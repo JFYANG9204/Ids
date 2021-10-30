@@ -14,7 +14,7 @@ import {
 } from "vscode-languageserver/node";
 import { ParserFileDigraph } from "./lib/file";
 import { File } from "./lib/types";
-import { builtInCompletions, keywordsCompletions } from "./completion";
+import { builtInCompletions, getCompletionsFromDefinitions, keywordsCompletions } from "./completion";
 import { updateAndVaidateDocument } from "./util";
 
 let connection = createConnection(ProposedFeatures.all);
@@ -43,7 +43,14 @@ connection.onInitialize((params) => {
 
 connection.onCompletion(
     (textDocumentPosition: TextDocumentPositionParams) => {
-        return builtInCompletions.concat(keywordsCompletions);
+        let completions: CompletionItem[] = builtInCompletions.concat(keywordsCompletions);
+        if (current && current.definitions) {
+            let defs = getCompletionsFromDefinitions(current.definitions);
+            if (defs) {
+                completions = completions.concat(defs);
+            }
+        }
+        return completions;
     }
 );
 
@@ -55,7 +62,10 @@ connection.onCompletionResolve(
 );
 
 documents.onDidChangeContent(change => {
-    updateAndVaidateDocument(change.document, graph, connection);
+    let file = updateAndVaidateDocument(change.document, graph, connection);
+    if (file) {
+        current = file;
+    }
 });
 
 documents.listen(connection);

@@ -35,5 +35,6 @@ export function updateAndVaidateDocument(
             diagnostics: errs
         });
     }
+    return file;
 }
 

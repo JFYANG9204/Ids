@@ -11,7 +11,7 @@ import {
     CompletionItemKind,
     MarkupKind
 } from 'vscode-languageserver-types';
-import { builtInAggregateDefinitions, builtInFunctionDefinitions, builtInObjectDefinitions } from "./lib/built-in/built-ins";
+import { BasicTypeDefinitions, builtInAggregateDefinitions, builtInFunctionDefinitions, builtInObjectDefinitions } from "./lib/built-in/built-ins";
 import { DefinitionBase } from "./lib/util/definition";
 
 
@@ -127,6 +127,65 @@ function setBuiltInCompletions(
 setBuiltInCompletions(builtInObjectDefinitions, CompletionItemKind.Module);
 setBuiltInCompletions(builtInFunctionDefinitions, CompletionItemKind.Function);
 setBuiltInCompletions(builtInAggregateDefinitions, CompletionItemKind.Function);
+
+function getCompletionTypeFromDefinition(def: DefinitionBase): CompletionItemKind {
+    if (def === BasicTypeDefinitions.string ||
+        def === BasicTypeDefinitions.categorical) {
+        return CompletionItemKind.Variable;
+    }
+    switch (def.defType) {
+        case "object":     return CompletionItemKind.Module;
+        case "constant":   return CompletionItemKind.Constant;
+        case "property":   return CompletionItemKind.Property;
+        case "method":     return CompletionItemKind.Method;
+        case "enum":       return CompletionItemKind.Enum;
+        case "function":   return CompletionItemKind.Function;
+        case "variant":    return CompletionItemKind.Variable;
+        case "macro":      return CompletionItemKind.Variable;
+        case "literal":    return CompletionItemKind.Variable;
+        case "interface":  return CompletionItemKind.Interface;
+        case "array":      return CompletionItemKind.Variable;
+        default:           return CompletionItemKind.Text;
+    }
+}
+
+function getCompletionFromDefinitionBase(def: DefinitionBase, name?: string): CompletionItem {
+    let type = getCompletionTypeFromDefinition(def);
+    return {
+        label: name ?? def.name,
+        kind: type,
+        documentation: {
+            kind: MarkupKind.Markdown,
+            value: def.getNote()
+        }
+    };
+}
+
+function getVariableCompletion(name: string, def: DefinitionBase): CompletionItem {
+    let label = `(${def.defType === "macro" ? "Macro" : "Variable"}) ${name}: ${def.name}`;
+    let type = getCompletionTypeFromDefinition(def);
+    return {
+        label: name,
+        kind: type,
+        documentation: {
+            kind: MarkupKind.Markdown,
+            value: "```ds\n" + label + "\n```"
+        }
+    };
+}
+
+export function getCompletionsFromDefinitions(defs: Map<string, DefinitionBase>): CompletionItem[] {
+    const completions: CompletionItem[] = [];
+    defs.forEach((def, name) => {
+        if (def.defType === "function") {
+            completions.push(getCompletionFromDefinitionBase(def));
+        } else {
+            completions.push(getVariableCompletion(name, def));
+        }
+    });
+    return completions;
+}
+
 
 export { keywordsCompletions, preKeywordsCompletions, builtInCompletions };
 
