@@ -159,9 +159,13 @@ export class DefinitionBase {
         if (this.note) {
             return this.note;
         }
-        let note = "```ds\n(" + this.defType + ") " + this.name + "\n```";
-        return note;
+        return "```ds\n" + this.getLable() + "\n```";
     }
+
+    getLable(): string {
+        return `(${this.defType}) ${this.name}`;
+    }
+
 }
 
 export const definitionPlaceHolder = new DefinitionBase({
@@ -187,6 +191,9 @@ export class VariantDefinition extends DefinitionBase {
     isArray: boolean;
     dimensions: number;
     boundaries?: number[];
+    override getLable(): string {
+        return `(${this.defType === "macro" ? "Macro" : "Variable"}) ${this.name}`;
+    }
 }
 
 export class EnumDefinition extends DefinitionBase {
@@ -216,6 +223,10 @@ export class EnumDefinition extends DefinitionBase {
         }
         return false;
     }
+
+    override getLable(): string {
+        return `(Enum) ${this.name}`;
+    }
 }
 
 export class FunctionDefinition extends DefinitionBase {
@@ -227,6 +238,33 @@ export class FunctionDefinition extends DefinitionBase {
 
     return?: DefinitionBase;
     arguments: Array<Argument> = [];
+
+    override getLable(): string {
+        let args = "";
+        let first = true;
+        this.arguments.forEach(arg => {
+            let argText = "";
+            if (arg.type instanceof Array) {
+                let argTypes: string[] = [];
+                arg.type.forEach(t => {
+                    argTypes.push(t.name);
+                });
+                argText = arg.name + ": " + argTypes.join(" | ");
+            } else {
+                argText = arg.name + ": " + arg.type.name;
+            }
+            if (arg.isOptional) {
+                argText = "[" + argText + "]";
+            }
+            if (first) {
+                args = argText;
+            } else {
+                args += ", " + argText;
+            }
+            first = false;
+        });
+        return `(function) ${this.name}(${args}): ${this.return ? this.return.name : "Void"}`;
+    }
 }
 
 export class MethodDefinition extends FunctionDefinition {

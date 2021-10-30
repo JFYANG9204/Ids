@@ -3,6 +3,7 @@ import { BuiltInDefinition } from "./types";
 
 export const builtInScriptConstants: BuiltInDefinition = {
         name: "mr",
+        label: "(constant) mr",
         definitionType: "constant",
         constants: [
             {

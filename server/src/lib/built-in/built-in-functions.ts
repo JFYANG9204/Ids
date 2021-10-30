@@ -5240,7 +5240,7 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
         ],
         note: [
             "```ds",
-            "Sleep(Val)",
+            "(function) Sleep(Val)",
             "```",
             "-----------------------------------",
             "Suspends the thread in which it is called.",
