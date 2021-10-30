@@ -1,0 +1,13 @@
+{
+  "compilerOptions": {
+    "target": "es5",
+    "module": "commonjs",
+    "lib": ["ES2019"],
+    "strict": true,
+    "outDir": "./out",
+    "rootDir": "./src",
+    "composite": true
+  },
+  "exclude": ["node_modules"],
+  "include": ["src"]
+}

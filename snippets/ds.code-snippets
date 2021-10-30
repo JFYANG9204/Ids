@@ -1,0 +1,114 @@
+
+{
+    "For Next Loop": {
+        "prefix": "for",
+        "body": [
+            "for ${1:index} = ${2:lower} to ${3:upper}",
+            "\t$0",
+            "next"
+        ],
+        "description": "For Next Loop"
+    },
+    "For Each ... Next": {
+        "prefix": "fore",
+        "body": [
+            "for each ${1:variable} in ${2:collection}",
+            "\t$0",
+            "next"
+        ],
+        "description": "For Each ... Next"
+    },
+    "Function": {
+        "prefix": "function",
+        "body": [
+            "function ${1:functionName}(${2:parameterList})",
+            "\t$0",
+            "end function"
+        ],
+        "description": "Function"
+    },
+    "Sub": {
+        "prefix": "sub",
+        "body": [
+            "sub ${1:subName}(${2:parameterList})",
+            "\t$0",
+            "end sub"
+        ],
+        "description": "Sub"
+    },
+    "While ... End While": {
+        "prefix": "while",
+        "body": [
+            "while ${1:boolean}",
+            "\t$0",
+            "end while"
+        ],
+        "description": "While ... End While"
+    },
+    "Do ... Loop While": {
+        "prefix": "do",
+        "body": [
+            "do",
+            "\t$0",
+            "loop while ${1:boolean}"
+        ],
+        "description": "Do ... Loop While"
+    },
+    "Do ... Loop Until": {
+        "prefix": "do",
+        "body": [
+            "do",
+            "\t$0",
+            "loop until ${1:boolean}"
+        ],
+        "description": "Do ... Loop Until"
+    },
+    "If Then": {
+        "prefix": "if",
+        "body": "if ${1:boolean} then $0",
+        "description": "If Then"
+    },
+    "If End If": {
+        "prefix": "if",
+        "body": [
+            "if ${1:boolean} then",
+            "\t$0",
+            "end if"
+        ],
+        "description": "If ... End If"
+    },
+    "If Else": {
+        "prefix": "ife",
+        "body": [
+            "if ${1:boolean} then",
+            "\t$2",
+            "else",
+            "\t$0",
+            "end if"
+        ],
+        "description": "If ... Else ... End if"
+    },
+    "FileSystemObject": {
+        "prefix": "fso",
+        "body": "set ${1:objectName} = CreateObject(\"Scripting.FileSystemObject\")",
+        "description": "File System Object"
+    },
+    "Dictionary": {
+        "prefix": "dic",
+        "body": "set ${1:objectName} = CreateObject(\"Scripting.Dictionary\")",
+        "description": "Dictionary"
+    },
+    "MDM Document": {
+        "prefix": "mdm",
+        "body": "set ${1:objectName}=CreateObject(\"MDM.Document\")",
+        "description": "Mdm Document"
+    },
+    "Log": {
+        "prefix": "log",
+        "body": "debug.log(${1:variableName})",
+        "description": "Log"
+    }
+}
+
+
+

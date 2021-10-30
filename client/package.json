@@ -1,0 +1,11 @@
+{
+    "name": "ids-client",
+    "author": "Yang",
+    "engines": {
+        "vscode": "^1.52.0"
+    },
+    "dependencies": {
+		"@types/vscode": "^1.52.0",
+        "vscode-languageclient": "^7.0.0"
+    }
+}
