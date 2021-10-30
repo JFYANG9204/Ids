@@ -14,7 +14,7 @@ import {
 } from "vscode-languageserver/node";
 import { ParserFileDigraph } from "./lib/file";
 import { File } from "./lib/types";
-import { builtInCompletions, getCompletionsFromDefinitions, keywordsCompletions } from "./completion";
+import { builtInCompletions, getCompletionFromPosition, getCompletionsFromDefinitions, keywordsCompletions } from "./completion";
 import { updateAndVaidateDocument } from "./util";
 
 let connection = createConnection(ProposedFeatures.all);
@@ -43,6 +43,23 @@ connection.onInitialize((params) => {
 
 connection.onCompletion(
     (textDocumentPosition: TextDocumentPositionParams) => {
+        let doc = documents.get(textDocumentPosition.textDocument.uri);
+        if (!doc) {
+            return [];
+        }
+        let pos = doc.offsetAt(textDocumentPosition.position);
+        let text = doc.getText().substring(0, pos);
+        if (current) {
+            let find = getCompletionFromPosition(
+                current,
+                pos,
+                fileURLToPath(textDocumentPosition.textDocument.uri),
+                text.slice(pos - 1, pos)
+            );
+            if (find.length > 0) {
+                return find;
+            }
+        }
         let completions: CompletionItem[] = builtInCompletions.concat(keywordsCompletions);
         if (current && current.definitions) {
             let defs = getCompletionsFromDefinitions(current.definitions);

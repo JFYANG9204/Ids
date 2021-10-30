@@ -3,7 +3,9 @@ import {
     readdirSync
 } from "fs";
 import {
+    dirname,
     isAbsolute,
+    join,
     resolve
 } from "path";
 import {
@@ -12,7 +14,9 @@ import {
     MarkupKind
 } from 'vscode-languageserver-types';
 import { BasicTypeDefinitions, builtInAggregateDefinitions, builtInFunctionDefinitions, builtInObjectDefinitions } from "./lib/built-in/built-ins";
-import { DefinitionBase } from "./lib/util/definition";
+import { positionAt } from "./lib/file/util";
+import { File } from "./lib/types";
+import { DefinitionBase, InterfaceDefinition } from "./lib/util/definition";
 
 
 export function getPathCompletion(uri: string): CompletionItem[] {
@@ -174,6 +178,19 @@ function getVariableCompletion(name: string, def: DefinitionBase): CompletionIte
     };
 }
 
+function getMemberCompletions(def: DefinitionBase) {
+    let completions: CompletionItem[] = [];
+    if (def instanceof InterfaceDefinition) {
+        def.methods.forEach(method => {
+            completions.push(getCompletionFromDefinitionBase(method));
+        });
+        def.properties.forEach(prop => {
+            completions.push(getCompletionFromDefinitionBase(prop));
+        });
+    }
+    return completions;
+}
+
 export function getCompletionsFromDefinitions(defs: Map<string, DefinitionBase>): CompletionItem[] {
     const completions: CompletionItem[] = [];
     defs.forEach((def, name) => {
@@ -186,6 +203,24 @@ export function getCompletionsFromDefinitions(defs: Map<string, DefinitionBase>)
     return completions;
 }
 
+export function getCompletionFromPosition(
+    file: File, pos: number, filePath: string, triggerChar: string) {
+    const completions: CompletionItem[] = [];
+    let node = positionAt(file, pos);
+    // #include
+    if (node.treeParent &&
+        node.treeParent.type === "PreIncludeStatement" &&
+        node.type === "StringLiteral" &&
+        (triggerChar === "\\" || triggerChar === "/")) {
+        let incPath = resolve(join(dirname(filePath), node.extra["raw"]));
+        return getPathCompletion(incPath);
+    }
+    let def = node.extra["definition"];
+    if (def && triggerChar === ".") {
+        return getMemberCompletions(def as InterfaceDefinition);
+    }
+    return completions;
+}
 
 export { keywordsCompletions, preKeywordsCompletions, builtInCompletions };
 
