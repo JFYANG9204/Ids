@@ -13,10 +13,18 @@ import {
     CompletionItemKind,
     MarkupKind
 } from 'vscode-languageserver-types';
-import { BasicTypeDefinitions, builtInAggregateDefinitions, builtInFunctionDefinitions, builtInObjectDefinitions } from "./lib/built-in/built-ins";
+import {
+    BasicTypeDefinitions,
+    builtInAggregateDefinitions,
+    builtInFunctionDefinitions,
+    builtInObjectDefinitions
+} from "./lib/built-in/built-ins";
 import { positionAt } from "./lib/file/util";
 import { File } from "./lib/types";
-import { DefinitionBase, InterfaceDefinition } from "./lib/util/definition";
+import {
+    DefinitionBase,
+    InterfaceDefinition
+} from "./lib/util/definition";
 
 
 export function getPathCompletion(uri: string): CompletionItem[] {
@@ -206,7 +214,7 @@ export function getCompletionsFromDefinitions(defs: Map<string, DefinitionBase>)
 export function getCompletionFromPosition(
     file: File, pos: number, filePath: string, triggerChar: string) {
     const completions: CompletionItem[] = [];
-    let node = positionAt(file, pos);
+    let node = positionAt(file.program.body, pos);
     // #include
     if (node.treeParent &&
         node.treeParent.type === "PreIncludeStatement" &&

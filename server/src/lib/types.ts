@@ -342,12 +342,13 @@ export class File extends NodeBase {
 export class Program extends Statement {
     type: "Program";
     sourceType: SourceType = SourceType.script;
-    body?: BlockStatement;
+    body: BlockStatement;
     metadata?: NodeBase[];
 
     constructor(parser: ParserBase, pos: number, loc: Position) {
         super(parser, pos, loc);
         this.type = "Program";
+        this.body = new BlockStatement(parser, pos, loc);
     }
 }
 

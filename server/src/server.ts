@@ -1,11 +1,8 @@
-import * as vscode from "vscode";
-import { join } from "path";
 import { fileURLToPath } from "url";
 import { TextDocument } from "vscode-languageserver-textdocument";
 import {
     CompletionItem,
     createConnection,
-    InitializeParams,
     InitializeResult,
     ProposedFeatures,
     TextDocumentPositionParams,
@@ -16,6 +13,7 @@ import { ParserFileDigraph } from "./lib/file";
 import { File } from "./lib/types";
 import { builtInCompletions, getCompletionFromPosition, getCompletionsFromDefinitions, keywordsCompletions } from "./completion";
 import { updateAndVaidateDocument } from "./util";
+import { positionAt } from "./lib/file/util";
 
 let connection = createConnection(ProposedFeatures.all);
 let documents = new TextDocuments(TextDocument);
@@ -56,6 +54,8 @@ connection.onCompletion(
                 fileURLToPath(textDocumentPosition.textDocument.uri),
                 text.slice(pos - 1, pos)
             );
+            const node = positionAt(current.program.body, pos);
+            connection.window.showInformationMessage(node.type);
             if (find.length > 0) {
                 return find;
             }
