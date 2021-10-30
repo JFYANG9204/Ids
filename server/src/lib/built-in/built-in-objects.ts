@@ -13,7 +13,9 @@ export const builtInObjects = new Set<BuiltInDefinition>([
         readonly: true,
         isCollection: false,
         note: [
+            "```ds",
             "(object) dmgrJob: IDataManagerJob",
+            "```",
             "-----------------------",
             "A Data Management Object Model (DMOM) intrinsic variable of type `IDataManagerJob` that exposes the properties and methods of the job object.",
             "",
@@ -31,7 +33,9 @@ export const builtInObjects = new Set<BuiltInDefinition>([
         readonly: true,
         isCollection: false,
         note: [
+            "```ds",
             "(object) dmgrGlobal: IDataManagerGlobalVariables",
+            "```",
             "-----------------------",
             "A Data Management Object Model (DMOM) intrinsic variable of type `IDataManagerGlobalVariables` that exposes the global variables collection.",
             "",
@@ -47,7 +51,9 @@ export const builtInObjects = new Set<BuiltInDefinition>([
         readonly: true,
         isCollection: false,
         note: [
+            "```ds",
             "(object) dmgrLog: IDataManagerLogging",
+            "```",
             "-----------------------",
             "A Data Management Object Model (DMOM) intrinsic variable that exposes the `Log` object.",
             "",
@@ -65,7 +71,9 @@ export const builtInObjects = new Set<BuiltInDefinition>([
         readonly: true,
         isCollection: false,
         note: [
+            "```ds",
             "(object) dmgrQuestions: IQuestions",
+            "```",
             "-----------------------",
             "A Data Management Object Model (DMOM) intrinsic variable of type `IQuestions` that exposes the questions collection. The questions collection contains a `Question` object for every variable in a `SelectQuery` statement in the `InputDataSource` section.",
             "",
@@ -83,7 +91,9 @@ export const builtInObjects = new Set<BuiltInDefinition>([
         readonly: true,
         isCollection: false,
         note: [
+            "```ds",
             "(object) dmgrWeightEngines: IDataManagerWeightEngines",
+            "```",
             "-----------------------",
             "A Data Management Object Model (DMOM) intrinsic variable of type `IDataManagerWeightEngines` that exposes the weight engines collection. The weight engines collection contains a `WeightEngine` object for every `OutputDataSource` section.",
             "",
@@ -98,7 +108,9 @@ export const builtInVBSDictionary: BuiltInDefinition = {
     name: "Dictionary",
     definitionType: "object",
     note: [
+        "```ds",
         "(object) Dictionary",
+        "```",
         "------------------------",
         "Object that stores data key, item pairs.",
         "",
@@ -131,7 +143,9 @@ export const builtInVBSDictionary: BuiltInDefinition = {
                 }
             ],
             note: [
+                "```ds",
                 "(method) Dictionary.Add(Key: Variant, Item: Variant): Void",
+                "```",
                 "-------------------------------------------",
                 "Adds a key and item pair to a `Dictionary` object.",
                 "",
@@ -160,7 +174,9 @@ export const builtInVBSDictionary: BuiltInDefinition = {
                 }
             ],
             note: [
+                "```ds",
                 "(method) Dictionary.Exist(Key: Variant): Boolean",
+                "```",
                 "-------------------------------------------",
                 "Returns `true` if a specified key exists in the Dictionary object, `false` if it does not.",
                 "",
@@ -189,7 +205,9 @@ export const builtInVBSDictionary: BuiltInDefinition = {
             definitionType: "method",
             returnType: createArrayDefinition("array", false, false, { dimensions: 1 }),
             note: [
+                "```ds",
                 "(method) Dictionary.Items(): Array<Item>",
+                "```",
                 "-------------------------------------------",
                 "Returns an array containing all the items in a `Dictionary` object.",
                 "",
@@ -227,7 +245,9 @@ export const builtinVBSFileSystemObject: BuiltInDefinition = {
     name: "FileSystemObject",
     definitionType: "object",
     note: [
+        "```ds",
         "(object) FileSystemObject",
+        "```",
         "------------------------",
         "Provides access to a computer's file system.",
         "",
@@ -263,7 +283,9 @@ export const builtinVBSFileSystemObject: BuiltInDefinition = {
                 },
             ],
             note: [
+                "```ds",
                 "(method) BuildPath(Path: String, Name: String): String",
+                "```",
                 "------------------------",
                 "Combines a folder path and the name of a folder or file and returns the combination with valid path separators.",
                 "+ `Path`: *String* - Required. Existing path with which _name_ is combined. Path can be absolute or relative and need not specify an existing folder.",
@@ -297,7 +319,9 @@ export const builtinVBSFileSystemObject: BuiltInDefinition = {
                 }
             ],
             note: [
+                "```ds",
                 "(method) CopyFile(Source: String, Destination: String, [Overwrite: Boolean]): Void",
+                "```",
                 "------------------------",
                 "Copies one or more files from one location to another.",
                 "+ `Source`: *String* - Required. Character string file specification, which can include wildcard characters, for one or more files to be copied.",
@@ -345,7 +369,9 @@ export const builtinVBSFileSystemObject: BuiltInDefinition = {
                 }
             ],
             note: [
+                "```ds",
                 "(method) CopyFolder(Source: String, Destination: String, [Overwrite: Boolean]): Void",
+                "```",
                 "------------------------",
                 "Recursively copies a folder from one location to another.",
                 "+ `Source`: *String* - Required. Character string folder specification, which can include wildcard characters, for one or more folders to be copied.",
@@ -382,7 +408,9 @@ export const builtinVBSFileSystemObject: BuiltInDefinition = {
                 }
             ],
             note: [
+                "```ds",
                 "(method) CreateFolder(FolderName: String): Void",
+                "```",
                 "------------------------",
                 "+ `FolderName`: *String* - Required. String expression that identifies the folder to create.",
                 "",
@@ -412,7 +440,9 @@ export const builtinVBSFileSystemObject: BuiltInDefinition = {
                 }
             ],
             note: [
+                "```ds",
                 "(method) CreateTextFile(FolderName: String, [Overwrite: Boolean], [Unicode: Boolean]): TextStream",
+                "```",
                 "------------------------",
                 "Creates a specified file name and returns a `TextStream` object that can be used to read from or write to the file.",
                 "+ `FileName`: *String* - Required. String expression that identifies the file to create.",
@@ -449,7 +479,9 @@ export const builtinVBSFileSystemObject: BuiltInDefinition = {
                 }
             ],
             note: [
+                "```ds",
                 "(method) DeleteFile(FileSpec: String, [Force: Boolean]): Void",
+                "```",
                 "------------------------",
                 "Deletes a specified file.",
                 "+ `FileSpec`: *String* - Required. The name of the file to delete. The `filespec` can contain wildcard characters in the last path component.",
@@ -476,7 +508,9 @@ export const builtinVBSFileSystemObject: BuiltInDefinition = {
                 }
             ],
             note: [
+                "```ds",
                 "(method) DeleteFolder(FileSpec: String, [Force: Boolean]): Void",
+                "```",
                 "------------------------",
                 "Deletes a specified folder and its contents.",
                 "+ `FileSpec`: *String* - Required. The name of the folder to delete. The `filespec` can contain wildcard characters in the last path component.",
@@ -500,7 +534,9 @@ export const builtinVBSFileSystemObject: BuiltInDefinition = {
                 }
             ],
             note: [
+                "```ds",
                 "(method) DriveExists(DriveSpec: String): Boolean",
+                "```",
                 "------------------------",
                 "Returns _True_ if the specified drive exists; _False_ if it does not.",
                 "+ `DriveSpec`: *String* - Required. A drive letter or a path specification for the root of the drive.",
@@ -521,7 +557,9 @@ export const builtinVBSFileSystemObject: BuiltInDefinition = {
                 }
             ],
             note: [
+                "```ds",
                 "(method) FileExists(FileSpec: String): Boolean",
+                "```",
                 "------------------------",
                 "Returns _True_ if a specified file exists; _False_ if it does not.",
                 "+ `FileSpec`: *String* - Required. The name of the file whose existence is to be determined. A complete path specification (either absolute or relative) must be provided if the file isn't expected to exist in the current folder.",
@@ -539,7 +577,9 @@ export const builtinVBSFileSystemObject: BuiltInDefinition = {
                 }
             ],
             note: [
+                "``ds",
                 "(method) FolderExists(FolderSpec: String): Boolean",
+                "```",
                 "------------------------",
                 "Returns _True_ if a specified folder exists; _False_ if it does not.",
                 "+ `FileSpec`: *String* - Required. The name of the folder whose existence is to be determined. A complete path specification (either absolute or relative) must be provided if the folder isn't expected to exist in the current folder.",
@@ -557,7 +597,9 @@ export const builtinVBSFileSystemObject: BuiltInDefinition = {
                 }
             ],
             note: [
+                "```ds",
                 "(method) GetAbsolutePathName(PathSpec: String): String",
+                "``",
                 "------------------------",
                 "Returns a complete and unambiguous path from a provided path specification.",
                 "+ `PathSpec`: *String* - Required. Path specification to change to a complete and unambiguous path.",
@@ -588,7 +630,9 @@ export const builtinVBSFileSystemObject: BuiltInDefinition = {
                 }
             ],
             note: [
+                "```ds",
                 "(method) GetBaseName(Path: String): String",
+                "```",
                 "------------------------",
                 "Returns a string containing the base name of the last component, less any file extension, in a path.",
                 "+ `Path`: *String* - Required. The path specification for the component whose base name is to be returned.",
@@ -611,7 +655,9 @@ export const builtinVBSFileSystemObject: BuiltInDefinition = {
                 }
             ],
             note: [
+                "```ds",
                 "(method) GetDrive(DriveSpec: String): Drive",
+                "```",
                 "------------------------",
                 "Returns a Drive object corresponding to the drive in a specified path.",
                 "+ `DriveSpec`: *String* - Required. The drivespec argument can be a drive letter (c), a drive letter with a colon appended (c:), a drive letter with a colon and path separator appended (c:), or any network share specification (\\computer2\\share1).",
@@ -637,7 +683,9 @@ export const builtinVBSFileSystemObject: BuiltInDefinition = {
                 }
             ],
             note: [
+                "```ds",
                 "(method) GetDriveName(Path: String): String",
+                "```",
                 "------------------------",
                 "Returns a string containing the name of the drive for a specified path.",
                 "+ `Path`: *String* - Required. The path specification for the component whose drive name is to be returned.",
@@ -659,7 +707,9 @@ export const builtinVBSFileSystemObject: BuiltInDefinition = {
                 }
             ],
             note: [
+                "```ds",
                 "(method) GetExtensionName(Path: String): String",
+                "```",
                 "------------------------",
                 "Returns a string containing the extension name for the last component in a path.",
                 "+ `Path`: *String* - Required. The path specification for the component whose extension name is to be returned.",
@@ -681,7 +731,9 @@ export const builtinVBSFileSystemObject: BuiltInDefinition = {
                 }
             ],
             note: [
+                "```ds",
                 "(method) GetFile(FileSpec: String): File",
+                "```",
                 "------------------------",
                 "Returns a File object corresponding to the file in a specified path.",
                 "+ `FileSpec`: *String* - Required. The `filespec` is the path (absolute or relative) to a specific file.",
@@ -702,7 +754,9 @@ export const builtinVBSFileSystemObject: BuiltInDefinition = {
                 }
             ],
             note: [
+                "```ds",
                 "(method) GetFileName(PathSpec: String): String",
+                "```",
                 "------------------------",
                 "Returns the last component of a specified path that is not part of the drive specification.",
                 "+ `PathSpec`: *String* - Required. The path (absolute or relative) to a specific file.",
@@ -724,7 +778,9 @@ export const builtinVBSFileSystemObject: BuiltInDefinition = {
                 }
             ],
             note: [
+                "```ds",
                 "(method) GetFolder(FolderSpec: String): Folder",
+                "```",
                 "------------------------",
                 "Returns a Folder object corresponding to the folder in a specified path.",
                 "+ `FolderSpec`: *String* - Required. The `folderspec` is the path (absolute or relative) to a specific folder.",
@@ -745,7 +801,9 @@ export const builtinVBSFileSystemObject: BuiltInDefinition = {
                 }
             ],
             note: [
+                "```ds",
                 "(method) GetParentFolderName(Path: String): String",
+                "```",
                 "------------------------",
                 "Returns a string containing the name of the parent folder of the last component in a specified path.",
                 "+ `Path`: *String* - Required. The path specification for the component whose parent folder name is to be returned.",
@@ -770,7 +828,9 @@ export const builtinVBSFileSystemObject: BuiltInDefinition = {
                 }
             ],
             note: [
+                "```ds",
                 "(method) MoveFile(Source: String, Destination: String): Void",
+                "```",
                 "------------------------",
                 "Moves one or more files from one location to another.",
                 "+ `Source`: *String* - Required. The path to the file or files to be moved. The `source` argument string can contain wildcard characters in the last path component only.",
@@ -800,7 +860,9 @@ export const builtinVBSFileSystemObject: BuiltInDefinition = {
                 }
             ],
             note: [
+                "```ds",
                 "(method) MoveFolder(Source: String, Destination: String): Void",
+                "```",
                 "------------------------",
                 "Moves one or more folders from one location to another.",
                 "+ `Source`: *String* - Required. The path to the folder or folders to be moved. The `source` argument string can contain wildcard characters in the last path component only.",
@@ -842,7 +904,9 @@ export const builtinVBSFileSystemObject: BuiltInDefinition = {
                 }
             ],
             note: [
+                "```ds",
                 "(method) OpenTextFile(FileName: String, [IOMode: Long], [Create: Boolean], [Format: Long]): TextStream",
+                "```",
                 "------------------------",
                 "Opens a specified file and returns a `TextStream` object that can be used to read from, write to, or append to the file.",
                 "+ `FileName`: *String* - Required. String expression that identifies the file to open.",
@@ -889,7 +953,9 @@ export const builtinVBSFileSystemObject: BuiltInDefinition = {
             returnType: createBuiltInDefPlaceHolder("Drive"),
             isCollection: true,
             note: [
+                "```ds",
                 "(property) Drives: Collection<Drive>",
+                "```",
                 "------------------------",
                 "Returns a Drives collection consisting of all `Drive` objects available on the local machine.",
                 "",
@@ -923,7 +989,9 @@ export const builtInVBSTextStreamObject: BuiltInDefinition = {
     name: "TextStream",
     definitionType: "object",
     note: [
+        "```ds",
         "(object) TextStream",
+        "```",
         "------------------------",
         "Facilitates sequential access to file.",
         "",
@@ -943,7 +1011,9 @@ export const builtInVBSTextStreamObject: BuiltInDefinition = {
             name: "Close",
             definitionType: "method",
             note: [
+                "```ds",
                 "(method) Close(): Void",
+                "```",
                 "------------------------",
                 "Closes an open TextStream file.",
                 "",
@@ -960,7 +1030,9 @@ export const builtInVBSTextStreamObject: BuiltInDefinition = {
                 }
             ],
             note: [
+                "```ds",
                 "(method) Read(Charaters: Long): String",
+                "```",
                 "------------------------",
                 "Reads a specified number of characters from a `TextStream` file and returns the resulting string.",
                 "+ `Charaters`: *Long* - Required. Number of characters that you want to read from the file.",
@@ -972,7 +1044,9 @@ export const builtInVBSTextStreamObject: BuiltInDefinition = {
             definitionType: "method",
             returnType: BasicTypeDefinitions.string,
             note: [
+                "```ds",
                 "(method) ReadAll(): String",
+                "```",
                 "------------------------",
                 "Reads an entire `TextStream` file and returns the resulting string.",
                 "",
@@ -987,7 +1061,9 @@ export const builtInVBSTextStreamObject: BuiltInDefinition = {
             definitionType: "method",
             returnType: BasicTypeDefinitions.string,
             note: [
+                "```ds",
                 "(method) ReadLine(): String",
+                "```",
                 "------------------------",
                 "Reads an entire line (up to, but not including, the newline character) from a `TextStream` file and returns the resulting string.",
                 "",
@@ -1003,7 +1079,9 @@ export const builtInVBSTextStreamObject: BuiltInDefinition = {
                 }
             ],
             note: [
+                "```ds",
                 "(method) Skip(Characters: Long): Void",
+                "```",
                 "------------------------",
                 "Reads an entire line (up to, but not including, the newline character) from a `TextStream` file and returns the resulting string.",
                 "+ `Characters`: *Long* - Required. Number of characters to skip when reading a file.",
@@ -1016,7 +1094,9 @@ export const builtInVBSTextStreamObject: BuiltInDefinition = {
             name: "SkipLine",
             definitionType: "method",
             note: [
+                "```ds",
                 "(method) SkipLine(): Void",
+                "```",
                 "------------------------",
                 "Skips the next line when reading a TextStream file.",
                 "",
@@ -1036,7 +1116,9 @@ export const builtInVBSTextStreamObject: BuiltInDefinition = {
                 }
             ],
             note: [
+                "```ds",
                 "(method) Write(Text: String): Void",
+                "```",
                 "------------------------",
                 "Writes a specified string to a `TextStream` file.",
                 "+ `Text`: *String* - Required. The text you want to write to the file.",
@@ -1056,7 +1138,9 @@ export const builtInVBSTextStreamObject: BuiltInDefinition = {
                 }
             ],
             note: [
+                "```ds",
                 "(method) WriteBlankLines(Lines: Long): Void",
+                "```",
                 "------------------------",
                 "Writes a specified number of newline characters to a `TextStream` file.",
                 "+ `Lines`: *Long* - Required. Number of newline characters you want to write to the file.",
@@ -1074,7 +1158,9 @@ export const builtInVBSTextStreamObject: BuiltInDefinition = {
                 }
             ],
             note: [
+                "```ds",
                 "(method) WriteLine([Text: String]): Void",
+                "```",
                 "------------------------",
                 "Writes a specified string and newline character to a `TextStream` file.",
                 "+ `Text`: *String* - Optional. The text you want to write to the file. If omitted, a newline character is written to the file.",
@@ -1089,7 +1175,9 @@ export const builtInVBSTextStreamObject: BuiltInDefinition = {
             returnType: BasicTypeDefinitions.boolean,
             readonly: true,
             note: [
+                "```ds",
                 "(property) AtEndOfLine: Boolean",
+                "```",
                 "------------------------",
                 "Read-only property that returns True if the file pointer immediately precedes the end-of-line marker in a `TextStream` file; *False* if it does not.",
                 "",
@@ -1115,7 +1203,9 @@ export const builtInVBSTextStreamObject: BuiltInDefinition = {
             returnType: BasicTypeDefinitions.boolean,
             readonly: true,
             note: [
+                "```ds",
                 "(property) AtEndOfStream: Boolean",
+                "```",
                 "------------------------",
                 "Read-only property that returns True if the file pointer is at the end of a `TextStream` file; *False* if it is not.",
                 "",
@@ -1141,7 +1231,9 @@ export const builtInVBSTextStreamObject: BuiltInDefinition = {
             returnType: BasicTypeDefinitions.long,
             readonly: true,
             note: [
+                "```ds",
                 "(property) Column: Long",
+                "```",
                 "------------------------",
                 "Read-only property that returns the column number of the current character position in a `TextStream` file.",
                 "",
@@ -1156,7 +1248,9 @@ export const builtInVBSTextStreamObject: BuiltInDefinition = {
             returnType: BasicTypeDefinitions.long,
             readonly: true,
             note: [
+                "```ds",
                 "(property) Line: Long",
+                "```",
                 "------------------------",
                 "Read-only property that returns the current line number in a `TextStream` file.",
                 "",
@@ -1172,7 +1266,9 @@ export const builtInVBSFileObject: BuiltInDefinition = {
     name: "File",
     definitionType: "object",
     note: [
+        "```ds",
         "(object) File",
+        "```",
         "------------------------",
         "Provides access to all the properties of a file.",
         "",
@@ -1205,7 +1301,9 @@ export const builtInVBSFileObject: BuiltInDefinition = {
                 }
             ],
             note: [
+                "```ds",
                 "(method) Copy(Destination: String, [Overwrite: Boolean]): Void",
+                "```",
                 "------------------------",
                 "Copies a specified file or folder from one location to another.",
                 "+ `Destination`: *String* - Required. `Destination` where the file or folder is to be copied. Wildcard characters are not allowed.",
@@ -1227,7 +1325,9 @@ export const builtInVBSFileObject: BuiltInDefinition = {
                 }
             ],
             note: [
+                "```ds",
                 "(method) Delete([Force: Boolean]): Void",
+                "```",
                 "------------------------",
                 "Deletes a specified file or folder.",
                 "+ `Force`: *Boolean* - Optional. *Boolean* value that is *True* if files or folders with the read-only attribute set are to be deleted; *False* (default) if they are not.",
@@ -1249,7 +1349,9 @@ export const builtInVBSFileObject: BuiltInDefinition = {
                 }
             ],
             note: [
+                "```ds",
                 "(method) Move(Destination: String): Void",
+                "```",
                 "------------------------",
                 "Deletes a specified file or folder.",
                 "+ `Destination`: *String* - Required. `Destination` where the file or folder is to be moved. Wildcard characters are not allowed.",
@@ -1276,7 +1378,9 @@ export const builtInVBSFileObject: BuiltInDefinition = {
                 },
             ],
             note: [
+                "```ds",
                 "(method) OpenAsTextStream([IOMode: Long], [Format: Long]): TextStream",
+                "```",
                 "------------------------",
                 "Opens a specified file and returns a `TextStream` object that can be used to read from, write to, or append to the file.",
                 "+ `IOMode`: *Long* - Optional. Indicates input/output mode. Can be one of three constants: `ForReading`, `ForWriting`, or `ForAppending`.",
@@ -1336,7 +1440,9 @@ export const builtInVBSFileObject: BuiltInDefinition = {
             },
             returnType: BasicTypeDefinitions.long,
             note: [
+                "```ds",
                 "(property) Attributes: Long",
+                "```",
                 "------------------------",
                 "Sets or returns the attributes of files or folders. Read/write or read-only, depending on the attribute.",
                 "",
@@ -1389,7 +1495,9 @@ export const builtInVBSFileObject: BuiltInDefinition = {
             returnType: BasicTypeDefinitions.string,
             readonly: true,
             note: [
+                "```ds",
                 "(property) DateCreated: String",
+                "```",
                 "------------------------",
                 "Returns the date and time that the specified file or folder was created. Read-only.",
                 "",
@@ -1412,7 +1520,9 @@ export const builtInVBSFileObject: BuiltInDefinition = {
             returnType: BasicTypeDefinitions.string,
             readonly: true,
             note: [
+                "```ds",
                 "(property) DateLastAccessed: String",
+                "```",
                 "------------------------",
                 "Returns the date and time that the specified file or folder was last accessed. Read-only.",
                 "",
@@ -1439,7 +1549,9 @@ export const builtInVBSFileObject: BuiltInDefinition = {
             returnType: BasicTypeDefinitions.string,
             readonly: true,
             note: [
+                "```ds",
                 "(property) DateLastModified: String",
+                "```",
                 "------------------------",
                 "Returns the date and time that the specified file or folder was last modified. Read-only.",
                 "",
@@ -1465,7 +1577,9 @@ export const builtInVBSFileObject: BuiltInDefinition = {
             returnType: BasicTypeDefinitions.string,
             readonly: true,
             note: [
+                "```ds",
                 "(property) Drive: String",
+                "```",
                 "------------------------",
                 "Returns the drive letter of the drive on which the specified file or folder resides. Read-only.",
                 "",
@@ -1490,7 +1604,9 @@ export const builtInVBSFileObject: BuiltInDefinition = {
             definitionType: "property",
             returnType: BasicTypeDefinitions.string,
             note: [
+                "```ds",
                 "(property) Name: String",
+                "```",
                 "------------------------",
                 "Sets or returns the name of a specified file or folder. Read/write.",
                 "",
@@ -1516,7 +1632,9 @@ export const builtInVBSFileObject: BuiltInDefinition = {
             returnType: createBuiltInDefPlaceHolder("Folder"),
             readonly: true,
             note: [
+                "```ds",
                 "(property) ParentFolder: Folder",
+                "```",
                 "------------------------",
                 "Returns the folder object for the parent of the specified file or folder. Read-only.",
                 "",
@@ -1542,7 +1660,9 @@ export const builtInVBSFileObject: BuiltInDefinition = {
             returnType: BasicTypeDefinitions.string,
             readonly: true,
             note: [
+                "```ds",
                 "(property) Path: String",
+                "```",
                 "------------------------",
                 "Returns the path for a specified file, folder, or drive.",
                 "",
@@ -1569,7 +1689,9 @@ export const builtInVBSFileObject: BuiltInDefinition = {
             returnType: BasicTypeDefinitions.string,
             readonly: true,
             note: [
+                "```ds",
                 "(property) ShortName: String",
+                "```",
                 "------------------------",
                 "Returns the short name used by programs that require the earlier 8.3 naming convention.",
                 "",
@@ -1594,7 +1716,9 @@ export const builtInVBSFileObject: BuiltInDefinition = {
             returnType: BasicTypeDefinitions.string,
             readonly: true,
             note: [
+                "```ds",
                 "(property) ShortPath: String",
+                "```",
                 "------------------------",
                 "Returns the short path used by programs that require the earlier 8.3 file naming convention.",
                 "",
@@ -1619,7 +1743,9 @@ export const builtInVBSFileObject: BuiltInDefinition = {
             returnType: BasicTypeDefinitions.long,
             readonly: true,
             note: [
+                "```ds",
                 "(property) Size: Long",
+                "```",
                 "------------------------",
                 "For files, returns the size, in bytes, of the specified file. For folders, returns the size, in bytes, of all files and subfolders contained in the folder.",
                 "",
@@ -1642,7 +1768,9 @@ export const builtInVBSFileObject: BuiltInDefinition = {
             returnType: BasicTypeDefinitions.string,
             readonly: true,
             note: [
+                "```ds",
                 "(property) Type: String",
+                "```",
                 "------------------------",
                 "Returns information about the type of a file or folder. For example, for files ending in .TXT, \"Text Document\" is returned.",
                 "",
@@ -1666,7 +1794,9 @@ export const builtInVBSFolderObject: BuiltInDefinition = {
     name: "Folder",
     definitionType: "object",
     note: [
+        "```ds",
         "(object) Folder",
+        "```",
         "------------------------",
         "Provides access to all the properties of a folder.",
         "",
@@ -1694,7 +1824,9 @@ export const builtInVBSFolderObject: BuiltInDefinition = {
                 }
             ],
             note: [
+                "```ds",
                 "(method) AddFolders(FolderName: String): Void",
+                "```",
                 "------------------------",
                 "Adds a new `Folder` to a `Folders` collection.",
                 "+ `FolderName`: *String* - Required. The name of the new `Folder` being added.",
@@ -1717,7 +1849,9 @@ export const builtInVBSFolderObject: BuiltInDefinition = {
                 }
             ],
             note: [
+                "```ds",
                 "(method) Copy(Destination: String, [Overwrite: Boolean]): Void",
+                "```",
                 "------------------------",
                 "Copies a specified file or folder from one location to another.",
                 "+ `Destination`: *String* - Required. `Destination` where the file or folder is to be copied. Wildcard characters are not allowed.",
@@ -1749,7 +1883,9 @@ export const builtInVBSFolderObject: BuiltInDefinition = {
                 }
             ],
             note: [
+                "```ds",
                 "(method) CreateTextFile(FolderName: String, [Overwrite: Boolean], [Unicode: Boolean]): TextStream",
+                "```",
                 "------------------------",
                 "Creates a specified file name and returns a `TextStream` object that can be used to read from or write to the file.",
                 "+ `FileName`: *String* - Required. String expression that identifies the file to create.",
@@ -1781,7 +1917,9 @@ export const builtInVBSFolderObject: BuiltInDefinition = {
                 }
             ],
             note: [
+                "```ds",
                 "(method) Delete([Force: Boolean]): Void",
+                "```",
                 "------------------------",
                 "Deletes a specified file or folder.",
                 "+ `Force`: *Boolean* - Optional. *Boolean* value that is *True* if files or folders with the read-only attribute set are to be deleted; *False* (default) if they are not.",
@@ -1803,7 +1941,9 @@ export const builtInVBSFolderObject: BuiltInDefinition = {
                 }
             ],
             note: [
+                "```ds",
                 "(method) Move(Destination: String): Void",
+                "```",
                 "------------------------",
                 "Deletes a specified file or folder.",
                 "+ `Destination`: *String* - Required. `Destination` where the file or folder is to be moved. Wildcard characters are not allowed.",
@@ -1821,7 +1961,9 @@ export const builtInVBSFolderObject: BuiltInDefinition = {
             isCollection: true,
             returnType: createBuiltInDefPlaceHolder("File"),
             note: [
+                "```ds",
                 "(property) Files: Collection<File>",
+                "```",
                 "------------------------",
                 "Collection of all `File` objects within a folder.",
                 "",
@@ -1848,7 +1990,9 @@ export const builtInVBSFolderObject: BuiltInDefinition = {
             isCollection: true,
             returnType: createBuiltInDefPlaceHolder("Folder"),
             note: [
+                "```ds",
                 "(property) Folders: Collection<Folder>",
+                "```",
                 "------------------------",
                 "Collection of all `Folder` objects contained within a `Folder` object.",
                 "",
@@ -1875,7 +2019,9 @@ export const builtInVBSFolderObject: BuiltInDefinition = {
             isCollection: true,
             returnType: createBuiltInDefPlaceHolder("Folder"),
             note: [
+                "```ds",
                 "(property) SubFolders: Collection<Folder>",
+                "```",
                 "------------------------",
                 "Returns a `Folders` collection consisting of all folders contained in a specified folder, including those with Hidden and System file attributes set.",
                 "",
@@ -1906,7 +2052,9 @@ export const builtInVBSFolderObject: BuiltInDefinition = {
             },
             returnType: BasicTypeDefinitions.long,
             note: [
+                "```ds",
                 "(property) Attributes: Long",
+                "```",
                 "------------------------",
                 "Sets or returns the attributes of files or folders. Read/write or read-only, depending on the attribute.",
                 "",
@@ -1959,7 +2107,9 @@ export const builtInVBSFolderObject: BuiltInDefinition = {
             returnType: BasicTypeDefinitions.string,
             readonly: true,
             note: [
+                "```ds",
                 "(property) DateCreated: String",
+                "```",
                 "------------------------",
                 "Returns the date and time that the specified file or folder was created. Read-only.",
                 "",
@@ -1982,7 +2132,9 @@ export const builtInVBSFolderObject: BuiltInDefinition = {
             returnType: BasicTypeDefinitions.string,
             readonly: true,
             note: [
+                "```ds",
                 "(property) DateLastAccessed: String",
+                "```",
                 "------------------------",
                 "Returns the date and time that the specified file or folder was last accessed. Read-only.",
                 "",
@@ -2009,7 +2161,9 @@ export const builtInVBSFolderObject: BuiltInDefinition = {
             returnType: BasicTypeDefinitions.string,
             readonly: true,
             note: [
+                "```ds",
                 "(property) DateLastModified: String",
+                "```",
                 "------------------------",
                 "Returns the date and time that the specified file or folder was last modified. Read-only.",
                 "",
@@ -2035,7 +2189,9 @@ export const builtInVBSFolderObject: BuiltInDefinition = {
             returnType: BasicTypeDefinitions.string,
             readonly: true,
             note: [
+                "```ds",
                 "(property) Drive: String",
+                "```",
                 "------------------------",
                 "Returns the drive letter of the drive on which the specified file or folder resides. Read-only.",
                 "",
@@ -2060,7 +2216,9 @@ export const builtInVBSFolderObject: BuiltInDefinition = {
             definitionType: "property",
             returnType: BasicTypeDefinitions.string,
             note: [
+                "```ds",
                 "(property) Name: String",
+                "```",
                 "------------------------",
                 "Sets or returns the name of a specified file or folder. Read/write.",
                 "",
@@ -2086,7 +2244,9 @@ export const builtInVBSFolderObject: BuiltInDefinition = {
             returnType: createBuiltInDefPlaceHolder("Folder"),
             readonly: true,
             note: [
+                "```ds",
                 "(property) ParentFolder: Folder",
+                "```",
                 "------------------------",
                 "Returns the folder object for the parent of the specified file or folder. Read-only.",
                 "",
@@ -2112,7 +2272,9 @@ export const builtInVBSFolderObject: BuiltInDefinition = {
             returnType: BasicTypeDefinitions.string,
             readonly: true,
             note: [
+                "```ds",
                 "(property) Path: String",
+                "```",
                 "------------------------",
                 "Returns the path for a specified file, folder, or drive.",
                 "",
@@ -2139,7 +2301,9 @@ export const builtInVBSFolderObject: BuiltInDefinition = {
             returnType: BasicTypeDefinitions.string,
             readonly: true,
             note: [
+                "```ds",
                 "(property) ShortName: String",
+                "```",
                 "------------------------",
                 "Returns the short name used by programs that require the earlier 8.3 naming convention.",
                 "",
@@ -2164,7 +2328,9 @@ export const builtInVBSFolderObject: BuiltInDefinition = {
             returnType: BasicTypeDefinitions.string,
             readonly: true,
             note: [
+                "```ds",
                 "(property) ShortPath: String",
+                "```",
                 "------------------------",
                 "Returns the short path used by programs that require the earlier 8.3 file naming convention.",
                 "",
@@ -2189,7 +2355,9 @@ export const builtInVBSFolderObject: BuiltInDefinition = {
             returnType: BasicTypeDefinitions.long,
             readonly: true,
             note: [
+                "```ds",
                 "(property) Size: Long",
+                "```",
                 "------------------------",
                 "For files, returns the size, in bytes, of the specified file. For folders, returns the size, in bytes, of all files and subfolders contained in the folder.",
                 "",
@@ -2212,7 +2380,9 @@ export const builtInVBSFolderObject: BuiltInDefinition = {
             returnType: BasicTypeDefinitions.string,
             readonly: true,
             note: [
+                "```ds",
                 "(property) Type: String",
+                "```",
                 "------------------------",
                 "Returns information about the type of a file or folder. For example, for files ending in .TXT, \"Text Document\" is returned.",
                 "",
@@ -2235,7 +2405,9 @@ export const builtInVBSFolderObject: BuiltInDefinition = {
             returnType: BasicTypeDefinitions.boolean,
             readonly: true,
             note: [
+                "```ds",
                 "(property) IsRootFolder: Boolean",
+                "```",
                 "------------------------",
                 "Returns *True* if the specified folder is the root folder; *False* if it is not.",
                 "",
@@ -2267,7 +2439,9 @@ export const builtInVBSDriveObject: BuiltInDefinition = {
     name: "Drive",
     definitionType: "object",
     note: [
+        "```ds",
         "(object) Drive",
+        "```",
         "------------------------",
         "Provides access to the properties of a particular disk drive or network share.",
         "",
@@ -2294,7 +2468,9 @@ export const builtInVBSDriveObject: BuiltInDefinition = {
             returnType: BasicTypeDefinitions.long,
             readonly: true,
             note: [
+                "```ds",
                 "(property) AvailableSpace: Long",
+                "```",
                 "------------------------",
                 "Returns the amount of space available to a user on the specified drive or network share.",
                 "",
@@ -2321,7 +2497,9 @@ export const builtInVBSDriveObject: BuiltInDefinition = {
             returnType: BasicTypeDefinitions.string,
             readonly: true,
             note: [
+                "```ds",
                 "(property) DriveLetter: String",
+                "```",
                 "------------------------",
                 "Returns the drive letter of a physical local drive or a network share. Read-only.",
                 "",
@@ -2348,7 +2526,9 @@ export const builtInVBSDriveObject: BuiltInDefinition = {
             returnType: BasicTypeDefinitions.long,
             readonly: true,
             note: [
+                "```ds",
                 "(property) DriveType: Long",
+                "```",
                 "------------------------",
                 "Returns a value indicating the type of a specified drive.",
                 "",
@@ -2379,7 +2559,9 @@ export const builtInVBSDriveObject: BuiltInDefinition = {
             returnType: BasicTypeDefinitions.string,
             readonly: true,
             note: [
+                "```ds",
                 "(property) FileSystem: String",
+                "```",
                 "------------------------",
                 "Returns the type of file system in use for the specified drive.",
                 "",
@@ -2403,7 +2585,9 @@ export const builtInVBSDriveObject: BuiltInDefinition = {
             returnType: BasicTypeDefinitions.long,
             readonly: true,
             note: [
+                "```ds",
                 "(property) FreeSpace: Long",
+                "```",
                 "------------------------",
                 "Returns the amount of free space available to a user on the specified drive or network share. Read-only.",
                 "",
@@ -2430,7 +2614,9 @@ export const builtInVBSDriveObject: BuiltInDefinition = {
             returnType: BasicTypeDefinitions.boolean,
             readonly: true,
             note: [
+                "```ds",
                 "(property) IsReady: Boolean",
+                "```",
                 "------------------------",
                 "Returns *True* if the specified drive is ready; *False* if it is not.",
                 "",
@@ -2467,7 +2653,9 @@ export const builtInVBSDriveObject: BuiltInDefinition = {
             returnType: BasicTypeDefinitions.string,
             readonly: true,
             note: [
+                "```ds",
                 "(property) Path: String",
+                "```",
                 "------------------------",
                 "Returns the path for a specified file, folder, or drive.",
                 "",
@@ -2494,7 +2682,9 @@ export const builtInVBSDriveObject: BuiltInDefinition = {
             returnType: BasicTypeDefinitions.string,
             readonly: true,
             note: [
+                "```ds",
                 "(property) RootFolder: String",
+                "```",
                 "------------------------",
                 "Returns a `Folder` object representing the root folder of a specified drive. Read-only.",
                 "",
@@ -2508,7 +2698,9 @@ export const builtInVBSDriveObject: BuiltInDefinition = {
             returnType: BasicTypeDefinitions.double,
             readonly: true,
             note: [
+                "```ds",
                 "(property) SerialNumber: Double",
+                "```",
                 "------------------------",
                 "Returns the decimal serial number used to uniquely identify a disk volume.",
                 "",
@@ -2541,7 +2733,9 @@ export const builtInVBSDriveObject: BuiltInDefinition = {
             returnType: BasicTypeDefinitions.string,
             readonly: true,
             note: [
+                "```ds",
                 "(property) ShareName: String",
+                "```",
                 "------------------------",
                 "Returns the network share name for a specified drive.",
                 "",
@@ -2565,7 +2759,9 @@ export const builtInVBSDriveObject: BuiltInDefinition = {
             returnType: BasicTypeDefinitions.long,
             readonly: true,
             note: [
+                "```ds",
                 "(property) TotalSize: Long",
+                "```",
                 "------------------------",
                 "Returns the total space, in bytes, of a drive or network share.",
                 "",
@@ -2591,7 +2787,9 @@ export const builtInVBSDriveObject: BuiltInDefinition = {
             definitionType: "property",
             returnType: BasicTypeDefinitions.string,
             note: [
+                "```ds",
                 "(property) VolumeName: String",
+                "```",
                 "------------------------",
                 "Sets or returns the volume name of the specified drive. Read/write.",
                 "",

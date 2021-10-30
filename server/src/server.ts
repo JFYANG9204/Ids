@@ -3,15 +3,19 @@ import { join } from "path";
 import { fileURLToPath } from "url";
 import { TextDocument } from "vscode-languageserver-textdocument";
 import {
+    CompletionItem,
     createConnection,
     InitializeParams,
     InitializeResult,
     ProposedFeatures,
+    TextDocumentPositionParams,
     TextDocuments,
     TextDocumentSyncKind
 } from "vscode-languageserver/node";
 import { ParserFileDigraph } from "./lib/file";
 import { File } from "./lib/types";
+import { builtInCompletions, keywordsCompletions } from "./completion";
+import { updateAndVaidateDocument } from "./util";
 
 let connection = createConnection(ProposedFeatures.all);
 let documents = new TextDocuments(TextDocument);
@@ -37,9 +41,22 @@ connection.onInitialize((params) => {
     return result;
 });
 
+connection.onCompletion(
+    (textDocumentPosition: TextDocumentPositionParams) => {
+        return builtInCompletions.concat(keywordsCompletions);
+    }
+);
 
 
+connection.onCompletionResolve(
+    (item: CompletionItem) => {
+        return item;
+    }
+);
 
+documents.onDidChangeContent(change => {
+    updateAndVaidateDocument(change.document, graph, connection);
+});
 
 documents.listen(connection);
 connection.listen();

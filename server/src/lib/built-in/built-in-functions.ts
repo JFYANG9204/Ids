@@ -16,7 +16,9 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
             }
         ],
         note: [
+            "```ds",
             "(function) AnswerCount(Val: Categorical): Long",
+            "```",
             "------------------------------------------",
             "Returns the number of categories selected in a category list.",
             "+ `Val`: *Categorical* - Categorical value.",
@@ -53,7 +55,9 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
             }
         ],
         note: [
+            "```ds",
             "(function) ContainsAll(Val: Categorical, Answers: Variant, [Exactly: Boolean]): Boolean",
+            "```",
             "-----------------------------------",
             "Identifies whether a category list contains all of the categories in a given list.",
             "+ `Val`: *Categorical* - Categorical value.",
@@ -116,7 +120,9 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
             }
         ],
         note: [
+            "```ds",
             "(function) ContainsSome(Val: Categorical, Answers: Variant, [Min: Long], [Max: Long], [Exactly: Boolean]): Boolean",
+            "```",
             "-----------------------------------",
             "Identifies whether a category list contains some of the categories in a given list.",
             "+ `Val`: *Categorical* - *Categorical* value. ",
@@ -169,7 +175,9 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
             }
         ],
         note: [
+            "```ds",
             "(function) ContainsAny(Val: Categorical, Answers: Variant, [Exactly: Boolean]): Boolean",
+            "```",
             "-----------------------------------",
             "Identifies whether a category list contains one or more categories in a given list.",
             "+ `Val`: *Categorical* - *Categorical* value.",
@@ -218,7 +226,9 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
             }
         ],
         note: [
+            "```ds",
             "(function) DefinedCategories(Val: Categorical, [Answers: Variant]): Categorical",
+            "```",
             "-----------------------------------",
             "Returns a set of categories of a categorical variable.",
             "+ `Val`: *Categorical* - *Categorical* value, used only to specify which MDM object to use.",
@@ -275,7 +285,9 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
             }
         ],
         note: [
+            "```ds",
             "(function) DefinedElements(Val: Categorical, [Types: Long]): Categorical",
+            "```",
             "-----------------------------------",
             "Returns a set of elements of a categorical variable.",
             "The possible values for Types are shown in the following table.",
@@ -385,7 +397,9 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
             }
         ],
         note: [
+            "```ds",
             "(function) DefinedListElements(Val: Variant, Answers: String | Categorical, [Types: Long]): Categorical",
+            "```",
             "-----------------------------------",
             "Returns a set of elements of a categorical variable.",
             "+ `Val`: *Variant* - *Variant* value, used only to specify which MDM object to use.",
@@ -435,7 +449,9 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
             }
         ],
         note: [
+            "```ds",
             "(function) Difference(Val: Categorical, Answers: String | Categorical): Categorical",
+            "```",
             "-----------------------------------",
             "Returns the difference of two category lists--that is, it returns the categories that are in the first category list but not in the second. The categories are returned in the order in which they appear in the first category list.",
             "+ `Val`: *Categorical* - *Categorical* value.",
@@ -476,7 +492,9 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
             }
         ],
         note: [
+            "```ds",
             "(function) Factor(Val: Categorical): Variant",
+            "```",
             "-----------------------------------",
             "Returns the factor defined for an element of a categorical variable.",
             "+ `Val`: *Categorical* - The element to look up.",
@@ -506,7 +524,9 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
             }
         ],
         note: [
+            "```ds",
             "(function) GetAnswer(Val: Categorical, Index: Long): Categorical",
+            "```",
             "-----------------------------------",
             "Returns a specified category in a category list.",
             "+ `Val`: *Categorical* - *Categorical* value.",
@@ -548,7 +568,9 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
             }
         ],
         note: [
+            "```ds",
             "(function) HasAnswer(Val: Categorical, Answer: Long): Boolean",
+            "```",
             "-----------------------------------",
             "Identifies whether a specified category is in a category list.",
             "+ `Val`: *Categorical* - *Categorical* value.",
@@ -596,7 +618,9 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
             }
         ],
         note: [
+            "```ds",
             "(function) Intersection(Val: Categorical, [Vals: String | Categorical ...]): Categorical",
+            "```",
             "-----------------------------------",
             "Returns the intersection of two or more category lists--that is, it returns the categories that appear in all of the category lists. The categories are returned in the order in which they appear in the first category list.",
             "+ `Val`: *Categorical* - *Categorical* value.",
@@ -649,7 +673,9 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
             }
         ],
         note: [
+            "```ds",
             "(function) LBound(List: Categorical | Array, [Dimension: Long]): Long",
+            "```",
             "-----------------------------------",
             "Returns the smallest available subscript for the indicated dimension of an array. By default, the lower bound is returned for the first dimension of the array.",
             "+ `List`: *Categorical* - *Array* or *Categorical* value.",
@@ -688,7 +714,9 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
             }
         ],
         note: [
+            "```ds",
             "(function) Merge([Vals: Variant, ...]): Categorical",
+            "```",
             "-----------------------------------",
             "Returns the union of a number of categorical values; that is, returns the categories that are in any of the input categorical values.",
             "+ `Vals`: *Variant* - One or more values.",
@@ -730,7 +758,9 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
             }
         ],
         note: [
+            "```ds",
             "(function) ReDim(List: Categorical | Array, Size: Long, [Preserve: Boolean = True]): Long",
+            "```",
             "-----------------------------------",
             "Re-sizes an array to a given size. By default, the array contents are preserved, unless `Preserve` is set to *False*.",
             "+ `List`: *Categorical* - *Array* or *Categorical* value.",
@@ -789,7 +819,9 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
             }
         ],
         note: [
+            "```ds",
             "(function) UBound(List: Categorical | Array, [Dimension: Long = 1]): Long",
+            "```",
             "-----------------------------------",
             "Returns the largest available subscript for the indicated dimension of an array. By default, the upper bound is returned for the first dimension of the array.",
             "+ `List`: *Categorical* - *Array* or *Categorical* value.",
@@ -833,7 +865,9 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
             }
         ],
         note: [
+            "```ds",
             "(function) Union(Val: Categorical, [Vals: Categorical | String ...]): Categorical",
+            "```",
             "-----------------------------------",
             "Returns the union of two or more category lists--that is, it returns all of the categories that are in any one or more of the category lists.",
             "+ `Val`: *Categorical* - *Categorical* value.",
@@ -876,7 +910,9 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
             }
         ],
         note: [
+            "```ds",
             "(function) Unique(Val: Categorical): Categorical",
+            "```",
             "-----------------------------------",
             "Returns a category list with any duplicate categories removed.",
             "+ `Val`: *Categorical* - *Categorical* value.",
@@ -914,7 +950,9 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
             }
         ],
         note: [
+            "```ds",
             "(function) XUnion(Val: Categorical, Answers: Categorical | String): Categorical",
+            "```",
             "-----------------------------------",
             "Returns the exclusive union of two category lists--that is, it returns all of the categories that are in either one of the category lists, but not in both.",
             "+ `Val`: *Categorical* - *Categorical* value.",
@@ -982,7 +1020,9 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
             }
         ],
         note: [
-            "(function) Find(Val: String | Categorical | Array, Key: Variant, [Skip: Long = 0], [Reverse: Boolean = False], [IgnoreCase: Boolean = True]): Long",
+            "```ds",
+           "(function) Find(Val: String | Categorical | Array, Key: Variant, [Skip: Long = 0], [Reverse: Boolean = False], [IgnoreCase: Boolean = True]): Long",
+            "```",
             "-----------------------------------",
             "Searches a string, a category list, or an array, for a specified substring, subcategory list, or subarray, and if it is found, returns its start position.",
             "+ `Val`: *String* | *Categorical* | *Array* - *Text* value, *Categorical* value, or *Array* to operate on.",
@@ -1053,7 +1093,9 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
             }
         ],
         note: [
+            "```ds",
             "(function) Left(Val: String | Categorical | Array, Length: Long): Variant",
+            "```",
             "-----------------------------------",
             "Returns a string containing the first characters from a string, a category list containing the first categories from a category list, or an array containing the first elements from an array.",
             "+ `Val`: *String* | *Categorical* | *Array* - *Text* value, *categorical* value, or *Array* to operate on.",
@@ -1100,7 +1142,9 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
             }
         ],
         note: [
+            "```ds",
             "(function) Len(Val: String | Categorical | Array): Long",
+            "```",
             "-----------------------------------",
             "Returns a *Long* containing the number of characters in a string, the number of categories in a category list, or the number of elements in an array.",
             "+ `Val`: *String* | *Categorical* | *Array* - *Text* value, *Categorical* value, or *Array* to operate on.",
@@ -1157,7 +1201,9 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
             }
         ],
         note: [
+            "```ds",
             "(function) Mid(Val: String | Categorical | Array, Start: Long, [Length: Long]): Variant",
+            "```",
             "-----------------------------------",
             "+ `Val`: *String* | *Categorical* | *Array* - *Text* value, *categorical* value, or *array* to operate on.",
             "+ `Start`: *Long* - Position in `Val` of the first character, category, or element wanted (counting from 0). If `Start` is greater than the number of items in `Val`, no items are returned. If `Start` is less than 0, items are returned from the start of `Val`.",
@@ -1213,7 +1259,9 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
             },
         ],
         note: [
+            "```ds",
             "(function) Right(Val: String | Categorical | Arrary, Length: Long): Variant",
+            "```",
             "-----------------------------------",
             "Returns a string containing the last characters from a string, a category list containing the last categories from a category list, or an array containing the last elements from an array.",
             "+ `Val`: *String* | *Categorical* | *Array* - *Text* value, *categorical* value, or *array* to operate on.",
@@ -1256,7 +1304,9 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
             }
         ],
         note: [
+            "```ds",
             "(function) CBoolean(Val: Variant): Boolean",
+            "```",
             "-----------------------------------",
             "Converts a value of any data type to a *Boolean* value.",
             "+ `Val`: *Variant* - *Variant* value to be converted.",
@@ -1305,7 +1355,9 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
             }
         ],
         note: [
+            "```ds",
             "(function) CCategorical(Val: Variant): Categorical",
+            "```",
             "-----------------------------------",
             "Converts a value of any data type to a *Categorical* value.",
             "+ `Val`: *Variant* - *Variant* value to be converted. ",
@@ -1350,7 +1402,9 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
             }
         ],
         note: [
+            "```ds",
             "(function) CDate(Val: Variant): Date",
+            "```",
             "-----------------------------------",
             "Converts a value of any data type to a *Date* value.",
             "+ `Val`: *Variant* - *Variant* value to be converted.",
@@ -1396,7 +1450,9 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
             }
         ],
         note: [
+            "```ds",
             "(function) CDouble(Val: Variant): Double",
+            "```",
             "-----------------------------------",
             "Converts a value of any data type to a *Double* value.",
             "+ `Val`: *Variant* - *Variant* value to be converted.",
@@ -1495,7 +1551,9 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
             }
         ],
         note: [
+            "```ds",
             "(function) CText(Val: Variant): String",
+            "```",
             "-----------------------------------",
             "Converts a value of any data type to a *Text* value.",
             "+ `Val`: *Variant* - *Variant* value to be converted.",
@@ -1539,7 +1597,9 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
             }
         ],
         note: [
+            "```ds",
             "(function) AscW(Val: String): Long",
+            "```",
             "-----------------------------------",
             "Returns an integer value representing the Unicode character code (sometimes called the code point) for a character",
             "+ `Val`: *String* - *Text* value.",
@@ -1569,7 +1629,9 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
         returnType: BasicTypeDefinitions.string,
         insertText: "ChrW",
         note: [
+            "```ds",
             "(function) ChrW(Val: Long): String",
+            "```",
             "-----------------------------------",
             "Returns the character that corresponds to a Unicode character code (sometimes called the code point).",
             "+ `Val`: *Long* - Unicode character code for a character.",
@@ -1620,7 +1682,9 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
             }
         ],
         note: [
+            "```ds",
             "(function) Format(Val: Variant, [Style: String], [Width: Long], [Locale: Long]): String",
+            "```",
             "-----------------------------------",
             "Returns a string that is the result of formatting a value according to one or more specified styles.",
             "+ `Val`: *Variant* - The value to be formatted. ",
@@ -1874,7 +1938,9 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
             }
         ],
         note: [
+            "```ds",
             "FormatValue(ValFormat: Variant, Val: Variant, [Style: String], [Width: Long], [Locale: Long]): String",
+            "```",
             "-----------------------------------",
             "Returns a string that is the result of formatting a value according to one or more specified styles. The `FormatValue` function is identical to the `Format` function, except that the metadata to be used for formatting is provided by one variable, while the value to be formatted may come from elsewhere.",
             "+ `ValFormat`: *Variant* - A variable that provides the metadata to be used for formatting.",
@@ -2019,7 +2085,9 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
             }
         ],
         note: [
+            "```ds",
             "(function) Hex(Val: Long): String",
+            "```",
             "-----------------------------------",
             "Returns a string representing the hexadecimal value of a number.",
             "+ `Val`: *Long* - Numeric value.",
@@ -2054,7 +2122,9 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
             }
         ],
         note: [
+            "```ds",
             "(function) LCase(Val: String): String",
+            "```",
             "-----------------------------------",
             "Returns a string that has been converted to lower case.",
             "+ `Val`: *String* - *String* value to be converted to lower case.",
@@ -2086,7 +2156,9 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
             }
         ],
         note: [
+            "```ds",
             "(function) LTrim(Val: String): String",
+            "```",
             "-----------------------------------",
             "Returns a copy of a string with any leading spaces removed.",
             "+ `Val`: *String* - *String* value from which you want to remove leading spaces. ",
@@ -2118,7 +2190,9 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
             }
         ],
         note: [
+            "```ds",
             "(function) MakeMDMName(Val: String): String",
+            "```",
             "-----------------------------------",
             "This function replaces characters in a text string that are not allowed in the name of an MDM object, to produce a valid name.",
             "+ `Val`: *String* - *String* value to encode.",
@@ -2154,7 +2228,9 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
             }
         ],
         note: [
+            "```ds",
             "(function) MakeString([Vals: Variant ...]): String",
+            "```",
             "-----------------------------------",
             "+ `Vals`: *Variant* - A comma-delimited list of values to be concatenated together as a string. ",
             "+ `return`: *String* - String that is the concatenation of the values specified in `Vals`.",
@@ -2186,7 +2262,9 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
             }
         ],
         note: [
+            "```ds",
             "(function) Oct(Val: Long): String",
+            "```",
             "-----------------------------------",
             "Returns a string representing the octal value of a number.",
             "+ `Val`: *Long* - Numeric value.",
@@ -2221,7 +2299,9 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
             }
         ],
         note: [
+            "```ds",
             "(function) RTrim(Val: String): String",
+            "```",
             "-----------------------------------",
             "Returns a copy of a string with any trailing spaces removed.",
             "+ `Val`: *String* - *String* value from which you want to remove trailing spaces.",
@@ -2266,7 +2346,9 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
             }
         ],
         note: [
+            "```ds",
             "(function) Split(Val: String, [Delimiter: String = \" \"], [Count: Long]): Categorical",
+            "```",
             "-----------------------------------",
             "Returns an array that contains substrings.",
             "+ `Val`: *String* - *String* value to split.",
@@ -2336,7 +2418,9 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
             }
         ],
         note: [
+            "```ds",
             "(function) Replace(Val: Variant, Key: Variant, Replacement: Variant, [Start: Long], [Count: Long], [IgnoreCase: Boolean]): Variant",
+            "```",
             "-----------------------------------",
             "Replaces part of a text or categorical value with another value of the same type.",
             "+ `Val`: *Variant* - Variant value of type *Text* or *Categorical*.",
@@ -2366,7 +2450,9 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
         definitionType: "function",
         returnType: BasicTypeDefinitions.string,
         note: [
+            "```ds",
             "(function) Trim(): String",
+            "```",
             "-----------------------------------",
             "Returns a copy of a string with any leading and trailing spaces removed.",
             "+ `return`: *String* - Copy of `Val` with leading and trailing spaces removed.",
@@ -2397,7 +2483,9 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
             }
         ],
         note: [
+            "```ds",
             "(function) Trim(Val: String): String",
+            "```",
             "-----------------------------------",
             "Returns a copy of a string with any leading and trailing spaces removed.",
             "+ `Val`: *String* - *String* value from which you want to remove leading and trailing spaces.",
@@ -2429,7 +2517,9 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
             }
         ],
         note: [
+            "```ds",
             "(function) UCase(Val: String): String",
+            "```",
             "-----------------------------------",
             "Returns a string that has been converted to upper case.",
             "+ `Val`: *String* - *String* value to be converted to upper case.",
@@ -2475,7 +2565,9 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
             }
         ],
         note: [
+            "```ds",
             "(function) DateAdd(Val: Date, Interval: String, Count: Long): Date",
+            "```",
             "-----------------------------------",
             "Returns a date to which a specified time interval (year, quarter, month, day, week, hour, minute, or second) has been added. ",
             "+ `Val`: *Date* - The date and/or time to which you want to add the interval(s). ",
@@ -2533,7 +2625,9 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
             }
         ],
         note: [
+            "```ds",
             "(function) DateDiff(Val1: Date, Val2: Date, Interval: String): Long",
+            "```",
             "-----------------------------------",
             "Returns the time interval between two dates.",
             "+ `Val1`: *Date* - First date value. ",
@@ -2605,7 +2699,9 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
             }
         ],
         note: [
+            "```ds",
             "(function) DateNow([Val: Long | String], [IgnoreDaylightSaving: Boolean = False]): Date",
+            "```",
             "-----------------------------------",
             "Returns the current local date in a particular time zone.",
             "+ `Val`: *Long* | *String* - Optional. *Long* or *String* value specifying local time zone to use.",
@@ -2636,7 +2732,9 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
             }
         ],
         note: [
+            "```ds",
             "(function) DateOnly(Val: Date): Date",
+            "```",
             "-----------------------------------",
             "Returns the date from a date and time value. ",
             "+ `Val`: *Date* - *Date* value.",
@@ -2665,7 +2763,9 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
             }
         ],
         note: [
+            "```ds",
             "(function) DatePart(Val: Date, Interval: String): Long",
+            "```",
             "-----------------------------------",
             "Returns a specified part of a given date.",
             "+ `Val`: *Date* - The date of which you want to return a part.",
@@ -2713,7 +2813,9 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
             }
         ],
         note: [
+            "```ds",
             "(function) Day(Val: Date): Long",
+            "```",
             "-----------------------------------",
             "Returns a whole number between 1 and 31, inclusive, representing the day of the month.",
             "+ `Val`: *Date* - The date for which you want to return the day. ",
@@ -2751,7 +2853,9 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
             }
         ],
         note: [
+            "```ds",
             "(function) GetTimeZone([Val: Long | String]): Long",
+            "```",
             "-----------------------------------",
             "Returns the index value of a time zone defined in the registry on the server.",
             "+ `Val`: *Long* | *String* - Optional. *Long* or *Text* value specifying time zone to use.",
@@ -2791,7 +2895,9 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
             }
         ],
         note: [
+            "```ds",
             "(function) GetTimeZoneDaylightSaving([Val: Long | String], [Time: Date]): Boolean",
+            "```",
             "-----------------------------------",
             "Returns True if daylight saving is currently in effect at the specified time (or now) in the specified time zone (or the program's time zone).",
             "+ `Val`: *Long* | *String* - Optional. *Long* or *String* value specifying time zone to use. ",
@@ -2829,7 +2935,9 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
             }
         ],
         note: [
+            "```ds",
             "(function) GetTimeZoneName([Val: Long | String]): String",
+            "```",
             "-----------------------------------",
             "Returns the name of the local time zone.",
             "+ `Val`: *Long* | *String* - Optional. *Long* or *String* value specifying time zone to use.",
@@ -2875,7 +2983,9 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
             }
         ],
         note: [
+            "```ds",
             "(function) GetTimeZoneOffset([Val: Long | String], [Time: Date], [IgnoreDaylightSaving: Boolean = False]): Long",
+            "```",
             "-----------------------------------",
             "Returns the number of minutes to add to or subtract from UTC time to get the local time.",
             "+ `Val`: *Long* | *String* - Optional. *Long* or *String* value specifying time zone to use.",
@@ -2903,7 +3013,9 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
             }
         ],
         note: [
+            "```ds",
             "(function) Hour(Val: Date): Long",
+            "```",
             "-----------------------------------",
             "Returns a whole number between 0 and 23, inclusive, representing the hour of the day.",
             "+ `Val`: *Date* - The date for which you want to return the hour of the day. ",
@@ -2953,7 +3065,9 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
             }
         ],
         note: [
+            "```ds",
             "(function) LocalToUTCTime(Val: Date, [Zone: Long | String], [IgnoreDaylightSaving: Boolean = False]): Date",
+            "```",
             "-----------------------------------",
             "Returns the UTC time that corresponds to a given local time.",
             "+ `Val`: *Date* - Local date/time value. ",
@@ -2980,7 +3094,9 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
             }
         ],
         note: [
+            "```ds",
             "(function) Minute(Val: Date): Long",
+            "```",
             "-----------------------------------",
             "Returns a whole number between 0 and 59, inclusive, representing the minute of the hour.",
             "+ `Val`: *Date* - The date for which you want to return the minute.",
@@ -3010,7 +3126,9 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
             }
         ],
         note: [
+            "```ds",
             "(function) Month(Val: Date): Long",
+            "```",
             "-----------------------------------",
             "Returns a whole number between 1 and 12, inclusive, representing the month of the year.",
             "+ `Val`: *Date* - The date for which you want to return the month.",
@@ -3053,7 +3171,9 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
             }
         ],
         note: [
+            "```ds",
             "(function) MonthName(Val: Long , [Abbreviate: Boolean = False], [Locale: Long]): String",
+            "```",
             "-----------------------------------",
             "Returns a string indicating the specified month.",
             "+ `Val`: *Long* - An integer between 1 and 13 representing the month, or a date. ",
@@ -3110,7 +3230,9 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
             }
         ],
         note: [
+            "```ds",
             "(function) Now([Val: Long | String], [IgnoreDaylightSaving: Boolean = False]): Date",
+            "```",
             "-----------------------------------",
             "Returns the current local date and time in a particular time zone.",
             "+ `Val`: *Long* | *String* - Optional. *Long* or *String* value specifying local time zone to use.",
@@ -3141,7 +3263,9 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
             }
         ],
         note: [
+            "```ds",
             "(function) Second(Val: Date): Long",
+            "```",
             "-----------------------------------",
             "Returns a whole number between 0 and 59, inclusive, representing the second of the minute.",
             "+ `Val`: *Date* - The date for which you want to return the second.",
@@ -3174,7 +3298,9 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
             }
         ],
         note: [
+            "```ds",
             "SetTimeZone(Val: Long | String): Long",
+            "```",
             "-----------------------------------",
             "Sets the time zone associated with a program.",
             "+ `Val`: *Long* | **String - *Long* or *String* value specifying time zone to use.",
@@ -3208,7 +3334,9 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
             }
         ],
         note: [
+            "```ds",
             "(function) TimeNow([Val: Long | String], [IgnoreDaylightSaving: Boolean = False]): Date",
+            "```",
             "-----------------------------------",
             "Returns the current local time in a particular time zone.",
             "+ `Val`: *Long* | *String* - Optional. *Long* or *String* value specifying local time zone to use.",
@@ -3239,7 +3367,9 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
             }
         ],
         note: [
+            "```ds",
             "(function) TimeOnly(Val: Date): Date",
+            "```",
             "-----------------------------------",
             "The return value is the same as `Val`, but with the date set to *30 December 1899*.",
             "+ `Val`: *Date* - *Date* value.",
@@ -3279,7 +3409,9 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
             }
         ],
         note: [
+            "```ds",
             "(function) UTCToLocalTime(Val: Date, [Zone: Long | String], [IgnoreDaylightSaving: Boolean = False]): Date",
+            "```",
             "-----------------------------------",
             "Returns the local time that corresponds to a given UTC time.",
             "+ `Val`: *Date* - UTC date/time value. ",
@@ -3321,7 +3453,9 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
             }
         ],
         note: [
+            "```ds",
             "(function) WeekdayName(Val: Long | Date, [Abbreviate: Boolean = False], [Locale: Long]): String",
+            "```",
             "-----------------------------------",
             "Returns a string indicating the specified day of the week.",
             "+ `Val`: *Long* | *Date* - A integer between 1 and 7 representing the day of the week, or a date. The input locale defines which days are considered the first and last days of the week. ",
@@ -3380,7 +3514,9 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
             }
         ],
         note: [
+            "```ds",
             "(function) Year(Val: Date): Long",
+            "```",
             "-----------------------------------",
             "Returns a whole number representing the year.",
             "+ `Val`: *Date* - The date for which you want to return the year.",
@@ -3403,7 +3539,9 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
         definitionType: "function",
         returnType: BasicTypeDefinitions.long ,
         note: [
+            "```ds",
             "(function) GetRandomSeed(): Long",
+            "```",
             "-----------------------------------",
             "Returns a value representing the current starting point of the random number generator for the `Rnd`, `RanInt`, and `Ran` functions.",
             "+ `return`: *Long* - Current starting point for random number generation.",
@@ -3435,7 +3573,9 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
             }
         ],
         note: [
+            "```ds",
             "(function) RanInt([Seed: Long = 0]): Long",
+            "```",
             "-----------------------------------",
             "This function returns a random integer number. The numbers generated by this function are not true random numbers because they can be reproduced. However, the numbers generated meet general statistical standards of randomness.",
             "+ `Seed`: *Long* - The starting point to be used for generating the random number. The default is 0.",
@@ -3487,7 +3627,9 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
             }
         ],
         note: [
+            "```ds",
             "(function) Rnd([Seed: Long = 0]): Double",
+            "```",
             "-----------------------------------",
             "This function returns a random decimal value. The numbers generated by this function are not true random numbers because they can be reproduced. However, the numbers generated meet general statistical standards of randomness.",
             "+ `Seed`: *Long* - The starting point to be used for generating the random number. The default is 0.",
@@ -3538,7 +3680,9 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
             }
         ],
         note: [
+            "```ds",
             "(function) SetRandomSeed([Seed: Long = 0]): Long",
+            "```",
             "-----------------------------------",
             "+ `Seed`: *Long* - Optional. Starting value to use for random number generation. The default is 0. ",
             "+ `return`: *Long* - New starting value for random number generation.",
@@ -3573,7 +3717,9 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
         definitionType: "function",
         returnType: BasicTypeDefinitions.categorical ,
         note: [
+            "```ds",
             "(function) Band(Val: Long | Double, Min: Double, Size: Double, [Count: Long]): Categorical",
+            "```",
             "-----------------------------------",
             "Calculates categories (called bands) for a numeric variable and returns the appropriate category for a specified value in the numeric variable.",
             "+ `Val`: *Long* | *Double* - *Variant* value of type *Long* or *Double*.",
@@ -3628,7 +3774,9 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
             }
         ],
         note: [
+            "```ds",
             "(function) BitAnd(Val1: Long, [Vals: Variant ...]): Long",
+            "```",
             "-----------------------------------",
             "Performs a bitwise `AND` on two or more numeric values and returns the result.",
             "+ `Val1`: *Long* - First data value.",
@@ -3667,7 +3815,9 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
             }
         ],
         note: [
+            "```ds",
             "(function) BitNot(Val: Long): Long",
+            "```",
             "-----------------------------------",
             "Performs a bitwise `NOT` on a numeric value and returns the result.",
             "+ `Val`: *Long* - *Data* value.",
@@ -3710,7 +3860,9 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
             }
         ],
         note: [
+            "```ds",
             "(function) BitOr(Val1: Long, [Vals: Variant ...]): Long",
+            "```",
             "-----------------------------------",
             "Performs a bitwise `OR` on two or more numeric values and returns the result.",
             "+ `Val1`: *Long* - First data value.",
@@ -3774,7 +3926,9 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
             }
         ],
         note: [
+            "```ds",
             "(function) BitXor(Val1: Long, [Vals: Variant ...]): Long",
+            "```",
             "-----------------------------------",
             "Performs a bitwise `XOR` (exclusive `OR`) on two or more numeric values and returns the result.",
             "+ `Val1`: *Long* - First data value.",
@@ -3813,7 +3967,9 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
             }
         ],
         note: [
+            "```ds",
             "(function) Categorize(Val: Variant, CategorizedVariable: String): Categorical",
+            "```",
             "-----------------------------------",
             "Converts the value of a *Numeric*, *Text*, or *Date* value to a *Categorical* value according to the definition of the specified categorical variable.",
             "",
@@ -3870,7 +4026,9 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
             }
         ],
         note: [
+            "```ds",
             "(function) CategorizeLoopVariable(Val: Variant, CategorizedVariable: String): Categorical",
+            "```",
             "-----------------------------------",
             "Converts the value of a *Numeric*, *Text*, or *Date* value to a *Categorical* value according to the definition of the specified categorical loop variable.",
             "+ `Val`: *None* - *Variant* value of type *Long*, *Double*, *Text*, or *Date*",
@@ -3938,7 +4096,9 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
         definitionType: "function",
         returnType: BasicTypeDefinitions.variant,
         note: [
+            "```ds",
             "(function) DBNull(): Variant",
+            "```",
             "-----------------------------------",
             "Returns a *NULL* data value for use with ADO.",
             "+ `return`: *Variant* - *Variant* of type *VT_NULL*, containing a *NULL* data value.",
@@ -3969,7 +4129,9 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
             }
         ],
         note: [
+            "```ds",
             "(function) CreateObject(Class: String): Object",
+            "```",
             "-----------------------------------",
             "Creates and returns a reference to an Automation object.",
             "+ `Class`: *String* - The COM class name of the object to be created.",
@@ -4052,7 +4214,9 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
             }
         ],
         note: [
+            "```ds",
             "(function) Decode(Expression: Variant, Search: Variant, Result: Variant, [Search1: Variant, Result1: Variant]...[,defaultValue]): Void",
+            "```",
             "-----------------------------------",
             "Provides the same functionality as an *IF-THEN-ELSE* statement (used for `OnNextCase` events).",
             "+ `Expression`: *Variant* - The value to compare.",
@@ -4118,7 +4282,9 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
             }
         ],
         note: [
+            "```ds",
             "(function) EngineVersion([Val: Long = 0], [Number: Boolean = False]): Varaint",
+            "```",
             "-----------------------------------",
             "Returns part or all of the engine's version number.",
             "+ `Val`: *Long* - Optional. Which parts of the version number to return, according to the list of options below. Treated as 0 if omitted or not a valid option.",
@@ -4180,7 +4346,9 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
             }
         ],
         note: [
+            "```ds",
             "(function) EqualBand(Val: Long | Double, Count: Long, Min: Double, Max: Double): Categorical",
+            "```",
             "-----------------------------------",
             "Calculates a specified number of equal categories (called bands) for a numeric variable and returns the appropriate category for a specified value in the numeric variable.",
             "+ `Val`: *Long* | *Double* - Variant value of type *Long* or *Double*.",
@@ -4226,7 +4394,9 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
             }
         ],
         note: [
+            "```ds",
             "(function) Eval(Expr: String): Variant",
+            "```",
             "-----------------------------------",
             "Evaluates an expression and returns the result.",
             "+ `Expr`: *String* - Expression to evaluate.",
@@ -4294,7 +4464,9 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
             }
         ],
         note: [
+            "```ds",
             "(function) EvaluateDerivedIteration(LevelID: String): Variant",
+            "```",
             "-----------------------------------",
             "Used by the derived grid feature to look up the value for the variable at the parent level with the same name as the supplied `LevelID` variable. The function takes the name of the `LevelID` and returns the value of that variable down-levelled into the grid level.",
             "+ `LevelID`: *String* - The variable that identifies the current iteration in the grid. This is typically the `LevelID` variable.",
@@ -4343,7 +4515,9 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
             }
         ],
         note: [
+            "```ds",
             "(function) Execute(Script: String): Long",
+            "```",
             "-----------------------------------",
             "Executes one or more specified statements.",
             "+ `Script`: *String* - Statements to execute.",
@@ -4381,7 +4555,9 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
             }
         ],
         note: [
+            "```ds",
             "(function) GetInterface(Object: Object, InterfaceID: String): Object",
+            "```",
             "-----------------------------------",
             "Returns an alternate interface for an object.",
             "+ `Object`: *Object* - The object to query for the alternate interface.",
@@ -4447,7 +4623,9 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
             }
         ],
         note: [
+            "```ds",
             "(function) IIf(Val: Boolean, TruePart: Varaint, FalsePart: Variant): Variant",
+            "```",
             "-----------------------------------",
             "Returns the value passed as the `TruePart` parameter if the expression evaluates to *True*, otherwise returns the value passed as the `FalsePart` parameter.",
             "+ `Val`: *Boolean* - *Boolean* value.",
@@ -4525,7 +4703,9 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
             }
         ],
         note: [
+            "```ds",
             "(function) InputBox(Prompt: String, [Default: String], [Title: String]): String",
+            "```",
             "-----------------------------------",
             "Displays a dialog containing a specified message, a text box for input, an OK button, and a Cancel button.",
             "+ `Prompt`: *String* - Message to display in the dialog box.",
@@ -4554,7 +4734,9 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
             }
         ],
         note: [
+            "```ds",
             "(function) IsDBNull(Val: Variant): Boolean",
+            "```",
             "-----------------------------------",
             "Returns true if a value is a *NULL* data value that can be used by ADO.",
             "+ `Val`: *Variant* - The value to test.",
@@ -4600,7 +4782,9 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
             }
         ],
         note: [
+            "```ds",
             "(function) IsElementInVersions(Val: Variant, Elem: Variant, Versions: String): Boolean",
+            "```",
             "-----------------------------------",
             "Tests whether an element or list exists in all specified versions of a variable.",
             "+ `Val`: *String* - Variant value, used only to specify which MDM object to use.",
@@ -4628,7 +4812,9 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
             }
         ],
         note: [
+            "```ds",
             "(function) IsEmpty(Val: Variant): Boolean",
+            "```",
             "-----------------------------------",
             "Returns *True* if the value is empty. An empty string is one that contains no characters or just contains white spaces. An empty category list is one that contains no categories. A *NULL* value is deemed to be empty. Unless *NULL*, other data types are always deemed to be not empty.",
             "+ `Val`: *Variant* - Variant value to be tested.",
@@ -4675,7 +4861,9 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
             },
         ],
         note: [
+            "```ds",
             "(function) IsEqualObject(Val1: Object, Val2: Object): Boolean",
+            "```",
             "-----------------------------------",
             "Returns *True* if two values refer to the same object.",
             "+ `Val1`: *Object* - The first value to test.",
@@ -4708,7 +4896,9 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
             }
         ],
         note: [
+            "```ds",
             "(function) IsNullObject(Val: Variant): Boolean",
+            "```",
             "-----------------------------------",
             "Returns *true* if an variable is *NULL*, without testing the default property of the object being referenced.",
             "+ `Val`: *Variant* - The value to test.",
@@ -4762,7 +4952,9 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
             }
         ],
         note: [
+            "```ds",
             "(function) IsOneOf(Val1: Variant, [Vals: Variant ...]): Boolean",
+            "```",
             "-----------------------------------",
             "Returns *true* if a value is equal to at least one of the other listed values.",
             "+ `Val1`: *Variant* - The value to test.",
@@ -4816,7 +5008,9 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
             }
         ],
         note: [
+            "```ds",
             "(function) IsSet(Val: Long, Mask: Long): Boolean",
+            "```",
             "-----------------------------------",
             "Returns *True* if an integer value matches a specified mask.",
             "+ `Val`: *Long* - Data value to test.",
@@ -4863,7 +5057,9 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
             },
         ],
         note: [
+            "```ds",
             "(function) RGB(Red: Long, Green: Long, Blue: Long): Long",
+            "```",
             "-----------------------------------",
             "+ `Red`: *Long* - Red value.",
             "+ `Green`: *Long* - Green value.",
@@ -4902,7 +5098,9 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
             }
         ],
         note: [
+            "```ds",
             "(function) SampleCategorize(Val: Variant, CategorizedVariable: String): Variant",
+            "```",
             "-----------------------------------",
             "A simple version of the `Categorize` function that is used with the Sample Reporting MDSC (Phone Reports).",
             "+ `Val`: *Variant* - Variant value of type *Long*, *Double*, *Text*, or *Date*",
@@ -4982,7 +5180,9 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
             }
         ],
         note: [
+            "```ds",
             "(function) ShellExecute(File: String, [HWnd: Long], [Verb: String], [Parameters: String], [Directory: String], [ShowCmd: Long]): Long",
+            "```",
             "-----------------------------------",
             "Performs an operation on a specified file.",
             "+ `File`: *String* - File or object on which to execute the specified verb.",
@@ -5097,7 +5297,9 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
             }
         ],
         note: [
+            "```ds",
             "(function) Validate(Val: Variant, [Min: Double], [Max: Double], [Expr: String], [Describe: Boolean]): Boolean",
+            "```",
             "-----------------------------------",
             "Validates a specified value based on specified minimum and maximum values and optionally a validating expression.",
             "+ `Val`: *Variant* - The value to test.",
@@ -5245,7 +5447,9 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
             }
         ],
         note: [
+            "```ds",
             "(function) VarType(Val: Long): Long",
+            "```",
             "-----------------------------------",
             "Returns a numeric value indicating the type of a variable.",
             "+ `Val`: *Long* - The data value.",
@@ -5299,7 +5503,9 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
             }
         ],
         note: [
+            "```ds",
             "(function) VarTypeName(Val: Long): String",
+            "```",
             "-----------------------------------",
             "Returns a string indicating the type of a variable.",
             "+ `Val`: *Long* - The data value.",
@@ -5358,7 +5564,9 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
             }
         ],
         note: [
+            "```ds",
             "(function) FindItem(List: Variant, Key: Varaint): Varaint",
+            "```",
             "-----------------------------------",
             "This function returns a specified item from a list, or *NULL* if the item isn't found.",
             "+ `List`: *Variant* - *Array*, *collection* or *Categorical* value to operate on.",
@@ -5417,7 +5625,9 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
         definitionType: "function",
         returnType: BasicTypeDefinitions.long ,
         note: [
+            "```ds",
             "(function) GetReversalSeed(): Long",
+            "```",
             "-----------------------------------",
             "Returns the current reversal state. This is the value that was used by the most recent call to the `Rev` function to determine whether the list was reversed or not. An odd value means that the list was reversed, an even value means that the list was presented in its normal order.",
             "+ `return`: *Long* - Current reversal state.",
@@ -5487,7 +5697,9 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
             }
         ],
         note: [
+            "```ds",
             "(function) Ran(List: Variant, [Count: Long], [Seed: Long = 0]): Varaint",
+            "```",
             "-----------------------------------",
             "This function returns a randomized copy of a list. The optional `Count` parameter defines how many items from the input list are included in the returned randomized list.",
             "+ `List`: *Variant* - *Array*, *collection*, or *Categorical* value to operate on.",
@@ -5573,7 +5785,9 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
             }
         ],
         note: [
+            "```ds",
             "(function) RandomPassword([Val: String], [MinLength: Long], [MaxLength: Long]): String",
+            "```",
             "-----------------------------------",
             "Returns a string whose content and length are selected randomly within the constraints specified by the parameters. This function is intended to be used to generate unpredictable passwords.",
             "+ `Val`: *String* - Optional. The characters allowed in the password. If `Val` is omitted or empty, “0123456789” is used.",
@@ -5632,7 +5846,9 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
             }
         ],
         note: [
+            "```ds",
             "RanSequence(Start: Long, End: Long, [Step: Long], [Count: Long], [Seed:Long]): Array",
+            "```",
             "-----------------------------------",
             "This function returns an array containing values selected randomly from a given series of integers.",
             "+ `Start`: *Long* - The first possible value.",
@@ -5712,7 +5928,9 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
             }
         ],
         note: [
+            "```ds",
             "(function) Rev(List: Variant, [Count: Long], [Policy: Long], [Seed: Long]): Array",
+            "```",
             "-----------------------------------",
             "This function returns an array containing copies of items from the input list, either in the normal order or in reverse order. The optional `Count` parameter defines how many items from the input list are included in the returned list.",
             "+ `List`: *Variant* - *Array*, *collection*, or *Categorical* value to operate on.",
@@ -5806,7 +6024,9 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
             },
         ],
         note: [
+            "```ds",
             "(function) RevSequence(Start: Long, End: Long, [Step: Long = 1], [Count: Long], [Policy: Long = 1], [Seed: Long = 0]): Array",
+            "```",
             "-----------------------------------",
             "This function returns an array containing values selected from a given series of integers, either in the original order or in reverse order.",
             "+ `Start`: *Long* - The first possible value.",
@@ -5889,7 +6109,9 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
             }
         ],
         note: [
+            "```ds",
             "(function) Rot(List: Variant, [Count: Long], [Policy: Long = 2], [Seed: Long = 0]): Array",
+            "```",
             "-----------------------------------",
             "This function returns an array containing copies of items from the input list, in a rotated order. The optional `Count` parameter defines how many items from the input list are included in the returned list.",
             "+ `List`: *Variant* - *Array*, *collection*, or *Categorical* value to operate on.",
@@ -6068,7 +6290,9 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
             }
         ],
         note: [
+            "```ds",
             "(function) RotSequence(Start: Long, End: Long, [Step: Long = 1], [Count: Long], [Policy: Long = 2], [Seed: Long]): Array",
+            "```",
             "-----------------------------------",
             "This function returns an array containing values selected from a given series of integers in a \"rotated\" order.",
             "+ `Start`: *Long* - The first possible value.",
@@ -6160,7 +6384,9 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
             }
         ],
         note: [
+            "```ds",
             "(function) SelectRange(List: Variant, [Range: Variant], [Count: Long]): Categorical",
+            "```",
             "-----------------------------------",
             "This function returns an array containing copies of selected items from the input list, in the same order as in the list.",
             "+ `List`: *Variant* - *Array*, *collection* or *Categorical* value to operate on.",
@@ -6215,7 +6441,9 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
             }
         ],
         note: [
+            "```ds",
             "(function) SetReversalSeed([Seed: Long = 0]): Long",
+            "```",
             "-----------------------------------",
             "This function sets the reversal state. This is stored by the mrScript engine and Evaluate component and passed to the `Rev` function.",
             "+ `Seed`: *Long* - Optional. State to use for reversals. The default is 0.",
@@ -6248,7 +6476,9 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
             }
         ],
         note: [
+            "```ds",
             "(function) SetRotationSeed([Seed: Long = 0]): Long",
+            "```",
             "-----------------------------------",
             "This function sets the rotation state. This is stored by the mrScript engine and Evaluate component and passed to the `Rot` function.",
             "+ `Seed`: *Long* - Optional. Rotation state value. The default is 0.",
@@ -6289,7 +6519,9 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
             }
         ],
         note: [
+            "```ds",
             "(function) SortAsc(List: Variant, [Count: Long], [IgnoreLocale: Boolean]): Array",
+            "```",
             "-----------------------------------",
             "This function returns an array containing copies of items from the input list, sorted in ascending order. The optional `Count` parameter defines how many items from the input list are included in the returned list.",
             "+ `List`: *Variant* - *Array*, *collection*, or *Categorical* value to operate on.",
@@ -6370,7 +6602,9 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
             }
         ],
         note: [
+            "```ds",
             "(function) SortDesc(List: Variant, [Count: Long], [IgnoreLocale: Boolean]): Array",
+            "```",
             "-----------------------------------",
             "This function returns an array containing copies of items from the input list, sorted in descending order. The optional `Count` parameter defines how many items from the input list are included in the returned list.",
             "+ `List`: *Variant* - *Array*, *collection*, or *Categorical* value to operate on.",
@@ -6420,7 +6654,9 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
             }
         ],
         note: [
+            "```ds",
             "(function) Abs(Val: Double): Double",
+            "```",
             "-----------------------------------",
             "Returns the absolute value of a number.",
             "+ `Val`: *Double* - A numeric value.",
@@ -6455,7 +6691,9 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
             }
         ],
         note: [
+            "```ds",
             "(function) Atn(Val: Double): Double",
+            "```",
             "-----------------------------------",
             "Returns the arctangent of a number.",
             "+ `Val`: *Double* - A numeric value that represents the ratio of the two shorter sides of a right-angled triangle. (The ratio is the length of the side opposite a particular angle divided by the length of the side adjacent to the angle.)",
@@ -6489,7 +6727,9 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
             }
         ],
         note: [
+            "```ds",
             "(function) Cos(Val: Double): Double",
+            "```",
             "-----------------------------------",
             "Returns the cosine of an angle.",
             "+ `Val`: *Double* - A numeric value that represents an angle in radians.",
@@ -6524,7 +6764,9 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
             }
         ],
         note: [
+            "```ds",
             "(function) Exp(Val: Double): Double",
+            "```",
             "-----------------------------------",
             "Returns e (the base of natural logarithms) raised to a power.",
             "+ `Val`: *Double* - A numeric value.",
@@ -6582,7 +6824,9 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
             }
         ],
         note: [
+            "```ds",
             "(function) Int(Val: Double): Long",
+            "```",
             "-----------------------------------",
             "Returns the integer portion of a number.",
             "+ `Val`: *Double* - A numeric value.",
@@ -6624,7 +6868,9 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
             }
         ],
         note: [
+            "```ds",
             "(function) Log(Val: Double, [Base: Double]): Double",
+            "```",
             "-----------------------------------",
             "Returns the logarithm of a number.",
             "+ `Val`: *Double* - A numeric value.",
@@ -6669,7 +6915,9 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
             }
         ],
         note: [
+            "```ds",
             "(function) MaxOf(Val1: Variant, [Vals: Variant ...]): Variant",
+            "```",
             "-----------------------------------",
             "Returns the highest value from a list of values.",
             "+ `Val1`: *Variant* - First data value.",
@@ -6708,7 +6956,9 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
             }
         ],
         note: [
+            "```ds",
             "(function) MinOf(Val1: Variant, [Vals: Variant ...]): Variant",
+            "```",
             "-----------------------------------",
             "Returns the lowest value from a list of values.",
             "+ `Val1`: *Variant* - First data value.",
@@ -6751,7 +7001,9 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
             }
         ],
         note: [
+            "```ds",
             "(function) Round(Val: Double, [Digits: Long], [Policy: Long]): Double",
+            "```",
             "-----------------------------------",
             "Returns a number rounded to a specified number of decimal places or significant digits.",
             "+ `Val`: *Double* - The value to be rounded.",
@@ -6824,7 +7076,9 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
             }
         ],
         note: [
+            "```ds",
             "(function) Pow(Val1: Double, Val2: Double): Double",
+            "```",
             "-----------------------------------",
             "Returns the value of a number raised to a power.",
             "+ `Val1`: *Double* - The base value.",
@@ -6859,7 +7113,9 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
             }
         ],
         note: [
+            "```ds",
             "(function) Sgn(Val: Double): Long",
+            "```",
             "-----------------------------------",
             "Returns an integer that indicates the sign of a number. The function returns 1 if the number is greater than 0, 0 if it is equal to 0, and -1 if it is less than zero.",
             "+ `Val`: *Double* - A numeric value.",
@@ -6894,7 +7150,9 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
             }
         ],
         note: [
+            "```ds",
             "(function) Sin(Val: Double): Double",
+            "```",
             "-----------------------------------",
             "Returns the sine of an angle.",
             "+ `Val`: *Double* - A numeric value that represents an angle in radians.",
@@ -6927,7 +7185,9 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
             }
         ],
         note: [
+            "```ds",
             "(function) Sqrt(Val: Double): Double",
+            "```",
             "-----------------------------------",
             "Returns the square root of a number.",
             "+ `Val`: *Double* - A numeric value that represents an angle in radians.",
@@ -6964,7 +7224,9 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
             }
         ],
         note: [
+            "```ds",
             "(function) Tan(Val: Double): Double",
+            "```",
             "-----------------------------------",
             "Returns the tangent of an angle.",
             "+ `Val`: *Double* - A numeric value that represents an angle in radians.",
@@ -7009,7 +7271,9 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
             }
         ],
         note: [
+            "```ds",
             "(function) CombineIterations(CombineQuestion: Object, CombineIterationName: String, CombineList: Categorical): Boolean",
+            "```",
             "-----------------------------------",
             "Combines the response value for nested grid question iterations (used for `OnNextCase` events).",
             "+ `CombineQuestion`: *Object* - Grid question.",
@@ -7082,7 +7346,9 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
             },
         ],
         note: [
+            "```ds",
             "(function) CopyGrid(SourceGrid: Object, DestinationGrid: Object, IterationFilter: Categorical): Boolean",
+            "```",
             "-----------------------------------",
             "Combines the response value for nested grid question iterations (used for `OnNextCase` events).",
             "+ `SourceGrid`: *Object* - Grid question.",
@@ -7201,7 +7467,9 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
             },
         ],
         note: [
+            "```ds",
             "(function) CreateGridSummary(Grid: Variant, SummaryVarible: Variant, SummaryCategories: Variant, QuestionNameForSummary: String): Void",
+            "```",
             "-----------------------------------",
             "Combines the response value for nested grid question iterations (used for `OnNextCase` events).",
             "+ `Grid`: *Variant* - The summarized grid question.",
@@ -7288,7 +7556,9 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
             },
         ],
         note: [
+            "```ds",
             "(function) FlattenGrid(FlattenQuestionFullName: String, FilterIteration: String, MDMObject: Object): Boolean",
+            "```",
             "-----------------------------------",
             "Converts categorical loop sub-questions (both grid and non-grid) into flattened questions that can be used in the DMOM `eventOnBeforeJobStart/OnAfterMetaDataTransformation`.",
             "+ `FlattenQuestionFullName`: *String* - `FullName` for the question being flattened.",
@@ -7434,7 +7704,9 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
             },
         ],
         note: [
+            "```ds",
             "(function) FlipGrid(SourceGrid: Object, DestinationGrid: Object, [QuestionNameForFlip: String], [IterationFilter: Variant = NULL]): Boolean",
+            "```",
             "-----------------------------------",
             "Retrieves flipped data from `SourceGrid`. `SourceGrid` contains the originally collected data; `DestinationGrid` (used for `OnNextCase` events) stores the flipped data.",
             "+ `SourceGrid`: *Object* - Grid question.",
@@ -7546,7 +7818,9 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
             },
         ],
         note: [
+            "```ds",
             "(function) RemoveCategory(MDMObject: Object, QuestionName: String, OldCategory: String): Boolean",
+            "```",
             "-----------------------------------",
             "Removes the deprecated `OldCategory` from `MDMObject` (often used in the `OnJobEnd` event).",
             "+ `MDMObject`: *Object* - The name for the MDM document that contains `QuestionName`.",
@@ -7703,7 +7977,9 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
             },
         ],
         note: [
+            "```ds",
             "(function) ReplaceCategory(Question: Object, oldCategory: String, newCategory: String): Boolean",
+            "```",
             "-----------------------------------",
             "Replaces `oldCategory` with `newCategory` for a loop/categorical questions (used for `OnNextCase` events).",
             "+ `Question`: *Object* - Category question or loop question.",
@@ -7823,7 +8099,9 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
             },
         ],
         note: [
+            "```ds",
             "(function) SubtractQuestion(ResultCat: Object, CatVar1: Object, CatVar2: Object,...): Categorical",
+            "```",
             "-----------------------------------",
             "Replaces `oldCategory` with `newCategory` for a loop/categorical questions (used for `OnNextCase` events).",
             "+ `CatVar1`: *Object* - Categorical question.",
@@ -7938,7 +8216,9 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
             },
         ],
         note: [
+            "```ds",
             "(function) SumQuestions(TotalCat: Object, CatVar1: Object, CatVar2: Object, CarVar3: Object,...): Categorical",
+            "```",
             "-----------------------------------",
             "Replaces `oldCategory` with `newCategory` for a loop/categorical questions (used for `OnNextCase` events).",
             "+ `TotalCat`: *Object* - Categorical question. `TotalCat.response.value=catVar1.response.value + catvar2.response.value`.",
@@ -8043,7 +8323,9 @@ export const builtInCallByDotCategoricalFunctions = new Set<BuiltInDefinition>([
         returnType: BasicTypeDefinitions.long ,
         definitionType: "function",
         note: [
+            "```ds",
             "(function) AnswerCount(): Long",
+            "```",
             "------------------------------------------",
             "Returns the number of categories selected in a category list.",
             "+ `return`: *Long* - Number of categories in Val.",
@@ -8074,7 +8356,9 @@ export const builtInCallByDotCategoricalFunctions = new Set<BuiltInDefinition>([
             }
         ],
         note: [
+            "```ds",
             "(function) ContainsAll(Answers: Variant, [Exactly: Boolean]): Boolean",
+            "```",
             "-----------------------------------",
             "Identifies whether a category list contains all of the categories in a given list.",
             "+ `Answers`: *Variant* - Variant value of type *Categorical* or *Text*, specifying a set of categories to look for in `Val`. If `Answers` is empty, the function returns *True*, unless `Exactly` is *True* and `Val` is not empty.",
@@ -8119,7 +8403,9 @@ export const builtInCallByDotCategoricalFunctions = new Set<BuiltInDefinition>([
             }
         ],
         note: [
+            "```ds",
             "(function) ContainsAny(Answers: Variant, [Exactly: Boolean])",
+            "```",
             "-----------------------------------",
             "Identifies whether a category list contains one or more categories in a given list.",
             "+ `Answers`: *Variant* - *Variant* value of type *Categorical* or *Text*, specifying a set of categories to look for in `Val`. If `Answers` is empty, the function returns *False*.",
@@ -8176,7 +8462,9 @@ export const builtInCallByDotCategoricalFunctions = new Set<BuiltInDefinition>([
             }
         ],
         note: [
+            "```ds",
             "(function) ContainsSome(Answers: Variant, [Min: Long], [Max: Long], [Exactly: Boolean]): Boolean",
+            "```",
             "-----------------------------------",
             "Identifies whether a category list contains some of the categories in a given list.",
             "+ `Answers`: *Variant* - *Variant* value of type *Categorical* or *Text*, specifying a set of categories to look for in `Val`. If `Answers` is empty, the function returns *True* (unless `Exactly` is *True* and `Val` is not empty).",
@@ -8218,7 +8506,9 @@ export const builtInCallByDotCategoricalFunctions = new Set<BuiltInDefinition>([
             }
         ],
         note: [
+            "```ds",
             "(function) DefinedCategories([Answers: Variant]): Categorical",
+            "```",
             "-----------------------------------",
             "Returns a set of categories of a categorical variable.",
             "+ `Answers`: *Variant* - Optional. *Variant* value of type *Categorical* or *Text*, specifying a set of categories. If omitted, all categoriesfrom the `VariableInstance` are returned. ",
@@ -8269,7 +8559,9 @@ export const builtInCallByDotCategoricalFunctions = new Set<BuiltInDefinition>([
             }
         ],
         note: [
+            "```ds",
             "(function) DefinedElements([Types: Long]): Categorical",
+            "```",
             "-----------------------------------",
             "Returns a set of elements of a categorical variable.",
             "The possible values for Types are shown in the following table.",
@@ -8328,7 +8620,9 @@ export const builtInCallByDotCategoricalFunctions = new Set<BuiltInDefinition>([
             }
         ],
         note: [
+            "```ds",
             "(function) DefinedFactors([Answers: Variant]): Categorical",
+            "```",
             "-----------------------------------",
             "Returns a set of factor numbers as defined on the categories in a variable.",
             "+ `Answers`: *Categorical* - Optional. *Variant* value of type *Categorical* or *Text*, specifying a set of categories to look for. If omitted, all categoriesfrom the object are used.",
@@ -8359,7 +8653,9 @@ export const builtInCallByDotCategoricalFunctions = new Set<BuiltInDefinition>([
             }
         ],
         note: [
+            "```ds",
             "(function) Difference(Answers: String | Categorical): Categorical",
+            "```",
             "-----------------------------------",
             "Returns the difference of two category lists--that is, it returns the categories that are in the first category list but not in the second. The categories are returned in the order in which they appear in the first category list.",
             "+ `Answers`: *String* | *Categorical* - *Variant* value of type *Categorical* or *Text*, specifying a set of categories.",
@@ -8392,7 +8688,9 @@ export const builtInCallByDotCategoricalFunctions = new Set<BuiltInDefinition>([
         definitionType: "function",
         returnType: BasicTypeDefinitions.variant,
         note: [
+            "```ds",
             "(function) Factor(): Variant",
+            "```",
             "-----------------------------------",
             "Returns the factor defined for an element of a categorical variable.",
             "+ `return`: *Variant* - Factor number as defined on the element.",
@@ -8416,7 +8714,9 @@ export const builtInCallByDotCategoricalFunctions = new Set<BuiltInDefinition>([
             }
         ],
         note: [
+            "```ds",
             "(function) GetAnswer(Index: Long): Categorical",
+            "```",
             "-----------------------------------",
             "Returns a specified category in a category list.",
             "+ `Index`: *Long* - Position of category to retrieve from `Val`, starting from 0.",
@@ -8452,7 +8752,9 @@ export const builtInCallByDotCategoricalFunctions = new Set<BuiltInDefinition>([
             }
         ],
         note: [
+            "```ds",
             "(function) HasAnswer(Answer: Long): Boolean",
+            "```",
             "-----------------------------------",
             "Identifies whether a specified category is in a category list.",
             "+ `Answer`: *Long* - Category to look for in `Val`.",
@@ -8494,7 +8796,9 @@ export const builtInCallByDotCategoricalFunctions = new Set<BuiltInDefinition>([
             }
         ],
         note: [
+            "```ds",
             "(function) Intersection([Vals: String | Categorical ...]): Categorical",
+            "```",
             "-----------------------------------",
             "Returns the intersection of two or more category lists--that is, it returns the categories that appear in all of the category lists. The categories are returned in the order in which they appear in the first category list.",
             "+ `Vals`: *String* | *Categorical* - One or more variant values of type *Categorical* or *Text*. Each value specifies a set of categories.",
@@ -8541,7 +8845,9 @@ export const builtInCallByDotCategoricalFunctions = new Set<BuiltInDefinition>([
             }
         ],
         note: [
+            "```ds",
             "(function) Union([Vals: Categorical | String ...]): Categorical",
+            "```",
             "-----------------------------------",
             "Returns the union of two or more category lists--that is, it returns all of the categories that are in any one or more of the category lists.",
             "+ `Vals`: *Categorical* | *String* - One or more variant values of type *Categorical* or *Text*. Each value specifies a set of categories.",
@@ -8586,7 +8892,9 @@ export const builtInCallByDotCategoricalFunctions = new Set<BuiltInDefinition>([
             }
         ],
         note: [
+            "```ds",
             "(function) XUnion(Answers: Categorical | String): Categorical",
+            "```",
             "-----------------------------------",
             "Returns the exclusive union of two category lists--that is, it returns all of the categories that are in either one of the category lists, but not in both.",
             "+ `Answers`: *Categorical* | *String* - *Variant* value of type *Categorical* or *Text*, specifying a set of categories. ",
@@ -8640,7 +8948,9 @@ export const builtInCallByDotTextFunctions = new Set<BuiltInDefinition>([
             }
         ],
         note: [
+            "```ds",
             "(function) Format([Style: String], [Width: Long], [Locale: Long]): String",
+            "```",
             "-----------------------------------",
             "Returns a string that is the result of formatting a value according to one or more specified styles.",
             "+ `Style`: *String* - Optional. One or more formatting codes. Multiple codes must be separated by semicolons. ",
@@ -8863,7 +9173,9 @@ export const builtInCallByDotTextFunctions = new Set<BuiltInDefinition>([
         definitionType: "function",
         returnType: BasicTypeDefinitions.string,
         note: [
+            "```ds",
             "(function) LCase(): String",
+            "```",
             "-----------------------------------",
             "Returns a string that has been converted to lower case.",
             "+ `return`: *String* - Lowercase copy of `Val`.",
@@ -8887,7 +9199,9 @@ export const builtInCallByDotTextFunctions = new Set<BuiltInDefinition>([
         definitionType: "function",
         returnType: BasicTypeDefinitions.string,
         note: [
+            "```ds",
             "(function) LTrim(): String",
+            "```",
             "-----------------------------------",
             "Returns a copy of a string with any leading spaces removed.",
             "+ `return`: *String* - Copy of `Val` with leading spaces removed.",
@@ -8911,7 +9225,9 @@ export const builtInCallByDotTextFunctions = new Set<BuiltInDefinition>([
         definitionType: "function",
         returnType: BasicTypeDefinitions.string,
         note: [
+            "```ds",
             "(function) RTrim(): String",
+            "```",
             "-----------------------------------",
             "Returns a copy of a string with any trailing spaces removed.",
             "+ `return`: *String* - Copy of `Val` with trailing spaces removed.",
@@ -8950,7 +9266,9 @@ export const builtInCallByDotTextFunctions = new Set<BuiltInDefinition>([
             }
         ],
         note: [
+            "```ds",
             "(function) Split([Delimiter: String = \" \"], [Count: Long]): Categorical",
+            "```",
             "-----------------------------------",
             "Returns an array that contains substrings.",
             "+ `Delimiter`: *String* - Optional. `Delimiter` between substrings. The default is a single space (\" \").",
@@ -9014,7 +9332,9 @@ export const builtInCallByDotTextFunctions = new Set<BuiltInDefinition>([
             }
         ],
         note: [
+            "```ds",
             "(function) Replace(Key: Variant, Replacement: Variant, [Start: Long], [Count: Long], [IgnoreCase: Boolean]): Variant",
+            "```",
             "-----------------------------------",
             "Replaces part of a text or categorical value with another value of the same type.",
             "+ `Key`: *Variant* - Variant value to look for in `Val`, of the same type as `Val`.",
@@ -9043,7 +9363,9 @@ export const builtInCallByDotTextFunctions = new Set<BuiltInDefinition>([
         definitionType: "function",
         returnType: BasicTypeDefinitions.string,
         note: [
+            "```ds",
             "(function) Trim(): String",
+            "```",
             "-----------------------------------",
             "Returns a copy of a string with any leading and trailing spaces removed.",
             "+ `return`: *String* - Copy of `Val` with leading and trailing spaces removed.",
@@ -9067,7 +9389,9 @@ export const builtInCallByDotTextFunctions = new Set<BuiltInDefinition>([
         definitionType: "function",
         returnType: BasicTypeDefinitions.string,
         note: [
+            "```ds",
             "(function) UCase(): String",
+            "```",
             "-----------------------------------",
             "Returns a string that has been converted to upper case.",
             "+ `return`: *String* - Uppercase copy of `Val`.",

@@ -154,6 +154,14 @@ export class DefinitionBase {
         }
         return this.name;
     }
+
+    getNote(): string {
+        if (this.note) {
+            return this.note;
+        }
+        let note = "```ds\n(" + this.defType + ") " + this.name + "\n```";
+        return note;
+    }
 }
 
 export const definitionPlaceHolder = new DefinitionBase({

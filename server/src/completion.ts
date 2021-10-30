@@ -8,8 +8,11 @@ import {
 } from "path";
 import {
     CompletionItem,
-    CompletionItemKind
-} from 'vscode-languageserver/node';
+    CompletionItemKind,
+    MarkupKind
+} from 'vscode-languageserver-types';
+import { builtInAggregateDefinitions, builtInFunctionDefinitions, builtInObjectDefinitions } from "./lib/built-in/built-ins";
+import { DefinitionBase } from "./lib/util/definition";
 
 
 export function getPathCompletion(uri: string): CompletionItem[] {
@@ -104,6 +107,26 @@ preKeywords.forEach(kw => {
     });
 });
 
+const builtInCompletions: CompletionItem[] = [];
 
-export { keywordsCompletions, preKeywordsCompletions };
+function setBuiltInCompletions(
+    defs: Map<string, DefinitionBase>,
+    kind: CompletionItemKind) {
+    defs.forEach(def => {
+        builtInCompletions.push({
+            label: def.name,
+            kind: kind,
+            documentation: {
+                kind: MarkupKind.Markdown,
+                value: def.getNote()
+            }
+        });
+    });
+}
+
+setBuiltInCompletions(builtInObjectDefinitions, CompletionItemKind.Module);
+setBuiltInCompletions(builtInFunctionDefinitions, CompletionItemKind.Function);
+setBuiltInCompletions(builtInAggregateDefinitions, CompletionItemKind.Function);
+
+export { keywordsCompletions, preKeywordsCompletions, builtInCompletions };
 

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 import {
     Argument,
     DefinitionBase,
@@ -159,11 +160,11 @@ function loadScriptConstant(definition: BuiltInDefinition): ScriptConstantDefini
     return def;
 }
 
-const builtInInterfaceDefinitions: Map<string, InterfaceDefinition> = new Map<string, InterfaceDefinition>();
-const builtInObjectDefinitions: Map<string, ObjectDefinition> = new Map<string, ObjectDefinition>();
-const builtInFunctionDefinitions: Map<string, FunctionDefinition> = new Map<string, FunctionDefinition>();
-const builtInEnumeratorDefinitions: Map<string, EnumDefinition> = new Map<string, EnumDefinition>();
-const builtInAggregateDefinitions: Map<string, FunctionDefinition> = new Map<string, FunctionDefinition>();
+export const builtInInterfaceDefinitions: Map<string, InterfaceDefinition> = new Map<string, InterfaceDefinition>();
+export const builtInObjectDefinitions: Map<string, ObjectDefinition> = new Map<string, ObjectDefinition>();
+export const builtInFunctionDefinitions: Map<string, FunctionDefinition> = new Map<string, FunctionDefinition>();
+export const builtInEnumeratorDefinitions: Map<string, EnumDefinition> = new Map<string, EnumDefinition>();
+export const builtInAggregateDefinitions: Map<string, FunctionDefinition> = new Map<string, FunctionDefinition>();
 
 (function loadBuiltIns() {
     builtInInterfaces.forEach(

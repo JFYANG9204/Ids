@@ -9,8 +9,10 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
         name: "IDispatch",
         definitionType: "interface",
         note: [
+            "```ds",
             "```cpp",
             "(interface) IDispatch",
+            "```",
             "-----------------------------",
             "Exposes objects, methods and properties to programming tools and other applications that support Automation. COM components implement the `IDispatch` interface to enable access by Automation clients, such as Visual Basic.",
             "Header File: oaidl.h",
@@ -49,6 +51,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                     }
                 ],
                 note: [
+                    "```ds",
                     "(method) HRESULT GetIDsOfNames(",
                     "           REFIID   riid,",
                     "           LPOLESTR *rgszNames,",
@@ -56,7 +59,8 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                     "           LCID     lcid,",
                     "           DISPID   *rgDispId",
                     "         );",
-                    "------------------------",
+                    "```",
+ "------------------------",
                     "### Parameters",
                     "+ `riid`: *REFIID* - Reserved for future use. Must be *IID_NULL*.",
                     "+ `*rgszNames`: *LPOLESTR* - The array of names to be mapped.",
@@ -136,12 +140,14 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                     }
                 ],
                 note: [
+                    "```ds",
                     "(method)  HRESULT GetTypeInfo(",
                     "            UINT      iTInfo,",
                     "            LCID      lcid,",
                     "            ITypeInfo **ppTInfo",
                     "          );",
-                    "------------------",
+                    "```",
+ "------------------",
                     "### Parameters",
                     "+ `iTInfo`: *UINT* - The type information to return. Pass 0 to retrieve type information for the `IDispatch` implementation.",
                     "+ `lcid`: *LCID* - The locale identifier for the type information. An object may be able to return different type information for different languages. This is important for classes that support localized member names. For classes that do not support localized member names, this parameter can be ignored.",
@@ -169,10 +175,12 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                     }
                 ],
                 note: [
+                    "```ds",
                     "(method)  HRESULT GetTypeInfoCount(",
                     "            UINT *pctinfo",
                     "          );",
-                    "-------------------------",
+                    "```",
+                    "-----------------------------",
                     "",
                     "### Parameters",
                     "+ `pctinfo`: *UINT* - The number of type information interfaces provided by the object. If the object provides type information, this number is 1; otherwise the number is 0.",
@@ -250,6 +258,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                     },
                 ],
                 note: [
+                    "```ds",
                     "(method) HRESULT Invoke(",
                     "           DISPID     dispIdMember,",
                     "           REFIID     riid,",
@@ -260,7 +269,8 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                     "           EXCEPINFO  *pExcepInfo,",
                     "           UINT       *puArgErr",
                     "         );",
-                    "--------------------------------",
+                    "```",
+ "--------------------------------",
                     "### Parameters",
                     "+ `dispIdMember`: *DISPID* - Identifies the member. Use `GetIDsOfNames` or the object's documentation to obtain the dispatch identifier.",
                     "+ `riid`: *REFIID* - Reserved for future use. **Must** be *IID_NULL*.",
@@ -317,7 +327,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
         name: "IDataManagerJob",
         definitionType: "interface",
         note: [
+            "```ds",
             "(interface) IDataManagerJob",
+            "```",
             "-----------------------------",
             "This interface enables script writers to access the Job object from the mrScripBasic section of the DMS file. The Job object is registered in the mrScriptBasic engine as Job.",
             "",
@@ -402,7 +414,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 name: "DropCurrentCase",
                 definitionType: "method",
                 note: [
+                    "```ds",
                     "(method) DropCurrentCase()",
+                    "```",
                     "--------------------",
                     "By calling this method, the current respondent's data will not be written to the output data source."
                 ].join("\n"),
@@ -419,7 +433,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                     }
                 ],
                 note: [
+                    "```ds",
                     "(method) IDataManagerJob.EnvironmentInit(Value: String): string",
+                    "```",
                     "--------------------",
                     "Sets the internal environment value."
                 ].join("\n"),
@@ -433,7 +449,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 isCollection: false,
                 readonly: true,
                 note: [
+                    "```ds",
                     "(property) IDataManagerJob.CurrentInputDataSource",
+                    "```",
                     "--------------------",
                     "Returns the first input datasource which is currently in use in the transformation"
                 ].join("\n"),
@@ -445,7 +463,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 readonly: true,
                 isCollection: true,
                 note: [
+                    "```ds",
                     "(property) IDataManagerJob.GlobalVariables",
+                    "```",
                     "--------------------",
                     "This property returns the Job's global variables collection.",
                     "",
@@ -477,7 +497,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 isCollection: true,
                 readonly: true,
                 note: [
+                    "```ds",
                     "(property) IDataManagerJob.InputCaseNumbers[Index: Variant]: Long",
+                    "```",
                     "--------------------",
                     "Returns the current input case number for the specified datasource index.",
                 ].join("\n"),
@@ -495,7 +517,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 isCollection: false,
                 readonly: true,
                 note: [
+                    "```ds",
                     "(property) IDataManagerJob.Log: Object",
+                    "```",
                     "--------------------",
                     "Return the Logging component.",
                     "",
@@ -514,7 +538,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 isCollection: false,
                 readonly: true,
                 note: [
+                    "```ds",
                     "(property) IDataManagerJob.OutputCaseNumber: Long",
+                    "```",
                     "--------------------",
                     "Returns the current output case number.",
                 ].join("\n"),
@@ -526,7 +552,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 isCollection: false,
                 readonly: true,
                 note: [
+                    "```ds",
                     "(property) IDataManagerJob.Questions: IQuestions",
+                    "```",
                     "--------------------",
                     "This property returns the Job's **Questions** collection.",
                     "",
@@ -544,7 +572,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 isCollection: false,
                 readonly: true,
                 note: [
+                    "```ds",
                     "(property) IDataManagerJob.TableDocument: IDocument",
+                    "```",
                     "--------------------",
                     "Default Table document i.e. the Table document assigned to the first output datasource.",
                     "",
@@ -574,7 +604,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 isCollection: true,
                 readonly: true,
                 note: [
+                    "```ds",
                     "(property) IDataManagerJob.TableDocument: IDocument[]",
+                    "```",
                     "--------------------",
                     "Table documents collection, containing one Table document per output datasource",
                     "",
@@ -620,7 +652,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 isCollection: true,
                 readonly: true,
                 note: [
+                    "```ds",
                     "(property) IDataManagerJob.TransformedInputMetaData[Index: Variant]: IDataManagerMetaDataSources",
+                    "```",
                     "--------------------",
                     "Returns a collection of input metadata filenames, one for each input data source.",
                     "",
@@ -658,7 +692,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 isCollection: true,
                 readonly: true,
                 note: [
+                    "```ds",
                     "(property) IDataManagerJob.TransformedOutputMetaData[Index: Variant]: IDataManagerMetaDataSources",
+                    "```",
                     "--------------------",
                     "Returns a collection of output metadata filenames, one for each input data source.",
                     "",
@@ -696,7 +732,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 isCollection: false,
                 readonly: true,
                 note: [
+                    "```ds",
                     "(property) IDataManagerJob.WeightEngine: IWeightEngine",
+                    "```",
                     "--------------------",
                     "This property returns the interface pointer to the weight engine interface for the first output data source.",
                     "",
@@ -714,7 +752,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 isCollection: true,
                 readonly: true,
                 note: [
+                    "```ds",
                     "(property) IDataManagerJob.WeightEngines[Index: Variant]: IDataManagerWeightEngines",
+                    "```",
                     "--------------------",
                     "Returns a collection of weight engines, one for each output data source.",
                     "",
@@ -744,7 +784,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 isCollection: false,
                 readonly: false,
                 note: [
+                    "```ds",
                     "(property) IDataManagerJob.TempDirectory: String",
+                    "```",
                     "--------------------",
                     "Get / Set the temporary directory to use during the transformation",
                 ].join("\n")
@@ -756,7 +798,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
         definitionType: "interface",
         defaultProperty: "Item",
         note: [
+            "```ds",
             "(interface) IDataManagerMetaDataSources",
+            "```",
             "-----------------------------",
             "Get the collection item at the specified location. (This is the default property.)"
         ].join("\n"),
@@ -768,7 +812,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 isCollection: false,
                 readonly: true,
                 note: [
+                    "```ds",
                     "(property) IDataManagerMetaDataSources.Count: Long",
+                    "```",
                     "--------------------",
                     "The number of items in the collection.",
                 ].join("\n")
@@ -780,7 +826,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 isCollection: false,
                 readonly: true,
                 note: [
+                    "```ds",
                     "(property) IDataManagerMetaDataSources.Item[Index: Variant]: Variant",
+                    "```",
                     "--------------------",
                     "Get the collection item at the specified location. (Default Property)",
                 ].join("\n")
@@ -805,7 +853,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                     }
                 ],
                 note: [
+                    "```ds",
                     "(method) IDataManagerMetaDataSources.Add(Name: String [, Value: Variant]): Void",
+                    "```",
                     "--------------------",
                     "Add an item to the collection."
                 ].join("\n")
@@ -822,7 +872,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                     }
                 ],
                 note: [
+                    "```ds",
                     "(method) IDataManagerMetaDataSources.Append(Item: IDataManagerGlobalVariable): Void",
+                    "```",
                     "--------------------",
                     "Append a global variable object to the collection"
                 ].join("\n")
@@ -839,7 +891,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                     }
                 ],
                 note: [
+                    "```ds",
                     "(method) IDataManagerMetaDataSources.Remove(Index: Variant): Void",
+                    "```",
                     "--------------------",
                     "Remove an item from the collection."
                 ].join("\n")
@@ -851,7 +905,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
         definitionType: "interface",
         defaultProperty: "Item",
         note: [
+            "```ds",
             "(interface) IDataManagerWeightEngines",
+            "```",
             "-----------------------------",
             "A collection object containing weightengine objects."
         ].join("\n"),
@@ -863,7 +919,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 isCollection: true,
                 returnType: createBuiltInDefPlaceHolder("IWeightEngine"),
                 note: [
+                    "```ds",
                     "(property) IDataManagerMetaDataSources.Item[Index: Variant]: IWeightEngine",
+                    "```",
                     "--------------------",
                     "Get the collection item at the specified location. (Default Property)",
                 ].join("\n"),
@@ -881,7 +939,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 isCollection: true,
                 returnType: BasicTypeDefinitions.long ,
                 note: [
+                    "```ds",
                     "(property) IDataManagerMetaDataSources.Count: Long",
+                    "```",
                     "--------------------",
                     "The number of items in the collection.",
                 ].join("\n"),
@@ -893,7 +953,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
         definitionType: "interface",
         defaultProperty: "Item",
         note: [
+            "```ds",
             "(interface) IDataManagerGlobalVariables",
+            "```",
             "-----------------------------",
             "A collection of GlobalVariable objects.",
         ].join("\n"),
@@ -916,7 +978,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                     }
                 ],
                 note: [
+                    "```ds",
                     "(method) IDataManagerGlobalVariables.Add(Name: String [, Value: Variant]): Void",
+                    "```",
                     "--------------------",
                     "Add an item to the collection."
                 ].join("\n"),
@@ -933,7 +997,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                     }
                 ],
                 note: [
+                    "```ds",
                     "(method) IDataManagerGlobalVariables.Append(Item: IDataManagerGlobalVariable): Void",
+                    "```",
                     "--------------------",
                     "Append a global variable object to the collection."
                 ].join("\n"),
@@ -950,7 +1016,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                     }
                 ],
                 note: [
+                    "```ds",
                     "(method) IDataManagerGlobalVariables.Remove(Index: Variant): Void",
+                    "```",
                     "--------------------",
                     "Remove an item from the collection."
                 ].join("\n"),
@@ -964,7 +1032,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 readonly: true,
                 isCollection: false,
                 note: [
+                    "```ds",
                     "(property) IDataManagerGlobalVariables.Count: Long",
+                    "```",
                     "--------------------",
                     "The number of items in the collection."
                 ].join("\n"),
@@ -982,7 +1052,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                     optional: false,
                 },
                 note: [
+                    "```ds",
                     "(property) IDataManagerGlobalVariables.Item[Index: Variant]: Variant",
+                    "```",
                     "--------------------",
                     "Get the collection item at the specified location. (This is the default property.)"
                 ].join("\n"),
@@ -994,7 +1066,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
         definitionType: "interface",
         defaultProperty: "Value",
         note: [
+            "```ds",
             "(interface) IDataManagerGlobalVariable",
+            "```",
             "-----------------------------",
             "Get the collection item at the specified location. (This is the default property.)",
             "",
@@ -1050,7 +1124,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 readonly: true,
                 isCollection: false,
                 note: [
+                    "```ds",
                     "(property) IDataManagerGlobalVariable.Name: String",
+                    "```",
                     "--------------------",
                     "The name of the global variable"
                 ].join("\n"),
@@ -1062,7 +1138,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 readonly: false,
                 isCollection: false,
                 note: [
+                    "```ds",
                     "(property) IDataManagerGlobalVariable.Value: Variant",
+                    "```",
                     "--------------------",
                     "Gets or sets the value of the `ValueObj`. (This is the default property.)"
                 ].join("\n"),
@@ -1074,7 +1152,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 readonly: false,
                 isCollection: false,
                 note: [
+                    "```ds",
                     "(property) IDataManagerGlobalVariable.ValueObj: IValue",
+                    "```",
                     "--------------------",
                     "Gets or sets an instance of the `Value` object."
                 ].join("\n"),
@@ -1085,7 +1165,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
         name: "IValue",
         definitionType: "interface",
         note: [
+            "```ds",
             "(interface) IDataManagerGlobalVariable",
+            "```",
             "-----------------------------",
             "Appends data to a binary value. The `AppendChunk` method is only supported for values of type mtObject. The Source property 'Stream Binary' must be set to True for the `AppendChunk` method to be used, otherwise the error *E_NOTIMPL* will be generated.",
             "",
@@ -1113,7 +1195,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                     }
                 ],
                 note: [
+                    "```ds",
                     "(method) IValue.AppendChunk(Data: Variant): Void",
+                    "```",
                     "--------------------",
                     "Appends data to a binary value. The `AppendChunk` method is only supported for values of type *mtObject*. The `Source` property 'Stream Binary' must be set to *True* for the `AppendChunk` method to be used, otherwise the error *E_NOTIMPL* will be generated."
                 ].join("\n"),
@@ -1122,7 +1206,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 name: "Clear",
                 definitionType: "method",
                 note: [
+                    "```ds",
                     "(method) IValue.AppendChunk(Data: Variant): Void",
+                    "```",
                     "--------------------",
                     "Clears the current contents of the value."
                 ].join("\n"),
@@ -1140,7 +1226,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                     }
                 ],
                 note: [
+                    "```ds",
                     "(method) IValue.GetChunk(lSize: Long): Variant",
+                    "```",
                     "--------------------",
                     "Returns all, or a portion, of the contents of a binary value. The `GetChunk` method is only supported for values of type *mtObject*. The `Source` property 'Stream Binary' must be set to *True* for the `GetChunk` method to be used, otherwise the error *E_NOTIMPL* will be generated."
                 ].join("\n"),
@@ -1154,7 +1242,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 readonly: true,
                 isCollection: false,
                 note: [
+                    "```ds",
                     "(property) IValue.Attributes: IValueAttributes",
+                    "```",
                     "--------------------",
                     "Indicates whether the value should be included in a base aggregate. Normally, a value is included in the base if it is not *NULL*."
                 ].join("\n"),
@@ -1166,7 +1256,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 readonly: false,
                 isCollection: false,
                 note: [
+                    "```ds",
                     "(property) IValue.IsDirty: Boolean",
+                    "```",
                     "--------------------",
                     "Indicates whether the value should be included in an update."
                 ].join("\n"),
@@ -1178,7 +1270,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 readonly: false,
                 isCollection: false,
                 note: [
+                    "```ds",
                     "(property) IValue.Type: DataTypeConstants",
+                    "```",
                     "--------------------",
                     "Property that returns the value data type."
                 ].join("\n"),
@@ -1190,7 +1284,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 readonly: false,
                 isCollection: true,
                 note: [
+                    "```ds",
                     "(property) IValue.Value: Variant",
+                    "```",
                     "--------------------",
                     "The actual value assigned to the value object."
                 ].join("\n"),
@@ -1208,7 +1304,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
         name: "IValueAttributes",
         definitionType: "interface",
         note: [
+            "```ds",
             "(interface) IValueAttributes",
+            "```",
             "-----------------------------",
             "A collection object that contains the attributes relating to a value."
         ].join("\n"),
@@ -1220,7 +1318,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 readonly: false,
                 isCollection: false,
                 note: [
+                    "```ds",
                     "(property) IValueAttributes.Count: Long",
+                    "```",
                     "--------------------",
                     "The number of items in the collection."
                 ].join("\n"),
@@ -1238,7 +1338,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                     isCollection: false,
                 },
                 note: [
+                    "```ds",
                     "(property) IValueAttributes.Item[Index: Variant]: IValueAttribute",
+                    "```",
                     "--------------------",
                     "Get the collection item at the specified location."
                 ].join("\n"),
@@ -1250,7 +1352,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
         definitionType: "interface",
         defaultProperty: "Text",
         note: [
+            "```ds",
             "(interface) ILabelInsert",
+            "```",
             "-----------------------------",
             "The LabelInsert object is used to get or set the text for a named insert of a label."
         ].join("\n"),
@@ -1262,7 +1366,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 readonly: true,
                 isCollection: false,
                 note: [
+                    "```ds",
                     "(property) ILabelInsert.Name: String",
+                    "```",
                     "--------------------",
                     "A read-only property that returns the name of the label insert."
                 ].join("\n"),
@@ -1274,7 +1380,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 readonly: false,
                 isCollection: false,
                 note: [
+                    "```ds",
                     "(property) ILabelInsert.Text: String",
+                    "```",
                     "--------------------",
                     "This property contains the text for the label insert. (Default Property)"
                 ].join("\n"),
@@ -1285,7 +1393,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
         name: "ILabelInserts",
         definitionType: "interface",
         note: [
+            "```ds",
             "(interface) ILabelInserts",
+            "```",
             "-----------------------------",
             "A collection object that contains LabelInsert objects."
         ].join("\n"),
@@ -1298,7 +1408,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 readonly: true,
                 isCollection: false,
                 note: [
+                    "```ds",
                     "(property) ILabelInserts.Count: Long",
+                    "```",
                     "--------------------",
                     "The number of items in the collection."
                 ].join("\n"),
@@ -1316,7 +1428,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                     isCollection: false,
                 },
                 note: [
+                    "```ds",
                     "(property) ILabelInserts.Item: ILabelInsert",
+                    "```",
                     "--------------------",
                     "Get the collection item at the specified location. (Default Property)."
                 ].join("\n"),
@@ -1328,7 +1442,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
         definitionType: "interface",
         defaultProperty: "Text",
         note: [
+            "```ds",
             "(interface) ILabel",
+            "```",
             "-----------------------------",
             "The Label object is used to get or set a label for questions, banners, errors, and navigation controls.",
             "",
@@ -1346,7 +1462,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 readonly: true,
                 isCollection: false,
                 note: [
+                    "```ds",
                     "(property) ILabel.Inserts: ILabelInserts",
+                    "```",
                     "--------------------",
                     "A read-only collection of ILabelInsert objects."
                 ].join("\n"),
@@ -1358,7 +1476,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 readonly: true,
                 isCollection: false,
                 note: [
+                    "```ds",
                     "(property) ILabel.Inserts: ILabelInserts",
+                    "```",
                     "--------------------",
                     "A read-only property that returns the name of the label."
                 ].join("\n"),
@@ -1370,7 +1490,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 readonly: true,
                 isCollection: false,
                 note: [
+                    "```ds",
                     "(property) ILabel.Style: IStyle",
+                    "```",
                     "--------------------",
                     "This property returns a Style object for the label."
                 ].join("\n"),
@@ -1382,7 +1504,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 readonly: false,
                 isCollection: false,
                 note: [
+                    "```ds",
                     "(property) ILabel.Text: String",
+                    "```",
                     "--------------------",
                     "This property contains the text for the label. (Default Property)"
                 ].join("\n"),
@@ -1394,7 +1518,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
         definitionType: "interface",
         defaultProperty: "Item",
         note: [
+            "```ds",
             "(interface) ILabels",
+            "```",
             "-----------------------------",
             "A collection object that contains label objects.",
         ].join("\n"),
@@ -1417,7 +1543,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                     }
                 ],
                 note: [
+                    "```ds",
                     "(method) ILabels.Add(Name: String, pLabel: ILabel): Void",
+                    "```",
                     "--------------------",
                     "Adds an existing label to the collection."
                 ].join("\n"),
@@ -1441,7 +1569,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                     }
                 ],
                 note: [
+                    "```ds",
                     "(method) ILabels.AddNew(Name: String, Text: String): ILabel",
+                    "```",
                     "--------------------",
                     "Adds a new label to the collection."
                 ].join("\n"),
@@ -1450,7 +1580,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 name: "Clear",
                 definitionType: "method",
                 note: [
+                    "```ds",
                     "(method) ILabels.Clear(): Void",
+                    "```",
                     "--------------------",
                     "Removes all items from the collection."
                 ].join("\n"),
@@ -1467,7 +1599,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                     }
                 ],
                 note: [
+                    "```ds",
                     "(method) ILabels.Remove(Index: Variant): Void",
+                    "```",
                     "--------------------",
                     "Removes an item from the collection."
                 ].join("\n"),
@@ -1481,7 +1615,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 readonly: true,
                 isCollection: false,
                 note: [
+                    "```ds",
                     "(property) ILabels.Count: Long",
+                    "```",
                     "--------------------",
                     "The number of items in the collection."
                 ].join("\n"),
@@ -1499,7 +1635,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                     isCollection: false,
                 },
                 note: [
+                    "```ds",
                     "(property) ILabels.Item[Index: Variant]: ILabel",
+                    "```",
                     "--------------------",
                     "Get the collection item at the specified location. (Default Property)"
                 ].join("\n"),
@@ -1511,7 +1649,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
         definitionType: "interface",
         defaultProperty: "Item",
         note: [
+            "```ds",
             "(interface) IQuestions",
+            "```",
             "-----------------------------",
             "A collection object that contains the questions for the current interview.",
         ].join("\n"),
@@ -1523,7 +1663,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 readonly: true,
                 isCollection: false,
                 note: [
+                    "```ds",
                     "(property) IQuestions.Count: Long",
+                    "```",
                     "--------------------",
                     "The number of items in the collection."
                 ].join("\n"),
@@ -1541,7 +1683,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                     isCollection: false,
                 },
                 note: [
+                    "```ds",
                     "(property) IQuestions.Item[Index: Variant]: IQuestion",
+                    "```",
                     "--------------------",
                     "Get the collection item at the specified location. (Default Property)"
                 ].join("\n"),
@@ -1553,7 +1697,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
         definitionType: "interface",
         defaultProperty: "Response",
         note: [
+            "```ds",
             "(interface) IQuestion",
+            "```",
             "-----------------------------",
             "The `Question` object is used to represent a question in the interview.",
             "",
@@ -1647,7 +1793,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                     }
                 ],
                 note: [
+                    "```ds",
                     "(method) IQuestion.Ask(LabelArgs: Variant[]): Void",
+                    "```",
                     "--------------------",
                     "Asks a question in an interview.",
                     "",
@@ -1697,7 +1845,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                     }
                 ],
                 note: [
+                    "```ds",
                     "(method) IQuestion.BuildDBFilter([bstrFieldName: String = \"L\"]): String",
+                    "```",
                     "--------------------",
                     "This method is used to build a database filter according to its response value.",
                     "",
@@ -1718,7 +1868,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 name: "ClearOffPathResponse",
                 definitionType: "method",
                 note: [
+                    "```ds",
                     "(method) IQuestion.ClearOffPathResponse(): Void",
+                    "```",
                     "--------------------",
                     "Clears the off-path response to the question (if applicable)",
                     "",
@@ -1740,7 +1892,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                     }
                 ],
                 note: [
+                    "```ds",
                     "(method) IQuestion.Delete(vtIndex: Variant): Void",
+                    "```",
                     "--------------------",
                     "This method is used to delete the given iteration of the question.",
                     "",
@@ -1761,7 +1915,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                     }
                 ],
                 note: [
+                    "```ds",
                     "(method) IQuestion.Exists(vtIndex: Variant): Boolean",
+                    "```",
                     "--------------------",
                     "This method is used to check given iteration exists or not.",
                     "",
@@ -1773,7 +1929,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 name: "Preserve",
                 definitionType: "method",
                 note: [
+                    "```ds",
                     "(method) IQuestion.Preserve(): Void",
+                    "```",
                     "--------------------",
                     "Preserves the response of a question such that the question can never be re-asked or reviewed.",
                     "",
@@ -1800,7 +1958,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                     }
                 ],
                 note: [
+                    "```ds",
                     "(method) IQuestion.Show(LableArgs: Variant[]): Void",
+                    "```",
                     "--------------------",
                     "Shows a question with its associated value or values.",
                     "",
@@ -1818,7 +1978,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 readonly: true,
                 isCollection: false,
                 note: [
+                    "```ds",
                     "(property) IQuestion.Banners: ILabels",
+                    "```",
                     "--------------------",
                     "A read-only property that returns a collection of Label objects.",
                     "",
@@ -1834,7 +1996,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 readonly: true,
                 isCollection: false,
                 note: [
+                    "```ds",
                     "(property) IQuestion.Categories: ICategories",
+                    "```",
                     "--------------------",
                     "A read-only property that returns a collection of category objects.",
                     "",
@@ -1850,7 +2014,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 readonly: true,
                 isCollection: false,
                 note: [
+                    "```ds",
                     "(property) IQuestion.Codes: ICategories",
+                    "```",
                     "--------------------",
                     "A read only property that returns a collection of category objects.",
                     "",
@@ -1864,7 +2030,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 returnType: BasicTypeDefinitions.long ,
                 readonly: true,
                 note: [
+                    "```ds",
                     "(property) IQuestion.Count: Long",
+                    "```",
                     "--------------------",
                     "The number of items in the collection."
                 ].join("\n"),
@@ -1876,7 +2044,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 readonly: true,
                 isCollection: true,
                 note: [
+                    "```ds",
                     "(property) IQuestion.Errors: ILabels",
+                    "```",
                     "--------------------",
                     "This property returns a collection of label objects for the question error texts.",
                     "",
@@ -1893,7 +2063,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 definitionType: "property",
                 readonly: true,
                 note: [
+                    "```ds",
                     "(property) IQuestion.Info: IQuestionInfo",
+                    "```",
                     "--------------------",
                     "This read-only property indicates whether the question is a `Database` question.",
                     "",
@@ -1907,7 +2079,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 definitionType: "property",
                 readonly: true,
                 note: [
+                    "```ds",
                     "(property) IQuestion.IsDBQuestion: Boolean",
+                    "```",
                     "--------------------",
                     "This read-only property indicates whether the question is a Database question."
                 ].join("\n"),
@@ -1918,7 +2092,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 definitionType: "property",
                 readonly: true,
                 note: [
+                    "```ds",
                     "(property) IQuestion.Label: ILabel",
+                    "```",
                     "--------------------",
                     "This read-only property returns the label for the question.",
                     "",
@@ -1932,7 +2108,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 definitionType: "property",
                 readonly: true,
                 note: [
+                    "```ds",
                     "(property) IQuestion.OtherCategories: ICategories",
+                    "```",
                     "--------------------",
                     "A read-only property that returns a collection of \"other specify\" categories.",
                     "",
@@ -1947,7 +2125,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 definitionType: "property",
                 readonly: true,
                 note: [
+                    "```ds",
                     "(property) IQuestion.ParentQuestion: IQuestion",
+                    "```",
                     "--------------------",
                     "A read-only property that returns the parent question if one exists.",
                     "",
@@ -1961,7 +2141,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 definitionType: "property",
                 readonly: true,
                 note: [
+                    "```ds",
                     "(property) IQuestion.Properties: IProperties",
+                    "```",
                     "--------------------",
                     "A read-only property that returns the properties for the question.",
                     "",
@@ -1975,7 +2157,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 definitionType: "property",
                 readonly: true,
                 note: [
+                    "```ds",
                     "(property) IQuestion.QuestionDataType: DataTypeContants",
+                    "```",
                     "--------------------",
                     "A read-only property that returns the question data type.",
                     "",
@@ -1989,7 +2173,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 definitionType: "property",
                 readonly: true,
                 note: [
+                    "```ds",
                     "(property) IQuestion.QuestionFullName: String",
+                    "```",
                     "--------------------",
                     "A read-only property that returns the full name of the question.",
                     "",
@@ -2003,7 +2189,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 definitionType: "property",
                 readonly: true,
                 note: [
+                    "```ds",
                     "(property) IQuestion.QuestionName: String",
+                    "```",
                     "--------------------",
                     "A read-only property that returns the name of the question or sub-question."
                 ].join("\n"),
@@ -2014,7 +2202,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 definitionType: "property",
                 readonly: true,
                 note: [
+                    "```ds",
                     "(property) IQuestion.QuestionType: QuestionTypes",
+                    "```",
                     "--------------------",
                     "A read-only property that returns the question type.",
                     "",
@@ -2028,7 +2218,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 definitionType: "property",
                 readonly: true,
                 note: [
+                    "```ds",
                     "(property) IQuestion.Response: IResponse",
+                    "```",
                     "--------------------",
                     "The read-only Response property returns the response object for the question.",
                     "",
@@ -2053,7 +2245,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 readonly: true,
                 isCollection: false,
                 note: [
+                    "```ds",
                     "(property) IQuestion.Style: IStyle",
+                    "```",
                     "--------------------",
                     "This property returns a `Style` object for the question.",
                     "",
@@ -2069,7 +2263,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 readonly: true,
                 isCollection: false,
                 note: [
+                    "```ds",
                     "(property) IQuestion.Validation: IValidation",
+                    "```",
                     "--------------------",
                     "This read-only property that defines the validation for the question.",
                     "",
@@ -2084,7 +2280,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 readonly: false,
                 isCollection: false,
                 note: [
+                    "```ds",
                     "(property) IQuestion.BannerTemplacte: String",
+                    "```",
                     "--------------------",
                     "This property is used to get or set the name of a `Banner` template for the question.",
                     "",
@@ -2100,7 +2298,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 readonly: false,
                 isCollection: false,
                 note: [
+                    "```ds",
                     "(property) IQuestion.DBFilter: String",
+                    "```",
                     "--------------------",
                     "This property is used to get and set the `Database` filter for the question."
                 ].join("\n"),
@@ -2112,7 +2312,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 readonly: false,
                 isCollection: false,
                 note: [
+                    "```ds",
                     "(property) IQuestion.ErrorTemplate: String",
+                    "```",
                     "--------------------",
                     "This property is used to get or set the name of a `Error` template for the question.",
                     "",
@@ -2133,7 +2335,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                     isCollection: false,
                 },
                 note: [
+                    "```ds",
                     "(property) IQuestion.Item: Variant",
+                    "```",
                     "--------------------",
                     "The `Item` property is used to return a sub-question. (Default Property)",
                     "",
@@ -2164,7 +2368,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 readonly: false,
                 isCollection: false,
                 note: [
+                    "```ds",
                     "(property) IQuestion.LayoutTemplate: String",
+                    "```",
                     "--------------------",
                     "This read/write property is used to get or set the layout template for the question.",
                     "",
@@ -2180,7 +2386,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 readonly: false,
                 isCollection: false,
                 note: [
+                    "```ds",
                     "(property) IQuestion.MustAnswer: Boolean",
+                    "```",
                     "--------------------",
                     "This read/write property is used to enable or disable automatic no answer questions.",
                     "",
@@ -2196,7 +2404,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 readonly: false,
                 isCollection: false,
                 note: [
+                    "```ds",
                     "(property) IQuestion.NarBarTemplate: String",
+                    "```",
                     "--------------------",
                     "This property is used to get or set the name of a `NavBar` template for the question.",
                     "",
@@ -2212,7 +2422,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 readonly: false,
                 isCollection: false,
                 note: [
+                    "```ds",
                     "(property) IQuestion.QuestionFilter: Variant",
+                    "```",
                     "--------------------",
                     "The sub-questions of this question that are to be asked.",
                     "",
@@ -2245,7 +2457,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 readonly: false,
                 isCollection: false,
                 note: [
+                    "```ds",
                     "(property) IQuestion.QuestionOrder: OrderConstants",
+                    "```",
                     "--------------------",
                     "The order of the sub-questions of this question.",
                     "",
@@ -2261,7 +2475,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 readonly: false,
                 isCollection: false,
                 note: [
+                    "```ds",
                     "(property) IQuestion.QuestionTemplate: String",
+                    "```",
                     "--------------------",
                     "This property is used to get or set the name of a question template for the question.",
                     "",
@@ -2277,7 +2493,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
         definitionType: "interface",
         defaultProperty: "Item",
         note: [
+            "```ds",
             "(interface) IResponses",
+            "```",
             "-----------------------------",
             "A collection object containing response objects.",
         ].join("\n"),
@@ -2289,7 +2507,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 readonly: true,
                 isCollection: false,
                 note: [
+                    "```ds",
                     "(property) IResponses.Count: Long",
+                    "```",
                     "--------------------",
                     "The number of items in the collection."
                 ].join("\n"),
@@ -2304,7 +2524,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                     type: BasicTypeDefinitions.variant,
                 },
                 note: [
+                    "```ds",
                     "(property) IResponses.Item[Index: Variant]: Variant",
+                    "```",
                     "--------------------",
                     "Get the collection item at the specified location. (Default Property)"
                 ].join("\n"),
@@ -2316,7 +2538,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
         definitionType: "interface",
         defaultProperty: "Value",
         note: [
+            "```ds",
             "(interface) IResponse",
+            "```",
             "-----------------------------",
             "The `Response` object is used to get or set a response value on a question.",
             "With the properties and methods of a `Response` object, you can:",
@@ -2334,7 +2558,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 readonly: true,
                 isCollection: false,
                 note: [
+                    "```ds",
                     "(property) IResponse.Label: String",
+                    "```",
                     "-----------------------------",
                     "The label corresponding to a *categorical* response"
                 ].join("\n"),
@@ -2346,7 +2572,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 readonly: true,
                 isCollection: false,
                 note: [
+                    "```ds",
                     "(property) IResponse.Name: String",
+                    "```",
                     "-----------------------------",
                     "This read-only property returns the name of an other response category."
                 ].join("\n"),
@@ -2358,7 +2586,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 readonly: true,
                 isCollection: false,
                 note: [
+                    "```ds",
                     "(property) IResponse.Other: IResponses",
+                    "```",
                     "-----------------------------",
                     "This read only property returns a collection of `Response` objects."
                 ].join("\n"),
@@ -2370,7 +2600,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 readonly: false,
                 isCollection: false,
                 note: [
+                    "```ds",
                     "(property) IResponse.Coded: Variant",
+                    "```",
                     "-----------------------------",
                     "A read/write property that returns the coded value for the question."
                 ].join("\n"),
@@ -2382,7 +2614,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 readonly: false,
                 isCollection: false,
                 note: [
+                    "```ds",
                     "(property) IResponse.DataType: DataTypeConstants",
+                    "```",
                     "-----------------------------",
                     "Read-only property that returns the value object data type."
                 ].join("\n"),
@@ -2394,7 +2628,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 readonly: false,
                 isCollection: false,
                 note: [
+                    "```ds",
                     "(property) IResponse.Default: Variant",
+                    "```",
                     "-----------------------------",
                     "This read/write property is used to set the default value for the question."
                 ].join("\n"),
@@ -2406,7 +2642,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 readonly: false,
                 isCollection: false,
                 note: [
+                    "```ds",
                     "(property) IResponse.Initial: Variant",
+                    "```",
                     "-----------------------------",
                     "This read/write property is used to set the initial value for the question.",
                     "",
@@ -2429,7 +2667,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 readonly: false,
                 isCollection: false,
                 note: [
+                    "```ds",
                     "(property) IResponse.IsDirty: Boolean",
+                    "```",
                     "-----------------------------",
                     "A read/write property that is automatically set to *True* when a value is updated.",
                     "",
@@ -2444,7 +2684,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 readonly: false,
                 isCollection: false,
                 note: [
+                    "```ds",
                     "(property) IResponse.Value: Variant",
+                    "```",
                     "-----------------------------",
                     "This read/write property is the actual value assigned to the value object. (Default Property)",
                 ].join("\n"),
@@ -2456,7 +2698,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 readonly: false,
                 isCollection: false,
                 note: [
+                    "```ds",
                     "(property) IResponse.ValueObj: IValue",
+                    "```",
                     "-----------------------------",
                     "The value object assigned to the `Response` object. The value object is an alternative mechanism for setting a value on a response.",
                 ].join("\n"),
@@ -2468,7 +2712,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
         definitionType: "interface",
         defaultProperty: "ValidateExpression",
         note: [
+            "```ds",
             "(interface) IValidation",
+            "```",
             "-----------------------------",
             "The Validation object is used to manage the question validation.",
             "With the properties of a Validation object, you can:",
@@ -2483,7 +2729,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 readonly: true,
                 isCollection: false,
                 note: [
+                    "```ds",
                     "(property) IValidation.Options: IValidationOptions",
+                    "```",
                     "-----------------------------",
                     "Additional validation options that differ between question types.",
                     "",
@@ -2510,7 +2758,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 readonly: false,
                 isCollection: false,
                 note: [
+                    "```ds",
                     "(property) IValidation.Function: String",
+                    "```",
                     "-----------------------------",
                     "The custom validation function to use.",
                     "",
@@ -2557,7 +2807,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 readonly: false,
                 isCollection: false,
                 note: [
+                    "```ds",
                     "(property) IValidation.MaxValue: Variant",
+                    "```",
                     "-----------------------------",
                     "This read/write property returns the maximum possible value.",
                     "",
@@ -2578,7 +2830,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 readonly: false,
                 isCollection: false,
                 note: [
+                    "```ds",
                     "(property) IValidation.MinValue: Variant",
+                    "```",
                     "-----------------------------",
                     "This read/write property returns the minimum possible value.",
                     "",
@@ -2600,7 +2854,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 readonly: false,
                 isCollection: false,
                 note: [
+                    "```ds",
                     "(property) IValidation.Precision: Long",
+                    "```",
                     "-----------------------------",
                     "The total number of digits that can be specified for a numeric value",
                     "",
@@ -2615,7 +2871,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 readonly: false,
                 isCollection: false,
                 note: [
+                    "```ds",
                     "(property) IValidation.Scale: Long",
+                    "```",
                     "-----------------------------",
                     "The number of digits after the decimal point for a double value",
                     "",
@@ -2630,7 +2888,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 readonly: false,
                 isCollection: false,
                 note: [
+                    "```ds",
                     "(property) IValidation.ValidateExpression: Long",
+                    "```",
                     "-----------------------------",
                     "This read/write property returns the validation expression. (Default Property)",
                     "",
@@ -2645,7 +2905,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
         definitionType: "interface",
         defaultProperty: "Item",
         note: [
+            "```ds",
             "(interface) ICategories",
+            "```",
             "-----------------------------",
             "A collection object that contains Category objects.",
         ].join("\n"),
@@ -2657,7 +2919,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 readonly: true,
                 isCollection: false,
                 note: [
+                    "```ds",
                     "(property) ICategories.Count: Long",
+                    "```",
                     "--------------------",
                     "The number of items in the collection."
                 ].join("\n"),
@@ -2669,7 +2933,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 readonly: false,
                 isCollection: false,
                 note: [
+                    "```ds",
                     "(property) ICategories.Filter: Variant",
+                    "```",
                     "--------------------",
                     "A read/write property that returns the filter used to select categories. The filter can be specified as a range or a categorical value. (Default Property)",
                     "",
@@ -2774,7 +3040,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                     optional: false,
                 },
                 note: [
+                    "```ds",
                     "(property) ICategories.Item[Index: Variant]: ICategory",
+                    "```",
                     "--------------------",
                     "Get the `Category` at the specified location. (Default Property)",
                     "",
@@ -2797,7 +3065,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 readonly: false,
                 isCollection: false,
                 note: [
+                    "```ds",
                     "(property) ICategories.Order: OrderConstants",
+                    "```",
                     "--------------------",
                     "The order of the categories in the collection",
                     "",
@@ -2813,7 +3083,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
         definitionType: "interface",
         defaultProperty: "Value",
         note: [
+            "```ds",
             "(interface) ICategory",
+            "```",
             "-----------------------------",
             "The `Category` object is used to represent a possible *category* response for a question.",
             "",
@@ -2836,7 +3108,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 readonly: true,
                 isCollection: false,
                 note: [
+                    "```ds",
                     "(property) ICategory.Attributes: Long",
+                    "```",
                     "--------------------",
                     "A read-only property that returns the CategoryAttributes. CategoryAttributes specify a category as exclusive, fixed, other etc.",
                     "",
@@ -2855,7 +3129,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 readonly: true,
                 isCollection: true,
                 note: [
+                    "```ds",
                     "(property) ICategory.Categories: ICategories",
+                    "```",
                     "--------------------",
                     "A read-only property that returns a collection of category objects.",
                     "",
@@ -2870,7 +3146,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 readonly: true,
                 isCollection: false,
                 note: [
+                    "```ds",
                     "(property) ICategory.CategoryType: CategoryTypes",
+                    "```",
                     "--------------------",
                     "A read-only property that returns the `CategoryType`. `CategoryTypes` specify a category as a single category or a category list."
                 ].join("\n"),
@@ -2882,7 +3160,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 readonly: true,
                 isCollection: false,
                 note: [
+                    "```ds",
                     "(property) ICategory.Count: Long",
+                    "```",
                     "--------------------",
                     "This is a read only property that returns the number of sub-categories.",
                     "",
@@ -2897,7 +3177,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 readonly: true,
                 isCollection: false,
                 note: [
+                    "```ds",
                     "(property) ICategory.Factor: Variant",
+                    "```",
                     "--------------------",
                     "A read-only property that returns a factor value that can be used for tabulating the category."
                 ].join("\n"),
@@ -2909,7 +3191,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 readonly: true,
                 isCollection: false,
                 note: [
+                    "```ds",
                     "(property) ICategory.FullName: String",
+                    "```",
                     "--------------------",
                     "A read-only property that returns the full name of the `category`.",
                     "",
@@ -2925,7 +3209,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 readonly: true,
                 isCollection: false,
                 note: [
+                    "```ds",
                     "(property) ICategory.Index: Long",
+                    "```",
                     "--------------------",
                     "A read-only property that returns the 0-based index for the position of the *category* in its parent *category* list."
                 ].join("\n"),
@@ -2937,7 +3223,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 readonly: true,
                 isCollection: false,
                 note: [
+                    "```ds",
                     "(property) ICategory.KeyCode: String",
+                    "```",
                     "--------------------",
                     "This property returns the key code for the `category`."
                 ].join("\n"),
@@ -2949,7 +3237,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 readonly: true,
                 isCollection: false,
                 note: [
+                    "```ds",
                     "(property) ICategory.Label: ILabel",
+                    "```",
                     "--------------------",
                     "This read-only property returns the label for the category.",
                     "",
@@ -2964,7 +3254,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 readonly: true,
                 isCollection: false,
                 note: [
+                    "```ds",
                     "(property) ICategory.Name: String",
+                    "```",
                     "--------------------",
                     "A read-only property that returns the name of the category."
                 ].join("\n"),
@@ -2976,7 +3268,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 readonly: true,
                 isCollection: false,
                 note: [
+                    "```ds",
                     "(property) ICategory.OtherQuestion: IQuestion",
+                    "```",
                     "--------------------",
                     "This property returns the *Other Specify* question.",
                     "",
@@ -2991,7 +3285,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 readonly: true,
                 isCollection: false,
                 note: [
+                    "```ds",
                     "(property) ICategory.Parent: ICategory",
+                    "```",
                     "--------------------",
                     "A read-only property that returns the parent `category` if one exists.",
                     "",
@@ -3012,7 +3308,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                     optional: false,
                 },
                 note: [
+                    "```ds",
                     "(property) ICategory.Properties: IProperties",
+                    "```",
                     "--------------------",
                     "A read-only property that returns the properties for the `category`.",
                     "",
@@ -3027,7 +3325,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 readonly: true,
                 isCollection: false,
                 note: [
+                    "```ds",
                     "(property) ICategory.Style: IStyle",
+                    "```",
                     "--------------------",
                     "This read/write property returns a `Style` object for the category.",
                     "",
@@ -3043,7 +3343,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 readonly: true,
                 isCollection: false,
                 note: [
+                    "```ds",
                     "(property) ICategory.Value: Variant",
+                    "```",
                     "--------------------",
                     "A read-only property that returns the *categorical* value of the `category`. (Default Property)",
                 ].join("\n"),
@@ -3055,7 +3357,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 readonly: false,
                 isCollection: false,
                 note: [
+                    "```ds",
                     "(property) ICategory.Filter: Variant",
+                    "```",
                     "--------------------",
                     "This property is used to get or set the categories filter.",
                     "",
@@ -3077,7 +3381,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                     optional: false,
                 },
                 note: [
+                    "```ds",
                     "(property) ICategory.Item[Index: Variant]: Variant",
+                    "```",
                     "--------------------",
                     "The `Item` property is used to return a sub-category. (Default Property)",
                     "",
@@ -3092,7 +3398,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 readonly: false,
                 isCollection: false,
                 note: [
+                    "```ds",
                     "(property) ICategory.Order: OrderConstants",
+                    "```",
                     "--------------------",
                     "The order of the categories in the collection",
                     "",
@@ -3107,7 +3415,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
         name: "IDataManagerLogging",
         definitionType: "interface",
         note: [
+            "```ds",
             "(interface) IDataManagerLogging",
+            "```",
             "-----------------------------",
             "A wrapper to the Logging component.",
         ].join("\n"),
@@ -3117,9 +3427,11 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 returnType: BasicTypeDefinitions.boolean ,
                 definitionType: "method",
                 note: [
+                    "```ds",
                     "(method) IDataManagerLogging.CreateGroupLog(): Boolean",
                     "```",
-                    "---------------------",
+                    "```",
+ "---------------------",
                     "Creates a public/group log file at the location designated by *m_Path* For full explanation of the parameters and their effect on logging please see the logging component documentation."
                 ].join("\n"),
             },
@@ -3128,9 +3440,11 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 returnType: BasicTypeDefinitions.boolean ,
                 definitionType: "method",
                 note: [
+                    "```ds",
                     "(method) IDataManagerLogging.CreatePrivateLog(): Boolean",
                     "```",
-                    "---------------------",
+                    "```",
+ "---------------------",
                     "Creates a private log file at the location designated by *m_Path* For full explanation of the parameters and their effect on logging please see the logging component documentation."
                 ].join("\n"),
             },
@@ -3150,9 +3464,11 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                     }
                 ],
                 note: [
+                    "```ds",
                     "(method) IDataManagerLogging.LogError(Id: Long, LogEntry: String): Void",
                     "```",
-                    "---------------------",
+                    "```",
+ "---------------------",
                     "Writes an Error-level error message, to the log file.",
                 ].join("\n")
             },
@@ -3167,9 +3483,11 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                     }
                 ],
                 note: [
+                    "```ds",
                     "(method) IDataManagerLogging.LogError_2(LogEntry: String): Void",
                     "```",
-                    "---------------------",
+                    "```",
+ "---------------------",
                     "Writes an Error-level error message, to the log file.",
                 ].join("\n"),
             },
@@ -3189,9 +3507,11 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                     }
                 ],
                 note: [
+                    "```ds",
                     "(method) IDataManagerLogging.LogFatal(Id: Long, LogEntry: String): Void",
                     "```",
-                    "---------------------",
+                    "```",
+ "---------------------",
                     "Writes a Fatal-level error message, to the log file.",
                 ].join("\n"),
             },
@@ -3206,9 +3526,11 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                     }
                 ],
                 note: [
+                    "```ds",
                     "(method) IDataManagerLogging.LogFatal_2(LogEntry: String): Void",
                     "```",
-                    "---------------------",
+                    "```",
+ "---------------------",
                     "Writes a Fatal-level error message, to the log file.",
                 ].join("\n"),
             },
@@ -3228,9 +3550,11 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                     }
                 ],
                 note: [
+                    "```ds",
                     "(method) IDataManagerLogging.LogInfo(Id: Long, LogEntry: String): Void",
                     "```",
-                    "---------------------",
+                    "```",
+ "---------------------",
                     "Writes an Info-level error message, to the log file.",
                 ].join("\n"),
             },
@@ -3245,9 +3569,11 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                     }
                 ],
                 note: [
+                    "```ds",
                     "(method) IDataManagerLogging.LogInfo_2(LogEntry: String): Void",
                     "```",
-                    "---------------------",
+                    "```",
+ "---------------------",
                     "Writes an Info-level error message, to the log file.",
                 ].join("\n"),
             },
@@ -3267,9 +3593,11 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                     }
                 ],
                 note: [
+                    "```ds",
                     "(method) IDataManagerLogging.LogMetric(Id: Long, LogEntry: String): Void",
                     "```",
-                    "---------------------",
+                    "```",
+ "---------------------",
                     "Writes an Metric-level error message, to the log file.",
                 ].join("\n"),
             },
@@ -3284,9 +3612,11 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                     }
                 ],
                 note: [
+                    "```ds",
                     "(method) IDataManagerLogging.LogMetric_2(LogEntry: String): Void",
                     "```",
-                    "---------------------",
+                    "```",
+ "---------------------",
                     "Writes a Metric-level error message, to the log file.",
                 ].join("\n"),
             },
@@ -3306,9 +3636,11 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                     }
                 ],
                 note: [
+                    "```ds",
                     "(method) IDataManagerLogging.LogScript(Id: Long, LogEntry: String): Void",
                     "```",
-                    "---------------------",
+                    "```",
+ "---------------------",
                     "Writes a Script-level error message, to the log file.",
                 ].join("\n"),
             },
@@ -3323,9 +3655,11 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                     }
                 ],
                 note: [
+                    "```ds",
                     "(method) IDataManagerLogging.LogScript_2(LogEntry: String): Void",
                     "```",
-                    "---------------------",
+                    "```",
+ "---------------------",
                     "Writes a Script-level error message, to the log file.",
                 ].join("\n"),
             },
@@ -3345,9 +3679,11 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                     }
                 ],
                 note: [
+                    "```ds",
                     "(method) IDataManagerLogging.LogTrace(Id: Long, LogEntry: String): Void",
                     "```",
-                    "---------------------",
+                    "```",
+ "---------------------",
                     "Writes a Trace-level error message, to the log file.",
                 ].join("\n"),
             },
@@ -3362,9 +3698,11 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                     }
                 ],
                 note: [
+                    "```ds",
                     "(method) IDataManagerLogging.LogTrace_2(LogEntry: String): Void",
                     "```",
-                    "---------------------",
+                    "```",
+ "---------------------",
                     "Writes a Trace-level error message, to the log file.",
                 ].join("\n"),
             },
@@ -3375,7 +3713,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
         definitionType: "interface",
         defaultProperty: "Item",
         note: [
+            "```ds",
             "(interface) IDataManagerWeightEngines",
+            "```",
             "-----------------------------",
             "A collection object containing weightengine objects.",
         ].join("\n"),
@@ -3385,7 +3725,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 definitionType: "property",
                 returnType: BasicTypeDefinitions.long ,
                 note: [
+                    "```ds",
                     "(property) IDataManagerWeightEngines.Count: Long",
+                    "```",
                     "--------------------",
                     "The number of items in the collection.",
                 ].join("\n")
@@ -3399,7 +3741,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                     type: BasicTypeDefinitions.variant,
                 },
                 note: [
+                    "```ds",
                     "(property) IDataManagerWeightEngines.Item[Index: Variant]: ILabel",
+                    "```",
                     "--------------------",
                     "Get the collection item at the specified location. (Default Property)"
                 ].join("\n"),
@@ -3411,7 +3755,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
         name: "IDocument",
         definitionType: "interface",
         note: [
+            "```ds",
             "(interface) IDocument",
+            "```",
             "-----------------------------",
             "The **Table Object Model (TOM)** document is at the root of the object model and is the only object which is publicly creatable. The `Document` object represents a book of tables.",
         ].join("\n"),
@@ -3427,7 +3773,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                     type: BasicTypeDefinitions.variant,
                 },
                 note: [
+                    "```ds",
                     "(property) IDocument.Axes[Index: Variant]: IAxes",
+                    "```",
                     "--------------------",
                     "A collection of axis objects that can be reused on multiple tables.",
                     "",
@@ -3442,7 +3790,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 readonly: true,
                 isCollection: false,
                 note: [
+                    "```ds",
                     "(property) IDocument.Coding: ICoding",
+                    "```",
                     "--------------------",
                     "The `Coding` object includes methods that can be used to `categorize` and *band text*, *numeric*, and *date* variables in the TOM document.",
                 ].join("\n"),
@@ -3454,7 +3804,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 readonly: true,
                 isCollection: false,
                 note: [
+                    "```ds",
                     "(property) IDocument.CreatedByVersion: String",
+                    "```",
                     "--------------------",
                     "Returns the version number of the `TOM.DLL` that created the `Document`.",
                 ].join("\n"),
@@ -3466,7 +3818,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 readonly: true,
                 isCollection: false,
                 note: [
+                    "```ds",
                     "(property) IDocument.DataSet: IDataSet",
+                    "```",
                     "--------------------",
                     "The data set that this table document is based upon. The data set consists of metadata and associated case data.",
                 ].join("\n"),
@@ -3478,7 +3832,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 readonly: true,
                 isCollection: false,
                 note: [
+                    "```ds",
                     "(property) IDocument.Default: ITableDefaults",
+                    "```",
                     "--------------------",
                     "The `Default` property has various settings that are automatically copied to a new table",
                     "",
@@ -3494,7 +3850,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 readonly: true,
                 isCollection: false,
                 note: [
+                    "```ds",
                     "(property) IDocument.Exports: IExports",
+                    "```",
                     "--------------------",
                     "Collection of `Export` objects. `Exports` are used to publish the resulting tables in a variety of formats.",
                 ].join("\n"),
@@ -3506,7 +3864,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 readonly: true,
                 isCollection: false,
                 note: [
+                    "```ds",
                     "(property) IDocument.Filters: IFilters",
+                    "```",
                     "--------------------",
                     "A collection of table filters which may be set up in advance for use on tables.",
                     "",
@@ -3521,7 +3881,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 readonly: true,
                 isCollection: false,
                 note: [
+                    "```ds",
                     "(property) IDocument.Global: ITableGlobals",
+                    "```",
                     "--------------------",
                     "The `TableGlobals` are various settings that are applied to all tables in the document. The settings are merged together with the per-table settings."
                 ].join("\n"),
@@ -3533,7 +3895,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 readonly: true,
                 isCollection: false,
                 note: [
+                    "```ds",
                     "(property) IDocument.GroupedTables: ITableListNode",
+                    "```",
                     "--------------------",
                     "Tables arranged into groups",
                     "",
@@ -3548,7 +3912,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 readonly: true,
                 isCollection: false,
                 note: [
+                    "```ds",
                     "(property) IDocument.IsPopulating: Boolean",
+                    "```",
                     "--------------------",
                     "Returns *True* if the `Document` is currently populating."
                 ].join("\n"),
@@ -3560,7 +3926,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 readonly: true,
                 isCollection: false,
                 note: [
+                    "```ds",
                     "(property) IDocument.LastUpdatedByVersion: String",
+                    "```",
                     "--------------------",
                     "Returns the version number of the `TOM.DLL` that last updated the `Document`."
                 ].join("\n"),
@@ -3572,7 +3940,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 readonly: true,
                 isCollection: false,
                 note: [
+                    "```ds",
                     "(property) IDocument.LicensedFeatures: Long",
+                    "```",
                     "--------------------",
                     "The features of the document for which a valid license exists.",
                     "",
@@ -3587,7 +3957,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 readonly: true,
                 isCollection: false,
                 note: [
+                    "```ds",
                     "(property) IDocument.Parent: Null",
+                    "```",
                     "--------------------",
                     "The parent object",
                     "",
@@ -3602,7 +3974,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 readonly: true,
                 isCollection: false,
                 note: [
+                    "```ds",
                     "(property) IDocument.PopulateProgress: Long",
+                    "```",
                     "--------------------",
                     "Returns the percentage completion of the population run",
                     "",
@@ -3617,7 +3991,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 readonly: true,
                 isCollection: false,
                 note: [
+                    "```ds",
                     "(property) IDocument.PopulateStatus: String",
+                    "```",
                     "--------------------",
                     "Returns a description of the current population status.",
                     "",
@@ -3632,7 +4008,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 readonly: true,
                 isCollection: false,
                 note: [
+                    "```ds",
                     "(property) IDocument.ProfileDefault: ITableDefaults",
+                    "```",
                     "--------------------",
                     "The `ProfileDefault` property has various setting that are automatically copied to a new profile table.",
                     "",
@@ -3648,7 +4026,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 readonly: true,
                 isCollection: false,
                 note: [
+                    "```ds",
                     "(property) IDocument.Properties: IProperties",
+                    "```",
                     "--------------------",
                     "A collection of user added Property objects relating to the document.",
                     "",
@@ -3675,7 +4055,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 readonly: true,
                 isCollection: false,
                 note: [
+                    "```ds",
                     "(property) IDocument.Statistics: IStatistics",
+                    "```",
                     "--------------------",
                     "A collection of Statistic objects that define statistical tests that are available for applying to tables.",
                     "",
@@ -3690,7 +4072,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 readonly: true,
                 isCollection: false,
                 note: [
+                    "```ds",
                     "(property) IDocument.Tables: ITables",
+                    "```",
                     "--------------------",
                     "This collection of tables contained in the document. This is the default property."
                 ].join("\n"),
@@ -3702,7 +4086,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 readonly: true,
                 isCollection: false,
                 note: [
+                    "```ds",
                     "(property) IDocument.TOMVersion: String",
+                    "```",
                     "--------------------",
                     "Returns the version number of the `TOM.DLL`"
                 ].join("\n"),
@@ -3714,7 +4100,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 readonly: false,
                 isCollection: false,
                 note: [
+                    "```ds",
                     "(property) IDocument.Context: String",
+                    "```",
                     "--------------------",
                     "The document context.",
                     "",
@@ -3729,7 +4117,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 readonly: false,
                 isCollection: false,
                 note: [
+                    "```ds",
                     "(property) IDocument.Description: String",
+                    "```",
                     "--------------------",
                     "A user specified string that can be used to describe the contents of this table document."
                 ].join("\n"),
@@ -3741,7 +4131,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 readonly: false,
                 isCollection: false,
                 note: [
+                    "```ds",
                     "(property) IDocument.ImageLocation: String",
+                    "```",
                     "--------------------",
                     "The location of the images referenced by the elements.",
                     "",
@@ -3760,7 +4152,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 readonly: false,
                 isCollection: false,
                 note: [
+                    "```ds",
                     "(property) IDocument.KeepLogFiles: Boolean",
+                    "```",
                     "--------------------",
                     "Keep the temporary files created during the call to IDocument.Populate",
                     "",
@@ -3775,7 +4169,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 readonly: false,
                 isCollection: false,
                 note: [
+                    "```ds",
                     "(property) IDocument.LabelType: String",
+                    "```",
                     "--------------------",
                     "The document label type.",
                     "",
@@ -3790,7 +4186,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 readonly: false,
                 isCollection: false,
                 note: [
+                    "```ds",
                     "(property) IDocument.Language: String",
+                    "```",
                     "--------------------",
                     "The document language. The language can be the three-character language code (such as \"ENU\"), the language long name, which is the localized name of the language and the country where it is spoken, such as \"English (United States)\" or the XML-name.",
                     "",
@@ -3805,7 +4203,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 readonly: false,
                 isCollection: false,
                 note: [
+                    "```ds",
                     "(property) IDocument.LogFilePath: String",
+                    "```",
                     "--------------------",
                     "The location used to write temporary files and log files created when a table is populated.",
                     "",
@@ -3820,7 +4220,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 readonly: false,
                 isCollection: false,
                 note: [
+                    "```ds",
                     "(property) IDocument.OpenOption: OpenOptions",
+                    "```",
                     "--------------------",
                     "The options used when opening data sets."
                 ].join("\n"),
@@ -3832,7 +4234,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 readonly: false,
                 isCollection: false,
                 note: [
+                    "```ds",
                     "(property) IDocument.OutputLocaleId: Long",
+                    "```",
                     "--------------------",
                     "Sets the locale id used for any error messages descriptions.",
                     "",
@@ -3847,7 +4251,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 readonly: false,
                 isCollection: false,
                 note: [
+                    "```ds",
                     "(property) IDocument.ProfileSpecialElements: Boolean",
+                    "```",
                     "--------------------",
                     "If set to *True*, special data elements, such as *Net* and *Base* elements, will be included in profile table results.",
                     "",
@@ -3862,7 +4268,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 readonly: false,
                 isCollection: false,
                 note: [
+                    "```ds",
                     "(property) IDocument.RawStatisticsDataEnabled: Boolean",
+                    "```",
                     "--------------------",
                     "Controls the generation of raw statistical data during execution of the Populate method.",
                     "",
@@ -3877,7 +4285,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 readonly: false,
                 isCollection: false,
                 note: [
+                    "```ds",
                     "(property) IDocument.SaveProfileResults: Boolean",
+                    "```",
                     "--------------------",
                     "If *True* the populated results for profile tables are included in saved `Table Document` files",
                     "",
@@ -3891,7 +4301,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 name: "Clear",
                 definitionType: "method",
                 note: [
+                    "```ds",
                     "(method) IDocument.Clear(): Void",
+                    "```",
                     "--------------------",
                     "Returns the `Document` to its initial state.",
                     "",
@@ -3931,7 +4343,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                     }
                 ],
                 note: [
+                    "```ds",
                     "(method) IDocument.GenerateScript([Tables: Variant], [Type: ScriptType], [Options: Variant]): String",
+                    "```",
                     "--------------------",
                     "Generates a script representation of the table document.",
                     "",
@@ -3961,7 +4375,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                     }
                 ],
                 note: [
+                    "```ds",
                     "(method) IDocument.GetObjectFromID(ID: String): Object",
+                    "```",
                     "--------------------",
                     "Get the object corresponding to an object ID",
                     "",
@@ -3989,7 +4405,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                     }
                 ],
                 note: [
+                    "```ds",
                     "(method) IDocument.GetTablesXml([Tables: Variant], [Options: Long = xmlIncludeResults]): String",
+                    "```",
                     "--------------------",
                     "Generates an XML representation of the table document.",
                     "",
@@ -4019,7 +4437,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                     }
                 ],
                 note: [
+                    "```ds",
                     "(method) IDocument.Open(Source: Variant, [IncludeResults: Boolean = 1]): String",
+                    "```",
                     "--------------------",
                     "Opens a previously saved table document.",
                     "",
@@ -4090,7 +4510,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                     },
                 ],
                 note: [
+                    "```ds",
                     "(method) IDocument.OpenWithDataSet(Source: Variant, [IncludeResults: Boolean = 1], MetaData: Variant, [MDSC: String = \"\"], [DbLocation: String = \"\"], [CDSC: String = \"\"], [Project: String = \"\"], [Version: String = {..}]): String",
+                    "```",
                     "--------------------",
                     "Opens a previously saved table document with the specified metadata and case data.",
                     "",
@@ -4118,6 +4540,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                         type: BasicTypeDefinitions.variant,
                         optional: false,
                         note: [
+                    "```ds",
                             "A list of tables to populate. If this parameter is not specified, then all tables in the document are populated. ",
                             "    - An empty string means populate no tables (the method call does nothing)",
                             "    - A value of \"*\" means populate all tables",
@@ -4128,7 +4551,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                     }
                 ],
                 note: [
+                    "```ds",
                     "(method) IDocument.Populate(Tables: Variant): Boolean",
+                    "```",
                     "--------------------",
                     "Populates the `CellValues` of the required document tables.Return *True* if all tables are populated successfully; return *False* if any of the tables fail during population.",
                     "",
@@ -4155,7 +4580,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                     }
                 ],
                 note: [
+                    "```ds",
                     "(method) IDocument.PopulateBegin(Tables: Variant): Void",
+                    "```",
                     "--------------------",
                     "Begin an asynchronous population run",
                     "",
@@ -4169,7 +4596,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 name: "PopulateCancel",
                 definitionType: "method",
                 note: [
+                    "```ds",
                     "(method) IDocument.PopulateCancel(): Void",
+                    "```",
                     "--------------------",
                     "Cancel an existing population started via `Populate()` or `PopulateBegin()`"
                 ].join("\n"),
@@ -4186,7 +4615,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                     }
                 ],
                 note: [
+                    "```ds",
                     "(method) IDocument.RefreshFromMetadata([ForceRefresh: Boolean = 0]): Void",
+                    "```",
                     "--------------------",
                     "Updates all axes in all tables from the metadata if `UseMetadataDefinition` is *True*",
                     "",
@@ -4215,7 +4646,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                     }
                 ],
                 note: [
+                    "```ds",
                     "(method) IDocument.Save(Destination: Variant, [IncludeResults: Boolean = 1]): Void",
+                    "```",
                     "--------------------",
                     "Saves the table document to the specified location.",
                     "",
@@ -4245,7 +4678,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                     }
                 ],
                 note: [
+                    "```ds",
                     "(method) IDocument.SaveWithoutDataSet(Destination: Variant, [IncludeResults: Boolean = 1]): Void",
+                    "```",
                     "--------------------",
                     "Saves the table document without any dataset information.",
                     "",
@@ -4260,7 +4695,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
         definitionType: "interface",
         defaultProperty: "Item",
         note: [
+            "```ds",
             "(interface) ITables",
+            "```",
             "-----------------------------",
             "A collection of Table objects.",
         ].join("\n"),
@@ -4272,7 +4709,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 readonly: true,
                 isCollection: false,
                 note: [
+                    "```ds",
                     "(property) ITables.Count: Long",
+                    "```",
                     "--------------------",
                     "The number of items in the collection."
                 ].join("\n"),
@@ -4289,7 +4728,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                     optional: false,
                 },
                 note: [
+                    "```ds",
                     "(property) ITables.Item[Index: Variant]: Variant",
+                    "```",
                     "--------------------",
                     "Returns the specified `Table` in the collection. This is the default property.",
                 ].join("\n"),
@@ -4301,7 +4742,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 readonly: true,
                 isCollection: false,
                 note: [
+                    "```ds",
                     "(property) ITables.Parent: IDocument",
+                    "```",
                     "--------------------",
                     "The parent object"
                 ].join("\n"),
@@ -4328,7 +4771,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                     }
                 ],
                 note: [
+                    "```ds",
                     "(method) ITables.Add(Table: ITable, [Index: Long = -1]): ITable",
+                    "```",
                     "--------------------",
                     "Adds an existing Table object into the `Tables` collection.",
                     "",
@@ -4377,7 +4822,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                     },
                 ],
                 note: [
+                    "```ds",
                     "(method) ITables.AddNew(Name: String, [Specification: String = \"\"], [Description: String = \"\"], [Index: Long = -1]): ITable",
+                    "```",
                     "--------------------",
                     "Creates a new Table object and adds it to the collection.",
                     "",
@@ -4439,7 +4886,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                     },
                 ],
                 note: [
+                    "```ds",
                     "(method) ITables.AddNewGrid(Name: String, Field: String, [Orientation: DisplayOrientation = doDefault], [Description: String = \"\"], [Index: Long = -1]): ITable",
+                    "```",
                     "--------------------",
                     "Constructs a new Table object from a grid or an array and adds it into the `Tables` collection.",
                     "",
@@ -4499,7 +4948,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                     }
                 ],
                 note: [
+                    "```ds",
                     "(method) ITables.AddNewProfile(Name: String, [Specification: String = \"\"], [Description: String = \"\"], [Index: Long = -1]): ITable",
+                    "```",
                     "--------------------",
                     "Creates a new profile `Table` object and adds it to the collection.",
                     "",
@@ -4516,7 +4967,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 name: "Clear",
                 definitionType: "method",
                 note: [
+                    "```ds",
                     "(method) ITables.Clear(): Void",
+                    "```",
                     "--------------------",
                     "Removes all Table objects from the collection."
                 ].join("\n")
@@ -4533,7 +4986,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                     }
                 ],
                 note: [
+                    "```ds",
                     "(method) ITables.Remove(Index: Variant): Void",
+                    "```",
                     "--------------------",
                     "Removes a Table from the Tables collection.",
                 ].join("\n")
@@ -4544,7 +4999,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
         name: "ITable",
         definitionType: "interface",
         note: [
+            "```ds",
             "(interface) ITable",
+            "```",
             "-----------------------------",
             "The Table object defines the structure of a table in terms of `Axes`, as well as a variety of other settings. The `Axes` objects define the dimensions while CellItems define the contents of the cells.",
             "",
@@ -4559,7 +5016,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 readonly: true,
                 isCollection: false,
                 note: [
+                    "```ds",
                     "(property) ITable.Annotations: IAnnotations",
+                    "```",
                     "--------------------",
                     "A collection of `Annotation` objects that define additional information to be shown outside the main body of the table (for example, headings and footnotes)."
                 ].join("\n"),
@@ -4576,7 +5035,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                     optional: false,
                 },
                 note: [
+                    "```ds",
                     "(property) ITable.AvailableLevels: Variant[]",
+                    "```",
                     "--------------------",
                     "A list of levels that the table can be aggregated at.",
                     "",
@@ -4591,7 +5052,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 readonly: true,
                 isCollection: false,
                 note: [
+                    "```ds",
                     "(property) ITable.Axes: IAxes",
+                    "```",
                     "--------------------",
                     "A collection of `Axis` objects that define the structure of the table.",
                     "",
@@ -4615,7 +5078,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 readonly: true,
                 isCollection: false,
                 note: [
+                    "```ds",
                     "(property) ITable.Base: Long",
+                    "```",
                     "--------------------",
                     "The numeric 'Base' value for the table.",
                     "",
@@ -4630,7 +5095,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 readonly: true,
                 isCollection: false,
                 note: [
+                    "```ds",
                     "(property) ITable.CellItems: ICellItems",
+                    "```",
                     "--------------------",
                     "A collection of `CellItem` objects that define the cell contents for the table.",
                     "",
@@ -4645,7 +5112,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 readonly: true,
                 isCollection: false,
                 note: [
+                    "```ds",
                     "(property) ITable.DatePopulated: Date",
+                    "```",
                     "--------------------",
                     "The date when the table was last populated.",
                     "",
@@ -4660,7 +5129,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 readonly: true,
                 isCollection: false,
                 note: [
+                    "```ds",
                     "(property) ITable.DefaultLevel: String",
+                    "```",
                     "--------------------",
                     "The default aggregation level for a table containing hierarchical data",
                     "",
@@ -4675,7 +5146,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 readonly: true,
                 isCollection: false,
                 note: [
+                    "```ds",
                     "(property) ITable.Filters: IFilters",
+                    "```",
                     "--------------------",
                     "A collection of `Filter` objects that are applied to the case data that the table is based on when the table is populated."
                 ].join("\n"),
@@ -4687,7 +5160,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 readonly: true,
                 isCollection: false,
                 note: [
+                    "```ds",
                     "(property) ITable.IsEmpty: Boolean",
+                    "```",
                     "--------------------",
                     "Returns *True* if the `Axes` collection is empty for this table, i.e. If the table doesn't have any *Top*, *Side*, or *Layer* axis."
                 ].join("\n"),
@@ -4699,7 +5174,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 readonly: true,
                 isCollection: false,
                 note: [
+                    "```ds",
                     "(property) ITable.IsEmptySide: Boolean",
+                    "```",
                     "--------------------",
                     "Returns *True* if no 'Side' axis exists in the `Axes` collection of this table.",
                 ].join("\n")
@@ -4711,7 +5188,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 readonly: true,
                 isCollection: false,
                 note: [
+                    "```ds",
                     "(property) ITable.IsEmptySide: Boolean",
+                    "```",
                     "--------------------",
                     "Returns *True* if no 'Top' axis exists in the `Axes` collection of this table.",
                 ].join("\n"),
@@ -4723,7 +5202,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 readonly: true,
                 isCollection: false,
                 note: [
+                    "```ds",
                     "(property) ITable.IsLevelValid: Boolean",
+                    "```",
                     "--------------------",
                     "*True* if the `ITable.Level` property is valid",
                     "",
@@ -4739,7 +5220,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 readonly: true,
                 isCollection: false,
                 note: [
+                    "```ds",
                     "(property) ITable.IsPopulated: Boolean",
+                    "```",
                     "--------------------",
                     "Returns *True* if the table has been populated (i.e. `ITable.CellValues` is not 'null').",
                     "",
@@ -4754,7 +5237,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 readonly: true,
                 isCollection: false,
                 note: [
+                    "```ds",
                     "(property) ITable.IsValid: Boolean",
+                    "```",
                     "--------------------",
                     "*True* if the table is valid.",
                     "",
@@ -4778,7 +5263,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 readonly: true,
                 isCollection: false,
                 note: [
+                    "```ds",
                     "(property) ITable.IsWeighted: Boolean",
+                    "```",
                     "--------------------",
                     "*True* if a weight variable has been specified for the `Weight` property",
                 ].join("\n")
@@ -4790,7 +5277,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 readonly: true,
                 isCollection: false,
                 note: [
+                    "```ds",
                     "(property) ITable.Name: String",
+                    "```",
                     "--------------------",
                     "The name used to reference the table in the `Tables` collection."
                 ].join("\n")
@@ -4802,7 +5291,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 readonly: true,
                 isCollection: false,
                 note: [
+                    "```ds",
                     "(property) ITable.Parent: ITables",
+                    "```",
                     "--------------------",
                     "The parent object",
                     "",
@@ -4817,7 +5308,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 readonly: true,
                 isCollection: false,
                 note: [
+                    "```ds",
                     "(property) ITable.Properties: IProperties",
+                    "```",
                     "--------------------",
                     "A collection of Property objects that define additional configuration information about the table.",
                 ].join("\n")
@@ -4829,7 +5322,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 readonly: true,
                 isCollection: false,
                 note: [
+                    "```ds",
                     "(property) ITable.Rules: IRules",
+                    "```",
                     "--------------------",
                     "A collection of `Rule` objects that are applied to the values in the table when it is populated.",
                 ].join("\n")
@@ -4841,7 +5336,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 readonly: true,
                 isCollection: false,
                 note: [
+                    "```ds",
                     "(property) ITable.Statistics: IStatistics",
+                    "```",
                     "--------------------",
                     "A collection of `Statistic` objects that define statistical tests to be calculated for the table.",
                 ].join("\n")
@@ -4853,7 +5350,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 readonly: true,
                 isCollection: false,
                 note: [
+                    "```ds",
                     "(property) ITable.Type: TableType",
+                    "```",
                     "--------------------",
                     "The `Type` of table (either *ttAggregated* or *ttProfile*)",
                 ].join("\n")
@@ -4870,7 +5369,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                     defaultValue: 0,
                 },
                 note: [
+                    "```ds",
                     "(property) ITable.CellValues[[Layer: Variant = 0]]: Object",
+                    "```",
                     "--------------------",
                     "The values of the cells of the table",
                     "",
@@ -4889,7 +5390,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 readonly: false,
                 isCollection: false,
                 note: [
+                    "```ds",
                     "(property) ITable.Description: String",
+                    "```",
                     "--------------------",
                     "A description or title for the table, e.g. \"Table of age by gender\".",
                     "",
@@ -4904,7 +5407,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 readonly: false,
                 isCollection: false,
                 note: [
+                    "```ds",
                     "(property) ITable.Level: String",
+                    "```",
                     "--------------------",
                     "The level at which to aggregate a table containing hierarchical data.",
                     "",
@@ -4920,7 +5425,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 readonly: false,
                 isCollection: false,
                 note: [
+                    "```ds",
                     "(property) ITable.PopulateError: String",
+                    "```",
                     "--------------------",
                     "The error message when populating the table.",
                     "",
@@ -4935,7 +5442,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 readonly: false,
                 isCollection: false,
                 note: [
+                    "```ds",
                     "(property) ITable.SortColumn: String",
+                    "```",
                     "--------------------",
                     "Controls sorting of rows by specifying the column to sort on and the order in which to sort.",
                     "",
@@ -4959,7 +5468,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 readonly: false,
                 isCollection: false,
                 note: [
+                    "```ds",
                     "(property) ITable.SortRow: String",
+                    "```",
                     "--------------------",
                     "Controls sorting of columns by specifying the row to sort on and the order in which to sort.",
                     "",
@@ -4984,7 +5495,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 readonly: false,
                 isCollection: false,
                 note: [
+                    "```ds",
                     "(property) ITable.Specification: String",
+                    "```",
                     "--------------------",
                     "The table specification string that defines the structure of the table.",
                     "",
@@ -5006,7 +5519,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 readonly: false,
                 isCollection: false,
                 note: [
+                    "```ds",
                     "(property) ITable.UseDefaultLevel: Boolean",
+                    "```",
                     "--------------------",
                     "Causes the `ITable.Level` property to be set to the default aggregation level",
                     "",
@@ -5021,7 +5536,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 readonly: false,
                 isCollection: false,
                 note: [
+                    "```ds",
                     "(property) ITable.Weight: String",
+                    "```",
                     "--------------------",
                     "Sets the name of the weight variable to be used for the table.",
                     "",
@@ -5036,7 +5553,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 name: "Clear",
                 definitionType: "method",
                 note: [
+                    "```ds",
                     "(method) ITable.Clear(): Void",
+                    "```",
                     "--------------------",
                     "Clears the table",
                     "",
@@ -5059,9 +5578,11 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                     }
                 ],
                 note: [
+                    "```ds",
                     "(method) ITable.IsStatisticValid(StatisticName: String): Boolean",
                     "```",
-                    "-----------------",
+                    "```",
+ "-----------------",
                     "Returns *True* if the specified statistical test is valid for this table.",
                     "",
                     "### Remarks",
@@ -5080,9 +5601,11 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                     }
                 ],
                 note: [
+                    "```ds",
                     "(method) RefreshFromMetadata([ForceRefresh: Boolean = 0]): Boolean",
                     "```",
-                    "-----------------",
+                    "```",
+ "-----------------",
                     "Updates all axes in the table from the metadata if `UseMetadataDefinition` is *True*",
                     "",
                     "### Remarks",
@@ -5098,7 +5621,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
         definitionType: "interface",
         defaultProperty: "Item",
         note: [
+            "```ds",
             "(interface) IAxes",
+            "```",
             "-----------------------------",
             "A collection of Axis objects. Each Axis object is used to describe the content of the side, the top, or a layer of a table.",
         ].join("\n"),
@@ -5110,7 +5635,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 isCollection: false,
                 readonly: true,
                 note: [
+                    "```ds",
                     "(property) IAxes.Count: Long",
+                    "```",
                     "--------------------",
                     "The number of items in the collection.",
                 ].join("\n")
@@ -5126,7 +5653,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                     type: BasicTypeDefinitions.variant,
                 },
                 note: [
+                    "```ds",
                     "(property) IAxes.Item[Index: Variant]: IAxis",
+                    "```",
                     "--------------------",
                     "Returns a specified item in the collection.",
                 ].join("\n"),
@@ -5138,7 +5667,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 readonly: true,
                 isCollection: false,
                 note: [
+                    "```ds",
                     "(property) IAxes.Parent: ITable | ITableDefaults | IDocument | IAxis",
+                    "```",
                     "--------------------",
                     "The parent object",
                     "",
@@ -5174,7 +5705,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                     },
                 ],
                 note: [
+                    "```ds",
                     "(method) IAxes.Add(Name: Variant, Axis: Variant, [Index: Long = -1]): IAxis",
+                    "```",
                     "--------------------",
                     "Add a copy of an existing Axis object to the Axes collection.",
                     "",
@@ -5228,7 +5761,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                     },
                 ],
                 note: [
+                    "```ds",
                     "(method) IAxes.AddNew(Name: Variant, [MdmObject: String = \"\"], [AxisExpression: String = \"\"], [Index: Long = -1]): IAxis",
+                    "```",
                     "--------------------",
                     "Creates an `Axis` object and adds it to the collection.",
                     "",
@@ -5240,7 +5775,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 name: "Clear",
                 definitionType: "method",
                 note: [
+                    "```ds",
                     "(method) IAxes.Clear(): Void",
+                    "```",
                     "--------------------",
                     "Removes all `Axis` objects from the collection."
                 ].join("\n")
@@ -5257,7 +5794,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                     }
                 ],
                 note: [
+                    "```ds",
                     "(method) IAxes.Remove(Index: Variant): Void",
+                    "```",
                     "--------------------",
                     "Removes an `Axis` object from the collection.",
                 ].join("\n")
@@ -5268,7 +5807,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
         name: "IAxis",
         definitionType: "interface",
         note: [
+            "```ds",
             "(interface) IAxis",
+            "```",
             "-----------------------------",
             "The `Axis` object defines the composition of a table axis. An `Axis` consists of elements and nested axes.",
         ].join("\n"),
@@ -5280,7 +5821,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 readonly: true,
                 isCollection: false,
                 note: [
+                    "```ds",
                     "(property) IAxis.AxisHeadings: IAxisHeadings",
+                    "```",
                     "--------------------",
                     "The headings to display on the table corresponding to `SubAxes` of this axis.",
                 ].join("\n"),
@@ -5292,7 +5835,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 readonly: true,
                 isCollection: false,
                 note: [
+                    "```ds",
                     "(property) IAxis.ElementHeadings: IElementHeadings",
+                    "```",
                     "--------------------",
                     "The headings to display on the table corresponding to the `Elements` of this axis."
                 ].join("\n"),
@@ -5304,7 +5849,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 readonly: true,
                 isCollection: false,
                 note: [
+                    "```ds",
                     "(property) IAxis.Elements: IElements",
+                    "```",
                     "--------------------",
                     "The collection of `Element` objects that make up the axis."
                 ].join("\n"),
@@ -5316,7 +5863,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 readonly: true,
                 isCollection: false,
                 note: [
+                    "```ds",
                     "(property) IAxis.Name: String",
+                    "```",
                     "--------------------",
                     "The axis is always named the same as the MDM field or variable that it is based upon, except in the case of a root axis which will normally be called 'Side' or 'Top'"
                 ].join("\n"),
@@ -5328,7 +5877,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 readonly: true,
                 isCollection: false,
                 note: [
+                    "```ds",
                     "(property) IAxis.Parent: IAxis",
+                    "```",
                     "--------------------",
                     "The parent axis of this axis",
                     "",
@@ -5343,7 +5894,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 readonly: true,
                 isCollection: false,
                 note: [
+                    "```ds",
                     "(property) IAxis.ParentObject: IAxes",
+                    "```",
                     "--------------------",
                     "The parent object",
                     "",
@@ -5358,7 +5911,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 readonly: true,
                 isCollection: false,
                 note: [
+                    "```ds",
                     "(property) IAxis.SubAxes: IAxes",
+                    "```",
                     "--------------------",
                     "The collection of `Axis` objects that are nested within this axis.",
                     "",
@@ -5379,7 +5934,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                     defaultValue: "\"\""
                 },
                 note: [
+                    "```ds",
                     "(property) IAxis.Label[[Language: String = \"\"]]: String",
+                    "```",
                     "--------------------",
                     "The label for the axis",
                     "",
@@ -5394,7 +5951,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 readonly: false,
                 isCollection: false,
                 note: [
+                    "```ds",
                     "(property) IAxis.MaxResponses: Long",
+                    "```",
                     "--------------------",
                     "The maximum response number of the `Axis`. The default value is -1, which means it is identical to the source variable's `EffectiveMaxValue`.",
                     "",
@@ -5409,7 +5968,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 readonly: false,
                 isCollection: false,
                 note: [
+                    "```ds",
                     "(property) IAxis.Specification: String",
+                    "```",
                     "--------------------",
                     "The current specification for the axis",
                     "",
@@ -5424,7 +5985,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 readonly: false,
                 isCollection: false,
                 note: [
+                    "```ds",
                     "(property) IAxis.UseMetadataDefinition: Boolean",
+                    "```",
                     "--------------------",
                     "Use the definition of the metadata variable that the axis is based upon.",
                     "",
@@ -5450,7 +6013,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                     }
                 ],
                 note: [
+                    "```ds",
                     "(method) IAxis.Concatenate(Name: Variant): IAxis",
+                    "```",
                     "--------------------",
                     "Concatenates a variable with this axis",
                     "",
@@ -5470,7 +6035,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                     }
                 ],
                 note: [
+                    "```ds",
                     "(method) IAxis.Nest(Name: Variant): IAxis",
+                    "```",
                     "--------------------",
                     "Nests a variable inside of this axis",
                     "",
@@ -5490,7 +6057,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                     }
                 ],
                 note: [
+                    "```ds",
                     "(method) IAxis.RefreshFromMetadata([ForceRefresh: Boolean = 0]): IAxis",
+                    "```",
                     "--------------------",
                     "Updates the axis from the metadata if `UseMetadataDefinition` is *True*",
                     "",
@@ -5507,7 +6076,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
         definitionType: "interface",
         defaultProperty: "Item",
         note: [
+            "```ds",
             "(interface) ICellItems",
+            "```",
             "-----------------------------",
             "The CellItems object is a collection of CellItem objects. The collection represents the contents of each cell in the populated table. Adding a statistics test may automatically add extra cell items.",
         ].join("\n"),
@@ -5519,7 +6090,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 isCollection: false,
                 readonly: true,
                 note: [
+                    "```ds",
                     "(property) ICellItems.Count: Long",
+                    "```",
                     "--------------------",
                     "The number of items in the collection.",
                 ].join("\n")
@@ -5535,7 +6108,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                     type: BasicTypeDefinitions.variant,
                 },
                 note: [
+                    "```ds",
                     "(property) ICellItems.Item[Index: Variant]: ICellItem",
+                    "```",
                     "--------------------",
                     "Returns a specified item in the collection.",
                 ].join("\n"),
@@ -5547,7 +6122,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 readonly: true,
                 isCollection: false,
                 note: [
+                    "```ds",
                     "(property) ICellItems.Parent: ITable | ITableDefaults | ITableGlobals",
+                    "```",
                     "--------------------",
                     "The parent object",
                     "",
@@ -5591,7 +6168,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                     }
                 ],
                 note: [
+                    "```ds",
                     "(method) ICellItems.AddNew(Type: CellItemType, [Decimals: Long = 0], [Variable: String = \"\"], [Index: Long = -1]): ICellItem",
+                    "```",
                     "--------------------",
                     "Creates a new `CellItem` object and adds it to the collection.",
                 ].join("\n")
@@ -5600,7 +6179,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 name: "Clear",
                 definitionType: "method",
                 note: [
+                    "```ds",
                     "(method) ICellItems.Clear(): Void",
+                    "```",
                     "--------------------",
                     "Removes all `CellItem` objects from the collection"
                 ].join("\n")
@@ -5616,7 +6197,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                     }
                 ],
                 note: [
+                    "```ds",
                     "(method) ICellItems.Remove(Index: Variant): Void",
+                    "```",
                     "--------------------",
                     "Removes the specified cell item from the collection.",
                 ].join("\n")
@@ -5627,7 +6210,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
         name: "ICellItem",
         definitionType: "interface",
         note: [
+            "```ds",
             "(interface) ICellItem",
+            "```",
             "-----------------------------",
             "A `CellItem` is a type of value that appears in each cell of the table. Each `CellItem` defines a single value that appears in each of the cells of the table. An example of a cell item is a count or column percentage.",
         ].join("\n"),
@@ -5637,7 +6222,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 definitionType: "property",
                 returnType: createBuiltInDefPlaceHolder("ICellItems"),
                 note: [
+                    "```ds",
                     "(property) ICellItem.Parent: ICellItems",
+                    "```",
                     "--------------------",
                     "The parent object",
                     "",
@@ -5651,7 +6238,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 readonly: true,
                 returnType: createBuiltInDefPlaceHolder("CellItemType") ,
                 note: [
+                    "```ds",
                     "(property) ICellItem.Type: CellItemType",
+                    "```",
                     "--------------------",
                     "The type of cell item (e.g. *itCount*, *itColPercent*)"
                 ].join("\n"),
@@ -5661,7 +6250,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 definitionType: "property",
                 returnType: BasicTypeDefinitions.double ,
                 note: [
+                    "```ds",
                     "(property) ICellItem.CutOffValue: Double",
+                    "```",
                     "--------------------",
                     "The cut-off value for percentiles (not relevant for other cell item types).",
                     "",
@@ -5675,7 +6266,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 definitionType: "property",
                 returnType: BasicTypeDefinitions.long ,
                 note: [
+                    "```ds",
                     "(property) ICellItem.Decimals: Double",
+                    "```",
                     "--------------------",
                     "The number of digits to show after the decimal point.",
                     "",
@@ -5688,7 +6281,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 definitionType: "property",
                 returnType: BasicTypeDefinitions.string ,
                 note: [
+                    "```ds",
                     "(property) ICellItem.FormatExpression: String",
+                    "```",
                     "--------------------",
                     "FormatExpression",
                     "",
@@ -5716,7 +6311,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 definitionType: "property",
                 returnType: BasicTypeDefinitions.long ,
                 note: [
+                    "```ds",
                     "(property) ICellItem.Index: Long",
+                    "```",
                     "--------------------",
                     "The index of the item in the parent `CellItems` collection.",
                     "",
@@ -5729,7 +6326,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 definitionType: "property",
                 returnType: BasicTypeDefinitions.string ,
                 note: [
+                    "```ds",
                     "(property) ICellItem.Prefix: String",
+                    "```",
                     "--------------------",
                     "A string to prefix to all values",
                 ].join("\n"),
@@ -5739,7 +6338,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 definitionType: "property",
                 returnType: BasicTypeDefinitions.string ,
                 note: [
+                    "```ds",
                     "(property) ICellItem.Variable: String",
+                    "```",
                     "--------------------",
                     "The variable name for those cell item types that require a numeric variable for their calculation (for example, *itMean*).",
                     "",
@@ -5790,7 +6391,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 definitionType: "property",
                 returnType: BasicTypeDefinitions.string ,
                 note: [
+                    "```ds",
                     "(property) ICellItem.Suffix: String",
+                    "```",
                     "--------------------",
                     "A string to append to all values",
                 ].join("\n")
@@ -5801,7 +6404,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
         name: "IFilters",
         definitionType: "interface",
         note: [
+            "```ds",
             "(interface) IFilters",
+            "```",
             "-----------------------------",
             "A collection of `Filter` objects. During population of the table, all filters in the collection are combined (ANDed together).",
         ].join("\n"),
@@ -5812,7 +6417,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 returnType: BasicTypeDefinitions.long ,
                 readonly: true,
                 note: [
+                    "```ds",
                     "(property) IFilters.Count: Long",
+                    "```",
                     "--------------------",
                     "The number of items in the collection."
                 ].join("\n"),
@@ -5827,7 +6434,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                     type: BasicTypeDefinitions.variant,
                 },
                 note: [
+                    "```ds",
                     "(property) IFilters.Item[Index: Variant]: Variant",
+                    "```",
                     "--------------------",
                     "Get the collection item at the specified location."
                 ].join("\n"),
@@ -5838,7 +6447,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 returnType: createBuiltInDefPlaceHolder("ITable"),
                 readonly: true,
                 note: [
+                    "```ds",
                     "(property) IFilters.Parent: ITable | ITableDefault | ITableGlobals | IDocument",
+                    "```",
                     "--------------------",
                     "The parent object"
                 ].join("\n")
@@ -5857,7 +6468,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                     }
                 ],
                 note: [
+                    "```ds",
                     "(method) IFilters.Add(Index: Variant): IFilter",
+                    "```",
                     "--------------------",
                     "Adds a copy of a filter object in the `IDocument.Filters` collection to the current collection.",
                     "",
@@ -5903,7 +6516,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                     }
                 ],
                 note: [
+                    "```ds",
                     "(method) IFilters.AddNew(Name: String, Expression: String, Description: String = \"\", Level: String = HDATA, IsInterviewFilter: Boolean = 0): IFilter",
+                    "```",
                     "--------------------",
                     "Adds a new `Filter` object to the collection.",
                     "",
@@ -5927,7 +6542,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 name: "Clear",
                 definitionType: "method",
                 note: [
+                    "```ds",
                     "(method) IFilters.Clear(): Void",
+                    "```",
                     "--------------------",
                     "Removes all `Filter` objects from the collection.",
                 ].join("\n"),
@@ -5942,7 +6559,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                     }
                 ],
                 note: [
+                    "```ds",
                     "(method) IFilters.Remove(Index: Variant): Void",
+                    "```",
                     "--------------------",
                     "Removes a `Filter` object from the collection."
                 ].join("\n"),
@@ -5953,7 +6572,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
         name: "IFilter",
         definitionType: "interface",
         note: [
+            "```ds",
             "(interface) IFilter",
+            "```",
             "-----------------------------",
             "The `Filter` object represents a user-defined case data filter. It is used to filter the cases that are to be included when the table is populated.",
         ].join("\n"),
@@ -5964,7 +6585,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 returnType: BasicTypeDefinitions.string ,
                 readonly: true,
                 note: [
+                    "```ds",
                     "(property) IFilter.Name: String",
+                    "```",
                     "--------------------",
                     "The `Filter` object represents a user-defined case data filter. It is used to filter the cases that are to be included when the table is populated."
                 ].join("\n"),
@@ -5975,7 +6598,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 returnType: createBuiltInDefPlaceHolder("IFilters"),
                 readonly: true,
                 note: [
+                    "```ds",
                     "(property) IFilter.Parent: IFilters",
+                    "```",
                     "--------------------",
                     "The parent object",
                     "",
@@ -5988,7 +6613,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 definitionType: "property",
                 returnType: BasicTypeDefinitions.string ,
                 note: [
+                    "```ds",
                     "(property) IFilter.Description: String",
+                    "```",
                     "--------------------",
                     "A description of the filter"
                 ].join("\n"),
@@ -5998,7 +6625,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 definitionType: "property",
                 returnType: BasicTypeDefinitions.string ,
                 note: [
+                    "```ds",
                     "(property) IFilter.Expression: String",
+                    "```",
                     "--------------------",
                     "An *mrEvalulate* expression that is evaluated for each case in the case data. Only cases for which the expression evaluates to *True* are included.",
                     "",
@@ -6013,7 +6642,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 definitionType: "property",
                 returnType: BasicTypeDefinitions.boolean ,
                 note: [
+                    "```ds",
                     "(property) IFilter.IsDimensionsFilter: Boolean",
+                    "```",
                     "--------------------",
                     "*True* if the filter is intended to filter based on a per-user filter defined in `DimensionNet`. This allows the differentiation between the two types of filters for the purposes of generating annotations. `IsDimensionsFilter` is *False* by default."
                 ].join("\n"),
@@ -6023,7 +6654,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 definitionType: "property",
                 returnType: BasicTypeDefinitions.boolean ,
                 note: [
+                    "```ds",
                     "(property) IFilter.IsInterviewFilter: Boolean",
+                    "```",
                     "--------------------",
                     "*True* if the filter is intended to filter based on the interview status. This allows the differentiation between the two types of filters for the purposes of generating annotations."
                 ].join("\n"),
@@ -6033,7 +6666,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 definitionType: "property",
                 returnType: BasicTypeDefinitions.string ,
                 note: [
+                    "```ds",
                     "(property) IFilter.Level: String",
+                    "```",
                     "--------------------",
                     "The level the filter is to be applied at. The expression used must be relative to this level."
                 ].join("\n"),
@@ -6045,7 +6680,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
         definitionType: "interface",
         defaultProperty: "Item",
         note: [
+            "```ds",
             "(interface) IStatistics",
+            "```",
             "-----------------------------",
             "The `Statistics` object is a collection of `Statistic` objects that define statistical tests to be calculated when a table is populated.",
         ].join("\n"),
@@ -6056,7 +6693,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 returnType: BasicTypeDefinitions.long ,
                 readonly: true,
                 note: [
+                    "```ds",
                     "(property) IStatistics.Count: Long",
+                    "```",
                     "--------------------",
                     "The number of items in the collection."
                 ].join("\n"),
@@ -6072,7 +6711,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                     type: BasicTypeDefinitions.variant,
                 },
                 note: [
+                    "```ds",
                     "(property) IStatistics.Item[Index: Variant]: IStatistic",
+                    "```",
                     "--------------------",
                     "Get the collection item at the specified location."
                 ].join("\n"),
@@ -6083,7 +6724,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 returnType: createBuiltInDefPlaceHolder("ITableDefaults"),
                 readonly: true,
                 note: [
+                    "```ds",
                     "(property) IStatistics.Parent: ITable | ITableDefaults | ITableGlobals | IDocument",
+                    "```",
                     "--------------------",
                     "The parent object",
                 ].join("\n"),
@@ -6093,7 +6736,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 definitionType: "property",
                 returnType: BasicTypeDefinitions.string ,
                 note: [
+                    "```ds",
                     "(property) IStatistics.ColumnIDs: String",
+                    "```",
                     "--------------------",
                     "The selected column heading IDs that the `Column` Proportions, *Column Means*, and *Tukey* statistics are to test.",
                     "",
@@ -6107,7 +6752,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 definitionType: "property",
                 returnType: BasicTypeDefinitions.boolean ,
                 note: [
+                    "```ds",
                     "(property) IStatistics.ShowMinPVal: Boolean",
+                    "```",
                     "--------------------",
                     "If *True*, a column is appended to the table to contain the minimum p-value found in the row.",
                     "",
@@ -6120,7 +6767,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 definitionType: "property",
                 returnType: BasicTypeDefinitions.string ,
                 note: [
+                    "```ds",
                     "(property) IStatistics.TestColumns: String",
+                    "```",
                     "--------------------",
                     "The heading ids of the columns the `Column` Proportions, *Column Means* and *Tukey* statistics are to test",
                     "",
@@ -6143,7 +6792,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 definitionType: "property",
                 returnType: BasicTypeDefinitions.boolean ,
                 note: [
+                    "```ds",
                     "(property) IStatistics.UseEffectiveBase: Boolean",
+                    "```",
                     "--------------------",
                     "If *True*, the effective base is used when the tests are calculated, otherwise no base adjustment is made.",
                     "",
@@ -6156,7 +6807,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 definitionType: "property",
                 returnType: BasicTypeDefinitions.boolean ,
                 note: [
+                    "```ds",
                     "(property) IStatistics.UseGridOverlapFormula: Boolean",
+                    "```",
                     "--------------------",
                     "Set if the statistics should use grid overlap formula. If this option is set to *false*, the grid overlap formula is not used and normal overlap formula is used if current table is an overlap table (normal overlap or grid table). If this option is set to *true*, the product itself decides which formula to use.",
                     "",
@@ -6178,7 +6831,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                     }
                 ],
                 note: [
+                    "```ds",
                     "(method) IStatistics.Add(Name: Variant): IStatistic",
+                    "```",
                     "--------------------",
                     "Adds a statistic from the `IDocument.Statistics` collection to the current collection.",
                     "",
@@ -6190,7 +6845,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 name: "Clear",
                 definitionType: "method",
                 note: [
+                    "```ds",
                     "(method) IStatistics.Clear(): Void",
+                    "```",
                     "--------------------",
                     "Removes all `Statistic` objects from the collection.",
                 ].join("\n"),
@@ -6205,7 +6862,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                     }
                 ],
                 note: [
+                    "```ds",
                     "(method) IStatistics.Remove(Index: Variant): Void",
+                    "```",
                     "--------------------",
                     "Removes a `Statistic` object from the collection."
                 ].join("\n"),
@@ -6216,7 +6875,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
         name: "IStatistic",
         definitionType: "interface",
         note: [
+            "```ds",
             "(interface) IStatistic",
+            "```",
             "-----------------------------",
             "A `Statistic` object represents a statistical test that is to be calculated when a table is populated. Adding a statistical test to a table may automatically add extra cell items or elements to the table.",
         ].join("\n"),
@@ -6227,7 +6888,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 returnType: BasicTypeDefinitions.string ,
                 readonly: true,
                 note: [
+                    "```ds",
                     "(property) IStatistic.Annotation: String",
+                    "```",
                     "--------------------",
                     "Additional textual information provided about the test.",
                     "",
@@ -6242,7 +6905,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 returnType: BasicTypeDefinitions.string ,
                 readonly: true,
                 note: [
+                    "```ds",
                     "(property) IStatistic.Name: String",
+                    "```",
                     "--------------------",
                     "The name of the statistical test",
                     "",
@@ -6263,7 +6928,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 returnType: createBuiltInDefPlaceHolder("IStatistics"),
                 readonly: true,
                 note: [
+                    "```ds",
                     "(property) IStatistic.Parent: IStatistics",
+                    "```",
                     "--------------------",
                     "The parent object",
                     "",
@@ -6277,7 +6944,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 returnType: createBuiltInDefPlaceHolder("IProperties"),
                 readonly: true,
                 note: [
+                    "```ds",
                     "(property) IStatistic.Properties: IProperties",
+                    "```",
                     "--------------------",
                     "A collection of `Property` objects that supply additional parameters that are needed to perform the statistical test.",
                     "",
@@ -6300,7 +6969,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
         definitionType: "interface",
         defaultProperty: "Item",
         note: [
+            "```ds",
             "(interface) IProperties",
+            "```",
             "-----------------------------",
             "A collection of property objects.",
         ].join("\n"),
@@ -6311,7 +6982,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 returnType: BasicTypeDefinitions.long ,
                 readonly: true,
                 note: [
+                    "```ds",
                     "(property) IProperties.Count: Long",
+                    "```",
                     "--------------------",
                     "The number of items in the collection."
                 ].join("\n"),
@@ -6327,7 +7000,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                     type: BasicTypeDefinitions.variant,
                 },
                 note: [
+                    "```ds",
                     "(property) IProperties.Item[Index: Variant]: IProperty",
+                    "```",
                     "--------------------",
                     "Get the collection item at the specified location."
                 ].join("\n"),
@@ -6338,7 +7013,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 returnType: createBuiltInDefPlaceHolder("IProperties"),
                 readonly: true,
                 note: [
+                    "```ds",
                     "(property) IProperties.Copy: IProperties",
+                    "```",
                     "--------------------",
                     "Returns a copy of the current property object.",
                 ].join("\n"),
@@ -6355,7 +7032,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                     }
                 ],
                 note: [
+                    "```ds",
                     "(method) IProperties.Add(Property: IProperty): Void",
+                    "```",
                     "--------------------",
                     "Adds an item to the collection."
                 ].join("\n"),
@@ -6370,7 +7049,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                     }
                 ],
                 note: [
+                    "```ds",
                     "(method) IProperties.CopyTo(Properties: IProperties): Void",
+                    "```",
                     "--------------------",
                     "Copies the properties collection to the supplied properties collection object.",
                 ].join("\n"),
@@ -6380,7 +7061,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 definitionType: "method",
                 returnType: createBuiltInDefPlaceHolder("IProperty"),
                 note: [
+                    "```ds",
                     "(method) IProperties.CreateProperty(): IProperty",
+                    "```",
                     "--------------------",
                     "Creates a new property object."
                 ].join("\n"),
@@ -6395,7 +7078,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                     }
                 ],
                 note: [
+                    "```ds",
                     "(method) IProperties.Remove(Property: IProperty): Void",
+                    "```",
                     "--------------------",
                     "Removes an item from the collection."
                 ].join("\n")
@@ -6407,7 +7092,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
         definitionType: "interface",
         defaultProperty: "Value",
         note: [
+            "```ds",
             "(interface) IProperties",
+            "```",
             "-----------------------------",
             "The `Property` object represents a project property.",
             "",
@@ -6423,7 +7110,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 returnType: createBuiltInDefPlaceHolder("IProperty"),
                 readonly: true,
                 note: [
+                    "```ds",
                     "(property) IProperty.Copy: IProperty",
+                    "```",
                     "--------------------",
                     "Returns a copy of the current property object.",
                 ].join("\n"),
@@ -6433,7 +7122,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 definitionType: "property",
                 returnType: BasicTypeDefinitions.string ,
                 note: [
+                    "```ds",
                     "(property) IProperty.Name: String",
+                    "```",
                     "--------------------",
                     "The name of the property.",
                 ].join("\n"),
@@ -6443,7 +7134,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 definitionType: "property",
                 returnType: BasicTypeDefinitions.variant ,
                 note: [
+                    "```ds",
                     "(property) IProperty.Value: Variant",
+                    "```",
                     "--------------------",
                     "The property value. (Default Property)"
                 ].join("\n"),
@@ -6460,7 +7153,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                     }
                 ],
                 note: [
+                    "```ds",
                     "(method) IProperty.CopyTo(Property: IProperty): Void",
+                    "```",
                     "--------------------",
                     "Copies the property name and value to the supplied property object."
                 ].join("\n"),
@@ -6472,7 +7167,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
         definitionType: "interface",
         defaultProperty: "Item",
         note: [
+            "```ds",
             "(interface) IRules",
+            "```",
             "-----------------------------",
             "The `Rules` object is a collection of `Rule` objects. All of the rules defined by the `Rule` objects are applied to the cell values of a table when they are calculated during the call to `IDocument.Populate`",
         ].join("\n"),
@@ -6483,7 +7180,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 returnType: BasicTypeDefinitions.long ,
                 readonly: true,
                 note: [
+                    "```ds",
                     "(property) IRules.Count: Long",
+                    "```",
                     "--------------------",
                     "The number of items in the collection."
                 ].join("\n"),
@@ -6499,7 +7198,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                     type: BasicTypeDefinitions.variant,
                 },
                 note: [
+                    "```ds",
                     "(property) IRules.Item[Index: Variant]: IRule",
+                    "```",
                     "--------------------",
                     "Get the collection item at the specified location."
                 ].join("\n"),
@@ -6510,7 +7211,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 returnType: createBuiltInDefPlaceHolder("ITableDefaults"),
                 readonly: true,
                 note: [
+                    "```ds",
                     "(property) IRules.Parent: ITable | ITableDefaults",
+                    "```",
                     "--------------------",
                     "The parent object",
                 ].join("\n"),
@@ -6559,7 +7262,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                     }
                 ],
                 note: [
+                    "```ds",
                     "(method) IRules.AddNew([Type: RuleType = rlHide], [Target: RuleTarget = rtRow], [CellItemRef: Long = (long)0], [Operator: ComparisonOperator = opEqual], [Value: Double = (double)0.0]): IRule",
+                    "```",
                     "--------------------",
                     "Creates a new Rule and adds it to the collection.",
                     "",
@@ -6576,7 +7281,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 name: "Clear",
                 definitionType: "method",
                 note: [
+                    "```ds",
                     "(method) IRules.Clear(): Void",
+                    "```",
                     "--------------------",
                     "Removes all `Rule` objects from the collection."
                 ].join("\n"),
@@ -6592,7 +7299,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                     }
                 ],
                 note: [
+                    "```ds",
                     "(method) IRules.Remove(Index: Variant): Void",
+                    "```",
                     "--------------------",
                     "Removes an item from the collection.",
                     "### Parameters",
@@ -6605,7 +7314,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
         name: "IRule",
         definitionType: "interface",
         note: [
+            "```ds",
             "(interface) IRule",
+            "```",
             "-----------------------------",
             "The `IRule` object defines criteria, for example, hiding parts of the table.",
         ].join("\n"),
@@ -6616,7 +7327,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 returnType: BasicTypeDefinitions.boolean ,
                 readonly: true,
                 note: [
+                    "```ds",
                     "(property) IRule.IsActive: Boolean",
+                    "```",
                     "--------------------",
                     "Returns *True* if the rule is active, or *False* if the rule is disabled.",
                     "",
@@ -6630,7 +7343,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 returnType: createBuiltInDefPlaceHolder("IRules"),
                 readonly: true,
                 note: [
+                    "```ds",
                     "(property) IRule.Parent: IRules",
+                    "```",
                     "--------------------",
                     "The parent object",
                     "",
@@ -6643,7 +7358,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 definitionType: "property",
                 returnType: BasicTypeDefinitions.long ,
                 note: [
+                    "```ds",
                     "(property) IRule.CellItemRef: Long",
+                    "```",
                     "--------------------",
                     "The index (into the tables `CellItems` collection) of the `CellItem` on which the rule's condition is based.",
                 ].join("\n")
@@ -6653,7 +7370,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 definitionType: "property",
                 returnType: BasicTypeDefinitions.string ,
                 note: [
+                    "```ds",
                     "(property) IRule.ElementRef: String",
+                    "```",
                     "--------------------",
                     "A reference to the element to the rule is to operate on.",
                     "",
@@ -6668,7 +7387,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 definitionType: "property",
                 returnType: BasicTypeDefinitions.boolean ,
                 note: [
+                    "```ds",
                     "(property) IRule.IgnoreSpecialElements: Boolean",
+                    "```",
                     "--------------------",
                     "If *False*, any special element such as mean, subtotal, etc, is hidden if it passes the rule for hiding.",
                     "",
@@ -6681,7 +7402,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 definitionType: "property",
                 returnType: createBuiltInDefPlaceHolder("ComparisonOperator") ,
                 note: [
+                    "```ds",
                     "(property) IRule.Operator: ComparisonOperator",
+                    "```",
                     "--------------------",
                     "The type of comparison operation to perform.",
                 ].join("\n"),
@@ -6691,7 +7414,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 definitionType: "property",
                 returnType: createBuiltInDefPlaceHolder("RuleTarget") ,
                 note: [
+                    "```ds",
                     "(property) IRule.Target: RuleTarget",
+                    "```",
                     "--------------------",
                     "The target of the rule.Note that it's not possible to change the `Target` property of a rule if an `ElementRef` property has been set. This is because changing the target will probably make the `ElementRef` invalid.",
                 ].join("\n")
@@ -6701,7 +7426,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 definitionType: "property",
                 returnType: createBuiltInDefPlaceHolder("RuleType") ,
                 note: [
+                    "```ds",
                     "(property) IRule.Type: RuleType",
+                    "```",
                     "--------------------",
                     "The type of rule.",
                 ].join("\n")
@@ -6711,7 +7438,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 definitionType: "property",
                 returnType: BasicTypeDefinitions.double ,
                 note: [
+                    "```ds",
                     "(property) IRule.Value: Double",
+                    "```",
                     "--------------------",
                     "The condition the rule is to test for.",
                     "",
@@ -6730,7 +7459,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
         name: "ISortSpecification",
         definitionType: "interface",
         note: [
+            "```ds",
             "(interface) ISortSpecification",
+            "```",
             "-----------------------------",
             "The `ISortSpecification` object defines the row or column to sort and the sort order (ascending/descending).",
         ].join("\n"),
@@ -6741,7 +7472,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 returnType: BasicTypeDefinitions.boolean ,
                 readonly: true,
                 note: [
+                    "```ds",
                     "(property) ISortSpecification.IsActive: Boolean",
+                    "```",
                     "--------------------",
                     "*True* if the sort specification is active",
                     "",
@@ -6755,7 +7488,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 returnType: createBuiltInDefPlaceHolder("ITable"),
                 readonly: true,
                 note: [
+                    "```ds",
                     "(property) ISortSpecification.Parent: ITable | ITableDefaults",
+                    "```",
                     "--------------------",
                     "The parent object",
                     "",
@@ -6768,7 +7503,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 definitionType: "property",
                 returnType: BasicTypeDefinitions.string ,
                 note: [
+                    "```ds",
                     "(property) ISortSpecification.ElementRef: String",
+                    "```",
                     "--------------------",
                     "A reference to the element to sort on",
                     "",
@@ -6795,7 +7532,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 definitionType: "property",
                 returnType: createBuiltInDefPlaceHolder("OrderConstants") ,
                 note: [
+                    "```ds",
                     "(property) ISortSpecification.Order: OrderConstants",
+                    "```",
                     "--------------------",
                     "The order (ascending/descending) in which to sort the values.",
                     "",
@@ -6814,7 +7553,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 name: "Clear",
                 definitionType: "method",
                 note: [
+                    "```ds",
                     "(method) ISortSpecification.Clear(): Void",
+                    "```",
                     "--------------------",
                     "Clears the sort specification",
                     "",
@@ -6828,7 +7569,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
         name: "IAnnotation",
         definitionType: "interface",
         note: [
+            "```ds",
             "(interface) IAnnotation",
+            "```",
             "-----------------------------",
             "The `Annotation` object is used to represent the heading, footnote, or table title text. The text can contain macros that are automatically replaced with the correct information about the table. The annotations are generally used to define the information that appears around the table when it is exported.",
         ].join("\n"),
@@ -6839,7 +7582,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 returnType: createBuiltInDefPlaceHolder("IAnnotations"),
                 readonly: true,
                 note: [
+                    "```ds",
                     "(property) IAnnotation.Parent: IAnnotations",
+                    "```",
                     "--------------------",
                     "The parent object",
                     "",
@@ -6853,7 +7598,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 returnType: BasicTypeDefinitions.string ,
                 readonly: true,
                 note: [
+                    "```ds",
                     "(property) IAnnotation.Text: String",
+                    "```",
                     "--------------------",
                     "The text of the annotation. This is the same as the `IAnnotation.Specification` property but with the macros expanded."
                 ].join("\n")
@@ -6863,7 +7610,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 definitionType: "property",
                 returnType: createBuiltInDefPlaceHolder("AnnotationPosition") ,
                 note: [
+                    "```ds",
                     "(property) IAnnotation.Position: AnnotationPosition",
+                    "```",
                     "--------------------",
                     "The position on the table of this `Annotation`."
                 ].join("\n")
@@ -6873,7 +7622,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 definitionType: "property",
                 returnType: BasicTypeDefinitions.string ,
                 note: [
+                    "```ds",
                     "(property) IAnnotation.Specification: String",
+                    "```",
                     "--------------------",
                     "A specification of the annotation. This can contain macros which are automatically replaced with the correct table information.",
                     "",
@@ -6893,7 +7644,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
         definitionType: "interface",
         defaultProperty: "Item",
         note: [
+            "```ds",
             "(interface) IAnnotations",
+            "```",
             "-----------------------------",
             "A collection of `Annotation` objects. An `Annotation` is a piece of text that gives information about the table. The text is dynamically generated by the Annotation object and is intended to be used when exporting the table.",
             "",
@@ -6907,7 +7660,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 returnType: BasicTypeDefinitions.long ,
                 readonly: true,
                 note: [
+                    "```ds",
                     "(property) IAnnotations.Count: Long",
+                    "```",
                     "-----------------------------",
                     "The number of `Annotation` objects in the collection."
                 ].join("\n")
@@ -6923,7 +7678,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                     type: BasicTypeDefinitions.variant,
                 },
                 note: [
+                    "```ds",
                     "(property) IAnnotations.Item[Index: Variant]: IAnnotation",
+                    "```",
                     "-----------------------------",
                     "Returns the specified `Annotation` object in the collection."
                 ].join("\n")
@@ -6934,7 +7691,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 returnType: createBuiltInDefPlaceHolder("ITableDefaults"),
                 readonly: true,
                 note: [
+                    "```ds",
                     "(property) IAnnotations.Parent: ITable | ITableDefaults | ITableGlobals",
+                    "```",
                     "-----------------------------",
                     "The parent object",
                     "",
@@ -6948,7 +7707,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 name: "ClearAll",
                 definitionType: "method",
                 note: [
+                    "```ds",
                     "(method) IAnnotations.ClearAll(): Void",
+                    "```",
                     "-----------------------------",
                     "Clears the `Specification` property of all `Annotation` objects in the collection"
                 ].join("\n"),
@@ -6960,7 +7721,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
         definitionType: "interface",
         defaultProperty: "Item",
         note: [
+            "```ds",
             "(interface) ITableListNode",
+            "```",
             "-----------------------------",
             "The `IDocument.GroupedTables` property represents tables arranged into hierarchical groupings. This can be thought of as groups of tables that can in turn contain other groups, like folders that contain files or other folders.",
             "",
@@ -7012,7 +7775,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                     type: BasicTypeDefinitions.variant
                 },
                 note: [
+                    "```ds",
                     "(property) ITableListNode.ChildNode[Index: Variant]: ITableListNode",
+                    "```",
                     "-----------------------------",
                     "Returns the specified child node.",
                 ].join("\n")
@@ -7023,7 +7788,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 returnType: BasicTypeDefinitions.long ,
                 readonly: true,
                 note: [
+                    "```ds",
                     "(property) ITableListNode.Count: Long",
+                    "```",
                     "-----------------------------",
                     "The number of child nodes the current node has."
                 ].join("\n")
@@ -7034,7 +7801,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 returnType: BasicTypeDefinitions.boolean ,
                 readonly: true,
                 note: [
+                    "```ds",
                     "(property) ITableListNode.HasChildNodes: Boolean",
+                    "```",
                     "-----------------------------",
                     "*True* if this node has at least one child node",
                 ].join("\n")
@@ -7045,7 +7814,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 returnType: BasicTypeDefinitions.boolean ,
                 readonly: true,
                 note: [
+                    "```ds",
                     "(property) ITableListNode.HasTable: Boolean",
+                    "```",
                     "-----------------------------",
                     "*True* if this node references a table.",
                 ].join("\n"),
@@ -7061,7 +7832,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                     type: BasicTypeDefinitions.variant,
                 },
                 note: [
+                    "```ds",
                     "(property) ITableListNode.Item[Index: Variant]: ITableListNode",
+                    "```",
                     "-----------------------------",
                     "Returns the specified child node. This is the default property.",
                 ].join("\n")
@@ -7072,7 +7845,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 returnType: BasicTypeDefinitions.string ,
                 readonly: true,
                 note: [
+                    "```ds",
                     "(property) ITableListNode.Name: String",
+                    "```",
                     "-----------------------------",
                     "The name of the node."
                 ].join("\n")
@@ -7083,7 +7858,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 returnType: createBuiltInDefPlaceHolder("ITableListNode"),
                 readonly: true,
                 note: [
+                    "```ds",
                     "(property) ITableListNode.Parent: ITableListNode | IDocument",
+                    "```",
                     "-----------------------------",
                     "The parent object",
                     "",
@@ -7096,7 +7873,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 definitionType: "property",
                 returnType: BasicTypeDefinitions.string ,
                 note: [
+                    "```ds",
                     "(property) ITableListNode.Description: String",
+                    "```",
                     "-----------------------------",
                     "A description of the node.",
                 ].join("\n")
@@ -7106,7 +7885,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 definitionType: "property",
                 returnType: createBuiltInDefPlaceHolder("ITable"),
                 note: [
+                    "```ds",
                     "(property) ITableListNode.Table: ITable",
+                    "```",
                     "-----------------------------",
                     "The table object associated with the node.",
                     "",
@@ -7149,7 +7930,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                     },
                 ],
                 note: [
+                    "```ds",
                     "(method) ITableListNode.AddNewGrid(Name: String, Field: String, [Orientation: DisplayOrientation = doDefault], [Description: String = \"\"], [Index: Long = -1]): ITable",
+                    "```",
                     "-----------------------------",
                     "Adds a new child node that references grid table.",
                     "",
@@ -7188,7 +7971,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                     },
                 ],
                 note: [
+                    "```ds",
                     "(method) ITableListNode.AddNewNode(Name: String, [Description: String = \"\"], [Index: Long = -1]): ITableListNode",
+                    "```",
                     "-----------------------------",
                     "Adds a new child node",
                     "",
@@ -7239,7 +8024,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                     },
                 ],
                 note: [
+                    "```ds",
                     "(method) ITableListNode.AddNewTable(Name: String, [Specification: String = \"\"], [Description: String = \"\"], [Index: Long = -1]): ITable",
+                    "```",
                     "-----------------------------",
                     "Adds a new child node that references table.",
                     "",
@@ -7270,7 +8057,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                     }
                 ],
                 note: [
+                    "```ds",
                     "(method) ITableListNode.AddNode(Node: ITableListNode, [Index: Long = -1]): ITableListNode",
+                    "```",
                     "-----------------------------",
                     "Add an existing node as a child of the current node.",
                     "",
@@ -7302,7 +8091,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                     }
                 ],
                 note: [
+                    "```ds",
                     "(method) ITableListNode.AddTable(Table: ITable, [Index: Long = -1]): ITableListNode",
+                    "```",
                     "-----------------------------",
                     "Add an existing table as new node that is a child of the current node.",
                     "",
@@ -7324,7 +8115,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 name: "Clear",
                 definitionType: "method",
                 note: [
+                    "```ds",
                     "(method) ITableListNode.Clear(): Void",
+                    "```",
                     "-----------------------------",
                     "Removes all child nodes"
                 ].join("\n"),
@@ -7340,7 +8133,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                     }
                 ],
                 note: [
+                    "```ds",
                     "(method) ITableListNode.Remove(Index: Variant): Void",
+                    "```",
                     "-----------------------------",
                     "Removes a child node",
                 ].join("\n")
@@ -7351,7 +8146,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
         name: "ITableDefaults",
         definitionType: "interface",
         note: [
+            "```ds",
             "(interface) ITableDefaults",
+            "```",
             "-----------------------------",
             "The `TableDefaults` object contains properties that define the initial state of a newly created Table object. These default properties are set to \"sensible\" values when the `Document` object is first created. These initial defaults allow simple tables to be created with a minimal amount of code. Separate TableDefaults objects are used for aggregated and profile tables (IDocument.Default and IDocument.ProfileDefault respectively).",
         ].join("\n"),
@@ -7362,7 +8159,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 returnType: createBuiltInDefPlaceHolder("IAnnotations"),
                 readonly: true,
                 note: [
+                    "```ds",
                     "(property) ITableDefaults.Annotations: IAnnotations",
+                    "```",
                     "-----------------------------",
                     "A collection of `Annotation` objects. These are copied to the `Annotations` collection of the Table object when a new table is created.",
                     "",
@@ -7382,7 +8181,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 returnType: createBuiltInDefPlaceHolder("IAxes"),
                 readonly: true,
                 note: [
+                    "```ds",
                     "(property) ITableDefaults.Axes: IAxes",
+                    "```",
                     "-----------------------------",
                     "A collection of `Axis` objects. These are copied to the `Axes` collection of the `Table` object when a new table is created. This collection is initially empty."
                 ].join("\n"),
@@ -7393,7 +8194,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 returnType: createBuiltInDefPlaceHolder("ICellItems"),
                 readonly: true,
                 note: [
+                    "```ds",
                     "(property) ITableDefaults.CellItems: ICellItems",
+                    "```",
                     "-----------------------------",
                     "A collection of `CellItem` objects. These are copied to the `CellItems` collection of the Table object when a new table is created.",
                     "",
@@ -7411,7 +8214,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 returnType: createBuiltInDefPlaceHolder("IFilters"),
                 readonly: true,
                 note: [
+                    "```ds",
                     "(property) ITableDefaults.Filters: IFilters",
+                    "```",
                     "-----------------------------",
                     "A collection of `Filter` objects. These are copied to the `Filters` collection of the `Table` object when a new table is created. This collection is initially empty.",
                 ].join("\n"),
@@ -7422,7 +8227,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 returnType: createBuiltInDefPlaceHolder("IDocument"),
                 readonly: true,
                 note: [
+                    "```ds",
                     "(property) ITableDefaults.Parent: IDocument",
+                    "```",
                     "-----------------------------",
                     "The parent object",
                     "",
@@ -7436,7 +8243,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 returnType: createBuiltInDefPlaceHolder("IProperties"),
                 readonly: true,
                 note: [
+                    "```ds",
                     "(property) ITableDefaults.Properties: IProperties",
+                    "```",
                     "-----------------------------",
                     "A collection of `Property` objects. These are copied to the `Properties` collection of the `Table` object when a new table is created. See `ITable.Properties` for more information.",
                 ].join("\n"),
@@ -7447,8 +8256,10 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 returnType: createBuiltInDefPlaceHolder("IRules"),
                 readonly: true,
                 note: [
+                    "```ds",
                     "(property) ITableDefaults.Rules: IRules",
-                    "-----------------------------",
+                    "```",
+                "-----------------------------",
                     "A collection of `Rule` objects. These are copied to the `Rules` collection of the `Table` object when a new table is created. This collection is initially empty.",
                 ].join("\n"),
             },
@@ -7458,7 +8269,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 returnType: createBuiltInDefPlaceHolder("IStatistics"),
                 readonly: true,
                 note: [
+                    "```ds",
                     "(property) ITableDefaults.Statistics: IStatistics",
+                    "```",
                     "-----------------------------",
                     "A collection of `Statistic` objects. These are copied to the `Statistics` collection of the `Table` object when a new table is created. This collection is initially empty.",
                     "",
@@ -7471,7 +8284,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 definitionType: "property",
                 returnType: BasicTypeDefinitions.string ,
                 note: [
+                    "```ds",
                     "(property) ITableDefaults.SortColumn: String",
+                    "```",
                     "-----------------------------",
                     "The default `SortColumn` settings for new tables.",
                     "",
@@ -7484,7 +8299,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 definitionType: "property",
                 returnType: BasicTypeDefinitions.string ,
                 note: [
+                    "```ds",
                     "(property) ITableDefaults.SortRow: String",
+                    "```",
                     "-----------------------------",
                     "The default `SortRow` settings for new tables.",
                     "",
@@ -7498,7 +8315,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 definitionType: "property",
                 returnType: BasicTypeDefinitions.string ,
                 note: [
+                    "```ds",
                     "(property) ITableDefaults.Weight: String",
+                    "```",
                     "-----------------------------",
                     "The default value of the `Weight` property for new tables.",
                     "",
@@ -7512,7 +8331,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 name: "Clear",
                 definitionType: "method",
                 note: [
+                    "```ds",
                     "(method) ITableDefaults.Clear(): Void",
+                    "```",
                     "-----------------------------",
                     "Clears all the properties of the TableDefaults object"
                 ].join("\n")
@@ -7521,7 +8342,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 name: "Reset",
                 definitionType: "method",
                 note: [
+                    "```ds",
                     "(method) ITableDefaults.Reset(): Void",
+                    "```",
                     "-----------------------------",
                     "Resets all the properties of the TableDefaults object to what they were when the Document object was initially created."
                 ].join("\n"),
@@ -7532,7 +8355,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
         name: "ITableGlobals",
         definitionType: "interface",
         note: [
+            "```ds",
             "(interface) ITableGlobals",
+            "```",
             "-----------------------------",
             "The `TableGlobals` object contains settings that are applied to all tables in the table document.",
             "",
@@ -7546,7 +8371,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 returnType: createBuiltInDefPlaceHolder("IAnnotations"),
                 readonly: true,
                 note: [
+                    "```ds",
                     "(property) ITableGlobals.Annotations: IAnnotations",
+                    "```",
                     "-----------------------------",
                     "A collection of `Annotation` objects that are applied to all tables in the collection.",
                     "",
@@ -7568,7 +8395,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 returnType: createBuiltInDefPlaceHolder("ICellItems"),
                 readonly: true,
                 note: [
+                    "```ds",
                     "(property) ITableGlobals.CellItems: ICellItems",
+                    "```",
                     "-----------------------------",
                     "A collection of `CellItem` objects that are applied to all tables in the collection.",
                     "",
@@ -7582,7 +8411,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 returnType: createBuiltInDefPlaceHolder("IFilters"),
                 readonly: true,
                 note: [
+                    "```ds",
                     "(property) ITableGlobals.Filters: IFilters",
+                    "```",
                     "-----------------------------",
                     "A collection of `Filter` objects that are applied to all the tables in the collection.",
                     "",
@@ -7596,7 +8427,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 returnType: createBuiltInDefPlaceHolder("IDocument"),
                 readonly: true,
                 note: [
+                    "```ds",
                     "(property) ITableGlobals.Parent: IDocument",
+                    "```",
                     "-----------------------------",
                     "The parent object",
                     "",
@@ -7610,7 +8443,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 returnType: createBuiltInDefPlaceHolder("IStatistics"),
                 readonly: true,
                 note: [
+                    "```ds",
                     "(property) ITableGlobals.Statistics: IStatistics",
+                    "```",
                     "-----------------------------",
                     "A collection of `Statistic` objects that are applied to all tables in the collection.",
                     "",
@@ -7624,7 +8459,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 name: "Clear",
                 definitionType: "method",
                 note: [
+                    "```ds",
                     "(method) ITableGlobals.Clear(): Void",
+                    "```",
                     "-----------------------------",
                     "Clears all the properties of the `TableGlobals` object.",
                     "",
@@ -7642,7 +8479,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
         name: "IDataSet",
         definitionType: "interface",
         note: [
+            "```ds",
             "(interface) IDataSet",
+            "```",
             "-----------------------------",
             "The `DataSet` object represents the data that the table is to be based upon. The `Load()` method of the `DataSet` object needs to be called soon after creating a Document object in order to set the data set to be used for the tables.",
             "",
@@ -7656,7 +8495,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 returnType: BasicTypeDefinitions.boolean ,
                 readonly: true,
                 note: [
+                    "```ds",
                     "(property) IDataSet.CanChangeView: Boolean",
+                    "```",
                     "-----------------------------",
                     "*True* if the View property can be changed.",
                     "",
@@ -7670,7 +8511,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 returnType: BasicTypeDefinitions.boolean ,
                 readonly: true,
                 note: [
+                    "```ds",
                     "(property) IDataSet.HasHdata: Boolean",
+                    "```",
                     "-----------------------------",
                     "*True* if the current data set supports *HDATA*.",
                     "",
@@ -7685,7 +8528,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 returnType: BasicTypeDefinitions.boolean ,
                 readonly: true,
                 note: [
+                    "```ds",
                     "(property) IDataSet.HasVdata: Boolean",
+                    "```",
                     "-----------------------------",
                     "*True* if the current data set supports *VDATA*.",
                     "",
@@ -7700,7 +8545,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 returnType: createBuiltInDefPlaceHolder("IChangeTracker"),
                 readonly: true,
                 note: [
+                    "```ds",
                     "(property) IDataSet.MdmChangeTracker: IChangeTracker",
+                    "```",
                     "-----------------------------",
                     "A `ChangeTracker` object which can be used to track changes to the `MdmDocument`",
                     "",
@@ -7714,7 +8561,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 returnType: createBuiltInDefPlaceHolder("IDocument"),
                 readonly: true,
                 note: [
+                    "```ds",
                     "(property) IDataSet.MdmDocument: IDocument",
+                    "```",
                     "-----------------------------",
                     "The metadata document loaded.",
                     "",
@@ -7728,7 +8577,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 returnType: BasicTypeDefinitions.string ,
                 readonly: true,
                 note: [
+                    "```ds",
                     "(property) IDataSet.MdscName: String",
+                    "```",
                     "-----------------------------",
                     "The name of the *DSC* used to load the metadata.",
                 ].join("\n")
@@ -7739,7 +8590,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 returnType: BasicTypeDefinitions.string ,
                 readonly: true,
                 note: [
+                    "```ds",
                     "(property) IDataSet.MetaDataLocation: String",
+                    "```",
                     "-----------------------------",
                     "The location of the metadata.",
                 ].join("\n"),
@@ -7750,7 +8603,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 returnType: createBuiltInDefPlaceHolder("IDocument"),
                 readonly: true,
                 note: [
+                    "```ds",
                     "(property) IDataSet.Parent: IDocument",
+                    "```",
                     "-----------------------------",
                     "The parent object",
                     "",
@@ -7764,7 +8619,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 returnType: createBuiltInDefPlaceHolder("IVariableListItem"),
                 readonly: true,
                 note: [
+                    "```ds",
                     "(property) IDataSet.Variables: IVariableListItem",
+                    "```",
                     "-----------------------------",
                     "The `Variables` for the open data set.",
                     "",
@@ -7778,7 +8635,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 returnType: BasicTypeDefinitions.string ,
                 readonly: true,
                 note: [
+                    "```ds",
                     "(property) IDataSet.Version: String",
+                    "```",
                     "-----------------------------",
                     "The version specification of the metadata loaded.",
                 ].join("\n"),
@@ -7788,8 +8647,10 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 definitionType: "property",
                 returnType: BasicTypeDefinitions.string ,
                 note: [
+                    "```ds",
                     "(property) IDataSet.CdscName: String",
-                    "----------------------",
+                    "```",
+            "-----------------------------",
                     "The name of the *DSC* to be used to access the case data.",
                 ].join("\n"),
             },
@@ -7798,8 +8659,10 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 definitionType: "property",
                 returnType: BasicTypeDefinitions.string ,
                 note: [
+                    "```ds",
                     "(property) IDataSet.DbLocation: String",
-                    "----------------------",
+                    "```",
+            "-----------------------------",
                     "The location of the case data for the table. The content of this string depends on the specific case data *DSC* that is used.",
                 ].join("\n"),
             },
@@ -7808,8 +8671,10 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 definitionType: "property",
                 returnType: BasicTypeDefinitions.string ,
                 note: [
+                    "```ds",
                     "(property) IDataSet.Description: String",
-                    "----------------------",
+                    "```",
+            "-----------------------------",
                     "A user specified description of the contents of this data set. This can be used as an annotation on the table.",
                 ].join("\n"),
             },
@@ -7818,8 +8683,10 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 definitionType: "property",
                 returnType: BasicTypeDefinitions.string ,
                 note: [
+                    "```ds",
                     "(property) IDataSet.Filter: String",
-                    "----------------------",
+                    "```",
+            "-----------------------------",
                     "The global filter for *CDSCs* that natively support case data filtering.",
                     "",
                     "### Remarks",
@@ -7834,8 +8701,10 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 definitionType: "property",
                 returnType: BasicTypeDefinitions.string ,
                 note: [
+                    "```ds",
                     "(property) IDataSet.Project: String",
-                    "----------------------",
+                    "```",
+            "-----------------------------",
                     "The specific project to use in the case of a *DSC* that supports multiple projects per database.",
                 ].join("\n"),
             },
@@ -7844,8 +8713,10 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 returnType: createBuiltInDefPlaceHolder("DataSetView") ,
                 definitionType: "property",
                 note: [
+                    "```ds",
                     "(property) IDataSet.View: DataSetView",
-                    "----------------------",
+                    "```",
+            "-----------------------------",
                     "The view of the data set that is currently being used.",
                     "",
                     "### Remarks",
@@ -7900,8 +8771,10 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                     },
                 ],
                 note: [
+                    "```ds",
                     "(method) IDataSet.Load(MetaData: Variant, [MDSC: String = \"\"], [DbLocation: String = \"\"], [CDSC: String = \"\"], [Project: String = \"\"], [Version: String = {..}]): Void",
-                    "----------------------",
+                    "```",
+            "-----------------------------",
                     "Loads the metadata and case data to be used.",
                     "",
                     "### Remarks",
@@ -7923,8 +8796,10 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 name: "ValidateCaseData",
                 definitionType: "method",
                 note: [
+                    "```ds",
                     "(method) IDataSet.ValidateCaseData(): Void",
-                    "----------------------",
+                    "```",
+            "-----------------------------",
                     "Attempts to connect to the case data and returns an error if the case data can't be accessed",
                     "",
                     "### Remarks",
@@ -7938,8 +8813,10 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
         definitionType: "interface",
         defaultProperty: "Item",
         note: [
+            "```ds",
             "(interface) IExports",
-            "-------------------------",
+            "```",
+ "-------------------------",
             "A collection of `Export` objects. Each `Export` object represents an export plug-in that can be used to export the tables in the document to a particular output format.",
             "",
             "### Remarks",
@@ -7952,8 +8829,10 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 returnType: BasicTypeDefinitions.long ,
                 readonly: true,
                 note: [
+                    "```ds",
                     "(property) IExports.Count: Long",
-                    "-------------------------",
+                    "```",
+                    "-----------------------------",
                     "The number of `Export` objects in the collection.",
                 ].join("\n"),
             },
@@ -7968,8 +8847,10 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                     type: BasicTypeDefinitions.variant
                 },
                 note: [
+                    "```ds",
                     "(property) IExports.Item[Index: Variant]: IExport",
-                    "-------------------------",
+                    "```",
+                    "-----------------------------",
                     "Returns the specified `Export` object in the collection.",
                 ].join("\n"),
             },
@@ -7979,8 +8860,10 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 returnType: createBuiltInDefPlaceHolder("IDocument"),
                 readonly: true,
                 note: [
+                    "```ds",
                     "(property) IExports.Parent: IDocument",
-                    "-------------------------",
+                    "```",
+                    "-----------------------------",
                     "The parent object",
                 ].join("\n"),
             },
@@ -8017,8 +8900,10 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                     },
                 ],
                 note: [
+                    "```ds",
                     "(method) IExports.AddNew(Name: String, ClassId: String, [CodeBase: String = \"\"], [Description: String = \"\"]): IExport",
-                    "-------------------------",
+                    "```",
+                    "-----------------------------",
                     "Creates a new `Export` object and adds it to the collection.",
                     "",
                     "### Remarks",
@@ -8029,8 +8914,10 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 name: "Clear",
                 definitionType: "method",
                 note: [
+                    "```ds",
                     "(method) IExports.Clear(): Void",
-                    "-------------------------",
+                    "```",
+                    "-----------------------------",
                     "Removes all Export objects from the collection",
                 ].join("\n")
             },
@@ -8045,8 +8932,10 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                     }
                 ],
                 note: [
+                    "```ds",
                     "(method) IExports.Remove(Index: Variant): Void",
-                    "-------------------------",
+                    "```",
+                    "-----------------------------",
                     "Removes the specified `Export` object from the collection.",
                 ].join("\n"),
             }
@@ -8056,8 +8945,10 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
         name: "IExport",
         definitionType: "interface",
         note: [
+            "```ds",
             "(interface) IExport",
-            "-------------------------",
+            "```",
+ "-------------------------",
             "Each `Export` object represents an export plug-in that can be used to export the tables in the document to a particular output format. The `Export` object serves to make the presence of the export plug-in transparent to the user of the `Table Object Model`.",
         ].join("\n"),
         properties: [
@@ -8067,8 +8958,10 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 returnType: BasicTypeDefinitions.string ,
                 readonly: true,
                 note: [
+                    "```ds",
                     "(property) IExport.ClassId: String",
-                    "-------------------------",
+                    "```",
+                    "-----------------------------",
                     "The `ClassId` string of the class that implements the export plug-in.",
                 ].join("\n"),
             },
@@ -8078,8 +8971,10 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 returnType: BasicTypeDefinitions.string ,
                 readonly: true,
                 note: [
+                    "```ds",
                     "(property) IExport.CodeBase: String",
-                    "-------------------------",
+                    "```",
+                    "-----------------------------",
                     "The location of the binary code for the plug-in. This will typically be the location of a signed CAB file for download from a web server. This is to enable the export plug-in to be downloaded and run on the client in a client/server situation.",
                 ].join("\n")
             },
@@ -8089,8 +8984,10 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 returnType: BasicTypeDefinitions.string ,
                 readonly: true,
                 note: [
+                    "```ds",
                     "(property) IExport.Description: String",
-                    "-------------------------",
+                    "```",
+                    "-----------------------------",
                     "A description of the export plug-in",
                 ].join("\n"),
             },
@@ -8100,8 +8997,10 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 returnType: BasicTypeDefinitions.boolean ,
                 readonly: true,
                 note: [
+                    "```ds",
                     "(property) IExport.IsServerOnly: Boolean",
-                    "-------------------------",
+                    "```",
+                    "-----------------------------",
                     "If there is no `CodeBase` specified then `IsServerOnly` is *True*, because there is no code that can be downloaded and run on the client.",
                 ].join("\n")
             },
@@ -8111,8 +9010,10 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 returnType: BasicTypeDefinitions.string ,
                 readonly: true,
                 note: [
+                    "```ds",
                     "(property) IExport.Name: String",
-                    "-------------------------",
+                    "```",
+                    "-----------------------------",
                     "The name of the `Export` object and the corresponding export plug-in",
                 ].join("\n")
             },
@@ -8122,8 +9023,10 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 returnType: createBuiltInDefPlaceHolder("IExports"),
                 readonly: true,
                 note: [
+                    "```ds",
                     "(property) IExport.Parent: IExports",
-                    "-------------------------",
+                    "```",
+                    "-----------------------------",
                     "The `Parent` property of the `Export` object always returns an `Exports` collection",
                 ].join("\n")
             },
@@ -8133,8 +9036,10 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 returnType: createBuiltInDefPlaceHolder("IProperties"),
                 readonly: true,
                 note: [
+                    "```ds",
                     "(property) IExport.Properties: IProperties",
-                    "-------------------------",
+                    "```",
+                    "-----------------------------",
                     "The exact `Property` objects in the collection are dependent on the particular export plug-in. For more information, see `Exporting` Tables.",
                 ].join("\n")
             },
@@ -8159,8 +9064,10 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                     }
                 ],
                 note: [
+                    "```ds",
                     "(method) IExport.Export([Destination: Variant], [Tables: Variant]): Variant",
-                    "-------------------------",
+                    "```",
+                    "-----------------------------",
                     "Invokes the export plug-in in order to export the specified tables.",
                     "",
                     "### Remarks",
@@ -8179,8 +9086,10 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
         definitionType: "interface",
         defaultProperty: "Item",
         note: [
+            "```ds",
             "(interface) IElements",
-            "----------------------",
+            "```",
+            "-----------------------------",
             "A collection of Element objects.",
         ].join("\n"),
         properties: [
@@ -8190,7 +9099,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 returnType: BasicTypeDefinitions.long ,
                 readonly: true,
                 note: [
+                    "```ds",
                     "(property) IElements.Count: Long",
+                    "```",
                     "--------------------",
                     "The number of items in the collection."
                 ].join("\n"),
@@ -8206,8 +9117,10 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                     type: BasicTypeDefinitions.variant
                 },
                 note: [
+                    "```ds",
                     "(property) IElements.Item[Index: Variant]: IElement",
-                    "-------------------------",
+                    "```",
+                    "-----------------------------",
                     "Returns a specified element in the collection.",
                 ].join("\n"),
             },
@@ -8217,8 +9130,10 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 returnType: createBuiltInDefPlaceHolder("IAxis"),
                 readonly: true,
                 note: [
+                    "```ds",
                     "(property) IElements.Parent: IElement | IAxis",
-                    "-------------------------",
+                    "```",
+                    "-----------------------------",
                     "The parent object",
                     "",
                     "### Remarks",
@@ -8246,8 +9161,10 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                     },
                 ],
                 note: [
+                    "```ds",
                     "(method) IElements.Add(ElementName: String, [Index: Long = -1]): IElement",
-                    "-------------------------",
+                    "```",
+                    "-----------------------------",
                     "Creates a new `Element` object based on an MDM object and adds it to the collection.",
                     "",
                     "### Remarks",
@@ -8284,8 +9201,10 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                     }
                 ],
                 note: [
+                    "```ds",
                     "(method) IElements.Add(ElementName: String, [Index: Long = -1]): IElement",
-                    "-------------------------",
+                    "```",
+                    "-----------------------------",
                     "Creates a new Element object and adds it to the collection.",
                     "",
                     "### Remarks",
@@ -8351,8 +9270,10 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                     },
                 ],
                 note: [
+                    "```ds",
                     "(method) IElements.AddNewFromMdmVariable(NewElementName: String, MdmVariableName: String, MdmElementName: String, [Index: Long = -1]): IElement",
-                    "-------------------------",
+                    "```",
+                    "-----------------------------",
                     "Creates a new `Element` object based on an MDM variable and element and adds it to the collection.",
                     "",
                     "### Remarks",
@@ -8370,8 +9291,10 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 name: "Clear",
                 definitionType: "method",
                 note: [
+                    "```ds",
                     "(method) IElements.Clear(): Void",
-                    "-------------------------",
+                    "```",
+                    "-----------------------------",
                     "Removes all `Element` objects from the collection",
                 ].join("\n")
             },
@@ -8386,8 +9309,10 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                     }
                 ],
                 note: [
+                    "```ds",
                     "(method) IElements.Remove(Index: Variant): Void",
-                    "-------------------------",
+                    "```",
+                    "-----------------------------",
                     "Removes an `Element` object from the collection",
                 ].join("\n")
             }
@@ -8397,8 +9322,10 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
         name: "IElement",
         definitionType: "interface",
         note: [
+            "```ds",
             "(interface) IElement",
-            "----------------------",
+            "```",
+            "-----------------------------",
             "An `Element` is the smallest discrete unit in an axis. An element in a side axis corresponds to a row in the resulting two-dimensional table and an element in the top axis corresponds to a column. For an aggregated table an `Element` object typically corresponds to an MDM element (normally a category), but additional analysis elements that are not part of the MDM variable can also be created. For a profile table an `Element` object in the top axis corresponds to a variable to profile.",
         ].join("\n"),
         properties: [
@@ -8408,8 +9335,10 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 returnType: BasicTypeDefinitions.boolean ,
                 readonly: true,
                 note: [
+                    "```ds",
                     "(property) IElement.HasCellValues: Boolean",
-                    "-------------------------",
+                    "```",
+                    "-----------------------------",
                     "`HasCellValues` is *True* if there is a row or field in the `CellValues` ADO recordset corresponding to this Element object.",
                     "",
                     "### Remarks",
@@ -8424,8 +9353,10 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 returnType: BasicTypeDefinitions.string ,
                 readonly: true,
                 note: [
+                    "```ds",
                     "(property) IElement.Name: String",
-                    "-------------------------",
+                    "```",
+                    "-----------------------------",
                     "The name used to reference the `Element` object.",
                     "",
                     "### Remarks",
@@ -8439,8 +9370,10 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 readonly: true,
                 isCollection: false,
                 note: [
+                    "```ds",
                     "(property) IElement.Parent: IElements",
-                    "-------------------------",
+                    "```",
+                    "-----------------------------",
                     "The parent object",
                     "",
                     "### Remarks",
@@ -8453,8 +9386,10 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 returnType: BasicTypeDefinitions.boolean ,
                 readonly: true,
                 note: [
+                    "```ds",
                     "(property) IElement.ShownOnTable: Boolean",
-                    "-------------------------",
+                    "```",
+                    "-----------------------------",
                     "`ShownOnTable` is *True* if this element object is to be displayed on the table.",
                     "",
                     "### Remarks",
@@ -8470,7 +9405,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 returnType: BasicTypeDefinitions.string ,
                 readonly: true,
                 note: [
+                    "```ds",
                     "(property) IElement.Specification: String",
+                    "```",
                     "--------------------------",
                     "The specification of the element as it appears in the axis expression.",
                 ].join("\n"),
@@ -8481,7 +9418,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 returnType: createBuiltInDefPlaceHolder("IStyle"),
                 readonly: true,
                 note: [
+                    "```ds",
                     "(property) IElement.Style: IStyle",
+                    "```",
                     "--------------------------",
                     "Controls the formatting of the element when displayed and exported.",
                 ].join("\n")
@@ -8492,7 +9431,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 returnType: createBuiltInDefPlaceHolder("IElements"),
                 readonly: true,
                 note: [
+                    "```ds",
                     "(property) IElement.SubElements: IElements",
+                    "```",
                     "--------------------------",
                     "A collection of `Elements` objects that make up a net or combine element",
                     "",
@@ -8506,7 +9447,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 returnType: createBuiltInDefPlaceHolder("ElementType") ,
                 readonly: true,
                 note: [
+                    "```ds",
                     "(property) IElement.Type: ElementType",
+                    "```",
                     "--------------------------",
                     "The type of element",
                 ].join("\n")
@@ -8516,7 +9459,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 definitionType: "property",
                 returnType: BasicTypeDefinitions.string ,
                 note: [
+                    "```ds",
                     "(property) IElement.AnalysisVariable: String",
+                    "```",
                     "--------------------------",
                     "The name of the analysis variable used by an analysis element",
                     "",
@@ -8544,7 +9489,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 definitionType: "property",
                 returnType: createBuiltInDefPlaceHolder("CalculationScopeType") ,
                 note: [
+                    "```ds",
                     "(property) IElement.CalculationScope: CalculationScopeType",
+                    "```",
                     "--------------------------",
                     "Determines the elements used in the calculation of some summary statistic elements",
                     "",
@@ -8567,7 +9514,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 definitionType: "property",
                 returnType: BasicTypeDefinitions.string ,
                 note: [
+                    "```ds",
                     "(property) IElement.ColumnText: String",
+                    "```",
                     "--------------------------",
                     "The text to insert in the cell for each column.",
                     "",
@@ -8580,7 +9529,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 definitionType: "property",
                 returnType: BasicTypeDefinitions.boolean ,
                 note: [
+                    "```ds",
                     "(property) IElement.CountsOnly: Boolean",
+                    "```",
                     "--------------------------",
                     "When set to *True*, this specifies that only the counts should be displayed for the row or column, regardless of what `CellItems` are specified for the table.",
                     "",
@@ -8603,7 +9554,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 definitionType: "property",
                 returnType: BasicTypeDefinitions.double ,
                 note: [
+                    "```ds",
                     "(property) IElement.CutOffValue: Double",
+                    "```",
                     "--------------------------",
                     "The cut off value for *ePercentile* elements",
                     "",
@@ -8618,7 +9571,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 definitionType: "property",
                 returnType: BasicTypeDefinitions.long ,
                 note: [
+                    "```ds",
                     "(property) IElement.Decimals: Long",
+                    "```",
                     "--------------------------",
                     "The number of digits to be shown after the decimal place.",
                     "",
@@ -8650,7 +9605,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 readonly: false,
                 isCollection: false,
                 note: [
+                    "```ds",
                     "(property) IElement.Expression: String",
+                    "```",
                     "--------------------------",
                     "A custom expression that determines the value of the element when the table is populated",
                     "",
@@ -8667,7 +9624,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 definitionType: "property",
                 returnType: BasicTypeDefinitions.variant ,
                 note: [
+                    "```ds",
                     "(property) IElement.Factor: Variant",
+                    "```",
                     "--------------------------",
                     "The factor value for the element to use when calculating factor based analysis elements.",
                     "",
@@ -8680,7 +9639,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 definitionType: "property",
                 returnType: BasicTypeDefinitions.boolean ,
                 note: [
+                    "```ds",
                     "(property) IElement.IncludeInBase: Boolean",
+                    "```",
                     "--------------------------",
                     "Allows *eCategory* elements to be excluded from the calculation of the base",
                     "",
@@ -8693,7 +9654,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 definitionType: "property",
                 returnType: BasicTypeDefinitions.boolean ,
                 note: [
+                    "```ds",
                     "(property) IElement.IsFixed: Boolean",
+                    "```",
                     "--------------------------",
                     "Fixes the position (index) of the element in the `ElementHeadings` collection when the table is sorted.",
                     "",
@@ -8706,7 +9669,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 definitionType: "property",
                 returnType: BasicTypeDefinitions.boolean ,
                 note: [
+                    "```ds",
                     "(property) IElement.IsHidden: Boolean",
+                    "```",
                     "--------------------------",
                     "Determines if the element is shown on the table. The default value is taken from the corresponding MDM element.",
                     "",
@@ -8719,7 +9684,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 definitionType: "property",
                 returnType: BasicTypeDefinitions.boolean ,
                 note: [
+                    "```ds",
                     "(property) IElement.IsHiddenWhenColumn: Boolean",
+                    "```",
                     "--------------------------",
                     "Hide the element if it appears as a column in the table.",
                     "",
@@ -8732,7 +9699,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 definitionType: "property",
                 returnType: BasicTypeDefinitions.boolean ,
                 note: [
+                    "```ds",
                     "(property) IElement.IsHiddenWhenRow: Boolean",
+                    "```",
                     "--------------------------",
                     "Hide the element if it appears as a row in the table.",
                     "",
@@ -8745,7 +9714,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 definitionType: "property",
                 returnType: BasicTypeDefinitions.boolean ,
                 note: [
+                    "```ds",
                     "(property) IElement.IsUnweighted: Boolean",
+                    "```",
                     "--------------------------",
                     "When set to True all weighting is ignored for this element.",
                     "",
@@ -8767,7 +9738,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                     defaultValue: "\"\"",
                 },
                 note: [
+                    "```ds",
                     "(property) IElement.Label[[Language: String = \"\"]]: String",
+                    "```",
                     "--------------------------",
                     "The label for the element",
                     "",
@@ -8786,7 +9759,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 definitionType: "property",
                 returnType: BasicTypeDefinitions.string ,
                 note: [
+                    "```ds",
                     "(property) IElement.Multiplier: String",
+                    "```",
                     "--------------------------",
                     "The name of the variable to use as the multiplier value when aggregating the data",
                     "",
@@ -8813,7 +9788,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 definitionType: "property",
                 returnType: BasicTypeDefinitions.string ,
                 note: [
+                    "```ds",
                     "(property) IElement.Weight: String",
+                    "```",
                     "--------------------------",
                     "The name of the variable to use as the weight value when aggregating the data",
                     "",
@@ -8845,8 +9822,10 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
         definitionType: "interface",
         defaultProperty: "Item",
         note: [
+            "```ds",
             "(interface) IElementHeadings",
-            "----------------------",
+            "```",
+            "-----------------------------",
             "A collection of `IElementHeading` objects",
         ].join("\n"),
         properties: [
@@ -8856,7 +9835,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 returnType: BasicTypeDefinitions.long ,
                 readonly: true,
                 note: [
+                    "```ds",
                     "(property) IElementHeadings.Count: Long",
+                    "```",
                     "--------------------",
                     "The number of items in the collection."
                 ].join("\n"),
@@ -8872,7 +9853,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                     type: BasicTypeDefinitions.variant,
                 },
                 note: [
+                    "```ds",
                     "(property) IElementHeadings.Item[Index: Variant]: IElementHeading",
+                    "```",
                     "--------------------",
                     "Returns the specified `ElementHeading` in the collection.",
                 ].join("\n"),
@@ -8883,7 +9866,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 returnType: createBuiltInDefPlaceHolder("IElements"),
                 readonly: true,
                 note: [
+                    "```ds",
                     "(property) IElementHeadings.Parent: IElements | IElementHeading",
+                    "```",
                     "--------------------",
                     "The parent object",
                 ].join("\n")
@@ -8894,8 +9879,10 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
         name: "IElementHeading",
         definitionType: "interface",
         note: [
+            "```ds",
             "(interface) IElementHeading",
-            "----------------------",
+            "```",
+            "-----------------------------",
             "An `IElementHeading` object is an instance of a `IElement` object. In the case of a nested table, at the inner-most nest level there is a separate `IElementHeading` object corresponding to each `IElement` object in the outer axis. After a table has been populated, the order of the `IElementHeading` objects in the `IElementHeadings` collections represents the sorted order of the table.",
         ].join("\n"),
         properties: [
@@ -8905,7 +9892,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 returnType: createBuiltInDefPlaceHolder("IElement"),
                 readonly: true,
                 note: [
+                    "```ds",
                     "(property) IElementHeading.Element: IElement",
+                    "```",
                     "--------------------",
                     "The `Element` object that this `IElementHeading` object is based on",
                 ].join("\n")
@@ -8916,7 +9905,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 returnType: BasicTypeDefinitions.string ,
                 readonly: true,
                 note: [
+                    "```ds",
                     "(property) IElementHeading.HeadingId: String",
+                    "```",
                     "--------------------",
                     "An id string assigned to the row or column",
                     "",
@@ -8937,7 +9928,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                     defaultValue: "\"\"",
                 },
                 note: [
+                    "```ds",
                     "(property) IElementHeading.Label[[Language: String = \"\"]]: String",
+                    "```",
                     "--------------------",
                     "The label for the `ElementHeading`.",
                     "",
@@ -8951,7 +9944,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 returnType: BasicTypeDefinitions.string ,
                 readonly: true,
                 note: [
+                    "```ds",
                     "(property) IElementHeading.Name: String",
+                    "```",
                     "--------------------",
                     "The name used to reference the `ElementHeading` object.",
                     "",
@@ -8965,7 +9960,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 returnType: createBuiltInDefPlaceHolder("IElementHeadings"),
                 readonly: true,
                 note: [
+                    "```ds",
                     "(property) IElementHeading.Parent: IElementHeadings",
+                    "```",
                     "--------------------",
                     "The parent object",
                 ].join("\n")
@@ -8976,7 +9973,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 returnType: createBuiltInDefPlaceHolder("IAxisHeading"),
                 readonly: true,
                 note: [
+                    "```ds",
                     "(property) IElementHeading.ParentAxisHeading: IAxisHeading",
+                    "```",
                     "--------------------",
                     "The `AxisHeading` object that this `ElementHeading` is to be displayed under",
                 ].join("\n"),
@@ -8987,7 +9986,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 returnType: createBuiltInDefPlaceHolder("IAxisHeadings"),
                 readonly: true,
                 note: [
+                    "```ds",
                     "(property) IElementHeading.ParentAxisHeading: IAxisHeading",
+                    "```",
                     "--------------------",
                     "The `AxisHeading` objects that are to be displayed under this `ElementHeading`",
                     "",
@@ -9001,7 +10002,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 returnType: createBuiltInDefPlaceHolder("IElementHeadings"),
                 readonly: true,
                 note: [
+                    "```ds",
                     "(property) IElementHeading.SubElementHeadings: IElementHeadings",
+                    "```",
                     "--------------------",
                     "The child element headings in the case of a heading based on a net element.",
                     "",
@@ -9014,7 +10017,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 definitionType: "property",
                 returnType: BasicTypeDefinitions.boolean ,
                 note: [
+                    "```ds",
                     "(property) IElementHeading.IsSortedOn: Boolean",
+                    "```",
                     "--------------------",
                     "*True* if the table has been sorted on the row or column corresponding to this `ElementHeading`",
                     "",
@@ -9047,8 +10052,10 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
         name: "IAxisHeadings",
         definitionType: "interface",
         note: [
+            "```ds",
             "(interface) IAxisHeadings",
-            "----------------------",
+            "```",
+            "-----------------------------",
             "A collection of `IAxisHeading` objects. The order of the `IAxisHeading` objects in the collection is modified by the sorting of the table.",
         ].join("\n"),
         properties: [
@@ -9058,7 +10065,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 returnType: BasicTypeDefinitions.long ,
                 readonly: true,
                 note: [
+                    "```ds",
                     "(property) IAxisHeadings.Count: Long",
+                    "```",
                     "--------------------",
                     "The number of items in the collection."
                 ].join("\n"),
@@ -9074,7 +10083,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                     type: BasicTypeDefinitions.variant
                 },
                 note: [
+                    "```ds",
                     "(property) IAxisHeadings.Item[Index: Variant]: IAxisHeading",
+                    "```",
                     "--------------------",
                     "Returns the specified `AxisHeading` in the collection.",
                 ].join("\n")
@@ -9085,7 +10096,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 returnType: createBuiltInDefPlaceHolder("IElements"),
                 readonly: true,
                 note: [
+                    "```ds",
                     "(property) IAxisHeadings.Parent: IElementHeading | IElements",
+                    "```",
                     "--------------------",
                     "The parent object",
                 ].join("\n")
@@ -9096,8 +10109,10 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
         name: "IVariableListItem",
         definitionType: "interface",
         note: [
+            "```ds",
             "(interface) IVariableListItem",
-            "----------------------",
+            "```",
+            "-----------------------------",
             "The `VariableListItem` object is used to manage the variables for a data set.",
             "",
             "### Remarks",
@@ -9110,7 +10125,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 returnType: BasicTypeDefinitions.long ,
                 readonly: true,
                 note: [
+                    "```ds",
                     "(property) IVariableListItem.Count: Long",
+                    "```",
                     "--------------------",
                     "The number of items in the collection.",
                     "",
@@ -9124,7 +10141,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 returnType: BasicTypeDefinitions.boolean ,
                 readonly: true,
                 note: [
+                    "```ds",
                     "(property) IVariableListItem.IsFolder: Boolean",
+                    "```",
                     "--------------------",
                     "Defines whether current `IVariableListItem` is a folder.",
                 ].join("\n"),
@@ -9140,7 +10159,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                     type: BasicTypeDefinitions.variant
                 },
                 note: [
+                    "```ds",
                     "(property) IVariableListItem.Item[Index: Variant]: IVariableListItem",
+                    "```",
                     "--------------------",
                     "Return the specified item in the current folder.",
                 ].join("\n")
@@ -9151,7 +10172,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 returnType: BasicTypeDefinitions.object,
                 readonly: true,
                 note: [
+                    "```ds",
                     "(property) IVariableListItem.MdmField: Object",
+                    "```",
                     "--------------------",
                     "Return the reference to the underlying MDM variable of current `IVariableListItem`.",
                 ].join("\n")
@@ -9162,7 +10185,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 returnType: BasicTypeDefinitions.string ,
                 readonly: true,
                 note: [
+                    "```ds",
                     "(property) IVariableListItem.Name: String",
+                    "```",
                     "--------------------",
                     "The name of the variable list item.",
                     "",
@@ -9176,7 +10201,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 returnType: createBuiltInDefPlaceHolder("IVariableListItem"),
                 readonly: true,
                 note: [
+                    "```ds",
                     "(property) IVariableListItem.Parent: IVariableListItem",
+                    "```",
                     "--------------------",
                     "Parent name of the current item.",
                     "",
@@ -9190,8 +10217,10 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
         name: "IStyle",
         definitionType: "interface",
         note: [
+            "```ds",
             "(interface) IStyle",
-            "------------------",
+            "```",
+ "------------------",
             "The `Style` object is used to set presentation styles for interview objects.",
             "",
             "### Remarks",
@@ -9259,8 +10288,10 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                     }
                 ],
                 note: [
+                    "```ds",
                     "(method) IStyle.CopyTo(Destination: IStyle, [AllCascadedStyles: Boolean = 0]): Void",
-                    "-------------------------------------",
+                    "```",
+ "-------------------------------------",
                     "Copies the styles from one style object to another.",
                     "",
                     "### Remarks",
@@ -9277,8 +10308,10 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 returnType: createBuiltInDefPlaceHolder("IAudioStyle"),
                 readonly: true,
                 note: [
+                    "```ds",
                     "(property) IStyle.Audio: IAudioStyle",
-                    "-------------------------------------",
+                    "```",
+ "-------------------------------------",
                     "The `Audio` property is used to set audio (play and record) styles.",
                     "",
                     "",
@@ -9290,8 +10323,10 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 returnType: createBuiltInDefPlaceHolder("ICellStyle"),
                 readonly: true,
                 note: [
+                    "```ds",
                     "(property) IStyle.Cell: ICellStyle",
-                    "-------------------------------------",
+                    "```",
+ "-------------------------------------",
                     "The `Cell` property is used to set cell styles.",
                     "",
                 ].join("\n"),
@@ -9302,8 +10337,10 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 returnType: createBuiltInDefPlaceHolder("IControlStyle"),
                 readonly: true,
                 note: [
+                    "```ds",
                     "(property) IStyle.Control: IControlStyle",
-                    "-------------------------------------",
+                    "```",
+ "-------------------------------------",
                     "The `Control` property is used to set control styles.",
                     "",
                 ].join("\n"),
@@ -9314,8 +10351,10 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 returnType: createBuiltInDefPlaceHolder("IFontStyle"),
                 readonly: true,
                 note: [
+                    "```ds",
                     "(property) IStyle.Font: IFontStyle",
-                    "-------------------------------------",
+                    "```",
+ "-------------------------------------",
                     "The `Font` property is used to set font styles.",
                     "",
                 ].join("\n"),
@@ -9326,8 +10365,10 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 returnType: BasicTypeDefinitions.boolean ,
                 readonly: true,
                 note: [
+                    "```ds",
                     "(property) IStyle.IsEmpty: Boolean",
-                    "-------------------------------------",
+                    "```",
+ "-------------------------------------",
                     "*True* if no style properties have been set for the style object.",
                     "",
                     "### Remarks",
@@ -9341,8 +10382,10 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 returnType: createBuiltInDefPlaceHolder("IStyle"),
                 readonly: true,
                 note: [
+                    "```ds",
                     "(property) IStyle.Parent: IStyle",
-                    "-------------------------------------",
+                    "```",
+ "-------------------------------------",
                     "This is a read-only property that returns the parent style.",
                     "",
                     "### Remarks",
@@ -9355,8 +10398,10 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 definitionType: "property",
                 returnType: createBuiltInDefPlaceHolder("Alignments") ,
                 note: [
+                    "```ds",
                     "(property) IStyle.Align: Alignments",
-                    "-------------------------------------",
+                    "```",
+ "-------------------------------------",
                     "`Alignment` is in reference to the parent element:",
                     "",
                     "### Remarks",
@@ -9369,8 +10414,10 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 definitionType: "property",
                 returnType: BasicTypeDefinitions.string ,
                 note: [
+                    "```ds",
                     "(property) IStyle.BgColor: String",
-                    "-------------------------------------",
+                    "```",
+ "-------------------------------------",
                     "Sets the background color for an element.",
                     "",
                     "### Remarks",
@@ -9387,8 +10434,10 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 definitionType: "property",
                 returnType: BasicTypeDefinitions.string ,
                 note: [
+                    "```ds",
                     "(property) IStyle.Color: String",
-                    "-------------------------------------",
+                    "```",
+ "-------------------------------------",
                     "Sets the color for an element.",
                     "",
                     "### Remarks",
@@ -9405,8 +10454,10 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 definitionType: "property",
                 returnType: BasicTypeDefinitions.long ,
                 note: [
+                    "```ds",
                     "(property) IStyle.Columns: Long",
-                    "-------------------------------------",
+                    "```",
+ "-------------------------------------",
                     "Sets the number of columns that a list is displayed over or the columns of a text box.",
                     "",
                     "### Remarks",
@@ -9424,8 +10475,10 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 definitionType: "property",
                 returnType: createBuiltInDefPlaceHolder("CursorTypes") ,
                 note: [
+                    "```ds",
                     "(property) IStyle.Cursor: CursorTypes",
-                    "-------------------------------------",
+                    "```",
+ "-------------------------------------",
                     "Specifies the type of cursor that should be displayed above the element.",
                     "",
                     "### Remarks",
@@ -9442,8 +10495,10 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 definitionType: "property",
                 returnType: createBuiltInDefPlaceHolder("ElementAlignments") ,
                 note: [
+                    "```ds",
                     "(property) IStyle.ElementAlign: ElementAlignments",
-                    "-------------------------------------",
+                    "```",
+ "-------------------------------------",
                     "This property is used to specify whether the element should be included on the next line or just to the left of the previous element:",
                     "",
                     "### Remarks",
@@ -9460,8 +10515,10 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 definitionType: "property",
                 returnType: BasicTypeDefinitions.string ,
                 note: [
+                    "```ds",
                     "(property) IStyle.Height: String",
-                    "-------------------------------------",
+                    "```",
+ "-------------------------------------",
                     "Sets the vertical size of the element.",
                     "",
                     "### Remarks",
@@ -9478,8 +10535,10 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 definitionType: "property",
                 returnType: BasicTypeDefinitions.string ,
                 note: [
+                    "```ds",
                     "(property) IStyle.Image: String",
-                    "-------------------------------------",
+                    "```",
+ "-------------------------------------",
                     "The name of the image to use for the element. The image name will typically be the URL to an image file.",
                     "",
                     "### Remarks",
@@ -9495,8 +10554,10 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 definitionType: "property",
                 returnType: createBuiltInDefPlaceHolder("ImagePositions") ,
                 note: [
+                    "```ds",
                     "(property) IStyle.ImagePosition: ImagePositions",
-                    "-------------------------------------",
+                    "```",
+ "-------------------------------------",
                     "The image position relative to the text.",
                     "",
                     "### Remarks",
@@ -9513,8 +10574,10 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 definitionType: "property",
                 returnType: BasicTypeDefinitions.long ,
                 note: [
+                    "```ds",
                     "(property) IStyle.Indent: Long",
-                    "-------------------------------------",
+                    "```",
+ "-------------------------------------",
                     "This read/write property returns the label for the navigation control.",
                     "",
                     "### Remarks",
@@ -9531,8 +10594,10 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 definitionType: "property",
                 returnType: createBuiltInDefPlaceHolder("Orientations") ,
                 note: [
+                    "```ds",
                     "(property) IStyle.Orientation: Orientations",
-                    "-------------------------------------",
+                    "```",
+ "-------------------------------------",
                     "The `Orientation` property is used to set the category list or grid orientation.",
                     "",
                     "### Remarks",
@@ -9549,8 +10614,10 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 definitionType: "property",
                 returnType: BasicTypeDefinitions.long ,
                 note: [
+                    "```ds",
                     "(property) IStyle.Rows: Long",
-                    "-------------------------------------",
+                    "```",
+ "-------------------------------------",
                     "Sets the number of rows that a list is displayed over or the rows of a multi-line text box.",
                     "",
                     "### Remarks",
@@ -9568,8 +10635,10 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 definitionType: "property",
                 returnType: BasicTypeDefinitions.boolean ,
                 note: [
+                    "```ds",
                     "(property) IStyle.UseCascadedStyles: Boolean",
-                    "-------------------------------------",
+                    "```",
+ "-------------------------------------",
                     "A read/write property that is used to indicate whether the style object should return all cascaded styles, or to return just the styles set on the particular object.",
                     "",
                     "### Remarks",
@@ -9582,8 +10651,10 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 definitionType: "property",
                 returnType: createBuiltInDefPlaceHolder("VerticalAlignments") ,
                 note: [
+                    "```ds",
                     "(property) IStyle.VerticalAlign: VerticalAlignments",
-                    "-------------------------------------",
+                    "```",
+ "-------------------------------------",
                     "This property is used to set the element alignment.",
                     "",
                     "### Remarks",
@@ -9600,8 +10671,10 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 definitionType: "property",
                 returnType: BasicTypeDefinitions.string ,
                 note: [
+                    "```ds",
                     "(property) IStyle.Width: String",
-                    "-------------------------------------",
+                    "```",
+ "-------------------------------------",
                     "Sets the horizontal size of the element.",
                     "",
                     "### Remarks",
@@ -9618,8 +10691,10 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 definitionType: "property",
                 returnType: BasicTypeDefinitions.long ,
                 note: [
+                    "```ds",
                     "(property) IStyle.ZIndex: Long",
-                    "-------------------------------------",
+                    "```",
+ "-------------------------------------",
                     "Controls the ordering of overlapping elements, and defines which will be displayed 'on top'.",
                     "",
                     "### Remarks",
@@ -9637,8 +10712,10 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
         name: "IValidation­Option",
         definitionType: "interface",
         note: [
+            "```ds",
             "(interface) IValidation­Option",
-            "----------------------",
+            "```",
+            "-----------------------------",
             "A validation option. Validation options are specific to each question type.",
         ].join("\n"),
         properties: [
@@ -9648,7 +10725,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 returnType: BasicTypeDefinitions.string ,
                 readonly: true,
                 note: [
+                    "```ds",
                     "(property) IValidation­Option.Name: String",
+                    "```",
                     "--------------",
                     "The name of the validation option.",
                 ].join("\n")
@@ -9658,7 +10737,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 definitionType: "property",
                 returnType: BasicTypeDefinitions.variant ,
                 note: [
+                    "```ds",
                     "(property) IValidation­Option.Value: Variant",
+                    "```",
                     "--------------",
                     "The current value of the validation option.",
                 ].join("\n")
@@ -9669,8 +10750,10 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
         name: "IQuestion­Style",
         definitionType: "interface",
         note: [
+            "```ds",
             "(interface) IQuestion­Style",
-            "----------------------",
+            "```",
+            "-----------------------------",
             "The `QuestionStyle` object is used to define the default presentation styles used by each question type.",
             "",
             "### Remarks",
@@ -9687,7 +10770,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 returnType: createBuiltInDefPlaceHolder("ICategoryStyles"),
                 readonly: true,
                 note: [
+                    "```ds",
                     "(property) IQuestion­Style.Categories: ICategoryStyles",
+                    "```",
                     "--------------",
                     "The default styles for each type of category for this question type.",
                     "",
@@ -9701,7 +10786,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 returnType: createBuiltInDefPlaceHolder("IStyles"),
                 readonly: true,
                 note: [
+                    "```ds",
                     "(property) IQuestion­Style.Labels: IStyles",
+                    "```",
                     "--------------",
                     "The default styles for each type of label for this question type.",
                     "",
@@ -9716,7 +10803,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 returnType: createBuiltInDefPlaceHolder("IStyle"),
                 readonly: true,
                 note: [
+                    "```ds",
                     "(property) IQuestion­Style.Style: IStyle",
+                    "```",
                     "--------------",
                     "The default styles for the question type.",
                     "",
@@ -9731,8 +10820,10 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
         name: "ICategory­Style",
         definitionType: "interface",
         note: [
+            "```ds",
             "(interface) ICategory­Style",
-            "----------------------",
+            "```",
+            "-----------------------------",
             "The `CategoryStyle` object is used to define the default presentation styles used by each category type.",
             "",
             "### Remarks",
@@ -9748,7 +10839,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 returnType: createBuiltInDefPlaceHolder("IStyle"),
                 readonly: true,
                 note: [
+                    "```ds",
                     "(property) ICategory­Style.Label: IStyle",
+                    "```",
                     "--------------",
                     "The default styles for each type of label for this `Category` type.",
                     "",
@@ -9763,7 +10856,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 returnType: createBuiltInDefPlaceHolder("IStyle"),
                 readonly: true,
                 note: [
+                    "```ds",
                     "(property) ICategory­Style.Style: IStyle",
+                    "```",
                     "--------------",
                     "The default styles for the category type.",
                     "",
@@ -9779,8 +10874,10 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
         definitionType: "interface",
         defaultProperty: "Item",
         note: [
+            "```ds",
             "(interface) ICategory­Styles",
-            "----------------------",
+            "```",
+            "-----------------------------",
             "A collection object that contains CategoryStyle objects.",
             "",
         ].join("\n"),
@@ -9791,7 +10888,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 returnType: BasicTypeDefinitions.long ,
                 readonly: true,
                 note: [
+                    "```ds",
                     "(property) ICategory­Styles.Count: Long",
+                    "```",
                     "--------------",
                     "The number of items in the collection.",
                 ].join("\n")
@@ -9806,7 +10905,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                     type: BasicTypeDefinitions.variant,
                 },
                 note: [
+                    "```ds",
                     "(property) ICategory­Styles.Item[Index: Variant]: ICategoryStyle",
+                    "```",
                     "--------------",
                     "Get the collection item at the specified location. (Default Property)",
                 ].join("\n")
@@ -9817,8 +10918,10 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
         name: "ICoding",
         definitionType: "interface",
         note: [
+            "```ds",
             "(interface) ICoding",
-            "----------------------",
+            "```",
+            "-----------------------------",
             "The Coding object includes methods that can be used to categorize and band text, numeric, and date variables in the TOM document.",
             "",
         ].join("\n"),
@@ -9863,7 +10966,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                     }
                 ],
                 note: [
+                    "```ds",
                     "(method) ICoding.CreateCategorizedDBVariable(DBVariableFullName: String, [NewVariableName: String = \"\"], [MaxCategories: Long = -1], [GenerateOtherCategory: Boolean = True], [SaveVariable: Boolean = True]): Object",
+                    "```",
                     "--------------------",
                     "Creates or updates a categorized, derived variable object from a DB variable. Database variables usually have underlying MDM types of Text, Long, Double and Date, and cannot be populated directly, thus categorized derived variables must be created instead.",
                     "+ `DBVariableFullName`: *String* - The full name of the source DB question. The source variable must belongs to DB variable types (DB Array, Single Response DBQ or Multiple Response DBQ).",
@@ -9957,7 +11062,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                     }
                 ],
                 note: [
+                    "```ds",
                     "(method) ICoding.CreateCategorizedVariable(SourceVariableName: String, [NewVariableName: String = \"\"], [NewCategoryLabelFormat: String = L\"{value}\"], [CategorizationExpression: String = \"\"], [MaxCategories: Long = -1], [GenerateOtherCategory: Boolean = True], [GenerateNoAnswerCategory: Boolean = False], [NoAnswerCategoryLabel: String = \"\"]): Object",
+                    "```",
                     "--------------------",
                     "Creates or updates a categorized, derived variable object from a DB variable. Database variables usually have underlying MDM types of Text, Long, Double and Date, and cannot be populated directly, thus categorized derived variables must be created instead.",
                     "+ `SourceVariableName`: *String* - The source variable's full name. The source variable data type must be Text, Long, Double, or Date.",
@@ -10010,7 +11117,9 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 name: "CreateCategorizedVariableCancel",
                 definitionType: "method",
                 note: [
+                    "```ds",
                     "(method) ICoding.CreateCategorizedVariable(SourceVariableName: String, [NewVariableName: String = \"\"], [NewCategoryLabelFormat: String = L\"{value}\"], [CategorizationExpression: String = \"\"], [MaxCategories: Long = -1], [GenerateOtherCategory: Boolean = True], [GenerateNoAnswerCategory: Boolean = False], [NoAnswerCategoryLabel: String = \"\"]): Object",
+                    "```",
                     "--------------------",
                     "Cancel an existing creation started via `CreateCategorizedVariable()`.",
                 ].join("\n"),
@@ -10025,7 +11134,8 @@ export const builtInQuesionInterface: BuiltInDefinition = {
     defaultProperty: "Item",
     note: [
         "(interface) IQuestion",
-        "-----------------------------",
+        "```",
+ "-----------------------------",
         "The `Question` object is used to represent a question in the interview.",
         "",
         "### Remarks",
@@ -10118,7 +11228,9 @@ export const builtInQuesionInterface: BuiltInDefinition = {
                 }
             ],
             note: [
+                "```ds",
                 "(method) Ask(LabelArgs: Variant[]): Void",
+                "```",
                 "--------------------",
                 "Asks a question in an interview.",
                 "",
@@ -10168,7 +11280,9 @@ export const builtInQuesionInterface: BuiltInDefinition = {
                 }
             ],
             note: [
+                "```ds",
                 "(method) BuildDBFilter([bstrFieldName: String = \"L\"]): String",
+                "```",
                 "--------------------",
                 "This method is used to build a database filter according to its response value.",
                 "",
@@ -10189,7 +11303,9 @@ export const builtInQuesionInterface: BuiltInDefinition = {
             name: "ClearOffPathResponse",
             definitionType: "method",
             note: [
+                "```ds",
                 "(method) ClearOffPathResponse(): Void",
+                "```",
                 "--------------------",
                 "Clears the off-path response to the question (if applicable)",
                 "",
@@ -10211,7 +11327,9 @@ export const builtInQuesionInterface: BuiltInDefinition = {
                 }
             ],
             note: [
+                "```ds",
                 "(method) Delete(vtIndex: Variant): Void",
+                "```",
                 "--------------------",
                 "This method is used to delete the given iteration of the question.",
                 "",
@@ -10232,7 +11350,9 @@ export const builtInQuesionInterface: BuiltInDefinition = {
                 }
             ],
             note: [
+                "```ds",
                 "(method) Exists(vtIndex: Variant): Boolean",
+                "```",
                 "--------------------",
                 "This method is used to check given iteration exists or not.",
                 "",
@@ -10244,7 +11364,9 @@ export const builtInQuesionInterface: BuiltInDefinition = {
             name: "Preserve",
             definitionType: "method",
             note: [
+                "```ds",
                 "(method) Preserve(): Void",
+                "```",
                 "--------------------",
                 "Preserves the response of a question such that the question can never be re-asked or reviewed.",
                 "",
@@ -10271,7 +11393,9 @@ export const builtInQuesionInterface: BuiltInDefinition = {
                 }
             ],
             note: [
+                "```ds",
                 "(method) Show(LableArgs: Variant[]): Void",
+                "```",
                 "--------------------",
                 "Shows a question with its associated value or values.",
                 "",
@@ -10289,7 +11413,9 @@ export const builtInQuesionInterface: BuiltInDefinition = {
             readonly: true,
             isCollection: false,
             note: [
+                "```ds",
                 "(property) Banners: ILabels",
+                "```",
                 "--------------------",
                 "A read-only property that returns a collection of Label objects.",
                 "",
@@ -10305,7 +11431,9 @@ export const builtInQuesionInterface: BuiltInDefinition = {
             readonly: true,
             isCollection: false,
             note: [
+                "```ds",
                 "(property) Categories: ICategories",
+                "```",
                 "--------------------",
                 "A read-only property that returns a collection of category objects.",
                 "",
@@ -10321,7 +11449,9 @@ export const builtInQuesionInterface: BuiltInDefinition = {
             readonly: true,
             isCollection: false,
             note: [
+                "```ds",
                 "(property) Codes: ICategories",
+                "```",
                 "--------------------",
                 "A read only property that returns a collection of category objects.",
                 "",
@@ -10335,7 +11465,9 @@ export const builtInQuesionInterface: BuiltInDefinition = {
             returnType: BasicTypeDefinitions.long ,
             readonly: true,
             note: [
+                "```ds",
                 "(property) Count: Long",
+                "```",
                 "--------------------",
                 "The number of items in the collection."
             ].join("\n"),
@@ -10347,7 +11479,9 @@ export const builtInQuesionInterface: BuiltInDefinition = {
             readonly: true,
             isCollection: true,
             note: [
+                "```ds",
                 "(property) Errors: ILabels",
+                "```",
                 "--------------------",
                 "This property returns a collection of label objects for the question error texts.",
                 "",
@@ -10364,7 +11498,9 @@ export const builtInQuesionInterface: BuiltInDefinition = {
             definitionType: "property",
             readonly: true,
             note: [
+                "```ds",
                 "(property) Info: IQuestionInfo",
+                "```",
                 "--------------------",
                 "This read-only property indicates whether the question is a `Database` question.",
                 "",
@@ -10378,7 +11514,9 @@ export const builtInQuesionInterface: BuiltInDefinition = {
             definitionType: "property",
             readonly: true,
             note: [
+                "```ds",
                 "(property) IsDBQuestion: Boolean",
+                "```",
                 "--------------------",
                 "This read-only property indicates whether the question is a Database question."
             ].join("\n"),
@@ -10389,7 +11527,9 @@ export const builtInQuesionInterface: BuiltInDefinition = {
             definitionType: "property",
             readonly: true,
             note: [
+                "```ds",
                 "(property) Label: ILabel",
+                "```",
                 "--------------------",
                 "This read-only property returns the label for the question.",
                 "",
@@ -10403,7 +11543,9 @@ export const builtInQuesionInterface: BuiltInDefinition = {
             definitionType: "property",
             readonly: true,
             note: [
+                "```ds",
                 "(property) OtherCategories: ICategories",
+                "```",
                 "--------------------",
                 "A read-only property that returns a collection of \"other specify\" categories.",
                 "",
@@ -10418,7 +11560,9 @@ export const builtInQuesionInterface: BuiltInDefinition = {
             definitionType: "property",
             readonly: true,
             note: [
+                "```ds",
                 "(property) ParentQuestion: IQuestion",
+                "```",
                 "--------------------",
                 "A read-only property that returns the parent question if one exists.",
                 "",
@@ -10432,7 +11576,9 @@ export const builtInQuesionInterface: BuiltInDefinition = {
             definitionType: "property",
             readonly: true,
             note: [
+                "```ds",
                 "(property) Properties: IProperties",
+                "```",
                 "--------------------",
                 "A read-only property that returns the properties for the question.",
                 "",
@@ -10446,7 +11592,9 @@ export const builtInQuesionInterface: BuiltInDefinition = {
             definitionType: "property",
             readonly: true,
             note: [
+                "```ds",
                 "(property) QuestionDataType: DataTypeContants",
+                "```",
                 "--------------------",
                 "A read-only property that returns the question data type.",
                 "",
@@ -10460,7 +11608,9 @@ export const builtInQuesionInterface: BuiltInDefinition = {
             definitionType: "property",
             readonly: true,
             note: [
+                "```ds",
                 "(property) QuestionFullName: String",
+                "```",
                 "--------------------",
                 "A read-only property that returns the full name of the question.",
                 "",
@@ -10474,7 +11624,9 @@ export const builtInQuesionInterface: BuiltInDefinition = {
             definitionType: "property",
             readonly: true,
             note: [
+                "```ds",
                 "(property) QuestionName: String",
+                "```",
                 "--------------------",
                 "A read-only property that returns the name of the question or sub-question."
             ].join("\n"),
@@ -10485,7 +11637,9 @@ export const builtInQuesionInterface: BuiltInDefinition = {
             definitionType: "property",
             readonly: true,
             note: [
+                "```ds",
                 "(property) QuestionType: QuestionTypes",
+                "```",
                 "--------------------",
                 "A read-only property that returns the question type.",
                 "",
@@ -10499,7 +11653,9 @@ export const builtInQuesionInterface: BuiltInDefinition = {
             definitionType: "property",
             readonly: true,
             note: [
+                "```ds",
                 "(property) Response: IResponse",
+                "```",
                 "--------------------",
                 "The read-only Response property returns the response object for the question.",
                 "",
@@ -10524,7 +11680,9 @@ export const builtInQuesionInterface: BuiltInDefinition = {
             readonly: true,
             isCollection: false,
             note: [
+                "```ds",
                 "(property) Response: IResponse",
+                "```",
                 "--------------------",
                 "This property returns a `Style` object for the question.",
                 "",
@@ -10540,7 +11698,9 @@ export const builtInQuesionInterface: BuiltInDefinition = {
             readonly: true,
             isCollection: false,
             note: [
+                "```ds",
                 "(property) Validation: IValidation",
+                "```",
                 "--------------------",
                 "This read-only property that defines the validation for the question.",
                 "",
@@ -10555,7 +11715,9 @@ export const builtInQuesionInterface: BuiltInDefinition = {
             readonly: false,
             isCollection: false,
             note: [
+                "```ds",
                 "(property) BannerTemplacte: String",
+                "```",
                 "--------------------",
                 "This property is used to get or set the name of a `Banner` template for the question.",
                 "",
@@ -10571,7 +11733,9 @@ export const builtInQuesionInterface: BuiltInDefinition = {
             readonly: false,
             isCollection: false,
             note: [
+                "```ds",
                 "(property) DBFilter: String",
+                "```",
                 "--------------------",
                 "This property is used to get and set the `Database` filter for the question."
             ].join("\n"),
@@ -10583,7 +11747,9 @@ export const builtInQuesionInterface: BuiltInDefinition = {
             readonly: false,
             isCollection: false,
             note: [
+                "```ds",
                 "(property) ErrorTemplate: String",
+                "```",
                 "--------------------",
                 "This property is used to get or set the name of a `Error` template for the question.",
                 "",
@@ -10604,7 +11770,9 @@ export const builtInQuesionInterface: BuiltInDefinition = {
                 isCollection: false,
             },
             note: [
+                "```ds",
                 "(property) Item: Variant",
+                "```",
                 "--------------------",
                 "The `Item` property is used to return a sub-question. (Default Property)",
                 "",
@@ -10635,7 +11803,9 @@ export const builtInQuesionInterface: BuiltInDefinition = {
             readonly: false,
             isCollection: false,
             note: [
+                "```ds",
                 "(property) LayoutTemplate: String",
+                "```",
                 "--------------------",
                 "This read/write property is used to get or set the layout template for the question.",
                 "",
@@ -10651,7 +11821,9 @@ export const builtInQuesionInterface: BuiltInDefinition = {
             readonly: false,
             isCollection: false,
             note: [
+                "```ds",
                 "(property) MustAnswer: Boolean",
+                "```",
                 "--------------------",
                 "This read/write property is used to enable or disable automatic no answer questions.",
                 "",
@@ -10667,7 +11839,9 @@ export const builtInQuesionInterface: BuiltInDefinition = {
             readonly: false,
             isCollection: false,
             note: [
+                "```ds",
                 "(property) NarBarTemplate: String",
+                "```",
                 "--------------------",
                 "This property is used to get or set the name of a `NavBar` template for the question.",
                 "",
@@ -10683,7 +11857,9 @@ export const builtInQuesionInterface: BuiltInDefinition = {
             readonly: false,
             isCollection: false,
             note: [
+                "```ds",
                 "(property) QuestionFilter: Variant",
+                "```",
                 "--------------------",
                 "The sub-questions of this question that are to be asked.",
                 "",
@@ -10716,7 +11892,9 @@ export const builtInQuesionInterface: BuiltInDefinition = {
             readonly: false,
             isCollection: false,
             note: [
+                "```ds",
                 "(property) QuestionOrder: OrderConstants",
+                "```",
                 "--------------------",
                 "The order of the sub-questions of this question.",
                 "",
@@ -10732,7 +11910,9 @@ export const builtInQuesionInterface: BuiltInDefinition = {
             readonly: false,
             isCollection: false,
             note: [
+                "```ds",
                 "(property) QuestionTemplate: String",
+                "```",
                 "--------------------",
                 "This property is used to get or set the name of a question template for the question.",
                 "",
@@ -10749,7 +11929,8 @@ export const builtInIDocumentInterface: BuiltInDefinition =     {
     definitionType: "interface",
     note: [
         "(interface) IDocument",
-        "-----------------------------",
+        "```",
+ "-----------------------------",
         "The **Table Object Model (TOM)** document is at the root of the object model and is the only object which is publicly creatable. The `Document` object represents a book of tables.",
     ].join("\n"),
     properties: [
@@ -10764,7 +11945,9 @@ export const builtInIDocumentInterface: BuiltInDefinition =     {
                 type: BasicTypeDefinitions.variant,
             },
             note: [
+                "```ds",
                 "(property) IDocument.Axes[Index: Variant]: IAxes",
+                "```",
                 "--------------------",
                 "A collection of axis objects that can be reused on multiple tables.",
                 "",
@@ -10779,7 +11962,9 @@ export const builtInIDocumentInterface: BuiltInDefinition =     {
             readonly: true,
             isCollection: false,
             note: [
+                "```ds",
                 "(property) IDocument.Coding: ICoding",
+                "```",
                 "--------------------",
                 "The `Coding` object includes methods that can be used to `categorize` and *band text*, *numeric*, and *date* variables in the TOM document.",
             ].join("\n"),
@@ -10791,7 +11976,9 @@ export const builtInIDocumentInterface: BuiltInDefinition =     {
             readonly: true,
             isCollection: false,
             note: [
+                "```ds",
                 "(property) IDocument.CreatedByVersion: String",
+                "```",
                 "--------------------",
                 "Returns the version number of the `TOM.DLL` that created the `Document`.",
             ].join("\n"),
@@ -10803,7 +11990,9 @@ export const builtInIDocumentInterface: BuiltInDefinition =     {
             readonly: true,
             isCollection: false,
             note: [
+                "```ds",
                 "(property) IDocument.DataSet: IDataSet",
+                "```",
                 "--------------------",
                 "The data set that this table document is based upon. The data set consists of metadata and associated case data.",
             ].join("\n"),
@@ -10815,7 +12004,9 @@ export const builtInIDocumentInterface: BuiltInDefinition =     {
             readonly: true,
             isCollection: false,
             note: [
+                "```ds",
                 "(property) IDocument.Default: ITableDefaults",
+                "```",
                 "--------------------",
                 "The `Default` property has various settings that are automatically copied to a new table",
                 "",
@@ -10831,7 +12022,9 @@ export const builtInIDocumentInterface: BuiltInDefinition =     {
             readonly: true,
             isCollection: false,
             note: [
+                "```ds",
                 "(property) IDocument.Exports: IExports",
+                "```",
                 "--------------------",
                 "Collection of `Export` objects. `Exports` are used to publish the resulting tables in a variety of formats.",
             ].join("\n"),
@@ -10843,7 +12036,9 @@ export const builtInIDocumentInterface: BuiltInDefinition =     {
             readonly: true,
             isCollection: false,
             note: [
+                "```ds",
                 "(property) IDocument.Filters: IFilters",
+                "```",
                 "--------------------",
                 "A collection of table filters which may be set up in advance for use on tables.",
                 "",
@@ -10858,7 +12053,9 @@ export const builtInIDocumentInterface: BuiltInDefinition =     {
             readonly: true,
             isCollection: false,
             note: [
+                "```ds",
                 "(property) IDocument.Global: ITableGlobals",
+                "```",
                 "--------------------",
                 "The `TableGlobals` are various settings that are applied to all tables in the document. The settings are merged together with the per-table settings."
             ].join("\n"),
@@ -10870,7 +12067,9 @@ export const builtInIDocumentInterface: BuiltInDefinition =     {
             readonly: true,
             isCollection: false,
             note: [
+                "```ds",
                 "(property) IDocument.GroupedTables: ITableListNode",
+                "```",
                 "--------------------",
                 "Tables arranged into groups",
                 "",
@@ -10885,7 +12084,9 @@ export const builtInIDocumentInterface: BuiltInDefinition =     {
             readonly: true,
             isCollection: false,
             note: [
+                "```ds",
                 "(property) IDocument.IsPopulating: Boolean",
+                "```",
                 "--------------------",
                 "Returns *True* if the `Document` is currently populating."
             ].join("\n"),
@@ -10897,7 +12098,9 @@ export const builtInIDocumentInterface: BuiltInDefinition =     {
             readonly: true,
             isCollection: false,
             note: [
+                "```ds",
                 "(property) IDocument.LastUpdatedByVersion: String",
+                "```",
                 "--------------------",
                 "Returns the version number of the `TOM.DLL` that last updated the `Document`."
             ].join("\n"),
@@ -10909,7 +12112,9 @@ export const builtInIDocumentInterface: BuiltInDefinition =     {
             readonly: true,
             isCollection: false,
             note: [
+                "```ds",
                 "(property) IDocument.LicensedFeatures: Long",
+                "```",
                 "--------------------",
                 "The features of the document for which a valid license exists.",
                 "",
@@ -10924,7 +12129,9 @@ export const builtInIDocumentInterface: BuiltInDefinition =     {
             readonly: true,
             isCollection: false,
             note: [
+                "```ds",
                 "(property) IDocument.Parent: Null",
+                "```",
                 "--------------------",
                 "The parent object",
                 "",
@@ -10939,7 +12146,9 @@ export const builtInIDocumentInterface: BuiltInDefinition =     {
             readonly: true,
             isCollection: false,
             note: [
+                "```ds",
                 "(property) IDocument.PopulateProgress: Long",
+                "```",
                 "--------------------",
                 "Returns the percentage completion of the population run",
                 "",
@@ -10954,7 +12163,9 @@ export const builtInIDocumentInterface: BuiltInDefinition =     {
             readonly: true,
             isCollection: false,
             note: [
+                "```ds",
                 "(property) IDocument.PopulateStatus: String",
+                "```",
                 "--------------------",
                 "Returns a description of the current population status.",
                 "",
@@ -10969,7 +12180,9 @@ export const builtInIDocumentInterface: BuiltInDefinition =     {
             readonly: true,
             isCollection: false,
             note: [
+                "```ds",
                 "(property) IDocument.ProfileDefault: ITableDefaults",
+                "```",
                 "--------------------",
                 "The `ProfileDefault` property has various setting that are automatically copied to a new profile table.",
                 "",
@@ -10985,7 +12198,9 @@ export const builtInIDocumentInterface: BuiltInDefinition =     {
             readonly: true,
             isCollection: false,
             note: [
+                "```ds",
                 "(property) IDocument.Properties: IProperties",
+                "```",
                 "--------------------",
                 "A collection of user added Property objects relating to the document.",
                 "",
@@ -11012,7 +12227,9 @@ export const builtInIDocumentInterface: BuiltInDefinition =     {
             readonly: true,
             isCollection: false,
             note: [
+                "```ds",
                 "(property) IDocument.Statistics: IStatistics",
+                "```",
                 "--------------------",
                 "A collection of Statistic objects that define statistical tests that are available for applying to tables.",
                 "",
@@ -11027,7 +12244,9 @@ export const builtInIDocumentInterface: BuiltInDefinition =     {
             readonly: true,
             isCollection: false,
             note: [
+                "```ds",
                 "(property) IDocument.Tables: ITables",
+                "```",
                 "--------------------",
                 "This collection of tables contained in the document. This is the default property."
             ].join("\n"),
@@ -11039,7 +12258,9 @@ export const builtInIDocumentInterface: BuiltInDefinition =     {
             readonly: true,
             isCollection: false,
             note: [
+                "```ds",
                 "(property) IDocument.TOMVersion: String",
+                "```",
                 "--------------------",
                 "Returns the version number of the `TOM.DLL`"
             ].join("\n"),
@@ -11051,7 +12272,9 @@ export const builtInIDocumentInterface: BuiltInDefinition =     {
             readonly: false,
             isCollection: false,
             note: [
+                "```ds",
                 "(property) IDocument.Context: String",
+                "```",
                 "--------------------",
                 "The document context.",
                 "",
@@ -11066,7 +12289,9 @@ export const builtInIDocumentInterface: BuiltInDefinition =     {
             readonly: false,
             isCollection: false,
             note: [
+                "```ds",
                 "(property) IDocument.Description: String",
+                "```",
                 "--------------------",
                 "A user specified string that can be used to describe the contents of this table document."
             ].join("\n"),
@@ -11078,7 +12303,9 @@ export const builtInIDocumentInterface: BuiltInDefinition =     {
             readonly: false,
             isCollection: false,
             note: [
+                "```ds",
                 "(property) IDocument.ImageLocation: String",
+                "```",
                 "--------------------",
                 "The location of the images referenced by the elements.",
                 "",
@@ -11097,7 +12324,9 @@ export const builtInIDocumentInterface: BuiltInDefinition =     {
             readonly: false,
             isCollection: false,
             note: [
+                "```ds",
                 "(property) IDocument.KeepLogFiles: Boolean",
+                "```",
                 "--------------------",
                 "Keep the temporary files created during the call to IDocument.Populate",
                 "",
@@ -11112,7 +12341,9 @@ export const builtInIDocumentInterface: BuiltInDefinition =     {
             readonly: false,
             isCollection: false,
             note: [
+                "```ds",
                 "(property) IDocument.LabelType: String",
+                "```",
                 "--------------------",
                 "The document label type.",
                 "",
@@ -11127,7 +12358,9 @@ export const builtInIDocumentInterface: BuiltInDefinition =     {
             readonly: false,
             isCollection: false,
             note: [
+                "```ds",
                 "(property) IDocument.Language: String",
+                "```",
                 "--------------------",
                 "The document language. The language can be the three-character language code (such as \"ENU\"), the language long name, which is the localized name of the language and the country where it is spoken, such as \"English (United States)\" or the XML-name.",
                 "",
@@ -11142,7 +12375,9 @@ export const builtInIDocumentInterface: BuiltInDefinition =     {
             readonly: false,
             isCollection: false,
             note: [
+                "```ds",
                 "(property) IDocument.LogFilePath: String",
+                "```",
                 "--------------------",
                 "The location used to write temporary files and log files created when a table is populated.",
                 "",
@@ -11157,7 +12392,9 @@ export const builtInIDocumentInterface: BuiltInDefinition =     {
             readonly: false,
             isCollection: false,
             note: [
+                "```ds",
                 "(property) IDocument.OpenOption: OpenOptions",
+                "```",
                 "--------------------",
                 "The options used when opening data sets."
             ].join("\n"),
@@ -11169,7 +12406,9 @@ export const builtInIDocumentInterface: BuiltInDefinition =     {
             readonly: false,
             isCollection: false,
             note: [
+                "```ds",
                 "(property) IDocument.OutputLocaleId: Long",
+                "```",
                 "--------------------",
                 "Sets the locale id used for any error messages descriptions.",
                 "",
@@ -11184,7 +12423,9 @@ export const builtInIDocumentInterface: BuiltInDefinition =     {
             readonly: false,
             isCollection: false,
             note: [
+                "```ds",
                 "(property) IDocument.ProfileSpecialElements: Boolean",
+                "```",
                 "--------------------",
                 "If set to *True*, special data elements, such as *Net* and *Base* elements, will be included in profile table results.",
                 "",
@@ -11199,7 +12440,9 @@ export const builtInIDocumentInterface: BuiltInDefinition =     {
             readonly: false,
             isCollection: false,
             note: [
+                "```ds",
                 "(property) IDocument.RawStatisticsDataEnabled: Boolean",
+                "```",
                 "--------------------",
                 "Controls the generation of raw statistical data during execution of the Populate method.",
                 "",
@@ -11214,7 +12457,9 @@ export const builtInIDocumentInterface: BuiltInDefinition =     {
             readonly: false,
             isCollection: false,
             note: [
+                "```ds",
                 "(property) IDocument.SaveProfileResults: Boolean",
+                "```",
                 "--------------------",
                 "If *True* the populated results for profile tables are included in saved `Table Document` files",
                 "",
@@ -11228,7 +12473,9 @@ export const builtInIDocumentInterface: BuiltInDefinition =     {
             name: "Clear",
             definitionType: "method",
             note: [
+                "```ds",
                 "(method) IDocument.Clear(): Void",
+                "```",
                 "--------------------",
                 "Returns the `Document` to its initial state.",
                 "",
@@ -11268,7 +12515,9 @@ export const builtInIDocumentInterface: BuiltInDefinition =     {
                 }
             ],
             note: [
+                "```ds",
                 "(method) IDocument.GenerateScript([Tables: Variant], [Type: ScriptType], [Options: Variant]): String",
+                "```",
                 "--------------------",
                 "Generates a script representation of the table document.",
                 "",
@@ -11298,7 +12547,9 @@ export const builtInIDocumentInterface: BuiltInDefinition =     {
                 }
             ],
             note: [
+                "```ds",
                 "(method) IDocument.GetObjectFromID(ID: String): Object",
+                "```",
                 "--------------------",
                 "Get the object corresponding to an object ID",
                 "",
@@ -11326,7 +12577,9 @@ export const builtInIDocumentInterface: BuiltInDefinition =     {
                 }
             ],
             note: [
+                "```ds",
                 "(method) IDocument.GetTablesXml([Tables: Variant], [Options: Long = xmlIncludeResults]): String",
+                "```",
                 "--------------------",
                 "Generates an XML representation of the table document.",
                 "",
@@ -11356,7 +12609,9 @@ export const builtInIDocumentInterface: BuiltInDefinition =     {
                 }
             ],
             note: [
+                "```ds",
                 "(method) IDocument.Open(Source: Variant, [IncludeResults: Boolean = 1]): String",
+                "```",
                 "--------------------",
                 "Opens a previously saved table document.",
                 "",
@@ -11427,7 +12682,9 @@ export const builtInIDocumentInterface: BuiltInDefinition =     {
                 },
             ],
             note: [
+                "```ds",
                 "(method) IDocument.OpenWithDataSet(Source: Variant, [IncludeResults: Boolean = 1], MetaData: Variant, [MDSC: String = \"\"], [DbLocation: String = \"\"], [CDSC: String = \"\"], [Project: String = \"\"], [Version: String = {..}]): String",
+                "```",
                 "--------------------",
                 "Opens a previously saved table document with the specified metadata and case data.",
                 "",
@@ -11455,6 +12712,7 @@ export const builtInIDocumentInterface: BuiltInDefinition =     {
                     type: BasicTypeDefinitions.variant,
                     optional: false,
                     note: [
+                    "```ds",
                         "A list of tables to populate. If this parameter is not specified, then all tables in the document are populated. ",
                         "    - An empty string means populate no tables (the method call does nothing)",
                         "    - A value of \"*\" means populate all tables",
@@ -11465,7 +12723,9 @@ export const builtInIDocumentInterface: BuiltInDefinition =     {
                 }
             ],
             note: [
+                "```ds",
                 "(method) IDocument.Populate(Tables: Variant): Boolean",
+                "```",
                 "--------------------",
                 "Populates the `CellValues` of the required document tables.Return *True* if all tables are populated successfully; return *False* if any of the tables fail during population.",
                 "",
@@ -11492,7 +12752,9 @@ export const builtInIDocumentInterface: BuiltInDefinition =     {
                 }
             ],
             note: [
+                "```ds",
                 "(method) IDocument.PopulateBegin(Tables: Variant): Void",
+                "```",
                 "--------------------",
                 "Begin an asynchronous population run",
                 "",
@@ -11506,7 +12768,9 @@ export const builtInIDocumentInterface: BuiltInDefinition =     {
             name: "PopulateCancel",
             definitionType: "method",
             note: [
+                "```ds",
                 "(method) IDocument.PopulateCancel(): Void",
+                "```",
                 "--------------------",
                 "Cancel an existing population started via `Populate()` or `PopulateBegin()`"
             ].join("\n"),
@@ -11523,7 +12787,9 @@ export const builtInIDocumentInterface: BuiltInDefinition =     {
                 }
             ],
             note: [
+                "```ds",
                 "(method) IDocument.RefreshFromMetadata([ForceRefresh: Boolean = 0]): Void",
+                "```",
                 "--------------------",
                 "Updates all axes in all tables from the metadata if `UseMetadataDefinition` is *True*",
                 "",
@@ -11552,7 +12818,9 @@ export const builtInIDocumentInterface: BuiltInDefinition =     {
                 }
             ],
             note: [
+                "```ds",
                 "(method) IDocument.Save(Destination: Variant, [IncludeResults: Boolean = 1]): Void",
+                "```",
                 "--------------------",
                 "Saves the table document to the specified location.",
                 "",
@@ -11582,7 +12850,9 @@ export const builtInIDocumentInterface: BuiltInDefinition =     {
                 }
             ],
             note: [
+                "```ds",
                 "(method) IDocument.SaveWithoutDataSet(Destination: Variant, [IncludeResults: Boolean = 1]): Void",
+                "```",
                 "--------------------",
                 "Saves the table document without any dataset information.",
                 "",
