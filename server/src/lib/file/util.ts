@@ -61,7 +61,7 @@ function mergeMap<T1, T2>(base: Map<T1, T2>, target: Map<T1, T2>) {
 export type FileReferenceMark = {
     path: string,
     mark: string,
-}
+};
 
 /**
  * 判断并读取字符串文件引用标记

@@ -7,7 +7,8 @@
     "outDir": "./out",
     "rootDir": "./src",
     "composite": true,
-    "suppressImplicitAnyIndexErrors": true
+    "suppressImplicitAnyIndexErrors": true,
+    "downlevelIteration": true
   },
   "exclude": ["node_modules"],
   "include": ["src"]

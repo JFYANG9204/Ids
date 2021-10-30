@@ -1,3 +1,6 @@
+import * as vscode from "vscode";
+import { join } from "path";
+import { fileURLToPath } from "url";
 import { TextDocument } from "vscode-languageserver-textdocument";
 import {
     createConnection,
@@ -7,11 +10,16 @@ import {
     TextDocuments,
     TextDocumentSyncKind
 } from "vscode-languageserver/node";
+import { ParserFileDigraph } from "./lib/file";
+import { File } from "./lib/types";
 
 let connection = createConnection(ProposedFeatures.all);
 let documents = new TextDocuments(TextDocument);
+let current: File;
+let graph: ParserFileDigraph;
+let folderPath: string;
 
-connection.onInitialize(() => {
+connection.onInitialize((params) => {
     const result: InitializeResult = {
         capabilities: {
             textDocumentSync: TextDocumentSyncKind.Incremental,
@@ -21,6 +29,11 @@ connection.onInitialize(() => {
             }
         }
     };
+    if (params.workspaceFolders) {
+        folderPath = fileURLToPath(params.workspaceFolders[params.workspaceFolders.length - 1].uri);
+        graph = new ParserFileDigraph(folderPath);
+        graph.init();
+    }
     return result;
 });
 
