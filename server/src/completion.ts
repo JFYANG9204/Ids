@@ -3,9 +3,7 @@ import {
     readdirSync
 } from "fs";
 import {
-    dirname,
     isAbsolute,
-    join,
     resolve
 } from "path";
 import {
@@ -19,8 +17,8 @@ import {
     builtInFunctionDefinitions,
     builtInObjectDefinitions
 } from "./lib/built-in/built-ins";
-import { positionAt } from "./lib/file/util";
-import { File } from "./lib/types";
+import { distanceTo, positionAt } from "./lib/file/util";
+import { File, PreIncludeStatement } from "./lib/types";
 import {
     DefinitionBase,
     InterfaceDefinition
@@ -212,16 +210,22 @@ export function getCompletionsFromDefinitions(defs: Map<string, DefinitionBase>)
 }
 
 export function getCompletionFromPosition(
-    file: File, pos: number, filePath: string, triggerChar: string) {
+    file: File, pos: number, triggerChar: string) {
     const completions: CompletionItem[] = [];
     let node = positionAt(file.program.body, pos);
     // #include
-    if (node.treeParent &&
-        node.treeParent.type === "PreIncludeStatement" &&
-        node.type === "StringLiteral" &&
-        (triggerChar === "\\" || triggerChar === "/")) {
-        let incPath = resolve(join(dirname(filePath), node.extra["raw"]));
-        return getPathCompletion(incPath);
+    if (node.type === "PreIncludeStatement") {
+        if (distanceTo((node as PreIncludeStatement).inc, pos) === 0 &&
+            (node as PreIncludeStatement).path &&
+            (triggerChar === "\\" || triggerChar === "/")) {
+            let incPath = (node as PreIncludeStatement).path;
+            try {
+                return getPathCompletion(incPath);
+            } catch (error) {
+                return [];
+            }
+        }
+        return [];
     }
     let def = node.extra["definition"];
     if (def && triggerChar === ".") {

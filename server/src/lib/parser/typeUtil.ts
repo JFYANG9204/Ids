@@ -296,7 +296,7 @@ export class TypeUtil extends UtilParser {
                     arg,
                     ErrorMessages["UnmatchedVarType"],
                     false,
-                    argType.name,
+                    this.getDefinitionsText(argType),
                     this.getDefinitionsText(args[index].type)
                 );
             }

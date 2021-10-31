@@ -273,13 +273,14 @@ export class PreUndefStatement extends PreprocessorBase {
 }
 
 export class PreIncludeStatement extends PreprocessorBase {
-    path: string;
+    path: string = "";
+    inc: StringLiteral | Identifier;
     parser?: Parser;
     file: File;
     constructor(parser: ParserBase, pos: number, loc: Position) {
         super(parser, pos, loc);
         this.type = "PreIncludeStatement";
-        this.path = "";
+        this.inc = new Identifier(parser, pos, loc);
         this.file = new File(parser, pos, loc);
     }
 }

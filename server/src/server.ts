@@ -15,7 +15,8 @@ import {
     builtInCompletions,
     getCompletionFromPosition,
     getCompletionsFromDefinitions,
-    keywordsCompletions
+    keywordsCompletions,
+    preKeywordsCompletions
 } from "./completion";
 import { updateAndVaidateDocument } from "./util";
 import { positionAt } from "./lib/file/util";
@@ -53,6 +54,9 @@ connection.onCompletion(
         }
         let pos = doc.offsetAt(textDocumentPosition.position);
         let text = doc.getText().substring(0, pos);
+        if (text.endsWith("#")) {
+            return preKeywordsCompletions;
+        };
         if (last && (
             text.endsWith(".") ||
             text.endsWith("/") ||
@@ -60,14 +64,11 @@ connection.onCompletion(
             let find = getCompletionFromPosition(
                 last,
                 pos - 1,
-                fileURLToPath(textDocumentPosition.textDocument.uri),
                 text.slice(pos - 1, pos)
             );
             const node = positionAt(last.program.body, pos - 1);
             connection.console.log(node.type + "   " + node.extra["definition"]);
-            if (find.length > 0) {
-                return find;
-            }
+            return find;
         }
         let completions: CompletionItem[] = builtInCompletions.concat(keywordsCompletions);
         if (current && current.definitions) {

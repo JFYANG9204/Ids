@@ -969,6 +969,14 @@ export class StatementParser extends ExpressionParser {
                 false,
                 false);
         } else {
+            if (node.dimensions === 1) {
+                return new Argument(
+                    node.name.name,
+                    BasicTypeDefinitions.array,
+                    true,
+                    false
+                );
+            }
             const arr = createDefinition({
                 name: node.name.name,
                 isCollection: true,
@@ -983,7 +991,7 @@ export class StatementParser extends ExpressionParser {
             return new Argument(
                 node.name.name,
                 arr,
-                false,
+                true,
                 false);
         }
     }
@@ -1018,10 +1026,16 @@ export class StatementParser extends ExpressionParser {
         const node = this.startNode(PreIncludeStatement);
         this.next();
         const includeFilePath = this.parseExpression();
+        this.finishNode(node, "PreIncludeStatement");
         if (includeFilePath instanceof StringLiteral) {
-            node.path = this.options.sourceFileName ?
+            node.inc = includeFilePath;
+            try {
+                node.path = this.options.sourceFileName ?
                 path.join(path.dirname(this.options.sourceFileName), includeFilePath.extra["rawValue"]) :
                 includeFilePath.extra["rawValue"];
+            } catch (error) {
+                return node;
+            }
             let search;
             if (this.searchParserNode &&
                 (search = this.searchParserNode(node.path))) {
@@ -1047,6 +1061,7 @@ export class StatementParser extends ExpressionParser {
             }
         } else if (includeFilePath instanceof Identifier &&
             this.searchParserNode && this.options.sourceFileName) {
+            node.inc = includeFilePath;
             const thisNode = this.searchParserNode(this.options.sourceFileName);
             if (thisNode) {
                 let incNode: ParserFileNode | undefined;
@@ -1065,7 +1080,6 @@ export class StatementParser extends ExpressionParser {
                 }
             }
         }
-        this.finishNode(node, "PreIncludeStatement");
         if (node.parser) {
             if (metadata) {
                 node.parser.options.sourceType = SourceType.metadata;
