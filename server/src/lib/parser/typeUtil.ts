@@ -287,6 +287,7 @@ export class TypeUtil extends UtilParser {
                     notOptional
                 );
             }
+            return;
         }
         expr.arguments.forEach((arg, index) => {
             let argType = this.getExprType(arg) ?? BasicTypeDefinitions.variant;

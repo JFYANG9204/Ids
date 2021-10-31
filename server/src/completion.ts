@@ -18,9 +18,10 @@ import {
     builtInObjectDefinitions
 } from "./lib/built-in/built-ins";
 import { distanceTo, positionAt } from "./lib/file/util";
-import { File, PreIncludeStatement } from "./lib/types";
+import { CallExpression, File, PreIncludeStatement } from "./lib/types";
 import {
     DefinitionBase,
+    FunctionDefinition,
     InterfaceDefinition
 } from "./lib/util/definition";
 
@@ -233,6 +234,53 @@ export function getCompletionFromPosition(
     }
     return completions;
 }
+
+function getFunctionParamText(def: FunctionDefinition, index: number) {
+    let text = def.name;
+    let argTexts: string[] = [];
+    def.arguments.forEach((arg, ndx) => {
+        let typeText = "";
+        if (arg.type instanceof Array) {
+            let textArr: string[] = [];
+            arg.type.forEach(t => textArr.push(t.name));
+            typeText = textArr.join(" | ");
+        } else {
+            typeText = arg.type.name;
+        }
+        let argText = `${arg.name}: ${typeText}`;
+        if (arg.isOptional) {
+            argText = "[" + argText + "]";
+        }
+        if (ndx === index) {
+            argTexts.push(`__${argText}__`);
+        } else {
+            argTexts.push(argText);
+        }
+    });
+    if (argTexts.length > 0) {
+        text += argTexts.join(", ");
+    }
+    text += "): " + def.return ? def.return?.name : "Void";
+    return text;
+}
+
+
+export function getFunctionParamCompletion(
+    file: File, pos: number): CompletionItem[] {
+    const node = positionAt(file.program.body, pos);
+    if (node &&
+        node instanceof CallExpression &&
+        node.callee.extra["definition"] instanceof FunctionDefinition) {
+        let def: FunctionDefinition = node.callee.extra["definition"];
+        return [{
+            label: getFunctionParamText(def, node.arguments.length),
+            kind: CompletionItemKind.Function,
+        }];
+    } else {
+        return [];
+    }
+}
+
 
 export { keywordsCompletions, preKeywordsCompletions, builtInCompletions };
 

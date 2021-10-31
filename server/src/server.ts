@@ -3,6 +3,7 @@ import { TextDocument } from "vscode-languageserver-textdocument";
 import {
     CompletionItem,
     createConnection,
+    Hover,
     InitializeResult,
     ProposedFeatures,
     TextDocumentPositionParams,
@@ -15,11 +16,13 @@ import {
     builtInCompletions,
     getCompletionFromPosition,
     getCompletionsFromDefinitions,
+    getFunctionParamCompletion,
     keywordsCompletions,
     preKeywordsCompletions
 } from "./completion";
 import { updateAndVaidateDocument } from "./util";
 import { positionAt } from "./lib/file/util";
+import { DefinitionBase } from "./lib/util/definition";
 
 let connection = createConnection(ProposedFeatures.all);
 let documents = new TextDocuments(TextDocument);
@@ -35,7 +38,8 @@ connection.onInitialize((params) => {
             completionProvider: {
                 resolveProvider: true,
                 triggerCharacters: [ "#", ".", "\\", "/" ]
-            }
+            },
+            hoverProvider: true
         }
     };
     if (params.workspaceFolders) {
@@ -87,6 +91,21 @@ connection.onCompletionResolve(
         return item;
     }
 );
+
+connection.onHover(params => {
+    let hover: Hover | undefined = undefined;
+    const document = documents.get(params.textDocument.uri);
+    if (!document) {
+        return hover;
+    }
+    const pos = document.offsetAt(params.position);
+    const node = positionAt(current.program.body, pos);
+    if (node.extra["definition"]) {
+        const def: DefinitionBase = node.extra["definition"];
+        hover = { contents: def.getNote() };
+    }
+    return hover;
+});
 
 documents.onDidChangeContent(change => {
     let file = updateAndVaidateDocument(change.document, graph, connection);
