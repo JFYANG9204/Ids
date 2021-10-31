@@ -6,8 +6,8 @@ import {
 } from "../../server/src/lib/file";
 import { getCurrentParser } from "../../server/src/lib/file/util";
 
-const folderPath = resolve("./test/fixture/dpgm");
-const startPath = resolve("./test/fixture/dpgm/MDD_Manipulation.mrs");
+const folderPath = resolve("./test/parser/fixture/dpgm");
+const startPath = resolve("./test/parser/fixture/dpgm/MDD_Manipulation.mrs");
 
 const graph = new ParserFileDigraph(folderPath);
 graph.init();
