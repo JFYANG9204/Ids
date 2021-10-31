@@ -267,6 +267,27 @@ export class TypeUtil extends UtilParser {
 
     checkCallExprArguments(expr: CallExpression, base: FunctionDefinition) {
         const args = base.arguments;
+        if (args.length > 0 && expr.arguments.length === 0) {
+            let notOptional = "";
+            args.forEach(arg => {
+                if (!arg.isOptional) {
+                    if (!notOptional) {
+                        notOptional = arg.name;
+                    } else {
+                        notOptional += "," + arg.name;
+                    }
+                }
+            });
+            if (notOptional) {
+                this.raiseAtLocation(
+                    expr.end - 2,
+                    expr.end,
+                    ErrorMessages["ArgumentIsNotOptional"],
+                    false,
+                    notOptional
+                );
+            }
+        }
         expr.arguments.forEach((arg, index) => {
             let argType = this.getExprType(arg) ?? BasicTypeDefinitions.variant;
             argType = argType.return && argType.return.name !== "PlaceHolder" ? argType.return : argType;
