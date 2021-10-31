@@ -174,7 +174,7 @@ function getCompletionFromDefinitionBase(def: DefinitionBase, name?: string): Co
 }
 
 function getVariableCompletion(name: string, def: DefinitionBase): CompletionItem {
-    let label = `(${def.defType === "macro" ? "Macro" : "Variable"}) ${name}: ${def.name}`;
+    let label = `(${def.defType === "macro" ? "macro" : "variable"}) ${name}: ${def.name}`;
     let type = getCompletionTypeFromDefinition(def);
     return {
         label: name,

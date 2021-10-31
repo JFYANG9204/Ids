@@ -11,13 +11,19 @@ import {
 } from "vscode-languageserver/node";
 import { ParserFileDigraph } from "./lib/file";
 import { File } from "./lib/types";
-import { builtInCompletions, getCompletionFromPosition, getCompletionsFromDefinitions, keywordsCompletions } from "./completion";
+import {
+    builtInCompletions,
+    getCompletionFromPosition,
+    getCompletionsFromDefinitions,
+    keywordsCompletions
+} from "./completion";
 import { updateAndVaidateDocument } from "./util";
 import { positionAt } from "./lib/file/util";
 
 let connection = createConnection(ProposedFeatures.all);
 let documents = new TextDocuments(TextDocument);
 let current: File;
+let last: File;
 let graph: ParserFileDigraph;
 let folderPath: string;
 
@@ -47,15 +53,18 @@ connection.onCompletion(
         }
         let pos = doc.offsetAt(textDocumentPosition.position);
         let text = doc.getText().substring(0, pos);
-        if (current) {
+        if (last && (
+            text.endsWith(".") ||
+            text.endsWith("/") ||
+            text.endsWith("\\"))) {
             let find = getCompletionFromPosition(
-                current,
-                pos,
+                last,
+                pos - 1,
                 fileURLToPath(textDocumentPosition.textDocument.uri),
                 text.slice(pos - 1, pos)
             );
-            const node = positionAt(current.program.body, pos);
-            connection.window.showInformationMessage(node.type);
+            const node = positionAt(last.program.body, pos - 1);
+            connection.console.log(node.type + "   " + node.extra["definition"]);
             if (find.length > 0) {
                 return find;
             }
@@ -81,6 +90,7 @@ connection.onCompletionResolve(
 documents.onDidChangeContent(change => {
     let file = updateAndVaidateDocument(change.document, graph, connection);
     if (file) {
+        last = current;
         current = file;
     }
 });

@@ -355,9 +355,10 @@ export class ExpressionParser extends NodeUtils {
                     this.next();
                     return node;
                 }
-            // eslint-disable-next-line no-fallthrough
+
             default:
-                throw this.unexpected();
+                this.unexpected(undefined, undefined, undefined, false);
+                return this.emptyExpression;
 
         }
 

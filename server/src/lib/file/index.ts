@@ -66,6 +66,10 @@ export class ParserFileDigraph {
 
     updateData(filePath: string, content: string) {
         this.data.set(filePath.toLowerCase(), content);
+        const find = this.search(filePath);
+        if (find) {
+            find.content = content;
+        }
     }
 
     search(filePath: string) {

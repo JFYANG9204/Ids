@@ -192,7 +192,7 @@ export class VariantDefinition extends DefinitionBase {
     dimensions: number;
     boundaries?: number[];
     override getLable(): string {
-        return `(${this.defType === "macro" ? "Macro" : "Variable"}) ${this.name}`;
+        return `(${this.defType === "macro" ? "macro" : "variable"}) ${this.name}`;
     }
 }
 
@@ -225,7 +225,7 @@ export class EnumDefinition extends DefinitionBase {
     }
 
     override getLable(): string {
-        return `(Enum) ${this.name}`;
+        return `(enum) ${this.name}`;
     }
 }
 

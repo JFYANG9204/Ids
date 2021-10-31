@@ -200,7 +200,11 @@ export class TypeUtil extends UtilParser {
 
     getMemberExprType(node: MemberExpression): DefinitionBase | undefined {
         const type = this.getMemberType(node);
-        this.addExtra(node, "definition", type);
+        if (type instanceof PropertyDefinition) {
+            this.addExtra(node, "definition", type?.return);
+        } else {
+            this.addExtra(node, "definition", type);
+        }
         return type;
     }
 
@@ -401,6 +405,12 @@ export class TypeUtil extends UtilParser {
             case "CallExpression":
                 this.getCallExprType(expr as CallExpression);
                 break;
+            case "Identifier":
+                this.getIdentifierType(expr as Identifier);
+                break;
+            case "MemberExpression":
+                this.getMemberExprType(expr as MemberExpression);
+                break;
 
             default:
                 break;
@@ -441,12 +451,11 @@ export class TypeUtil extends UtilParser {
                     type = IQuestionDefinition;
                 }
             }
+            this.addExtra(node, "definition", type);
         } else if (node instanceof MemberExpression) {
             type = this.getMemberExprType(node);
         } else {
             type = this.scope.currentScope().headerType;
-        }
-        if (type) {
             this.addExtra(node, "definition", type);
         }
         return type;
