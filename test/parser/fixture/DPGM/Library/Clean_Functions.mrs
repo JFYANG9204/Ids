@@ -1,0 +1,658 @@
+'*****FILE VERSION=4, DATE LAST MODIFIED=2012/08/29, KO
+
+
+   sub sbRSP(dmgrjob,q,strComment)
+        'require single response
+                
+        dim strText
+        dim responses
+        dim response
+        dim name
+
+        if q.AnswerCount() > 1 then
+
+            strText = ""
+            responses = q.Response.Value
+
+                        for each response in responses
+                                name = format(response, "A")                    
+                strText = strText + iif(strText<>"",", ","") + name
+                next
+
+            sbLog(dmgrjob,q.questionfullname + " is not single punch", strComment, q.questionfullname + " = {" + strtext +  "}")                
+        elseif q.AnswerCount() = 0 then
+            'null
+            sbLog(dmgrjob,q.questionfullname + " is not single punch", strComment, q.questionfullname + " is NULL")                
+            
+        elseif q.AnswerCount() = 1 then
+            'do nothing
+        end if
+        
+    end sub
+   
+
+
+'**************    
+
+    sub sbRSMP(dmgrjob,q,strComment)
+        'require not blank - response can be single or multi-punch
+
+        dim strText
+        dim responses
+        dim response
+        dim name 
+                
+        if not (q.AnswerCount() >= 1) then
+                
+            strText = ""
+            responses = q.Response.Value
+
+            sbLog(dmgrjob,q.questionfullname +  " has no answers", strComment, q.questionfullname + " = {" + strtext +  "}")    
+        end if
+            
+    end sub
+
+'**************
+        
+    sub sbRB(dmgrjob,q,strComment)
+        'require blank 
+                
+        dim strText
+        dim responses
+        dim response
+        dim name 
+                
+        if (q.AnswerCount() > 0 ) then
+                
+            strText = ""
+            responses = q.Response.Value
+            for each response in responses
+                                name = format(response, "A")                    
+                strText = strText + iif(strText<>"",", ","") + name
+                next
+            
+                sbLog(dmgrjob,q.questionfullname + " is not blank", strComment, q.questionfullname + " = {" + strtext + "}")            
+        end if
+
+    end sub
+
+'**************
+
+    sub sbMustEqual(dmgrjob,q,resp,strComment)
+        'must have specific answer and nothing else
+        
+        dim strText1
+        dim strText
+        dim responses
+        dim response
+        dim name 
+        
+        if not (q = resp) then
+                if left(ctext(resp),1)="{" then
+                strText1 = fnGetName(resp,dmgrjob)
+            else
+                strText1 = ctext(resp)
+            end if
+                        
+                        
+            strText = ""
+            responses = q.Response.Value
+            for each response in responses
+                                name = format(response, "A")                    
+                strText = strText + iif(strText<>"",", ","") + name
+                next            
+            
+            sbLog(dmgrjob, q.questionfullname + " does not equal " + strText1 , strComment, q.questionfullname + " = {" + strtext +  "}")
+                end if
+    end sub
+
+'**************        
+        
+    sub sbMustContain(dmgrjob,q,resp,strComment)
+        'must contain a specific answer - additional responses are allowed
+                
+        dim strText1
+        dim strText
+        dim responses
+        dim response
+        dim name
+                
+        if not (q.ContainsAny(resp)) then
+                if left(ctext(resp),1)="{" then
+                strText1 = fnGetName(resp,dmgrjob)
+            else
+                strText1 = ctext(resp)
+            end if
+       
+            strText = ""
+            responses = q.Response.Value
+            for each response in responses
+                                name = format(response, "A")                    
+                strText = strText + iif(strText<>"",", ","") + name
+                next            
+                        sbLog(dmgrjob, q.questionfullname + " does not contain any " + strText1, strComment, q.questionfullname + " = {" + strtext +  "}")
+        end if
+    end sub
+
+'**************
+        
+    sub sbMustNot(dmgrjob,q,resp,strComment)
+        'must NOT have specific answer
+        
+        dim strText1
+        dim strText
+        dim responses
+        dim response
+        dim name 
+                
+        if (q.ContainsAny(resp)) then
+                if left(ctext(resp),1)="{" then
+                strText1 = fnGetName(resp,dmgrjob)
+            else
+                strText1 = ctext(resp)
+            end if
+                
+            strText = ""
+            responses = q.Response.Value
+            for each response in responses
+                                name = format(response, "A")                    
+                strText = strText + iif(strText<>"",", ","") + name
+                next            
+
+                        
+                        sbLog(dmgrjob,q.questionfullname + " contains " + strText1, strComment, q.questionfullname + " = {" + strtext +  "}")
+          
+        end if
+    end sub
+
+'**************      
+                
+sub sbCheckBack(dmgrjob,currQ,backQ,strComment)
+      'Checks one question back to another - each response given at currQ must be present at backQ
+        'Note: does not support grids
+        
+        dim strText
+        dim strText2
+        
+        dim response
+        dim responsesCurrQ
+        dim responsesBackQ
+        dim responseCurrQ
+        dim responseBackQ
+        dim name
+        dim name1
+        dim intNull
+        dim blnNullCurrQ
+        dim blnNullBackQ
+        
+        intNull = 0
+        blnNullCurrQ = False
+        blnNullBackQ = False
+        
+ 
+            if currQ.AnswerCount() = 0 then 
+            intNull = intNull + 1
+            blnNullCurrQ = True
+            end if
+        
+        if backQ.AnswerCount() = 0 then
+            intNull = intNull + 2
+            blnNullBackQ = True
+        end if
+        
+        
+        select case intNull
+            case 0
+             if currQ.containsall(backQ) = false then
+        
+            
+                  responsesCurrQ = CurrQ.Response.Value
+                  for each response in responsesCurrQ
+                              if not (backQ.ContainsAny(ccategorical(response))) then
+                                    name1 = format(response, "A")
+                                    strText = ""
+                                    responsesCurrQ = CurrQ.Response.Value
+                              for each responseCurrQ in responsesCurrQ
+                                          name = format(responseCurrQ, "A")               
+                              strText = strText + iif(strText<>"",", ","") + name
+                              next        
+                              
+                                    strText2 = ""
+                                    responsesBackQ = BackQ.Response.Value
+                              for each responseBackQ in responsesBackQ
+                                          name = format(responseBackQ, "A")               
+                              strText2 = strText2 + iif(strText2<>"",", ","") + name
+                              next               
+        
+                        sbLog(dmgrjob,currQ.questionfullname + " has " + name1 + " but " + ctext(backQ.QuestionFullName) + " did not", strComment, currQ.questionfullname + " = {" + strtext + "}, " + backQ.questionfullname + " = {" + strtext2 + "}"      )
+                        
+                              end if
+                  next
+              end if
+            case 1 'currQ is null
+                        strText2 = ""
+                        responsesBackQ = BackQ.Response.Value
+                  for each responseBackQ in responsesBackQ
+                              name = format(responseBackQ, "A")               
+                  strText2 = strText2 + iif(strText2<>"",", ","") + name
+                  next 
+                        sbLog(dmgrjob,currQ.questionfullname + " is null but " + ctext(backQ.QuestionFullName) + " is not", strComment, currQ.questionfullname + " = NULL, " + backQ.questionfullname + " = {" + strtext2 + "}"      )
+                  case 2 'backQ is null
+                        strText = ""
+                        responsesCurrQ = CurrQ.Response.Value
+                        for each responseCurrQ in responsesCurrQ
+                              name = format(responseCurrQ, "A")               
+                        strText = strText + iif(strText<>"",", ","") + name
+                        next                    
+                        sbLog(dmgrjob,backQ.questionfullname + " is null but " + ctext(currq.QuestionFullName) + " is not", strComment, backQ.questionfullname + " = NULL, " + currQ.questionfullname + " = {" + strtext + "}" )
+                  case 3 'currQ and BackQ is null
+                        'do nothing
+            end select
+    end Sub
+
+'**************
+ 
+    sub sbRNumInRange(dmgrjob,q,min,max,strComment)
+        'requires a numeric to be in a certain range
+                        'null response will have answercount()=0
+        if ctext(q.response)="" then 'null
+            sbLog(dmgrjob,q.questionfullname + " is not in range " + ctext(min)+ "-" + ctext(max), strComment, q.questionfullname + " is NULL")
+        elseif not(q >= min and q <= max) then
+                        sbLog(dmgrjob,q.questionfullname + " is not in range " + ctext(min)+ "-" + ctext(max), strComment, q.questionfullname + " = " + CText(q))
+        end if
+    end Sub
+
+'**************        
+     
+    sub sbAddUp(dmgrJob,qList,val,dmgrQuestions,strComment) 
+        'Sub to check a list of questions add to a certain value
+        
+        dim check,qn, strData
+                for each qn in split(qList,",")
+                        if dmgrquestions[qn].QuestionDataType=1 then
+                                check=check+dmgrQuestions[qn]
+                                strData = strData + iif(strData <> "",",","") +  qn + " = " + ctext(dmgrquestions[qn])
+                        else
+                                debug.msgbox("Question "+dmgrquestions[qn].questionfullname +" is not a numeric")
+                        end if
+                next
+                if check <> val then 
+                        'outfile.writeline(dmgrquestions[qn].questionfullname+":ADDUP ERROR,The values from questions do not add to: "+val)
+                        sbLog(dmgrjob,qList + " do not add up to " + ctext(val), strComment, strData)
+                end if
+        end sub 
+
+'**************
+     
+    sub sbShowDataAndLog(dmgrjob,qList,dmgrQuestions,strComment)
+        'sends log message and shows data values for any variables included in string passed as qList
+        'best used for checks that do not use the other functions in this library
+    
+        dim arrQ
+        dim q
+        dim strText
+        dim strText2
+        dim objTemp
+                dim responses
+                dim response
+                dim name
+
+        arrQ = split(qList,",")
+        
+        strText = ""
+        for q = 0 to ubound(arrQ)
+                set objTemp = fnResolveNameSpace(arrQ[q],dmgrQuestions)
+                        
+                        if strText2 <> "" then strText2 = strText2 + ", "
+                        
+                'check for categorical
+            if objTemp.questiondatatype = 3 then
+   
+                strText = ""
+                responses = objTemp.Response.Value
+                for each response in responses
+                                        name = format(response, "A")                    
+                        strText = strText + iif(strText<>"",", ","") + name
+                        next  
+
+                        strText2 = strText2 + arrQ[q] + " = {" + strText + "}"
+            else
+                strText2 = strText2 + arrQ[q] + " = " + ctext(objTemp)
+                end if
+        next
+
+        sbLog(dmgrjob,Null, strComment, strText2 )
+    end sub
+
+'**************
+
+   function fnGetName(resp,dmgrjob)
+        'returns category name associated with category value
+        dim cat
+        if left(ctext(resp),1) <> "{" then
+            resp = ccategorical("{" + resp + "}")
+        end if
+        for each cat in resp
+            fnGetName = fnGetName + ccategorical(dmgrjob.inputdatasources[0].mdmdocument.categorymap.valuetoname[cat])
+        next
+        
+        fnGetName = "{" + format(fnGetName,"A") + "}"
+        'fnGetName = dmgrjob.inputdatasources[0].mdmdocument.categorymap.valuetoname[resp]
+    end function
+
+'**************
+
+    function fnResolveNameSpace(strFullName, objRoot)
+        'function to return the object of the same name as a string you pass in 
+        'useful when building a text string of an object name, but then needing to access the object
+        
+        'on error resume next
+        On Error Goto ResolveNameSpaceErrorHandler
+   
+                dim name
+                set FnResolveNameSpace = objRoot
+        
+                if Find(strFullName,"[") >= 0 then
+                        strFullName = strFullName.Replace("[{",".") 'Replace begining collection access
+                        strFullName = strFullName.Replace("}].",".") 'Replace ending collection access with following object
+                        strFullName = strFullName.Replace("}]","") 'Replace ending collection access with no following object
+                end if
+                
+                for each name in split(strFullName,".")
+                        set FnResolveNameSpace = FnResolveNameSpace[name]
+                next
+    
+        Exit Function
+        
+                ResolveNameSpaceErrorHandler:
+                debug.MsgBox(MakeString("Error in FnResolveNameSpace.  Error Desc: ",  err.Description))
+                FnResolveNameSpace = null    
+
+    end function
+
+'**************
+
+    function fnStraightLine(dmgrJob,dmgrQuestions,q,innerVar,blnLog)
+        'function to return True/False if all iterations of grid are straight lined (all have the same answers)
+        
+        dim cat
+        dim objTemp
+        dim catLast
+        dim strTemp
+        dim counter
+        
+        fnStraightLine = False
+        counter = 0
+        
+        for each cat in q.Categories
+                set objTemp = fnResolvenameSpace(q.questionname + "[{" + cat.name + "}]." + innervar,dmgrQuestions) 
+                if objTemp <> "" then
+                        counter = counter + 1
+                        if catLast = "" then
+                                'set catLast to the first answer found
+                                catLast = objTemp
+                                fnStraightLine = True
+                        else
+                                if catlast <> objTemp then
+                                        fnStraightLine = False
+                                end if
+                                catLast = objTemp                       
+                        end if
+                end if
+        next
+        
+        if counter <=1 then fnStraightLine = False
+                'can't be straightline if didn't give multiple answers
+        
+        if blnLog = True  and fnStraightLine = True then
+                strTemp = ""
+                for each cat in q.categories
+                        set objTemp = fnResolvenameSpace(q.questionname + "[{" + cat.name + "}]." + innervar,dmgrQuestions)
+                        if objTemp <> null then
+                        
+                                strTemp = strTemp + iif(strTemp<>"",",","") + q.questionname + "[{" + cat.name + "}]." + innervar
+                        end if
+                next
+                sbShowDataAndLog(dmgrJob,strTemp,dmgrquestions,q.questionname + " straightliners")
+                end if
+                
+    end function
+
+'**************
+
+
+    sub sbExclusive(dmgrJob,q,resp,strComment) 
+                ' Sub to check if answer given is exclusive
+        
+                dim strText
+                dim responses
+                dim response
+                dim name
+
+                if q.containsany(resp) and answercount(q)> 1 then 
+                strText = ""
+                responses = q.Response.Value
+                for each response in responses
+                                name = format(response, "A")                    
+                strText = strText + iif(strText<>"",", ","") + name
+                next        
+            
+                strText = q.questionfullname + " = {" + strText + "}"
+                sbLog(dmgrJob,q.questionfullname + " has answers besides " + fnGetName(resp,dmgrjob),strComment,strText)
+                end if
+    end sub
+
+'**************
+
+    Sub sbLog(dmgrjob,strText,strComment,strData)
+        'logs error to log sheet
+        
+        dim strOutText
+               
+        'respondent identifier
+        strOutText = """" + ctext(dmgrJob.globalvariables.respnum) + ""","
+        
+        'helper identifier
+        strOutText = strOutText + """" + ctext(dmgrJob.GlobalVariables.LogHelpVar) + ""","
+        
+        'error message
+        strOutText = strOutText + """" + strText + iif(strComment<>Null, iif(strText<>Null," - " + strComment,strComment),"") + """"
+        
+        'data
+        if strData <> NULL then
+                strOutText = strOutText + ",""" + strData + """"
+                end if
+        dmgrjob.GlobalVariables.report.writeline(strOutText)
+   end Sub
+
+'**************
+
+   Sub sbCheck(dmgrjob,strText,strComment)
+
+     if (strText) then sbLog(dmgrjob,strComment,"","")
+
+   end Sub
+'**************
+        
+   Sub sbCheckContentsVersusList(dmgrJob,q, validationlist,strComment)
+                'checks contents of variable against a list to make sure there are no illegal responses
+        
+                'Check we have a catgeorical question...
+                if q.QuestionDataType<>DataTypeConstants.mtCategorical then exit sub 
+                '...and that it contains data
+                if q.Response is null then exit sub
+
+                dim responses
+                dim response
+                dim strText
+                dim name
+                
+                ' put the response(s) into a variable
+                ' this allows us to iterate through each response
+                responses = q.Response.Value
+                'debug.Log(makestring(q.questionname,": ",format(responses, "A")))
+                
+                for each response in responses
+                        
+                        if not (response*validationlist.DefinedCategories()) then 
+                                ' response not found: throw error or log message etc
+                                'debug.Log(makestring(name," not found"))
+                                ' get the response's name using the format function with the "A" flag
+                                name = format(response, "A")
+                                strText = strText + iif(strText<>"",",","") + name
+                        end if
+                next 'response
+                
+                if strText <> "" then
+                strText = q.questionfullname + " should not contain {" + strText + "}"
+                if dmgrJob.questions.FindItem(validationlist) is null then 'Not a DMOM question, assumption is it is a list
+                        sbLog(dmgrJob,q.questionfullname + " has answers that are not included in " + validationlist.name,strComment,strText)
+                        else
+                                sbLog(dmgrJob,q.questionfullname + " has answers that are not included in " + validationlist.questionfullname,strComment,strText)
+                        end if
+                end if
+        End Sub
+
+'**************
+
+sub sbCheckAllQuestions(dmgrjob,questions,blnArray)
+        'this sub will call sbCheckContentsVersusList for a single question or all the questions in dmgrjob.questions
+        'if you are passing in dmgrJob.questions or any individual grid set blnArray to True so it will use recursion to 
+        'traverse to the lowest level
+        'if you are passing in a simple questions set blnArray to True
+
+        'dmgrJob        dmgrJob object
+        'questions      can be invididual field or a collection of questions (dmgrJob.questions)
+        'blnArray       set to True if a grid or a collection of questions (dmgrJob.Questions) is passed in to Questions
+        '                       for each q in Questions will only work properly for an array of questions
+        
+                                
+        dim q
+        if blnArray then
+                for each q in Questions
+                        if q.questiontype <> 0 then ' questiontypes.qtsimple
+                                sbCheckAllQuestions(dmgrjob,q,True)
+                        else
+                                sbCheckContentsVersusList(dmgrJob,q,q,null)
+                                'debug.Log(q.questionfullname)
+                        end if
+                next
+        else
+                sbCheckContentsVersusList(dmgrJob,questions,questions,null)
+        end if
+end sub
+
+'**************
+
+sub sbRNull(dmgrjob,q,strComment)
+        'require variable to be empty
+        'works with Categorical or Numeric but doesn�t format the response values for Categorical variables like sbRB
+         
+        if ctext(q.response.value) <> "" then 
+             sbLog(dmgrjob,q.questionfullname + " is not blank", strComment, q.questionfullname + " = " + CText(q))            
+        end if
+
+end sub
+
+
+'**************
+
+
+sub sbCheckSubset(dmgrjob,q,resp,blnAll,blnUse,blnInclusive,strComment)
+   'sbCheckSubset(dmgrjob,qa1,{Under18,_41_74},True,True,True,"blnAll = True")
+      'q = question to be checked
+      'resp = subset of categories to be used
+      'blnAll = whether or not all categories in resp must be found (and/or logic)
+      'blnUse = use list provided or all categories besides those listed in resp (use resp or generate new list)
+      'blnInclusive = if true no other responses are allowed
+      'strComment = Additional user supplied comments if condition fails
+                
+        dim strText1
+        dim strText
+        dim responses
+        dim response
+        dim name
+        dim strSubset
+        dim category
+
+
+            responses = q.Response.Value
+            
+            if blnUse = False then
+                  strSubset = "{"
+                  'need to get all the other categories that weren't passed in
+                  for each category in q.categories
+                        if find(resp,category) > -1 then
+                              'is on list - not needed
+                        else
+                              'add it to the new list
+                              strSubset = strSubset + iif(strSubset <> "{",",","") + category.name
+                        end if
+                  next
+                  
+                  strSubset = strSubset + "}"
+                  resp = ccategorical(strSubset)
+            end if
+            'debug.Log(strsubset)
+
+            if blnAll = True then
+                  'must find all categories from the resp in the response - "And logic"
+                  if blnInclusive = True then
+                        'must have all the categories from the resp in the answer and no others
+                        if not (q.ContainsAll(resp,True)) then
+                              strText1 = fnGetName(resp,dmgrjob)
+                        responses = q.Response.Value
+                        for each response in responses
+                        name = format(response, "A")                    
+                        strText = strText + iif(strText<>"",", ","") + name
+                  next            
+                    sbLog(dmgrjob, q.questionfullname + " does not contain all of " + ctext(strText1) + " or additional answers were included", strComment, q.questionfullname + " = {" + strtext +  "}")
+                                    
+                        end if
+                  elseif blnInclusive = False then
+                        'must have all the categories from the resp in the answer, but additional answers are allowed
+                        if not (q.ContainsAll(resp,False)) then
+                              strText1 = fnGetName(resp,dmgrjob)
+                        responses = q.Response.Value
+                        for each response in responses
+                        name = format(response, "A")                    
+                        strText = strText + iif(strText<>"",", ","") + name
+                  next            
+                    sbLog(dmgrjob, q.questionfullname + " does not contain all of " + ctext(strText1), strComment, q.questionfullname + " = {" + strtext +  "}")
+                                    
+                        end if
+                  end if
+                                          
+            elseif blnAll = False then
+                  'must find at least one of the categories from the resp in the response - "Or logic"
+                  if blnInclusive = True then
+                        'must have at least one of the categories from the resp in the answer and no others
+                        if not (q.ContainsAny(resp,True)) then
+                        strText1 = fnGetName(resp,dmgrjob)
+                        responses = q.Response.Value
+                        for each response in responses
+                        name = format(response, "A")                    
+                        strText = strText + iif(strText<>"",", ","") + name
+                  next            
+                    sbLog(dmgrjob, q.questionfullname + " does not contain any of " + ctext(strText1) + " or additional answers were included", strComment, q.questionfullname + " = {" + strtext +  "}")
+                                    
+
+
+                        end if
+                  elseif blnInclusive = False then
+                        'must have at least one of the categories from the resp in the answer, but additional answers are allowed
+                        if not (q.ContainsAny(resp,False)) then
+                        strText1 = fnGetName(resp,dmgrjob)
+                        responses = q.Response.Value
+                        for each response in responses
+                        name = format(response, "A")                    
+                        strText = strText + iif(strText<>"",", ","") + name
+                  next            
+                    sbLog(dmgrjob, q.questionfullname + " does not contain any of " + ctext(strText1), strComment, q.questionfullname + " = {" + strtext +  "}")
+                                    
+                        end if
+                  end if                  
+            
+            end if
+
+end sub

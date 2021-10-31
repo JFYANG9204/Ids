@@ -1,0 +1,295 @@
+'*****FILE VERSION=4, DATE LAST MODIFIED=2012/08/29, KO
+
+
+SUB sbCopyFile(SourceFile,Destination,Overwrite)
+        'Copies file
+        'Parameters:  SourceFile - Character string file specification, which can include wildcard characters, for one or more files to be copied.
+        '             Destination - Character string destination where the file or files from source are to be copied. Wildcard characters are not allowed. It should end in a "\"
+        '             Overwrite - TRUE or FALSE, should an existing file be overwritten?
+        'Note that CopyFile will fail if destination has the read-only attribute set, regardless of the value of overwrite.
+        DIM objFSO
+        SET objFSO = CreateObject("Scripting.FileSystemObject")
+        objFSO.CopyFile(sourceFile,Destination,Overwrite)
+
+END SUB
+
+
+SUB sbDeleteFile(FileSpec,Force)
+        'Copies file
+        'Parameters:  FileSpec - The name of the file to delete. The filespec can contain wildcard characters in the last path component.
+        '             Force - Boolean value that is True if files with the read-only attribute set are to be deleted; False (default) if they are not.
+        DIM objFSO
+        SET objFSO = CreateObject("Scripting.FileSystemObject")
+        if (objFSO.FileExists(FileSpec)) Then
+                objFSO.DeleteFile(FileSpec,Force)
+        End IF
+
+END SUB
+
+
+SUB sbCreateFolder(Path)
+        'Creates a folder
+        'Parameters:  Path - String expression that identifies the folder to create.
+        'Nothing happents if the folder already exists.
+        DIM objFSO
+        SET objFSO = CreateObject("Scripting.FileSystemObject")
+        if NOT(objFSO.FolderExists(Path)) Then
+                objFSO.CreateFolder(Path)
+        End IF
+END SUB
+
+
+SUB sbCopyFolder (source, destination, overwrite)
+        'Copies Folder
+        'Parameters:  Source - Character string folder specification, which can include wildcard characters, for one or more folders to be copied.
+        '             Destination - Character string destination where the folder and subfolders from source are to be copied. Wildcard characters are not allowed. It should NOT end in a "\"
+        '             Overwrite - TRUE or FALSE, should an existing file be overwritten?
+        'Wildcard characters can only be used in the last path component of the source argument. For example, you can use:
+        '       c:\mydocuments\letters\*
+        'But not
+        '       c:\mydocuments\*\*
+
+        DIM objFSO
+        SET objFSO = CreateObject("Scripting.FileSystemObject")
+        objFSO.CopyFolder (source, destination, overwrite)
+
+END SUB
+
+
+SUB sbDeleteFolder (folderspec, force)
+        'Deletes a specified folder and its contents.
+        'Parameters:    folderspec - The name of the folder to delete. The folderspec can contain wildcard characters in the last path component.
+        '                               force - Boolean value that is True if folders with the read-only attribute set are to be deleted; False  if they are not.
+
+        DIM objFSO
+        SET objFSO = CreateObject("Scripting.FileSystemObject")
+        if (objFSO.FolderExists(folderspec)) Then
+                objFSO.DeleteFolder (folderspec, force)
+        End IF
+
+END SUB
+
+
+SUB sbRenameFile(SourceFile,Destination)
+        'Renames file
+        'Parameters:  SourceFile - Character string file specification, which can include wildcard characters, for one or more files to be renamed.
+        '             Destination - Character string destination to which the file(s) from source are to be renamed. Wildcard characters are not allowed.
+        DIM objFSO
+        SET objFSO = CreateObject("Scripting.FileSystemObject")
+        If not(objFSO.FileExists(Destination)) then
+                objFSO.MoveFile(sourceFile,Destination)
+        Else
+                debug.Log("Error: File " + ChrW(34) + ctext(Destination) + ChrW(34) + " already exists - cannot rename " + ChrW(34) + ctext(SourceFile) + ChrW(34))
+        End if
+
+END SUB
+
+
+SUB sbLogTime(fileName, startOrEnd)
+        Dim startOrEndTime, fso, timefile
+        startOrEndTime = Ctext(timenow()) + mr.Tab + ctext(datenow())
+        Set fso = CreateObject("Scripting.FileSystemObject")
+        if not fso.FileExists(JOB_ROOT + "MasterTimeLog.txt") then fso.CreateTextFile(JOB_ROOT + "MasterTimeLog.txt",false,false)
+        set timefile = fso.OpenTextFile(JOB_ROOT + "MasterTimeLog.txt",8,false,0)
+        timefile.WriteLine(fileName + mr.Tab + startOrend + " Time:" + mr.Tab + Ctext(startOrEndTime))
+END SUB
+
+
+SUB sbSetDBLocation(fileName)
+        Dim objMDM
+        Set objMDM = CreateObject("MDM.Document")
+        objMDM.Open(ctext(fileName) + ".mdd")
+        Set objMDM.DataSources.Current.DBLocation=ctext(fileName) + ".ddf"
+        objMDM.Save()
+        objMDM.Close()
+END SUB
+
+
+sub sbSet(adoConn,qes,resp,filter)
+        sbUpdate(adoConn,qes,resp,filter)
+end sub
+
+sub sbAppend(adoConn,qes,resp,filter)
+        sbUpdate(adoConn,qes,"UNION("+qes+","+resp+")",filter)
+end sub
+
+sub sbRemove(adoConn,qes,resp,filter)
+        sbUpdate(adoConn,qes,"DIFFERENCE("+qes+","+resp+")",filter)
+end sub
+
+sub sbUpdate(adoConn,qes,resp,filter)
+        if trim(filter)<>"" then resp=resp+" WHERE "+filter
+
+        adoConn.Execute("UPDATE vdata SET "+qes+"="+resp)
+end sub
+
+sub sbDropCases(adoConn,filter)
+      Dim adoRS, iIn
+      
+      'Number records of records start with
+      set adoRS=adoConn.Execute("SELECT COUNT(*) FROM VDATA")
+      adoRS.moveFirst()
+      iIn=adoRS[0].value
+      
+      'Delete the cases
+      adoConn.Execute("DELETE FROM vdata WHERE "+filter)
+      
+      'Log what we have done
+      set adoRS=adoConn.Execute("SELECT COUNT(*) FROM VDATA")
+      adoRS.moveFirst()
+      
+      debug.Log("CAUTION: "+ctext(iIn-adoRS[0].value)+" case(s) dropped where "+trim(filter))
+end sub
+
+
+sub sbCreateFlippedGridMetadata(objMDM,var,newname,fso)
+
+        dim file,ele,cnt,checker
+
+        Const eDontknow      = &H0002
+        Const eRefuse        = &H0004
+        Const eNoanswer      = &H0008
+        
+        if fso.FileExists("temp.inc") then
+                set file=fso.OpenTextFile("temp.inc",8) 'ForAppending
+        else
+                set file=fso.createtextfile("temp.inc",true,false)
+        end if
+
+        cnt=0
+        checker=0
+
+        with objMDM
+                file.WriteLine(newname+" """+objMDM.fields[var].fields[0].label+""" loop")
+                file.writeline("                {")
+        for each ele in .Fields[var].fields[0].elements.elements
+                if not(BitAnd(ele.Flag,BitOr(eDontknow,eRefuse,eNoAnswer))) then checker=checker+1
+        next
+        for each ele in .Fields[var].fields[0].elements.elements
+              cnt=cnt+1
+                  if cnt < checker then
+                            file.WriteLine("                     "+ele.name+" """+ele.label+""",")
+                  end if
+                  if cnt=checker then
+                            file.WriteLine("                     "+ele.name + " """+ele.label+"""")
+                  end if
+            next
+
+                file.WriteLine("                } fields (")
+                file.WriteLine("                                        slice """+objMDM.fields[var].label+""" categorical")
+                file.WriteLine("                                                        {")
+                cnt=0
+                for each ele in .Fields[var].categories
+                        file.writeline("                                                "+ele.name+" """+ele.label+""",")
+                next
+                file.WriteLine("                                None NA                 };")
+                file.WriteLine("                                ) grid expand;")
+
+        end with
+
+end sub
+
+'function fnMDDNeedsOpening(oFso)
+'        fnMDDNeedsOpening=false
+'
+'        with oFso
+'
+'                'Anything in metadata.mrs?
+'                if .fnHasContent("../include/metadata.mrs") then
+'                        fnMDDNeedsOpening=true
+'                        exit function
+'                end if
+'
+'                'Anything in edits.mrs?
+'                if .fnHasContent("../include/edits.mrs") then
+'                        fnMDDNeedsOpening=true
+'                        exit function
+'                end if
+'
+'                'Anything in lists.mrs?
+'                if .fnHasContent("../include/lists.mrs") then
+'                        fnMDDNeedsOpening=true
+'                        exit function
+'                end if
+'        end with
+'
+'end function
+
+'function fnHaveEdits(oFso)
+'        fnHaveEdits=false
+'
+'        'Anything in edits.mrs?
+'        if oFso.fnHasContent("../include/edits.mrs") then fnHaveEdits=true
+'
+'end function
+
+'function fnHasContent(ofso,strFile)
+'        Dim file, strLine
+'
+'        fnHasContent=false
+'
+'        if oFso.FileExists(strFile) then
+'                set File=oFso.OpenTextFile(strFile)
+'                while not file.AtEndOfStream
+'                        strline=file.ReadLine()
+'                        if strLine="'*** PLACE CONTENT BELOW THIS LINE.  DO NOT REMOVE OR EDIT THIS LINE ***" then
+'                                if not file.AtEndOfStream then
+'                                        fnHasContent=true
+'                                        exit function
+'                                end if
+'                        end if
+'                end while
+'        end if
+'end function
+
+'sub sbReadIncludeFiles(MDD,oFso)
+'        'Add the lists first
+'        sbAddToTypes(MDD,oFso,"..\Include\Lists.mrs")
+'
+'        'Then any metadata
+'        sbAddToFields(MDD,oFso,"..\Include\Metadata.mrs")
+'
+'        'Finally, any additional metadata created by sbCreateFlippedGridMetadata
+'        sbAddToFields(MDD,oFso,"temp.inc")
+'end sub
+
+sub sbAddToTypes(MDD,oFso,strFile)
+        Dim oFile
+
+        if oFso.FileExists(strFile) then
+                set oFile=oFso.OpenTextFile(strFile)
+                if not oFile.AtEndOfStream then MDD.Types.AddScript(oFile.ReadAll())
+        end if
+end sub
+
+sub sbAddToFields(MDD,oFso,strFile)
+        Dim oFile
+
+        if oFso.FileExists(strFile) then
+                set oFile=oFso.OpenTextFile(strFile)
+                if not oFile.AtEndOfStream then MDD.Fields.AddScript(oFile.ReadAll())
+        end if
+end sub
+
+Sub sbAddFileToZip(zip,file)
+'!
+    Adds file(s) to a zip file, Success depends on WZZIP command line add-on to Winzip being available
+    If zip fails user will be given an option to stop script
+
+    @param1:    file(s) names as a space delimited list, include "" if file names themselves contain spaces
+    @param2:    zip file name, if this file does not already exist, wzzip will create it
+!'
+Dim oShell, lngResult
+Set oShell = CreateObject("WScript.Shell")
+
+lngResult = oShell.Run(MakeString("cmd.exe /C wzzip -u -ybc ",zip," ",file),0,True)
+
+If lngResult <> 0 Then
+    Debug.MsgBox(MakeString("Failed to zip up a copy of your input data files (NOTE: command line add-on to WinZip (WZZIP) must be installed for this to work).",mr.CrLf,mr.CrLf,"It is recommended that you stop this script and manually create a backup of your input files.  To stop the script click on the stop icon in Professional and then click on OK to this warning message.",mr.CrLf,mr.CrLf,"If you do not wish to make a back up copy click OK if you wish to continue"),304,"WARNING")
+Else
+    Debug.Log(MakeString("File ",file," added to zip ",zip))
+End if
+
+End Sub
+
+

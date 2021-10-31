@@ -1,0 +1,200 @@
+#define INPUT_METADATA "abcd"
+
+#define LOCALE "CHS"
+#define CASE_OPTION 2
+
+'Input Metadata
+#define mddin "data\"+INPUT_METADATA+".mdd"
+
+' Input database - ddf or xml
+#define datain "data\"+INPUT_METADATA+".ddf"
+
+' Input DSC type - choose ddf or xml
+#define dscin "mrdatafiledsc"
+'#define dscin "mrxmldsc"
+
+'Define MTD in quotes if using one, otherwise leave as is
+#define mtdin ""
+
+' Job Number
+#define jobno "77114699"
+
+' Job Title
+#define jobtitle "网络视频消费者研究"
+
+' Output Name File Prefix - No spaces please
+#define outputname "FasTabs"
+
+'Categorize (i.e. tabulate) numeric and text questions - true or false
+'Setting to true tells FasTabs to create derived categorical ranges from numeric or text variables
+'Setting to false means no text (open end) or numeric questions will be tabulated
+#define categ true
+
+' Override the default OpCo output - 4 options are NULL or "HTML,CSV,Etabs".  User may specify 0-3 output types
+'#define tabout NULL
+#define tabout "HTML,CSV"
+
+'For users who have do not have Dimensions 5.6 patch 4, set folderin to False
+#define folderin False
+
+' THIS SECTION IS FOR SIG TESTING  ****************************************************************************
+
+' TO TURN ON SIG TESTING SET THE SIGTESTING TO TRUE, OTHERWISE LEAVE AS FALSE
+#define SIGTESTING False
+
+'Default is SIGTEST1=FALSE
+'1st Level - True/False
+#define SIGTEST1 TRUE
+'Default is 95%(5 = 95% confidence)
+#define SIGLEVEL1 "5"
+
+'Default is SIGTEST2=FALSE
+'2nd Level - True/False
+#define SIGTEST2 TRUE
+'2nd sig-testing confidence level should always be the lower than the 1st level (i.e. 10 = 90% confidence level)
+#define SIGLEVEL2 "10"
+
+'Minimum Base (default is 30) and Small Base (default 100)
+#define MINBASELEVEL "30"
+#define SMALLBASELEVEL "100"
+
+'Default is CONTINUITYCORRECTION=TRUE
+'UseContinuityCorrection (e.g.Propcorr) - True/False
+#define CONTINUITYCORRECTION True
+
+'Manually assign sig-testing ids/letters (i.e. "...MN") or leave as "" to have Dimensions assign ids (this line in manual only)
+#define SIGCOLUMNIDS ""
+'#define SIGCOLUMNIDS ".ABCDEF"
+
+'Define the specific columns (i.e. "A/B,C/D/E")
+'or leave as "" to test all (this line in manual only)
+#define SIGCOLUMNS ""
+'#define SIGCOLUMNS "A/B,C/D/E/F"
+
+' END OF SECTION FOR SIG TESTING  *******************************************************************************
+
+' Cell Items. Separate with a semi colon (;).
+' C - counts,CP - Column percents,RP - Row Percents.
+' Default is Counts and Column percents
+#define Cells "CP"
+
+' Banner from RfS - This will override your banneradd statements below.
+#define dtrban "* bk01"
+'#define dtrban "* qcity{b1 'Total' base(), _1, _2, _3} + s6{b1 'Total' base()[ishidden=true],Male, Female}"
+'#define dtrban "* qb + qc2{b1 base() [IsHidden=True], myvar_t2 'Top 2 Box' combine({Married, SingleNeverBeenMarriend}) [IsHidden=True], Married, SingleNeverBeenMarriend, SingleLivingCoupleRelationship, Divorced, Separated, Widowed, myvar_b2 'Bottom 2 Box' combine({Widowed, Separated}) [IsHidden=True], REF [IsHidden=True]}"
+'#define dtrban " * q8{b1 base(), comb 'Pain' combine({Headache 'Headache', SoreThroat 'Sore Throat'}), comb1 'Infection' combine({EarInfection 'Ear infection', EyeInfection 'Eye infection'})} 'MOST OFTEN ILLNESS P6M' > qc2{b1 base(), comb 'Coupled' combine({Married 'Married', SingleLivingCoupleRelationship 'Single, but living in a couple relationship'}), comb1 'Not coupled' combine({SingleNeverBeenMarriend 'Single, never been married', Divorced 'Divorced', Separated 'Separated', Widowed 'Widowed', REF 'Prefer not to answer'})} 'RELATIONSHIP STATUS'"
+
+' Filter from RfS - This will override your filtadd statement below.
+#define dtrfilt "NO_T2>0"
+'dtrfilt "comp.ContainsAny({Completed}) And ((weekno>201124 And Q4.ContainsAny({MarieJenks,PaulHodgkiss,SteveBuckley,TahiraMirza,TimHunt})) Or (weekno>201126 And Q4.ContainsAny({AndyJohnson,CathyPfeifer_Lawler,IramKamal,JimJones,TiffanyKoch})))"
+
+'To switch weighting on/off
+' 0 is off
+' 1 is on
+#define weighting "0"
+
+'if weighting=1 then give weighting variable else leave it ""
+#define WEIGHT_NAME ""
+
+#include "Library\init.mrs"
+
+'Define ANALYSIS DEFAULTS applied to all tables - 7 options are "sigma,avnum,top2,bot2,meant OR meanb" or NULL
+'Meant and Meanb cannot be used together but any other combination of options 1-6 can be applied
+'sigma - total number or responses
+'avnum - average number of answers - Only appears on multi questions
+'top2 - top 2 box
+'bot2 - bottom 2 box
+'meant - mean factors high to low
+'meanb - mean factors low to high
+'#define defs NULL
+'#define defs "sigma,avnum,top2,bot2"
+#define defs "sigma"
+
+'Define FILTERS.  Separate each variable in the filter with a @ and each argument of the filter with a ;
+'Arguments for the filter are: variable type [C or N];variable name;first category,second category,etc;descriptive text
+'[C=categorical, N=numeric/long]
+'Combination filters are created by separating each individual filter with @ (uses AND condition to combine filters) [only one filtadd line at a time is operable]
+'filtadd(docMDM,null)
+'filtadd(docMDM,"N;yyyymmdd;>=20100528;All interviews between 28/05/2010 and 30/05/2010")
+'filtadd(docMDM,"C;Q1;VeryDifferentFromEachOther;TEST")
+'filtadd(docMDM,"C;comp;Completed;COMPLETES@C;Q4;MarieJenks,PaulHodgkiss,SteveBuckley,TahiraMirza,TimHunt;Q4 MARIE OR STEVE OR PAUL")
+'filtadd(docMDM,"C;qb;Male;Filter by Male")
+
+'This is where you set your banner
+'banneradd adds questions to the banner
+'bannerrem remove questions from the banner
+'Leave blank for total banner.  Multiple variables can be included by using multiple banneradd statements 
+'banner variables are displayed in program order regardless of the order specified here
+'banneradd(docMDM,"")
+'banneradd(docMDM,"q1")
+'banneradd(docMDM,"qd")
+
+#include "Library\fasttab.mrs"
+
+'Optional section to override global definitions applied above, one table at a time
+
+'fastadd adds a default to a table  [e.g., add sigma, top2, bot2, meanb, meant to a table]
+'fastadd(docMDM,"cp2.slice","sigma")
+
+'fastadd(docMDM,"A3g_1[{_1}].Slice","meant,top2,bot2")
+'fastadd(docMDM,"A4g_1[{_1}].Slice","meant")
+'fastadd(docMDM,"A5g_1[{_1}].Slice","meant")
+
+'fastrem removes a default from a table [e.g., remove sigma, top2, bot2, meanb, meant from a table]
+'fastrem(docMDM,"bstflag","sigma")
+
+
+'tabrem removes a table from the tab output [variable is still included in the mtd]
+'tabrem(docMDM,"HidState")
+
+'tabrem(docMDM,"CategoricalFile")
+'tabrem(docMDM,"comp")
+'tabrem(docMDM,"realid")
+'tabrem(docMDM,"SurveyID")
+'tabrem(docMDM,"totalQuota")
+'tabrem(docMDM,"ttimes")
+'tabrem(docMDM,"panels")
+'tabrem(docMDM,"b2")
+'tabrem(docMDM,"c7")
+'tabrem(docMDM,"c13b")
+'tabrem(docMDM,"c14b")
+'tabrem(docMDM,"c15b")
+'tabrem(docMDM,"A1a[{_1}].slice")
+'tabrem(docMDM,"A1a[{_2}].slice")
+'tabrem(docMDM,"A1a[{_3}].slice")
+'tabrem(docMDM,"A1a[{_4}].slice")
+'tabrem(docMDM,"A1a[{_5}].slice")
+'tabrem(docMDM,"A1a[{_6}].slice")
+'tabrem(docMDM,"A1a[{_7}].slice")
+'tabrem(docMDM,"A1a[{_8}].slice")
+'tabrem(docMDM,"A1a[{_9}].slice")
+'tabrem(docMDM,"A1a[{_10}].slice")
+'tabrem(docMDM,"A1b[{_1}].slice")
+'tabrem(docMDM,"A1b[{_2}].slice")
+'tabrem(docMDM,"A1b[{_3}].slice")
+'tabrem(docMDM,"A1b[{_4}].slice")
+'tabrem(docMDM,"A1b[{_5}].slice")
+'tabrem(docMDM,"A1b[{_6}].slice")
+'tabrem(docMDM,"A1b[{_7}].slice")
+'tabrem(docMDM,"A1b[{_8}].slice")
+'tabrem(docMDM,"A1b[{_9}].slice")
+'tabrem(docMDM,"A1b[{_10}].slice")
+
+
+'tabadd adds a table to the tab output.  Useful for tabbing shell variables ignored by default in FasTabs
+'tabadd(docMDM,"comp")
+
+
+'foldadd and shelladd only affect RfS; they do not affect tab output
+'foldadd adds the variable to a named folder for RfS.  This can be comma delimited for sub folders
+'foldadd(docMDM,"Q13Time","Shell")
+
+
+'shelladd moves variables to the shell folder in RfS to make them shell variables
+'shelladd(docMDM,"Q4Time")
+
+#include "Library\createtab.mrs"
+#include "Library\functions.mrs"
+#include "Library\MDD.mrs"
+#include "Library\String.mrs"
+#include "Library\LinkDatabaseFunctions.mrs"

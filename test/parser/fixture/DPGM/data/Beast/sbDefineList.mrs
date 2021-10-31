@@ -1,0 +1,56 @@
+BeastBrandList "" define
+{
+        colddrink_1  "Qiaolezi",
+        colddrink_2  "Ice Factory",
+        colddrink_3  "Zhenxi",
+        colddrink_4  "Yili Pasture",
+        colddrink_5  "Miaoqu",
+        colddrink_9  "Cornetto",
+        colddrink_10 "Magnum",
+        colddrink_11 "Wall's Max",
+        colddrink_16 "Ice+",
+        colddrink_17 "Di Lan Sheng Xue",
+        colddrink_28 "Nestle True",
+        colddrink_39 "BAXY",
+        colddrink_51 "Haagen Daz"
+};
+
+Respondent_Serial "Serial number" long;
+
+DPWT "Weight" double usagetype("Weight");
+
+
+
+Beastregionlist "" define
+{
+       _1  "East",
+       _2  "South",
+       _3  "West",
+       _4  "North"
+};
+
+Beasttierlist "" define
+{
+       _1  "Tier 1",
+       _2  "Tier 2",
+       _3  "Tier 3"
+};
+
+BeastCLUSTAlist "" define
+{
+_1 "Only one brand..."       factor(1),
+_2 "Choose among several..." factor(2),
+_3 "One with best price"     factor(3)
+};
+
+BeastCLUSTBlist "" define
+{
+_1 "Always at best price" factor(1),
+_2 "Preference for brand" factor(2)
+};
+
+'AwInt_01 "Unaided Awareness - Mention 1" categorical[1]
+'{
+'  use BrandList
+'};
+

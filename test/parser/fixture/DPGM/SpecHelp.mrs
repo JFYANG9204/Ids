@@ -1,0 +1,1289 @@
+'*****FILE VERSION=2, DATE LAST MODIFIED=2012/08/29, KO
+
+'This SpecHelp.mrs file helps generate code to tabulate variables and manipulate the 
+'MDD file and create reference files.
+
+#include ".\job.ini"
+#include ".\LIBRARY\string.mrs"
+#include ".\LIBRARY\MDD.mrs"
+
+'**************************************************************************************
+'**************************************************************************************
+'**************************************************************************************
+
+'CHANGE AS NEEDED:  path and name of mdd file
+#define METADATA "data\" + INPUT_METADATA + ".mdd"
+
+
+'**************************************************************************************
+'**************************************************************************************
+'**************************************************************************************
+'Tables_AddNew - sbTables_AddNew()
+
+'This sub will help create code to build tables for each field in the MDD with use of the function fnAddTable
+
+'Standard questions will have a call to fnAddTable and will include 'banner' for the top spec parameter
+'
+'Grid Questions will have a call to fnAddTable with the inner field as the side spec parameter 
+'       and the outer grid as the top spec parameter.  They will also have a call to fnAddGridSliceTables
+'       to produce an individual table for each iteration of that grid/field combination
+'
+' NOTE:         System, shell,coding, text,date, boolean and variables without case data will not be included
+
+
+'CHANGE AS NEEDED:   TRUE/FALSE
+'set to TRUE if you want to include "for each loops" around table specs
+'set to FALSE if you are not planning on having multiple banner specs in a single table run
+#define INCLUDE_FOR FALSE
+    
+    
+'**************************************************************************************
+'**************************************************************************************
+'**************************************************************************************
+'MDD_Manipulation - sbMDD_Manip()
+
+'This sub along with these options will help create code to set titles, axis expressions and response text for each field in the MDD
+
+'CHANGE AS NEEDED:  set to TRUE if you want syntax to adjust titling included in output
+#define INCLUDE_TITLES TRUE
+  
+'CHANGE AS NEEDED:  set to TRUE if you want titles with question name in output
+#define INCLUDE_TITLES_WITH_QUESTION_NAME FALSE
+  
+'*****SpecHelp_Define options insert FILE VERSION=1, DATE LAST MODIFIED=2011/06/13, KO
+'CHANGE AS NEEDED:  set to TRUE if you want syntax to adjust axis expressions included in output
+#define INCLUDE_AXISEXPRESSIONS TRUE
+
+'CHANGE AS NEEDED:  set to TRUE if you want syntax to include sigma/total() included in axis expressions
+#define INCLUDE_SIGMA TRUE
+'*****END OF SpecHelp_Define options insert 
+                        
+'CHANGE AS NEEDED:  set to TRUE if you want syntax to adjust response labels in output using sbSetResponseText
+#define INCLUDE_RESPONSETEXT TRUE
+
+'CHANGE AS NEEDED:  set to TRUE if you want the current labels included in sbSetResponseText statements
+#define INCLUDE_CURRENTLABELS TRUE
+
+
+'**************************************************************************************
+'**************************************************************************************
+'**************************************************************************************
+'CreateQuestionList - sbCreateQuestionList()
+
+'This sub will help create a Question/Response list for reference
+
+
+'CHANGE AS NEEDED:  name want appended to "QuestionList???.txt" and "VariableList???.txt" output file names
+#define OUTPUT_NAME ""
+
+'CHANGE AS NEEDED:  choose if you want html tags (<b>, <i>, <sup>, etc.) removed from labels - True or False
+#define REMOVE_HTML_TAGS TRUE
+
+
+'**************************************************************************************
+'**************************************************************************************
+'**************************************************************************************
+'Cleaning Specs - sbClean()
+
+'This sub will create code to assist in validating data for each categorical or numeric field in the MDD
+'*** NOTE:  That the clean_help.inc file is generated based on mdd structure
+'*** NOTE:  The end user must confirm that the variable type (single, multi, double) is appropriate for the question being asked in the survey
+'*** NOTE:  System, shell,coding, text,date, boolean and variables without case data will not be included
+
+
+'**************************************************************************************
+'**************************************************************************************
+'**************************************************************************************
+
+
+'CHANGE AS NEEDED:  comment out specific subs you do not wish to run
+sbTables_AddNew()
+sbMDD_Manip()
+sbCreateQuestionList()
+sbClean()
+
+
+
+
+
+
+
+'**************************************************************************************
+'No Need To Edit Below This Line
+'**************************************************************************************
+
+
+
+
+
+        
+sub sbTables_AddNew()
+
+Dim fso, TabSpec, MDDManip
+Dim MDM, intDelete
+Dim var
+dim strNoCase, strSystem, strShell, strCoding, strTextDateBoolean
+dim blnSkip
+dim blnNumeric
+dim propReportType
+dim CurVar, PrevVar
+dim strVar
+dim iCount
+dim blnBlank
+dim arrVars
+dim str0
+dim str1
+dim str2
+dim str3
+dim strTabHelp
+
+strTabHelp = "..\File\Tab_help.inc"
+
+'Create the output files
+set fso=CreateObject("Scripting.FileSystemObject")
+if fso.FileExists(strTabHelp) then
+        intDelete = debug.MsgBox(".\Tab_help.inc already exists.  Do you want to overwrite the file and continue?",4,"Overwrite .\Tab_help.inc?")
+        if intDelete = 6 then
+                fso.deletefile(strTabHelp)
+        else
+                exit
+        end if
+end if
+
+
+
+TabSpec=fso.CreateTextFile(strTabHelp)
+
+'Open the MDD file
+set MDM=CreateObject("MDM.Document")
+MDM.Open(METADATA)
+
+if INCLUDE_FOR = TRUE then
+        tabspec.writeline("dim objTab")
+end if
+  
+'loop through each variable
+for each var in MDM.variables
+        strVar = left(fnStripIterations(var.FullName),find(fnStripIterations(var.fullname),"."))
+
+    blnSkip = False
+    blnNumeric = False
+
+        'skip system variables
+    if var.IsSystem = true  then
+        strsystem = strsystem + var.fullname + ", " 
+        blnSkip = True
+
+    end if
+        
+        'skip shell variables
+    propReportType = var.Properties["ReportType"]
+        if Find(propReportType, "IsShell") >= 0  then
+        ' this is a shell variable so skip it
+        strShell = strShell + var.fullname + ", "
+        blnSkip = True
+    end if
+
+        'skip variables that have no case data
+    if var.HasCaseData = false then
+        strNoCase = strNoCase + var.fullname + ", "
+        blnSkip = True
+    end if
+        
+    'skip coding helper variables
+    if var.usagetype = 532 or var.UsageType = 536 or lcase(right(var.FullName,6)) = ".codes" or lcase(right(var.FullName,7)) = ".coding" then 'vtcoding
+    
+        blnSkip = True
+        strCoding = strCoding + var.fullname + ", "
+        end if                                  
+
+        'skip text variables            
+    if var.DataType = 2 then 'mttext = 2
+        blnSkip = True
+        strTextDateBoolean = strTextDateBoolean + var.fullname + ", "
+    end if              
+        
+        'skip date varaibles
+    if var.DataType = 5 then 'mtDate = 5
+        blnSkip = True
+        strTextDateBoolean = strTextDateBoolean + var.fullname + ", "
+    end if                      
+
+        'skip boolean variables         
+    if var.DataType = 7 then 'mtBoolean = 7
+        blnSkip = True
+        strTextDateBoolean = strTextDateBoolean + var.fullname + ", "
+        end if
+
+        'numeric variables 
+        if var.DataType = 1 or var.DataType = 6 then
+                blnNumeric = True
+        end if
+        
+        if blnSkip = False then
+                'grids
+            if var.UsageType = 8 or var.UsageType = 1 then '8 vtArray, 1 = vtGrid
+                                        
+                curVar = fnStripIterations(var.FullName)
+                '***
+                arrVars = split(curVar,".")
+                str0 = arrVars[0] + "[..]."
+                select case ubound(arrVars)
+                        case 1
+                                str1 = arrVars[1]       
+                                str2 = ""
+                                str3 = ""
+                        case 2
+                                str1 = arrVars[1] + "[..]."
+                                str2 = arrVars[2]
+                                str3 = ""
+                        case 3
+                                str1 = arrVars[1] + "[..]."
+                                str2 = arrVars[2] + "[..]."
+                                str3 = arrVars[3]    
+                end select
+                
+                '***
+                if PrevVar = CurVar then
+                        'not the first iteration of this grid/array
+                        iCount = iCount + 1
+                else
+                        iCount = 1
+                end if
+                
+                PrevVar = CurVar
+                        
+                        'write output for first iteration of each grid
+                        if iCount = 1 then
+                                tabspec.writeline(mr.CrLf)
+                                strVar = left(curvar,find(curvar,"."))
+
+                                '***** tab spec code
+                                tabspec.writeline("'" + ucase(str0 + str1 + str2 + str3))
+                        'tabspec.writeline(mr.Tab + "fnAddNewGrid(TableDoc,"""+ strVar + """,2)")                       
+                        tabspec.writeline(mr.Tab + iif(INCLUDE_FOR = True,"for each objTab in ","") + "fnAddGrid(TableDoc,""" + str0 + str1 + str2 + str3 + """,""" + strVar + """,NULL,"""")")
+                        if INCLUDE_FOR = True then
+                                tabspec.writeline(mr.Tab + mr.Tab + "with objTab")
+                                tabspec.WriteLine(mr.Tab + mr.Tab + "end with")
+                                        tabspec.WriteLine(mr.Tab + "next")
+                        end if
+                        'tabspec.writeline(mr.Tab + "fnGridSliceTablesWithBase(TableDoc,"""+ strVar + """,banner,""Total"")")
+                                tabspec.writeline(mr.Tab + iif(INCLUDE_FOR = True,"for each objTab in ","") + "fnAddGridSliceTables(TableDoc,""" + str0 + str1 + str2 + str3 + """,banner,NULL,"""",NULL,"""")")
+                        if INCLUDE_FOR = True then
+                                tabspec.writeline(mr.Tab + mr.Tab + "with objTab")
+                                tabspec.WriteLine(mr.Tab + mr.Tab + "end with")
+                                        tabspec.WriteLine(mr.Tab + "next")
+                        end if
+           end if
+                
+         else
+                'all other question types
+                
+                tabspec.writeline(mr.CrLf)
+                tabspec.writeline("'" + ucase(var.fullname))
+                        tabspec.writeline(mr.Tab + iif(INCLUDE_FOR = True,"for each objTab in ","") + "fnAddTable(TableDoc,"""+ Var.fullname + """,banner,Null,"""")")
+                if INCLUDE_FOR = True then
+                        tabspec.writeline(mr.Tab + mr.Tab + "with objTab")
+                        tabspec.WriteLine(mr.Tab + mr.Tab + "end with")
+                                tabspec.WriteLine(mr.Tab + "next")
+                end if  
+                blnBlank = False
+                end if
+
+        end if
+
+next
+        
+tabspec.writeline("'***************************************************")
+tabspec.writeline("'Skipped Variables:")
+tabspec.writeline("'" + mr.Tab + "System Variables:  " + strSystem)
+tabspec.writeline("'" + mr.Tab + "Shell Variables:  " + strShell)
+tabspec.writeline("'" + mr.Tab + "No Case Data Variables:  " + strNoCase)
+tabspec.writeline("'" + mr.Tab + "Coding Variables:  " + strCoding)
+tabspec.writeline("'" + mr.Tab + "Text, Date, and Boolean Variables:  " + strTextDateBoolean)   
+        
+MDM.Close()
+TabSpec.Close()
+set fso=null
+debug.Log("Created " + JOB_ROOT + mid(strTabHelp,2))
+exit
+
+
+end sub
+
+
+
+sub sbMDD_Manip()
+if INCLUDE_TITLES <> TRUE and INCLUDE_AXISEXPRESSIONS <> TRUE and INCLUDE_RESPONSETEXT <> TRUE then
+        debug.MsgBox("No output was selected.  Please set INCLUDE_TITLES and/or INCLUDE_AXISEXPRESSIONS and/or INCLUDE_RESPONSETEXT to TRUE")
+        exit
+end if
+
+
+Dim fso, MDDManip
+Dim MDM, intDelete, oType, oElement
+Dim var, cat, ele
+dim strNoCase, strSystem, strShell, strCoding, strTextDateBoolean
+dim blnSkip
+dim blnNumeric
+dim propReportType
+dim CurVar, PrevVar
+dim strVar
+dim iCount
+dim blnBlank
+dim intSigma
+dim strSigma
+dim arrVars
+dim str0
+dim str1
+dim str2
+dim str3
+dim strAE
+dim intList
+dim dctLists
+dim dctCategories
+dim strMDDManip
+
+strMddManip = "..\File\MDD_manip_help.inc"
+
+Set dctLists = CreateObject("Scripting.Dictionary")
+Set dctCategories = CreateObject("Scripting.Dictionary")
+
+'check if existing file of same name should be overwritten
+set fso=CreateObject("Scripting.FileSystemObject")
+if fso.FileExists(strMddManip) then
+        intDelete = debug.MsgBox("MDD_manip_help.inc already exists.  Do you want to overwrite the file and continue?",4,"Overwrite .\MDD_manip_help.inc?")
+        if intDelete = 6 then
+                fso.deletefile(strMddManip)
+        else
+                exit
+        end if
+end if
+
+'create a new file for output
+MDDManip = fso.CreateTextFile(strMddManip,True)
+
+'Open the MDD file
+set MDM=CreateObject("MDM.Document")
+MDM.Open(METADATA)
+
+
+  
+'*****SpecHelp_sigma options insert FILE VERSION=2, DATE LAST MODIFIED=2012/08/29, KO
+'ask if user wants sigma/subtotal() included in axis expressions
+if INCLUDE_SIGMA = TRUE then 
+        strSigma = ",sigma 'Sigma' subtotal()"
+else
+        strSigma = ""
+end if
+'*****END OF SpecHelp_sigma options insert 
+                        
+  
+
+set mdm.Contexts.Current = MDD_TYPE
+
+'loop through each variable
+for each var in MDM.variables
+        strVar = left(fnStripIterations(var.FullName),find(fnStripIterations(var.fullname),"."))
+
+    blnSkip = False
+    blnNumeric = False
+
+        'skip system variables
+    if var.IsSystem = true  then
+        strsystem = strsystem + var.fullname + ", " 
+        blnSkip = True
+
+    end if
+        
+        'skip shell variables
+    propReportType = var.Properties["ReportType"]
+        if Find(propReportType, "IsShell") >= 0  then
+        ' this is a shell variable so skip it
+        strShell = strShell + var.fullname + ", "
+        blnSkip = True
+    end if
+
+        'skip variables that have no case data
+    if var.HasCaseData = false then
+        strNoCase = strNoCase + var.fullname + ", "
+        blnSkip = True
+    end if
+        
+    'skip coding helper variables
+    if var.usagetype = 532 or var.UsageType = 536 or lcase(right(var.FullName,6)) = ".codes" or lcase(right(var.FullName,7)) = ".coding" then 'vtcoding
+    
+        blnSkip = True
+        strCoding = strCoding + var.fullname + ", "
+        end if                                  
+
+        'skip text variables            
+    if var.DataType = 2 then 'mttext = 2
+        blnSkip = True
+        strTextDateBoolean = strTextDateBoolean + var.fullname + ", "
+    end if              
+        
+        'skip date varaibles
+    if var.DataType = 5 then 'mtDate = 5
+        blnSkip = True
+        strTextDateBoolean = strTextDateBoolean + var.fullname + ", "
+    end if                      
+
+        'skip boolean variables         
+    if var.DataType = 7 then 'mtBoolean = 7
+        blnSkip = True
+        strTextDateBoolean = strTextDateBoolean + var.fullname + ", "
+        end if
+
+        'numeric variables -get flagged because they need bands in axis expressions
+        if var.DataType = 1 or var.DataType = 6 then
+                blnNumeric = True
+        end if
+        
+        if blnSkip = False then
+
+                'write output for first iteration of grids
+                if var.UsageType = 8 or var.UsageType = 1 then '8 vtArray, 1 = vtGrid
+                                        
+                curVar = fnStripIterations(var.FullName)
+                arrVars = split(curVar,".")
+                str0 = arrVars[0] + "[..]."
+                select case ubound(arrVars)
+                        case 1
+                                str1 = arrVars[1]       
+                                str2 = ""
+                                str3 = ""
+                                strAE = mdm.fields[arrVars[0]].fields[arrVars[1]].axisexpression
+                        case 2
+                                str1 = arrVars[1] + "[..]."
+                                str2 = arrVars[2]
+                                str3 = ""
+                                strAE = mdm.fields[arrVars[0]].fields[arrVars[1]].fields[arrVars[2]].axisexpression
+                        case 3
+                                str1 = arrVars[1] + "[..]."
+                                str2 = arrVars[2] + "[..]."
+                                str3 = arrVars[3]    
+                                strAE = mdm.fields[arrVars[0]].fields[arrVars[1]].fields[arrVars[2]].fields[arrVars[3]].axisexpression
+                end select
+                                
+                                
+                if PrevVar = CurVar then
+                        'not the first iteration of this grid/array
+                        iCount = iCount + 1
+                else
+                        iCount = 1
+                end if
+                        
+                PrevVar = CurVar
+
+                 if iCount = 1 then
+                                strVar = left(curvar,find(curvar,"."))
+                                MDDManip.writeline("'" + ucase(strVar))
+                        '***MDD_Manipulation code
+                        if INCLUDE_TITLES = TRUE  then
+                            if INCLUDE_TITLES_WITH_QUESTION_NAME = TRUE  and (var.UsageType = 8 or var.UsageType = 1) then MDDManip.writeline(mr.Tab + "sbSetTitleText(MDM,""" + strVar + """,MDD_TYPE,LOCALE,"""+ strVar + ". " + fnCleanUpText(fnCaseControl(MDM.Fields[strVar].label,CASE_OPTION)) + """)")
+                            if INCLUDE_TITLES_WITH_QUESTION_NAME = FALSE and (var.UsageType = 8 or var.UsageType = 1) then MDDManip.writeline(mr.Tab + "sbSetTitleText(MDM,""" + strVar + """,MDD_TYPE,LOCALE,"""+ fnCleanUpText(fnCaseControl(MDM.Fields[strVar].label,CASE_OPTION)) + """)")
+                            if INCLUDE_TITLES_WITH_QUESTION_NAME = TRUE  and (var.UsageType = 8 or var.UsageType = 1) then MDDManip.writeline(mr.Tab + "sbSetTitleText(MDM,""" + str0 + str1 + str2 + str3 + """,MDD_TYPE,LOCALE,"""+ strVar + ". " + fnCleanUpText(fnCaseControl(MDM.Fields[strVar].label,CASE_OPTION)) + """)")
+                            if INCLUDE_TITLES_WITH_QUESTION_NAME = FALSE and (var.UsageType = 8 or var.UsageType = 1) then MDDManip.writeline(mr.Tab + "sbSetTitleText(MDM,""" + str0 + str1 + str2 + str3 + """,MDD_TYPE,LOCALE,"""+ fnCleanUpText(fnCaseControl(MDM.Fields[strVar].label,CASE_OPTION)) + """)")
+                            if INCLUDE_TITLES_WITH_QUESTION_NAME = TRUE  and not (var.UsageType = 8 or var.UsageType = 1) then MDDManip.writeline(mr.Tab + "sbSetTitleText(MDM,""" + strVar + """,MDD_TYPE,LOCALE,"""+ strVar + ". " + fnCleanUpText(fnCaseControl(MDM.Fields[strVar].label,CASE_OPTION)) + """)")
+                            if INCLUDE_TITLES_WITH_QUESTION_NAME = FALSE and not (var.UsageType = 8 or var.UsageType = 1) then MDDManip.writeline(mr.Tab + "sbSetTitleText(MDM,""" + strVar + """,MDD_TYPE,LOCALE,"""+ fnCleanUpText(fnCaseControl(MDM.Fields[strVar].label,CASE_OPTION)) + """)")
+                                'MDDManip.writeline(mr.Tab + "sbSetAxisExpression(MDM,""" + strVar + "[..]." + mid(curvar,find(curvar,".",,True) + 1)+ """,""{.." + strSigma + "}"")")
+                                end if
+
+                                if INCLUDE_AXISEXPRESSIONS = TRUE then
+                                'debug.Log(var.fullname + " = " + strAE)
+                                if blnNumeric = True then
+                                        MDDManip.writeline("'" + mr.tab + " *** NUMERIC - NEEDS BANDS ***")
+                                end if
+                                
+                                'only create a generic axis expression if one did not already exist
+                                if strAE = "" then
+                                        MDDManip.writeline(mr.Tab + "sbSetAxisExpression(MDM,""" + str0 + str1 + str2 + str3 + """,""{e1 '' text(),base 'Base : Total Respondent' base(),e2 '' text(),..,e3 '' text()" + strSigma + "}"")")
+                                else
+                                        MDDManip.writeline(mr.Tab + "sbSetAxisExpression(MDM,""" + str0 + str1 + str2 + str3 + """,""" + strAE + """)")
+                                end if
+                                
+                        IF INCLUDE_RESPONSETEXT = TRUE then
+ 
+                                        intList = 0
+                                        dctCategories.RemoveAll()
+                                        for each ele in mdm.Fields[var.fullname].elements
+                                                if ele.isreference = true then
+                                                        intList = intList + 1
+                                                        MDDManip.writeline(mr.Tab + "'uses " + ele.name)
+                                                        if dctLists.Exists(ele.name) = false then
+                                                                dctLists.Add(ele.name, ele.name)
+                                                                end if                                                  
+                                                else
+                                                        'store the names of elements that are not in the list
+                                                        dctCategories.add(ele.name,ele.name)
+                                                end if
+                                                        next
+ 
+                                                        if intList < mdm.Fields[var.fullname].elements.count then
+                                                                if INCLUDE_CURRENTLABELS = TRUE then
+
+                                                        if ubound(arrVars)>=1 then
+                                                                        for each cat in mdm.fields[arrVars[0]].categories
+                                                                                  MDDManip.writeline(mr.Tab + "sbSetResponseText(MDM,""" + arrVars[0] + """,MDD_TYPE,LOCALE,""" + cat.name + """,""" + cat.label + """)")
+                                                                        next
+                                                           if ubound(arrVars)>=2 then
+                                                                        for each cat in mdm.fields[arrVars[0]].fields[arrVars[1]].categories
+                                                                                  MDDManip.writeline(mr.Tab + "sbSetResponseText(MDM,""" + arrVars[0] + "[..]." + arrVars[1] + """,MDD_TYPE,LOCALE,""" + cat.name + """,""" + cat.label + """)")
+                                                                        next
+                                                              if ubound(arrVars)>=3 then
+                                                                        for each cat in mdm.fields[arrVars[0]].fields[arrVars[1]].fields[arrVars[2]].categories
+                                                                                  MDDManip.writeline(mr.Tab + "sbSetResponseText(MDM,""" + arrVars[0] + "[..]." + arrVars[1] + "[..]." + arrVars[2] + """,MDD_TYPE,LOCALE,""" + cat.name + """,""" + cat.label + """)")
+                                                                        next
+                                                                 if ubound(arrVars)>=4 then
+                                                                        for each cat in mdm.fields[arrVars[0]].fields[arrVars[1]].fields[arrVars[2]].fields[arrVars[3]].categories
+                                                                                  MDDManip.writeline(mr.Tab + "sbSetResponseText(MDM,""" + arrVars[0] + "[..]." + arrVars[1] + "[..]." + arrVars[2] + "[..]." + arrVars[3] + """,MDD_TYPE,LOCALE,""" + cat.name + """,""" + cat.label + """)")
+                                                                        next
+                                                                 end if
+                                                              end if
+                                                           end if
+                                                        end if
+
+                                                        for each cat in mdm.Fields[var.fullname].categories
+                                                                if dctCategories.Exists(cat.name) then
+                                                                                        MDDManip.writeline(mr.Tab + "sbSetResponseText(MDM,""" + str0 + str1 + str2 + str3 + """,MDD_TYPE,LOCALE,""" + cat.name + """,""" + cat.label + """)")
+                                                                                end if
+                                                        next
+                                                else
+
+                                                    if ubound(arrVars)>=1 then
+                                                                    for each cat in mdm.fields[arrVars[0]].categories
+                                                                              MDDManip.writeline(mr.Tab + "sbSetResponseText(MDM,""" + arrVars[0] + """,MDD_TYPE,LOCALE,""" + cat.name + ""","""")")
+                                                                    next
+                                                       if ubound(arrVars)>=2 then
+                                                                    for each cat in mdm.fields[arrVars[0]].fields[arrVars[1]].categories
+                                                                              MDDManip.writeline(mr.Tab + "sbSetResponseText(MDM,""" + arrVars[0] + "[..]." + arrVars[1] + """,MDD_TYPE,LOCALE,""" + cat.name + ""","""")")
+                                                                    next
+                                                          if ubound(arrVars)>=3 then
+                                                                    for each cat in mdm.fields[arrVars[0]].fields[arrVars[1]].fields[arrVars[2]].categories
+                                                                              MDDManip.writeline(mr.Tab + "sbSetResponseText(MDM,""" + arrVars[0] + "[..]." + arrVars[1] + "[..]." + arrVars[2] + """,MDD_TYPE,LOCALE,""" + cat.name + ""","""")")
+                                                                    next
+                                                             if ubound(arrVars)>=4 then
+                                                                    for each cat in mdm.fields[arrVars[0]].fields[arrVars[1]].fields[arrVars[2]].fields[arrVars[3]].categories
+                                                                              MDDManip.writeline(mr.Tab + "sbSetResponseText(MDM,""" + arrVars[0] + "[..]." + arrVars[1] + "[..]." + arrVars[2] + "[..]." + arrVars[3] + """,MDD_TYPE,LOCALE,""" + cat.name + ""","""")")
+                                                                    next
+                                                             end if
+                                                          end if
+                                                       end if
+                                                    end if
+
+                                                    for each cat in mdm.Fields[var.fullname].categories
+                                                                if dctCategories.Exists(cat.name) then
+                                                                        MDDManip.writeline(mr.Tab + "sbSetResponseText(MDM,""" + str0 + str1 + str2 + str3 + """,MDD_TYPE,LOCALE,""" + cat.name + ""","""")")
+                                                                end if
+                                                    next
+                                                end if  
+                                        end if
+                                end if   
+                end if                          
+                MDDManip.writeline(mr.CrLf)
+            end if      
+         else
+                'write output for non-grid variables
+                        
+                strAE = mdm.fields[var.fullname].axisexpression
+                        
+                        MDDManip.writeline("'" + ucase(var.fullname))
+                '***MDD_Manipulation code
+                if INCLUDE_TITLES = TRUE then
+                    if INCLUDE_TITLES_WITH_QUESTION_NAME = TRUE then  MDDManip.writeline(mr.Tab + "sbSetTitleText(MDM,""" + Var.fullname + """,MDD_TYPE,LOCALE,"""+ Var.fullname + ". " + fnCleanUpText(fnCaseControl(var.label,CASE_OPTION)) + """)")
+                    if INCLUDE_TITLES_WITH_QUESTION_NAME = FALSE then MDDManip.writeline(mr.Tab + "sbSetTitleText(MDM,""" + Var.fullname + """,MDD_TYPE,LOCALE,"""+ fnCleanUpText(fnCaseControl(var.label,CASE_OPTION)) + """)")
+
+            end if
+                
+            if INCLUDE_AXISEXPRESSIONS = TRUE then
+                if blnNumeric = True then
+                        MDDManip.writeline("'" + mr.tab + " *** NUMERIC - NEEDS BANDS ***")
+                        'debug.Log(var.fullname + " = " + mdm.fields[var.fullname].axisexpression)
+                end if
+                
+                'only create a generic axis expression if one did not already exist
+                if strAE = "" then
+                                MDDManip.writeline(mr.Tab + "sbSetAxisExpression(MDM,""" + Var.fullname + """,""{e1 '' text(),base 'Base : Total Respondent' base(),e2 '' text(),..,e3 '' text()" + strSigma + "}"")")
+                else
+                                MDDManip.writeline(mr.Tab + "sbSetAxisExpression(MDM,""" + Var.fullname + """,""" + strAE + """)")
+                end if
+            end if
+            
+            
+            IF INCLUDE_RESPONSETEXT = TRUE then
+
+                        intList = 0
+                        dctCategories.RemoveAll()
+                        for each ele in mdm.Fields[var.fullname].elements
+                                if ele.isreference = true then
+                                        intList = intList + 1
+                                        MDDManip.writeline(mr.Tab + "'uses " + ele.name)
+                                        if dctLists.Exists(ele.name) = false then
+                                                dctLists.Add(ele.name, ele.name)
+                                                end if                                          
+                                else
+                                        'store the names of elements that are not in the list
+                                        dctCategories.add(ele.name,ele.name)
+                                end if
+                                
+                        next
+                 
+                 if INCLUDE_CURRENTLABELS = TRUE then         
+                        for each cat in mdm.Fields[var.fullname].categories
+                                if dctCategories.Exists(cat.name) then
+                                        MDDManip.writeline(mr.Tab + "sbSetResponseText(MDM,""" + Var.FullName + """,MDD_TYPE,LOCALE,""" + cat.name + """,""" + cat.label + """)")
+                                end if
+                        next
+                else
+                        for each cat in mdm.Fields[var.fullname].categories
+                                if dctCategories.Exists(cat.name) then
+                                        MDDManip.writeline(mr.Tab + "sbSetResponseText(MDM,""" + Var.FullName + """,MDD_TYPE,LOCALE,""" + cat.name + ""","""")")
+                                end if
+                        next
+                end if  
+            end if  
+                
+            MDDManip.writeline(mr.CrLf)
+                
+                blnBlank = False
+                end if
+
+        end if
+
+next
+
+IF INCLUDE_RESPONSETEXT = TRUE then
+dim item
+if dctLists.Count > 0 then
+        MDDManip.WriteLine("'******************")
+        MDDManip.writeline("'DEFINE LISTS" + mr.CrLf)
+'        for each item in dctLists
+'                        MDDManip.writeline("'" + ucase(item))
+'                        for each ele in mdm.Types[item].elements
+'                                if INCLUDE_CURRENTLABELS = TRUE then
+'                                        MDDManip.writeline(mr.Tab + "sbSetDefineResponseText(MDM,""" + item + """,MDD_TYPE,LOCALE,""" + ele.name + """,""" + ele.label + """)")
+'                                else
+'                                        MDDManip.writeline(mr.Tab + "sbSetDefineResponseText(MDM,""" + item + """,MDD_TYPE,LOCALE,""" + ele.name + ""","""")")
+'                                end if
+'                        next
+'                next
+        end if
+
+dim strLabel
+For Each oType In MDM.Types
+    If oType.Elements.Count > 0 Then
+        MDDManip.writeline("'" + ucase(oType.FullName))
+        For Each oElement In oType.Elements
+'                strLabel = replace(iif(REMOVE_HTML_TAGS = True, fnStripHTML(oElement.Label),oElement.Label),"""","""""")
+            If Len(oElement.Name)>31 Then Debug.Log(MakeString("Question = ",oType.Name," - Response = ",oElement.Name))
+
+            if INCLUDE_CURRENTLABELS = TRUE then
+                    MDDManip.writeline(mr.Tab + "sbSetDefineResponseText(MDM,""" + oType.FullName + """,MDD_TYPE,LOCALE,""" + oElement.Name + """,""" + oElement.Label + """)")
+            else
+                    MDDManip.writeline(mr.Tab + "sbSetDefineResponseText(MDM,""" + oType.FullName + """,MDD_TYPE,LOCALE,""" + oElement.name + ""","""")")
+            end if
+
+        Next
+    End If
+    MDDManip.WriteLine()
+Next
+
+
+end if
+
+MDDManip.WriteLine(mr.CrLf)
+MDDManip.writeline("'***************************************************")
+MDDManip.writeline("'Skipped Variables:")
+MDDManip.writeline("'" + mr.Tab + "System Variables:  " + strSystem)
+MDDManip.writeline("'" + mr.Tab + "Shell Variables:  " + strShell)
+MDDManip.writeline("'" + mr.Tab + "No Case Data Variables:  " + strNoCase)
+MDDManip.writeline("'" + mr.Tab + "Coding Variables:  " + strCoding)
+MDDManip.writeline("'" + mr.Tab + "Text, Date, and Boolean Variables:  " + strTextDateBoolean)
+
+MDM.Close()
+MDDManip.Close()
+set fso=null
+debug.Log("Created " + JOB_ROOT + mid(strMDDManip,2))
+exit
+
+end sub
+
+
+function fnStripIterations(VarName)
+'this function returns the names of all fields included in a variable fullname
+'VarName        text string that will be parsed
+        'q1[{pepsi}].imagery[{tastesgreat}].slice returns 'q1.imagery.slice'
+        
+    Dim objRegExp       ' Regular Expression Object
+        
+    ' Create built In Regular Expression object
+    set objRegExp = CreateObject("VBScript.RegExp")
+    objRegExp.Global = True
+    ' Set the pattern To look For  tags
+    objRegExp.Pattern = "\[[^\]]*\]"
+        
+    ' Return the original String stripped of iteration information
+    fnStripIterations = objRegExp.Replace(varname, "")
+        
+    Set objRegExp = null
+End function
+
+
+function fnCleanUpText(strText)
+        strText = replace(strText,chrw(180),chrw(39))
+        strText = replace(strText,chrw(8216),chrw(39))
+        strText = replace(strText,chrw(8217),chrw(39))
+        strText = replace(strText,chrw(8220),chrw(39))
+        strText = replace(strText,chrw(8221),chrw(39))
+        
+        strText = replace(strText," :","")
+        strText = replace(strText,"slice","")
+        strText = trim(strText)
+        
+        strText = replace(strText,"_"," ")
+        strText = replace(strText,"   "," ",)
+        strText = replace(strText,"  "," ",)
+        strText = replace(strText,"{","")
+        strText = replace(strText,"}","")
+        
+        strText = replace(strText,"&lt;br/&gt;","")
+        strText = replace(strText,"""","""""")
+
+        fnCleanUpText = strText
+end function
+
+
+
+sub sbCreateQuestionList()
+Dim oFso, oElement, QuestionList, MDM, VariableList, MyText, oVar, oType
+dim i
+dim strLabel
+dim strVar
+dim strQuestionList
+dim strVarList
+
+strQuestionList = "..\File\QuestionList" + OUTPUT_NAME + ".csv"
+strVarList = "..\File\VariableList" + OUTPUT_NAME + ".txt"
+
+Set MDM = CreateObject("MDM.Document")
+    MDM.Open (METADATA)
+
+Set oFso = CreateObject("Scripting.FileSystemObject")
+Set QuestionList = oFso.CreateTextFile(strQuestionList, True, True)
+
+
+QuestionList.WriteLine("--------------------------------------------------------------------------------------------------------------------------------------")
+QuestionList.WriteLine(" TYPES (DEFINE LISTS)")
+QuestionList.WriteLine("--------------------------------------------------------------------------------------------------------------------------------------")
+QuestionList.WriteLine()
+
+For Each oType In MDM.Types
+    QuestionList.WriteLine(Makestring("DEFINE LIST ID = ",ChrW(34),oType.FullName,ChrW(34)))
+    If oType.Elements.Count > 0 Then
+        QuestionList.WriteLine("RESPONSE LIST:")
+        For Each oElement In oType.Elements
+                strLabel = "'" + replace(iif(REMOVE_HTML_TAGS = True, fnStripHTML(oElement.Label),oElement.Label),"'","''") + "'"
+            'QuestionList.WriteLine(MakeString(oElement.Name,fnTabCount(Len(oElement.Name)),oElement.Label))
+            QuestionList.WriteLine(MakeString(oElement.Name,fnTabCount(Len(oElement.Name)),strLabel,fnTabCount2(Len(strLabel)),iif(i<oType.elements.count,",_","")))
+            If Len(oElement.Name)>31 Then Debug.Log(MakeString("Question = ",oType.Name," - Response = ",oElement.Name))
+        Next
+    End If
+    QuestionList.WriteLine()
+Next
+
+QuestionList.WriteLine("--------------------------------------------------------------------------------------------------------------------------------------")
+QuestionList.WriteLine(" QUESTIONS (VARIABLE INSTANCES)")
+QuestionList.WriteLine("--------------------------------------------------------------------------------------------------------------------------------------")
+QuestionList.WriteLine()
+
+
+For Each oVar In MDM.Variables
+        If oVar.IsSystemVariable = False And oVar.HasCaseData = True Then
+                strVar = iif(REMOVE_HTML_TAGS = True, fnStripHTML(oVar.Label),oVar.Label)
+        QuestionList.WriteLine(Makestring("QUESTION ID = ",ChrW(34),oVar.FullName,ChrW(34)))
+        QuestionList.WriteLine(Makestring("QUESTION TITLE = ",ChrW(34),strVar,ChrW(34)))
+        If oVar.Elements.Elements.Count > 0 Then
+            QuestionList.WriteLine("RESPONSE LIST:")
+                        i = 0
+                For Each oElement In oVar.Elements.Elements
+                        i = i + 1
+                        strLabel = "'" + replace(iif(REMOVE_HTML_TAGS = True, fnStripHTML(oElement.Label),oElement.Label),"'","''") + "'"
+                'QuestionList.WriteLine(MakeString(oElement.FullName,fnTabCount(Len(oElement.FullName)),oElement.Label))
+                QuestionList.WriteLine(MakeString(oElement.FullName,fnTabCount(Len(oElement.FullName)),strLabel,fnTabCount2(Len(strLabel)),iif(i<oVar.elements.elements.count,",_","")))
+                If Len(oElement.FullName)>31 Then Debug.Log(MakeString("Question = ",oVar.FullName," - Response = ",oElement.FullName))
+            Next
+        End If
+        QuestionList.WriteLine()
+    End If
+Next
+
+QuestionList.Close()
+
+Set VariableList = oFso.CreateTextFile(strVarList)
+
+MyText = ""
+
+For Each oVar In MDM.Variables
+    If oVar.HasCaseData = True Then
+        VariableList.WriteLine(oVar.FullName)
+    End If
+Next
+
+VariableList.Close()
+MDM.Close()
+
+debug.Log("Created " + JOB_ROOT + mid(strQuestionList,2))
+debug.Log("Created " + JOB_ROOT + mid(strVarList,2))
+end sub
+
+
+
+Function fnTabCount(length)
+Dim myTab
+'if length<8 then                        myTab = mr.Tab + mr.Tab + mr.Tab + mr.Tab
+'if length>=8 and length<=15 then        myTab = mr.Tab + mr.Tab + mr.Tab
+'if length>=16 and length<=23 then       myTab = mr.Tab + mr.Tab
+'if length>=24 then                      myTab = mr.Tab
+'fnTabCount=myTab
+fnTabCount=mr.Tab
+End Function
+
+
+Function fnTabCount2(length)
+Dim myTab
+'if length<8 then                        myTab = mr.Tab + mr.Tab + mr.Tab + mr.Tab + mr.Tab + mr.Tab
+'if length>=8 and length<=15 then        myTab = mr.Tab + mr.Tab + mr.Tab + mr.Tab + mr.Tab
+'if length>=16 and length<=23 then       myTab = mr.Tab + mr.Tab + mr.Tab + mr.Tab
+'if length>=24 and length<=31 then       myTab = mr.Tab + mr.Tab + mr.Tab
+'if length>=32 and length<=39 then       myTab = mr.Tab + mr.Tab
+'if length>=40 then                      myTab = mr.Tab
+'fnTabCount2=myTab
+fnTabCount2=mr.Tab
+End Function
+
+
+sub sbClean()
+'THIS SUB-ROUTINE CREATES BASIC CLEANING SPECS FOR USE IN THE CLEAN.DMS SCRIPT
+Dim fso, MDDClean
+Dim MDM, intDelete
+Dim var, cat, ele
+dim strNoCase, strSystem, strShell, strCoding, strText, strDate, strBoolean
+dim blnSkip
+dim blnNumeric
+dim blnCategorical
+dim blnMulti
+dim propReportType
+dim CurVar, PrevVar
+dim strVar
+dim strTab
+dim strCheck
+dim i
+dim iCount
+dim blnDim
+dim blnBlank
+dim intSigma
+dim strSigma
+dim arrVars
+dim str0
+dim str1
+dim str2
+dim str3
+dim strAE
+dim intList
+dim dctLists
+dim dctCategories
+dim strMDDClean
+
+'CLEAN_HELP.INC FILE
+strMDDClean = "..\File\Clean_help.inc"
+
+Set dctLists = CreateObject("Scripting.Dictionary")
+Set dctCategories = CreateObject("Scripting.Dictionary")
+
+'check if existing file of same name should be overwritten
+set fso=CreateObject("Scripting.FileSystemObject")
+if fso.FileExists(strMDDClean) then
+        intDelete = debug.MsgBox("Clean_help.inc already exists.  Do you want to overwrite the file and continue?",4,"Overwrite .\Clean_help.inc?")
+        if intDelete = 6 then
+                fso.deletefile(strMDDClean)
+        else
+                exit
+        end if
+end if
+
+'create a new file for output
+MDDClean = fso.CreateTextFile(strMDDClean,True)
+
+
+'ASSIGN THE BLNDIM VARIABLE TO FALSE
+blnDim = False
+
+'Open the MDD file
+set MDM=CreateObject("MDM.Document")
+MDM.Open(METADATA)
+
+ 
+set mdm.Contexts.Current = MDD_TYPE
+
+MDDClean.writeline("'!")
+MDDClean.writeline("**************** INSTRUCTIONS ***********************************************************************************************************")
+MDDClean.writeline("* The Clean_help.inc file is meant to be a starting point to save the user in typing out the validation subroutines.")
+MDDClean.writeline("  It is not a validation program and does not include any logic for checking routing.")
+MDDClean.writeline("* The validation subroutines created for all variables will need to be checked to make sure that they are appropriate")
+MDDClean.writeline("  for the question being asked.")
+MDDClean.writeline("  For example, if on the QRE the question is listed as single response but the variable is a multiple response in the MDD")
+MDDClean.writeline("  the sbRSMP subroutine will be written out into the help file.")
+MDDClean.writeline("* A list of variables that nothing was done to is included at the end of the Clean_help.inc file.")
+MDDClean.writeline("* This include file generates validation subroutines for all categorical and numeric variables.")
+MDDClean.writeline("")
+MDDClean.writeline("RESPONSE Paramter in subs below must be updated to include desired response categories")
+MDDClean.writeline("*****************************************************************************************************************************************")
+MDDClean.writeline("!'")
+MDDClean.writeline("")
+
+MDDClean.writeline("'!")
+MDDClean.writeline("***************** EXAMPLE CLEANING SUBS ************************************************************************************************")
+MDDClean.writeline("sbRSP - Require Variable Has Only One Answer - Only works with categorical variables")
+MDDClean.writeline(mr.tab + "sbRSP(dmgrjob,q1,"""") ")
+MDDClean.writeline("")
+MDDClean.writeline("sbRSMP - Require Variable Have An Answer - Only works with categorical variables")
+MDDClean.writeline(mr.tab + "sbRSMP(dmgrjob,q2,"""") ")
+MDDClean.writeline("")
+MDDClean.writeline("sbRB - Require Categorical Variable To Be Blank - Only works with categorical variables")
+MDDClean.writeline(mr.tab + "sbRB(dmgrjob,q2,"""") ")
+MDDClean.writeline("")
+MDDClean.writeline("sbRNull - Require Numeric Variable To Be Blank")
+MDDClean.writeline(mr.tab + "sbRNull(dmgrjob,q4,"""") ")
+MDDClean.writeline("")
+MDDClean.writeline("sbMustEqual - Require A Variable Have a Specific Response And Only That Response - Only works with categorical variables")
+MDDClean.writeline(mr.tab + "sbMustEqual(dmgrjob,country,{USA},"""") ")
+MDDClean.writeline("")
+MDDClean.writeline("sbMustContain - Require A Variable Have A Specific Response But Can Also Have Other Responses - Only works with categorical variables")
+MDDClean.writeline(mr.tab + "sbMustContain(dmgrjob,q2,{brandA},"""") ")
+MDDClean.writeline("")
+MDDClean.writeline("sbMustNot - Require A Variable NOT To Have A Specific Response - Only works with categorical variables")
+MDDClean.writeline(mr.tab + "sbMustNot(dmgrjob,q2,{brandA},"""") ")
+MDDClean.writeline("")
+MDDClean.writeline("sbCheckBack - Checks Response From One Variable Back To Another Variable - Only works with non-grid categorical variables")
+MDDClean.writeline(mr.tab + "sbCheckBack(dmgrjob,q2,q4,"""") ")
+MDDClean.writeline("")
+MDDClean.writeline("sbRNumInRange - Requires Numeric Variable To Be Within Certain Range - Only works with numeric variables")
+MDDClean.writeline(mr.tab + "sbRNumInRange(dmgrjob,q5,18,64,"""") ")
+MDDClean.writeline("")
+MDDClean.writeline("sbShowDataAndLog - Sends Log Message And Shows Data Values For Any Variables Included")
+MDDClean.writeline(mr.tab + "sbShowDataAndLog(dmgrjob,""country,q2"",dmgrQuestions,""Display answers for country and q2 variables"")")
+MDDClean.writeline("")
+MDDClean.writeline("sbShowDataAndLog - EXAMPLE USING If logic to check for valid responses only")
+MDDClean.writeline(mr.tab + "IF (Q2-{VeryGood,Good}<>{}) THEN sbShowDataAndLog(dmgrjob,""country,q2"",dmgrQuestions,""Display answers for country and q2 variables where if condition not met"")")
+MDDClean.writeline("")
+MDDClean.writeline("sbExclusive - Checks That Any Answer is the Only Answer - Only works with categorical variables")
+MDDClean.writeline(mr.tab + "sbExclusive(dmgrjob,q6[{brand1}].slice,{NA},"""") ")
+MDDClean.writeline("")
+MDDClean.writeline("sbAddUp - Checks The Sum of Responses Equals the Desired Total - Only works with numeric variables")
+MDDClean.writeline(mr.tab + "sbAddup(dmgrJob,""q3,q4"",5000,dmgrQuestions,"""")")
+MDDClean.writeline("")
+MDDClean.writeline("fnStraightLine - Function That Checks That Grid Responses Are Not All The Same")
+MDDClean.writeline(mr.tab + "dim Q6_SL")
+MDDClean.writeline(mr.tab + "Q6_SL = fnStraightLine(dmgrJob,dmgrQuestions,q6,""slice"",True)")
+MDDClean.writeline("")
+MDDClean.writeline("sbCheckContentsVersusList - Checks contents of categorical variable against a list to make sure there are no illegal responses")
+MDDClean.writeline(mr.tab + "sbCheckContentsVersusList(dmgrJob,q1,brands_germany,"""")")
+MDDClean.writeline("")
+MDDClean.writeline("sbCheckAllQuestions - Checks contents of all categorical variables against permitted answers to make sure there are no illegal responses")
+MDDClean.writeline(mr.tab + "sbCheckAllQuestions(dmgrjob,dmgrjob.Questions,True)")
+MDDClean.writeline("")
+MDDClean.writeline("sbCheckSubset - Allows you to check if a variable has a specific set of responses")
+MDDClean.writeline(mr.tab + "sbCheckSubset(dmgrjob,qa,{BrandA,BrandB},True,True,True,"""") ")
+MDDClean.writeline("*****************************************************************************************************************************************")
+MDDClean.writeline("!'")
+MDDClean.writeline("")
+MDDClean.writeline("")
+
+MDDClean.writeline("'DEFINE THE CAT VARIABLES FOR CHECKING LOOP VARIABLES")
+MDDClean.writeline("DIM CAT, INRCAT, INR2CAT")
+MDDClean.writeline(mr.CrLf)
+
+'loop through each variable
+for each var in MDM.variables
+        strVar = left(fnStripIterations(var.FullName),find(fnStripIterations(var.fullname),"."))
+
+    blnSkip = False
+    blnNumeric = False
+    blnCategorical = False
+    blnMulti = False
+
+    'skip system variables
+    if var.IsSystem = true  then
+        strsystem = strsystem + var.fullname + ", " 
+        blnSkip = True
+
+    end if
+        
+   'skip shell variables
+    propReportType = var.Properties["ReportType"]
+        if Find(propReportType, "IsShell") >= 0  then
+        ' this is a shell variable so skip it
+        strShell = strShell + var.fullname + ", "
+        blnSkip = True
+    end if
+
+    'skip variables that have no case data
+    if var.HasCaseData = false then
+        strNoCase = strNoCase + var.fullname + ", "
+        blnSkip = True
+    end if
+        
+    'skip coding helper variables
+    if var.usagetype = 532 or var.UsageType = 536 or lcase(right(var.FullName,6)) = ".codes" or lcase(right(var.FullName,7)) = ".coding" then 'vtcoding
+    
+        blnSkip = True
+        strCoding = strCoding + var.fullname + ", "
+        end if                                  
+
+    
+        select case var.DataType
+                'Categorical Variables
+                case 3
+                        blnCategorical=True
+                        'Multiple Response categorical variables have a MaxValue property greater than 1
+                        if var.MaxValue >1 then
+                                blnMulti=True
+                        end if
+                
+                'numeric variables
+        case 1,6
+            blnNumeric = True
+                
+                'skip text variables
+                case 2          
+                blnSkip = True
+                strText = strText + var.fullname + ", "
+        
+        'skip date variables
+        case 5
+                blnSkip = True
+                strDate = strDate + var.fullname + ", "
+
+        'skip boolean variables         
+        case 7
+                blnSkip = True
+                strBoolean = strBoolean + var.fullname + ", "
+        end select
+    
+    
+    
+    
+    'VARIABLES TO INCLUDE IN CLEAN_HELP.INC FILE
+    if blnSkip = False then
+
+        'write output for first iteration of grids
+        if var.UsageType = 8 or var.UsageType = 1 then '8 vtArray, 1 = vtGrid
+
+            'CURRENT VARIABLE
+            curVar = fnStripIterations(var.FullName)
+
+            'CHECK TO SEE IF CURRENT VARIABLE IS THE SAME AS PREVIOUS VARIABLE
+            if PrevVar = CurVar then
+                'not the first occurrence of this grid/array
+                iCount = iCount + 1
+            else
+                'the first occurrence of this grid/array
+                iCount = 1
+            end if
+            
+            'SET PREVIOUS VARIABLE = CURRENT VARIABLE
+            PrevVar = CurVar
+
+            'WRITE OUT FOR EACH LOOP FOR GRID VARIABLE IF FIRST OCCURRENCE OF THIS GRID/ARRAY
+            if iCount = 1 then
+                                
+
+                    arrVars = split(curVar,".")
+'''TESTING FOR IDENTIFYING GRID/ARRAY VARIABLES
+'                   if ubound(arrVars)>1 then
+'                       debug.Log(var.FullName)
+'                   end if
+                    str0 = arrVars[0] + "[..]."
+                    strCheck=""
+                    'FIND THE UPPER BOUND OF THE ARRAY VARIABLE, POPULATE STRING VARIABLES ACCORDINGLY
+                    select case ubound(arrVars)
+                            case 1
+                                    str1 = arrVars[1]       
+                                    str2 = ""
+                                    str3 = ""
+                                    'TAB OBJECT FOR INDENTING FOR LOOPS
+                                    set strTab=null
+                                                                'POPULATE CHECK STRING FOR VARIABLE WITH OUTER LOOP ONLY
+                                                                strCheck=strVar + "[CAT.NAME]."+str1+str2+str3
+                            case 2
+                                    str1 = arrVars[1] + "[..]."
+                                    str2 = arrVars[2]
+                                    str3 = ""
+                                    'TAB OBJECT FOR INDENTING FOR LOOPS
+                                    set strTab=mr.tab
+                                                                'POPULATE CHECK STRING FOR VARIABLE WITH LOOP WITHIN A LOOP ONLY
+                                                                strCheck=strVar + "[CAT.NAME]."+arrVars[1]+"[INRCAT.NAME]."+arrVars[2]
+                            case 3
+                                    str1 = arrVars[1] + "[..]."
+                                    str2 = arrVars[2] + "[..]."
+                                    str3 = arrVars[3]    
+                                    'TAB OBJECT FOR INDENTING FOR LOOPS
+                                    set strTab=mr.tab + mr.tab
+                                                                'POPULATE CHECK STRING FOR VARIABLE WITH A LOOP WITHIN A LOOP, WITHIN A LOOP
+                                                                strCheck=strVar + "[CAT.NAME]."+arrVars[1]+"[INRCAT.NAME]."+arrVars[2]+"[INR2CAT.NAME]."+arrVars[3]
+                    end select
+                                
+                'CURRENT VARIABLE                
+                strVar = left(curvar,find(curvar,"."))
+                MDDClean.writeline("'" + ucase(strVar))
+
+                '***Clean Code
+                        'Categorical Variables
+                        if blnCategorical=True and ubound(arrVars)<=3 then
+                                        'WRITE OUT FOR EACH CATEGORY LOOP FOR CHECKING
+                                        MDDClean.writeline(mr.tab + "FOR EACH CAT IN " + strVar + ".CATEGORIES")
+                                        'FOR EACH STATEMENT FOR LOOP WITHIN A LOOP
+                                        IF UBOUND(arrVars)>=2 then
+                                                MDDClean.writeline(mr.tab + mr.tab + "FOR EACH INRCAT IN "+strVar+"[CAT.NAME]."+arrVars[1]+".CATEGORIES")
+                                                'FOR EACH STATEMENT FOR LOOP WITHIN A LOOP, WITHIN A LOOP
+                                                IF UBOUND(arrVars)=3 then
+                                                        MDDClean.writeline(mr.tab +mr.tab + mr.tab + "FOR EACH INR2CAT IN "+strVar+"[CAT.NAME]."+arrVars[1]+"[INRCAT.NAME]."+arrVars[2]+".CATEGORIES")
+                                                END IF
+                                        END IF
+                                'WRITE OUT MULTIPLE OR SINGLE RESPONSE CHECKS FOR CATEGORICAL VARIABLES
+                                if blnMulti=True then
+                                                'MDDClean.writeline(mr.tab + mr.tab + "sbRSMP(dmgrjob," + strVar + "[cat.name]." + str1 + str2 + str3 + ","""")")
+                                                MDDClean.writeline(strTab + mr.tab + mr.tab + "sbRSMP(dmgrjob," + strCheck + ","""")")
+                                        else
+                                                'MDDClean.writeline(mr.tab + mr.tab + "sbRSP(dmgrjob," + strVar + "[cat.name]." + str1 + str2 + str3 + ","""")")
+                                                MDDClean.writeline(strTab + mr.tab + mr.tab + "sbRSP(dmgrjob," + strCheck + ","""")")
+                                        end if
+                                        'OTHER CATEGORICAL VALIDATION SUBROUTINES
+                                MDDClean.writeline(strTab + mr.tab + mr.tab + "sbMustContain(dmgrjob," + strCheck + "," + "{RESPONSE}"  + ","""")")     
+                                MDDClean.writeline(strTab + mr.tab + mr.Tab + "sbExclusive(dmgrjob," + strCheck + "," + "{RESPONSE}" + ","""")")  
+                                MDDClean.writeline(strTab + mr.tab + mr.tab + "sbRB(dmgrjob," + strCheck + ","""")")
+                                        'NEXT STATEMENTS FOR LOOP WITHIN A LOOP, WITHIN A LOOP
+                                        IF UBOUND(arrVars)=3 then
+                                                'NEXT FOR INR2CAT
+                                                MDDClean.writeline(mr.Tab + mr.Tab + mr.tab + "NEXT")
+                                        END IF                                          
+                                        'NEXT STATEMENTS FOR LOOP WITHIN A LOOP
+                                        IF UBOUND(arrVars)>=2 then 
+                                                'NEXT FOR INRCAT
+                                                MDDClean.writeline(mr.Tab + mr.tab + "NEXT")
+                                        END IF
+                                        'NEXT FOR CAT
+                                        MDDClean.writeline(mr.tab + "NEXT")
+                                        MDDClean.writeline(mr.CrLf)
+
+                                'NUMERIC VARIABLES
+                                elseif blnNumeric = True and ubound(arrVars)<=3 then
+                                        'WRITE OUT FOR EACH CATEGORY LOOP FOR CHECKING NUMERIC VARIABLES
+                                        MDDClean.writeline(mr.tab + "FOR EACH CAT IN " + strVar + ".CATEGORIES")
+                                        IF UBOUND(arrVars)>=2 then
+                                                MDDClean.writeline(mr.tab + mr.tab + "FOR EACH INRCAT IN "+strVar+"[CAT.NAME]."+arrVars[1]+".CATEGORIES")
+                                                'FOR EACH STATEMENT FOR LOOP WITHIN A LOOP, WITHIN A LOOP
+                                                IF UBOUND(arrVars)=3 then
+                                                        MDDClean.writeline(mr.tab +mr.tab + mr.tab + "FOR EACH INR2CAT IN "+strVar+"[CAT.NAME]."+arrVars[1]+"[INRCAT.NAME]."+arrVars[2]+".CATEGORIES")
+                                                END IF
+                                        END IF
+                                        MDDClean.writeline(strTab + mr.tab + mr.tab + "sbRNumInRange(dmgrjob," + strCheck + "," + ctext(var.MinValue) + "," + ctext(var.MaxValue) + ","""")")
+                                        MDDClean.writeline(strTab + mr.tab + mr.tab + "sbRNull(dmgrjob," + strCheck + ","""")")
+                                        'NEXT STATEMENT FOR LOOP WITHIN A LOOP, WITHIN A LOOP
+                                        IF UBOUND(arrVars)=3 then
+                                                MDDClean.writeline(mr.Tab + mr.Tab + mr.tab + "'NEXT FOR INR2CAT")
+                                                MDDClean.writeline(mr.Tab + mr.Tab + mr.tab + "NEXT")
+                                        END IF                                          
+                                        'NEXT STATEMENT FOR LOOP WITHIN A LOOP
+                                        IF UBOUND(arrVars)>=2 then 
+                                                'NEXT FOR INRCAT
+                                                MDDClean.writeline(mr.Tab + mr.tab + "NEXT")
+                                        END IF
+                                        'NEXT FOR CAT
+                                        MDDClean.writeline(mr.tab + "NEXT")
+                                        MDDClean.writeline(mr.CrLf)
+                                'OTHER GRID VARIABLES WITH MORE THAN 3 BOUNDS IN THE ARRAY
+                                elseif ubound(arrVars)>3 then
+                                        'POPULATE THE STRING FOR THE VARIABLE TO CHECK
+                                        for i=0 to ubound(arrVars)
+                                                if i<ubound(arrVars) then
+                                                        strCheck=strCheck + arrVars[i] + "[..]."
+                                                else
+                                                        strCheck=strCheck + arrVars[i]
+                                                end if
+                                        next
+                                        'Categorical Variables
+                                        if blnCategorical=True then
+                                        'WRITE OUT MULTIPLE OR SINGLE RESPONSE CHECKS FOR CATEGORICAL VARIABLES
+                                        if blnMulti=True then
+                                                        MDDClean.writeline(mr.tab + "sbRSMP(dmgrjob," + strCheck + ","""")")
+                                                else
+                                                        MDDClean.writeline(mr.tab + "sbRSP(dmgrjob," + strCheck + ","""")")
+                                                end if
+                                        MDDClean.writeline(mr.tab + "sbMustContain(dmgrjob," + strCheck + "," + "{RESPONSE}"  + ","""")")
+                                        MDDClean.writeline(mr.tab + "sbExclusive(dmgrjob," + strCheck + "," + """" + "{RESPONSE}" + """" + ","""")")
+                                        MDDClean.writeline(mr.tab + "sbRB(dmgrjob," + strCheck + ","""")")
+                                                
+                                                MDDClean.writeline(mr.CrLf)
+                                        elseif blnNumeric = True then
+                                                'WRITE OUT FOR NUMERIC VARIABLE CHECKING
+                                                MDDClean.writeline(mr.tab + "sbRNumInRange(dmgrjob," + strCheck + "," + ctext(var.MinValue) + "," + ctext(var.MaxValue) + ","""")")
+                                                MDDClean.writeline(mr.tab + "sbRNull(dmgrjob," + strCheck + ","""")")
+                                                MDDClean.writeline(mr.CrLf)
+                                        end if
+                                end if
+                        end if                          
+        else
+                        'write output for non-grid variables
+                        MDDClean.writeline("'" + ucase(var.fullname))
+                '***Clean Code
+                        'Categorical Variables
+                        if blnCategorical=True then
+                                'WRITE OUT MULTIPLE OR SINGLE RESPONSE CHECKS FOR CATEGORICAL VARIABLES
+                                if blnMulti=True then
+                                                MDDClean.writeline(mr.tab + "sbRSMP(dmgrjob," + var.fullname + ","""")")
+                                        else
+                                                MDDClean.writeline(mr.tab + "sbRSP(dmgrjob," + var.fullname + ","""")")
+                                        end if
+                                MDDClean.writeline(mr.tab + "sbMustContain(dmgrjob," + var.fullname + "," + "{RESPONSE}"  + ","""")")
+                                MDDClean.writeline(mr.tab + "sbExclusive(dmgrjob," + var.fullname + "," + "{RESPONSE}" + ","""")")
+                                MDDClean.writeline(mr.tab + "sbRB(dmgrjob," + var.fullname + ","""")")
+                            MDDClean.writeline(mr.CrLf)
+                                end if
+        
+                                if blnNumeric = True then
+                                        'WRITE OUT FOR REGULAR NUMERIC VARIABLE CHECKING
+                                        MDDClean.writeline(mr.tab + "sbRNumInRange(dmgrjob," + var.fullname + "," + ctext(var.MinValue) + "," + ctext(var.MaxValue) + ","""")")
+                                        MDDClean.writeline(mr.tab + "sbRNull(dmgrjob," + var.fullname + ","""")")
+                                    MDDClean.writeline(mr.CrLf)
+                                end if
+                        blnBlank = False
+                'END OF NON-GRID VARIABLES
+                end if
+        'END OF BLNSKIP
+        end if
+'NEXT VARIABLE
+next
+
+
+MDDClean.WriteLine(mr.CrLf)
+MDDClean.writeline("'***************************************************")
+MDDClean.writeline("'Skipped Variables:")
+MDDClean.writeline("'" + mr.Tab + "System Variables:  " + strSystem)
+MDDClean.writeline("'" + mr.Tab + "Shell Variables:  " + strShell)
+MDDClean.writeline("'" + mr.Tab + "No Case Data Variables:  " + strNoCase)
+MDDClean.writeline("'" + mr.Tab + "Coding Variables:  " + strCoding)
+MDDClean.writeline("'" + mr.Tab + "Text Variables:  " + strText)
+MDDClean.writeline("'" + mr.Tab + "Date Variables:  " + strDate)
+MDDClean.writeline("'" + mr.Tab + "Boolean Variables:  " + strBoolean)
+
+MDM.Close()
+MDDClean.Close()
+set fso=null
+debug.Log("Created " + JOB_ROOT + mid(strMDDClean,2))
+exit
+
+end sub
+
+

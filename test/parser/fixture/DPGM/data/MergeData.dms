@@ -1,0 +1,234 @@
+'*****FILE VERSION=1, DATE LAST MODIFIED=2010/09/16, KO
+
+#include "..\job.ini"
+'**************************************************************************************
+'**************************************************************************************
+'**************************************************************************************
+'CHANGE:  Number of inputs will match number of weeks being merged.  Uncomment appropriate one. Only leave one uncommented
+#define INPUT_2
+'#define INPUT_3
+'#define INPUT_4
+'#define INPUT_5
+'#define INPUT_6
+'#define INPUT_7
+'#define INPUT_8
+'#define INPUT_9
+'#define INPUT_10
+
+
+'CHANGE:  Path and name of metadata and casedata for each week.  Comment out inputs that are not needed
+#if not defined(METADATA_OUT)
+#define METADATA_OUT INPUT_METADATA + "_UPDATE.mdd"
+#endif
+#if not defined(CASEDATA_OUT)
+#define CASEDATA_OUT INPUT_METADATA + "_FINAL.ddf"
+#endif
+
+#if not defined(METADATA_1)
+#define METADATA_1 "W01\" + INPUT_METADATA + "_W01_FINAL.mdd"
+#endif
+#if not defined(CASEDATA_1)
+#define CASEDATA_1 "W01\" + INPUT_METADATA + "_W01_FINAL.ddf"
+#endif
+
+#if not defined(METADATA_2)
+#define METADATA_2 "W02\" + INPUT_METADATA + "_W02_FINAL.mdd"
+#endif
+#if not defined(CASEDATA_2)
+#define CASEDATA_2 "W02\" + INPUT_METADATA + "_W02_FINAL.ddf"
+#endif
+
+#if not defined(METADATA_3)
+#define METADATA_3 "W03\" + INPUT_METADATA + "_W03_FINAL.mdd"
+#endif
+#if not defined(CASEDATA_3)
+#define CASEDATA_3 "W03\" + INPUT_METADATA + "_W03_FINAL.ddf"
+#endif
+
+#if not defined(METADATA_4)
+#define METADATA_4 "W04\" + INPUT_METADATA + "_W04_FINAL.mdd"
+#endif
+#if not defined(CASEDATA_4)
+#define CASEDATA_4 "W04\" + INPUT_METADATA + "_W04_FINAL.ddf"
+#endif
+
+#if not defined(METADATA_5)
+#define METADATA_5 "W05\" + INPUT_METADATA + "_W05_FINAL.mdd"
+#endif
+#if not defined(CASEDATA_5)
+#define CASEDATA_5 "W05\" + INPUT_METADATA + "_W05_FINAL.ddf"
+#endif
+
+#if not defined(METADATA_6)
+#define METADATA_6 "W06\" + INPUT_METADATA + "_W06_FINAL.mdd"
+#endif
+#if not defined(CASEDATA_6)
+#define CASEDATA_6 "W06\" + INPUT_METADATA + "_W06_FINAL.ddf"
+#endif
+
+#if not defined(METADATA_7)
+#define METADATA_7 "W07\" + INPUT_METADATA + "_W07_FINAL.mdd"
+#endif
+#if not defined(CASEDATA_7)
+#define CASEDATA_7 "W07\" + INPUT_METADATA + "_W07_FINAL.ddf"
+#endif
+
+#if not defined(METADATA_8)
+#define METADATA_8 "W08\" + INPUT_METADATA + "_W08_FINAL.mdd"
+#endif
+#if not defined(CASEDATA_8)
+#define CASEDATA_8 "W08\" + INPUT_METADATA + "_W08_FINAL.ddf"
+#endif
+
+#if not defined(METADATA_9)
+#define METADATA_9 "W09\" + INPUT_METADATA + "_W09_FINAL.mdd"
+#endif
+#if not defined(CASEDATA_9)
+#define CASEDATA_9 "W09\" + INPUT_METADATA + "_W09_FINAL.ddf"
+#endif
+
+#if not defined(METADATA_10)
+#define METADATA_10 "W10\" + INPUT_METADATA + "_W10_FINAL.mdd"
+#endif
+#if not defined(CASEDATA_10)
+#define CASEDATA_10 "W10\" + INPUT_METADATA + "_W10_FINAL.ddf"
+#endif
+
+'**************************************************************************************
+'**************************************************************************************
+'**************************************************************************************
+
+
+
+'**************************************************************************************
+'No Need To Edit Below This Line
+'**************************************************************************************
+
+Event(OnBeforeJobStart, "Delete the file")
+
+   Dim oFso
+   Set oFso = CreateObject("Scripting.FileSystemObject")
+   If oFso.FileExists(METADATA_OUT) Then oFso.DeleteFile(METADATA_OUT,True)
+   If oFso.FileExists(CASEDATA_OUT) Then oFso.DeleteFile(CASEDATA_OUT,True)
+
+End Event
+
+
+
+        InputDataSource(InputDataSource1, "DDF input1")
+        ConnectionString= " _
+                Provider=mrOleDB.Provider.2; _
+                Initial Catalog=" + METADATA_1 + "; _
+                Data Source=mrDataFileDsc; _
+                MR Init MDM Version = "{..}"; _
+                Location=" + CASEDATA_1
+        End InputDataSource
+
+#ifdef INPUT_2
+        InputDataSource(InputDataSource2, "DDF input2")
+        ConnectionString= " _
+                Provider=mrOleDB.Provider.2; _
+                Initial Catalog=" + METADATA_2 + "; _
+                Data Source=mrDataFileDsc; _
+                MR Init MDM Version = "{..}"; _
+                Location=" + CASEDATA_2
+        End InputDataSource
+#endif
+
+#ifdef INPUT_3
+        InputDataSource(InputDataSource3, "DDF input3")
+        ConnectionString= " _
+                Provider=mrOleDB.Provider.2; _
+                Initial Catalog=" + METADATA_3 + "; _
+                Data Source=mrDataFileDsc; _
+                MR Init MDM Version = "{..}"; _
+                Location=" + CASEDATA_3
+        End InputDataSource
+#endif
+
+#ifdef INPUT_4
+        InputDataSource(InputDataSource4, "DDF input4")
+        ConnectionString= " _
+                Provider=mrOleDB.Provider.2; _
+                Initial Catalog=" + METADATA_4 + "; _
+                Data Source=mrDataFileDsc; _
+                MR Init MDM Version = "{..}"; _
+                Location=" + CASEDATA_4
+        End InputDataSource
+#endif
+
+#ifdef INPUT_5
+        InputDataSource(InputDataSource5, "DDF input5")
+        ConnectionString= " _
+                Provider=mrOleDB.Provider.2; _
+                Initial Catalog=" + METADATA_5 + "; _
+                Data Source=mrDataFileDsc; _
+                MR Init MDM Version = "{..}"; _
+                Location=" + CASEDATA_5
+        End InputDataSource
+#endif
+
+#ifdef INPUT_6
+        InputDataSource(InputDataSource6, "DDF input6")
+        ConnectionString= " _
+                Provider=mrOleDB.Provider.2; _
+                Initial Catalog=" + METADATA_6 + "; _
+                Data Source=mrDataFileDsc; _
+                MR Init MDM Version = "{..}"; _
+                Location=" + CASEDATA_6
+        End InputDataSource
+#endif
+
+#ifdef INPUT_7
+        InputDataSource(InputDataSource7, "DDF input7")
+        ConnectionString= " _
+                Provider=mrOleDB.Provider.2; _
+                Initial Catalog=" + METADATA_7 + "; _
+                Data Source=mrDataFileDsc; _
+                MR Init MDM Version = "{..}"; _
+                Location=" + CASEDATA_7
+        End InputDataSource
+#endif
+
+#ifdef INPUT_8
+        InputDataSource(InputDataSource8, "DDF input8")
+        ConnectionString= " _
+                Provider=mrOleDB.Provider.2; _
+                Initial Catalog=" + METADATA_8 + "; _
+                Data Source=mrDataFileDsc; _
+                MR Init MDM Version = "{..}"; _
+                Location=" + CASEDATA_8
+        End InputDataSource
+#endif
+
+#ifdef INPUT_9
+        InputDataSource(InputDataSource9, "DDF input9")
+        ConnectionString= " _
+                Provider=mrOleDB.Provider.2; _
+                Initial Catalog=" + METADATA_9 + "; _
+                Data Source=mrDataFileDsc; _
+                MR Init MDM Version = "{..}"; _
+                Location=" + CASEDATA_9
+        End InputDataSource
+#endif
+
+#ifdef INPUT_10
+        InputDataSource(InputDataSource10, "DDF input10")
+        ConnectionString= " _
+                Provider=mrOleDB.Provider.2; _
+                Initial Catalog=" + METADATA_10 + "; _
+                Data Source=mrDataFileDsc; _
+                MR Init MDM Version = "{..}"; _
+                Location=" + CASEDATA_10
+        End InputDataSource
+#endif
+
+
+OutputDataSource (DDFOutputDataSource, "DDF merged clean output")
+        ConnectionString= "Provider=mrOleDB.Provider.2; _
+                Data Source=mrDataFileDsc; _
+                Location=" + CASEDATA_OUT + "; _
+                MR Init Overwrite=1; _
+                MR Init Allow Dirty = false;"
+        MetaDataOutputName=METADATA_OUT
+End OutputDataSource

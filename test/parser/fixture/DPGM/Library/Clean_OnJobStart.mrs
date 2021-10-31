@@ -1,0 +1,24 @@
+'*****FILE VERSION=1, DATE LAST MODIFIED=2010/09/16, KO
+
+        dim RespNum
+        dim LogHelpVar
+        dim txtfile
+        dim report
+        dim fso
+        
+
+        dmgrJob.GlobalVariables.Add("dmgrJob.GlobalVariables.RespNum")
+        Set dmgrJob.GlobalVariables.RespNum = RESP_NUMBER
+        
+        dmgrJob.GlobalVariables.Add("dmgrJob.GlobalVariables.LogHelpVar")
+        Set dmgrJob.GlobalVariables.LogHelpVar = LOG_HELP_VAR
+   
+   '*****************************
+   
+        set fso=createobject("Scripting.FileSystemObject")
+        set txtfile=fso.CreateTextFile(CSV_FILE,true,true)
+        dmgrglobal.Add("report")
+        set dmgrglobal.report=txtfile
+   
+        dmgrjob.GlobalVariables.report.writeline(dmgrJob.GlobalVariables.RespNum.questionfullname + "," + dmgrJob.GlobalVariables.LogHelpVar.questionfullname + ",Message,Data" )
+   

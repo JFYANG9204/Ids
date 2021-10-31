@@ -1,0 +1,226 @@
+'------------------------------------------------------------------------------------------------------------------------------------------
+'FORMAT TABLES
+'------------------------------------------------------------------------------------------------------------------------------------------
+Dim myTab
+For Each myTab In .Tables
+    With myTab
+        .Side.SubAxes[0].Label="@"+.Side.SubAxes[0].Label
+        'If GLOBALLABEL<>"" Then .Annotations[0].Specification = .Annotations[0].Specification + " - " + GLOBALLABEL
+        'If GLOBALLABEL<>"" and HTMOUTPUT=True Then .Annotations[1].Specification ="Global Filter : " + GLOBALLABEL
+        'If GLOBALLABEL<>"" and CSVOUTPUT=True Then .Top.SubAxes[0].Label = "(Global Filter : " + GLOBALLABEL + ") " + .Top.SubAxes[0].Label
+
+
+        '.Rules.AddNew() ' Hide Row
+        '.Rules.AddNew(,1) ' Hide Column
+
+
+        'Add weighting
+        If WEIGHT = True Then .Weight = WEIGHT_NAME
+
+
+        'Add effective base to all tables
+        If EFFECTIVEBASE = True Then sbAddEffectiveBase(myTab,"Base : Total Respondent (Effective)")
+
+
+        'General formatting - remove side label
+        if CSVOUTPUT=False Then .Side.SubAxes[0].Label = ""
+
+        'Add sig-testing 1st level (not grids)
+        If SIGTEST1 = True And Left(myTab.Name,2)<>"TG" then
+            with .Statistics
+                  with .Add("ColumnMeans")
+                        .SigLevel = SIGLEVEL1
+                        .MinBase = MINBASELEVEL
+                        .SmallBase = SMALLBASELEVEL
+                  end with
+
+                  with .Add("ColumnProportions")
+                        .SigLevel = SIGLEVEL1
+                        .MinBase = MINBASELEVEL
+                        .SmallBase = SMALLBASELEVEL
+                        .UseContinuityCorrection = CONTINUITYCORRECTION
+                  end with
+
+                  ' Add sig-testing 2nd level (not grids)
+                  If SIGTEST2 = True then
+                        .ColumnProportions.SigLevelLow = SIGLEVEL2
+                        .ColumnMeans.SigLevelLow = SIGLEVEL2
+                  End If
+
+                  .ColumnIDs = SIGCOLUMNIDS
+                  .TestColumns = SIGCOLUMNS
+                  'UseGridOverlapFormula set to False does not turn off all overlap calculations on grids but sets it back to the formula used in version 5.6 and earlier (including the last version of Quantum.)
+                  .UseGridOverlapFormula=False
+            end with '.Statistics
+
+            '.Annotations[5].Specification="{statistics}"
+            if SIGTEST2 = False then .Annotations[5].Specification="Proportions/Means: Columns Tested (" + SIGLEVEL1 + "% risk level) : " + Replace(SIGCOLUMNS,","," - ") + "; Min Base Level: " + MINBASELEVEL + "(**)£¬Small Base Level: " + SMALLBASELEVEL + "(*)"
+            if SIGTEST2 = True  then .Annotations[5].Specification="Proportions/Means: Columns Tested (" + SIGLEVEL1 + "%, " + SIGLEVEL2 + "% risk level) : " + Replace(SIGCOLUMNS,","," - ") + "; Min Base Level: " + MINBASELEVEL + "(**)£¬Small Base Level: " + SMALLBASELEVEL + "(*)"
+
+         End If  'sig-testing
+
+
+        If SIGTEST1 = True And Left(myTab.Name,2)="TG" then
+            with .Statistics
+                  with .Add("ColumnMeans")
+                        .SigLevel = SIGLEVEL1
+                        .MinBase = MINBASELEVEL
+                        .SmallBase = SMALLBASELEVEL
+                  end with
+
+                  with .Add("ColumnProportions")
+                        .SigLevel = SIGLEVEL1
+                        .MinBase = MINBASELEVEL
+                        .SmallBase = SMALLBASELEVEL
+                        .UseContinuityCorrection = CONTINUITYCORRECTION
+                  end with
+
+                  ' Add sig-testing 2nd level (not grids)
+                  If SIGTEST2 = True then
+                        .ColumnProportions.SigLevelLow = SIGLEVEL2
+                        .ColumnMeans.SigLevelLow = SIGLEVEL2
+                  End If
+
+                  .ColumnIDs = ""
+                  .TestColumns = ""
+                  'UseGridOverlapFormula set to False does not turn off all overlap calculations on grids but sets it back to the formula used in version 5.6 and earlier (including the last version of Quantum.)
+                  .UseGridOverlapFormula=False
+            end with '.Statistics
+
+            '.Annotations[5].Specification="{statistics}"
+            if SIGTEST2 = False then .Annotations[5].Specification="Proportions/Means: Columns Tested (" + SIGLEVEL1 + "% risk level) : All Columns" + "; Min Base Level: " + MINBASELEVEL + "(**)£¬Small Base Level: " + SMALLBASELEVEL + "(*)"
+            if SIGTEST2 = True  then .Annotations[5].Specification="Proportions/Means: Columns Tested (" + SIGLEVEL1 + "%, " + SIGLEVEL2 + "% risk level) : All Columns" + "; Min Base Level: " + MINBASELEVEL + "(**)£¬Small Base Level: " + SMALLBASELEVEL + "(*)"
+
+         End If  'sig-testing
+
+
+        'Option to hide bases for variables in the topbreak/banner
+           'Option 1 - keep first weighted base (or unweighted base if not a weighted variable) and hide all others
+           'Option 2 - keep first unweighted base and hide all others
+           'Option 3 - keep first weighted and unweighted bases and hide all others
+           'Option 4 - hide all bases
+         If Not .IsEmptyTop then sbHideBannerBases(.top,4)
+
+
+        'Hiding the unweighted base in the side stub of a table
+        If HIDESIDEUNWEIGHTEDBASE = True then sbHideSideUnweightedBase(myTab)
+
+        'Set the unweighted base text in the side stub of a table
+        If WEIGHT = True then sbSetSideUnweightedBaseText(myTab,"Base : Total Respondent (Unweighted)")
+
+
+        ''Use if have multiple topbreaks/banners within the same set of tables and need to apply different
+        ''options (i.e. sig/stat-testing, weighting, etc) to a specific topbreak/banner.
+        ''NOTE:  If you turn off any options applied to all tables above make sure to account for any grids
+        ''       you may have in the 'else' portion of this 'if' statement
+'        if not isnullobject(.Properties.finditem("BannerSpec")) and Left(myTab.Name,2) <> "TG" then
+'             select case .Properties["BannerSpec"].value
+'                  case banner                                             'banner is the name of the first banner
+'                       If Not .IsEmptyTop then sbHideBannerBases(.top,1)     'Example to conrol Hiding Banner Bases
+'                       .Statistics.ColumnIDs = SIGCOLUMNIDS                  'Example to control ColumnIDs
+'                       .Statistics.TestColumns = SIGCOLUMNS                  'Example to control TestColumns
+'                  case ban2a,ban2b                                        'ban2a,ban2b are the names of the second/third banners
+'                       If Not .IsEmptyTop then sbHideBannerBases(.top,3)    'Example to conrol Hiding Banner Bases
+'                       .Statistics.ColumnIDs = SIGCOLUMNIDS2                'Example to control ColumnIDs
+'                       .Statistics.TestColumns = SIGCOLUMNS2                'Example to control TestColumns
+'             end select
+'        else  'apply options to grids in this 'else' section
+'             If Not .IsEmptyTop then sbHideBannerBases(.top,3)
+'        end if  'BannerSpec Property
+
+
+    End With  'MyTab
+Next  'MyTab
+
+'------------------------------------------------------------------------------------------------------------------------------------------
+'------------------------------------------------------------------------------------------------------------------------------------------
+
+if POPULATEACCELERATE = TRUE then
+  'Save unpopulated MTD For sbSplitPopulateAccelerated
+  .Save(OUTPUTFOLDER + OUTPUTNAME + "_Unpopulated.mtd")
+  'POPULATE TABLES
+  sbSplitPopulateAccelerated(TableDoc,50,JOB_ROOT,OUTPUTFOLDER,OUTPUTNAME,REMOVEBLANKTABLES)
+else
+  'POPULATE TABLES
+  sbSplitPopulate(TableDoc,900)
+end if
+
+
+'Include Existence code
+#include "LIBRARY\RunTables_Existence_Include.mrs"
+
+'REMOVE BLANK TABLES
+If REMOVEBLANKTABLES = True Then sbRemoveBlankTables(TableDoc)
+
+
+'EXPORT
+With .Exports
+  If HTMOUTPUT = True Then
+    With .mrHtmlExport
+        .Properties["OverwriteOutput"]= True
+        .Properties["DisplayOption"] = "Table Only"
+        .Properties["DisplayLogo"] = False
+        .Properties["UseStyles"] = False
+        .Export(OUTPUTFOLDER + OUTPUTNAME + ".htm")
+    End With
+  End If
+
+  If CSVOUTPUT = True and POPULATEACCELERATE = False Then
+    With .mrTextExport
+        .Properties["LaunchApplication"] = False
+        .Properties["OverwriteOutput"] = True
+        .Properties["TableDelimiter"] = AscW(" ") 'AscW(mr.FormFeed)
+        .Properties["FieldDelimiter"] = AscW(",")
+        .Properties["DisplayAnnotations"] = True 'False
+        .Export(OUTPUTFOLDER + "temp.csv")
+    End With
+
+    sbFormatDBCsv(OUTPUTFOLDER + "temp.csv",OUTPUTFOLDER + OUTPUTNAME + ".csv")
+
+    If Left(TableDoc.TOMVersion,3)="1.9" Then
+        sbChangeFileFormat(OUTPUTFOLDER + OUTPUTNAME + ".csv")
+    End if
+  End If
+
+  If WORDOUTPUT = True Then
+    With .mrWordExport
+        .Properties["OverwriteOutput"] = True
+        .Properties["HideApplication"] =  True
+        .Properties["DisplayBorders"] =  False
+        .Export(OUTPUTFOLDER + OUTPUTNAME + ".doc")
+    End With
+  End If
+
+'  If EXCELOUTPUT = True Then
+'    With .mrExcelExport
+'        .Properties["DisplayCharts"] = False
+'        .Properties["HideApplication"] =True
+'        .Properties["OverwriteOutput"] = True
+'        .Export(OUTPUTFOLDER + OUTPUTNAME + ".xls")
+'        If SINGLE_SHEET_EXCEL_OUTPUT  then subExcelOnePage(OUTPUTFOLDER + OUTPUTNAME + ".xls","T1","Tables")
+'    End With
+'  End If
+
+  End With 'Exports
+
+
+'Add Visual Reports for Surveys to mtd file
+If VISUAL_RFS = True Then .sbAddVisualRfS()
+
+'SAVE MTD
+If MTD = True and POPULATEACCELERATE = False Then .Save(OUTPUTFOLDER + OUTPUTNAME + ".mtd")
+
+If MTD = True and EXCELOUTPUT = True Then
+  ' - Create DTE tables
+  Dim WshShell
+  Set WshShell = CreateObject("WScript.Shell")
+  WshShell.Run("Library\DTE\v5.0.1\DTE.exe -type=XLP -mtd=""" + OUTPUTFOLDER + OUTPUTNAME + ".mtd"" -saveas=""" + OUTPUTFOLDER + OUTPUTNAME + ".xlsx""", , True)
+end if 'MTD
+
+Dim oFso
+Set oFso = CreateObject("Scripting.FileSystemObject")
+If MTD = False and oFso.FileExists(OUTPUTFOLDER + OUTPUTNAME + ".mtd") Then oFso.DeleteFile(OUTPUTFOLDER + OUTPUTNAME + ".mtd",True)
+
+EndTime = Now()
+
+Debug.Log("Table Run Time: " + Ctext(DateDiff(StartTime,EndTime,"s") / 60) + " mins " + Ctext(DateDiff(StartTime,EndTime,"s") mod 60) + " seconds" )

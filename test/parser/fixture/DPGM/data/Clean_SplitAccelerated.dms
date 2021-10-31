@@ -1,0 +1,240 @@
+#include "..\job.ini"
+
+'#define WAVE_NO "W01"
+
+'#define RESP_QES Respondent.Serial
+
+#define RUN_DATA_NAME WAVE_NO + "\" + INPUT_METADATA + "_" + WAVE_NO
+
+#define TEMPFOLDER_NAME JOB_ROOT + "data\"  + WAVE_NO + "\TempFile_Clean_SplitAccelerated"
+
+'#define NUMBEROFTHREADS 7
+
+
+Event(OnBeforeJobStart)
+
+        Dim oFso, i
+        Set oFso = CreateObject("Scripting.FileSystemObject")
+        If oFso.FileExists(RUN_DATA_NAME + "_FINAL.ddf") Then oFso.DeleteFile(RUN_DATA_NAME + "_FINAL.ddf",True)
+        If oFso.FileExists(RUN_DATA_NAME + "_FINAL.mdd") Then oFso.DeleteFile(RUN_DATA_NAME + "_FINAL.mdd",True)
+        If not (oFso.FileExists(RUN_DATA_NAME + "_withOE.ddf")) Then oFso.CopyFile(RUN_DATA_NAME + ".ddf",RUN_DATA_NAME + "_withOE.ddf",False)
+        If not (oFso.FileExists(RUN_DATA_NAME + "_withOE.mdd")) Then oFso.CopyFile(RUN_DATA_NAME + ".mdd",RUN_DATA_NAME + "_withOE.mdd",False)
+        Dim oFolder,oFile
+
+        on error GOTO jump1
+        If (oFso.FolderExists(TEMPFOLDER_NAME)) Then 
+          For i = 1 to NUMBEROFTHREADS
+            If (oFso.FolderExists(TEMPFOLDER_NAME+"\"+ctext(i))) Then 
+              set oFolder = oFso.GetFolder(TEMPFOLDER_NAME+"\"+ctext(i))
+              For each oFile in oFolder.Files
+                oFile.Delete()
+              Next
+              oFso.DeleteFolder(TEMPFOLDER_NAME+"\"+ctext(i))
+            End if
+          Next
+
+          set oFolder = oFso.GetFolder(TEMPFOLDER_NAME)
+          For each oFile in oFolder.Files
+            oFile.Delete()
+          Next
+          oFso.DeleteFolder(TEMPFOLDER_NAME)
+        End if
+        jump1:
+        err.Clear()
+
+        If not (oFso.FolderExists(TEMPFOLDER_NAME)) Then 
+          oFso.CreateFolder(TEMPFOLDER_NAME)
+        End if
+    
+End Event
+
+InputDataSource(MyInputDataSource, "Loading in Data")
+        ConnectionString = "Provider=mrOleDB.Provider.2; _
+                Data Source=mrDataFileDsc; _
+                MR Init MDM Version = {}; _
+                MR Init MDM Access = 1; _
+                Mr Init MDM Category Names = 1; _
+                Initial Catalog=" + RUN_DATA_NAME + "_withOE.mdd; _
+                Location=" + RUN_DATA_NAME + "_withOE.ddf"
+        SelectQuery = "select * from vdata"
+End InputDataSource
+
+OutputDataSource(myOutputDataSource, "Exporting Data")
+        ConnectionString = "Provider=mrOleDB.Provider.2; _
+                Data Source=mrDataFileDsc;MR Init Overwrite=1; _
+                Location=" + INPUT_METADATA + "_tmp.ddf"
+        MetaDataOutputName = ".\" + INPUT_METADATA + "_tmp.mdd"
+End OutputDataSource
+
+Event(OnJobStart, "Do the set up")      
+        dim RespNum
+        dim txtfile
+        dim report
+        dim fso
+
+        dmgrJob.GlobalVariables.Add("dmgrJob.GlobalVariables.RespNum")
+        Set dmgrJob.GlobalVariables.RespNum = RESP_QES
+        
+        set fso=createobject("Scripting.FileSystemObject")
+        set txtfile=fso.CreateTextFile(TEMPFOLDER_NAME + "\ExportResNo.csv",true,true)
+        dmgrglobal.Add("report")
+        set dmgrglobal.report=txtfile
+   
+        dmgrjob.GlobalVariables.report.writeline(dmgrJob.GlobalVariables.RespNum.questionfullname)
+
+End Event
+
+
+Event(OnNextCase, "Clean the data")
+
+    dmgrJob.GlobalVariables.RespNum = RESP_QES
+    dmgrjob.GlobalVariables.report.writeline(ctext(dmgrJob.globalvariables.respnum))
+    
+end Event
+
+
+Event(OnJobEnd)
+dmgrglobal.report.close()
+End Event
+
+Event(OnAfterJobEnd)
+
+dim RespNum
+dmgrJob.GlobalVariables.Add("dmgrJob.GlobalVariables.RespNum")
+Set dmgrJob.GlobalVariables.RespNum = RESP_QES
+
+Dim ofso,xlObj,xlworkbook,xlsheets,usgrow, i, j, iCasesPerThread
+
+set ofso=createobject("Scripting.filesystemobject")
+If oFso.FileExists(INPUT_METADATA + "_tmp.mdd") Then oFso.DeleteFile(INPUT_METADATA + "_tmp.mdd",True)
+If oFso.FileExists(INPUT_METADATA + "_tmp.ddf") Then oFso.DeleteFile(INPUT_METADATA + "_tmp.ddf",True)
+
+set xlObj=createobject("Excel.Application")
+
+xlObj.visible=False
+xlObj.DisplayAlerts = False
+
+'set xlWorkbook=xlObj.Workbooks.opentext(TEMPFOLDER_NAME + "\ExportResNo.csv",,,1,1,,,,true,,,,,,,,,)
+set xlWorkbook=xlObj.Workbooks.open(TEMPFOLDER_NAME + "\ExportResNo.csv")
+set xlsheets=xlObj.activesheet
+usgrow = xlsheets.usedrange.rows.count
+
+if (usgrow - 1) mod NUMBEROFTHREADS <> 0 then
+	iCasesPerThread = ((usgrow - 1) / NUMBEROFTHREADS) + 1
+else
+	iCasesPerThread = ((usgrow - 1) / NUMBEROFTHREADS)
+end if	
+
+xlsheets.cells[1][2] = "Keep Respondent No"
+
+Dim startcase[],endcase[],runstring[],runDMSstring[],outxlsxname[],outdataname[],oWShell,batFile,oFolder,oFile
+Set oWShell = CreateObject("WScript.Shell")
+For i = 1 To NUMBEROFTHREADS
+	'Get The number of tables stored
+	startcase[i] = clong((i-1) * iCasesPerThread + 1)
+	If (i = NUMBEROFTHREADS) Then
+	  endcase[i] = clong((usgrow - 1))
+	Else
+		endcase[i] = clong(startcase[i] + iCasesPerThread - 1)
+	End If
+
+	For j = startcase[i] to endcase[i]
+	
+		xlsheets.cells[i+1][2] = ctext(xlsheets.cells[i+1][2]) + "," + ctext(xlsheets.cells[j+1][1])
+	
+	Next 'j
+
+	xlsheets.cells[i+1][2]=right(xlsheets.cells[i+1][2],len(xlsheets.cells[i+1][2])-1)
+  
+  oFso.CreateFolder(TEMPFOLDER_NAME + "\" + ctext(i))
+    
+  runstring[i] = "mrScriptCl """ + JOB_ROOT + "data\SplitDMSAccelerated.mrs""" + _
+  	 " /a:WAVE_NO=""" + WAVE_NO + """" + _
+  	 " /a:RESP_QES=""" + dmgrJob.GlobalVariables.RespNum.questionfullname + """" + _
+  	 " /a:METADATA_OUT=""" + TEMPFOLDER_NAME + "\" + ctext(i) + "\" + INPUT_METADATA + "_" + WAVE_NO + "_tmp" + ctext(i) + ".mdd""" + _
+  	 " /a:CASEDATA_OUT=""" + TEMPFOLDER_NAME + "\" + ctext(i) + "\" + INPUT_METADATA + "_" + WAVE_NO + "_tmp" + ctext(i) + ".ddf""" + _
+  	 " /a:KEEPRESNO=""" + xlsheets.cells[i+1][2] + """"
+  
+  set batFile=ofso.createtextfile(TEMPFOLDER_NAME + "\" + INPUT_METADATA + "_" + WAVE_NO + "_tmp" + ctext(i) + ".bat",true,false)
+  batFile.WriteLine(runstring[i])
+
+  runDMSstring[i] = "DMSRun " + JOB_ROOT + "data\clean.dms" + _
+  	 " /d""WAVE_NO \""" + WAVE_NO + "\""""" + _
+  	 " /d""WAVE_METADATA \""" + WAVE_NO + "\sbMetadata_dms.mrs\""""" + _
+  	 " /d""WAVE_NEXTCASE \""" + WAVE_NO + "\sbOnNextCase.mrs\""""" + _
+  	 " /d""WAVE_CORRECTIONS \""" + WAVE_NO + "\corrections.inc\""""" + _
+  	 " /d""WAVE_WEIGHT \""" + WAVE_NO + "\sbWeighting.mrs\""""" + _
+  	 " /d""QUERY_FILTER \""where not(" + dmgrJob.GlobalVariables.RespNum.questionfullname + " = 0)\""""" + _
+  	 " /d""RUN_DATA_NAME_IN \""" + TEMPFOLDER_NAME + "\" + ctext(i) + "\" + INPUT_METADATA + "_" + WAVE_NO + "_tmp" + ctext(i) + "\""""" + _
+  	 " /d""RUN_DATA_NAME_OUT \""" + TEMPFOLDER_NAME + "\" + ctext(i) + "\" + INPUT_METADATA + "_" + WAVE_NO + "_FINAL" + ctext(i) + "\""""" + _
+  	 " /d""CSV_FILE \""" + TEMPFOLDER_NAME + "\" + ctext(i) + "\Clean_Results.csv\""""" + _
+  	 " /d""EXCEL_FILE \""" + TEMPFOLDER_NAME + "\" + ctext(i) + "\Clean_Results.xlsx\"""""
+
+  batFile.WriteLine("cd ..\..\..\")
+  batFile.WriteLine(runDMSstring[i])
+
+  batFile.Close()
+
+  outxlsxname[i] = TEMPFOLDER_NAME + "\" + ctext(i) + "\Clean_Results.xlsx"
+  outdataname[i] = TEMPFOLDER_NAME + "\" + ctext(i) + "\" + INPUT_METADATA + "_" + WAVE_NO + "_FINAL" + ctext(i)
+  oWShell.Run(TEMPFOLDER_NAME + "\" + INPUT_METADATA + "_" + WAVE_NO + "_tmp" + ctext(i) + ".bat",0 , False)
+
+Next
+
+xlWorkbook.save()
+xlWorkbook.close()
+xlObj.quit()
+
+
+Sleep:
+	for i = 1 to NUMBEROFTHREADS
+		if not(oFso.FileExists(outxlsxname[i])) then
+			Sleep(100)
+			GOTO Sleep
+    end if
+	next
+
+Dim DMOMJob
+Dim Directives
+Set DMOMJob = CreateObject("DMOM.Job")
+Set Directives = CreateObject("DMOM.StringCollection")
+
+for i = 1 to NUMBEROFTHREADS
+
+  Directives.add("#define INPUT_" + ctext(i))
+  Directives.add("#define METADATA_" + ctext(i) + " """ + outdataname[i] + ".mdd""")
+  Directives.add("#define CASEDATA_" + ctext(i) + " """ + outdataname[i] + ".ddf""")
+
+next
+
+Directives.add("#define METADATA_OUT """ + JOB_ROOT + "data\" + WAVE_NO + "\" + INPUT_METADATA + "_" + WAVE_NO + "_FINAL.mdd""")
+Directives.add("#define CASEDATA_OUT """ + JOB_ROOT + "data\" + WAVE_NO + "\" + INPUT_METADATA + "_" + WAVE_NO + "_FINAL.ddf""")
+
+
+DMOMJob.Load(JOB_ROOT + "data\MergeData.dms", Directives)
+DMOMJob.Run()
+Directives.Clear()
+
+
+on error GOTO jump1
+For i = 1 to NUMBEROFTHREADS
+  If (oFso.FolderExists(TEMPFOLDER_NAME+"\"+ctext(i))) Then 
+    set oFolder = oFso.GetFolder(TEMPFOLDER_NAME+"\"+ctext(i))
+    For each oFile in oFolder.Files
+      oFile.Delete()
+    Next
+    oFso.DeleteFolder(TEMPFOLDER_NAME+"\"+ctext(i))
+  End if
+Next
+
+If (oFso.FolderExists(TEMPFOLDER_NAME)) Then 
+  set oFolder = oFso.GetFolder(TEMPFOLDER_NAME)
+  For each oFile in oFolder.Files
+    oFile.Delete()
+  Next
+  oFso.DeleteFolder(TEMPFOLDER_NAME)
+End if
+jump1:
+err.Clear()
+
+end Event

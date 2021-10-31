@@ -1,0 +1,470 @@
+'*****FILE VERSION=3, DATE LAST MODIFIED=2012/02/01, KO
+
+'*****************************************************************************************
+'Functions for creating Rolling or Discrete Axis Expressions
+'*****************************************************************************************
+'
+'(for detailed instructions see Wiki page: )
+'
+'fnRollingBanners(Rolling,strStart,strEnd,strBreak,strName)
+'----> Returns Axis Expression with Rolling Time Periods and Fieldwork breaks as specified
+'
+'fnDiscreteBanners(Discrete,strStart,strEnd,strBreak,strName)
+'----> Returns Axis Expression with Discrete Time Periods and Fieldwork breaks as specified
+'
+'
+'******************************************************************************************************************
+' Example
+'
+'    Dim banner1
+'    Set banner1=tabledoc.Axes.AddNew("top1")
+'    banner1.Specification=fnRollingBanners(4,"2007/07/02","2008/04/14","2007/12/17;2007/12/24","Roll4")
+'    banner1.SubAxes["Roll4"].Label="Rolling 4 Weekly"
+'
+' This will create an new Table axis called 'top1' with Rolling 4 weekly periods
+' from weeks 200801 to 200813 with breaks at weeks 200807 & 200808
+' Axis name is 'Roll4'
+'******************************************************************************************************************
+
+
+
+'==================================================================================================================
+' FUNCTIONS =======================================================================================================
+'==================================================================================================================
+
+Function fnRollingBanners(Rolling,strStart,strEnd,strBreak,strName)
+Dim dtStart,dtEnd,strAxis,dtStartRolling,dtEndRolling,i,arrBreaks,blnStartBreak,blnEndBreak
+
+dtStart = cdate(strStart)
+dtEnd = cdate(strEnd)
+
+arrBreaks=Split(strBreak,";")
+
+i=1
+dtStartRolling = dtStart
+dtEndRolling = DateAdd(cdate(DateAdd(dtStartRolling,"ww",Rolling)),"d",-1)
+strAxis="axis({"
+
+'Loop from start date to end date
+Do
+
+    'Check End dates for breaks
+    Do
+        blnEndBreak = fnCheckBreaks(DateAdd(dtEndRolling,"d",-6),arrBreaks)
+        if blnEndBreak then dtEndRolling = DateAdd(dtEndRolling,"ww",1)
+    Loop While blnEndBreak = True
+
+    'See whether current week is a break
+    blnStartBreak = fnCheckBreaks(dtStartRolling,arrBreaks)
+
+    If blnStartBreak = false then
+
+        strAxis = strAxis + "n" + ctext(i) +  " '" +_
+        fnGetWeek(dtStartRolling) + "!to!" + _
+        fnGetWeek(dtEndRolling) + _
+        "' expression('yyyymmdd >=" + _
+        fnGetYear(dtStartRolling) + _
+        fngetMonth(dtStartRolling) + _
+        fngetDay(dtStartRolling) + _
+        " AND yyyymmdd <=" + _
+        fnGetYear(dtEndRolling) + _
+        fngetMonth(dtEndRolling) + _
+        fngetDay(dtEndRolling) + _
+        "'),"
+
+        dtEndRolling = DateAdd(dtEndRolling,"ww",1)
+
+    End if
+
+    dtStartRolling = DateAdd(dtStartRolling,"ww",1)
+    i=i+1
+    blnStartBreak = false
+    blnEndBreak = false
+
+Loop While clong(DateAdd(dtEndRolling,"ww",-1)) < clong(cdate(dtEnd))
+
+'Complete end syntax
+strAxis = left(strAxis,len(strAxis)-1) + "}) As " + strName
+
+'Logging
+debug.log("---------------------" + mr.Crlf + "Using Rolling Banners" + mr.Crlf + "---------------------" + mr.Crlf + _
+ "Start Week = " + fnGetWeek(dtStart) + mr.Crlf + _
+ "End Week = " + fnGetWeek(dtEnd) + mr.Crlf + _
+ "Rolling Period = Every " + ctext(Rolling) + " Week" + fnPlural(Rolling) + mr.Crlf + _
+ "Break in week" + fnPlural(ubound(arrBreaks)+1) + " " + fnGetBreaks(arrBreaks))
+
+'Return value
+fnRollingBanners=strAxis
+
+End Function
+
+
+Function fnDiscreteBanners(Discrete,strStart,strEnd,strBreak,strName)
+Dim dtStart,dtEnd,strAxis,dtStartDiscrete,dtEndDiscrete,i,arrBreaks,blnStartBreak,blnIsBreak,noWeeks,blnIncomplete
+
+dtStart = cdate(strStart)
+dtEnd = cdate(strEnd)
+
+arrBreaks=Split(strBreak,";")
+
+i=1
+noWeeks=1
+strAxis="axis({"
+dtStartDiscrete = dtStart
+
+
+'Loop from start date to end date
+Do
+
+    'Is start date a break, if yes move on one week ?
+    Do
+        blnStartBreak = fnCheckBreaks(dtStartDiscrete,arrBreaks)
+        if blnStartBreak then dtStartDiscrete = DateAdd(dtStartDiscrete,"ww",1)
+    Loop While blnStartBreak = True
+
+        'Calculate end date
+        dtEndDiscrete = DateAdd(dtStartDiscrete,"ww",1)
+        noWeeks=1
+        Do while noWeeks < Discrete
+        blnIsBreak = fnCheckBreaks(dtEndDiscrete,arrBreaks)
+            If blnIsBreak = false then noWeeks = noWeeks + 1
+            dtEndDiscrete = DateAdd(dtEndDiscrete,"ww",1)
+        Loop
+
+        'Make end date the previous Sunday
+        dtEndDiscrete = DateAdd(dtEndDiscrete,"d",-1)
+
+        'Only write if a whole time period
+        If clong(DateAdd(dtEndDiscrete,"d",-6)) <= clong(cdate(dtEnd)) Then
+
+        'Write Axis for current period
+        strAxis = strAxis + "n" + ctext(i) +  " '" +_
+        fnGetWeek(dtStartDiscrete) + "!to!" + _
+        fnGetWeek(dtEndDiscrete) + _
+        "' expression('yyyymmdd >=" + _
+        fnGetYear(dtStartDiscrete) + _
+        fngetMonth(dtStartDiscrete) + _
+        fngetDay(dtStartDiscrete) + _
+        " AND yyyymmdd <=" + _
+        fnGetYear(dtEndDiscrete) + _
+        fngetMonth(dtEndDiscrete) + _
+        fngetDay(dtEndDiscrete) + _
+        "'),"
+
+        Else
+
+            blnIncomplete = True
+            Exit Do
+
+        End If
+
+    dtStartDiscrete = DateAdd(dtEndDiscrete,"d",1)
+    i=i+1
+    blnStartBreak = false
+    blnIsBreak = false
+
+Loop While clong(dtEndDiscrete) < clong(cdate(dtEnd))
+
+'Complete end syntax
+strAxis = left(strAxis,len(strAxis)-1) + "}) As " + strName
+
+'Logging
+debug.log("----------------------" + mr.Crlf + "Using Discrete Banners" + mr.Crlf + "----------------------" + mr.Crlf + _
+ "Start Week = " + fnGetWeek(dtStart) + mr.Crlf + _
+ "End Week = " + fnGetWeek(dtEnd) + mr.Crlf + _
+ "Discrete Period = Every " + ctext(Discrete) + " Week" + fnPlural(Discrete) + mr.Crlf + _
+ "Break in week" + fnPlural(ubound(arrBreaks)+1) + " " + fnGetBreaks(arrBreaks))
+
+ debug.LogIf(blnIncomplete,"Warning - Could not reach end date as not enough weeks to complete final time period")
+
+'Return value
+fnDiscreteBanners=strAxis
+
+End Function
+
+
+Function fnGetDay(datein)
+    Dim day
+    day = ctext(DatePart(datein,"d"))
+    if len(day)=1 then day = "0" + ctext(day)
+    fnGetDay = day
+End Function
+
+Function fnGetMonth(datein)
+    Dim month
+    month = ctext(DatePart(datein,"m"))
+    if len(month)=1 then month = "0" + ctext(month)
+    fnGetMonth = month
+End Function
+
+Function fnGetWeek(datein)
+        '''''''''''''''''''''''''''''''''''''
+        ' Wiki: http://rsd.grpitsrv.com/confluence/display/OfDim/SbGetWeek
+        '''''''''''''''''''''''''''''''''''''
+    On Error Goto GetWeekErrorHandler
+
+        Dim N, Thu, SoY, YNo, WNo, YearWeek, weekMod, qWeek,yyyymmdd, thisYear
+        N = 2
+        thisYear = Ctext(DatePart(datein, "yyyy"))
+        Thu = Int((Cdouble(datein) + 3 + N) / 7) * 7 - N '' Nearest Thu
+        YNo = DatePart(Thu,"yyyy")
+        SoY = CDate("1/1/"+CText(YNo))'' Date, YYYY-01-01
+        WNo = Int((Thu - CDouble(SoY)) / 7) + 1
+        YearWeek = CText(YNo) + CText(FnLeadingZeros(WNo,2))
+        fnGetWeek = YearWeek
+
+        Exit Function
+GetWeekErrorHandler:
+        SbLogMessage(MakeString("Error in fnGetWeek. Error Desc: ",  err.Description), "ERROR", true, null)
+
+End Function
+
+Function fnGetYear(datein)
+    fnGetYear=ctext(DatePart(datein,"yyyy"))
+End Function
+
+Function fnPlural(num)
+    If clong(num)=1 Then
+        fnPlural = ""
+    Else
+        fnPlural = "s"
+    End If
+End Function
+
+Function fnCheckBreaks(datein,breaks)
+    Dim i
+    For i = 0 to ubound(breaks)
+        If cdate(datein)=cdate(breaks[i]) then
+            fnCheckBreaks=True
+            exit function
+        Else
+            fnCheckBreaks=False
+        End If
+    Next
+End Function
+
+Function fnGetBreaks(breaks)
+    Dim i,str
+    For i = 0 to ubound(breaks)
+        str = str + fnGetWeek(cdate(breaks[i])) + ","
+    Next
+    fnGetBreaks=left(str,len(str)-1)
+End Function
+
+Function FnLeadingZeros(lngNum, lngLen)
+        '''''''''''''''''''''''''''''''''''''
+        ' Wiki: http://rsd.grpitsrv.com/confluence/display/OfDim/FnLeadingZeros
+        '''''''''''''''''''''''''''''''''''''
+        On Error Goto LeadingZerosErrorHandler
+
+    dim zero
+        FnLeadingZeros = CText(lngNum)
+        for zero = 1 to lngLen - FnLeadingZeros.Len()
+                FnLeadingZeros = "0" + FnLeadingZeros
+        next
+
+    Exit Function
+LeadingZerosErrorHandler:
+    debug.MsgBox(MakeString("Error in FnLeadingZeros.  Error Desc: ",  err.Description))
+    FnLeadingZeros = ""
+
+End Function
+
+
+Sub SbCatWeekNo(strStart,strEnd,strName,strTitle,strTemplate)
+
+Dim Input_Week,Input_Date,Start_Year,End_Year,Start_WeekNo,End_WeekNo,Start_Time_Period, End_Time_Period,Start_StrWeekdayName,End_StrWeekdayName
+
+Input_Week = False
+Input_Date = False
+
+if (len(strStart)) = 6 Then Input_Week = True
+if (len(strStart)) = 8 Then Input_Date = True
+
+if Input_Week = True Then
+
+        'What Day is 1st Jan for Year
+
+        Start_Year = ctext(left(strStart,4))
+        Start_WeekNo = ctext(mid(strStart,4,2))
+
+        End_Year = ctext(left(strEnd,4))
+        End_WeekNo = ctext(mid(strEnd,4,2))
+                
+        Start_Time_Period = (cdate(Start_Year + "/01/01"))
+        End_Time_Period   = (cdate(End_Year   + "/01/01"))
+
+        Start_StrWeekdayName = WeekdayName(DatePart(Start_Time_Period, "w"))
+
+        'Adjust the Date to be Monday of Week 01 for Year
+        
+        Select Case (Start_StrWeekdayName)
+                Case "Monday"           
+                        Start_Time_Period = Start_Time_Period
+                Case "Tuesday"
+                        Start_Time_Period = Start_Time_Period -1
+                Case "Wednesday"
+                        Start_Time_Period = Start_Time_Period -2
+                Case "Thursday"
+                        Start_Time_Period = Start_Time_Period -3
+                Case "Friday"
+                        Start_Time_Period = Start_Time_Period +3
+                Case "Saturday"
+                        Start_Time_Period = Start_Time_Period +2
+                Case "Sunday"
+                        Start_Time_Period = Start_Time_Period +1
+        End Select
+
+        Start_StrWeekdayName = WeekdayName(DatePart(Start_Time_Period, "w"))
+
+        Start_Time_Period  = Start_Time_Period + ((Start_WeekNo-1) * 7)
+
+        Start_StrWeekdayName = WeekdayName(DatePart(Start_Time_Period, "w"))
+
+        strStart = ctext(DatePart(Start_Time_Period,"yyyy")) + "/" 
+        
+        if clong(DatePart(Start_Time_Period,"m")) <10 then
+                strStart = strStart + "0" + ctext(DatePart(Start_Time_Period,"m")) + "/"
+        else
+                strStart = strStart + ctext(DatePart(Start_Time_Period,"m")) + "/"
+        End if
+        
+        if clong(DatePart(Start_Time_Period,"d")) <10 then
+                strStart = strStart + "0" + ctext(DatePart(Start_Time_Period,"d"))
+        else
+                strStart = strStart + ctext(DatePart(Start_Time_Period,"d"))
+        End if
+
+
+        End_StrWeekdayName = WeekdayName(DatePart(End_Time_Period, "w"))
+
+        'Adjust the Date to be Monday of Week 01 for Year
+        
+        Select Case (End_StrWeekdayName)
+                Case "Monday"           
+                        End_Time_Period = End_Time_Period
+                Case "Tuesday"
+                        End_Time_Period = End_Time_Period -1
+                Case "Wednesday"
+                        End_Time_Period = End_Time_Period -2
+                Case "Thursday"
+                        End_Time_Period = End_Time_Period -3
+                Case "Friday"
+                        End_Time_Period = End_Time_Period +3
+                Case "Saturday"
+                        End_Time_Period = End_Time_Period +2
+                Case "Sunday"
+                        End_Time_Period = End_Time_Period +1
+         End Select
+
+        End_StrWeekdayName = WeekdayName(DatePart(End_Time_Period, "w"))
+
+        End_Time_Period  = End_Time_Period + ((End_WeekNo-1) * 7) + 6
+
+        End_StrWeekdayName = WeekdayName(DatePart(End_Time_Period, "w"))
+
+        strEnd = ctext(DatePart(End_Time_Period,"yyyy")) + "/" 
+        
+        if clong(DatePart(End_Time_Period,"m")) <10 then
+                strEnd = strEnd + "0" + ctext(DatePart(End_Time_Period,"m")) + "/"
+        else
+                strEnd = strEnd + ctext(DatePart(End_Time_Period,"m")) + "/"
+        End if
+        
+        if clong(DatePart(End_Time_Period,"d")) <10 then
+                strEnd = strEnd + "0" + ctext(DatePart(End_Time_Period,"d"))
+        else
+                strEnd = strEnd + ctext(DatePart(End_Time_Period,"d"))
+        End if
+
+
+        Start_Time_Period = strStart
+        End_Time_Period   = strEnd
+
+Elseif Input_Date Then
+
+        Start_Time_Period = ctext(left(strStart,4)) + "/" + ctext(mid(strStart,4,2)) + "/" + ctext(mid(strStart,6,2))
+        End_Time_Period   = ctext(left(strEnd,4))   + "/" + ctext(mid(strEnd,4,2))   + "/" + ctext(mid(strEnd,6,2))
+
+End if
+
+Dim dtStart,dtEnd,strAxisMetadata,strAxisOnNextCase,i,clngEndWeekNo,clngWeekNo
+
+dtStart = cdate(Start_Time_Period)
+dtEnd   = cdate(End_Time_Period)
+
+clngWeekNo    = clong(fnGetWeek(dtStart))
+clngEndWeekNo = clong(fnGetWeek(dtEnd))
+
+strAxisMetadata = strName + " " + ChrW(34) + strTitle + ChrW(34) + mr.Crlf
+strAxisMetadata = strAxisMetadata + "Categorical [1..1]" + mr.Crlf
+strAxisMetadata = strAxisMetadata + "{" + mr.Crlf
+
+i = 0
+
+'Loop from start date to end date
+Do
+
+   if (lcase(strTemplate)) = "old" Then       
+        'Write Axis for current period (Old Template)
+        strAxisMetadata = strAxisMetadata + mr.tab + "W" + ctext(clngWeekNo) +  " " +ChrW(34)+  ctext(clngWeekNo) +ChrW(34) + "," + mr.Crlf
+        strAxisOnNextCase = strAxisOnNextCase + "if (weekno = " + ctext(clngWeekNo) +  ") Then CatWeekNo = {W" +  ctext(clngWeekNo) + "}" + mr.Crlf
+
+   else
+   
+           'Write Axis for current period (New Template)
+           strAxisMetadata = strAxisMetadata + mr.tab + "W" + ctext(clngWeekNo) +  " " +ChrW(34)+  ctext(clngWeekNo) +ChrW(34)+ " " + _
+           " expression("+ChrW(34)+"weekno=" + ctext(clngWeekNo) + ChrW(34) + ")," + mr.Crlf
+
+   End if
+
+
+dtStart = dtStart + 7
+clngWeekNo = clong(fnGetWeek(dtStart))
+
+        i = i + 1
+
+Loop While clngWeekNo <= clngEndWeekNo
+
+'Complete end syntax
+strAxisMetadata = left(strAxisMetadata,len(strAxisMetadata)-3) + mr.CrLf + "};" + mr.CrLf
+
+'Re-set Start date
+dtStart = cdate(Start_Time_Period)
+
+'Write out Files
+
+     Dim oFso1,oFileMetadata,oFileOnnextCase
+
+     Set oFso1 = CreateObject("Scripting.FileSystemObject")
+
+
+        if (lcase(strTemplate)) = "old" Then    
+                Set oFileMetadata = oFSo1.OpenTextFile("..\include\CategoricalWeekno_Metadata.mrs",2,True)
+                Set oFileOnnextCase = oFSo1.OpenTextFile("..\include\CategoricalWeekno_OnNextCase.mrs",2,True)
+     
+        else
+                Set oFileMetadata = oFSo1.OpenTextFile(".\include\CategoricalWeekno.mrs",2,True)
+        End if
+
+        oFileMetadata.Write(strAxisMetadata)
+        oFileMetadata.WriteBlankLines(1)
+        strAxisMetadata = ""
+
+        if (lcase(strTemplate)) = "old" Then    
+
+                oFileOnnextCase.Write(strAxisOnNextCase)
+                oFileOnnextCase.WriteBlankLines(1)
+                strAxisOnNextCase = ""
+
+        End if
+
+
+'Logging
+debug.log("----------------------" + mr.Crlf + "CatWeekNo info" + mr.Crlf + "----------------------" + mr.Crlf + _
+ "Start Week = " + fnGetWeek(dtStart) + mr.Crlf + _
+ "End Week = " + fnGetWeek(dtEnd) + mr.Crlf + _
+ "No of Categorical Weeks Added : " + ctext(i))
+ 
+End Sub
+

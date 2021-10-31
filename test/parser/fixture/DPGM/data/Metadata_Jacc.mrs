@@ -1,0 +1,114 @@
+
+
+
+generate_jaccards_variable_file(mdm, "Jacc_Top_B4B12", "B4", null, null, true, 1, "V97,V98,V99")
+generate_jaccards_variable_file(mdm, "Jacc_Top_B4B12", "B12[..].column", null, "Jacc_B4B12_", false, 1, "")
+
+generate_jaccards_variable_file(mdm, "Jacc_Top_B4B12oppo", "B4", null, null, true, 1, "V1,v3,v4,v5,v6,v7,v8,v9,v10,v11,V97,V98,V99")
+generate_jaccards_variable_file(mdm, "Jacc_Top_B4B12oppo", "B12[..].column", null, "Jacc_B4B12oppo_", false, 1, "")
+
+dim str_filter_b6b13[], str_code_b6b13[]
+
+str_filter_b6b13[0] = "B6*{V12}"
+str_filter_b6b13[1] = "B6*{V24}"
+str_filter_b6b13[2] = "B6*{V28}"
+str_filter_b6b13[3] = "B6*{V60}"
+
+str_code_b6b13[0] = "v1"
+str_code_b6b13[1] = "v2"
+str_code_b6b13[2] = "v3"
+str_code_b6b13[3] = "t2"
+
+generate_jaccards_variable_file_by_corresponding_code(mdm, "Jacc_Top_B6B13", "B13", str_code_b6b13, str_filter_b6b13)
+generate_jaccards_variable_file(mdm, "Jacc_Top_B6B13", "B13[..].column", null, "Jacc_B6B13_", false, 1, "")
+
+dim str_filter_b5[], str_code_b5[]
+
+str_filter_b5[0] = "_@B5_1*{b5_12}"
+str_filter_b5[1] = "_@B5_1*{b5_24}"
+str_filter_b5[2] = "_@B5_1*{b5_28}"
+str_filter_b5[3] = "_@B5_1*{b5_44}"
+str_filter_b5[4] = "_@B5_1*{b5_60}"
+
+str_code_b5[0] = "b5_12"
+str_code_b5[1] = "b5_24"
+str_code_b5[2] = "b5_28"
+str_code_b5[3] = "b5_44"
+str_code_b5[4] = "b5_60"
+
+generate_jaccards_variable_file_by_corresponding_code(mdm, "Jacc_Top_B5B14b", "_@B5_1", str_code_b5, str_filter_b5)
+generate_jaccards_variable_file(mdm, "Jacc_Top_B5B14b", "_@B14b_1", null, "Jacc_B5B14b_", false, 5, "")
+
+dim str_filter_b6[], str_code_b6[]
+
+str_filter_b6[0] = "B6*{v12}"
+str_filter_b6[1] = "B6*{v24}"
+str_filter_b6[2] = "B6*{v28}"
+str_filter_b6[3] = "B6*{v44}"
+str_filter_b6[4] = "B6*{v60}"
+
+str_code_b6[0] = "v12"
+str_code_b6[1] = "v24"
+str_code_b6[2] = "v28"
+str_code_b6[3] = "v44"
+str_code_b6[4] = "v60"
+
+generate_jaccards_variable_file_by_corresponding_code(mdm, "Jacc_Top_B6B14b", "B6", str_code_b6, str_filter_b6)
+generate_jaccards_variable_file(mdm, "Jacc_Top_B6B14b", "_@B14b_1", null, "Jacc_B6B14b_", false, 5, "")
+
+dim str_filter_b2c3[], str_code_b2c3[]
+
+str_filter_b2c3[0] = "_@B2_1*{b2_12}"
+str_filter_b2c3[1] = "_@B2_1*{b2_24}"
+str_filter_b2c3[2] = "_@B2_1*{b2_28}"
+str_filter_b2c3[3] = "_@B2_1*{b2_44}"
+str_filter_b2c3[4] = "_@B2_1*{b2_60}"
+
+str_code_b2c3[0] = "v1"
+str_code_b2c3[1] = "v2"
+str_code_b2c3[2] = "v3"
+str_code_b2c3[3] = "v4"
+str_code_b2c3[4] = "t2"
+
+generate_jaccards_variable_file_by_corresponding_code(mdm, "Jacc_Top_B2C3", "cloop", str_code_b2c3, str_filter_b2c3)
+generate_jaccards_variable_file(mdm, "Jacc_Top_B2C3", "cloop[..].c3", null, "Jacc_B2C3_", false, 1, "")
+
+dim str_filter_b5c3[], str_code_b5c3[]
+
+str_filter_b5c3[0] = "_@B5_1*{b5_12}"
+str_filter_b5c3[1] = "_@B5_1*{b5_24}"
+str_filter_b5c3[2] = "_@B5_1*{b5_28}"
+str_filter_b5c3[3] = "_@B5_1*{b5_44}"
+str_filter_b5c3[4] = "_@B5_1*{b5_60}"
+
+str_code_b5c3[0] = "v1"
+str_code_b5c3[1] = "v2"
+str_code_b5c3[2] = "v3"
+str_code_b5c3[3] = "v4"
+str_code_b5c3[4] = "t2"
+
+generate_jaccards_variable_file_by_corresponding_code(mdm, "Jacc_Top_B5C3", "cloop", str_code_b5c3, str_filter_b5c3)
+generate_jaccards_variable_file(mdm, "Jacc_Top_B5C3", "cloop[..].c3", null, "Jacc_B5C3_", false, 1, "")
+
+dim str_filter_b6c3[], str_code_b6c3[]
+
+str_filter_b6c3[0] = "b6*{v12}"
+str_filter_b6c3[1] = "b6*{v24}"
+str_filter_b6c3[2] = "b6*{v28}"
+str_filter_b6c3[3] = "b6*{v44}"
+str_filter_b6c3[4] = "b6*{v60}"
+
+str_code_b6c3[0] = "v1"
+str_code_b6c3[1] = "v2"
+str_code_b6c3[2] = "v3"
+str_code_b6c3[3] = "v4"
+str_code_b6c3[4] = "t2"
+
+generate_jaccards_variable_file_by_corresponding_code(mdm, "Jacc_Top_B6C3", "cloop", str_code_b6c3, str_filter_b6c3)
+generate_jaccards_variable_file(mdm, "Jacc_Top_B6C3", "cloop[..].c3", null, "Jacc_B6C3_", false, 1, "")
+
+
+
+
+
+

@@ -1,0 +1,288 @@
+'*****FILE VERSION=2, DATE LAST MODIFIED=2012/06/08, KO
+
+'EXCEL FUNCTIONS / SUBS
+'***********************
+'
+'subExcelOnePage(strFilename,TableOneName,TableOneUpdatedName)
+'----> all tables on one Excel sheet
+'
+'subExcelTOC(strFilename,intTitleLength, intTitleLocation)
+'----> Make a table of contents with links to each sheet (and a link back to the Table of Contents)
+'
+'subExcelRenameTOC(strFilename)
+'----> Make a table of contents with link to each sheet, and rename the sheets
+'
+'subExcelSmileyFace(strFilename)
+'----> Converts csv output to paginated excel - UK jobs only
+
+
+Sub subExcelOnePage(strFilename,TableOneName,TableOneUpdatedName)
+
+        dim objExcel, PasteRange,i,sheet
+        Set objExcel = CreateObject("Excel.Application")
+        objExcel.Visible = true
+        objExcel.Workbooks.Open(strFilename)
+        'objExcel.Worksheets[1].Rows[objExcel.Worksheets[1].Cells.SpecialCells(11).Row+5].Pagebreak = -4135
+        set PasteRange = objExcel.Worksheets[1].Range["A65536"].End[-4162].Offset[5][0]
+
+        objExcel.Range["A"+Ctext(objExcel.Worksheets[1].Cells.SpecialCells(11).Row+5)].Select()
+    objExcel.Worksheets[1].HPageBreaks.Add(objExcel.ActiveCell)
+
+
+        for i = 2 to objExcel.Worksheets.Count
+                objExcel.Worksheets[i].UsedRange.Copy(PasteRange)
+                'objExcel.Worksheets[1].Rows[objExcel.Worksheets[1].Cells.SpecialCells(11).Row+5].Pagebreak = -4135
+                set PasteRange = objExcel.Worksheets[1].Range["A65536"].End[-4162].Offset[5][0]
+                'line commented out because would cause tables to be skipped in the output  i = i + 1
+        next
+
+        objExcel.Application.DisplayAlerts = false
+        for each sheet in ObjExcel.Worksheets
+                if sheet.name = TableOneName then
+                        sheet.name = TableOneUpdatedName
+                else
+                        sheet.Delete()
+                end if
+
+        next
+
+        objExcel.Application.DisplayAlerts = False
+        objExcel.ActiveWorkbook.SaveAs(strFilename.Mid(0,strFilename.Len()-4) +"_OneSheet.xls")
+        objExcel.Workbooks.Close()
+
+End Sub
+
+Sub subExcelTOC(strFilename,intTitleLength, intTitleLocation)
+        'This sub takes Excel output from mrStudio and creates a Table of Contents
+        'page with links to the sheets.  Also each sheet has a link back to the Table of
+        'Contents.
+        '
+        'strFilename = input filename.  Output will be saved as intputTOC.xls
+        'intTitleLength = # of rows that the title of the study is held on
+        'intTitleLocation = row where Title of each Table is located
+
+        dim objExcel,objWorksheet, newSheet,lastRow, lastRowLinks, count
+        count = 1
+        Set objExcel = CreateObject("Excel.Application")
+        objExcel.Visible = false
+        objExcel.Workbooks.Open(strFilename)
+        set newSheet = objExcel.Application.Worksheets.Add()
+        newSheet.Name = "Links"
+        do while (count < intTitleLength + 1)
+                newSheet.Cells[count][1] = objExcel.Application.Worksheets[2].Cells[count][1]
+                count = count + 1
+        loop
+        newSheet.Cells[intTitleLength+1][1] = " "
+        for each objWorksheet in objExcel.Application.Worksheets
+                lastRow=objWorksheet.Cells.SpecialCells(11).Row
+                lastRowLinks=newSheet.Cells.SpecialCells(11).Row
+                if (objWorksheet.Name <> "Links") then
+                debug.Log(objWorksheet.Name + "!A1")
+                        objExcel.Application.Worksheets[1].Hyperlinks.Add(objExcel.Application.Worksheets[1].Cells[lastrowlinks+1][1],"",objWorksheet.Name + "!A1",objWorksheet.Name + "-" + objWorksheet.Cells[intTitleLocation][1],objWorksheet.Name+ "-" + objWorksheet.Cells[intTitleLocation][1])
+                        objWorkSheet.Hyperlinks.Add(objWorkSheet.Cells[lastrow+3][1],"" ,"Links!A1","Links","Links")
+                end if
+        next
+        objExcel.Application.DisplayAlerts = False
+        objExcel.ActiveWorkbook.SaveAs(strFilename.Mid(0,strFilename.Len()-4) +"_TOC.xls")
+        objExcel.Workbooks.Close()
+
+End Sub
+
+Sub subExcelRenameTOC(strFilename)
+        'This sub takes Excel output from mrStudio and renames the sheets and creates
+        'a Table of Contents page with links to the sheets.  Also each sheet has a link back
+        'to the Table of Contents.
+
+        'strFilename = input filename.  Output will be saved as intputTOC.xls
+        'intTitleLength = # of rows that the title of the study is held on
+        'intTitleLocation = row where Title of each Table is located
+        on Error GoTo errTrap
+
+        dim objExcel,objWorksheet, newSheet,lastRow, lastRowLinks, count, FullTitle, ShortTitle,FoundTableNumber, TitleRow
+        dim arrSheets[4][], i, j, arrMatches[2][], FoundMatch
+        count = 1
+        Set objExcel = CreateObject("Excel.Application")
+        objExcel.Visible = false
+        objExcel.Workbooks.Open(strFilename)
+        set newSheet = objExcel.Application.Worksheets.Add()
+        newSheet.Name = "Links"
+
+   'changed this to look for Table number instead of having to pass two parameters to sub
+        do while not FoundTableNumber
+                if left(objExcel.Application.Worksheets[2].Cells[count][1],6) = "Table " then
+                        FoundTableNumber = True
+                        TitleRow = count + 1 'Title should follow table number
+                else
+                        newSheet.Cells[count][1] = objExcel.Application.Worksheets[2].Cells[count][1]
+                        count = count + 1
+                end if
+        loop
+
+        newSheet.Cells[count][1] = " "
+        count = 0
+
+        for each objWorksheet in objExcel.Application.Worksheets
+                lastRow=objWorksheet.Cells.SpecialCells(11).Row
+
+                if (objWorksheet.Name <> "Links") then
+
+                        FullTitle = objWorksheet.cells[TitleRow][1] ' this is what will appear on the Links Page
+                        ShortTitle = FullTitle ' this will be the one that is shortened and cleaned
+
+                        'remove characters not allowed in sheet names
+                ShortTitle = Replace(ShortTitle, "'", "")
+                ShortTitle = Replace(ShortTitle, "&", "")
+                ShortTitle = Replace(ShortTitle, ":", "")
+                ShortTitle = Replace(ShortTitle, "?", "")
+                ShortTitle = Replace(ShortTitle, "[", "")
+                ShortTitle = Replace(ShortTitle, "]", "")
+                ShortTitle = Replace(ShortTitle, "/", "_")
+                ShortTitle = Replace(ShortTitle, "\", "_")
+
+                        If Len(ShortTitle) > 31 Then
+                'sheet names can only be 31 characters long
+                ShortTitle = Left(ShortTitle, 31)
+
+                End If
+
+                'debug.Log(ctext(count) + "  - " + shortTitle)
+                debug.Log(ctext(count) + "  - " + FullTitle)
+
+                arrSheets[0][count] = FullTitle
+                arrSheets[1][count] = ShortTitle 'Original short title - store this for later comparisons - if a duplicate will need to change
+                arrSheets[2][count] = "" 'will tell if there is a match
+                arrSheets[3][count] = objWorksheet.name 'will store the original sheet name (T1, T2, etc.)
+
+
+                        for i = 0 to ubound(arrSheets,2) - 1 'loop through all the worksheet sheet names in the sheet array (-1 so it doesn't check against itself)
+                        'debug.Log(mr.Tab + "arrSheets = " + arrSheets[1][i] + mr.Tab + arrSheets[0][i])
+                        if ucase(ShortTitle) = ucase(arrSheets[1][i]) then 'check for duplicate short title
+                                'found a match - will need to make some change to short title
+                                arrSheets[2][i]="x" 'mark the match fields of the sheets that match the current sheet name
+                                arrSheets[2][count]="x" 'mark the match field of the current sheet name
+                                FoundMatch = False
+                                for j = 0 to ubound(arrMatches,2) 'loop through the matches array - will only store one entry for duplicates
+
+                                        'check the match array to see if this one has already been entered
+                                        if ucase(arrMatches[0][j]) = ucase(ShortTitle) then
+                                                FoundMatch = True
+                                                Exit For
+                                        end if
+                                next
+                                if FoundMatch = False then
+                                        'new entry for the match array
+                                        arrMatches[0][ubound(arrMatches,2) + 1] = ShortTitle
+                                        debug.Log(mr.Tab + "arrMatches = " + arrMatches[0][j] + mr.Tab + arrMatches[1][j])
+                                end if
+                        end if
+                next
+
+
+
+                        'insert hyperlinks back to Links page on each sheet
+                        objWorkSheet.Hyperlinks.Add(objWorkSheet.Cells[lastrow+3][1],"" ,"Links!A1","Links","Links")
+
+                end if
+                count = count + 1
+        next
+
+
+
+        for i = 1 to ubound(arrSheets,2)
+
+
+                        'debug.Log(mr.Tab + "i=" + ctext(i))
+                        'see if this has a match and needs to be renamed
+                        if arrSheets[2][i] <> "" then
+                                'had a match - go to the match array to find the number to attach to make it unique
+                                for j = 0 to ubound(arrMatches,2)
+                                        'debug.Log(mr.Tab + mr.Tab + "j=" + ctext(j))
+                                        if ucase(arrMatches[0][j]) = ucase(arrSheets[1][i]) then
+                                                arrMatches[1][j] = arrMatches[1][j] + 1 'increment the counter - will be attached as end of name
+                                                ShortTitle = left(arrSheets[1][i],28) + right("000" + ctext(arrMatches[1][j]),3) 'attach a 3 digit number
+                                                exit for
+                                        end if
+
+                                next
+                        else
+                                ShortTitle = arrSheets[1][i]
+                        end if
+
+                        FullTitle = arrSheets[0][i]
+
+
+                        'hard coding some shortened names specific to TV Link
+                        select case FullTitle
+                                case "(Q14A) PERSUASION AMONG USERS (FMCG)"
+                                        ShortTitle = "(Q14A) PERSUASION USERS (FMCG)"
+                                case "(Q14B) PERSUASION AMONG TRIALISTS (FMCG)"
+                                        ShortTitle = "(Q14B) PERSUASION TRIAL (FMCG)"
+                                case "(Q14C) PERSUASION AMONG NON-TRIALISTS (FMCG)"
+                                        ShortTitle = "(Q14C) PERSUASION NON-TRI (FMCG"
+
+                                case "(Q14A) PERSUASION AMONG USERS (EMOTIONAL)"
+                                        ShortTitle = "(Q14A) PERSUASION USERS (EMO)"
+                                case "(Q14B) PERSUASION AMONG TRIALISTS (EMOTIONAL)"
+                                        ShortTitle = "(Q14B) PERSUASION TRIAL (EMO)"
+                                case "(Q14C) PERSUASION AMONG NON-TRIALISTS (EMOTIONAL)"
+                                        ShortTitle = "(Q14C) PERSUASION NON-TRI (EMO)"
+
+
+
+                        end select
+
+
+                        'rename the sheet to short title
+                        objExcel.Application.Worksheets[arrSheets[3][i]].name = ShortTitle
+
+                    'get the last row of the Links sheet
+                    lastRowLinks=newSheet.Cells.SpecialCells(11).Row
+
+                        'insert hyperlinks on Links page - Text will be full title of table, but address and sheet name are shortened when necessary
+                        objExcel.Application.Worksheets[1].Hyperlinks.Add(objExcel.Application.Worksheets[1].Cells[lastrowlinks+1][1],"","'" +ShortTitle + "'!A1", FullTitle, FullTitle)
+
+
+
+        next
+
+        'Expand column A of the Links sheet
+        objExcel.Application.Worksheets[1].columns[1].EntireColumn.Autofit()
+
+        objExcel.Application.DisplayAlerts = False
+        objExcel.ActiveWorkbook.SaveAs(strFilename.Mid(0,strFilename.Len()-4) +"_RenameTOC.xls")
+        objExcel.Workbooks.Close()
+        objExcel.Quit()
+        set objExcel = null
+
+
+        Exit sub
+
+        errTrap:
+        debug.Log("Error at " + ShortTitle)
+        debug.Log(err.Description)
+        objExcel.Workbooks.Close()
+        objExcel.Quit()
+        set objExcel = null
+
+End Sub
+
+Sub subExcelSmileyFace(strFilename)
+
+    dim objExcel
+    Set objExcel = CreateObject("Excel.Application")
+    objExcel.Visible = False
+
+    If find(strFilename,"kogur")<>-1 then
+        objExcel.Workbooks.Open("\\kogurmri080\dataexports\uk\macro\Personal_Dim.xls")
+    Elseif  find(strFilename,"kopun")<>-1 then
+        objExcel.Workbooks.Open("\\kopunmri080\dataexports\uk\macro\Personal_Dim.xls")
+    Else
+        objExcel.Workbooks.Open("\\koolymri080\dataexports\uk\macro\Personal_Dim.xls")
+    End If
+
+    objExcel.Workbooks.Open(strFilename)
+    objExcel.Application.Run("Personal_Dim.xls!NewContLoop")
+    objExcel.Workbooks.Close()
+    objExcel.Quit()
+
+End Sub

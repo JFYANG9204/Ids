@@ -1,0 +1,105 @@
+'*****FILE VERSION=2, DATE LAST MODIFIED=2012/02/01, KO
+
+     'Opens MDD only if adding metadata (controlled by define above)
+     if USING_METADATA_INCLUDE_FILES = TRUE then
+          'Open our MDD
+          set MDM=CreateObject("MDM.Document")
+          with MDM
+               .Open("Temp.mdd",VERSION)
+               with .Versions
+                    If .Count > 0 Then
+                         If .Latest.IsLocked Then
+                              .AddNew()
+                         End If
+                    End If
+               end with '.Versions
+
+
+               'File which includes calls to sbCreateFlippedGridMetadata which will create metadata for
+               'flipped grids and will be read in below in temp.inc
+                                #include DEFCREATEFLIPPEDGRIDMETADATA
+
+               'Create a new mdd file to add the new code to
+               dim MDM_New
+               set MDM_New=createobject("MDM.Document")
+
+               with MDM_New
+                    .Contexts.Base=MDD_TYPE
+                    .Contexts.Current=MDD_TYPE
+
+                    'Adds the LOCALE as the language to the temporary mdd
+                    .Languages.Add(LOCALE)
+                    .Languages.Current=LOCALE
+
+                    'Reads in the content of the standard metadata include files
+                    'If you have additional metadata files you can load them like the examples below
+                    'Opens lists.mrs file - file which should contain all your define lists
+                    .sbAddToTypes(oFso,DEFLISTS)
+
+
+                    'Opens metadata.mrs file - file which contains metadata for all new questions besides
+                    'grids that are being flipped
+                    .sbAddToFields(oFso,DEFMETADATA)
+
+
+                    '*****DMS_CORE Spark Insert FILE VERSION=1, DATE LAST MODIFIED=2012/02/01, MB UK
+                    ' *****************************************************************************************
+                    If ADDSPARKVARIABLES Then .sbAddToFields(oFso,DEFSPARKMETADATA)
+                    ' *****************************************************************************************
+                    '*****END OF DMS_CORE Spark Insert
+
+
+                    'Additional metadata created by sbCreateFlippedGridMetadata in the FlippedGridMetadata.mrs
+                    .sbAddToFields(oFso,"temp.inc")
+
+                    .save("temp1.mdd")
+               end with  'MDM_New
+
+               'Join together the temp and temp1 mdd files
+               .Join(MDM_New,VERSION,1,1)
+
+
+               'Autoassign our categoryvalues...
+               .categorymap.autoassignvalues()
+
+               'save the mdd
+               .Save()
+
+               'only close the mdd if it is not needed for edits below
+               if USING_EDITS_INCLUDE_FILES = False then .close()
+
+          end with 'MDD
+     end if 'USING_METADATA_INCLUDE_FILES
+
+
+
+     'Opens edits.mrs to make updates to casedata (controlled by define above)
+     if USING_EDITS_INCLUDE_FILES = TRUE then
+          'only open the MDD if wasn't opened for adding metadata above
+          if USING_METADATA_INCLUDE_FILES = False then
+               set MDM=CreateObject("MDM.Document")
+               with MDM
+                    .Open("Temp.mdd",VERSION)
+                    with .Versions
+                         If .Count > 0 Then
+                              If .Latest.IsLocked Then
+                                   .AddNew()
+                              End If
+                         End If
+                    end with '.Versions
+               end with 'MDM
+          end if 'USING_METADATA_INCLUDE_FILES
+
+          Set DataLinkHelper = CreateObject("MROLEDB.DataLinkHelper")
+          ConnectionString="Provider=mrOleDB.Provider.2;Data Source=mrDataFileDsc;Location=temp.ddf;MR Init MDM Document="+DataLinkHelper.CreateDocumentObjectString(MDM)+";MR Init MDM Access=1;"
+          Set adoConnection = CreateObject("ADODB.Connection")
+          with adoConnection
+               .Open(ConnectionString)
+               .Execute("exec xp_syncdb")
+               '*** INCLUDE ANY EDITS HERE ***
+               #include DEFEDITS
+               '******************************
+               .Close() 'adoConnection
+          end with 'adoConnection
+          MDM.Close() 'MDM
+     end if 'USING_EDITS_INCLUDE_FILES

@@ -1,0 +1,8 @@
+'*****FILE VERSION=1, DATE LAST MODIFIED=2010/09/16, KO
+
+Logging(myLog, "My logging section")
+   Group = "DMGR"
+   Path = "MyLogs"
+   Alias = "Tester"
+   FileSize = 500
+End Logging
