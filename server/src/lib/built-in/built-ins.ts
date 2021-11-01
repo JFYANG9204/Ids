@@ -281,6 +281,14 @@ builtInInterfaceDefinitions.forEach(
     }
 );
 
+builtInObjectDefinitions.forEach(
+    value => {
+        if (value.return) {
+            value.return = searchInterface(value.return.name);
+        }
+    }
+);
+
 setBuiltInDefinition(IDocumentDefinition.properties);
 setBuiltInDefinition(IDocumentDefinition.methods);
 setBuiltInDefinition(IQuestionDefinition.properties);

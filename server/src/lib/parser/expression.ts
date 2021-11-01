@@ -363,7 +363,7 @@ export class ExpressionParser extends NodeUtils {
 
             default:
                 this.unexpected(undefined, undefined, undefined, false);
-                return this.emptyExpression;
+                return this.createEmptyExpression();
 
         }
 

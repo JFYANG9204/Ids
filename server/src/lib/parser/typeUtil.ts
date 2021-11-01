@@ -28,7 +28,6 @@ import {
     ValueType,
     VariantDefinition,
 } from "../util/definition";
-import { Position } from "../util/location";
 import { matchOneOfDefinitions } from "../util/match";
 import { ErrorMessages, WarningMessages } from "./error-messages";
 import { ErrorTemplate } from "./errors";
@@ -36,7 +35,6 @@ import { UtilParser } from "./util";
 
 export class TypeUtil extends UtilParser {
 
-    emptyExpression: Expression = new Expression(this, 0, new Position(0, 0));
     needCheckLineMark: Identifier[] = [];
 
     declareLocalVar(
@@ -195,9 +193,6 @@ export class TypeUtil extends UtilParser {
                 false,
                 node.name
             );
-        }
-        if (def?.defType === "object") {
-            def = def.return;
         }
         this.addExtra(node, "definition", def);
         return def;
@@ -471,9 +466,6 @@ export class TypeUtil extends UtilParser {
                     this.options.treatUnkownAsQuesion) {
                     type = IQuestionDefinition;
                 }
-            }
-            if (type?.defType === "object") {
-                type = type.return;
             }
             this.addExtra(node, "definition", type);
         } else if (node instanceof MemberExpression) {
