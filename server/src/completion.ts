@@ -22,7 +22,8 @@ import { CallExpression, File, PreIncludeStatement } from "./lib/types";
 import {
     DefinitionBase,
     FunctionDefinition,
-    InterfaceDefinition
+    InterfaceDefinition,
+    ObjectDefinition
 } from "./lib/util/definition";
 
 
@@ -185,8 +186,11 @@ function getVariableCompletion(name: string, def: DefinitionBase): CompletionIte
     };
 }
 
-function getMemberCompletions(def: DefinitionBase) {
+function getMemberCompletions(def: DefinitionBase): CompletionItem[] {
     let completions: CompletionItem[] = [];
+    if (def instanceof ObjectDefinition && def.return) {
+        return getMemberCompletions(def.return);
+    }
     if (def instanceof InterfaceDefinition) {
         def.methods.forEach(method => {
             completions.push(getCompletionFromDefinitionBase(method));
@@ -234,8 +238,8 @@ export function getCompletionFromPosition(
         triggerChar === ".") {
         let maybeWith = positionInWith(file.program.body, pos);
         if (maybeWith) {
-            const def = maybeWith.extra["definition"];
-            if (def && def instanceof InterfaceDefinition) {
+            const def: DefinitionBase = maybeWith.extra["definition"];
+            if (def) {
                 return getMemberCompletions(def);
             }
             return [];
@@ -244,7 +248,7 @@ export function getCompletionFromPosition(
         }
     }
     //
-    let def = ahead.extra["definition"];
+    let def: DefinitionBase = ahead.extra["definition"];
     if (def && triggerChar === ".") {
         return getMemberCompletions(def as InterfaceDefinition);
     }

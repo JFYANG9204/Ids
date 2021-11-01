@@ -1,4 +1,4 @@
-
+dmgrjob
 Dim TableDoc,StartTime,EndTime
 Set TableDoc = CreateObject("TOM.Document")
 Dim MDM
