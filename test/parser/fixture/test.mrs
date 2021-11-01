@@ -1,6 +1,8 @@
 
 Dim TableDoc,StartTime,EndTime
 Set TableDoc = CreateObject("TOM.Document")
+Dim MDM
+Set MDM = TableDoc.DataSet.MdmDocument
 
 With TableDoc
 ' trailing comment

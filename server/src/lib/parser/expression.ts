@@ -433,6 +433,7 @@ export class ExpressionParser extends NodeUtils {
         node.arguments = this.parseCallExpressionArguments(tt.braceR);
         node.pushArr(node.arguments);
         node.push(node.callee);
+        node.pushArr(node.arguments);
         return this.finishNode(node, "CallExpression");
     }
 

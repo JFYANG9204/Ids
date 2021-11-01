@@ -249,17 +249,9 @@ export class TypeUtil extends UtilParser {
         } else {
             type = this.scope.currentScope().currentHeader();
         }
-        if (!this.checkCalleeFunctionError(
-            node.callee,
-            funcName,
-            type
-        )) {
-            return;
-        }
-        if (!type) {
-            return;
-        }
-        if (!this.checkIfFunction(node.callee, type, this.getCalleeFuncionName(node))) {
+        if (!type ||
+            !this.checkCalleeFunctionError(node.callee, funcName, type) ||
+            !this.checkIfFunction(node.callee, type, this.getCalleeFuncionName(node))) {
             return;
         }
         const func = type as FunctionDefinition;

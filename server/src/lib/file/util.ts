@@ -172,7 +172,7 @@ export function positionAt<T extends NodeBase>(
                     continue;
                 }
             } else {
-                if (distanceTo(sub, pos) <= 0) {
+                if (dist <= 0) {
                     cur = sub;
                 } else {
                     break;
