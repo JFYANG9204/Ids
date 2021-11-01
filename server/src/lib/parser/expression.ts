@@ -51,6 +51,11 @@ export class ExpressionParser extends NodeUtils {
         return node;
     }
 
+    createEmptyExpression(): Expression {
+        let expr = this.startNode(Expression);
+        return this.finishNode(expr, "Expression");
+    }
+
     parseLiteralAtNode<T extends NodeBase>(value: string, type: string, node: T) {
         this.addExtra(node, "rawValue", value);
         this.addExtra(node, "raw", this.input.slice(node.start, this.state.end));
@@ -457,7 +462,7 @@ export class ExpressionParser extends NodeUtils {
     parseCallOrMember(prefix?: Expression): Expression {
         const startPos = this.state.pos;
         const startLoc = this.state.startLoc;
-        let expr = this.emptyExpression;
+        let expr = this.createEmptyExpression();
         if (prefix) {
             expr = prefix;
         } else if (this.match(tt.identifier)) {
