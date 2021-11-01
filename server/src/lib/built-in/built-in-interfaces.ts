@@ -11927,9 +11927,10 @@ export const builtInIDocumentInterface: BuiltInDefinition =     {
     name: "IDocument",
     definitionType: "interface",
     note: [
+        "```ds",
         "(interface) IDocument",
         "```",
- "-----------------------------",
+        "-----------------------------",
         "The **Table Object Model (TOM)** document is at the root of the object model and is the only object which is publicly creatable. The `Document` object represents a book of tables.",
     ].join("\n"),
     properties: [
