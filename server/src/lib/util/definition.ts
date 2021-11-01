@@ -147,6 +147,7 @@ export class DefinitionBase {
         this.isCollection = options.isCollection;
         this.isConst = options.isConst;
         this.section = options.section;
+        this.return = options.return;
         this.note = options.note;
         this.node = options.node;
     }

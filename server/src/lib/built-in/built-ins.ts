@@ -74,6 +74,7 @@ function loadDefinitonBase<T extends DefinitionBase>(
         isReadonly: definition.readonly ?? false,
         isCollection: definition.isCollection ?? false,
         isConst: false,
+        return: definition.returnType,
         section: { name: "global", type: "global" },
         note: definition.note
     };
