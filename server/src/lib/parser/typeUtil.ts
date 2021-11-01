@@ -196,6 +196,9 @@ export class TypeUtil extends UtilParser {
                 node.name
             );
         }
+        if (def?.defType === "object") {
+            def = def.return;
+        }
         this.addExtra(node, "definition", def);
         return def;
     }
@@ -468,6 +471,9 @@ export class TypeUtil extends UtilParser {
                     this.options.treatUnkownAsQuesion) {
                     type = IQuestionDefinition;
                 }
+            }
+            if (type?.defType === "object") {
+                type = type.return;
             }
             this.addExtra(node, "definition", type);
         } else if (node instanceof MemberExpression) {
