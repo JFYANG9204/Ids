@@ -11178,7 +11178,7 @@ export const builtInQuesionInterface: BuiltInDefinition = {
         "Loop1[{ExhibitB}].Rating.Ask()",
         "```",
         "+ **Block**: The *Block* (or Compound, Page) question type defines a list of sub-questions. The Block question type supports all of the question properties except Value and has Item as its default property.",
-        "```",
+        "```ds",
         "' Ask all of the questions in the block",
         "Block1.Ask()",
         "",
