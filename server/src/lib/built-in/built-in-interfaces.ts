@@ -822,7 +822,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 name: "Item",
                 definitionType: "property",
                 returnType: basicTypeDefinitions.variant ,
-                isCollection: false,
+                isCollection: true,
                 readonly: true,
                 note: [
                     "```ds",
@@ -3748,6 +3748,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 name: "Item",
                 definitionType: "property",
                 returnType: createBuiltInDefPlaceHolder("IWeightEngine"),
+                isCollection: true,
                 index: {
                     name: "Index",
                     type: basicTypeDefinitions.variant,
@@ -10912,6 +10913,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 definitionType: "property",
                 returnType: createBuiltInDefPlaceHolder("ICategoryStyle"),
                 readonly: true,
+                isCollection: true,
                 index: {
                     name: "Index",
                     type: basicTypeDefinitions.variant,
