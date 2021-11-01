@@ -1,4 +1,4 @@
-dmgrjob
+dmgrjob.questions["A1"].response
 Dim TableDoc,StartTime,EndTime
 Set TableDoc = CreateObject("TOM.Document")
 Dim MDM

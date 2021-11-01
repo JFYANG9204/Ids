@@ -24,6 +24,7 @@ import {
     FunctionDefinition,
     InterfaceDefinition,
     MacroDefinition,
+    ObjectDefinition,
     PropertyDefinition,
     ValueType,
     VariantDefinition,
@@ -486,7 +487,7 @@ export class TypeUtil extends UtilParser {
         if (node.computed) {
             const collection = this.checkCollectionDefinition(node, base);
             if (collection) {
-                this.addExtra(node.property, "definition", collection);
+                this.addExtra(node, "definition", collection);
                 return this.checkCollectionIndex(
                     node,
                     collection,
@@ -501,6 +502,11 @@ export class TypeUtil extends UtilParser {
                 propDef = base.return.getProperty((prop as Identifier).name)?.return;
             } else if (!this.checkIfObjectOrInterface(prop as Identifier, base)) {
                 return;
+            } else if ((base instanceof ObjectDefinition) &&
+                        base.return) {
+                const type = base.return as InterfaceDefinition;
+                propDef = type.getProperty((prop as Identifier).name) ||
+                          type.getMethod((prop as Identifier).name);
             } else {
                 propDef = (base as InterfaceDefinition).getProperty((prop as Identifier).name) ||
                           (base as InterfaceDefinition).getMethod((prop as Identifier).name);
@@ -585,8 +591,12 @@ export class TypeUtil extends UtilParser {
     checkCollectionDefinition(
         node: NodeBase,
         base: DefinitionBase): DefinitionBase | undefined {
-        const def = base;
-        if (!def.isCollection) {
+        const def = (base instanceof PropertyDefinition) ?
+                    base.return :
+                    (base instanceof FunctionDefinition) ?
+                    base.return :
+                    base;
+        if (def && !def.isCollection) {
             if (!(def instanceof InterfaceDefinition && def.default)) {
                 if (this.options.raiseTypeError &&
                     !this.scope.currentScope().isFunction) {
