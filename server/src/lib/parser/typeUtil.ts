@@ -3,6 +3,7 @@ import {
     BasicTypeDefinitions,
     IDocumentDefinition,
     IQuestionDefinition,
+    searchBuiltIn,
     VbsDictionaryDefinition,
     VbsFsoDefinition,
 } from "../built-in/built-ins";
@@ -238,9 +239,12 @@ export class TypeUtil extends UtilParser {
         // Function(Args...)
         } else if (node.callee instanceof Identifier) {
             if (node.callee.name.toLowerCase() === "createobject") {
+                let createObjectFunc = searchBuiltIn("createobject");
+                this.addExtra(node.callee, "definition", createObjectFunc);
                 return this.getCreateObjectType(node);
             }
             type = this.scope.currentScope().get(node.callee.name);
+            this.addExtra(node.callee, "definition", type);
         // .Method(Args...)
         } else {
             type = this.scope.currentScope().currentHeader();
@@ -261,7 +265,6 @@ export class TypeUtil extends UtilParser {
         const func = type as FunctionDefinition;
         this.checkCallExprArguments(node, func);
         this.checkConversion(node);
-        this.addExtra(node.callee, "definition", func);
         this.addExtra(node, "definition", func.return);
         return func.return;
     }
