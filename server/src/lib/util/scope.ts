@@ -24,7 +24,7 @@ class SymbolTable {
     storeMap?: Map<string, DefinitionBase>;
     table: Map<string, DefinitionBase> = new Map();
     section: NodeBase;
-    headerType?: DefinitionBase;
+    headerType: Array<DefinitionBase | undefined> = [];
     unDefined: Map<string, DefinitionBase> = new Map();
     raise: (node: NodeBase, template: ErrorTemplate, warning: boolean, ...params: any) => void;
 
@@ -172,6 +172,21 @@ class SymbolTable {
                 this.storeMap.set(key, value);
             }
         });
+    }
+
+    enterHeader(def: DefinitionBase | undefined) {
+        this.headerType.push(def);
+    }
+
+    exitHeader() {
+        this.headerType.pop();
+    }
+
+    currentHeader() {
+        if (this.headerType.length > 0) {
+            return this.headerType[this.headerType.length - 1];
+        }
+        return undefined;
     }
 
 }

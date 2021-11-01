@@ -17,7 +17,7 @@ import {
     builtInFunctionDefinitions,
     builtInObjectDefinitions
 } from "./lib/built-in/built-ins";
-import { distanceTo, positionAt } from "./lib/file/util";
+import { distanceTo, positionAt, positionInWith } from "./lib/file/util";
 import { CallExpression, File, PreIncludeStatement } from "./lib/types";
 import {
     DefinitionBase,
@@ -228,7 +228,23 @@ export function getCompletionFromPosition(
         }
         return [];
     }
-    let def = node.extra["definition"];
+    let ahead = positionAt(file.program.body, pos, false, 1);
+    // with
+    if (!["CallExpression", "MemberExpression", "Identifier"].includes(ahead.type) &&
+        triggerChar === ".") {
+        let maybeWith = positionInWith(file.program.body, pos);
+        if (maybeWith) {
+            const def = maybeWith.extra["definition"];
+            if (def && def instanceof InterfaceDefinition) {
+                return getMemberCompletions(def);
+            }
+            return [];
+        } else {
+            return [];
+        }
+    }
+    //
+    let def = ahead.extra["definition"];
     if (def && triggerChar === ".") {
         return getMemberCompletions(def as InterfaceDefinition);
     }

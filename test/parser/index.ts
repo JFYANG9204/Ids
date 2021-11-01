@@ -5,16 +5,21 @@ import {
     ParserFileDigraph
 } from "../../server/src/lib/file";
 import { getCurrentParser } from "../../server/src/lib/file/util";
+import { createBasicOptions } from "../../server/src/lib/options";
+import { Parser } from "../../server/src/lib/parser";
 
-const folderPath = resolve("./test/parser/fixture/dpgm");
-const startPath = resolve("./test/parser/fixture/dpgm/MDD_Manipulation.mrs");
+//const folderPath = resolve("./test/parser/fixture/dpgm");
+//const startPath = resolve("./test/parser/fixture/dpgm/Run.mrs");
 
-const graph = new ParserFileDigraph(folderPath);
-graph.init();
-graph.setStart(startPath);
-const file = graph.startParse();
-let mdd;
-if (file) {
-    mdd = getCurrentParser(file, startPath);
-}
+//const graph = new ParserFileDigraph(folderPath);
+//graph.init();
+//graph.setStart(startPath);
+//const file = graph.startParse();
+//let mdd;
+//if (file) {
+//    mdd = getCurrentParser(file, startPath);
+//}
+const testpath = resolve("./test/parser/fixture/dpgm");
+const parser = new Parser(createBasicOptions(testpath, true), "dmgrjob");
+parser.parse();
 console.log("end");

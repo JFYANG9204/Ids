@@ -5,7 +5,8 @@ import * as iconv from "iconv-lite";
 import { lineBreak } from "../util/whitespace";
 import {
     File,
-    NodeBase
+    NodeBase,
+    WithStatement
 } from "../types";
 import { SourceType } from "../options";
 
@@ -147,7 +148,8 @@ export function distanceTo<T extends NodeBase>(node: T, pos: number) {
     }
 }
 
-export function positionAt<T extends NodeBase>(node: T, pos: number, untilId?: boolean): NodeBase {
+export function positionAt<T extends NodeBase>(
+    node: T, pos: number, untilId?: boolean, maxDistance?: number): NodeBase {
     if ((node.type === "CallExpression"   ||
         node.type === "MemberExpression" ||
         node.type === "Identifier") && !untilId) {
@@ -160,17 +162,55 @@ export function positionAt<T extends NodeBase>(node: T, pos: number, untilId?: b
         distanceTo(node, pos) === 0) {
         let cur;
         for (const sub of node.positionMap) {
-            if (distanceTo(sub, pos) <= 0) {
-                cur = sub;
+            let dist = distanceTo(sub, pos);
+            if (maxDistance) {
+                if (Math.abs(dist) <= maxDistance) {
+                    cur = sub;
+                } else if (dist > 0) {
+                    break;
+                } else {
+                    continue;
+                }
+            } else {
+                if (distanceTo(sub, pos) <= 0) {
+                    cur = sub;
+                } else {
+                    break;
+                }
+            }
+        }
+        if (cur) {
+            return positionAt(cur, pos, untilId, maxDistance);
+        }
+    }
+    return node;
+}
+
+export function positionIn<T extends NodeBase>(
+    node: T,
+    pos: number,
+    callback: (node: NodeBase) => void) {
+    if (distanceTo(node, pos) === 0) {
+        callback(node);
+        for (const sub of node.positionMap) {
+            if (distanceTo(sub, pos) === 0) {
+                callback(sub);
+                positionIn(sub, pos, callback);
             } else {
                 break;
             }
         }
-        if (cur) {
-            return positionAt(cur, pos);
-        }
     }
-    return node;
+}
+
+export function positionInWith(node: NodeBase, pos: number) {
+    let withStatement: WithStatement | undefined;
+    positionIn(node, pos, sub => {
+        if (sub.type === "WithStatement") {
+            withStatement = sub as WithStatement;
+        }
+    });
+    return withStatement;
 }
 
 export function getCurrentParser(file: File, path: string): File | undefined {

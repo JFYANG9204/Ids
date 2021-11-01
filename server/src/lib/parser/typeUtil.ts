@@ -243,7 +243,7 @@ export class TypeUtil extends UtilParser {
             type = this.scope.currentScope().get(node.callee.name);
         // .Method(Args...)
         } else {
-            type = this.scope.currentScope().headerType;
+            type = this.scope.currentScope().currentHeader();
         }
         if (!this.checkCalleeFunctionError(
             node.callee,
@@ -480,7 +480,7 @@ export class TypeUtil extends UtilParser {
         } else if (node instanceof CallExpression) {
             type = this.getCallExprType(node);
         } else {
-            type = this.scope.currentScope().headerType;
+            type = this.scope.currentScope().currentHeader();
             this.addExtra(node, "definition", type);
         }
         return type;

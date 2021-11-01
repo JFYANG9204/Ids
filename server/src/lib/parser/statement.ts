@@ -681,10 +681,13 @@ export class StatementParser extends ExpressionParser {
         const node = this.startNode(WithStatement);
         this.next();
         node.object = this.parseExpression();
-        this.scope.currentScope().headerType = this.getExprType(node.object);
+        const header = this.getExprType(node.object);
+        this.addExtra(node, "definition", header);
+        this.scope.currentScope().enterHeader(header);
         node.body = this.parseBlock(tt._end);
         this.expect(tt._end);
         this.expect(tt._with);
+        this.scope.currentScope().exitHeader();
         this.skipUntilNewLine();
         node.push(node.object, node.body);
         return this.finishNode(node, "WithStatement");
