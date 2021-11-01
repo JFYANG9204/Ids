@@ -147,10 +147,13 @@ export function distanceTo<T extends NodeBase>(node: T, pos: number) {
     }
 }
 
-export function positionAt<T extends NodeBase>(node: T, pos: number): NodeBase {
-    if (node.type === "CallExpression"   ||
+export function positionAt<T extends NodeBase>(node: T, pos: number, untilId?: boolean): NodeBase {
+    if ((node.type === "CallExpression"   ||
         node.type === "MemberExpression" ||
-        node.type === "Identifier") {
+        node.type === "Identifier") && !untilId) {
+        return node;
+    }
+    if (untilId && node.type === "Identifier") {
         return node;
     }
     if (node.positionMap.length > 0 &&

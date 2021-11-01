@@ -164,7 +164,7 @@ const stringOptions: DefinitionOptions = {
     }
 };
 
-export const BasicTypes = {
+export const basicTypes = {
     long         : createBasicValueType("Long"),
     double       : createBasicValueType("Double"),
     string       : createBasicValueType("String"),
@@ -177,17 +177,17 @@ export const BasicTypes = {
     null         : createBasicValueType("Null"),
 };
 
-export const BasicTypeDefinitions = {
-    long         : createBasicTypeDefinition(BasicTypes.long),
-    double       : createBasicTypeDefinition(BasicTypes.double),
+export const basicTypeDefinitions = {
+    long         : createBasicTypeDefinition(basicTypes.long),
+    double       : createBasicTypeDefinition(basicTypes.double),
     string       : createDefinition(stringOptions, ObjectDefinition),
-    variant      : createBasicTypeDefinition(BasicTypes.variant),
-    boolean      : createBasicTypeDefinition(BasicTypes.boolean),
+    variant      : createBasicTypeDefinition(basicTypes.variant),
+    boolean      : createBasicTypeDefinition(basicTypes.boolean),
     categorical  : createDefinition(categoricalOptions, ObjectDefinition),
-    date         : createBasicTypeDefinition(BasicTypes.date),
-    object       : createBasicTypeDefinition(BasicTypes.object),
+    date         : createBasicTypeDefinition(basicTypes.date),
+    object       : createBasicTypeDefinition(basicTypes.object),
     array        : createArrayDefinition("Array", false, false, { dimensions: 1 }),
-    null         : createBasicTypeDefinition(BasicTypes.null),
+    null         : createBasicTypeDefinition(basicTypes.null),
 };
 
 export function isCorrectDefinition(
@@ -205,21 +205,21 @@ export function isCorrectDefinition(
         for (const type of source) {
             if (((isArray && type.array) || (!isArray && !type.array)) &&
                 (check === type.definition ||
-                 check === BasicTypeDefinitions.variant ||
-                 type.definition === BasicTypeDefinitions.variant)
+                 check === basicTypeDefinitions.variant ||
+                 type.definition === basicTypeDefinitions.variant)
             ) {
                 return true;
             }
         }
         return false;
     } else if (source instanceof DefinitionBase) {
-        return check === BasicTypeDefinitions.variant  ||
-               source === BasicTypeDefinitions.variant ||
+        return check === basicTypeDefinitions.variant  ||
+               source === basicTypeDefinitions.variant ||
                check === source;
     } else {
         return check === source.definition ||
-            check === BasicTypeDefinitions.variant ||
-            source.definition === BasicTypeDefinitions.variant;
+            check === basicTypeDefinitions.variant ||
+            source.definition === basicTypeDefinitions.variant;
     }
 }
 

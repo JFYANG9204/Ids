@@ -16,7 +16,6 @@ import {
     builtInCompletions,
     getCompletionFromPosition,
     getCompletionsFromDefinitions,
-    getFunctionParamCompletion,
     keywordsCompletions,
     preKeywordsCompletions
 } from "./completion";
@@ -99,7 +98,7 @@ connection.onHover(params => {
         return hover;
     }
     const pos = document.offsetAt(params.position);
-    const node = positionAt(current.program.body, pos);
+    const node = positionAt(current.program.body, pos, true);
     if (node.extra["definition"]) {
         const def: DefinitionBase = node.extra["definition"];
         hover = { contents: def.getNote() };

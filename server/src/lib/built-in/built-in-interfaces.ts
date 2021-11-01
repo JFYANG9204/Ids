@@ -1,5 +1,5 @@
 import {
-    BasicTypeDefinitions,
+    basicTypeDefinitions,
     createBuiltInDefPlaceHolder
 } from "./basic";
 import { BuiltInDefinition } from "./types";
@@ -427,7 +427,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 arguments: [
                     {
                         name: "Value",
-                        type: BasicTypeDefinitions.string,
+                        type: basicTypeDefinitions.string,
                         optional: false,
                         isCollection: false,
                     }
@@ -445,7 +445,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
             {
                 name: "CurrentInputDataSource",
                 definitionType: "property",
-                returnType: BasicTypeDefinitions.long ,
+                returnType: basicTypeDefinitions.long ,
                 isCollection: false,
                 readonly: true,
                 note: [
@@ -485,7 +485,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 ].join("\n"),
                 index: {
                     name: "Index",
-                    type: BasicTypeDefinitions.variant,
+                    type: basicTypeDefinitions.variant,
                     isCollection: false,
                     optional: false,
                 }
@@ -493,7 +493,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
             {
                 name: "InputCaseNumbers",
                 definitionType: "property",
-                returnType: BasicTypeDefinitions.long ,
+                returnType: basicTypeDefinitions.long ,
                 isCollection: true,
                 readonly: true,
                 note: [
@@ -505,7 +505,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 ].join("\n"),
                 index: {
                     name: "Index",
-                    type: BasicTypeDefinitions.variant,
+                    type: basicTypeDefinitions.variant,
                     isCollection: false,
                     optional: false,
                 }
@@ -513,7 +513,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
             {
                 name: "Log",
                 definitionType: "property",
-                returnType: BasicTypeDefinitions.object,
+                returnType: basicTypeDefinitions.object,
                 isCollection: false,
                 readonly: true,
                 note: [
@@ -534,7 +534,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
             {
                 name: "OutputCaseNumber",
                 definitionType: "property",
-                returnType: BasicTypeDefinitions.long ,
+                returnType: basicTypeDefinitions.long ,
                 isCollection: false,
                 readonly: true,
                 note: [
@@ -640,7 +640,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 ].join("\n"),
                 index: {
                     name: "Index",
-                    type: BasicTypeDefinitions.variant,
+                    type: basicTypeDefinitions.variant,
                     isCollection: false,
                     optional: false,
                 }
@@ -680,7 +680,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 ].join("\n"),
                 index: {
                     name: "Index",
-                    type: BasicTypeDefinitions.variant,
+                    type: basicTypeDefinitions.variant,
                     isCollection: false,
                     optional: false,
                 }
@@ -720,7 +720,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 ].join("\n"),
                 index: {
                     name: "Index",
-                    type: BasicTypeDefinitions.variant,
+                    type: basicTypeDefinitions.variant,
                     isCollection: false,
                     optional: false,
                 }
@@ -780,7 +780,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
             {
                 name: "TempDirectory",
                 definitionType: "property",
-                returnType: BasicTypeDefinitions.string ,
+                returnType: basicTypeDefinitions.string ,
                 isCollection: false,
                 readonly: false,
                 note: [
@@ -808,7 +808,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
             {
                 name: "Count",
                 definitionType: "property",
-                returnType: BasicTypeDefinitions.long ,
+                returnType: basicTypeDefinitions.long ,
                 isCollection: false,
                 readonly: true,
                 note: [
@@ -822,7 +822,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
             {
                 name: "Item",
                 definitionType: "property",
-                returnType: BasicTypeDefinitions.variant ,
+                returnType: basicTypeDefinitions.variant ,
                 isCollection: false,
                 readonly: true,
                 note: [
@@ -841,13 +841,13 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 arguments: [
                     {
                         name: "Name",
-                        type: BasicTypeDefinitions.string,
+                        type: basicTypeDefinitions.string,
                         optional: false,
                         isCollection: false,
                     },
                     {
                         name: "Value",
-                        type: BasicTypeDefinitions.variant,
+                        type: basicTypeDefinitions.variant,
                         optional: true,
                         isCollection: false,
                     }
@@ -885,7 +885,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 arguments: [
                     {
                         name: "Index",
-                        type: BasicTypeDefinitions.variant,
+                        type: basicTypeDefinitions.variant,
                         optional: false,
                         isCollection: false,
                     }
@@ -927,7 +927,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 ].join("\n"),
                 index: {
                     name: "Index",
-                    type: BasicTypeDefinitions.variant,
+                    type: basicTypeDefinitions.variant,
                     isCollection: false,
                     optional: false,
                 }
@@ -937,7 +937,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 definitionType: "property",
                 readonly: false,
                 isCollection: true,
-                returnType: BasicTypeDefinitions.long ,
+                returnType: basicTypeDefinitions.long ,
                 note: [
                     "```ds",
                     "(property) IDataManagerMetaDataSources.Count: Long",
@@ -966,13 +966,13 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 arguments: [
                     {
                         name: "Name",
-                        type: BasicTypeDefinitions.string,
+                        type: basicTypeDefinitions.string,
                         isCollection: false,
                         optional: false,
                     },
                     {
                         name: "Value",
-                        type: BasicTypeDefinitions.variant,
+                        type: basicTypeDefinitions.variant,
                         isCollection: false,
                         optional: true,
                     }
@@ -1010,7 +1010,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 arguments: [
                     {
                         name: "Index",
-                        type: BasicTypeDefinitions.variant,
+                        type: basicTypeDefinitions.variant,
                         isCollection: false,
                         optional: false,
                     }
@@ -1028,7 +1028,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
             {
                 name: "Count",
                 definitionType: "property",
-                returnType: BasicTypeDefinitions.long ,
+                returnType: basicTypeDefinitions.long ,
                 readonly: true,
                 isCollection: false,
                 note: [
@@ -1042,12 +1042,12 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
             {
                 name: "Item",
                 definitionType: "property",
-                returnType: BasicTypeDefinitions.variant ,
+                returnType: basicTypeDefinitions.variant ,
                 readonly: true,
                 isCollection: true,
                 index: {
                     name: "Index",
-                    type: BasicTypeDefinitions.variant,
+                    type: basicTypeDefinitions.variant,
                     isCollection: false,
                     optional: false,
                 },
@@ -1120,7 +1120,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
             {
                 name: "Name",
                 definitionType: "property",
-                returnType: BasicTypeDefinitions.string ,
+                returnType: basicTypeDefinitions.string ,
                 readonly: true,
                 isCollection: false,
                 note: [
@@ -1134,7 +1134,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
             {
                 name: "Value",
                 definitionType: "property",
-                returnType: BasicTypeDefinitions.variant ,
+                returnType: basicTypeDefinitions.variant ,
                 readonly: false,
                 isCollection: false,
                 note: [
@@ -1189,7 +1189,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 arguments: [
                     {
                         name: "Data",
-                        type: BasicTypeDefinitions.variant,
+                        type: basicTypeDefinitions.variant,
                         isCollection: false,
                         optional: false
                     }
@@ -1215,12 +1215,12 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
             },
             {
                 name: "GetChunk",
-                returnType: BasicTypeDefinitions.variant ,
+                returnType: basicTypeDefinitions.variant ,
                 definitionType: "method",
                 arguments: [
                     {
                         name: "lSize",
-                        type: BasicTypeDefinitions.long,
+                        type: basicTypeDefinitions.long,
                         isCollection: false,
                         optional: false,
                     }
@@ -1251,7 +1251,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
             },
             {
                 name: "IsDirty",
-                returnType: BasicTypeDefinitions.boolean ,
+                returnType: basicTypeDefinitions.boolean ,
                 definitionType: "property",
                 readonly: false,
                 isCollection: false,
@@ -1279,7 +1279,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
             },
             {
                 name: "Value",
-                returnType: BasicTypeDefinitions.variant ,
+                returnType: basicTypeDefinitions.variant ,
                 definitionType: "property",
                 readonly: false,
                 isCollection: true,
@@ -1292,7 +1292,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 ].join("\n"),
                 index: {
                     name: "IsDirty",
-                    type: BasicTypeDefinitions.boolean,
+                    type: basicTypeDefinitions.boolean,
                     optional: true,
                     defaultValue: -1,
                     isCollection: false,
@@ -1313,7 +1313,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
         properties: [
             {
                 name: "Count",
-                returnType: BasicTypeDefinitions.long ,
+                returnType: basicTypeDefinitions.long ,
                 definitionType: "property",
                 readonly: false,
                 isCollection: false,
@@ -1333,7 +1333,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 isCollection: true,
                 index: {
                     name: "Index",
-                    type: BasicTypeDefinitions.variant,
+                    type: basicTypeDefinitions.variant,
                     optional: false,
                     isCollection: false,
                 },
@@ -1361,7 +1361,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
         properties: [
             {
                 name: "Name",
-                returnType: BasicTypeDefinitions.string ,
+                returnType: basicTypeDefinitions.string ,
                 definitionType: "property",
                 readonly: true,
                 isCollection: false,
@@ -1375,7 +1375,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
             },
             {
                 name: "Text",
-                returnType: BasicTypeDefinitions.string ,
+                returnType: basicTypeDefinitions.string ,
                 definitionType: "property",
                 readonly: false,
                 isCollection: false,
@@ -1403,7 +1403,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
         properties: [
             {
                 name: "Count",
-                returnType: BasicTypeDefinitions.long ,
+                returnType: basicTypeDefinitions.long ,
                 definitionType: "property",
                 readonly: true,
                 isCollection: false,
@@ -1423,7 +1423,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 isCollection: true,
                 index: {
                     name: "Index",
-                    type: BasicTypeDefinitions.variant,
+                    type: basicTypeDefinitions.variant,
                     optional: false,
                     isCollection: false,
                 },
@@ -1471,7 +1471,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
             },
             {
                 name: "Name",
-                returnType: BasicTypeDefinitions.string ,
+                returnType: basicTypeDefinitions.string ,
                 definitionType: "property",
                 readonly: true,
                 isCollection: false,
@@ -1499,7 +1499,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
             },
             {
                 name: "Text",
-                returnType: BasicTypeDefinitions.string ,
+                returnType: basicTypeDefinitions.string ,
                 definitionType: "property",
                 readonly: false,
                 isCollection: false,
@@ -1531,7 +1531,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 arguments: [
                     {
                         name: "Name",
-                        type: BasicTypeDefinitions.string,
+                        type: basicTypeDefinitions.string,
                         optional: false,
                         isCollection: false,
                     },
@@ -1557,13 +1557,13 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 arguments: [
                     {
                         name: "Name",
-                        type: BasicTypeDefinitions.string,
+                        type: basicTypeDefinitions.string,
                         optional: false,
                         isCollection: false,
                     },
                     {
                         name: "Text",
-                        type: BasicTypeDefinitions.string,
+                        type: basicTypeDefinitions.string,
                         optional: false,
                         isCollection: false,
                     }
@@ -1593,7 +1593,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 arguments: [
                     {
                         name: "Index",
-                        type: BasicTypeDefinitions.variant,
+                        type: basicTypeDefinitions.variant,
                         optional: false,
                         isCollection: false,
                     }
@@ -1611,7 +1611,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
             {
                 name: "Count",
                 definitionType: "property",
-                returnType: BasicTypeDefinitions.long ,
+                returnType: basicTypeDefinitions.long ,
                 readonly: true,
                 isCollection: false,
                 note: [
@@ -1630,7 +1630,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 isCollection: true,
                 index: {
                     name: "Index",
-                    type: BasicTypeDefinitions.variant,
+                    type: basicTypeDefinitions.variant,
                     optional: false,
                     isCollection: false,
                 },
@@ -1658,7 +1658,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
         properties: [
             {
                 name: "Count",
-                returnType: BasicTypeDefinitions.long ,
+                returnType: basicTypeDefinitions.long ,
                 definitionType: "property",
                 readonly: true,
                 isCollection: false,
@@ -1678,7 +1678,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 isCollection: true,
                 index: {
                     name: "Index",
-                    type: BasicTypeDefinitions.variant,
+                    type: basicTypeDefinitions.variant,
                     optional: false,
                     isCollection: false,
                 },
@@ -1787,7 +1787,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 arguments: [
                     {
                         name: "LabelArgs",
-                        type: BasicTypeDefinitions.variant,
+                        type: basicTypeDefinitions.variant,
                         isCollection: true,
                         optional: false,
                     }
@@ -1834,11 +1834,11 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
             {
                 name: "BuildDBFilter",
                 definitionType: "method",
-                returnType: BasicTypeDefinitions.string ,
+                returnType: basicTypeDefinitions.string ,
                 arguments: [
                     {
                         name: "bstrFieldName",
-                        type: BasicTypeDefinitions.string,
+                        type: basicTypeDefinitions.string,
                         optional: true,
                         isCollection: false,
                         defaultValue: "L"
@@ -1886,7 +1886,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 arguments: [
                     {
                         name: "vtIndex",
-                        type: BasicTypeDefinitions.variant,
+                        type: basicTypeDefinitions.variant,
                         isCollection: false,
                         optional: false,
                     }
@@ -1904,12 +1904,12 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
             },
             {
                 name: "Exists",
-                returnType: BasicTypeDefinitions.boolean ,
+                returnType: basicTypeDefinitions.boolean ,
                 definitionType: "method",
                 arguments: [
                     {
                         name: "vtIndex",
-                        type: BasicTypeDefinitions.variant,
+                        type: basicTypeDefinitions.variant,
                         isCollection: false,
                         optional: false
                     }
@@ -1946,12 +1946,12 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 arguments: [
                     {
                         name: "LabelArgs",
-                        type: BasicTypeDefinitions.variant,
+                        type: basicTypeDefinitions.variant,
                         isCollection: true,
                         optional: false,
                         index: {
                             name: "Index",
-                            type: BasicTypeDefinitions.variant,
+                            type: basicTypeDefinitions.variant,
                             optional: false,
                             isCollection: false,
                         }
@@ -2027,7 +2027,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
             {
                 name: "Count",
                 definitionType: "property",
-                returnType: BasicTypeDefinitions.long ,
+                returnType: basicTypeDefinitions.long ,
                 readonly: true,
                 note: [
                     "```ds",
@@ -2075,7 +2075,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
             },
             {
                 name: "IsDBQuestion",
-                returnType: BasicTypeDefinitions.boolean ,
+                returnType: basicTypeDefinitions.boolean ,
                 definitionType: "property",
                 readonly: true,
                 note: [
@@ -2169,7 +2169,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
             },
             {
                 name: "QuestionFullName",
-                returnType: BasicTypeDefinitions.string ,
+                returnType: basicTypeDefinitions.string ,
                 definitionType: "property",
                 readonly: true,
                 note: [
@@ -2185,7 +2185,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
             },
             {
                 name: "QuestionName",
-                returnType: BasicTypeDefinitions.string ,
+                returnType: basicTypeDefinitions.string ,
                 definitionType: "property",
                 readonly: true,
                 note: [
@@ -2275,7 +2275,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
             },
             {
                 name: "BannerTemplacte",
-                returnType: BasicTypeDefinitions.string ,
+                returnType: basicTypeDefinitions.string ,
                 definitionType: "property",
                 readonly: false,
                 isCollection: false,
@@ -2293,7 +2293,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
             },
             {
                 name: "DBFilter",
-                returnType: BasicTypeDefinitions.string ,
+                returnType: basicTypeDefinitions.string ,
                 definitionType: "property",
                 readonly: false,
                 isCollection: false,
@@ -2307,7 +2307,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
             },
             {
                 name: "ErrorTemplate",
-                returnType: BasicTypeDefinitions.string ,
+                returnType: basicTypeDefinitions.string ,
                 definitionType: "property",
                 readonly: false,
                 isCollection: false,
@@ -2325,13 +2325,13 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
             },
             {
                 name: "Item",
-                returnType: BasicTypeDefinitions.variant ,
+                returnType: basicTypeDefinitions.variant ,
                 definitionType: "property",
                 readonly: false,
                 isCollection: true,
                 index: {
                     name: "Index",
-                    type: BasicTypeDefinitions.variant,
+                    type: basicTypeDefinitions.variant,
                     isCollection: false,
                 },
                 note: [
@@ -2363,7 +2363,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
             },
             {
                 name: "LayoutTemplate",
-                returnType: BasicTypeDefinitions.string ,
+                returnType: basicTypeDefinitions.string ,
                 definitionType: "property",
                 readonly: false,
                 isCollection: false,
@@ -2381,7 +2381,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
             },
             {
                 name: "MustAnswer",
-                returnType: BasicTypeDefinitions.boolean ,
+                returnType: basicTypeDefinitions.boolean ,
                 definitionType: "property",
                 readonly: false,
                 isCollection: false,
@@ -2399,7 +2399,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
             },
             {
                 name: "NarBarTemplate",
-                returnType: BasicTypeDefinitions.string ,
+                returnType: basicTypeDefinitions.string ,
                 definitionType: "property",
                 readonly: false,
                 isCollection: false,
@@ -2417,7 +2417,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
             },
             {
                 name: "QuestionFilter",
-                returnType: BasicTypeDefinitions.variant ,
+                returnType: basicTypeDefinitions.variant ,
                 definitionType: "property",
                 readonly: false,
                 isCollection: false,
@@ -2470,7 +2470,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
             },
             {
                 name: "QuestionTemplate",
-                returnType: BasicTypeDefinitions.string ,
+                returnType: basicTypeDefinitions.string ,
                 definitionType: "property",
                 readonly: false,
                 isCollection: false,
@@ -2503,7 +2503,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
             {
                 name: "Count",
                 definitionType: "property",
-                returnType: BasicTypeDefinitions.long ,
+                returnType: basicTypeDefinitions.long ,
                 readonly: true,
                 isCollection: false,
                 note: [
@@ -2517,11 +2517,11 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
             {
                 name: "Item",
                 definitionType: "property",
-                returnType: BasicTypeDefinitions.variant ,
+                returnType: basicTypeDefinitions.variant ,
                 isCollection: true,
                 index: {
                     name: "Index",
-                    type: BasicTypeDefinitions.variant,
+                    type: basicTypeDefinitions.variant,
                 },
                 note: [
                     "```ds",
@@ -2553,7 +2553,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
         properties: [
             {
                 name: "Label",
-                returnType: BasicTypeDefinitions.string ,
+                returnType: basicTypeDefinitions.string ,
                 definitionType: "property",
                 readonly: true,
                 isCollection: false,
@@ -2567,7 +2567,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
             },
             {
                 name: "Name",
-                returnType: BasicTypeDefinitions.string ,
+                returnType: basicTypeDefinitions.string ,
                 definitionType: "property",
                 readonly: true,
                 isCollection: false,
@@ -2595,7 +2595,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
             },
             {
                 name: "Coded",
-                returnType: BasicTypeDefinitions.variant ,
+                returnType: basicTypeDefinitions.variant ,
                 definitionType: "property",
                 readonly: false,
                 isCollection: false,
@@ -2623,7 +2623,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
             },
             {
                 name: "Default",
-                returnType: BasicTypeDefinitions.variant ,
+                returnType: basicTypeDefinitions.variant ,
                 definitionType: "property",
                 readonly: false,
                 isCollection: false,
@@ -2637,7 +2637,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
             },
             {
                 name: "Initial",
-                returnType: BasicTypeDefinitions.variant ,
+                returnType: basicTypeDefinitions.variant ,
                 definitionType: "property",
                 readonly: false,
                 isCollection: false,
@@ -2662,7 +2662,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
             },
             {
                 name: "IsDirty",
-                returnType: BasicTypeDefinitions.boolean ,
+                returnType: basicTypeDefinitions.boolean ,
                 definitionType: "property",
                 readonly: false,
                 isCollection: false,
@@ -2679,7 +2679,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
             },
             {
                 name: "Value",
-                returnType: BasicTypeDefinitions.variant ,
+                returnType: basicTypeDefinitions.variant ,
                 definitionType: "property",
                 readonly: false,
                 isCollection: false,
@@ -2753,7 +2753,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
             },
             {
                 name: "Function",
-                returnType: BasicTypeDefinitions.string ,
+                returnType: basicTypeDefinitions.string ,
                 definitionType: "property",
                 readonly: false,
                 isCollection: false,
@@ -2802,7 +2802,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
             },
             {
                 name: "MaxValue",
-                returnType: BasicTypeDefinitions.variant ,
+                returnType: basicTypeDefinitions.variant ,
                 definitionType: "property",
                 readonly: false,
                 isCollection: false,
@@ -2825,7 +2825,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
             },
             {
                 name: "MinValue",
-                returnType: BasicTypeDefinitions.variant ,
+                returnType: basicTypeDefinitions.variant ,
                 definitionType: "property",
                 readonly: false,
                 isCollection: false,
@@ -2849,7 +2849,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
             },
             {
                 name: "Precision",
-                returnType: BasicTypeDefinitions.long ,
+                returnType: basicTypeDefinitions.long ,
                 definitionType: "property",
                 readonly: false,
                 isCollection: false,
@@ -2866,7 +2866,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
             },
             {
                 name: "Scale",
-                returnType: BasicTypeDefinitions.long ,
+                returnType: basicTypeDefinitions.long ,
                 definitionType: "property",
                 readonly: false,
                 isCollection: false,
@@ -2883,7 +2883,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
             },
             {
                 name: "ValidateExpression",
-                returnType: BasicTypeDefinitions.string ,
+                returnType: basicTypeDefinitions.string ,
                 definitionType: "property",
                 readonly: false,
                 isCollection: false,
@@ -2914,7 +2914,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
         properties: [
             {
                 name: "Count",
-                returnType: BasicTypeDefinitions.long ,
+                returnType: basicTypeDefinitions.long ,
                 definitionType: "property",
                 readonly: true,
                 isCollection: false,
@@ -2928,7 +2928,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
             },
             {
                 name: "Filter",
-                returnType: BasicTypeDefinitions.variant ,
+                returnType: basicTypeDefinitions.variant ,
                 definitionType: "property",
                 readonly: false,
                 isCollection: false,
@@ -3035,7 +3035,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 isCollection: true,
                 index: {
                     name: "Index",
-                    type: BasicTypeDefinitions.variant,
+                    type: basicTypeDefinitions.variant,
                     isCollection: false,
                     optional: false,
                 },
@@ -3103,7 +3103,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
         properties: [
             {
                 name: "Attributes",
-                returnType: BasicTypeDefinitions.long ,
+                returnType: basicTypeDefinitions.long ,
                 definitionType: "property",
                 readonly: true,
                 isCollection: false,
@@ -3155,7 +3155,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
             },
             {
                 name: "Count",
-                returnType: BasicTypeDefinitions.long ,
+                returnType: basicTypeDefinitions.long ,
                 definitionType: "property",
                 readonly: true,
                 isCollection: false,
@@ -3172,7 +3172,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
             },
             {
                 name: "Factor",
-                returnType: BasicTypeDefinitions.variant ,
+                returnType: basicTypeDefinitions.variant ,
                 definitionType: "property",
                 readonly: true,
                 isCollection: false,
@@ -3186,7 +3186,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
             },
             {
                 name: "FullName",
-                returnType: BasicTypeDefinitions.string ,
+                returnType: basicTypeDefinitions.string ,
                 definitionType: "property",
                 readonly: true,
                 isCollection: false,
@@ -3204,7 +3204,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
             },
             {
                 name: "Index",
-                returnType: BasicTypeDefinitions.long ,
+                returnType: basicTypeDefinitions.long ,
                 definitionType: "property",
                 readonly: true,
                 isCollection: false,
@@ -3218,7 +3218,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
             },
             {
                 name: "KeyCode",
-                returnType: BasicTypeDefinitions.string ,
+                returnType: basicTypeDefinitions.string ,
                 definitionType: "property",
                 readonly: true,
                 isCollection: false,
@@ -3249,7 +3249,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
             },
             {
                 name: "Name",
-                returnType: BasicTypeDefinitions.string ,
+                returnType: basicTypeDefinitions.string ,
                 definitionType: "property",
                 readonly: true,
                 isCollection: false,
@@ -3303,7 +3303,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 isCollection: true,
                 index: {
                     name: "Index",
-                    type: BasicTypeDefinitions.variant,
+                    type: basicTypeDefinitions.variant,
                     isCollection: false,
                     optional: false,
                 },
@@ -3338,7 +3338,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
             },
             {
                 name: "Value",
-                returnType: BasicTypeDefinitions.variant ,
+                returnType: basicTypeDefinitions.variant ,
                 definitionType: "property",
                 readonly: true,
                 isCollection: false,
@@ -3352,7 +3352,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
             },
             {
                 name: "Filter",
-                returnType: BasicTypeDefinitions.variant ,
+                returnType: basicTypeDefinitions.variant ,
                 definitionType: "property",
                 readonly: false,
                 isCollection: false,
@@ -3370,13 +3370,13 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
             },
             {
                 name: "Item",
-                returnType: BasicTypeDefinitions.variant ,
+                returnType: basicTypeDefinitions.variant ,
                 definitionType: "property",
                 readonly: false,
                 isCollection: true,
                 index: {
                     name: "Index",
-                    type: BasicTypeDefinitions.variant,
+                    type: basicTypeDefinitions.variant,
                     isCollection: false,
                     optional: false,
                 },
@@ -3424,7 +3424,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
         methods: [
             {
                 name: "CreateGroupLog",
-                returnType: BasicTypeDefinitions.boolean ,
+                returnType: basicTypeDefinitions.boolean ,
                 definitionType: "method",
                 note: [
                     "```ds",
@@ -3437,7 +3437,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
             },
             {
                 name: "CreatePrivateLog",
-                returnType: BasicTypeDefinitions.boolean ,
+                returnType: basicTypeDefinitions.boolean ,
                 definitionType: "method",
                 note: [
                     "```ds",
@@ -3454,12 +3454,12 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 arguments: [
                     {
                         name: "Id",
-                        type: BasicTypeDefinitions.long,
+                        type: basicTypeDefinitions.long,
                         optional: false
                     },
                     {
                         name: "LogEntry",
-                        type: BasicTypeDefinitions.string,
+                        type: basicTypeDefinitions.string,
                         optional: false
                     }
                 ],
@@ -3478,7 +3478,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 arguments: [
                     {
                         name: "LogEntry",
-                        type: BasicTypeDefinitions.string,
+                        type: basicTypeDefinitions.string,
                         optional: false
                     }
                 ],
@@ -3497,12 +3497,12 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 arguments: [
                     {
                         name: "Id",
-                        type: BasicTypeDefinitions.long,
+                        type: basicTypeDefinitions.long,
                         optional: false
                     },
                     {
                         name: "LogEntry",
-                        type: BasicTypeDefinitions.string,
+                        type: basicTypeDefinitions.string,
                         optional: false
                     }
                 ],
@@ -3521,7 +3521,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 arguments: [
                     {
                         name: "LogEntry",
-                        type: BasicTypeDefinitions.string,
+                        type: basicTypeDefinitions.string,
                         optional: false
                     }
                 ],
@@ -3540,12 +3540,12 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 arguments: [
                     {
                         name: "Id",
-                        type: BasicTypeDefinitions.long,
+                        type: basicTypeDefinitions.long,
                         optional: false
                     },
                     {
                         name: "LogEntry",
-                        type: BasicTypeDefinitions.string,
+                        type: basicTypeDefinitions.string,
                         optional: false
                     }
                 ],
@@ -3564,7 +3564,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 arguments: [
                     {
                         name: "LogEntry",
-                        type: BasicTypeDefinitions.string,
+                        type: basicTypeDefinitions.string,
                         optional: false
                     }
                 ],
@@ -3583,12 +3583,12 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 arguments: [
                     {
                         name: "Id",
-                        type: BasicTypeDefinitions.long,
+                        type: basicTypeDefinitions.long,
                         optional: false
                     },
                     {
                         name: "LogEntry",
-                        type: BasicTypeDefinitions.string,
+                        type: basicTypeDefinitions.string,
                         optional: false
                     }
                 ],
@@ -3607,7 +3607,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 arguments: [
                     {
                         name: "LogEntry",
-                        type: BasicTypeDefinitions.string,
+                        type: basicTypeDefinitions.string,
                         optional: false
                     }
                 ],
@@ -3626,12 +3626,12 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 arguments: [
                     {
                         name: "Id",
-                        type: BasicTypeDefinitions.long,
+                        type: basicTypeDefinitions.long,
                         optional: false
                     },
                     {
                         name: "LogEntry",
-                        type: BasicTypeDefinitions.string,
+                        type: basicTypeDefinitions.string,
                         optional: false
                     }
                 ],
@@ -3650,7 +3650,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 arguments: [
                     {
                         name: "LogEntry",
-                        type: BasicTypeDefinitions.string,
+                        type: basicTypeDefinitions.string,
                         optional: false
                     }
                 ],
@@ -3669,12 +3669,12 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 arguments: [
                     {
                         name: "Id",
-                        type: BasicTypeDefinitions.long,
+                        type: basicTypeDefinitions.long,
                         optional: false
                     },
                     {
                         name: "LogEntry",
-                        type: BasicTypeDefinitions.string,
+                        type: basicTypeDefinitions.string,
                         optional: false
                     }
                 ],
@@ -3693,7 +3693,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 arguments: [
                     {
                         name: "LogEntry",
-                        type: BasicTypeDefinitions.string,
+                        type: basicTypeDefinitions.string,
                         optional: false
                     }
                 ],
@@ -3723,7 +3723,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
             {
                 name: "Count",
                 definitionType: "property",
-                returnType: BasicTypeDefinitions.long ,
+                returnType: basicTypeDefinitions.long ,
                 note: [
                     "```ds",
                     "(property) IDataManagerWeightEngines.Count: Long",
@@ -3738,7 +3738,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 returnType: createBuiltInDefPlaceHolder("IWeightEngine"),
                 index: {
                     name: "Index",
-                    type: BasicTypeDefinitions.variant,
+                    type: basicTypeDefinitions.variant,
                 },
                 note: [
                     "```ds",
@@ -3770,7 +3770,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 isCollection: true,
                 index: {
                     name: "Index",
-                    type: BasicTypeDefinitions.variant,
+                    type: basicTypeDefinitions.variant,
                 },
                 note: [
                     "```ds",
@@ -3800,7 +3800,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
             {
                 name: "CreatedByVersion",
                 definitionType: "property",
-                returnType: BasicTypeDefinitions.string ,
+                returnType: basicTypeDefinitions.string ,
                 readonly: true,
                 isCollection: false,
                 note: [
@@ -3908,7 +3908,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
             {
                 name: "IsPopulating",
                 definitionType: "property",
-                returnType: BasicTypeDefinitions.boolean ,
+                returnType: basicTypeDefinitions.boolean ,
                 readonly: true,
                 isCollection: false,
                 note: [
@@ -3922,7 +3922,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
             {
                 name: "LastUpdatedByVersion",
                 definitionType: "property",
-                returnType: BasicTypeDefinitions.string ,
+                returnType: basicTypeDefinitions.string ,
                 readonly: true,
                 isCollection: false,
                 note: [
@@ -3936,7 +3936,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
             {
                 name: "LicensedFeatures",
                 definitionType: "property",
-                returnType: BasicTypeDefinitions.long ,
+                returnType: basicTypeDefinitions.long ,
                 readonly: true,
                 isCollection: false,
                 note: [
@@ -3953,7 +3953,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
             {
                 name: "Parent",
                 definitionType: "property",
-                returnType: BasicTypeDefinitions.null ,
+                returnType: basicTypeDefinitions.null ,
                 readonly: true,
                 isCollection: false,
                 note: [
@@ -3970,7 +3970,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
             {
                 name: "PopulateProgress",
                 definitionType: "property",
-                returnType: BasicTypeDefinitions.long ,
+                returnType: basicTypeDefinitions.long ,
                 readonly: true,
                 isCollection: false,
                 note: [
@@ -3987,7 +3987,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
             {
                 name: "PopulateStatus",
                 definitionType: "property",
-                returnType: BasicTypeDefinitions.string ,
+                returnType: basicTypeDefinitions.string ,
                 readonly: true,
                 isCollection: false,
                 note: [
@@ -4082,7 +4082,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
             {
                 name: "TOMVersion",
                 definitionType: "property",
-                returnType: BasicTypeDefinitions.string ,
+                returnType: basicTypeDefinitions.string ,
                 readonly: true,
                 isCollection: false,
                 note: [
@@ -4096,7 +4096,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
             {
                 name: "Context",
                 definitionType: "property",
-                returnType: BasicTypeDefinitions.string ,
+                returnType: basicTypeDefinitions.string ,
                 readonly: false,
                 isCollection: false,
                 note: [
@@ -4113,7 +4113,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
             {
                 name: "Description",
                 definitionType: "property",
-                returnType: BasicTypeDefinitions.string ,
+                returnType: basicTypeDefinitions.string ,
                 readonly: false,
                 isCollection: false,
                 note: [
@@ -4127,7 +4127,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
             {
                 name: "ImageLocation",
                 definitionType: "property",
-                returnType: BasicTypeDefinitions.string ,
+                returnType: basicTypeDefinitions.string ,
                 readonly: false,
                 isCollection: false,
                 note: [
@@ -4148,7 +4148,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
             {
                 name: "KeepLogFiles",
                 definitionType: "property",
-                returnType: BasicTypeDefinitions.boolean ,
+                returnType: basicTypeDefinitions.boolean ,
                 readonly: false,
                 isCollection: false,
                 note: [
@@ -4165,7 +4165,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
             {
                 name: "LabelType",
                 definitionType: "property",
-                returnType: BasicTypeDefinitions.string ,
+                returnType: basicTypeDefinitions.string ,
                 readonly: false,
                 isCollection: false,
                 note: [
@@ -4182,7 +4182,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
             {
                 name: "Language",
                 definitionType: "property",
-                returnType: BasicTypeDefinitions.string ,
+                returnType: basicTypeDefinitions.string ,
                 readonly: false,
                 isCollection: false,
                 note: [
@@ -4199,7 +4199,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
             {
                 name: "LogFilePath",
                 definitionType: "property",
-                returnType: BasicTypeDefinitions.string ,
+                returnType: basicTypeDefinitions.string ,
                 readonly: false,
                 isCollection: false,
                 note: [
@@ -4230,7 +4230,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
             {
                 name: "OutputLocaleId",
                 definitionType: "property",
-                returnType: BasicTypeDefinitions.long ,
+                returnType: basicTypeDefinitions.long ,
                 readonly: false,
                 isCollection: false,
                 note: [
@@ -4247,7 +4247,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
             {
                 name: "ProfileSpecialElements",
                 definitionType: "property",
-                returnType: BasicTypeDefinitions.boolean ,
+                returnType: basicTypeDefinitions.boolean ,
                 readonly: false,
                 isCollection: false,
                 note: [
@@ -4264,7 +4264,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
             {
                 name: "RawStatisticsDataEnabled",
                 definitionType: "property",
-                returnType: BasicTypeDefinitions.boolean ,
+                returnType: basicTypeDefinitions.boolean ,
                 readonly: false,
                 isCollection: false,
                 note: [
@@ -4281,7 +4281,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
             {
                 name: "SaveProfileResults",
                 definitionType: "property",
-                returnType: BasicTypeDefinitions.boolean ,
+                returnType: basicTypeDefinitions.boolean ,
                 readonly: false,
                 isCollection: false,
                 note: [
@@ -4320,11 +4320,11 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
             {
                 name: "GenerateScript",
                 definitionType: "method",
-                returnType: BasicTypeDefinitions.string ,
+                returnType: basicTypeDefinitions.string ,
                 arguments: [
                     {
                         name: "Tables",
-                        type: BasicTypeDefinitions.variant,
+                        type: basicTypeDefinitions.variant,
                         optional: true,
                         note: "A list of tables to include in the generated script.",
                     },
@@ -4337,7 +4337,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                     },
                     {
                         name: "Options",
-                        type: BasicTypeDefinitions.variant,
+                        type: basicTypeDefinitions.variant,
                         optional: true,
                         note: "Reserved for future use",
                     }
@@ -4366,11 +4366,11 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
             {
                 name: "GetObjectFromID",
                 definitionType: "method",
-                returnType: BasicTypeDefinitions.object,
+                returnType: basicTypeDefinitions.object,
                 arguments: [
                     {
                         name: "ID",
-                        type: BasicTypeDefinitions.string,
+                        type: basicTypeDefinitions.string,
                         optional: false
                     }
                 ],
@@ -4388,17 +4388,17 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
             {
                 name: "GetTablesXml",
                 definitionType: "method",
-                returnType: BasicTypeDefinitions.string ,
+                returnType: basicTypeDefinitions.string ,
                 arguments: [
                     {
                         name: "Tables",
-                        type: BasicTypeDefinitions.variant,
+                        type: basicTypeDefinitions.variant,
                         optional: false,
                         note: "A list of tables to include in the generated script. See the Tables parameter of IDocument.Populate for more information on the valid values for this parameter.",
                     },
                     {
                         name: "Options",
-                        type: BasicTypeDefinitions.long,
+                        type: basicTypeDefinitions.long,
                         optional: true,
                         defaultValue: "xmlIncludeResults",
                         note: "A binary '`OR`' of `XmlOption` enumerated values which control the contents of the returned Tables XML"
@@ -4425,12 +4425,12 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 arguments: [
                     {
                         name: "Source",
-                        type: BasicTypeDefinitions.variant,
+                        type: basicTypeDefinitions.variant,
                         note: "Either the name of a previously saved table document file or an `XML DOM` object into which a table document has already been loaded.",
                     },
                     {
                         name: "IncludeResults",
-                        type: BasicTypeDefinitions.boolean,
+                        type: basicTypeDefinitions.boolean,
                         optional: true,
                         defaultValue: "1",
                         note: "If the previously saved table document had been populated then it may contain cell values. If `IncludeResults` is *False* then these values will not be loaded with the rest of the document. This will make the call to the Open method slightly faster."
@@ -4457,53 +4457,53 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 arguments: [
                     {
                         name: "Source",
-                        type: BasicTypeDefinitions.variant,
+                        type: basicTypeDefinitions.variant,
                         optional: false,
                         note: "Either the name of a previously saved table document file or an XML DOM object into which a table document has already been loaded.",
                     },
                     {
                         name: "IncludeResults",
-                        type: BasicTypeDefinitions.boolean,
+                        type: basicTypeDefinitions.boolean,
                         optional: false,
                         note: "If the previously saved table document had been populated then it may contain cell values. If IncludeResults is False then these values will not be loaded with the rest of the document. This will make the call to the Open method slightly faster.",
                     },
                     {
                         name: "MetaData",
-                        type: BasicTypeDefinitions.variant,
+                        type: basicTypeDefinitions.variant,
                         optional: false,
                         note: "The location of the metadata to use. The format of this string depends on the MDSC, but is typically a location of an .MDD or some other type of file. This can also be an existing MDM document object.",
                     },
                     {
                         name: "MDSC",
-                        type: BasicTypeDefinitions.string,
+                        type: basicTypeDefinitions.string,
                         optional: true,
                         defaultValue: "\"\"",
                         note: "The metadata DSC to use e.g. *mrQvDsc*, or empty if no MDSC is required",
                     },
                     {
                         name: "DbLocation",
-                        type: BasicTypeDefinitions.string,
+                        type: basicTypeDefinitions.string,
                         optional: true,
                         defaultValue: "\"\"",
                         note: "The location of the case data to use. The format of this string depends on the CDSC",
                     },
                     {
                         name: "CDSC",
-                        type: BasicTypeDefinitions.string,
+                        type: basicTypeDefinitions.string,
                         optional: true,
                         defaultValue: "\"\"",
                         note: "The case data dsc to use e.g. *mrQdiDrsDsc*",
                     },
                     {
                         name: "Project",
-                        type: BasicTypeDefinitions.string,
+                        type: basicTypeDefinitions.string,
                         optional: true,
                         defaultValue: "\"\"",
                         note: "The project name to use if the CDSC supports multiple projects. Otherwise this parameter is ignored.",
                     },
                     {
                         name: "Version",
-                        type: BasicTypeDefinitions.string,
+                        type: basicTypeDefinitions.string,
                         optional: true,
                         defaultValue: "{..}",
                         note: "A version specified for the metadata to use. The default specification string is \"{..}\" (the 'SuperVersion') which means to use all locked versions in the metadata.",
@@ -4533,11 +4533,11 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
             {
                 name: "Populate",
                 definitionType: "method",
-                returnType: BasicTypeDefinitions.boolean ,
+                returnType: basicTypeDefinitions.boolean ,
                 arguments: [
                     {
                         name: "Tables",
-                        type: BasicTypeDefinitions.variant,
+                        type: basicTypeDefinitions.variant,
                         optional: false,
                         note: [
                     "```ds",
@@ -4575,7 +4575,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 arguments: [
                     {
                         name: "Tables",
-                        type: BasicTypeDefinitions.variant,
+                        type: basicTypeDefinitions.variant,
                         optional: false
                     }
                 ],
@@ -4609,7 +4609,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 arguments: [
                     {
                         name: "ForceRefresh",
-                        type: BasicTypeDefinitions.boolean,
+                        type: basicTypeDefinitions.boolean,
                         optional: true,
                         defaultValue: "0"
                     }
@@ -4633,13 +4633,13 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 arguments: [
                     {
                         name: "Destination",
-                        type: BasicTypeDefinitions.variant,
+                        type: basicTypeDefinitions.variant,
                         optional: false,
                         note: "Either the name of a file to save the table document to, or an empty `XML DOM` object. If a file name is specified, and the file already exists, then it is overwritten without warning.",
                     },
                     {
                         name: "IncludeResults",
-                        type: BasicTypeDefinitions.boolean,
+                        type: basicTypeDefinitions.boolean,
                         optional: true,
                         defaultValue: "1",
                         note: "If the parameter is *False*, then the cell values for all tables are not saved. This makes the call to the `Save` method slightly faster and the resulting document smaller.",
@@ -4667,12 +4667,12 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 arguments: [
                     {
                         name: "Destination",
-                        type: BasicTypeDefinitions.variant,
+                        type: basicTypeDefinitions.variant,
                         optional: false,
                     },
                     {
                         name: "IncludeResults",
-                        type: BasicTypeDefinitions.boolean,
+                        type: basicTypeDefinitions.boolean,
                         optional: true,
                         defaultValue: "1"
                     }
@@ -4704,7 +4704,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
         properties: [
             {
                 name: "Count",
-                returnType: BasicTypeDefinitions.long ,
+                returnType: basicTypeDefinitions.long ,
                 definitionType: "property",
                 readonly: true,
                 isCollection: false,
@@ -4718,13 +4718,13 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
             },
             {
                 name: "Item",
-                returnType: BasicTypeDefinitions.variant ,
+                returnType: basicTypeDefinitions.variant ,
                 definitionType: "property",
                 readonly: true,
                 isCollection: true,
                 index: {
                     name: "Index",
-                    type: BasicTypeDefinitions.variant,
+                    type: basicTypeDefinitions.variant,
                     optional: false,
                 },
                 note: [
@@ -4764,7 +4764,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                     },
                     {
                         name: "Index",
-                        type: BasicTypeDefinitions.long,
+                        type: basicTypeDefinitions.long,
                         optional: true,
                         defaultValue: "-1",
                         note: "The position in the collection to insert the table.",
@@ -4795,27 +4795,27 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 arguments: [
                     {
                         name: "Name",
-                        type: BasicTypeDefinitions.string,
+                        type: basicTypeDefinitions.string,
                         optional: false,
                         note: "The name used to reference the table in the collection",
                     },
                     {
                         name: "Specification",
-                        type: BasicTypeDefinitions.string,
+                        type: basicTypeDefinitions.string,
                         optional: true,
                         defaultValue: "\"\"",
                         note: "The table specification string. An empty table may be created by using an empty string for the specification (this is the default value)",
                     },
                     {
                         name: "Description",
-                        type: BasicTypeDefinitions.string,
+                        type: basicTypeDefinitions.string,
                         optional: true,
                         defaultValue: "\"\"",
                         note: "An optional description for the table, e.g. \"Table of age against gender\". This is can be used as an annotation on the resulting table.",
                     },
                     {
                         name: "Index",
-                        type: BasicTypeDefinitions.long,
+                        type: basicTypeDefinitions.long,
                         optional: true,
                         defaultValue: "-1",
                         note: "The position in the collection to insert the table. The new table is inserted at the specified integer position. The index of the table that is currently at that position and all following tables is increased by one. If the index is not specified, or is specified as -1, then the table is appended to the end of the collection.",
@@ -4853,13 +4853,13 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 arguments: [
                     {
                         name: "Name",
-                        type: BasicTypeDefinitions.string,
+                        type: basicTypeDefinitions.string,
                         optional: false,
                         note: "The name used to reference the table in the collection",
                     },
                     {
                         name: "Field",
-                        type: BasicTypeDefinitions.string,
+                        type: basicTypeDefinitions.string,
                         optional: false,
                         note: "The name of an MDM grid or array field tabulate.",
                     },
@@ -4872,14 +4872,14 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                     },
                     {
                         name: "Description",
-                        type: BasicTypeDefinitions.string,
+                        type: basicTypeDefinitions.string,
                         optional: true,
                         defaultValue: "\"\"",
                         note: "An optional description for the table, e.g. \"Table of interest rating of exhibits\". This is can be used as an annotation on the resulting table.",
                     },
                     {
                         name: "Index",
-                        type: BasicTypeDefinitions.long,
+                        type: basicTypeDefinitions.long,
                         optional: true,
                         defaultValue: "-1",
                         note: "The position in the collection to insert the table. See the `ITables.AddNew` method for more information on the `Index` parameter. The default is for the table to be appended to the end of the collection.",
@@ -4921,27 +4921,27 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 arguments: [
                     {
                         name: "Name",
-                        type: BasicTypeDefinitions.string,
+                        type: basicTypeDefinitions.string,
                         optional: false,
                         note: "The name used to reference the table in the collection",
                     },
                     {
                         name: "Specification",
-                        type: BasicTypeDefinitions.string,
+                        type: basicTypeDefinitions.string,
                         optional: true,
                         defaultValue: "\"\"",
                         note: "The profile table specification string. An empty table may be created by using an empty string for the specification (this is the default value)",
                     },
                     {
                         name: "Description",
-                        type: BasicTypeDefinitions.string,
+                        type: basicTypeDefinitions.string,
                         optional: true,
                         defaultValue: "\"\"",
                         note: "An optional description for the table, e.g. \"User's comments\". This is can be used as an annotation on the resulting table.",
                     },
                     {
                         name: "Index",
-                        type: BasicTypeDefinitions.long,
+                        type: basicTypeDefinitions.long,
                         optional: true,
                         defaultValue: "-1",
                         note: "The position in the collection to insert the table. The new table is inserted at the specified integer position. The index of the table that is currently at that position and all following tables is increased by one. If the index is not specified, or is specified as -1, then the table is appended to the end of the collection.",
@@ -4980,7 +4980,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 arguments: [
                     {
                         name: "Index",
-                        type: BasicTypeDefinitions.variant,
+                        type: basicTypeDefinitions.variant,
                         optional: false,
                         note: "A reference to the table to be removed. This is either the integer position of the table in the collection or the name of the table."
                     }
@@ -5031,7 +5031,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 isCollection: true,
                 index: {
                     name: "Index",
-                    type: BasicTypeDefinitions.variant,
+                    type: basicTypeDefinitions.variant,
                     optional: false,
                 },
                 note: [
@@ -5074,7 +5074,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
             {
                 name: "Base",
                 definitionType: "property",
-                returnType: BasicTypeDefinitions.long ,
+                returnType: basicTypeDefinitions.long ,
                 readonly: true,
                 isCollection: false,
                 note: [
@@ -5108,7 +5108,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
             {
                 name: "DatePopulated",
                 definitionType: "property",
-                returnType: BasicTypeDefinitions.date ,
+                returnType: basicTypeDefinitions.date ,
                 readonly: true,
                 isCollection: false,
                 note: [
@@ -5125,7 +5125,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
             {
                 name: "DefaultLevel",
                 definitionType: "property",
-                returnType: BasicTypeDefinitions.string ,
+                returnType: basicTypeDefinitions.string ,
                 readonly: true,
                 isCollection: false,
                 note: [
@@ -5156,7 +5156,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
             {
                 name: "IsEmpty",
                 definitionType: "property",
-                returnType: BasicTypeDefinitions.boolean ,
+                returnType: basicTypeDefinitions.boolean ,
                 readonly: true,
                 isCollection: false,
                 note: [
@@ -5170,7 +5170,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
             {
                 name: "IsEmptySide",
                 definitionType: "property",
-                returnType: BasicTypeDefinitions.boolean ,
+                returnType: basicTypeDefinitions.boolean ,
                 readonly: true,
                 isCollection: false,
                 note: [
@@ -5184,7 +5184,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
             {
                 name: "IsEmptyTop",
                 definitionType: "property",
-                returnType: BasicTypeDefinitions.boolean ,
+                returnType: basicTypeDefinitions.boolean ,
                 readonly: true,
                 isCollection: false,
                 note: [
@@ -5198,7 +5198,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
             {
                 name: "IsLevelValid",
                 definitionType: "property",
-                returnType: BasicTypeDefinitions.boolean ,
+                returnType: basicTypeDefinitions.boolean ,
                 readonly: true,
                 isCollection: false,
                 note: [
@@ -5216,7 +5216,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
             {
                 name: "IsPopulated",
                 definitionType: "property",
-                returnType: BasicTypeDefinitions.boolean ,
+                returnType: basicTypeDefinitions.boolean ,
                 readonly: true,
                 isCollection: false,
                 note: [
@@ -5233,7 +5233,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
             {
                 name: "IsValid",
                 definitionType: "property",
-                returnType: BasicTypeDefinitions.boolean ,
+                returnType: basicTypeDefinitions.boolean ,
                 readonly: true,
                 isCollection: false,
                 note: [
@@ -5259,7 +5259,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
             {
                 name: "IsWeighted",
                 definitionType: "property",
-                returnType: BasicTypeDefinitions.boolean ,
+                returnType: basicTypeDefinitions.boolean ,
                 readonly: true,
                 isCollection: false,
                 note: [
@@ -5273,7 +5273,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
             {
                 name: "Name",
                 definitionType: "property",
-                returnType: BasicTypeDefinitions.string ,
+                returnType: basicTypeDefinitions.string ,
                 readonly: true,
                 isCollection: false,
                 note: [
@@ -5360,12 +5360,12 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
             {
                 name: "CellValues",
                 definitionType: "property",
-                returnType: BasicTypeDefinitions.object,
+                returnType: basicTypeDefinitions.object,
                 readonly: false,
                 isCollection: true,
                 index: {
                     name: "Layer",
-                    type: BasicTypeDefinitions.variant,
+                    type: basicTypeDefinitions.variant,
                     defaultValue: 0,
                 },
                 note: [
@@ -5386,7 +5386,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
             {
                 name: "Description",
                 definitionType: "property",
-                returnType: BasicTypeDefinitions.string ,
+                returnType: basicTypeDefinitions.string ,
                 readonly: false,
                 isCollection: false,
                 note: [
@@ -5403,7 +5403,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
             {
                 name: "Level",
                 definitionType: "property",
-                returnType: BasicTypeDefinitions.string ,
+                returnType: basicTypeDefinitions.string ,
                 readonly: false,
                 isCollection: false,
                 note: [
@@ -5421,7 +5421,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
             {
                 name: "PopulateError",
                 definitionType: "property",
-                returnType: BasicTypeDefinitions.string ,
+                returnType: basicTypeDefinitions.string ,
                 readonly: false,
                 isCollection: false,
                 note: [
@@ -5438,7 +5438,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
             {
                 name: "SortColumn",
                 definitionType: "property",
-                returnType: BasicTypeDefinitions.string ,
+                returnType: basicTypeDefinitions.string ,
                 readonly: false,
                 isCollection: false,
                 note: [
@@ -5464,7 +5464,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
             {
                 name: "SortRow",
                 definitionType: "property",
-                returnType: BasicTypeDefinitions.string ,
+                returnType: basicTypeDefinitions.string ,
                 readonly: false,
                 isCollection: false,
                 note: [
@@ -5491,7 +5491,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
             {
                 name: "Specification",
                 definitionType: "property",
-                returnType: BasicTypeDefinitions.string ,
+                returnType: basicTypeDefinitions.string ,
                 readonly: false,
                 isCollection: false,
                 note: [
@@ -5515,7 +5515,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
             {
                 name: "UseDefaultLevel",
                 definitionType: "property",
-                returnType: BasicTypeDefinitions.boolean ,
+                returnType: basicTypeDefinitions.boolean ,
                 readonly: false,
                 isCollection: false,
                 note: [
@@ -5532,7 +5532,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
             {
                 name: "Weight",
                 definitionType: "property",
-                returnType: BasicTypeDefinitions.string ,
+                returnType: basicTypeDefinitions.string ,
                 readonly: false,
                 isCollection: false,
                 note: [
@@ -5569,11 +5569,11 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
             {
                 name: "IsStatisticValid",
                 definitionType: "method",
-                returnType: BasicTypeDefinitions.boolean ,
+                returnType: basicTypeDefinitions.boolean ,
                 arguments: [
                     {
                         name: "StatisticName",
-                        type: BasicTypeDefinitions.string,
+                        type: basicTypeDefinitions.string,
                         optional: false,
                     }
                 ],
@@ -5595,7 +5595,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 arguments: [
                     {
                         name: "ForceRefresh",
-                        type: BasicTypeDefinitions.boolean,
+                        type: basicTypeDefinitions.boolean,
                         optional: true,
                         defaultValue: "0"
                     }
@@ -5631,7 +5631,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
             {
                 name: "Count",
                 definitionType: "property",
-                returnType: BasicTypeDefinitions.long ,
+                returnType: basicTypeDefinitions.long ,
                 isCollection: false,
                 readonly: true,
                 note: [
@@ -5650,7 +5650,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 isCollection: true,
                 index: {
                     name: "Index",
-                    type: BasicTypeDefinitions.variant,
+                    type: basicTypeDefinitions.variant,
                 },
                 note: [
                     "```ds",
@@ -5686,19 +5686,19 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 arguments: [
                     {
                         name: "Name",
-                        type: BasicTypeDefinitions.variant,
+                        type: basicTypeDefinitions.variant,
                         optional: false,
                         note: "Either a string name used to reference the axis or an `AxisType` enumerated value. The enumerated values map to the corresponding string equivalent, i.e. \"Side\" and axSide can be used interchangeably.",
                     },
                     {
                         name: "Axis",
-                        type: BasicTypeDefinitions.variant,
+                        type: basicTypeDefinitions.variant,
                         optional: false,
                         note: "The name of an `Axis` object that exists in the `IDocument.Axes` collection.",
                     },
                     {
                         name: "Index",
-                        type: BasicTypeDefinitions.long,
+                        type: basicTypeDefinitions.long,
                         optional: true,
                         defaultValue: "-1",
                         note: "The position in the collection to insert the axis."
@@ -5734,27 +5734,27 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 arguments: [
                     {
                         name: "Name",
-                        type: BasicTypeDefinitions.variant,
+                        type: basicTypeDefinitions.variant,
                         optional: false,
                         note: "Either a string name used to reference the axis or an `AxisType` enumerated value. The enumerated values map to the corresponding string equivalent, i.e. \"Side\" and axSide can be used interchangeably.",
                     },
                     {
                         name: "MdmObject",
-                        type: BasicTypeDefinitions.string,
+                        type: basicTypeDefinitions.string,
                         optional: true,
                         defaultValue: "\"\"",
                         note: "The MDM object that the axis is to be based upon. This can be a variable, grid, or loop. If the data set view is set to *dvVDATA* this refers to an object in the `Variables` collection of the metadata. If the data set view is set to dvHDATA this refers to an object in the `Fields` collection of the metadata.",
                     },
                     {
                         name: "AxisExpression",
-                        type: BasicTypeDefinitions.string,
+                        type: basicTypeDefinitions.string,
                         optional: true,
                         defaultValue: "\"\"",
                         note: "If the `MdmObject` is a variable then an axis expression can be specified to override the axis expression specified in the metadata.",
                     },
                     {
                         name: "Index",
-                        type: BasicTypeDefinitions.long,
+                        type: basicTypeDefinitions.long,
                         optional: true,
                         defaultValue: "-1",
                         note: "The position in the collection to insert the axis. The new axis is inserted at the specified integer position. The index of the axis that is currently at that position and all following axes is increased by one. If the index is not specified, or is specified as -1, then the axis is appended to the end of the collection.",
@@ -5788,7 +5788,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 arguments: [
                     {
                         name: "Index",
-                        type: BasicTypeDefinitions.variant,
+                        type: basicTypeDefinitions.variant,
                         optional: false,
                         note: "A reference to an `Axis` object in the collection. This is either the integer position of the object in the collection, the string name of the axis, or an `AxisType` enumerated value."
                     }
@@ -5859,7 +5859,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
             {
                 name: "Name",
                 definitionType: "property",
-                returnType: BasicTypeDefinitions.string ,
+                returnType: basicTypeDefinitions.string ,
                 readonly: true,
                 isCollection: false,
                 note: [
@@ -5924,12 +5924,12 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
             {
                 name: "Label",
                 definitionType: "property",
-                returnType: BasicTypeDefinitions.string ,
+                returnType: basicTypeDefinitions.string ,
                 readonly: false,
                 isCollection: true,
                 index: {
                     name: "Language",
-                    type: BasicTypeDefinitions.string,
+                    type: basicTypeDefinitions.string,
                     optional: true,
                     defaultValue: "\"\""
                 },
@@ -5947,7 +5947,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
             {
                 name: "MaxResponses",
                 definitionType: "property",
-                returnType: BasicTypeDefinitions.long ,
+                returnType: basicTypeDefinitions.long ,
                 readonly: false,
                 isCollection: false,
                 note: [
@@ -5964,7 +5964,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
             {
                 name: "Specification",
                 definitionType: "property",
-                returnType: BasicTypeDefinitions.string ,
+                returnType: basicTypeDefinitions.string ,
                 readonly: false,
                 isCollection: false,
                 note: [
@@ -5981,7 +5981,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
             {
                 name: "UseMetadataDefinition",
                 definitionType: "property",
-                returnType: BasicTypeDefinitions.boolean ,
+                returnType: basicTypeDefinitions.boolean ,
                 readonly: false,
                 isCollection: false,
                 note: [
@@ -6007,7 +6007,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 arguments: [
                     {
                         name: "Name",
-                        type: BasicTypeDefinitions.variant,
+                        type: basicTypeDefinitions.variant,
                         optional: false,
                         note: "The name of an MDM variable"
                     }
@@ -6030,7 +6030,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 arguments: [
                     {
                         name: "Name",
-                        type: BasicTypeDefinitions.variant,
+                        type: basicTypeDefinitions.variant,
                         note: "The name of an MDM variable"
                     }
                 ],
@@ -6051,7 +6051,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 arguments: [
                     {
                         name: "ForceRefresh",
-                        type: BasicTypeDefinitions.boolean,
+                        type: basicTypeDefinitions.boolean,
                         optional: true,
                         defaultValue: "0"
                     }
@@ -6086,7 +6086,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
             {
                 name: "Count",
                 definitionType: "property",
-                returnType: BasicTypeDefinitions.long ,
+                returnType: basicTypeDefinitions.long ,
                 isCollection: false,
                 readonly: true,
                 note: [
@@ -6105,7 +6105,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 isCollection: true,
                 index: {
                     name: "Index",
-                    type: BasicTypeDefinitions.variant,
+                    type: basicTypeDefinitions.variant,
                 },
                 note: [
                     "```ds",
@@ -6147,21 +6147,21 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                     },
                     {
                         name: "Decimals",
-                        type: BasicTypeDefinitions.long,
+                        type: basicTypeDefinitions.long,
                         optional: true,
                         defaultValue: "0",
                         note: "The number of decimal places to display for the cell value. The default is 0 decimal places.",
                     },
                     {
                         name: "Variable",
-                        type: BasicTypeDefinitions.string,
+                        type: basicTypeDefinitions.string,
                         optional: true,
                         defaultValue: "\"\"",
                         note: "The variable to base the calculation of the cell value on (for those cell items types that require it). The default is for no variable to be specified.",
                     },
                     {
                         name: "Index",
-                        type: BasicTypeDefinitions.long,
+                        type: basicTypeDefinitions.long,
                         optional: true,
                         defaultValue: -1,
                         note: "The position in the collection to insert the cell item. The new cell item is inserted at the specified integer position. The index of the cell item that is currently at that position and all following cell items is increased by one. If the index is not specified, or is specified as -1, then the cell item is appended to the end of the collection.",
@@ -6192,7 +6192,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 arguments: [
                     {
                         name: "Index",
-                        type: BasicTypeDefinitions.variant,
+                        type: basicTypeDefinitions.variant,
                         note: "The integer position of the `CellItem` object in the collection to be removed.",
                     }
                 ],
@@ -6248,7 +6248,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
             {
                 name: "CutOffValue",
                 definitionType: "property",
-                returnType: BasicTypeDefinitions.double ,
+                returnType: basicTypeDefinitions.double ,
                 note: [
                     "```ds",
                     "(property) ICellItem.CutOffValue: Double",
@@ -6264,7 +6264,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
             {
                 name: "Decimals",
                 definitionType: "property",
-                returnType: BasicTypeDefinitions.long ,
+                returnType: basicTypeDefinitions.long ,
                 note: [
                     "```ds",
                     "(property) ICellItem.Decimals: Double",
@@ -6279,7 +6279,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
             {
                 name: "FormatExpression",
                 definitionType: "property",
-                returnType: BasicTypeDefinitions.string ,
+                returnType: basicTypeDefinitions.string ,
                 note: [
                     "```ds",
                     "(property) ICellItem.FormatExpression: String",
@@ -6309,7 +6309,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
             {
                 name: "Index",
                 definitionType: "property",
-                returnType: BasicTypeDefinitions.long ,
+                returnType: basicTypeDefinitions.long ,
                 note: [
                     "```ds",
                     "(property) ICellItem.Index: Long",
@@ -6324,7 +6324,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
             {
                 name: "Prefix",
                 definitionType: "property",
-                returnType: BasicTypeDefinitions.string ,
+                returnType: basicTypeDefinitions.string ,
                 note: [
                     "```ds",
                     "(property) ICellItem.Prefix: String",
@@ -6336,7 +6336,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
             {
                 name: "Variable",
                 definitionType: "property",
-                returnType: BasicTypeDefinitions.string ,
+                returnType: basicTypeDefinitions.string ,
                 note: [
                     "```ds",
                     "(property) ICellItem.Variable: String",
@@ -6389,7 +6389,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
             {
                 name: "Suffix",
                 definitionType: "property",
-                returnType: BasicTypeDefinitions.string ,
+                returnType: basicTypeDefinitions.string ,
                 note: [
                     "```ds",
                     "(property) ICellItem.Suffix: String",
@@ -6414,7 +6414,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
             {
                 name: "Count",
                 definitionType: "property",
-                returnType: BasicTypeDefinitions.long ,
+                returnType: basicTypeDefinitions.long ,
                 readonly: true,
                 note: [
                     "```ds",
@@ -6427,11 +6427,11 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
             {
                 name: "Item",
                 definitionType: "property",
-                returnType: BasicTypeDefinitions.variant ,
+                returnType: basicTypeDefinitions.variant ,
                 isCollection: true,
                 index: {
                     name: "Index",
-                    type: BasicTypeDefinitions.variant,
+                    type: basicTypeDefinitions.variant,
                 },
                 note: [
                     "```ds",
@@ -6463,7 +6463,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 arguments: [
                     {
                         name: "Index",
-                        type: BasicTypeDefinitions.variant,
+                        type: basicTypeDefinitions.variant,
                         note: "A reference to a Filter object in the ID`ocument.Filters` collection. This is either the integer position of the object within the collection or the name of the filter."
                     }
                 ],
@@ -6485,31 +6485,31 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 arguments: [
                     {
                         name: "Name",
-                        type: BasicTypeDefinitions.string,
+                        type: basicTypeDefinitions.string,
                         note: "The filter name. This is used to reference the filter within the collection.",
                     },
                     {
                         name: "Expression",
-                        type: BasicTypeDefinitions.string,
+                        type: basicTypeDefinitions.string,
                         note: "An *mrEvalulate* expression that is evaluated for each case in the case data. Only cases for which the expression evaluates to *True* are included.",
                     },
                     {
                         name: "Description",
-                        type: BasicTypeDefinitions.string,
+                        type: basicTypeDefinitions.string,
                         optional: true,
                         defaultValue: "\"\"",
                         note: "Filter description",
                     },
                     {
                         name: "Level",
-                        type: BasicTypeDefinitions.string,
+                        type: basicTypeDefinitions.string,
                         optional: true,
                         defaultValue: "HDATA",
                         note: "The level the filter is to be applied at. The expression used must be relative to the specified level. The default level is HDATA.",
                     },
                     {
                         name: "IsInterviewFilter",
-                        type: BasicTypeDefinitions.boolean,
+                        type: basicTypeDefinitions.boolean,
                         optional: true,
                         defaultValue: 0,
                         note: "*True* if the new filter is intended to filter based on the interview status. The default is *False*. This flag does not effect the evaluation of the filter, it just allows a distinction to be made between interview and non-interview filters for the purpose of generating table annotations.",
@@ -6555,7 +6555,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 arguments: [
                     {
                         name: "Index",
-                        type: BasicTypeDefinitions.variant,
+                        type: basicTypeDefinitions.variant,
                     }
                 ],
                 note: [
@@ -6582,7 +6582,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
             {
                 name: "Name",
                 definitionType: "property",
-                returnType: BasicTypeDefinitions.string ,
+                returnType: basicTypeDefinitions.string ,
                 readonly: true,
                 note: [
                     "```ds",
@@ -6611,7 +6611,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
             {
                 name: "Description",
                 definitionType: "property",
-                returnType: BasicTypeDefinitions.string ,
+                returnType: basicTypeDefinitions.string ,
                 note: [
                     "```ds",
                     "(property) IFilter.Description: String",
@@ -6623,7 +6623,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
             {
                 name: "Expression",
                 definitionType: "property",
-                returnType: BasicTypeDefinitions.string ,
+                returnType: basicTypeDefinitions.string ,
                 note: [
                     "```ds",
                     "(property) IFilter.Expression: String",
@@ -6640,7 +6640,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
             {
                 name: "IsDimensionsFilter",
                 definitionType: "property",
-                returnType: BasicTypeDefinitions.boolean ,
+                returnType: basicTypeDefinitions.boolean ,
                 note: [
                     "```ds",
                     "(property) IFilter.IsDimensionsFilter: Boolean",
@@ -6652,7 +6652,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
             {
                 name: "IsInterviewFilter",
                 definitionType: "property",
-                returnType: BasicTypeDefinitions.boolean ,
+                returnType: basicTypeDefinitions.boolean ,
                 note: [
                     "```ds",
                     "(property) IFilter.IsInterviewFilter: Boolean",
@@ -6664,7 +6664,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
             {
                 name: "Level",
                 definitionType: "property",
-                returnType: BasicTypeDefinitions.string ,
+                returnType: basicTypeDefinitions.string ,
                 note: [
                     "```ds",
                     "(property) IFilter.Level: String",
@@ -6690,7 +6690,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
             {
                 name: "Count",
                 definitionType: "property",
-                returnType: BasicTypeDefinitions.long ,
+                returnType: basicTypeDefinitions.long ,
                 readonly: true,
                 note: [
                     "```ds",
@@ -6708,7 +6708,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 isCollection: true,
                 index: {
                     name: "Index",
-                    type: BasicTypeDefinitions.variant,
+                    type: basicTypeDefinitions.variant,
                 },
                 note: [
                     "```ds",
@@ -6734,7 +6734,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
             {
                 name: "ColumnIDs",
                 definitionType: "property",
-                returnType: BasicTypeDefinitions.string ,
+                returnType: basicTypeDefinitions.string ,
                 note: [
                     "```ds",
                     "(property) IStatistics.ColumnIDs: String",
@@ -6750,7 +6750,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
             {
                 name: "ShowMinPVal",
                 definitionType: "property",
-                returnType: BasicTypeDefinitions.boolean ,
+                returnType: basicTypeDefinitions.boolean ,
                 note: [
                     "```ds",
                     "(property) IStatistics.ShowMinPVal: Boolean",
@@ -6765,7 +6765,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
             {
                 name: "TestColumns",
                 definitionType: "property",
-                returnType: BasicTypeDefinitions.string ,
+                returnType: basicTypeDefinitions.string ,
                 note: [
                     "```ds",
                     "(property) IStatistics.TestColumns: String",
@@ -6790,7 +6790,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
             {
                 name: "UseEffectiveBase",
                 definitionType: "property",
-                returnType: BasicTypeDefinitions.boolean ,
+                returnType: basicTypeDefinitions.boolean ,
                 note: [
                     "```ds",
                     "(property) IStatistics.UseEffectiveBase: Boolean",
@@ -6805,7 +6805,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
             {
                 name: "UseGridOverlapFormula",
                 definitionType: "property",
-                returnType: BasicTypeDefinitions.boolean ,
+                returnType: basicTypeDefinitions.boolean ,
                 note: [
                     "```ds",
                     "(property) IStatistics.UseGridOverlapFormula: Boolean",
@@ -6826,7 +6826,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 arguments: [
                     {
                         name: "Name",
-                        type: BasicTypeDefinitions.variant,
+                        type: basicTypeDefinitions.variant,
                         note: "The name of a `Statistic` object in the `IDocument.Statistics` collection.",
                     }
                 ],
@@ -6858,7 +6858,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 arguments: [
                     {
                         name: "Index",
-                        type: BasicTypeDefinitions.variant,
+                        type: basicTypeDefinitions.variant,
                     }
                 ],
                 note: [
@@ -6885,7 +6885,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
             {
                 name: "Annotation",
                 definitionType: "property",
-                returnType: BasicTypeDefinitions.string ,
+                returnType: basicTypeDefinitions.string ,
                 readonly: true,
                 note: [
                     "```ds",
@@ -6902,7 +6902,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
             {
                 name: "Name",
                 definitionType: "property",
-                returnType: BasicTypeDefinitions.string ,
+                returnType: basicTypeDefinitions.string ,
                 readonly: true,
                 note: [
                     "```ds",
@@ -6979,7 +6979,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
             {
                 name: "Count",
                 definitionType: "property",
-                returnType: BasicTypeDefinitions.long ,
+                returnType: basicTypeDefinitions.long ,
                 readonly: true,
                 note: [
                     "```ds",
@@ -6997,7 +6997,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 isCollection: true,
                 index: {
                     name: "Index",
-                    type: BasicTypeDefinitions.variant,
+                    type: basicTypeDefinitions.variant,
                 },
                 note: [
                     "```ds",
@@ -7120,7 +7120,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
             {
                 name: "Name",
                 definitionType: "property",
-                returnType: BasicTypeDefinitions.string ,
+                returnType: basicTypeDefinitions.string ,
                 note: [
                     "```ds",
                     "(property) IProperty.Name: String",
@@ -7132,7 +7132,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
             {
                 name: "Value",
                 definitionType: "property",
-                returnType: BasicTypeDefinitions.variant ,
+                returnType: basicTypeDefinitions.variant ,
                 note: [
                     "```ds",
                     "(property) IProperty.Value: Variant",
@@ -7177,7 +7177,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
             {
                 name: "Count",
                 definitionType: "property",
-                returnType: BasicTypeDefinitions.long ,
+                returnType: basicTypeDefinitions.long ,
                 readonly: true,
                 note: [
                     "```ds",
@@ -7195,7 +7195,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 isCollection: true,
                 index: {
                     name: "Index",
-                    type: BasicTypeDefinitions.variant,
+                    type: basicTypeDefinitions.variant,
                 },
                 note: [
                     "```ds",
@@ -7241,7 +7241,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                     },
                     {
                         name: "CellItemRef",
-                        type: BasicTypeDefinitions.long,
+                        type: basicTypeDefinitions.long,
                         optional: true,
                         defaultValue: "(long)0",
                         note: "The index of an item in the tables CellItems collection to apply the rule to. The default is 0 (the first cell item)",
@@ -7255,7 +7255,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                     },
                     {
                         name: "Value",
-                        type: BasicTypeDefinitions.double,
+                        type: basicTypeDefinitions.double,
                         optional: true,
                         defaultValue: "(double)0.0",
                         note: "The condition to test for. The default is 0.",
@@ -7294,7 +7294,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 arguments: [
                     {
                         name: "Index",
-                        type: BasicTypeDefinitions.variant,
+                        type: basicTypeDefinitions.variant,
                         note: "An integer index into the collection."
                     }
                 ],
@@ -7324,7 +7324,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
             {
                 name: "IsActive",
                 definitionType: "property",
-                returnType: BasicTypeDefinitions.boolean ,
+                returnType: basicTypeDefinitions.boolean ,
                 readonly: true,
                 note: [
                     "```ds",
@@ -7356,7 +7356,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
             {
                 name: "CellItemRef",
                 definitionType: "property",
-                returnType: BasicTypeDefinitions.long ,
+                returnType: basicTypeDefinitions.long ,
                 note: [
                     "```ds",
                     "(property) IRule.CellItemRef: Long",
@@ -7368,7 +7368,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
             {
                 name: "ElementRef",
                 definitionType: "property",
-                returnType: BasicTypeDefinitions.string ,
+                returnType: basicTypeDefinitions.string ,
                 note: [
                     "```ds",
                     "(property) IRule.ElementRef: String",
@@ -7385,7 +7385,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
             {
                 name: "IgnoreSpecialElements",
                 definitionType: "property",
-                returnType: BasicTypeDefinitions.boolean ,
+                returnType: basicTypeDefinitions.boolean ,
                 note: [
                     "```ds",
                     "(property) IRule.IgnoreSpecialElements: Boolean",
@@ -7436,7 +7436,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
             {
                 name: "Value",
                 definitionType: "property",
-                returnType: BasicTypeDefinitions.double ,
+                returnType: basicTypeDefinitions.double ,
                 note: [
                     "```ds",
                     "(property) IRule.Value: Double",
@@ -7469,7 +7469,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
             {
                 name: "IsActive",
                 definitionType: "property",
-                returnType: BasicTypeDefinitions.boolean ,
+                returnType: basicTypeDefinitions.boolean ,
                 readonly: true,
                 note: [
                     "```ds",
@@ -7501,7 +7501,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
             {
                 name: "ElementRef",
                 definitionType: "property",
-                returnType: BasicTypeDefinitions.string ,
+                returnType: basicTypeDefinitions.string ,
                 note: [
                     "```ds",
                     "(property) ISortSpecification.ElementRef: String",
@@ -7595,7 +7595,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
             {
                 name: "Text",
                 definitionType: "property",
-                returnType: BasicTypeDefinitions.string ,
+                returnType: basicTypeDefinitions.string ,
                 readonly: true,
                 note: [
                     "```ds",
@@ -7620,7 +7620,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
             {
                 name: "Specification",
                 definitionType: "property",
-                returnType: BasicTypeDefinitions.string ,
+                returnType: basicTypeDefinitions.string ,
                 note: [
                     "```ds",
                     "(property) IAnnotation.Specification: String",
@@ -7657,7 +7657,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
             {
                 name: "Count",
                 definitionType: "property",
-                returnType: BasicTypeDefinitions.long ,
+                returnType: basicTypeDefinitions.long ,
                 readonly: true,
                 note: [
                     "```ds",
@@ -7675,7 +7675,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 isCollection: true,
                 index: {
                     name: "Index",
-                    type: BasicTypeDefinitions.variant,
+                    type: basicTypeDefinitions.variant,
                 },
                 note: [
                     "```ds",
@@ -7772,7 +7772,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 isCollection: true,
                 index: {
                     name: "Index",
-                    type: BasicTypeDefinitions.variant
+                    type: basicTypeDefinitions.variant
                 },
                 note: [
                     "```ds",
@@ -7785,7 +7785,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
             {
                 name: "Count",
                 definitionType: "property",
-                returnType: BasicTypeDefinitions.long ,
+                returnType: basicTypeDefinitions.long ,
                 readonly: true,
                 note: [
                     "```ds",
@@ -7798,7 +7798,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
             {
                 name: "HasChildNodes",
                 definitionType: "property",
-                returnType: BasicTypeDefinitions.boolean ,
+                returnType: basicTypeDefinitions.boolean ,
                 readonly: true,
                 note: [
                     "```ds",
@@ -7811,7 +7811,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
             {
                 name: "HasTable",
                 definitionType: "property",
-                returnType: BasicTypeDefinitions.boolean ,
+                returnType: basicTypeDefinitions.boolean ,
                 readonly: true,
                 note: [
                     "```ds",
@@ -7829,7 +7829,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 isCollection: true,
                 index: {
                     name: "Index",
-                    type: BasicTypeDefinitions.variant,
+                    type: basicTypeDefinitions.variant,
                 },
                 note: [
                     "```ds",
@@ -7842,7 +7842,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
             {
                 name: "Name",
                 definitionType: "property",
-                returnType: BasicTypeDefinitions.string ,
+                returnType: basicTypeDefinitions.string ,
                 readonly: true,
                 note: [
                     "```ds",
@@ -7871,7 +7871,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
             {
                 name: "Description",
                 definitionType: "property",
-                returnType: BasicTypeDefinitions.string ,
+                returnType: basicTypeDefinitions.string ,
                 note: [
                     "```ds",
                     "(property) ITableListNode.Description: String",
@@ -7904,11 +7904,11 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 arguments: [
                     {
                         name: "Name",
-                        type: BasicTypeDefinitions.string,
+                        type: basicTypeDefinitions.string,
                     },
                     {
                         name: "Field",
-                        type: BasicTypeDefinitions.string,
+                        type: basicTypeDefinitions.string,
                     },
                     {
                         name: "Orientation",
@@ -7918,13 +7918,13 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                     },
                     {
                         name: "Description",
-                        type: BasicTypeDefinitions.string,
+                        type: basicTypeDefinitions.string,
                         optional: true,
                         defaultValue: "\"\""
                     },
                     {
                         name: "Index",
-                        type: BasicTypeDefinitions.long,
+                        type: basicTypeDefinitions.long,
                         optional: true,
                         defaultValue: -1,
                     },
@@ -7952,19 +7952,19 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 arguments: [
                     {
                         name: "Name",
-                        type: BasicTypeDefinitions.string,
+                        type: basicTypeDefinitions.string,
                         note: "The name of the node",
                     },
                     {
                         name: "Description",
-                        type: BasicTypeDefinitions.string,
+                        type: basicTypeDefinitions.string,
                         optional: true,
                         defaultValue: "\"\"",
                         note: "An optional description for the node",
                     },
                     {
                         name: "Index",
-                        type: BasicTypeDefinitions.long,
+                        type: basicTypeDefinitions.long,
                         optional: true,
                         defaultValue: -1,
                         note: "The position in the collection to insert the new node. The new node is inserted at the specified integer position. The index of the node that is currently at that position and all following nodes is increased by one. If the index is not specified, or is specified as -1, then the node is appended to the end of the collection.",
@@ -8002,23 +8002,23 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 arguments: [
                     {
                         name: "Name",
-                        type: BasicTypeDefinitions.string,
+                        type: basicTypeDefinitions.string,
                     },
                     {
                         name: "Specification",
-                        type: BasicTypeDefinitions.string,
+                        type: basicTypeDefinitions.string,
                         optional: true,
                         defaultValue: "\"\"",
                     },
                     {
                         name: "Description",
-                        type: BasicTypeDefinitions.string,
+                        type: basicTypeDefinitions.string,
                         optional: true,
                         defaultValue: "\"\"",
                     },
                     {
                         name: "Index",
-                        type: BasicTypeDefinitions.long,
+                        type: basicTypeDefinitions.long,
                         optional: true,
                         defaultValue: -1,
                     },
@@ -8051,7 +8051,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                     },
                     {
                         name: "Index",
-                        type: BasicTypeDefinitions.long,
+                        type: basicTypeDefinitions.long,
                         optional: true,
                         defaultValue: -1
                     }
@@ -8085,7 +8085,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                     },
                     {
                         name: "Index",
-                        type: BasicTypeDefinitions.long,
+                        type: basicTypeDefinitions.long,
                         optional: true,
                         defaultValue: -1
                     }
@@ -8128,7 +8128,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 arguments: [
                     {
                         name: "Index",
-                        type: BasicTypeDefinitions.variant,
+                        type: basicTypeDefinitions.variant,
                         note: "A reference to the child node to be removed. This is either the integer index of the node or the name of the node."
                     }
                 ],
@@ -8282,7 +8282,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
             {
                 name: "SortColumn",
                 definitionType: "property",
-                returnType: BasicTypeDefinitions.string ,
+                returnType: basicTypeDefinitions.string ,
                 note: [
                     "```ds",
                     "(property) ITableDefaults.SortColumn: String",
@@ -8297,7 +8297,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
             {
                 name: "SortRow",
                 definitionType: "property",
-                returnType: BasicTypeDefinitions.string ,
+                returnType: basicTypeDefinitions.string ,
                 note: [
                     "```ds",
                     "(property) ITableDefaults.SortRow: String",
@@ -8313,7 +8313,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
             {
                 name: "Weight",
                 definitionType: "property",
-                returnType: BasicTypeDefinitions.string ,
+                returnType: basicTypeDefinitions.string ,
                 note: [
                     "```ds",
                     "(property) ITableDefaults.Weight: String",
@@ -8492,7 +8492,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
             {
                 name: "CanChangeView",
                 definitionType: "property",
-                returnType: BasicTypeDefinitions.boolean ,
+                returnType: basicTypeDefinitions.boolean ,
                 readonly: true,
                 note: [
                     "```ds",
@@ -8508,7 +8508,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
             {
                 name: "HasHdata",
                 definitionType: "property",
-                returnType: BasicTypeDefinitions.boolean ,
+                returnType: basicTypeDefinitions.boolean ,
                 readonly: true,
                 note: [
                     "```ds",
@@ -8525,7 +8525,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
             {
                 name: "HasVdata",
                 definitionType: "property",
-                returnType: BasicTypeDefinitions.boolean ,
+                returnType: basicTypeDefinitions.boolean ,
                 readonly: true,
                 note: [
                     "```ds",
@@ -8574,7 +8574,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
             {
                 name: "MdscName",
                 definitionType: "property",
-                returnType: BasicTypeDefinitions.string ,
+                returnType: basicTypeDefinitions.string ,
                 readonly: true,
                 note: [
                     "```ds",
@@ -8587,7 +8587,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
             {
                 name: "MetaDataLocation",
                 definitionType: "property",
-                returnType: BasicTypeDefinitions.string ,
+                returnType: basicTypeDefinitions.string ,
                 readonly: true,
                 note: [
                     "```ds",
@@ -8632,7 +8632,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
             {
                 name: "Version",
                 definitionType: "property",
-                returnType: BasicTypeDefinitions.string ,
+                returnType: basicTypeDefinitions.string ,
                 readonly: true,
                 note: [
                     "```ds",
@@ -8645,7 +8645,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
             {
                 name: "CdscName",
                 definitionType: "property",
-                returnType: BasicTypeDefinitions.string ,
+                returnType: basicTypeDefinitions.string ,
                 note: [
                     "```ds",
                     "(property) IDataSet.CdscName: String",
@@ -8657,7 +8657,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
             {
                 name: "DbLocation",
                 definitionType: "property",
-                returnType: BasicTypeDefinitions.string ,
+                returnType: basicTypeDefinitions.string ,
                 note: [
                     "```ds",
                     "(property) IDataSet.DbLocation: String",
@@ -8669,7 +8669,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
             {
                 name: "Description",
                 definitionType: "property",
-                returnType: BasicTypeDefinitions.string ,
+                returnType: basicTypeDefinitions.string ,
                 note: [
                     "```ds",
                     "(property) IDataSet.Description: String",
@@ -8681,7 +8681,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
             {
                 name: "Filter",
                 definitionType: "property",
-                returnType: BasicTypeDefinitions.string ,
+                returnType: basicTypeDefinitions.string ,
                 note: [
                     "```ds",
                     "(property) IDataSet.Filter: String",
@@ -8699,7 +8699,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
             {
                 name: "Project",
                 definitionType: "property",
-                returnType: BasicTypeDefinitions.string ,
+                returnType: basicTypeDefinitions.string ,
                 note: [
                     "```ds",
                     "(property) IDataSet.Project: String",
@@ -8731,40 +8731,40 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 arguments: [
                     {
                         name: "MetaData",
-                        type: BasicTypeDefinitions.variant,
+                        type: basicTypeDefinitions.variant,
                         note: "The location of the metadata to use. The format of this string depends on the MDSC, but is typically a location of an .MDD or some other type of file. This can also be an existing MDM document object.",
                     },
                     {
                         name: "MDSC",
-                        type: BasicTypeDefinitions.string,
+                        type: basicTypeDefinitions.string,
                         optional: true,
                         defaultValue: "\"\"",
                         note: "The metadata *DSC* to use e.g. *mrQvDsc*, or empty if no *MDSC* is required",
                     },
                     {
                         name: "DbLocation",
-                        type: BasicTypeDefinitions.string,
+                        type: basicTypeDefinitions.string,
                         optional: true,
                         defaultValue: "\"\"",
                         note: "The location of the case data to use. The format of this string depends on the *CDSC*",
                     },
                     {
                         name: "CDSC",
-                        type: BasicTypeDefinitions.string,
+                        type: basicTypeDefinitions.string,
                         optional: true,
                         defaultValue: "\"\"",
                         note: "The case data dsc to use e.g. *mrQdiDrsDsc*",
                     },
                     {
                         name: "Project",
-                        type: BasicTypeDefinitions.string,
+                        type: basicTypeDefinitions.string,
                         optional: true,
                         defaultValue: "\"\"",
                         note: "The project name to use if the *CDSC* supports multiple projects. Otherwise this parameter is ignored.",
                     },
                     {
                         name: "Version",
-                        type: BasicTypeDefinitions.string,
+                        type: basicTypeDefinitions.string,
                         optional: true,
                         defaultValue: "{..}",
                         note: "A version specified for the metadata to use. The default specification string is “{..}” (the 'SuperVersion') which means to use all locked versions in the metadata.",
@@ -8826,7 +8826,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
             {
                 name: "Count",
                 definitionType: "property",
-                returnType: BasicTypeDefinitions.long ,
+                returnType: basicTypeDefinitions.long ,
                 readonly: true,
                 note: [
                     "```ds",
@@ -8844,7 +8844,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 isCollection: true,
                 index: {
                     name: "Index",
-                    type: BasicTypeDefinitions.variant
+                    type: basicTypeDefinitions.variant
                 },
                 note: [
                     "```ds",
@@ -8876,24 +8876,24 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 arguments: [
                     {
                         name: "Name",
-                        type: BasicTypeDefinitions.string,
+                        type: basicTypeDefinitions.string,
                         note: "The name used to reference the Export object within the collection.",
                     },
                     {
                         name: "ClassId",
-                        type: BasicTypeDefinitions.string,
+                        type: basicTypeDefinitions.string,
                         note: "The `ClassId` string of the class that implements the export.",
                     },
                     {
                         name: "CodeBase",
-                        type: BasicTypeDefinitions.string,
+                        type: basicTypeDefinitions.string,
                         optional: true,
                         defaultValue: "\"\"",
                         note: "The location of the codebase (the *CAB* file) for the export plug-in. See IExport.CodeBase",
                     },
                     {
                         name: "Description",
-                        type: BasicTypeDefinitions.string,
+                        type: basicTypeDefinitions.string,
                         optional: true,
                         defaultValue: "\"\"",
                         note: "A description of the plug-in.",
@@ -8927,7 +8927,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 arguments: [
                     {
                         name: "Index",
-                        type: BasicTypeDefinitions.variant,
+                        type: basicTypeDefinitions.variant,
                         note: "A reference to an `Export` object. This is either the integer position of the export within the collection or the name of the export.",
                     }
                 ],
@@ -8955,7 +8955,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
             {
                 name: "ClassId",
                 definitionType: "property",
-                returnType: BasicTypeDefinitions.string ,
+                returnType: basicTypeDefinitions.string ,
                 readonly: true,
                 note: [
                     "```ds",
@@ -8968,7 +8968,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
             {
                 name: "CodeBase",
                 definitionType: "property",
-                returnType: BasicTypeDefinitions.string ,
+                returnType: basicTypeDefinitions.string ,
                 readonly: true,
                 note: [
                     "```ds",
@@ -8981,7 +8981,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
             {
                 name: "Description",
                 definitionType: "property",
-                returnType: BasicTypeDefinitions.string ,
+                returnType: basicTypeDefinitions.string ,
                 readonly: true,
                 note: [
                     "```ds",
@@ -8994,7 +8994,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
             {
                 name: "IsServerOnly",
                 definitionType: "property",
-                returnType: BasicTypeDefinitions.boolean ,
+                returnType: basicTypeDefinitions.boolean ,
                 readonly: true,
                 note: [
                     "```ds",
@@ -9007,7 +9007,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
             {
                 name: "Name",
                 definitionType: "property",
-                returnType: BasicTypeDefinitions.string ,
+                returnType: basicTypeDefinitions.string ,
                 readonly: true,
                 note: [
                     "```ds",
@@ -9048,17 +9048,17 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
             {
                 name: "Export",
                 definitionType: "method",
-                returnType: BasicTypeDefinitions.variant ,
+                returnType: basicTypeDefinitions.variant ,
                 arguments: [
                     {
                         name: "Destination",
-                        type: BasicTypeDefinitions.variant,
+                        type: basicTypeDefinitions.variant,
                         optional: true,
                         note: "Normally the destination of the result of the export. The meaning of the `Destination` parameter is dependent on the particular export plug-in.",
                     },
                     {
                         name: "Tables",
-                        type: BasicTypeDefinitions.variant,
+                        type: basicTypeDefinitions.variant,
                         optional: true,
                         note: "A table or list of tables to be exported. This is similar to the `Tables` parameter of the `IDocument.Populate` method.",
                     }
@@ -9096,7 +9096,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
             {
                 name: "Count",
                 definitionType: "property",
-                returnType: BasicTypeDefinitions.long ,
+                returnType: basicTypeDefinitions.long ,
                 readonly: true,
                 note: [
                     "```ds",
@@ -9114,7 +9114,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 isCollection: true,
                 index: {
                     name: "Index",
-                    type: BasicTypeDefinitions.variant
+                    type: basicTypeDefinitions.variant
                 },
                 note: [
                     "```ds",
@@ -9149,12 +9149,12 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 arguments: [
                     {
                         name: "ElementName",
-                        type: BasicTypeDefinitions.string,
+                        type: basicTypeDefinitions.string,
                         note: "The name of the MDM object. For an aggregated table it must be an element within the MDM variable which the axis is based on. For a profile table it must be the name of an MDM variable.",
                     },
                     {
                         name: "Index",
-                        type: BasicTypeDefinitions.long,
+                        type: basicTypeDefinitions.long,
                         optional: true,
                         defaultValue: -1,
                         note: "The position in the collection to insert the element. See the Index parameter of the IElements.AddNew method for more information.",
@@ -9184,7 +9184,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 arguments: [
                     {
                         name: "Name",
-                        type: BasicTypeDefinitions.string,
+                        type: basicTypeDefinitions.string,
                         note: "The name for the new element",
                     },
                     {
@@ -9194,7 +9194,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                     },
                     {
                         name: "Index",
-                        type: BasicTypeDefinitions.long,
+                        type: basicTypeDefinitions.long,
                         optional: true,
                         defaultValue: -1,
                         note: "The position in the collection to insert the element. The new element is inserted at the specified integer position. The index of the element that is currently at that position and all following elements is increased by one. If the index is not specified, or is specified as -1, then the element is appended to the end of the collection.",
@@ -9248,22 +9248,22 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 arguments: [
                     {
                         name: "NewElementName",
-                        type: BasicTypeDefinitions.string,
+                        type: basicTypeDefinitions.string,
                         note: "The name to give to the new element.",
                     },
                     {
                         name: "MdmVariableName",
-                        type: BasicTypeDefinitions.string,
+                        type: basicTypeDefinitions.string,
                         note: "The name of the MDM variable. It must be a variable which exists in the MDM document.",
                     },
                     {
                         name: "MdmElementName",
-                        type: BasicTypeDefinitions.string,
+                        type: basicTypeDefinitions.string,
                         note: "The name of the MDM element. It must be an element within the specified MDM variable.",
                     },
                     {
                         name: "Index",
-                        type: BasicTypeDefinitions.long,
+                        type: basicTypeDefinitions.long,
                         optional: true,
                         defaultValue: -1,
                         note: "The position in the collection to insert the element.",
@@ -9304,7 +9304,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 arguments: [
                     {
                         name: "Index",
-                        type: BasicTypeDefinitions.variant,
+                        type: basicTypeDefinitions.variant,
                         note: "A reference to the object in the collection to remove. This is either the integer position of the object within the collection or the name of the Element object."
                     }
                 ],
@@ -9332,7 +9332,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
             {
                 name: "HasCellValues",
                 definitionType: "property",
-                returnType: BasicTypeDefinitions.boolean ,
+                returnType: basicTypeDefinitions.boolean ,
                 readonly: true,
                 note: [
                     "```ds",
@@ -9350,7 +9350,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
             {
                 name: "Name",
                 definitionType: "property",
-                returnType: BasicTypeDefinitions.string ,
+                returnType: basicTypeDefinitions.string ,
                 readonly: true,
                 note: [
                     "```ds",
@@ -9383,7 +9383,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
             {
                 name: "ShownOnTable",
                 definitionType: "property",
-                returnType: BasicTypeDefinitions.boolean ,
+                returnType: basicTypeDefinitions.boolean ,
                 readonly: true,
                 note: [
                     "```ds",
@@ -9402,7 +9402,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
             {
                 name: "Specification",
                 definitionType: "property",
-                returnType: BasicTypeDefinitions.string ,
+                returnType: basicTypeDefinitions.string ,
                 readonly: true,
                 note: [
                     "```ds",
@@ -9457,7 +9457,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
             {
                 name: "AnalysisVariable",
                 definitionType: "property",
-                returnType: BasicTypeDefinitions.string ,
+                returnType: basicTypeDefinitions.string ,
                 note: [
                     "```ds",
                     "(property) IElement.AnalysisVariable: String",
@@ -9512,7 +9512,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
             {
                 name: "ColumnText",
                 definitionType: "property",
-                returnType: BasicTypeDefinitions.string ,
+                returnType: basicTypeDefinitions.string ,
                 note: [
                     "```ds",
                     "(property) IElement.ColumnText: String",
@@ -9527,7 +9527,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
             {
                 name: "CountsOnly",
                 definitionType: "property",
-                returnType: BasicTypeDefinitions.boolean ,
+                returnType: basicTypeDefinitions.boolean ,
                 note: [
                     "```ds",
                     "(property) IElement.CountsOnly: Boolean",
@@ -9552,7 +9552,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
             {
                 name: "CutOffValue",
                 definitionType: "property",
-                returnType: BasicTypeDefinitions.double ,
+                returnType: basicTypeDefinitions.double ,
                 note: [
                     "```ds",
                     "(property) IElement.CutOffValue: Double",
@@ -9569,7 +9569,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
             {
                 name: "Decimals",
                 definitionType: "property",
-                returnType: BasicTypeDefinitions.long ,
+                returnType: basicTypeDefinitions.long ,
                 note: [
                     "```ds",
                     "(property) IElement.Decimals: Long",
@@ -9601,7 +9601,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
             {
                 name: "Expression",
                 definitionType: "property",
-                returnType: BasicTypeDefinitions.string ,
+                returnType: basicTypeDefinitions.string ,
                 readonly: false,
                 isCollection: false,
                 note: [
@@ -9622,7 +9622,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
             {
                 name: "Factor",
                 definitionType: "property",
-                returnType: BasicTypeDefinitions.variant ,
+                returnType: basicTypeDefinitions.variant ,
                 note: [
                     "```ds",
                     "(property) IElement.Factor: Variant",
@@ -9637,7 +9637,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
             {
                 name: "IncludeInBase",
                 definitionType: "property",
-                returnType: BasicTypeDefinitions.boolean ,
+                returnType: basicTypeDefinitions.boolean ,
                 note: [
                     "```ds",
                     "(property) IElement.IncludeInBase: Boolean",
@@ -9652,7 +9652,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
             {
                 name: "IsFixed",
                 definitionType: "property",
-                returnType: BasicTypeDefinitions.boolean ,
+                returnType: basicTypeDefinitions.boolean ,
                 note: [
                     "```ds",
                     "(property) IElement.IsFixed: Boolean",
@@ -9667,7 +9667,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
             {
                 name: "IsHidden",
                 definitionType: "property",
-                returnType: BasicTypeDefinitions.boolean ,
+                returnType: basicTypeDefinitions.boolean ,
                 note: [
                     "```ds",
                     "(property) IElement.IsHidden: Boolean",
@@ -9682,7 +9682,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
             {
                 name: "IsHiddenWhenColumn",
                 definitionType: "property",
-                returnType: BasicTypeDefinitions.boolean ,
+                returnType: basicTypeDefinitions.boolean ,
                 note: [
                     "```ds",
                     "(property) IElement.IsHiddenWhenColumn: Boolean",
@@ -9697,7 +9697,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
             {
                 name: "IsHiddenWhenRow",
                 definitionType: "property",
-                returnType: BasicTypeDefinitions.boolean ,
+                returnType: basicTypeDefinitions.boolean ,
                 note: [
                     "```ds",
                     "(property) IElement.IsHiddenWhenRow: Boolean",
@@ -9712,7 +9712,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
             {
                 name: "IsUnweighted",
                 definitionType: "property",
-                returnType: BasicTypeDefinitions.boolean ,
+                returnType: basicTypeDefinitions.boolean ,
                 note: [
                     "```ds",
                     "(property) IElement.IsUnweighted: Boolean",
@@ -9729,11 +9729,11 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
             {
                 name: "Label",
                 definitionType: "property",
-                returnType: BasicTypeDefinitions.string ,
+                returnType: basicTypeDefinitions.string ,
                 isCollection: true,
                 index: {
                     name: "Language",
-                    type: BasicTypeDefinitions.string,
+                    type: basicTypeDefinitions.string,
                     optional: true,
                     defaultValue: "\"\"",
                 },
@@ -9757,7 +9757,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
             {
                 name: "Multiplier",
                 definitionType: "property",
-                returnType: BasicTypeDefinitions.string ,
+                returnType: basicTypeDefinitions.string ,
                 note: [
                     "```ds",
                     "(property) IElement.Multiplier: String",
@@ -9786,7 +9786,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
             {
                 name: "Weight",
                 definitionType: "property",
-                returnType: BasicTypeDefinitions.string ,
+                returnType: basicTypeDefinitions.string ,
                 note: [
                     "```ds",
                     "(property) IElement.Weight: String",
@@ -9832,7 +9832,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
             {
                 name: "Count",
                 definitionType: "property",
-                returnType: BasicTypeDefinitions.long ,
+                returnType: basicTypeDefinitions.long ,
                 readonly: true,
                 note: [
                     "```ds",
@@ -9850,7 +9850,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 isCollection: true,
                 index: {
                     name: "Index",
-                    type: BasicTypeDefinitions.variant,
+                    type: basicTypeDefinitions.variant,
                 },
                 note: [
                     "```ds",
@@ -9902,7 +9902,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
             {
                 name: "HeadingId",
                 definitionType: "property",
-                returnType: BasicTypeDefinitions.string ,
+                returnType: basicTypeDefinitions.string ,
                 readonly: true,
                 note: [
                     "```ds",
@@ -9918,12 +9918,12 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
             {
                 name: "Label",
                 definitionType: "property",
-                returnType: BasicTypeDefinitions.string ,
+                returnType: basicTypeDefinitions.string ,
                 readonly: true,
                 isCollection: true,
                 index: {
                     name: "Language",
-                    type: BasicTypeDefinitions.string,
+                    type: basicTypeDefinitions.string,
                     optional: true,
                     defaultValue: "\"\"",
                 },
@@ -9941,7 +9941,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
             {
                 name: "Name",
                 definitionType: "property",
-                returnType: BasicTypeDefinitions.string ,
+                returnType: basicTypeDefinitions.string ,
                 readonly: true,
                 note: [
                     "```ds",
@@ -10015,7 +10015,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
             {
                 name: "IsSortedOn",
                 definitionType: "property",
-                returnType: BasicTypeDefinitions.boolean ,
+                returnType: basicTypeDefinitions.boolean ,
                 note: [
                     "```ds",
                     "(property) IElementHeading.IsSortedOn: Boolean",
@@ -10032,7 +10032,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
             {
                 name: "GetSuppressed",
                 definitionType: "method",
-                returnType: BasicTypeDefinitions.boolean ,
+                returnType: basicTypeDefinitions.boolean ,
                 note: "(method) IElementHeading.GetSuppressed(): Boolean"
             },
             {
@@ -10041,7 +10041,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 arguments: [
                     {
                         name: "newVal",
-                        type: BasicTypeDefinitions.boolean,
+                        type: basicTypeDefinitions.boolean,
                     }
                 ],
                 note: "(method) IElementHeading.SetSuppressed(newVal: Boolean): Void"
@@ -10062,7 +10062,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
             {
                 name: "Count",
                 definitionType: "property",
-                returnType: BasicTypeDefinitions.long ,
+                returnType: basicTypeDefinitions.long ,
                 readonly: true,
                 note: [
                     "```ds",
@@ -10080,7 +10080,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 isCollection: true,
                 index: {
                     name: "Index",
-                    type: BasicTypeDefinitions.variant
+                    type: basicTypeDefinitions.variant
                 },
                 note: [
                     "```ds",
@@ -10122,7 +10122,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
             {
                 name: "Count",
                 definitionType: "property",
-                returnType: BasicTypeDefinitions.long ,
+                returnType: basicTypeDefinitions.long ,
                 readonly: true,
                 note: [
                     "```ds",
@@ -10138,7 +10138,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
             {
                 name: "IsFolder",
                 definitionType: "property",
-                returnType: BasicTypeDefinitions.boolean ,
+                returnType: basicTypeDefinitions.boolean ,
                 readonly: true,
                 note: [
                     "```ds",
@@ -10156,7 +10156,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 isCollection: true,
                 index: {
                     name: "Index",
-                    type: BasicTypeDefinitions.variant
+                    type: basicTypeDefinitions.variant
                 },
                 note: [
                     "```ds",
@@ -10169,7 +10169,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
             {
                 name: "MdmField",
                 definitionType: "property",
-                returnType: BasicTypeDefinitions.object,
+                returnType: basicTypeDefinitions.object,
                 readonly: true,
                 note: [
                     "```ds",
@@ -10182,7 +10182,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
             {
                 name: "Name",
                 definitionType: "property",
-                returnType: BasicTypeDefinitions.string ,
+                returnType: basicTypeDefinitions.string ,
                 readonly: true,
                 note: [
                     "```ds",
@@ -10282,7 +10282,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                     },
                     {
                         name: "AllCascadedStyles",
-                        type: BasicTypeDefinitions.boolean,
+                        type: basicTypeDefinitions.boolean,
                         optional: true,
                         defaultValue: 0
                     }
@@ -10362,7 +10362,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
             {
                 name: "IsEmpty",
                 definitionType: "property",
-                returnType: BasicTypeDefinitions.boolean ,
+                returnType: basicTypeDefinitions.boolean ,
                 readonly: true,
                 note: [
                     "```ds",
@@ -10412,7 +10412,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
             {
                 name: "BgColor",
                 definitionType: "property",
-                returnType: BasicTypeDefinitions.string ,
+                returnType: basicTypeDefinitions.string ,
                 note: [
                     "```ds",
                     "(property) IStyle.BgColor: String",
@@ -10432,7 +10432,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
             {
                 name: "Color",
                 definitionType: "property",
-                returnType: BasicTypeDefinitions.string ,
+                returnType: basicTypeDefinitions.string ,
                 note: [
                     "```ds",
                     "(property) IStyle.Color: String",
@@ -10452,7 +10452,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
             {
                 name: "Columns",
                 definitionType: "property",
-                returnType: BasicTypeDefinitions.long ,
+                returnType: basicTypeDefinitions.long ,
                 note: [
                     "```ds",
                     "(property) IStyle.Columns: Long",
@@ -10513,7 +10513,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
             {
                 name: "Height",
                 definitionType: "property",
-                returnType: BasicTypeDefinitions.string ,
+                returnType: basicTypeDefinitions.string ,
                 note: [
                     "```ds",
                     "(property) IStyle.Height: String",
@@ -10533,7 +10533,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
             {
                 name: "Image",
                 definitionType: "property",
-                returnType: BasicTypeDefinitions.string ,
+                returnType: basicTypeDefinitions.string ,
                 note: [
                     "```ds",
                     "(property) IStyle.Image: String",
@@ -10572,7 +10572,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
             {
                 name: "Indent",
                 definitionType: "property",
-                returnType: BasicTypeDefinitions.long ,
+                returnType: basicTypeDefinitions.long ,
                 note: [
                     "```ds",
                     "(property) IStyle.Indent: Long",
@@ -10612,7 +10612,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
             {
                 name: "Rows",
                 definitionType: "property",
-                returnType: BasicTypeDefinitions.long ,
+                returnType: basicTypeDefinitions.long ,
                 note: [
                     "```ds",
                     "(property) IStyle.Rows: Long",
@@ -10633,7 +10633,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
             {
                 name: "UseCascadedStyles",
                 definitionType: "property",
-                returnType: BasicTypeDefinitions.boolean ,
+                returnType: basicTypeDefinitions.boolean ,
                 note: [
                     "```ds",
                     "(property) IStyle.UseCascadedStyles: Boolean",
@@ -10669,7 +10669,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
             {
                 name: "Width",
                 definitionType: "property",
-                returnType: BasicTypeDefinitions.string ,
+                returnType: basicTypeDefinitions.string ,
                 note: [
                     "```ds",
                     "(property) IStyle.Width: String",
@@ -10689,7 +10689,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
             {
                 name: "ZIndex",
                 definitionType: "property",
-                returnType: BasicTypeDefinitions.long ,
+                returnType: basicTypeDefinitions.long ,
                 note: [
                     "```ds",
                     "(property) IStyle.ZIndex: Long",
@@ -10722,7 +10722,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
             {
                 name: "Name",
                 definitionType: "property",
-                returnType: BasicTypeDefinitions.string ,
+                returnType: basicTypeDefinitions.string ,
                 readonly: true,
                 note: [
                     "```ds",
@@ -10735,7 +10735,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
             {
                 name: "Value",
                 definitionType: "property",
-                returnType: BasicTypeDefinitions.variant ,
+                returnType: basicTypeDefinitions.variant ,
                 note: [
                     "```ds",
                     "(property) IValidation­Option.Value: Variant",
@@ -10885,7 +10885,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
             {
                 name: "Count",
                 definitionType: "property",
-                returnType: BasicTypeDefinitions.long ,
+                returnType: basicTypeDefinitions.long ,
                 readonly: true,
                 note: [
                     "```ds",
@@ -10902,7 +10902,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 readonly: true,
                 index: {
                     name: "Index",
-                    type: BasicTypeDefinitions.variant,
+                    type: basicTypeDefinitions.variant,
                 },
                 note: [
                     "```ds",
@@ -10929,37 +10929,37 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
             {
                 name: "CreateCategorizedDBVariable",
                 definitionType: "method",
-                returnType: BasicTypeDefinitions.object,
+                returnType: basicTypeDefinitions.object,
                 arguments: [
                     {
                         name: "DBVariableFullName",
-                        type: BasicTypeDefinitions.string,
+                        type: basicTypeDefinitions.string,
                         note: "The full name of the source DB question. The source variable must belongs to DB variable types (DB Array, Single Response DBQ or Multiple Response DBQ)."
                     },
                     {
                         name: "NewVariableName",
-                        type: BasicTypeDefinitions.string,
+                        type: basicTypeDefinitions.string,
                         optional: true,
                         defaultValue: "",
                         note: "The name of the new variable. If the source DB question is not of type DB Array and NewVariableName is empty, the new variable is added as a helper field for the source variable, with name “DBCodes”. If the source DB question is not of type DB Array and NewVariableName is of the form “SourceVariableName.NewName” or “.NewName”, the new variable is added as a helper field for the source variable, with NewName as its name. If the source DB question is not of type DB Array and NewVariableName is of the form “NewName”, the new variable is added at the same level as the source variable with the given name. If the source DB question is of type DB Array, then the new variable is (and must be) added into the Fields collection of the DB Array with NewVariableName as its name, and NewVariableName should not contain “.”."
                     },
                     {
                         name: "MaxCategories",
-                        type: BasicTypeDefinitions.long,
+                        type: basicTypeDefinitions.long,
                         optional: true,
                         defaultValue: -1,
                         note: "The maximum number of categories to generate. -1 indicates no maximum. The maximum number of categories does not include the 'other' categories."
                     },
                     {
                         name: "GenerateOtherCategory",
-                        type: BasicTypeDefinitions.boolean,
+                        type: basicTypeDefinitions.boolean,
                         optional: true,
                         defaultValue: 1,
                         note: "Indicates whether or not to generate an 'other' category for uncategorized data. By default, an 'other' category is generated."
                     },
                     {
                         name: "SaveVariable",
-                        type: BasicTypeDefinitions.boolean,
+                        type: basicTypeDefinitions.boolean,
                         optional: true,
                         defaultValue: 1,
                         note: "Indicates whether or not to save the new variable to the MTD."
@@ -11012,51 +11012,51 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
             {
                 name: "CreateCategorizedVariable",
                 definitionType: "method",
-                returnType: BasicTypeDefinitions.object,
+                returnType: basicTypeDefinitions.object,
                 arguments: [
                     {
                         name: "SourceVariableName",
-                        type: BasicTypeDefinitions.string,
+                        type: basicTypeDefinitions.string,
                     },
                     {
                         name: "NewVariableName",
-                        type: BasicTypeDefinitions.string,
+                        type: basicTypeDefinitions.string,
                         optional: true,
                         defaultValue: ""
                     },
                     {
                         name: "NewCategoryLabelFormat",
-                        type: BasicTypeDefinitions.string,
+                        type: basicTypeDefinitions.string,
                         optional: true,
                         defaultValue: "L{value}"
                     },
                     {
                         name: "CategorizationExpression",
-                        type: BasicTypeDefinitions.string,
+                        type: basicTypeDefinitions.string,
                         optional: true,
                         defaultValue: "",
                     },
                     {
                         name: "MaxCategories",
-                        type: BasicTypeDefinitions.long,
+                        type: basicTypeDefinitions.long,
                         optional: true,
                         defaultValue: -1
                     },
                     {
                         name: "GenerateOtherCategory",
-                        type: BasicTypeDefinitions.boolean,
+                        type: basicTypeDefinitions.boolean,
                         optional: true,
                         defaultValue: true,
                     },
                     {
                         name: "GenerateNoAnswerCategory",
-                        type: BasicTypeDefinitions.boolean,
+                        type: basicTypeDefinitions.boolean,
                         optional: true,
                         defaultValue: false
                     },
                     {
                         name: "NoAnswerCategoryLabel",
-                        type: BasicTypeDefinitions.string,
+                        type: basicTypeDefinitions.string,
                         optional: true,
                         defaultValue: ""
                     }
@@ -11222,7 +11222,7 @@ export const builtInQuesionInterface: BuiltInDefinition = {
             arguments: [
                 {
                     name: "LabelArgs",
-                    type: BasicTypeDefinitions.variant,
+                    type: basicTypeDefinitions.variant,
                     isCollection: true,
                     optional: false,
                 }
@@ -11269,11 +11269,11 @@ export const builtInQuesionInterface: BuiltInDefinition = {
         {
             name: "BuildDBFilter",
             definitionType: "method",
-            returnType: BasicTypeDefinitions.string ,
+            returnType: basicTypeDefinitions.string ,
             arguments: [
                 {
                     name: "bstrFieldName",
-                    type: BasicTypeDefinitions.string,
+                    type: basicTypeDefinitions.string,
                     optional: true,
                     isCollection: false,
                     defaultValue: "L"
@@ -11321,7 +11321,7 @@ export const builtInQuesionInterface: BuiltInDefinition = {
             arguments: [
                 {
                     name: "vtIndex",
-                    type: BasicTypeDefinitions.variant,
+                    type: basicTypeDefinitions.variant,
                     isCollection: false,
                     optional: false,
                 }
@@ -11339,12 +11339,12 @@ export const builtInQuesionInterface: BuiltInDefinition = {
         },
         {
             name: "Exists",
-            returnType: BasicTypeDefinitions.boolean ,
+            returnType: basicTypeDefinitions.boolean ,
             definitionType: "method",
             arguments: [
                 {
                     name: "vtIndex",
-                    type: BasicTypeDefinitions.variant,
+                    type: basicTypeDefinitions.variant,
                     isCollection: false,
                     optional: false
                 }
@@ -11381,12 +11381,12 @@ export const builtInQuesionInterface: BuiltInDefinition = {
             arguments: [
                 {
                     name: "LabelArgs",
-                    type: BasicTypeDefinitions.variant,
+                    type: basicTypeDefinitions.variant,
                     isCollection: true,
                     optional: false,
                     index: {
                         name: "Index",
-                        type: BasicTypeDefinitions.variant,
+                        type: basicTypeDefinitions.variant,
                         optional: false,
                         isCollection: false,
                     }
@@ -11462,7 +11462,7 @@ export const builtInQuesionInterface: BuiltInDefinition = {
         {
             name: "Count",
             definitionType: "property",
-            returnType: BasicTypeDefinitions.long ,
+            returnType: basicTypeDefinitions.long ,
             readonly: true,
             note: [
                 "```ds",
@@ -11510,7 +11510,7 @@ export const builtInQuesionInterface: BuiltInDefinition = {
         },
         {
             name: "IsDBQuestion",
-            returnType: BasicTypeDefinitions.boolean ,
+            returnType: basicTypeDefinitions.boolean ,
             definitionType: "property",
             readonly: true,
             note: [
@@ -11604,7 +11604,7 @@ export const builtInQuesionInterface: BuiltInDefinition = {
         },
         {
             name: "QuestionFullName",
-            returnType: BasicTypeDefinitions.string ,
+            returnType: basicTypeDefinitions.string ,
             definitionType: "property",
             readonly: true,
             note: [
@@ -11620,7 +11620,7 @@ export const builtInQuesionInterface: BuiltInDefinition = {
         },
         {
             name: "QuestionName",
-            returnType: BasicTypeDefinitions.string ,
+            returnType: basicTypeDefinitions.string ,
             definitionType: "property",
             readonly: true,
             note: [
@@ -11710,7 +11710,7 @@ export const builtInQuesionInterface: BuiltInDefinition = {
         },
         {
             name: "BannerTemplacte",
-            returnType: BasicTypeDefinitions.string ,
+            returnType: basicTypeDefinitions.string ,
             definitionType: "property",
             readonly: false,
             isCollection: false,
@@ -11728,7 +11728,7 @@ export const builtInQuesionInterface: BuiltInDefinition = {
         },
         {
             name: "DBFilter",
-            returnType: BasicTypeDefinitions.string ,
+            returnType: basicTypeDefinitions.string ,
             definitionType: "property",
             readonly: false,
             isCollection: false,
@@ -11742,7 +11742,7 @@ export const builtInQuesionInterface: BuiltInDefinition = {
         },
         {
             name: "ErrorTemplate",
-            returnType: BasicTypeDefinitions.string ,
+            returnType: basicTypeDefinitions.string ,
             definitionType: "property",
             readonly: false,
             isCollection: false,
@@ -11766,7 +11766,7 @@ export const builtInQuesionInterface: BuiltInDefinition = {
             isCollection: true,
             index: {
                 name: "Index",
-                type: BasicTypeDefinitions.variant,
+                type: basicTypeDefinitions.variant,
                 isCollection: false,
             },
             note: [
@@ -11798,7 +11798,7 @@ export const builtInQuesionInterface: BuiltInDefinition = {
         },
         {
             name: "LayoutTemplate",
-            returnType: BasicTypeDefinitions.string ,
+            returnType: basicTypeDefinitions.string ,
             definitionType: "property",
             readonly: false,
             isCollection: false,
@@ -11816,7 +11816,7 @@ export const builtInQuesionInterface: BuiltInDefinition = {
         },
         {
             name: "MustAnswer",
-            returnType: BasicTypeDefinitions.boolean ,
+            returnType: basicTypeDefinitions.boolean ,
             definitionType: "property",
             readonly: false,
             isCollection: false,
@@ -11834,7 +11834,7 @@ export const builtInQuesionInterface: BuiltInDefinition = {
         },
         {
             name: "NarBarTemplate",
-            returnType: BasicTypeDefinitions.string ,
+            returnType: basicTypeDefinitions.string ,
             definitionType: "property",
             readonly: false,
             isCollection: false,
@@ -11852,7 +11852,7 @@ export const builtInQuesionInterface: BuiltInDefinition = {
         },
         {
             name: "QuestionFilter",
-            returnType: BasicTypeDefinitions.variant ,
+            returnType: basicTypeDefinitions.variant ,
             definitionType: "property",
             readonly: false,
             isCollection: false,
@@ -11905,7 +11905,7 @@ export const builtInQuesionInterface: BuiltInDefinition = {
         },
         {
             name: "QuestionTemplate",
-            returnType: BasicTypeDefinitions.string ,
+            returnType: basicTypeDefinitions.string ,
             definitionType: "property",
             readonly: false,
             isCollection: false,
@@ -11942,7 +11942,7 @@ export const builtInIDocumentInterface: BuiltInDefinition =     {
             isCollection: true,
             index: {
                 name: "Index",
-                type: BasicTypeDefinitions.variant,
+                type: basicTypeDefinitions.variant,
             },
             note: [
                 "```ds",
@@ -11972,7 +11972,7 @@ export const builtInIDocumentInterface: BuiltInDefinition =     {
         {
             name: "CreatedByVersion",
             definitionType: "property",
-            returnType: BasicTypeDefinitions.string ,
+            returnType: basicTypeDefinitions.string ,
             readonly: true,
             isCollection: false,
             note: [
@@ -12080,7 +12080,7 @@ export const builtInIDocumentInterface: BuiltInDefinition =     {
         {
             name: "IsPopulating",
             definitionType: "property",
-            returnType: BasicTypeDefinitions.boolean ,
+            returnType: basicTypeDefinitions.boolean ,
             readonly: true,
             isCollection: false,
             note: [
@@ -12094,7 +12094,7 @@ export const builtInIDocumentInterface: BuiltInDefinition =     {
         {
             name: "LastUpdatedByVersion",
             definitionType: "property",
-            returnType: BasicTypeDefinitions.string ,
+            returnType: basicTypeDefinitions.string ,
             readonly: true,
             isCollection: false,
             note: [
@@ -12108,7 +12108,7 @@ export const builtInIDocumentInterface: BuiltInDefinition =     {
         {
             name: "LicensedFeatures",
             definitionType: "property",
-            returnType: BasicTypeDefinitions.long ,
+            returnType: basicTypeDefinitions.long ,
             readonly: true,
             isCollection: false,
             note: [
@@ -12125,7 +12125,7 @@ export const builtInIDocumentInterface: BuiltInDefinition =     {
         {
             name: "Parent",
             definitionType: "property",
-            returnType: BasicTypeDefinitions.null ,
+            returnType: basicTypeDefinitions.null ,
             readonly: true,
             isCollection: false,
             note: [
@@ -12142,7 +12142,7 @@ export const builtInIDocumentInterface: BuiltInDefinition =     {
         {
             name: "PopulateProgress",
             definitionType: "property",
-            returnType: BasicTypeDefinitions.long ,
+            returnType: basicTypeDefinitions.long ,
             readonly: true,
             isCollection: false,
             note: [
@@ -12159,7 +12159,7 @@ export const builtInIDocumentInterface: BuiltInDefinition =     {
         {
             name: "PopulateStatus",
             definitionType: "property",
-            returnType: BasicTypeDefinitions.string ,
+            returnType: basicTypeDefinitions.string ,
             readonly: true,
             isCollection: false,
             note: [
@@ -12254,7 +12254,7 @@ export const builtInIDocumentInterface: BuiltInDefinition =     {
         {
             name: "TOMVersion",
             definitionType: "property",
-            returnType: BasicTypeDefinitions.string ,
+            returnType: basicTypeDefinitions.string ,
             readonly: true,
             isCollection: false,
             note: [
@@ -12268,7 +12268,7 @@ export const builtInIDocumentInterface: BuiltInDefinition =     {
         {
             name: "Context",
             definitionType: "property",
-            returnType: BasicTypeDefinitions.string ,
+            returnType: basicTypeDefinitions.string ,
             readonly: false,
             isCollection: false,
             note: [
@@ -12285,7 +12285,7 @@ export const builtInIDocumentInterface: BuiltInDefinition =     {
         {
             name: "Description",
             definitionType: "property",
-            returnType: BasicTypeDefinitions.string ,
+            returnType: basicTypeDefinitions.string ,
             readonly: false,
             isCollection: false,
             note: [
@@ -12299,7 +12299,7 @@ export const builtInIDocumentInterface: BuiltInDefinition =     {
         {
             name: "ImageLocation",
             definitionType: "property",
-            returnType: BasicTypeDefinitions.string ,
+            returnType: basicTypeDefinitions.string ,
             readonly: false,
             isCollection: false,
             note: [
@@ -12320,7 +12320,7 @@ export const builtInIDocumentInterface: BuiltInDefinition =     {
         {
             name: "KeepLogFiles",
             definitionType: "property",
-            returnType: BasicTypeDefinitions.boolean ,
+            returnType: basicTypeDefinitions.boolean ,
             readonly: false,
             isCollection: false,
             note: [
@@ -12337,7 +12337,7 @@ export const builtInIDocumentInterface: BuiltInDefinition =     {
         {
             name: "LabelType",
             definitionType: "property",
-            returnType: BasicTypeDefinitions.string ,
+            returnType: basicTypeDefinitions.string ,
             readonly: false,
             isCollection: false,
             note: [
@@ -12354,7 +12354,7 @@ export const builtInIDocumentInterface: BuiltInDefinition =     {
         {
             name: "Language",
             definitionType: "property",
-            returnType: BasicTypeDefinitions.string ,
+            returnType: basicTypeDefinitions.string ,
             readonly: false,
             isCollection: false,
             note: [
@@ -12371,7 +12371,7 @@ export const builtInIDocumentInterface: BuiltInDefinition =     {
         {
             name: "LogFilePath",
             definitionType: "property",
-            returnType: BasicTypeDefinitions.string ,
+            returnType: basicTypeDefinitions.string ,
             readonly: false,
             isCollection: false,
             note: [
@@ -12402,7 +12402,7 @@ export const builtInIDocumentInterface: BuiltInDefinition =     {
         {
             name: "OutputLocaleId",
             definitionType: "property",
-            returnType: BasicTypeDefinitions.long ,
+            returnType: basicTypeDefinitions.long ,
             readonly: false,
             isCollection: false,
             note: [
@@ -12419,7 +12419,7 @@ export const builtInIDocumentInterface: BuiltInDefinition =     {
         {
             name: "ProfileSpecialElements",
             definitionType: "property",
-            returnType: BasicTypeDefinitions.boolean ,
+            returnType: basicTypeDefinitions.boolean ,
             readonly: false,
             isCollection: false,
             note: [
@@ -12436,7 +12436,7 @@ export const builtInIDocumentInterface: BuiltInDefinition =     {
         {
             name: "RawStatisticsDataEnabled",
             definitionType: "property",
-            returnType: BasicTypeDefinitions.boolean ,
+            returnType: basicTypeDefinitions.boolean ,
             readonly: false,
             isCollection: false,
             note: [
@@ -12453,7 +12453,7 @@ export const builtInIDocumentInterface: BuiltInDefinition =     {
         {
             name: "SaveProfileResults",
             definitionType: "property",
-            returnType: BasicTypeDefinitions.boolean ,
+            returnType: basicTypeDefinitions.boolean ,
             readonly: false,
             isCollection: false,
             note: [
@@ -12492,11 +12492,11 @@ export const builtInIDocumentInterface: BuiltInDefinition =     {
         {
             name: "GenerateScript",
             definitionType: "method",
-            returnType: BasicTypeDefinitions.string ,
+            returnType: basicTypeDefinitions.string ,
             arguments: [
                 {
                     name: "Tables",
-                    type: BasicTypeDefinitions.variant,
+                    type: basicTypeDefinitions.variant,
                     optional: true,
                     note: "A list of tables to include in the generated script.",
                 },
@@ -12509,7 +12509,7 @@ export const builtInIDocumentInterface: BuiltInDefinition =     {
                 },
                 {
                     name: "Options",
-                    type: BasicTypeDefinitions.variant,
+                    type: basicTypeDefinitions.variant,
                     optional: true,
                     note: "Reserved for future use",
                 }
@@ -12538,11 +12538,11 @@ export const builtInIDocumentInterface: BuiltInDefinition =     {
         {
             name: "GetObjectFromID",
             definitionType: "method",
-            returnType: BasicTypeDefinitions.object,
+            returnType: basicTypeDefinitions.object,
             arguments: [
                 {
                     name: "ID",
-                    type: BasicTypeDefinitions.string,
+                    type: basicTypeDefinitions.string,
                     optional: false
                 }
             ],
@@ -12560,17 +12560,17 @@ export const builtInIDocumentInterface: BuiltInDefinition =     {
         {
             name: "GetTablesXml",
             definitionType: "method",
-            returnType: BasicTypeDefinitions.string ,
+            returnType: basicTypeDefinitions.string ,
             arguments: [
                 {
                     name: "Tables",
-                    type: BasicTypeDefinitions.variant,
+                    type: basicTypeDefinitions.variant,
                     optional: false,
                     note: "A list of tables to include in the generated script. See the Tables parameter of IDocument.Populate for more information on the valid values for this parameter.",
                 },
                 {
                     name: "Options",
-                    type: BasicTypeDefinitions.long,
+                    type: basicTypeDefinitions.long,
                     optional: true,
                     defaultValue: "xmlIncludeResults",
                     note: "A binary '`OR`' of `XmlOption` enumerated values which control the contents of the returned Tables XML"
@@ -12597,12 +12597,12 @@ export const builtInIDocumentInterface: BuiltInDefinition =     {
             arguments: [
                 {
                     name: "Source",
-                    type: BasicTypeDefinitions.variant,
+                    type: basicTypeDefinitions.variant,
                     note: "Either the name of a previously saved table document file or an `XML DOM` object into which a table document has already been loaded.",
                 },
                 {
                     name: "IncludeResults",
-                    type: BasicTypeDefinitions.boolean,
+                    type: basicTypeDefinitions.boolean,
                     optional: true,
                     defaultValue: "1",
                     note: "If the previously saved table document had been populated then it may contain cell values. If `IncludeResults` is *False* then these values will not be loaded with the rest of the document. This will make the call to the Open method slightly faster."
@@ -12629,53 +12629,53 @@ export const builtInIDocumentInterface: BuiltInDefinition =     {
             arguments: [
                 {
                     name: "Source",
-                    type: BasicTypeDefinitions.variant,
+                    type: basicTypeDefinitions.variant,
                     optional: false,
                     note: "Either the name of a previously saved table document file or an XML DOM object into which a table document has already been loaded.",
                 },
                 {
                     name: "IncludeResults",
-                    type: BasicTypeDefinitions.boolean,
+                    type: basicTypeDefinitions.boolean,
                     optional: false,
                     note: "If the previously saved table document had been populated then it may contain cell values. If IncludeResults is False then these values will not be loaded with the rest of the document. This will make the call to the Open method slightly faster.",
                 },
                 {
                     name: "MetaData",
-                    type: BasicTypeDefinitions.variant,
+                    type: basicTypeDefinitions.variant,
                     optional: false,
                     note: "The location of the metadata to use. The format of this string depends on the MDSC, but is typically a location of an .MDD or some other type of file. This can also be an existing MDM document object.",
                 },
                 {
                     name: "MDSC",
-                    type: BasicTypeDefinitions.string,
+                    type: basicTypeDefinitions.string,
                     optional: true,
                     defaultValue: "\"\"",
                     note: "The metadata DSC to use e.g. *mrQvDsc*, or empty if no MDSC is required",
                 },
                 {
                     name: "DbLocation",
-                    type: BasicTypeDefinitions.string,
+                    type: basicTypeDefinitions.string,
                     optional: true,
                     defaultValue: "\"\"",
                     note: "The location of the case data to use. The format of this string depends on the CDSC",
                 },
                 {
                     name: "CDSC",
-                    type: BasicTypeDefinitions.string,
+                    type: basicTypeDefinitions.string,
                     optional: true,
                     defaultValue: "\"\"",
                     note: "The case data dsc to use e.g. *mrQdiDrsDsc*",
                 },
                 {
                     name: "Project",
-                    type: BasicTypeDefinitions.string,
+                    type: basicTypeDefinitions.string,
                     optional: true,
                     defaultValue: "\"\"",
                     note: "The project name to use if the CDSC supports multiple projects. Otherwise this parameter is ignored.",
                 },
                 {
                     name: "Version",
-                    type: BasicTypeDefinitions.string,
+                    type: basicTypeDefinitions.string,
                     optional: true,
                     defaultValue: "{..}",
                     note: "A version specified for the metadata to use. The default specification string is \"{..}\" (the 'SuperVersion') which means to use all locked versions in the metadata.",
@@ -12705,11 +12705,11 @@ export const builtInIDocumentInterface: BuiltInDefinition =     {
         {
             name: "Populate",
             definitionType: "method",
-            returnType: BasicTypeDefinitions.boolean ,
+            returnType: basicTypeDefinitions.boolean ,
             arguments: [
                 {
                     name: "Tables",
-                    type: BasicTypeDefinitions.variant,
+                    type: basicTypeDefinitions.variant,
                     optional: false,
                     note: [
                     "```ds",
@@ -12747,7 +12747,7 @@ export const builtInIDocumentInterface: BuiltInDefinition =     {
             arguments: [
                 {
                     name: "Tables",
-                    type: BasicTypeDefinitions.variant,
+                    type: basicTypeDefinitions.variant,
                     optional: false
                 }
             ],
@@ -12781,7 +12781,7 @@ export const builtInIDocumentInterface: BuiltInDefinition =     {
             arguments: [
                 {
                     name: "ForceRefresh",
-                    type: BasicTypeDefinitions.boolean,
+                    type: basicTypeDefinitions.boolean,
                     optional: true,
                     defaultValue: "0"
                 }
@@ -12805,13 +12805,13 @@ export const builtInIDocumentInterface: BuiltInDefinition =     {
             arguments: [
                 {
                     name: "Destination",
-                    type: BasicTypeDefinitions.variant,
+                    type: basicTypeDefinitions.variant,
                     optional: false,
                     note: "Either the name of a file to save the table document to, or an empty `XML DOM` object. If a file name is specified, and the file already exists, then it is overwritten without warning.",
                 },
                 {
                     name: "IncludeResults",
-                    type: BasicTypeDefinitions.boolean,
+                    type: basicTypeDefinitions.boolean,
                     optional: true,
                     defaultValue: "1",
                     note: "If the parameter is *False*, then the cell values for all tables are not saved. This makes the call to the `Save` method slightly faster and the resulting document smaller.",
@@ -12839,12 +12839,12 @@ export const builtInIDocumentInterface: BuiltInDefinition =     {
             arguments: [
                 {
                     name: "Destination",
-                    type: BasicTypeDefinitions.variant,
+                    type: basicTypeDefinitions.variant,
                     optional: false,
                 },
                 {
                     name: "IncludeResults",
-                    type: BasicTypeDefinitions.boolean,
+                    type: basicTypeDefinitions.boolean,
                     optional: true,
                     defaultValue: "1"
                 }

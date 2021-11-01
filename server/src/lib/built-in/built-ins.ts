@@ -37,8 +37,8 @@ import {
 import { builtInEnums } from "./built-in-enums";
 import { builtInAggregate } from "./built-in-aggregate";
 import {
-    BasicTypeDefinitions,
-    BasicTypes,
+    basicTypeDefinitions,
+    basicTypes,
     createDefinition
 } from "./basic";
 import { builtInScriptConstants } from "./built-in-script-constant";
@@ -137,7 +137,7 @@ function loadProperty(
     obj: InterfaceDefinition | ObjectDefinition): PropertyDefinition {
     const def = loadDefinitonBase(definition, PropertyDefinition);
     def.object = obj;
-    def.return = definition.returnType ?? BasicTypeDefinitions.variant;
+    def.return = definition.returnType ?? basicTypeDefinitions.variant;
     if (definition.index) {
         def.index = loadArugment(definition.index);
     }
@@ -226,24 +226,24 @@ export function searchBuiltIn(name: string): DefinitionBase | undefined {
 }
 
 builtInCallByDotCategoricalFunctions.forEach(
-    func => BasicTypeDefinitions.categorical.methods.set(
+    func => basicTypeDefinitions.categorical.methods.set(
         func.name.toLowerCase(),
         loadFunctionBase(
             func,
             FunctionDefinition,
-            BasicTypeDefinitions.categorical))
+            basicTypeDefinitions.categorical))
 );
 builtInCallByDotTextFunctions.forEach(
-    func => BasicTypeDefinitions.string.methods.set(
+    func => basicTypeDefinitions.string.methods.set(
         func.name.toLowerCase(),
         loadFunctionBase(
             func,
             FunctionDefinition,
-            BasicTypeDefinitions.string)
+            basicTypeDefinitions.string)
     )
 );
 
-BasicTypeDefinitions.categorical.isCollection = true;
+basicTypeDefinitions.categorical.isCollection = true;
 
 export const eventNames: string[] =[
     "OnBeforeJobStart",
@@ -320,19 +320,19 @@ setVbsBuiltInDefinition(VbsFolderDefinition.methods);
 setVbsBuiltInDefinition(VbsFileDefinition.properties);
 setVbsBuiltInDefinition(VbsFileDefinition.methods);
 
-BasicTypes.string.definition = BasicTypeDefinitions.string;
-BasicTypes.categorical.definition = BasicTypeDefinitions.categorical;
+basicTypes.string.definition = basicTypeDefinitions.string;
+basicTypes.categorical.definition = basicTypeDefinitions.categorical;
 
-BasicTypes.long.definition = BasicTypeDefinitions.long;
-BasicTypes.double.definition = BasicTypeDefinitions.double;
-BasicTypes.variant.definition = BasicTypeDefinitions.variant;
-BasicTypes.boolean.definition = BasicTypeDefinitions.boolean;
-BasicTypes.date.definition = BasicTypeDefinitions.date;
-BasicTypes.object.definition = BasicTypeDefinitions.object;
-BasicTypes.array.definition = BasicTypeDefinitions.array;
-BasicTypes.null.definition = BasicTypeDefinitions.null;
+basicTypes.long.definition = basicTypeDefinitions.long;
+basicTypes.double.definition = basicTypeDefinitions.double;
+basicTypes.variant.definition = basicTypeDefinitions.variant;
+basicTypes.boolean.definition = basicTypeDefinitions.boolean;
+basicTypes.date.definition = basicTypeDefinitions.date;
+basicTypes.object.definition = basicTypeDefinitions.object;
+basicTypes.array.definition = basicTypeDefinitions.array;
+basicTypes.null.definition = basicTypeDefinitions.null;
 
-BasicTypeDefinitions.array.return = BasicTypeDefinitions.variant;
+basicTypeDefinitions.array.return = basicTypeDefinitions.variant;
 
-export { BasicTypes };
-export { BasicTypeDefinitions };
+export { basicTypes as BasicTypes };
+export { basicTypeDefinitions as BasicTypeDefinitions };

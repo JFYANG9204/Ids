@@ -1,4 +1,4 @@
-import { BasicTypeDefinitions } from "./basic";
+import { basicTypeDefinitions } from "./basic";
 import { BuiltInDefinition } from "./types";
 
 export const builtInFunctions = new Set<BuiltInDefinition>([
@@ -7,11 +7,11 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
         label: "AnswerCount(Val: Categorical): Long",
         insertText: "AnswerCount",
         definitionType: "function",
-        returnType: BasicTypeDefinitions.long,
+        returnType: basicTypeDefinitions.long,
         arguments: [
             {
                 name: "Val",
-                type: BasicTypeDefinitions.categorical,
+                type: basicTypeDefinitions.categorical,
                 note: "Categorical value.",
             }
         ],
@@ -35,21 +35,21 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
         label: "ContainsAll(Val: Categorical, Answers: Variant, [Exactly: Boolean]): Boolean",
         insertText: "ContainsAll",
         definitionType: "function",
-        returnType: BasicTypeDefinitions.boolean,
+        returnType: basicTypeDefinitions.boolean,
         arguments: [
             {
                 name: "Val",
-                type: BasicTypeDefinitions.categorical,
+                type: basicTypeDefinitions.categorical,
                 note: "Categorical value.",
             },
             {
                 name: "Answers",
-                type: BasicTypeDefinitions.variant,
+                type: basicTypeDefinitions.variant,
                 note: "Variant value of type *Categorical* or *Text*, specifying a set of categories to look for in `Val`. If `Answers` is empty, the function returns *True*, unless `Exactly` is *True* and `Val` is not empty.",
             },
             {
                 name: "Exactly",
-                type: BasicTypeDefinitions.boolean,
+                type: basicTypeDefinitions.boolean,
                 optional: true,
                 note: "Optional. If *True*, the function returns *True* only if `Val` contains all of the categories in `Answers` and no others. If `Exactly` is omitted or *False*, the function returns *True* if all of the categories in `Answers` are in `Val`, even if `Val` contains other categories."
             }
@@ -88,33 +88,33 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
         label: "ContainsSome(Val: Categorical, Answers: Variant, [Min: Long], [Max: Long], [Exactly: Boolean]): Boolean",
         insertText: "ContainsSome",
         definitionType: "function",
-        returnType: BasicTypeDefinitions.boolean,
+        returnType: basicTypeDefinitions.boolean,
         arguments: [
             {
                 name: "Val",
-                type: BasicTypeDefinitions.categorical,
+                type: basicTypeDefinitions.categorical,
                 note: "*Categorical* value. ",
             },
             {
                 name: "Answers",
-                type: BasicTypeDefinitions.variant,
+                type: basicTypeDefinitions.variant,
                 note: "*Variant* value of type *Categorical* or *Text*, specifying a set of categories to look for in `Val`. If `Answers` is empty, the function returns *True* (unless `Exactly` is *True* and `Val` is not empty)."
             },
             {
                 name: "Min",
-                type: BasicTypeDefinitions.long,
+                type: basicTypeDefinitions.long,
                 optional: true,
                 note: "Optional. The minimum number of categories in `Answers` that must be in `Val` for the function to return *True*. If omitted, the minimum is one. ",
             },
             {
                 name: "Max",
-                type: BasicTypeDefinitions.long,
+                type: basicTypeDefinitions.long,
                 optional: true,
                 note: "Optional. The maximum number of categories in `Answers` that must be in `Val` for the function to return *True*. If omitted, the maximum is the number of categories in `Answers`."
             },
             {
                 name: "Exactly",
-                type: BasicTypeDefinitions.boolean,
+                type: basicTypeDefinitions.boolean,
                 optional: true,
                 note: "*True* if `Val` contains the specified categories, otherwise *False*."
             }
@@ -155,21 +155,21 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
         label: "ContainsAny(Val: Categorical, Answers: Variant, [Exactly: Boolean]): Boolean",
         insertText: "ContainsAny",
         definitionType: "function",
-        returnType: BasicTypeDefinitions.boolean,
+        returnType: basicTypeDefinitions.boolean,
         arguments: [
             {
                 name: "Val",
-                type: BasicTypeDefinitions.categorical,
+                type: basicTypeDefinitions.categorical,
                 note: "*Categorical* value."
             },
             {
                 name: "Answers",
-                type: BasicTypeDefinitions.variant,
+                type: basicTypeDefinitions.variant,
                 note: "*Variant* value of type *Categorical* or *Text*, specifying a set of categories to look for in `Val`. If `Answers` is empty, the function returns *False*."
             },
             {
                 name: "Exactly",
-                type: BasicTypeDefinitions.boolean,
+                type: basicTypeDefinitions.boolean,
                 optional: true,
                 note: "Optional. If *True*, the function returns *False* if `Val` contains any categories that are not in `Answers`. If `Exactly` is omitted or *False*, the function returns *True* if any of the categories in `Answers` are in `Val`, even if `Val` contains other categories."
             }
@@ -211,16 +211,16 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
         label: "DefinedCategories(Val: Categorical, [Answers: Variant]): Categorical",
         insertText: "DefinedCategories",
         definitionType: "function",
-        returnType: BasicTypeDefinitions.categorical,
+        returnType: basicTypeDefinitions.categorical,
         arguments: [
             {
                 name: "Val",
-                type: BasicTypeDefinitions.categorical,
+                type: basicTypeDefinitions.categorical,
                 note: "*Categorical* value, used only to specify which MDM object to use.",
             },
             {
                 name: "Answers",
-                type: BasicTypeDefinitions.variant,
+                type: basicTypeDefinitions.variant,
                 optional: true,
                 note: "Optional. *Variant* value of type *Categorical* or *Text*, specifying a set of categories. If omitted, all categoriesfrom the VariableInstance are returned."
             }
@@ -270,16 +270,16 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
         label: "DefinedElements(Val: Categorical, [Types: Long]): Categorical",
         insertText: "DefinedElements",
         definitionType: "function",
-        returnType: BasicTypeDefinitions.categorical,
+        returnType: basicTypeDefinitions.categorical,
         arguments: [
             {
                 name: "Val",
-                type: BasicTypeDefinitions.categorical,
+                type: basicTypeDefinitions.categorical,
                 note: "*Categorical* value, used only to specify which MDM object to use.",
             },
             {
                 name: "Types",
-                type: BasicTypeDefinitions.long,
+                type: basicTypeDefinitions.long,
                 optional: true,
                 note: "*Long* - Optional. Flags specifying which types of `Element` objects to include. The default is (Category + Base)."
             }
@@ -337,16 +337,16 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
         label: "DefinedFactors(Val: Categorical, [Answers: Variant]): Categorical",
         insertText: "DefinedFactors",
         definitionType: "function",
-        returnType: BasicTypeDefinitions.categorical,
+        returnType: basicTypeDefinitions.categorical,
         arguments: [
             {
                 name: "Val",
-                type: BasicTypeDefinitions.categorical,
+                type: basicTypeDefinitions.categorical,
                 note: "*Categorical* value, used only to specify which MDM object to use.",
             },
             {
                 name: "Answers",
-                type: BasicTypeDefinitions.variant,
+                type: basicTypeDefinitions.variant,
                 optional: true,
                 note: "Optional. *Variant* value of type *Categorical* or *Text*, specifying a set of categories to look for. If omitted, all categoriesfrom the object are used.",
             }
@@ -374,24 +374,24 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
         label: "DefinedListElements(Val: Variant, Answers: String | Categorical, [Types: Long]): Categorical",
         insertText: "DefinedListElements",
         definitionType: "function",
-        returnType: BasicTypeDefinitions.categorical,
+        returnType: basicTypeDefinitions.categorical,
         arguments: [
             {
                 name: "Val",
-                type: BasicTypeDefinitions.variant,
+                type: basicTypeDefinitions.variant,
                 note: "*Variant* value, used only to specify which MDM object to use.",
             },
             {
                 name: "Answers",
                 type: [
-                    BasicTypeDefinitions.string,
-                    BasicTypeDefinitions.categorical,
+                    basicTypeDefinitions.string,
+                    basicTypeDefinitions.categorical,
                 ],
                 note: "*Text* or *Categorical* value specifying element lists in `Val`."
             },
             {
                 name: "Types",
-                type: BasicTypeDefinitions.long,
+                type: basicTypeDefinitions.long,
                 optional: true,
                 note: "Optional. Flags specifying which types of `Element` objects to include. Default is (Category + Base).",
             }
@@ -432,18 +432,18 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
         label: "Difference(Val: Categorical, Answers: String | Categorical): Categorical",
         insertText: "Difference",
         definitionType: "function",
-        returnType: BasicTypeDefinitions.categorical,
+        returnType: basicTypeDefinitions.categorical,
         arguments: [
             {
                 name: "Val",
-                type: BasicTypeDefinitions.categorical,
+                type: basicTypeDefinitions.categorical,
                 note: "*Categorical* value."
             },
             {
                 name: "Answers",
                 type: [
-                    BasicTypeDefinitions.string,
-                    BasicTypeDefinitions.categorical,
+                    basicTypeDefinitions.string,
+                    basicTypeDefinitions.categorical,
                 ],
                 note: "*Variant* value of type *Categorical* or *Text*, specifying a set of categories.",
             }
@@ -483,11 +483,11 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
         label: "Factor(Val: Categorical): Variant",
         insertText: "Factor",
         definitionType: "function",
-        returnType: BasicTypeDefinitions.variant,
+        returnType: basicTypeDefinitions.variant,
         arguments: [
             {
                 name: "Val",
-                type: BasicTypeDefinitions.categorical,
+                type: basicTypeDefinitions.categorical,
                 note: "The element to look up."
             }
         ],
@@ -510,16 +510,16 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
         label: "GetAnswer(Val: Categorical, Index: Long): Categorical",
         insertText: "GetAnswer",
         definitionType: "function",
-        returnType: BasicTypeDefinitions.categorical,
+        returnType: basicTypeDefinitions.categorical,
         arguments: [
             {
                 name: "Val",
-                type: BasicTypeDefinitions.categorical,
+                type: basicTypeDefinitions.categorical,
                 note: "*Categorical* value.",
             },
             {
                 name: "Index",
-                type: BasicTypeDefinitions.long,
+                type: basicTypeDefinitions.long,
                 note: "Position of category to retrieve from `Val`, starting from 0.",
             }
         ],
@@ -554,16 +554,16 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
         label: "HasAnswer(Val: Categorical, Answer: Long): Boolean",
         insertText: "HasAnswer",
         definitionType: "function",
-        returnType: BasicTypeDefinitions.boolean,
+        returnType: basicTypeDefinitions.boolean,
         arguments: [
             {
                 name: "Val",
-                type: BasicTypeDefinitions.categorical,
+                type: basicTypeDefinitions.categorical,
                 note: "*Categorical* value.",
             },
             {
                 name: "Answer",
-                type: BasicTypeDefinitions.long,
+                type: basicTypeDefinitions.long,
                 note: "Category to look for in `Val`."
             }
         ],
@@ -599,18 +599,18 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
         label: "Intersection(Val: Categorical, [Vals: String | Categorical ...]): Categorical",
         insertText: "Intersection",
         definitionType: "function",
-        returnType: BasicTypeDefinitions.categorical,
+        returnType: basicTypeDefinitions.categorical,
         arguments: [
             {
                 name: "Val",
-                type: BasicTypeDefinitions.categorical,
+                type: basicTypeDefinitions.categorical,
                 note: "*Categorical* value.",
             },
             {
                 name: "Vals",
                 type: [
-                    BasicTypeDefinitions.string,
-                    BasicTypeDefinitions.categorical
+                    basicTypeDefinitions.string,
+                    basicTypeDefinitions.categorical
                 ],
                 ellipsis: true,
                 optional: true,
@@ -654,19 +654,19 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
         label: "LBound(List: Categorical | Array, [Dimension: Long = 1]): Long",
         insertText: "LBound",
         definitionType: "function",
-        returnType: BasicTypeDefinitions.long ,
+        returnType: basicTypeDefinitions.long ,
         arguments: [
             {
                 name: "List",
                 type: [
-                    BasicTypeDefinitions.categorical,
-                    BasicTypeDefinitions.array
+                    basicTypeDefinitions.categorical,
+                    basicTypeDefinitions.array
                 ],
                 note: "*Array* or *Categorical* value."
             },
             {
                 name: "Dimension",
-                type: BasicTypeDefinitions.long,
+                type: basicTypeDefinitions.long,
                 optional: true,
                 defaultValue: 1,
                 note: "*Long* - *Array* dimension to use. The default is 1.",
@@ -703,11 +703,11 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
         label: "Merge([Vals: Variant, ...]): Categorical",
         insertText: "Merge",
         definitionType: "function",
-        returnType: BasicTypeDefinitions.categorical ,
+        returnType: basicTypeDefinitions.categorical ,
         arguments: [
             {
                 name: "Vals",
-                type: BasicTypeDefinitions.variant,
+                type: basicTypeDefinitions.variant,
                 ellipsis: true,
                 optional: true,
                 note: "One or more values."
@@ -737,21 +737,21 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
         label: "ReDim(List: Array, Size: Long, [Preserve: Boolean = True]): Long",
         insertText: "ReDim",
         definitionType: "function",
-        returnType: BasicTypeDefinitions.long ,
+        returnType: basicTypeDefinitions.long ,
         arguments: [
             {
                 name: "List",
-                type: BasicTypeDefinitions.categorical,
+                type: basicTypeDefinitions.categorical,
                 note: "*Array* or *Categorical* value.",
             },
             {
                 name: "Size",
-                type: BasicTypeDefinitions.long,
+                type: basicTypeDefinitions.long,
                 note: "New size of the array.",
             },
             {
                 name: "Preserve",
-                type: BasicTypeDefinitions.boolean,
+                type: basicTypeDefinitions.boolean,
                 optional: true,
                 defaultValue: true,
                 note: "Defines whether to keep the existing contents. The default is *True*.",
@@ -803,16 +803,16 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
         label: "UBound(List: Array, [Dimension: Long = 1]): Long",
         insertText: "UBound",
         definitionType: "function",
-        returnType: BasicTypeDefinitions.long ,
+        returnType: basicTypeDefinitions.long ,
         arguments: [
             {
                 name: "List",
-                type: BasicTypeDefinitions.categorical,
+                type: basicTypeDefinitions.categorical,
                 note: "*Array* or *Categorical* value."
             },
             {
                 name: "Dimension",
-                type: BasicTypeDefinitions.long,
+                type: basicTypeDefinitions.long,
                 optional: true,
                 defaultValue: 1,
                 note: "Array dimension to use. The default is 1."
@@ -849,16 +849,16 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
         label: "Union(Val: Categorical, [Vals: Categorical ...]): Categorical",
         insertText: "Union",
         definitionType: "function",
-        returnType: BasicTypeDefinitions.categorical ,
+        returnType: basicTypeDefinitions.categorical ,
         arguments: [
             {
                 name: "Val",
-                type: BasicTypeDefinitions.categorical,
+                type: basicTypeDefinitions.categorical,
                 note: "*Categorical* value."
             },
             {
                 name: "Vals",
-                type: BasicTypeDefinitions.categorical,
+                type: basicTypeDefinitions.categorical,
                 ellipsis: true,
                 optional: true,
                 note: "One or more variant values of type *Categorical* or *Text*. Each value specifies a set of categories."
@@ -901,11 +901,11 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
         label: "Unique(Val: Categorical): Categorical",
         insertText: "Unique",
         definitionType: "function",
-        returnType: BasicTypeDefinitions.categorical ,
+        returnType: basicTypeDefinitions.categorical ,
         arguments: [
             {
                 name: "Val",
-                type: BasicTypeDefinitions.categorical,
+                type: basicTypeDefinitions.categorical,
                 note: "*Categorical* value."
             }
         ],
@@ -936,16 +936,16 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
         label: "XUnion(Val: Categorical, Answers: Categorical): Categorical",
         insertText: "XUnion",
         definitionType: "function",
-        returnType: BasicTypeDefinitions.categorical ,
+        returnType: basicTypeDefinitions.categorical ,
         arguments: [
             {
                 name: "Val",
-                type: BasicTypeDefinitions.categorical,
+                type: basicTypeDefinitions.categorical,
                 note: "*Categorical* value."
             },
             {
                 name: "Answers",
-                type: BasicTypeDefinitions.categorical,
+                type: basicTypeDefinitions.categorical,
                 note: "*Variant* value of type *Categorical* or *Text*, specifying a set of categories."
             }
         ],
@@ -981,39 +981,39 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
         label: "Find(Val: String | Categorical | Array, Key: Variant, [Skip: Long = 0], [Reverse: Boolean = False], [IgnoreCase: Boolean = True]): Long",
         insertText: "Find",
         definitionType: "function",
-        returnType: BasicTypeDefinitions.long ,
+        returnType: basicTypeDefinitions.long ,
         arguments: [
             {
                 name: "Val",
                 type: [
-                    BasicTypeDefinitions.string,
-                    BasicTypeDefinitions.categorical,
-                    BasicTypeDefinitions.array,
+                    basicTypeDefinitions.string,
+                    basicTypeDefinitions.categorical,
+                    basicTypeDefinitions.array,
                 ],
                 note: "*Text* value, *Categorical* value, or *Array* to operate on."
             },
             {
                 name: "Key",
-                type: BasicTypeDefinitions.variant,
+                type: basicTypeDefinitions.variant,
                 note: "Value to search for in `Val`."
             },
             {
                 name: "Skip",
-                type: BasicTypeDefinitions.long,
+                type: basicTypeDefinitions.long,
                 optional: true,
                 defaultValue: 0,
                 note: "Optional. The number of positions to skip in `Val` before starting the search. If `Reverse` is *True*, `Skip` is the number of positions to skip from the end of `Val`. If `Reverse` is omitted or *False*, Skip is the number of positions to skip from the start of `Val`. Treated as 0 if omitted or is < 0."
             },
             {
                 name: "Reverse",
-                type: BasicTypeDefinitions.boolean,
+                type: basicTypeDefinitions.boolean,
                 optional: true,
                 defaultValue: false,
                 note: "Optional. If *True*, `Val` is searched backwards. If `Reverse` is omitted or *False*, `Val` is searched forwards."
             },
             {
                 name: "IgnoreCase",
-                type: BasicTypeDefinitions.boolean,
+                type: basicTypeDefinitions.boolean,
                 optional: true,
                 defaultValue: true,
                 note: "Optional. If *False*, the comparison is case-sensitive. If `IgnoreCase` is omitted or *True*, the comparison is case-insensitive."
@@ -1075,20 +1075,20 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
         label: "Left(Val: String | Categorical | Array, Length: Long): Variant",
         insertText: "Left",
         definitionType: "function",
-        returnType: BasicTypeDefinitions.variant,
+        returnType: basicTypeDefinitions.variant,
         arguments: [
             {
                 name: "Val",
                 type: [
-                    BasicTypeDefinitions.string,
-                    BasicTypeDefinitions.categorical,
-                    BasicTypeDefinitions.array
+                    basicTypeDefinitions.string,
+                    basicTypeDefinitions.categorical,
+                    basicTypeDefinitions.array
                 ],
                 note: "*Text* value, *categorical* value, or *Array* to operate on."
             },
             {
                 name: "Length",
-                type: BasicTypeDefinitions.long,
+                type: basicTypeDefinitions.long,
                 note: "Number of characters, categories, or elements to return. If `Length` is greater than the number of items available, all of the items are returned."
             }
         ],
@@ -1129,14 +1129,14 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
         label: "Len(Val: String | Categorical | Array): Long",
         insertText: "Len",
         definitionType: "function",
-        returnType: BasicTypeDefinitions.long,
+        returnType: basicTypeDefinitions.long,
         arguments: [
             {
                 name: "Val",
                 type: [
-                    BasicTypeDefinitions.string,
-                    BasicTypeDefinitions.categorical,
-                    BasicTypeDefinitions.array
+                    basicTypeDefinitions.string,
+                    basicTypeDefinitions.categorical,
+                    basicTypeDefinitions.array
                 ],
                 note: "*Text* value, *Categorical* value, or *Array* to operate on."
             }
@@ -1177,25 +1177,25 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
         label: "Mid(Val: String | Categorical | Array, Start: Long, [Length: Long]): Variant",
         insertText: "Mid",
         definitionType: "function",
-        returnType: BasicTypeDefinitions.variant,
+        returnType: basicTypeDefinitions.variant,
         arguments: [
             {
                 name: "Val",
                 type: [
-                    BasicTypeDefinitions.string,
-                    BasicTypeDefinitions.categorical,
-                    BasicTypeDefinitions.array
+                    basicTypeDefinitions.string,
+                    basicTypeDefinitions.categorical,
+                    basicTypeDefinitions.array
                 ],
                 note: "*Text* value, *categorical* value, or *array* to operate on."
             },
             {
                 name: "Start",
-                type: BasicTypeDefinitions.long,
+                type: basicTypeDefinitions.long,
                 note: "Position in `Val` of the first character, category, or element wanted (counting from 0). If `Start` is greater than the number of items in `Val`, no items are returned. If `Start` is less than 0, items are returned from the start of `Val`."
             },
             {
                 name: "Length",
-                type: BasicTypeDefinitions.long,
+                type: basicTypeDefinitions.long,
                 optional: true,
                 note: "Optional. Number of characters, categories, or elements to return. If `Length` is omitted, or if there are fewer than *Lengthcharacters* (including the `Start` character), all characters from `Start` to the end of the string are returned. If `Start` + `Length` is < 1, no items are returned."
             }
@@ -1241,20 +1241,20 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
         label: "Right(Val: String | Categorical | Arrary, Length: Long): Variant",
         insertText: "Right",
         definitionType: "function",
-        returnType: BasicTypeDefinitions.variant,
+        returnType: basicTypeDefinitions.variant,
         arguments: [
             {
                 name: "Val",
                 type: [
-                    BasicTypeDefinitions.string,
-                    BasicTypeDefinitions.categorical,
-                    BasicTypeDefinitions.array
+                    basicTypeDefinitions.string,
+                    basicTypeDefinitions.categorical,
+                    basicTypeDefinitions.array
                 ],
                 note: "*Text* value, *categorical* value, or *array* to operate on."
             },
             {
                 name: "Long",
-                type: BasicTypeDefinitions.long,
+                type: basicTypeDefinitions.long,
                 note: "Number of characters, categories, or elements to return. If `Length` is greater than the number of items available, all of the items are returned."
             },
         ],
@@ -1295,11 +1295,11 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
         label: "CBoolean(Val: Variant): Boolean",
         insertText: "CBoolean",
         definitionType: "function",
-        returnType: BasicTypeDefinitions.boolean,
+        returnType: basicTypeDefinitions.boolean,
         arguments: [
             {
                 name: "Val",
-                type: BasicTypeDefinitions.variant,
+                type: basicTypeDefinitions.variant,
                 note: "*Variant* value to be converted."
             }
         ],
@@ -1346,11 +1346,11 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
         label: "CCategorical(Val: Variant): Categorical",
         insertText: "CCategorical",
         definitionType: "function",
-        returnType: BasicTypeDefinitions.categorical ,
+        returnType: basicTypeDefinitions.categorical ,
         arguments: [
             {
                 name: "Val",
-                type: BasicTypeDefinitions.variant,
+                type: basicTypeDefinitions.variant,
                 note: "*Variant* value to be converted."
             }
         ],
@@ -1393,11 +1393,11 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
         label: "CDate(Val: Variant): Date",
         insertText: "CDate",
         definitionType: "function",
-        returnType: BasicTypeDefinitions.date,
+        returnType: basicTypeDefinitions.date,
         arguments: [
             {
                 name: "Val",
-                type: BasicTypeDefinitions.variant,
+                type: basicTypeDefinitions.variant,
                 note: "*Variant* value to be converted."
             }
         ],
@@ -1441,11 +1441,11 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
         label: "CDouble(Val: Variant): Double",
         insertText: "CDouble",
         definitionType: "function",
-        returnType: BasicTypeDefinitions.double ,
+        returnType: basicTypeDefinitions.double ,
         arguments: [
             {
                 name: "Val",
-                type: BasicTypeDefinitions.variant,
+                type: basicTypeDefinitions.variant,
                 note: "*Variant* value to be converted."
             }
         ],
@@ -1489,11 +1489,11 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
         label: "CLong(Val: Variant): Long",
         insertText: "CLong",
         definitionType: "function",
-        returnType: BasicTypeDefinitions.long ,
+        returnType: basicTypeDefinitions.long ,
         arguments: [
             {
                 name: "Val",
-                type: BasicTypeDefinitions.variant,
+                type: basicTypeDefinitions.variant,
                 note: "*Variant* value to be converted."
             }
         ],
@@ -1542,11 +1542,11 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
         label: "CText(Val: Variant): String",
         insertText: "CText",
         definitionType: "function",
-        returnType: BasicTypeDefinitions.string,
+        returnType: basicTypeDefinitions.string,
         arguments: [
             {
                 name: "Val",
-                type: BasicTypeDefinitions.variant,
+                type: basicTypeDefinitions.variant,
                 note: "*Variant* value to be converted."
             }
         ],
@@ -1588,11 +1588,11 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
         label: "AscW(Val: String): Long",
         insertText: "AscW",
         definitionType: "function",
-        returnType: BasicTypeDefinitions.long ,
+        returnType: basicTypeDefinitions.long ,
         arguments: [
             {
                 name: "Val",
-                type: BasicTypeDefinitions.string,
+                type: basicTypeDefinitions.string,
                 note: "*Text* value."
             }
         ],
@@ -1626,7 +1626,7 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
         name: "ChrW",
         label: "ChrW(Val: Long): String",
         definitionType: "function",
-        returnType: BasicTypeDefinitions.string,
+        returnType: basicTypeDefinitions.string,
         insertText: "ChrW",
         note: [
             "```ds",
@@ -1655,28 +1655,28 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
         label: "Format(Val: Variant, [Style: String], [Width: Long], [Locale: Long]): String",
         insertText: "Format",
         definitionType: "function",
-        returnType: BasicTypeDefinitions.string,
+        returnType: basicTypeDefinitions.string,
         arguments: [
             {
                 name: "Val",
-                type: BasicTypeDefinitions.variant,
+                type: basicTypeDefinitions.variant,
                 note: "The value to be formatted."
             },
             {
                 name: "Style",
-                type: BasicTypeDefinitions.string,
+                type: basicTypeDefinitions.string,
                 optional: true,
                 note: "Optional. One or more formatting codes. Multiple codes must be separated by semicolons."
             },
             {
                 name: "Width",
-                type: BasicTypeDefinitions.long,
+                type: basicTypeDefinitions.long,
                 optional: true,
                 note: "Optional. The minimum width of the formatted string."
             },
             {
                 name: "Locale",
-                type: BasicTypeDefinitions.long,
+                type: basicTypeDefinitions.long,
                 optional: true,
                 note: "Optional. The output locale to use for regional variations in formatting. If `Locale` is omitted or is negative, the current output locale is used for formatting."
             }
@@ -1906,33 +1906,33 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
         label: "FormatValue(ValFormat: Variant, Val: Variant, [Style: String], [Width: Long], [Locale: Long]): String",
         insertText: "FormatValue",
         definitionType: "function",
-        returnType: BasicTypeDefinitions.string,
+        returnType: basicTypeDefinitions.string,
         arguments: [
             {
                 name: "ValFormat",
-                type: BasicTypeDefinitions.variant,
+                type: basicTypeDefinitions.variant,
                 note: "A variable that provides the metadata to be used for formatting."
             },
             {
                 name: "Val",
-                type: BasicTypeDefinitions.variant,
+                type: basicTypeDefinitions.variant,
                 note: "The value to be formatted."
             },
             {
                 name: "Style",
-                type: BasicTypeDefinitions.string,
+                type: basicTypeDefinitions.string,
                 optional: true,
                 note: "Optional. One or more formatting codes. Multiple codes must be separated by semicolons."
             },
             {
                 name: "Width",
-                type: BasicTypeDefinitions.long,
+                type: basicTypeDefinitions.long,
                 optional: true,
                 note: "Optional. The minimum width of the formatted string."
             },
             {
                 name: "Locale",
-                type: BasicTypeDefinitions.long,
+                type: basicTypeDefinitions.long,
                 optional: true,
                 note: "Optional. The output locale to use for regional variations in formatting. If `Locale` is omitted or is negative, the current output locale is used for formatting."
             }
@@ -2076,11 +2076,11 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
         label: "Hex(Val: Long): String",
         insertText: "Hex",
         definitionType: "function",
-        returnType: BasicTypeDefinitions.string,
+        returnType: basicTypeDefinitions.string,
         arguments: [
             {
                 name: "Val",
-                type: BasicTypeDefinitions.long,
+                type: basicTypeDefinitions.long,
                 note: "Numeric value."
             }
         ],
@@ -2113,11 +2113,11 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
         label: "LCase(Val: String): String",
         insertText: "LCase",
         definitionType: "function",
-        returnType: BasicTypeDefinitions.string,
+        returnType: basicTypeDefinitions.string,
         arguments: [
             {
                 name: "Val",
-                type: BasicTypeDefinitions.string,
+                type: basicTypeDefinitions.string,
                 note: "*String* value to be converted to lower case."
             }
         ],
@@ -2147,11 +2147,11 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
         label: "LTrim(Val: String): String",
         insertText: "LTrim",
         definitionType: "function",
-        returnType: BasicTypeDefinitions.string,
+        returnType: basicTypeDefinitions.string,
         arguments: [
             {
                 name: "Val",
-                type: BasicTypeDefinitions.string,
+                type: basicTypeDefinitions.string,
                 note: "*String* value from which you want to remove leading spaces."
             }
         ],
@@ -2181,11 +2181,11 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
         label: "MakeMDMName(Val: String): String",
         insertText: "MakeMDMName",
         definitionType: "function",
-        returnType: BasicTypeDefinitions.string,
+        returnType: basicTypeDefinitions.string,
         arguments: [
             {
                 name: "Val",
-                type: BasicTypeDefinitions.string,
+                type: basicTypeDefinitions.string,
                 note: "*String* value to encode."
             }
         ],
@@ -2217,11 +2217,11 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
         label: "MakeString([Vals: Variant ...]): String",
         insertText: "MakeString",
         definitionType: "function",
-        returnType: BasicTypeDefinitions.string,
+        returnType: basicTypeDefinitions.string,
         arguments: [
             {
                 name: "Vals",
-                type: BasicTypeDefinitions.variant,
+                type: basicTypeDefinitions.variant,
                 ellipsis: true,
                 optional: true,
                 note: "A comma-delimited list of values to be concatenated together as a string."
@@ -2253,11 +2253,11 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
         label: "Oct(Val: Long): String",
         insertText: "Oct",
         definitionType: "function",
-        returnType: BasicTypeDefinitions.string,
+        returnType: basicTypeDefinitions.string,
         arguments: [
             {
                 name: "Val",
-                type: BasicTypeDefinitions.long,
+                type: basicTypeDefinitions.long,
                 note: "Numeric value."
             }
         ],
@@ -2290,11 +2290,11 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
         label: "RTrim(Val: String): String",
         insertText: "RTrim",
         definitionType: "function",
-        returnType: BasicTypeDefinitions.string,
+        returnType: basicTypeDefinitions.string,
         arguments: [
             {
                 name: "Val",
-                type: BasicTypeDefinitions.string,
+                type: basicTypeDefinitions.string,
                 note: "*String* value from which you want to remove trailing spaces."
             }
         ],
@@ -2324,23 +2324,23 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
         label: "Split(Val: String, [Delimiter: String], [Count: Long]): Categorical",
         insertText: "Split",
         definitionType: "function",
-        returnType: BasicTypeDefinitions.categorical ,
+        returnType: basicTypeDefinitions.categorical ,
         arguments: [
             {
                 name: "Val",
-                type: BasicTypeDefinitions.string,
+                type: basicTypeDefinitions.string,
                 note: "*String* value to split."
             },
             {
                 name: "Delimiter",
-                type: BasicTypeDefinitions.string,
+                type: basicTypeDefinitions.string,
                 optional: true,
                 defaultValue: "\" \"",
                 note: "Optional. `Delimiter` between substrings. The default is a single space (\" \")."
             },
             {
                 name: "Count",
-                type: BasicTypeDefinitions.long,
+                type: basicTypeDefinitions.long,
                 optional: true,
                 note: "Optional. The maximum number of substrings to return. If omitted or less than zero, all substrings are returned."
             }
@@ -2381,38 +2381,38 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
         label: "Replace(Val: Variant, Key: Variant, Replacement: Variant, [Start: Long], [Count: Long], [IgnoreCase: Boolean]): Variant",
         insertText: "Replace",
         definitionType: "function",
-        returnType: BasicTypeDefinitions.variant,
+        returnType: basicTypeDefinitions.variant,
         arguments: [
             {
                 name: "Val",
-                type: BasicTypeDefinitions.variant,
+                type: basicTypeDefinitions.variant,
                 note: "Variant value of type *Text* or *Categorical*."
             },
             {
                 name: "Key",
-                type: BasicTypeDefinitions.variant,
+                type: basicTypeDefinitions.variant,
                 note: "Variant value to look for in `Val`, of the same type as `Val`."
             },
             {
                 name: "Replacement",
-                type: BasicTypeDefinitions.variant,
+                type: basicTypeDefinitions.variant,
                 note: "Variant value with which to replace `Key`, of the same type as `Val`."
             },
             {
                 name: "Start",
-                type: BasicTypeDefinitions.long,
+                type: basicTypeDefinitions.long,
                 optional: true,
                 note: "Optional. Position in `Val` (starting from 0), from which to start searching for `Key`. If omitted or less than 0, searching starts at the start of `Val`."
             },
             {
                 name: "Count",
-                type: BasicTypeDefinitions.long,
+                type: basicTypeDefinitions.long,
                 optional: true,
                 note: "Optional. Maximum number of replacements to make. If omitted or less than 0, all possible replacements are made."
             },
             {
                 name: "IgnoreCase",
-                type: BasicTypeDefinitions.boolean,
+                type: basicTypeDefinitions.boolean,
                 optional: true,
                 note: "Optional. Whether to do case-insensitive comparison for `Key`. The default is *False*."
             }
@@ -2448,7 +2448,7 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
         label: "Trim(): String",
         insertText: "Trim",
         definitionType: "function",
-        returnType: BasicTypeDefinitions.string,
+        returnType: basicTypeDefinitions.string,
         note: [
             "```ds",
             "(function) Trim(): String",
@@ -2474,11 +2474,11 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
         label: "Trim(Val: String): String",
         insertText: "Trim",
         definitionType: "function",
-        returnType: BasicTypeDefinitions.string,
+        returnType: basicTypeDefinitions.string,
         arguments: [
             {
                 name: "Val",
-                type: BasicTypeDefinitions.string,
+                type: basicTypeDefinitions.string,
                 note: "*String* value from which you want to remove leading and trailing spaces."
             }
         ],
@@ -2508,11 +2508,11 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
         label: "UCase(Val: String): String",
         insertText: "UCase",
         definitionType: "function",
-        returnType: BasicTypeDefinitions.string,
+        returnType: basicTypeDefinitions.string,
         arguments: [
             {
                 name: "Val",
-                type: BasicTypeDefinitions.string,
+                type: basicTypeDefinitions.string,
                 note: "*String* value to be converted to upper case."
             }
         ],
@@ -2546,21 +2546,21 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
         label: "DateAdd(Val: Date, Interval: String, Count: Long): Date",
         insertText: "DateAdd",
         definitionType: "function",
-        returnType: BasicTypeDefinitions.date,
+        returnType: basicTypeDefinitions.date,
         arguments: [
             {
                 name: "Val",
-                type: BasicTypeDefinitions.date,
+                type: basicTypeDefinitions.date,
                 note: "The date and/or time to which you want to add the interval(s)."
             },
             {
                 name: "Interval",
-                type: BasicTypeDefinitions.string,
+                type: basicTypeDefinitions.string,
                 note: "The type of interval to be added, as specified in the table below."
             },
             {
                 name: "Count",
-                type: BasicTypeDefinitions.long,
+                type: basicTypeDefinitions.long,
                 note: "Specifies the number of intervals to add. Can be negative to give an earlier date."
             }
         ],
@@ -2606,21 +2606,21 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
         label: "DateDiff(Val1: Date, Val2: Date, Interval: String): Long",
         insertText: "DateDiff",
         definitionType: "function",
-        returnType: BasicTypeDefinitions.long ,
+        returnType: basicTypeDefinitions.long ,
         arguments: [
             {
                 name: "Val1",
-                type: BasicTypeDefinitions.date,
+                type: basicTypeDefinitions.date,
                 note: "First date value.",
             },
             {
                 name: "Val2",
-                type: BasicTypeDefinitions.date,
+                type: basicTypeDefinitions.date,
                 note: "First date value."
             },
             {
                 name: "Interval",
-                type: BasicTypeDefinitions.string,
+                type: basicTypeDefinitions.string,
                 note: "Type of interval in which the difference between the two dates is to be reported."
             }
         ],
@@ -2679,20 +2679,20 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
         label: "DateNow([Val: Long | String], [IgnoreDaylightSaving: Boolean = False]): Date",
         insertText: "DateNow",
         definitionType: "function",
-        returnType: BasicTypeDefinitions.date,
+        returnType: basicTypeDefinitions.date,
         arguments: [
             {
                 name: "Val",
                 type: [
-                    BasicTypeDefinitions.long,
-                    BasicTypeDefinitions.string,
+                    basicTypeDefinitions.long,
+                    basicTypeDefinitions.string,
                 ],
                 optional: true,
                 note: "Optional. *Long* or *String* value specifying local time zone to use."
             },
             {
                 name: "IgnoreDaylightSaving",
-                type: BasicTypeDefinitions.boolean,
+                type: basicTypeDefinitions.boolean,
                 optional: true,
                 defaultValue: false,
                 note: "Optional. Whether to ignore adjustments for daylight-saving time. Default is *False*."
@@ -2723,11 +2723,11 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
         label: "DateOnly(Val: Date): Date",
         insertText: "DateOnly",
         definitionType: "function",
-        returnType: BasicTypeDefinitions.date,
+        returnType: basicTypeDefinitions.date,
         arguments: [
             {
                 name: "Val",
-                type: BasicTypeDefinitions.date,
+                type: basicTypeDefinitions.date,
                 note: "*Date* value."
             }
         ],
@@ -2749,16 +2749,16 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
         label: "DatePart(Val: Date, Interval: String): Long",
         insertText: "DatePart",
         definitionType: "function",
-        returnType: BasicTypeDefinitions.long ,
+        returnType: basicTypeDefinitions.long ,
         arguments: [
             {
                 name: "Val",
-                type: BasicTypeDefinitions.date,
+                type: basicTypeDefinitions.date,
                 note: "The date of which you want to return a part.",
             },
             {
                 name: "Interval",
-                type: BasicTypeDefinitions.string,
+                type: basicTypeDefinitions.string,
                 note: "Defines the part of the date that is to be returned, as specified in the table below.",
             }
         ],
@@ -2804,11 +2804,11 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
         label: "Day(Val: Date): Long",
         insertText: "Day",
         definitionType: "function",
-        returnType: BasicTypeDefinitions.long ,
+        returnType: basicTypeDefinitions.long ,
         arguments: [
             {
                 name: "Val",
-                type: BasicTypeDefinitions.date,
+                type: basicTypeDefinitions.date,
                 note: "The date for which you want to return the day."
             }
         ],
@@ -2840,13 +2840,13 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
         label: "GetTimeZone([Val: Long | String]): Long",
         insertText: "GetTimeZone",
         definitionType: "function",
-        returnType: BasicTypeDefinitions.long ,
+        returnType: basicTypeDefinitions.long ,
         arguments: [
             {
                 name: "Val",
                 type: [
-                    BasicTypeDefinitions.long,
-                    BasicTypeDefinitions.string,
+                    basicTypeDefinitions.long,
+                    basicTypeDefinitions.string,
                 ],
                 optional: true,
                 note: "Optional. *Long* or *Text* value specifying time zone to use."
@@ -2876,20 +2876,20 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
         label: "GetTimeZoneDaylightSaving([Val: Long | String], [Time: Date]): Boolean",
         insertText: "GetTimeZoneDaylightSaving",
         definitionType: "function",
-        returnType: BasicTypeDefinitions.boolean,
+        returnType: basicTypeDefinitions.boolean,
         arguments: [
             {
                 name: "Val",
                 type: [
-                    BasicTypeDefinitions.long,
-                    BasicTypeDefinitions.string,
+                    basicTypeDefinitions.long,
+                    basicTypeDefinitions.string,
                 ],
                 optional: true,
                 note: "Optional. *Long* or *String* value specifying time zone to use.",
             },
             {
                 name: "Time",
-                type: BasicTypeDefinitions.date,
+                type: basicTypeDefinitions.date,
                 optional: true,
                 note: "Optional. Local date and time to use.",
             }
@@ -2922,13 +2922,13 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
         label: "GetTimeZoneName([Val: Long | String]): String",
         insertText: "GetTimeZoneName",
         definitionType: "function",
-        returnType: BasicTypeDefinitions.string,
+        returnType: basicTypeDefinitions.string,
         arguments: [
             {
                 name: "Val",
                 type: [
-                    BasicTypeDefinitions.long,
-                    BasicTypeDefinitions.string,
+                    basicTypeDefinitions.long,
+                    basicTypeDefinitions.string,
                 ],
                 optional: true,
                 note: "Optional. *Long* or *String* value specifying time zone to use."
@@ -2958,26 +2958,26 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
         label: "GetTimeZoneOffset([Val: Long | String], [Time: Date], [IgnoreDaylightSaving: Boolean = False]): Long",
         insertText: "GetTimeZoneOffset",
         definitionType: "function",
-        returnType: BasicTypeDefinitions.long ,
+        returnType: basicTypeDefinitions.long ,
         arguments: [
             {
                 name: "Val",
                 type: [
-                    BasicTypeDefinitions.long,
-                    BasicTypeDefinitions.string,
+                    basicTypeDefinitions.long,
+                    basicTypeDefinitions.string,
                 ],
                 optional: true,
                 note: "Optional. *Long* or *String* value specifying time zone to use.",
             },
             {
                 name: "Time",
-                type: BasicTypeDefinitions.date,
+                type: basicTypeDefinitions.date,
                 optional: true,
                 note: "Optional. Local date and time to use."
             },
             {
                 name: "IgnoreDaylightSaving",
-                type: BasicTypeDefinitions.boolean,
+                type: basicTypeDefinitions.boolean,
                 optional: true,
                 note: "Optional. Whether to ignore adjustments for daylight-saving time. Default is *False*."
             }
@@ -3004,11 +3004,11 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
         label: "Hour(Val: Date): Long",
         insertText: "Hour",
         definitionType: "function",
-        returnType: BasicTypeDefinitions.long ,
+        returnType: basicTypeDefinitions.long ,
         arguments: [
             {
                 name: "Val",
-                type: BasicTypeDefinitions.date,
+                type: basicTypeDefinitions.date,
                 note: "The date for which you want to return the hour of the day."
             }
         ],
@@ -3040,25 +3040,25 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
         label: "LocalToUTCTime(Val: Date, [Zone: Long | String], [IgnoreDaylightSaving: Boolean = False]): Date",
         insertText: "LocalToUTCTime",
         definitionType: "function",
-        returnType: BasicTypeDefinitions.date,
+        returnType: basicTypeDefinitions.date,
         arguments: [
             {
                 name: "Val",
-                type: BasicTypeDefinitions.date,
+                type: basicTypeDefinitions.date,
                 note: "Local date/time value."
             },
             {
                 name: "Zone",
                 type: [
-                    BasicTypeDefinitions.long,
-                    BasicTypeDefinitions.string,
+                    basicTypeDefinitions.long,
+                    basicTypeDefinitions.string,
                 ],
                 optional: true,
                 note: "Optional. *Long* or *String* value specifying local time zone to use."
             },
             {
                 name: "IgnoreDaylightSaving",
-                type: BasicTypeDefinitions.boolean,
+                type: basicTypeDefinitions.boolean,
                 optional: true,
                 defaultValue: false,
                 note: "Optional. Whether to ignore adjustments for daylight-saving time. Default is *False*.",
@@ -3085,11 +3085,11 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
         label: "Minute(Val: Date): Long",
         insertText: "Minute",
         definitionType: "function",
-        returnType: BasicTypeDefinitions.long ,
+        returnType: basicTypeDefinitions.long ,
         arguments: [
             {
                 name: "Val",
-                type: BasicTypeDefinitions.date,
+                type: basicTypeDefinitions.date,
                 note: "The date for which you want to return the minute."
             }
         ],
@@ -3117,11 +3117,11 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
         label: "Month(Val: Date): Long",
         insertText: "Month",
         definitionType: "function",
-        returnType: BasicTypeDefinitions.long ,
+        returnType: basicTypeDefinitions.long ,
         arguments: [
             {
                 name: "Val",
-                type: BasicTypeDefinitions.date,
+                type: basicTypeDefinitions.date,
                 note: "The date for which you want to return the month."
             }
         ],
@@ -3149,23 +3149,23 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
         label: "MonthName(Val: Long , [Abbreviate: Boolean = False], [Locale: Long]): String",
         insertText: "MonthName",
         definitionType: "function",
-        returnType: BasicTypeDefinitions.string,
+        returnType: basicTypeDefinitions.string,
         arguments: [
             {
                 name: "Val",
-                type: BasicTypeDefinitions.long,
+                type: basicTypeDefinitions.long,
                 note: "An integer between 1 and 13 representing the month, or a date."
             },
             {
                 name: "Abbreviate",
-                type: BasicTypeDefinitions.boolean,
+                type: basicTypeDefinitions.boolean,
                 optional: true,
                 defaultValue: false,
                 note: "Optional. Whether a short form of the month name isto be used. The default is *False*."
             },
             {
                 name: "Locale",
-                type: BasicTypeDefinitions.long,
+                type: basicTypeDefinitions.long,
                 optional: true,
                 note: "Optional. The output locale to use for regional variations in month names. If `Locale` is omitted or negative, or does not match a known Locale ID (LCID), the current output locale is used."
             }
@@ -3210,20 +3210,20 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
         label: "Now([Val: Long | String], [IgnoreDaylightSaving: Boolean = False]): Date",
         insertText: "Now",
         definitionType: "function",
-        returnType: BasicTypeDefinitions.date,
+        returnType: basicTypeDefinitions.date,
         arguments: [
             {
                 name: "Val",
                 type: [
-                    BasicTypeDefinitions.long,
-                    BasicTypeDefinitions.string,
+                    basicTypeDefinitions.long,
+                    basicTypeDefinitions.string,
                 ],
                 optional: true,
                 note: "Optional. *Long* or *String* value specifying local time zone to use.",
             },
             {
                 name: "IgnoreDaylightSaving",
-                type: BasicTypeDefinitions.boolean,
+                type: basicTypeDefinitions.boolean,
                 optional: true,
                 defaultValue: false,
                 note: "Optional. Whether to ignore adjustments for daylight-saving time. Default is *False*."
@@ -3254,11 +3254,11 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
         label: "Second(Val: Date): Long",
         insertText: "Second",
         definitionType: "function",
-        returnType: BasicTypeDefinitions.long ,
+        returnType: basicTypeDefinitions.long ,
         arguments: [
             {
                 name: "Val",
-                type: BasicTypeDefinitions.date,
+                type: basicTypeDefinitions.date,
                 note: "The date for which you want to return the second."
             }
         ],
@@ -3286,13 +3286,13 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
         label: "SetTimeZone(Val: Long | String): Long",
         insertText: "SetTimeZone",
         definitionType: "function",
-        returnType: BasicTypeDefinitions.long ,
+        returnType: basicTypeDefinitions.long ,
         arguments: [
             {
                 name: "Val",
                 type: [
-                    BasicTypeDefinitions.long,
-                    BasicTypeDefinitions.string,
+                    basicTypeDefinitions.long,
+                    basicTypeDefinitions.string,
                 ],
                 note: "*Long* or *String* value specifying time zone to use."
             }
@@ -3315,19 +3315,19 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
         label: "TimeNow([Val: Long | String], [IgnoreDaylightSaving: Boolean = False]): Date",
         insertText: "TimeNow",
         definitionType: "function",
-        returnType: BasicTypeDefinitions.date,
+        returnType: basicTypeDefinitions.date,
         arguments: [
             {
                 name: "Val",
                 type: [
-                    BasicTypeDefinitions.long,
-                    BasicTypeDefinitions.string,
+                    basicTypeDefinitions.long,
+                    basicTypeDefinitions.string,
                 ],
                 note: "Optional. *Long* or *String* value specifying local time zone to use."
             },
             {
                 name: "IgnoreDaylightSaving",
-                type: BasicTypeDefinitions.boolean,
+                type: basicTypeDefinitions.boolean,
                 optional: true,
                 defaultValue: false,
                 note: "Optional. Whether to ignore adjustments for daylight-saving time. Default is *False*."
@@ -3358,11 +3358,11 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
         label: "TimeOnly(Val: Date): Date",
         insertText: "TimeOnly",
         definitionType: "function",
-        returnType: BasicTypeDefinitions.date,
+        returnType: basicTypeDefinitions.date,
         arguments: [
             {
                 name: "Val",
-                type: BasicTypeDefinitions.date,
+                type: basicTypeDefinitions.date,
                 note: "*Date* value."
             }
         ],
@@ -3384,25 +3384,25 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
         label: "UTCToLocalTime(Val: Date, [Zone: Long | String], [IgnoreDaylightSaving: Boolean = False]): Date",
         insertText: "UTCToLocalTime",
         definitionType: "function",
-        returnType: BasicTypeDefinitions.date,
+        returnType: basicTypeDefinitions.date,
         arguments: [
             {
                 name: "Val",
-                type: BasicTypeDefinitions.date,
+                type: basicTypeDefinitions.date,
                 note: "UTC date/time value."
             },
             {
                 name: "Zone",
                 type: [
-                    BasicTypeDefinitions.long,
-                    BasicTypeDefinitions.string,
+                    basicTypeDefinitions.long,
+                    basicTypeDefinitions.string,
                 ],
                 optional: true,
                 note: "Optional. *Long* or *String* value specifying the local time zone to use."
             },
             {
                 name: "IgnoreDaylightSaving",
-                type: BasicTypeDefinitions.boolean,
+                type: basicTypeDefinitions.boolean,
                 optional: true,
                 defaultValue: false,
                 note: "Optional. Whether to ignore adjustments for daylight-saving time. Default is *False*.",
@@ -3428,26 +3428,26 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
         label: "WeekdayName(Val: Long | Date, [Abbreviate: Boolean = False], [Locale: Long]): String",
         insertText: "WeekdayName",
         definitionType: "function",
-        returnType: BasicTypeDefinitions.string,
+        returnType: basicTypeDefinitions.string,
         arguments: [
             {
                 name: "Val",
                 type: [
-                    BasicTypeDefinitions.long,
-                    BasicTypeDefinitions.date,
+                    basicTypeDefinitions.long,
+                    basicTypeDefinitions.date,
                 ],
                 note: "A integer between 1 and 7 representing the day of the week, or a date. The input locale defines which days are considered the first and last days of the week.",
             },
             {
                 name: "Abbreviate",
-                type: BasicTypeDefinitions.boolean,
+                type: basicTypeDefinitions.boolean,
                 optional: true,
                 defaultValue: false,
                 note: "Optional. Whether a short form of the day name is to be used. The default is *False*."
             },
             {
                 name: "Locale",
-                type: BasicTypeDefinitions.long,
+                type: basicTypeDefinitions.long,
                 optional: true,
                 note: "Optional. The output locale to use for regional variations in day names. If Locale is omitted or negative, or does not match a known Locale ID (LCID), the current output locale is used."
             }
@@ -3505,11 +3505,11 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
         label: "Year(Val: Date): Long",
         insertText: "Year",
         definitionType: "function",
-        returnType: BasicTypeDefinitions.long ,
+        returnType: basicTypeDefinitions.long ,
         arguments: [
             {
                 name: "Val",
-                type: BasicTypeDefinitions.date,
+                type: basicTypeDefinitions.date,
                 note: "The date for which you want to return the year."
             }
         ],
@@ -3537,7 +3537,7 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
         label: "GetRandomSeed(): Long",
         insertText: "GetRandomSeed",
         definitionType: "function",
-        returnType: BasicTypeDefinitions.long ,
+        returnType: basicTypeDefinitions.long ,
         note: [
             "```ds",
             "(function) GetRandomSeed(): Long",
@@ -3562,11 +3562,11 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
         label: "RanInt([Seed: Long = 0]): Long",
         insertText: "RanInt",
         definitionType: "function",
-        returnType: BasicTypeDefinitions.long ,
+        returnType: basicTypeDefinitions.long ,
         arguments: [
             {
                 name: "Seed",
-                type: BasicTypeDefinitions.long,
+                type: basicTypeDefinitions.long,
                 optional: true,
                 defaultValue: 0,
                 note: "The starting point to be used for generating the random number. The default is 0."
@@ -3616,11 +3616,11 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
         label: "Rnd([Seed: Long = 0]): Double",
         insertText: "Rnd",
         definitionType: "function",
-        returnType: BasicTypeDefinitions.double ,
+        returnType: basicTypeDefinitions.double ,
         arguments: [
             {
                 name: "Seed",
-                type: BasicTypeDefinitions.long,
+                type: basicTypeDefinitions.long,
                 optional: true,
                 defaultValue: 0,
                 note: "The starting point to be used for generating the random number. The default is 0."
@@ -3669,11 +3669,11 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
         label: "SetRandomSeed([Seed: Long = 0]): Long",
         insertText: "SetRandomSeed",
         definitionType: "function",
-        returnType: BasicTypeDefinitions.long ,
+        returnType: basicTypeDefinitions.long ,
         arguments: [
             {
                 name: "Seed",
-                type: BasicTypeDefinitions.long,
+                type: basicTypeDefinitions.long,
                 optional: true,
                 defaultValue: 0,
                 note: "Optional. Starting value to use for random number generation. The default is 0."
@@ -3715,7 +3715,7 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
         label: "Band(Val: Long | Double, Min: Double, Size: Double, [Count: Long]): Categorical",
         insertText: "Band",
         definitionType: "function",
-        returnType: BasicTypeDefinitions.categorical ,
+        returnType: basicTypeDefinitions.categorical ,
         note: [
             "```ds",
             "(function) Band(Val: Long | Double, Min: Double, Size: Double, [Count: Long]): Categorical",
@@ -3758,16 +3758,16 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
         label: "BitAnd(Val1: Long, [Vals: Variant ...]): Long",
         insertText: "BitAnd",
         definitionType: "function",
-        returnType: BasicTypeDefinitions.long ,
+        returnType: basicTypeDefinitions.long ,
         arguments: [
             {
                 name: "Val1",
-                type: BasicTypeDefinitions.long,
+                type: basicTypeDefinitions.long,
                 note: "First data value."
             },
             {
                 name: "Vals",
-                type: BasicTypeDefinitions.variant,
+                type: basicTypeDefinitions.variant,
                 ellipsis: true,
                 optional: true,
                 note: "Variable number of other values."
@@ -3806,11 +3806,11 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
         label: "BitNot(Val: Long): Long",
         insertText: "BitNot",
         definitionType: "function",
-        returnType: BasicTypeDefinitions.long ,
+        returnType: basicTypeDefinitions.long ,
         arguments: [
             {
                 name: "Val",
-                type: BasicTypeDefinitions.long,
+                type: basicTypeDefinitions.long,
                 note: "*Data* value."
             }
         ],
@@ -3844,16 +3844,16 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
         label: "BitOr(Val1: Long, [Vals: Variant ...]): Long",
         insertText: "BitOr",
         definitionType: "function",
-        returnType: BasicTypeDefinitions.long ,
+        returnType: basicTypeDefinitions.long ,
         arguments: [
             {
                 name: "Val1",
-                type: BasicTypeDefinitions.long,
+                type: basicTypeDefinitions.long,
                 note: "First data value.",
             },
             {
                 name: "Vals",
-                type: BasicTypeDefinitions.variant,
+                type: basicTypeDefinitions.variant,
                 ellipsis: true,
                 optional: true,
                 note: "Variable number of other values."
@@ -3910,16 +3910,16 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
         label: "BitXor(Val1: Long, [Vals: Variant ...]): Long",
         insertText: "BitXor",
         definitionType: "function",
-        returnType: BasicTypeDefinitions.long ,
+        returnType: basicTypeDefinitions.long ,
         arguments: [
             {
                 name: "Val1",
-                type: BasicTypeDefinitions.long,
+                type: basicTypeDefinitions.long,
                 note: "First data value.",
             },
             {
                 name: "Vals",
-                type: BasicTypeDefinitions.variant,
+                type: basicTypeDefinitions.variant,
                 ellipsis: true,
                 optional: true,
                 note: "Variable number of other values."
@@ -3953,16 +3953,16 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
         label: "Categorize(Val: Variant, CategorizedVariable: String): Categorical",
         insertText: "Categorize",
         definitionType: "function",
-        returnType: BasicTypeDefinitions.categorical ,
+        returnType: basicTypeDefinitions.categorical ,
         arguments: [
             {
                 name: "Val",
-                type: BasicTypeDefinitions.variant,
+                type: basicTypeDefinitions.variant,
                 note: "*Variant* value of type *Long*, *Double*, *Text*, or *Date*"
             },
             {
                 name: "CategorizedVariable",
-                type: BasicTypeDefinitions.string,
+                type: basicTypeDefinitions.string,
                 note: "The name of the *categorical* variable, which will be used to ensure the generated category name exists."
             }
         ],
@@ -4012,16 +4012,16 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
         label: "CategorizeLoopVariable(Val: Variant, CategorizedVariable: String): Categorical",
         insertText: "CategorizeLoopVariable",
         definitionType: "function",
-        returnType: BasicTypeDefinitions.categorical ,
+        returnType: basicTypeDefinitions.categorical ,
         arguments: [
             {
                 name: "Val",
-                type: BasicTypeDefinitions.variant,
+                type: basicTypeDefinitions.variant,
                 note: "*Variant* value of type *Long*, *Double*, *Text*, or *Date*"
             },
             {
                 name: "CategorizedVariable",
-                type: BasicTypeDefinitions.string,
+                type: basicTypeDefinitions.string,
                 note: "The name of the *categorical* loop variable, which will be used to ensure the generated category name exists and to check if *Other* and *NA* should be used."
             }
         ],
@@ -4094,7 +4094,7 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
         label: "DBNull(): Variant",
         insertText: "DBNull",
         definitionType: "function",
-        returnType: BasicTypeDefinitions.variant,
+        returnType: basicTypeDefinitions.variant,
         note: [
             "```ds",
             "(function) DBNull(): Variant",
@@ -4120,11 +4120,11 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
         label: "CreateObject(Class: String): Object",
         insertText: "CreateObject",
         definitionType: "function",
-        returnType: BasicTypeDefinitions.object,
+        returnType: basicTypeDefinitions.object,
         arguments: [
             {
                 name: "Class",
-                type: BasicTypeDefinitions.string,
+                type: basicTypeDefinitions.string,
                 note: "The COM class name of the object to be created."
             }
         ],
@@ -4179,36 +4179,36 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
         arguments: [
             {
                 name: "Expression",
-                type: BasicTypeDefinitions.variant,
+                type: basicTypeDefinitions.variant,
                 note: "The value to compare."
             },
             {
                 name: "Search",
-                type: BasicTypeDefinitions.variant,
+                type: basicTypeDefinitions.variant,
                 note: "The value that is compared against `Expression`."
             },
             {
                 name: "Result",
-                type: BasicTypeDefinitions.variant,
+                type: basicTypeDefinitions.variant,
                 note: "The returned value if `Expression` is equal to `Search`."
             },
             {
                 name: "Search1",
-                type: BasicTypeDefinitions.variant,
+                type: basicTypeDefinitions.variant,
                 ellipsis: true,
                 optional: true,
                 note: "The value that is compared against `Expression`."
             },
             {
                 name: "Result1",
-                type: BasicTypeDefinitions.variant,
+                type: basicTypeDefinitions.variant,
                 ellipsis: true,
                 optional: true,
                 note: "The returned value if `Expression` is equal to `Search`."
             },
             {
                 name: "defaultValue",
-                type: BasicTypeDefinitions.variant,
+                type: basicTypeDefinitions.variant,
                 optional: true,
                 note: "Optional. If no matches are found, it returns the default. If the default is omitted, then the decode statement returns *null*."
             }
@@ -4264,18 +4264,18 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
         label: "EngineVersion([Val: Long = 0], [Number: Boolean = False]): Varaint",
         insertText: "EngineVersion",
         definitionType: "function",
-        returnType: BasicTypeDefinitions.variant,
+        returnType: basicTypeDefinitions.variant,
         arguments: [
             {
                 name: "Val",
-                type: BasicTypeDefinitions.long,
+                type: basicTypeDefinitions.long,
                 optional: true,
                 defaultValue: 0,
                 note: "Optional. Which parts of the version number to return, according to the list of options below. Treated as 0 if omitted or not a valid option."
             },
             {
                 name: "Number",
-                type: BasicTypeDefinitions.boolean,
+                type: basicTypeDefinitions.boolean,
                 optional: true,
                 defaultValue: false,
                 note: "Optional. If *True*, a number is returned. If Number is omitted or *False*, a string is returned."
@@ -4319,29 +4319,29 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
         label: "EqualBand(Val: Long | Double, Count: Long, Min: Double, Max: Double): Categorical",
         insertText: "EqualBand",
         definitionType: "function",
-        returnType: BasicTypeDefinitions.categorical ,
+        returnType: basicTypeDefinitions.categorical ,
         arguments: [
             {
                 name: "Val",
                 type: [
-                    BasicTypeDefinitions.long,
-                    BasicTypeDefinitions.double,
+                    basicTypeDefinitions.long,
+                    basicTypeDefinitions.double,
                 ],
                 note: "Variant value of type *Long* or *Double*."
             },
             {
                 name: "Count",
-                type: BasicTypeDefinitions.long,
+                type: basicTypeDefinitions.long,
                 note: "The number of bands to define between `Min` and `Max`. If `Count` < 1, an empty *categorical* value is returned."
             },
             {
                 name: "Min",
-                type: BasicTypeDefinitions.double,
+                type: basicTypeDefinitions.double,
                 note: "*Double* value specifying the (inclusive) lower bound of the first band."
             },
             {
                 name: "Max",
-                type: BasicTypeDefinitions.double,
+                type: basicTypeDefinitions.double,
                 note: "*Double* value specifying the (exclusive) upper bound of the last band."
             }
         ],
@@ -4385,11 +4385,11 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
         label: "Eval(Expr: String): Variant",
         insertText: "Eval",
         definitionType: "function",
-        returnType: BasicTypeDefinitions.variant,
+        returnType: basicTypeDefinitions.variant,
         arguments: [
             {
                 name: "Expr",
-                type: BasicTypeDefinitions.string,
+                type: basicTypeDefinitions.string,
                 note: "Expression to evaluate."
             }
         ],
@@ -4455,11 +4455,11 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
         label: "EvaluateDerivedIteration(LevelID: String): Variant",
         insertText: "EvaluateDerivedIteration",
         definitionType: "function",
-        returnType: BasicTypeDefinitions.variant,
+        returnType: basicTypeDefinitions.variant,
         arguments: [
             {
                 name: "LevelID",
-                type: BasicTypeDefinitions.string,
+                type: basicTypeDefinitions.string,
                 note: "The variable that identifies the current iteration in the grid. This is typically the `LevelID` variable."
             }
         ],
@@ -4506,11 +4506,11 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
         label: "Execute(Script: String): Long",
         insertText: "Execute",
         definitionType: "function",
-        returnType: BasicTypeDefinitions.long ,
+        returnType: basicTypeDefinitions.long ,
         arguments: [
             {
                 name: "Script",
-                type: BasicTypeDefinitions.string,
+                type: basicTypeDefinitions.string,
                 note: "Statements to execute."
             }
         ],
@@ -4541,16 +4541,16 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
         label: "GetInterface(Object: Object, InterfaceID: String): Object",
         insertText: "GetInterface",
         definitionType: "function",
-        returnType: BasicTypeDefinitions.object,
+        returnType: basicTypeDefinitions.object,
         arguments: [
             {
                 name: "Object",
-                type: BasicTypeDefinitions.object,
+                type: basicTypeDefinitions.object,
                 note: "The object to query for the alternate interface."
             },
             {
                 name: "InterfaceID",
-                type: BasicTypeDefinitions.string,
+                type: basicTypeDefinitions.string,
                 note: "The identifier of the interface as a string. This is a string representation of the `Interface ID` in the form {xxxxxx-...-xxxx}"
             }
         ],
@@ -4604,21 +4604,21 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
         label: "IIf(Val: Boolean, TruePart: Varaint, FalsePart: Variant): Variant",
         insertText: "IIf",
         definitionType: "function",
-        returnType: BasicTypeDefinitions.variant,
+        returnType: basicTypeDefinitions.variant,
         arguments: [
             {
                 name: "Val",
-                type: BasicTypeDefinitions.boolean,
+                type: basicTypeDefinitions.boolean,
                 note: "*Boolean* value."
             },
             {
                 name: "TruePart",
-                type: BasicTypeDefinitions.variant,
+                type: basicTypeDefinitions.variant,
                 note: "Value of any type, to be returned if `Val` is *True*."
             },
             {
                 name: "FalsePart",
-                type: BasicTypeDefinitions.variant,
+                type: basicTypeDefinitions.variant,
                 note: "Value of any type, to be returned if `Val` is *False*."
             }
         ],
@@ -4682,22 +4682,22 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
         label: "InputBox(Prompt: String, [Default: String], [Title: String]): String",
         insertText: "InputBox",
         definitionType: "function",
-        returnType: BasicTypeDefinitions.string,
+        returnType: basicTypeDefinitions.string,
         arguments: [
             {
                 name: "Prompt",
-                type: BasicTypeDefinitions.string,
+                type: basicTypeDefinitions.string,
                 note: "Message to display in the dialog box.",
             },
             {
                 name: "Default",
-                type: BasicTypeDefinitions.string,
+                type: basicTypeDefinitions.string,
                 optional: true,
                 note: "Optional. Initial contents of the dialog box."
             },
             {
                 name: "Title",
-                type: BasicTypeDefinitions.string,
+                type: basicTypeDefinitions.string,
                 optional: true,
                 note: "Optional. *Text* to display in the title bar.",
             }
@@ -4725,11 +4725,11 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
         label: "IsDBNull(Val: Variant): Boolean",
         insertText: "IsDBNull",
         definitionType: "function",
-        returnType: BasicTypeDefinitions.boolean,
+        returnType: basicTypeDefinitions.boolean,
         arguments: [
             {
                 name: "Val",
-                type: BasicTypeDefinitions.variant,
+                type: basicTypeDefinitions.variant,
                 note: "The value to test."
             }
         ],
@@ -4760,24 +4760,24 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
         label: "IsElementInVersions(Val: Variant, Elem: String | Categorical, Versions: String): Boolean",
         insertText: "IsElementInVersions",
         definitionType: "function",
-        returnType: BasicTypeDefinitions.boolean,
+        returnType: basicTypeDefinitions.boolean,
         arguments: [
             {
                 name: "Val",
-                type: BasicTypeDefinitions.variant,
+                type: basicTypeDefinitions.variant,
                 note: "Variant value, used only to specify which MDM object to use."
             },
             {
                 name: "Elem",
                 type: [
-                    BasicTypeDefinitions.string,
-                    BasicTypeDefinitions.categorical,
+                    basicTypeDefinitions.string,
+                    basicTypeDefinitions.categorical,
                 ],
                 note: "*String* or *Categorical* value specifying an element or Elements list in `Val`."
             },
             {
                 name: "Versions",
-                type: BasicTypeDefinitions.string,
+                type: basicTypeDefinitions.string,
                 note: "Optional. Names of versions to check."
             }
         ],
@@ -4803,11 +4803,11 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
         label: "IsEmpty(Val: Variant): Boolean",
         insertText: "IsEmpty",
         definitionType: "function",
-        returnType: BasicTypeDefinitions.boolean,
+        returnType: basicTypeDefinitions.boolean,
         arguments: [
             {
                 name: "Val",
-                type: BasicTypeDefinitions.variant,
+                type: basicTypeDefinitions.variant,
                 note: "Variant value to be tested."
             }
         ],
@@ -4847,16 +4847,16 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
         label: "IsEqualObject(Val1: Object, Val2: Object): Boolean",
         insertText: "IsEqualObject",
         definitionType: "function",
-        returnType: BasicTypeDefinitions.boolean,
+        returnType: basicTypeDefinitions.boolean,
         arguments: [
             {
                 name: "Val1",
-                type: BasicTypeDefinitions.object,
+                type: basicTypeDefinitions.object,
                 note: "The first value to test.",
             },
             {
                 name: "Val2",
-                type: BasicTypeDefinitions.object,
+                type: basicTypeDefinitions.object,
                 note: "The second value to test.",
             },
         ],
@@ -4887,11 +4887,11 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
         label: "IsNullObject(Val: Variant): Boolean",
         insertText: "IsNullObject",
         definitionType: "function",
-        returnType: BasicTypeDefinitions.boolean,
+        returnType: basicTypeDefinitions.boolean,
         arguments: [
             {
                 name: "Val",
-                type: BasicTypeDefinitions.variant,
+                type: basicTypeDefinitions.variant,
                 note: "The value to test."
             }
         ],
@@ -4936,16 +4936,16 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
         label: "IsOneOf(Val1: Variant, [Vals: Variant ...]): Boolean",
         insertText: "IsOneOf",
         definitionType: "function",
-        returnType: BasicTypeDefinitions.boolean,
+        returnType: basicTypeDefinitions.boolean,
         arguments: [
             {
                 name: "Val1",
-                type: BasicTypeDefinitions.variant,
+                type: basicTypeDefinitions.variant,
                 note: "The value to test."
             },
             {
                 name: "Vals",
-                type: BasicTypeDefinitions.variant,
+                type: basicTypeDefinitions.variant,
                 ellipsis: true,
                 optional: true,
                 note: "Variable number of other values."
@@ -4994,16 +4994,16 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
         label: "IsSet(Val: Long, Mask: Long): Boolean",
         insertText: "IsSet",
         definitionType: "function",
-        returnType: BasicTypeDefinitions.boolean,
+        returnType: basicTypeDefinitions.boolean,
         arguments: [
             {
                 name: "Val",
-                type: BasicTypeDefinitions.long,
+                type: basicTypeDefinitions.long,
                 note: "Data value to test.",
             },
             {
                 name: "Mask",
-                type: BasicTypeDefinitions.long,
+                type: basicTypeDefinitions.long,
                 note: "Pattern of bits to check."
             }
         ],
@@ -5038,21 +5038,21 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
         label: "RGB(Red: Long, Green: Long, Blue: Long): Long",
         insertText: "RGB",
         definitionType: "function",
-        returnType: BasicTypeDefinitions.long ,
+        returnType: basicTypeDefinitions.long ,
         arguments: [
             {
                 name: "Red",
-                type: BasicTypeDefinitions.long,
+                type: basicTypeDefinitions.long,
                 note: "Red value."
             },
             {
                 name: "Green",
-                type: BasicTypeDefinitions.long,
+                type: basicTypeDefinitions.long,
                 note: "Green value."
             },
             {
                 name: "Blue",
-                type: BasicTypeDefinitions.long,
+                type: basicTypeDefinitions.long,
                 note: "Blue value."
             },
         ],
@@ -5084,16 +5084,16 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
         label: "SampleCategorize(Val: Variant, CategorizedVariable: String): Variant",
         insertText: "SampleCategorize",
         definitionType: "function",
-        returnType: BasicTypeDefinitions.variant,
+        returnType: basicTypeDefinitions.variant,
         arguments: [
             {
                 name: "Val",
-                type: BasicTypeDefinitions.variant,
+                type: basicTypeDefinitions.variant,
                 note: "Variant value of type *Long*, *Double*, *Text*, or *Date*"
             },
             {
                 name: "CategorizedVariable",
-                type: BasicTypeDefinitions.string,
+                type: basicTypeDefinitions.string,
                 note: "The name of the *categorical* variable, which will be used to ensure the generated category name exists."
             }
         ],
@@ -5141,40 +5141,40 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
         label: "ShellExecute(File: String, [HWnd: Long], [Verb: String], [Parameters: String], [Directory: String], [ShowCmd: Long]): Long",
         insertText: "ShellExecute",
         definitionType: "function",
-        returnType: BasicTypeDefinitions.long ,
+        returnType: basicTypeDefinitions.long ,
         arguments: [
             {
                 name: "File",
-                type: BasicTypeDefinitions.string,
+                type: basicTypeDefinitions.string,
                 note: "File or object on which to execute the specified verb."
             },
             {
                 name: "HWnd",
-                type: BasicTypeDefinitions.long,
+                type: basicTypeDefinitions.long,
                 optional: true,
                 note: "Optional. Handle to a parent window. This window receives any message boxes that the invoked application produces, such as error reporting. If omitted, message boxes will not be tied to a window."
             },
             {
                 name: "Verb",
-                type: BasicTypeDefinitions.string,
+                type: basicTypeDefinitions.string,
                 optional: true,
                 note: "Optional. Action to be performed. If omitted, the default verb for the file type is used if it is valid; otherwise, the \"open\" verb is used. For Windows 2000 and later systems, if neither verb is available, the first available verb for the file type is used."
             },
             {
                 name: "Paramerters",
-                type: BasicTypeDefinitions.string,
+                type: basicTypeDefinitions.string,
                 optional: true,
                 note: "Optional. If `File` is an executable file, the parameters to be passed to the application. Otherwise, ignored."
             },
             {
                 name: "Directory",
-                type: BasicTypeDefinitions.string,
+                type: basicTypeDefinitions.string,
                 optional: true,
                 note: "Optional. Default directory for the application. The default is the current directory."
             },
             {
                 name: "ShowCmd",
-                type: BasicTypeDefinitions.long,
+                type: basicTypeDefinitions.long,
                 optional: true,
                 note: "Optional. A value that specifies how the application is to be displayed. The default is 1. Possible values are shown in the table below."
             }
@@ -5234,7 +5234,7 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
         arguments: [
             {
                 name: "Val",
-                type: BasicTypeDefinitions.long,
+                type: basicTypeDefinitions.long,
                 note: "Number of milliseconds to suspend the thread for."
             }
         ],
@@ -5263,34 +5263,34 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
         label: "Validate(Val: Variant, [Min: Double], [Max: Double], [Expr: String], [Describe: Boolean = False]): Boolean",
         insertText: "Validate",
         definitionType: "function",
-        returnType: BasicTypeDefinitions.boolean,
+        returnType: basicTypeDefinitions.boolean,
         arguments: [
             {
                 name: "Val",
-                type: BasicTypeDefinitions.variant,
+                type: basicTypeDefinitions.variant,
                 note: "The value to test.",
             },
             {
                 name: "Min",
-                type: BasicTypeDefinitions.double,
+                type: basicTypeDefinitions.double,
                 optional: true,
                 note: "Optional. The minimum value allowed. The default is -1.79769313486232e308."
             },
             {
                 name: "Max",
-                type: BasicTypeDefinitions.double,
+                type: basicTypeDefinitions.double,
                 optional: true,
                 note: "Optional. The maximum value allowed. The default is 1.79769313486232e308."
             },
             {
                 name: "Expr",
-                type: BasicTypeDefinitions.string,
+                type: basicTypeDefinitions.string,
                 optional: true,
                 note: "Optional. Expression for a text, numeric, or date value. For a numeric or date value, the expression can specify one or more valid ranges. For a text value, the expression defines a regular expression that can be used to validate the text."
             },
             {
                 name: "Describe",
-                type: BasicTypeDefinitions.boolean,
+                type: basicTypeDefinitions.boolean,
                 optional: true,
                 defaultValue: false,
                 note: "Optional. Whether to generate a description for a failed test. The default is *False*"
@@ -5438,11 +5438,11 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
         label: "VarType(Val: Long): Long",
         insertText: "VarType",
         definitionType: "function",
-        returnType: BasicTypeDefinitions.long ,
+        returnType: basicTypeDefinitions.long ,
         arguments: [
             {
                 name: "Val",
-                type: BasicTypeDefinitions.long,
+                type: basicTypeDefinitions.long,
                 note: "The data value."
             }
         ],
@@ -5494,11 +5494,11 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
         label: "VarTypeName(Val: Long): String",
         insertText: "VarTypeName",
         definitionType: "function",
-        returnType: BasicTypeDefinitions.string,
+        returnType: basicTypeDefinitions.string,
         arguments: [
             {
                 name: "Val",
-                type: BasicTypeDefinitions.long,
+                type: basicTypeDefinitions.long,
                 note: "The data value."
             }
         ],
@@ -5550,16 +5550,16 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
         label: "FindItem(List: Variant, Key: Varaint): Varaint",
         insertText: "FindItem",
         definitionType: "function",
-        returnType: BasicTypeDefinitions.variant,
+        returnType: basicTypeDefinitions.variant,
         arguments: [
             {
                 name: "List",
-                type: BasicTypeDefinitions.variant,
+                type: basicTypeDefinitions.variant,
                 note: "*Array*, *collection* or *Categorical* value to operate on.",
             },
             {
                 name: "Key",
-                type: BasicTypeDefinitions.variant,
+                type: basicTypeDefinitions.variant,
                 note: "Index, name, or value of the item to be found."
             }
         ],
@@ -5623,7 +5623,7 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
         label: "GetReversalSeed(): Long",
         insertText: "GetReversalSeed",
         definitionType: "function",
-        returnType: BasicTypeDefinitions.long ,
+        returnType: basicTypeDefinitions.long ,
         note: [
             "```ds",
             "(function) GetReversalSeed(): Long",
@@ -5649,7 +5649,7 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
         label: "GetRotationSeed(): Long",
         insertText: "GetRotationSeed",
         definitionType: "function",
-        returnType: BasicTypeDefinitions.long ,
+        returnType: basicTypeDefinitions.long ,
         note: [
             "```ds",
             "GetRotationSeed()",
@@ -5675,22 +5675,22 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
         label: "Ran(List: Variant, [Count: Long], [Seed: Long = 0]): Varaint",
         insertText: "Ran",
         definitionType: "function",
-        returnType: BasicTypeDefinitions.variant,
+        returnType: basicTypeDefinitions.variant,
         arguments: [
             {
                 name: "List",
-                type: BasicTypeDefinitions.variant,
+                type: basicTypeDefinitions.variant,
                 note: "*Array*, *collection*, or *Categorical* value to operate on."
             },
             {
                 name: "Count",
-                type: BasicTypeDefinitions.long,
+                type: basicTypeDefinitions.long,
                 optional: true,
                 note: "Optional. Number of items to return. If omitted, negative, or greater than the number of input items, all items are returned"
             },
             {
                 name: "Seed",
-                type: BasicTypeDefinitions.long,
+                type: basicTypeDefinitions.long,
                 optional: true,
                 defaultValue: 0,
                 note: "Optional. The starting point to be used for the generation of the random ordering. The default is 0."
@@ -5766,21 +5766,21 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
         label: "RandomPassword([Val: String], [MinLength: Long], [MaxLength: Long]): String",
         insertText: "RandomPassword",
         definitionType: "function",
-        returnType: BasicTypeDefinitions.string,
+        returnType: basicTypeDefinitions.string,
         arguments: [
             {
                 name: "Val",
-                type: BasicTypeDefinitions.string,
+                type: basicTypeDefinitions.string,
                 note: "Optional. The characters allowed in the password. If `Val` is omitted or empty, “0123456789” is used.",
             },
             {
                 name: "MinLength",
-                type: BasicTypeDefinitions.long,
+                type: basicTypeDefinitions.long,
                 note: "Optional. The minimum length of the password. If `MinLength` is omitted or is less than 1, the minimum length is set to 8."
             },
             {
                 name: "MaxLength",
-                type: BasicTypeDefinitions.long,
+                type: basicTypeDefinitions.long,
                 note: "Optional. The maximum length of the password. If `MaxLength` is omitted or is less than `MinLength`, the maximum length is set to `MinLength`."
             }
         ],
@@ -5813,34 +5813,34 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
         label: "RanSequence(Start: Long, End: Long, [Step: Long = 1], [Count: Long], [Seed:Long = 0]): Array",
         insertText: "RanSequence",
         definitionType: "function",
-        returnType: BasicTypeDefinitions.array,
+        returnType: basicTypeDefinitions.array,
         arguments: [
             {
                 name: "Start",
-                type: BasicTypeDefinitions.long,
+                type: basicTypeDefinitions.long,
                 note: "The first possible value."
             },
             {
                 name: "End",
-                type: BasicTypeDefinitions.long,
+                type: basicTypeDefinitions.long,
                 note: "The last possible value."
             },
             {
                 name: "Step",
-                type: BasicTypeDefinitions.long,
+                type: basicTypeDefinitions.long,
                 optional: true,
                 defaultValue: 1,
                 note: "Optional. The increment between consecutive possible values. The default is 1."
             },
             {
                 name: "Count",
-                type: BasicTypeDefinitions.long,
+                type: basicTypeDefinitions.long,
                 optional: true,
                 note: "Optional. The number of items to return. If omitted, negative, or greater than the number of possible values, all items are returned."
             },
             {
                 name: "Seed",
-                type: BasicTypeDefinitions.long,
+                type: basicTypeDefinitions.long,
                 optional: true,
                 note: "Optional. The starting point to be used for the random number generator. The default is 0."
             }
@@ -5899,29 +5899,29 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
         label: "Rev(List: Variant, [Count: Long], [Policy: Long = 1], [Seed: Long = 0]): Array",
         insertText: "Rev",
         definitionType: "function",
-        returnType: BasicTypeDefinitions.array,
+        returnType: basicTypeDefinitions.array,
         arguments: [
             {
                 name: "List",
-                type: BasicTypeDefinitions.variant,
+                type: basicTypeDefinitions.variant,
                 note: "*Array*, *collection*, or *Categorical* value to operate on."
             },
             {
                 name: "Count",
-                type: BasicTypeDefinitions.long,
+                type: basicTypeDefinitions.long,
                 optional: true,
                 note: "Optional. Number of items to return. If omitted, negative, or greater than the number of input items, all items are returned."
             },
             {
                 name: "Policy",
-                type: BasicTypeDefinitions.long,
+                type: basicTypeDefinitions.long,
                 optional: true,
                 defaultValue: 1,
                 note: "Optional. Controls the way the list order is chosen. The default is 1."
             },
             {
                 name: "Seed",
-                type: BasicTypeDefinitions.long,
+                type: basicTypeDefinitions.long,
                 optional: true,
                 defaultValue: 0,
                 note: "Optional. The state to be used for the reversal. The default is 0."
@@ -5983,41 +5983,41 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
         label: "RevSequence(Start: Long, End: Long, [Step: Long = 1], [Count: Long], [Policy: Long = 1], [Seed: Long = 0]): Array",
         insertText: "RevSequence",
         definitionType: "function",
-        returnType: BasicTypeDefinitions.array,
+        returnType: basicTypeDefinitions.array,
         arguments: [
             {
                 name: "Start",
-                type: BasicTypeDefinitions.long,
+                type: basicTypeDefinitions.long,
                 note: "The first possible value."
             },
             {
                 name: "End",
-                type: BasicTypeDefinitions.long,
+                type: basicTypeDefinitions.long,
                 note: "The last possible value."
             },
             {
                 name: "Step",
-                type: BasicTypeDefinitions.long,
+                type: basicTypeDefinitions.long,
                 optional: true,
                 defaultValue: 1,
                 note: "Optional. The increment between consecutive possible values. The default is 1.",
             },
             {
                 name: "Count",
-                type: BasicTypeDefinitions.long,
+                type: basicTypeDefinitions.long,
                 optional: true,
                 note: "Optional. The number of items to return. If omitted, negative, or greater than the number of possible values, all items are returned.",
             },
             {
                 name: "Policy",
-                type: BasicTypeDefinitions.long,
+                type: basicTypeDefinitions.long,
                 optional: true,
                 defaultValue: 1,
                 note: "Optional. Controls the way the list order is chosen. The default is 1.",
             },
             {
                 name: "Seed",
-                type: BasicTypeDefinitions.long,
+                type: basicTypeDefinitions.long,
                 optional: true,
                 defaultValue: 0,
                 note: "Optional. The state to be used for the reversal. The default is 0.",
@@ -6080,29 +6080,29 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
         label: "Rot(List: Variant, [Count: Long], [Policy: Long = 2], [Seed: Long = 0]): Array",
         insertText: "Rot",
         definitionType: "function",
-        returnType: BasicTypeDefinitions.array,
+        returnType: basicTypeDefinitions.array,
         arguments: [
             {
                 name: "List",
-                type: BasicTypeDefinitions.variant,
+                type: basicTypeDefinitions.variant,
                 note: "*Array*, *collection*, or *Categorical* value to operate on."
             },
             {
                 name: "Count",
-                type: BasicTypeDefinitions.long,
+                type: basicTypeDefinitions.long,
                 optional: true,
                 note: "Optional. Number of items to return. If omitted, negative, or greater than the number of input items, all items are returned."
             },
             {
                 name: "Policy",
-                type: BasicTypeDefinitions.long,
+                type: basicTypeDefinitions.long,
                 optional: true,
                 defaultValue: 2,
                 note: "Optional. Controls the way the rotation is chosen. The default is 2."
             },
             {
                 name: "Seed",
-                type: BasicTypeDefinitions.long,
+                type: basicTypeDefinitions.long,
                 optional: true,
                 defaultValue: 0,
                 note: "Optional. The state to be used for the rotation. The default is 0."
@@ -6250,41 +6250,41 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
         label: "RotSequence(Start: Long, End: Long, [Step: Long = 1], [Count: Long], [Policy: Long = 2], [Seed: Long]): Array",
         insertText: "RotSequence",
         definitionType: "function",
-        returnType: BasicTypeDefinitions.array,
+        returnType: basicTypeDefinitions.array,
         arguments: [
             {
                 name: "Start",
-                type: BasicTypeDefinitions.long,
+                type: basicTypeDefinitions.long,
                 note: "The first possible value."
             },
             {
                 name: "End",
-                type: BasicTypeDefinitions.long,
+                type: basicTypeDefinitions.long,
                 note: "The last possible value."
             },
             {
                 name: "Step",
-                type: BasicTypeDefinitions.long,
+                type: basicTypeDefinitions.long,
                 optional: true,
                 defaultValue: 1,
                 note: "Optional. The increment between consecutive possible values. The default is 1."
             },
             {
                 name: "Count",
-                type: BasicTypeDefinitions.long,
+                type: basicTypeDefinitions.long,
                 optional: true,
                 note: "Optional. The number of items to return. If omitted, negative, or greater than the number of possible values, all items are returned."
             },
             {
                 name: "Policy",
-                type: BasicTypeDefinitions.long,
+                type: basicTypeDefinitions.long,
                 optional: true,
                 defaultValue: 2,
                 note: "Optional. Controls the way the rotation is performed. The default is 2."
             },
             {
                 name: "Seed",
-                type: BasicTypeDefinitions.long,
+                type: basicTypeDefinitions.long,
                 optional: true,
                 note: "Optional. The state to be used for the rotation. The default is the value acquired from the `GetRotationSeed()` function."
             }
@@ -6363,22 +6363,22 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
         label: "SelectRange(List: Variant, [Range: Variant], [Count: Long]): Categorical",
         insertText: "SelectRange",
         definitionType: "function",
-        returnType: BasicTypeDefinitions.categorical ,
+        returnType: basicTypeDefinitions.categorical ,
         arguments: [
             {
                 name: "List",
-                type: BasicTypeDefinitions.variant,
+                type: basicTypeDefinitions.variant,
                 note: "*Array*, *collection* or *Categorical* value to operate on."
             },
             {
                 name: "Range",
-                type: BasicTypeDefinitions.variant,
+                type: basicTypeDefinitions.variant,
                 optional: true,
                 note: "*Text*, *Long* or *Categorical* value for selecting list items."
             },
             {
                 name: "Count",
-                type: BasicTypeDefinitions.long,
+                type: basicTypeDefinitions.long,
                 optional: true,
                 note: "Optional. Number of items to return. If omitted, negative, or greater than the maximum number of items selected by `Range`, all selected items are returned."
             }
@@ -6430,11 +6430,11 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
         label: "SetReversalSeed([Seed: Long = 0]): Long",
         insertText: "SetReversalSeed",
         definitionType: "function",
-        returnType: BasicTypeDefinitions.long ,
+        returnType: basicTypeDefinitions.long ,
         arguments: [
             {
                 name: "Seed",
-                type: BasicTypeDefinitions.long,
+                type: basicTypeDefinitions.long,
                 optional: true,
                 defaultValue: 0,
                 note: "Optional. State to use for reversals. The default is 0."
@@ -6465,11 +6465,11 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
         label: "SetRotationSeed([Seed: Long = 0]): Long",
         insertText: "SetRotationSeed",
         definitionType: "function",
-        returnType: BasicTypeDefinitions.long ,
+        returnType: basicTypeDefinitions.long ,
         arguments: [
             {
                 name: "Seed",
-                type: BasicTypeDefinitions.long,
+                type: basicTypeDefinitions.long,
                 optional: true,
                 defaultValue: 0,
                 note: "Optional. Rotation state value. The default is 0."
@@ -6500,21 +6500,21 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
         label: "SortAsc(List: Variant, [Count: Long], [IgnoreLocale: Boolean]): Array",
         insertText: "SortAsc",
         definitionType: "function",
-        returnType: BasicTypeDefinitions.array,
+        returnType: basicTypeDefinitions.array,
         arguments: [
             {
                 name: "List",
-                type: BasicTypeDefinitions.variant,
+                type: basicTypeDefinitions.variant,
                 note: "*Variant* - *Array*, *collection*, or *Categorical* value to operate on."
             },
             {
                 name: "Count",
-                type: BasicTypeDefinitions.long,
+                type: basicTypeDefinitions.long,
                 note: "Optional. Number of items to return. If omitted, negative, or greater than the number of input items, all items are returned."
             },
             {
                 name: "IgnoreLocale",
-                type: BasicTypeDefinitions.boolean,
+                type: basicTypeDefinitions.boolean,
                 note: "Optional. When *True*, the rules of the input locale are ignored when sorting text and the text is sorted in a language-neutral way. The default is *False*."
             }
         ],
@@ -6583,21 +6583,21 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
         label: "SortDesc(List: Variant, [Count: Long], [IgnoreLocale: Boolean]): Array",
         insertText: "SortDesc",
         definitionType: "function",
-        returnType: BasicTypeDefinitions.array,
+        returnType: basicTypeDefinitions.array,
         arguments: [
             {
                 name: "List",
-                type: BasicTypeDefinitions.variant,
+                type: basicTypeDefinitions.variant,
                 note: "*Variant* - *Array*, *collection*, or *Categorical* value to operate on."
             },
             {
                 name: "Count",
-                type: BasicTypeDefinitions.long,
+                type: basicTypeDefinitions.long,
                 note: "Optional. Number of items to return. If omitted, negative, or greater than the number of input items, all items are returned."
             },
             {
                 name: "IgnoreLocale",
-                type: BasicTypeDefinitions.boolean,
+                type: basicTypeDefinitions.boolean,
                 note: "Optional. When *True*, the rules of the input locale are ignored when sorting text and the text is sorted in a language-neutral way. The default is *False*."
             }
         ],
@@ -6645,11 +6645,11 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
         label: "Abs(Val: Double): Double",
         insertText: "Abs",
         definitionType: "function",
-        returnType: BasicTypeDefinitions.double ,
+        returnType: basicTypeDefinitions.double ,
         arguments: [
             {
                 name: "Val",
-                type: BasicTypeDefinitions.double,
+                type: basicTypeDefinitions.double,
                 note: "A numeric value."
             }
         ],
@@ -6682,11 +6682,11 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
         label: "Atn(Val: Double): Double",
         insertText: "Atn",
         definitionType: "function",
-        returnType: BasicTypeDefinitions.double ,
+        returnType: basicTypeDefinitions.double ,
         arguments: [
             {
                 name: "Val",
-                type: BasicTypeDefinitions.double,
+                type: basicTypeDefinitions.double,
                 note: "A numeric value that represents the ratio of the two shorter sides of a right-angled triangle. (The ratio is the length of the side opposite a particular angle divided by the length of the side adjacent to the angle.)"
             }
         ],
@@ -6718,11 +6718,11 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
         label: "Cos(Val: Double): Double",
         insertText: "Cos",
         definitionType: "function",
-        returnType: BasicTypeDefinitions.double ,
+        returnType: basicTypeDefinitions.double ,
         arguments: [
             {
                 name: "Val",
-                type: BasicTypeDefinitions.double,
+                type: basicTypeDefinitions.double,
                 note: "A numeric value that represents an angle in radians."
             }
         ],
@@ -6755,11 +6755,11 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
         label: "Exp(Val: Double): Double",
         insertText: "Exp",
         definitionType: "function",
-        returnType: BasicTypeDefinitions.double ,
+        returnType: basicTypeDefinitions.double ,
         arguments: [
             {
                 name: "Val",
-                type: BasicTypeDefinitions.double,
+                type: basicTypeDefinitions.double,
                 note: "A numeric value."
             }
         ],
@@ -6815,11 +6815,11 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
         label: "Int(Val: Double): Long",
         insertText: "Int",
         definitionType: "function",
-        returnType: BasicTypeDefinitions.long ,
+        returnType: basicTypeDefinitions.long ,
         arguments: [
             {
                 name: "Val",
-                type: BasicTypeDefinitions.double,
+                type: basicTypeDefinitions.double,
                 note: "A numeric value."
             }
         ],
@@ -6853,16 +6853,16 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
         label: "Log(Val: Double, [Base: Double]): Double",
         insertText: "Log",
         definitionType: "function",
-        returnType: BasicTypeDefinitions.double ,
+        returnType: basicTypeDefinitions.double ,
         arguments: [
             {
                 name: "Val",
-                type: BasicTypeDefinitions.double,
+                type: basicTypeDefinitions.double,
                 note: "A numeric value."
             },
             {
                 name: "Base",
-                type: BasicTypeDefinitions.double,
+                type: basicTypeDefinitions.double,
                 optional: true,
                 note: "Optional. The base for the logarithm. If omitted or <= 0.0, e is used."
             }
@@ -6899,16 +6899,16 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
         label: "MaxOf(Val1: Variant, [Vals: Variant ...]): Variant",
         insertText: "MaxOf",
         definitionType: "function",
-        returnType: BasicTypeDefinitions.variant,
+        returnType: basicTypeDefinitions.variant,
         arguments: [
             {
                 name: "Val1",
-                type: BasicTypeDefinitions.variant,
+                type: basicTypeDefinitions.variant,
                 note: "First data value."
             },
             {
                 name: "Vals",
-                type: BasicTypeDefinitions.variant,
+                type: basicTypeDefinitions.variant,
                 ellipsis: true,
                 optional: true,
                 note: "Variable number of other values."
@@ -6940,16 +6940,16 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
         label: "MinOf(Val1: Variant, [Vals: Variant ...]): Variant",
         insertText: "MinOf",
         definitionType: "function",
-        returnType: BasicTypeDefinitions.variant,
+        returnType: basicTypeDefinitions.variant,
         arguments: [
             {
                 name: "Val1",
-                type: BasicTypeDefinitions.variant,
+                type: basicTypeDefinitions.variant,
                 note: "First data value."
             },
             {
                 name: "Vals",
-                type: BasicTypeDefinitions.variant,
+                type: basicTypeDefinitions.variant,
                 ellipsis: true,
                 optional: true,
                 note: "Variable number of other values."
@@ -6980,22 +6980,22 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
         label: "Round(Val: Double, [Digits: Long], [Policy: Long]): Double",
         insertText: "Round",
         definitionType: "function",
-        returnType: BasicTypeDefinitions.double ,
+        returnType: basicTypeDefinitions.double ,
         arguments: [
             {
                 name: "Val",
-                type: BasicTypeDefinitions.double,
+                type: basicTypeDefinitions.double,
                 note: "The value to be rounded.",
             },
             {
                 name: "Digits",
-                type: BasicTypeDefinitions.long,
+                type: basicTypeDefinitions.long,
                 optional: true,
                 note: "Optional. The number of decimal places or significant digits in the result. Treated as 0 if omitted or is < 0.",
             },
             {
                 name: "Policy",
-                type: BasicTypeDefinitions.long,
+                type: basicTypeDefinitions.long,
                 optional: true,
                 note: "Optional. The type of rounding to use as described in the table below. Treated as 0 if omitted or is < 0."
             }
@@ -7062,16 +7062,16 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
         label: "Pow(Val1: Double, Val2: Double): Double",
         insertText: "Pow",
         definitionType: "function",
-        returnType: BasicTypeDefinitions.double ,
+        returnType: basicTypeDefinitions.double ,
         arguments: [
             {
                 name: "Val1",
-                type: BasicTypeDefinitions.double,
+                type: basicTypeDefinitions.double,
                 note: "The base value."
             },
             {
                 name: "Val2",
-                type: BasicTypeDefinitions.double,
+                type: basicTypeDefinitions.double,
                 note: "The exponent value."
             }
         ],
@@ -7104,11 +7104,11 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
         label: "Sgn(Val: Double): Long",
         insertText: "Sgn",
         definitionType: "function",
-        returnType: BasicTypeDefinitions.long ,
+        returnType: basicTypeDefinitions.long ,
         arguments: [
             {
                 name: "Val",
-                type: BasicTypeDefinitions.double,
+                type: basicTypeDefinitions.double,
                 note: "A numeric value."
             }
         ],
@@ -7141,11 +7141,11 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
         label: "Sin(Val: Double): Double",
         insertText: "Sin",
         definitionType: "function",
-        returnType: BasicTypeDefinitions.double ,
+        returnType: basicTypeDefinitions.double ,
         arguments: [
             {
                 name: "Val",
-                type: BasicTypeDefinitions.double,
+                type: basicTypeDefinitions.double,
                 note: "A numeric value that represents an angle in radians."
             }
         ],
@@ -7176,11 +7176,11 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
         label: "Sqrt(Val: Double): Double",
         insertText: "Sqrt",
         definitionType: "function",
-        returnType: BasicTypeDefinitions.double ,
+        returnType: basicTypeDefinitions.double ,
         arguments: [
             {
                 name: "Val",
-                type: BasicTypeDefinitions.double,
+                type: basicTypeDefinitions.double,
                 note: "A numeric value that represents an angle in radians."
             }
         ],
@@ -7215,11 +7215,11 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
         label: "Tan(Val: Double): Double",
         insertText: "Tan",
         definitionType: "function",
-        returnType: BasicTypeDefinitions.double ,
+        returnType: basicTypeDefinitions.double ,
         arguments: [
             {
                 name: "Val",
-                type: BasicTypeDefinitions.double,
+                type: basicTypeDefinitions.double,
                 note: "A numeric value that represents an angle in radians."
             }
         ],
@@ -7252,21 +7252,21 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
         definitionType: "function",
         label: "CombineIterations(CombineQuestion: Object, CombineIterationName: String, CombineList: Categorical): Boolean",
         insertText: "CombineIterations",
-        returnType: BasicTypeDefinitions.boolean,
+        returnType: basicTypeDefinitions.boolean,
         arguments: [
             {
                 name: "CombineQuestion",
-                type: BasicTypeDefinitions.object,
+                type: basicTypeDefinitions.object,
                 note: "Grid question"
             },
             {
                 name: "CombineIterationName",
-                type: BasicTypeDefinitions.string,
+                type: basicTypeDefinitions.string,
                 note: "The iteration category that stores the combination results."
             },
             {
                 name: "CombineList",
-                type: BasicTypeDefinitions.categorical,
+                type: basicTypeDefinitions.categorical,
                 note: "The iteration category items that determine the result."
             }
         ],
@@ -7327,21 +7327,21 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
         label: "CopyGrid(SourceGrid: Object, DestinationGrid: Object, IterationFilter: Categorical): Boolean",
         insertText: "CopyGrid",
         definitionType: "function",
-        returnType: BasicTypeDefinitions.boolean,
+        returnType: basicTypeDefinitions.boolean,
         arguments: [
             {
                 name: "SourceGrid",
-                type: BasicTypeDefinitions.object,
+                type: basicTypeDefinitions.object,
                 note: "Grid question"
             },
             {
                 name: "DestinationGrid",
-                type: BasicTypeDefinitions.object,
+                type: basicTypeDefinitions.object,
                 note: "Grid question"
             },
             {
                 name: "IterationFilter",
-                type: BasicTypeDefinitions.categorical,
+                type: basicTypeDefinitions.categorical,
                 note: "Categorical for iteration filter"
             },
         ],
@@ -7447,22 +7447,22 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
         arguments: [
             {
                 name: "Grid",
-                type: BasicTypeDefinitions.variant,
+                type: basicTypeDefinitions.variant,
                 note: "The summarized grid question.",
             },
             {
                 name: "SummaryVariable",
-                type: BasicTypeDefinitions.variant,
+                type: basicTypeDefinitions.variant,
                 note: "The categorical question for saving summary results.",
             },
             {
                 name: "SummaryCategories",
-                type: BasicTypeDefinitions.variant,
+                type: basicTypeDefinitions.variant,
                 note: "The category list for calculating summary results.",
             },
             {
                 name: "QuestionNameForSummary",
-                type: BasicTypeDefinitions.string,
+                type: basicTypeDefinitions.string,
                 note: "The name of sub-question in the summarized grid.",
             },
         ],
@@ -7541,17 +7541,17 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
         arguments: [
             {
                 name: "FlattenQuestionFullName",
-                type: BasicTypeDefinitions.string,
+                type: basicTypeDefinitions.string,
                 note: "FullName for the question being flattened"
             },
             {
                 name: "FilterIteration",
-                type: BasicTypeDefinitions.string,
+                type: basicTypeDefinitions.string,
                 note: "String for the iteration filter"
             },
             {
                 name: "MDMObject",
-                type: BasicTypeDefinitions.object,
+                type: basicTypeDefinitions.object,
                 note: "MDM object related to the *.mdd* file that contains `GridObjectName`"
             },
         ],
@@ -7677,27 +7677,27 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
         label: "FlipGrid(SourceGrid: Object, DestinationGrid: Object, [QuestionNameForFlip: String], [IterationFilter: Variant = NULL]): Boolean",
         insertText: "FlipGrid",
         definitionType: "function",
-        returnType: BasicTypeDefinitions.boolean,
+        returnType: basicTypeDefinitions.boolean,
         arguments: [
             {
                 name: "SourceGrid",
-                type: BasicTypeDefinitions.object,
+                type: basicTypeDefinitions.object,
                 note: "Grid question",
             },
             {
                 name: "DestinationGrid",
-                type: BasicTypeDefinitions.object,
+                type: basicTypeDefinitions.object,
                 note: "Grid question",
             },
             {
                 name: "QuestionNameForFlip",
-                type: BasicTypeDefinitions.string,
+                type: basicTypeDefinitions.string,
                 optional: true,
                 note: "The categorical question name for being flipped (optional).",
             },
             {
                 name: "IterationFilter",
-                type: BasicTypeDefinitions.variant,
+                type: basicTypeDefinitions.variant,
                 optional: true,
                 defaultValue: "NULL",
                 note: "Categorical for iteration filter. The default is NULL.",
@@ -7799,21 +7799,21 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
         label: "RemoveCategory(MDMObject: Object, QuestionName: String, OldCategory: String): Boolean",
         insertText: "RemoveCategory",
         definitionType: "function",
-        returnType: BasicTypeDefinitions.boolean,
+        returnType: basicTypeDefinitions.boolean,
         arguments: [
             {
                 name: "MDMObject",
-                type: BasicTypeDefinitions.object,
+                type: basicTypeDefinitions.object,
                 note: "The name for the MDM document that contains QuestionName."
             },
             {
                 name: "QuestionName",
-                type: BasicTypeDefinitions.string,
+                type: basicTypeDefinitions.string,
                 note: "The name of the question object from which `oldCategory` will be removed."
             },
             {
                 name: "OldCategory",
-                type: BasicTypeDefinitions.string,
+                type: basicTypeDefinitions.string,
                 note: "The category item being moved from `QuestionName`."
             },
         ],
@@ -7962,17 +7962,17 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
         arguments: [
             {
                 name: "Question",
-                type: BasicTypeDefinitions.object,
+                type: basicTypeDefinitions.object,
                 note: "Category question or loop question.",
             },
             {
                 name: "oldCategory",
-                type: BasicTypeDefinitions.string,
+                type: basicTypeDefinitions.string,
                 note: "Category item that will be replaced with `newCategory`.",
             },
             {
                 name: "newCategory",
-                type: BasicTypeDefinitions.string,
+                type: basicTypeDefinitions.string,
                 note: "The new category value that replaces `oldCategory`.",
             },
         ],
@@ -8079,21 +8079,21 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
         label: "SubtractQuestion(ResultCat: Object, CatVar1: Object, CatVar2: Object,...): Categorical",
         insertText: "SubtractQuestion",
         definitionType: "function",
-        returnType: BasicTypeDefinitions.categorical,
+        returnType: basicTypeDefinitions.categorical,
         arguments: [
             {
                 name: "ResultCat",
-                type: BasicTypeDefinitions.object,
+                type: basicTypeDefinitions.object,
                 note: "Categorical question"
             },
             {
                 name: "CatVar1",
-                type: BasicTypeDefinitions.object,
+                type: basicTypeDefinitions.object,
                 note: "Categorical question"
             },
             {
                 name: "CatVar2",
-                type: BasicTypeDefinitions.object,
+                type: basicTypeDefinitions.object,
                 ellipsis: true,
                 note: "Categorical question. `ResultCat.Response.value = catVar1.Response.Value - catVar2.Response.Value-…-catVarN.Response.Value`"
             },
@@ -8196,21 +8196,21 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
         label: "SumQuestions(TotalCat: Object, CatVar1: Object, CatVar2: Object, CarVar3: Object,...): Categorical",
         insertText: "SumQuestions",
         definitionType: "function",
-        returnType: BasicTypeDefinitions.categorical,
+        returnType: basicTypeDefinitions.categorical,
         arguments: [
             {
                 name: "TotalCat",
-                type: BasicTypeDefinitions.object,
+                type: basicTypeDefinitions.object,
                 note: "Categorical question. `TotalCat.response.value=catVar1.response.value + catvar2.response.value`"
             },
             {
                 name: "CatVar1",
-                type: BasicTypeDefinitions.object,
+                type: basicTypeDefinitions.object,
                 note: "Categorical question. The number of questions varies, but there should be at least two questions.",
             },
             {
                 name: "CatVar2",
-                type: BasicTypeDefinitions.object,
+                type: basicTypeDefinitions.object,
                 ellipsis: true,
                 note: "Categorical question. The number of questions varies, but there should be at least two questions.",
             },
@@ -8320,7 +8320,7 @@ export const builtInCallByDotCategoricalFunctions = new Set<BuiltInDefinition>([
         name: "AnswerCount",
         label: "AnswerCount(): Long",
         insertText: "AnswerCount",
-        returnType: BasicTypeDefinitions.long ,
+        returnType: basicTypeDefinitions.long ,
         definitionType: "function",
         note: [
             "```ds",
@@ -8341,16 +8341,16 @@ export const builtInCallByDotCategoricalFunctions = new Set<BuiltInDefinition>([
         label: "ContainsAll(Answers: Variant, [Exactly: Boolean]): Boolean",
         insertText: "ContainsAll",
         definitionType: "function",
-        returnType: BasicTypeDefinitions.boolean,
+        returnType: basicTypeDefinitions.boolean,
         arguments: [
             {
                 name: "Answers",
-                type: BasicTypeDefinitions.variant,
+                type: basicTypeDefinitions.variant,
                 note: "Variant value of type *Categorical* or *Text*, specifying a set of categories to look for in `Val`. If `Answers` is empty, the function returns *True*, unless `Exactly` is *True* and `Val` is not empty.",
             },
             {
                 name: "Exactly",
-                type: BasicTypeDefinitions.boolean,
+                type: basicTypeDefinitions.boolean,
                 optional: true,
                 note: "Optional. If *True*, the function returns *True* only if `Val` contains all of the categories in `Answers` and no others. If `Exactly` is omitted or *False*, the function returns *True* if all of the categories in `Answers` are in `Val`, even if `Val` contains other categories."
             }
@@ -8388,16 +8388,16 @@ export const builtInCallByDotCategoricalFunctions = new Set<BuiltInDefinition>([
         label: "ContainsAny(Answers: Variant, [Exactly: Boolean])",
         insertText: "ContainsAny",
         definitionType: "function",
-        returnType: BasicTypeDefinitions.boolean,
+        returnType: basicTypeDefinitions.boolean,
         arguments: [
             {
                 name: "Answers",
-                type: BasicTypeDefinitions.variant,
+                type: basicTypeDefinitions.variant,
                 note: "*Variant* value of type *Categorical* or *Text*, specifying a set of categories to look for in `Val`. If `Answers` is empty, the function returns *False*.",
             },
             {
                 name: "Exactly",
-                type: BasicTypeDefinitions.boolean,
+                type: basicTypeDefinitions.boolean,
                 optional: true,
                 note: "Optional. If *True*, the function returns *False* if `Val` contains any categories that are not in `Answers`. If `Exactly` is omitted or *False*, the function returns *True* if any of the categories in `Answers` are in `Val`, even if `Val` contains other categories.",
             }
@@ -8438,26 +8438,26 @@ export const builtInCallByDotCategoricalFunctions = new Set<BuiltInDefinition>([
         label: "ContainsSome(Answers: Variant, [Min: Long], [Max: Long], [Exactly: Boolean]): Boolean",
         insertText: "ContainsSome",
         definitionType: "function",
-        returnType: BasicTypeDefinitions.boolean,
+        returnType: basicTypeDefinitions.boolean,
         arguments: [
             {
                 name: "Answers",
-                type: BasicTypeDefinitions.variant,
+                type: basicTypeDefinitions.variant,
                 note: "*Variant* value of type *Categorical* or *Text*, specifying a set of categories to look for in `Val`. If `Answers` is empty, the function returns *True* (unless `Exactly` is *True* and `Val` is not empty).",
             },
             {
                 name: "Min",
-                type: BasicTypeDefinitions.long,
+                type: basicTypeDefinitions.long,
                 note: "*Long* - Optional. The minimum number of categories in `Answers` that must be in `Val` for the function to return *True*. If omitted, the minimum is one.",
             },
             {
                 name: "Max",
-                type: BasicTypeDefinitions.long,
+                type: basicTypeDefinitions.long,
                 note: "Optional. The maximum number of categories in `Answers` that must be in `Val` for the function to return *True*. If omitted, the maximum is the number of categories in `Answers`.",
             },
             {
                 name: "Exactly",
-                type: BasicTypeDefinitions.boolean,
+                type: basicTypeDefinitions.boolean,
                 note: "Optional. If *True*, the function returns *True* only if `Val` contains the specified number of categories and no others. If `Exactly` is omitted or *False*, the function returns *True* if the specifiednumber of categories in `Answers` are in `Val`, even if `Val` contains other categories.",
             }
         ],
@@ -8496,11 +8496,11 @@ export const builtInCallByDotCategoricalFunctions = new Set<BuiltInDefinition>([
         label: "DefinedCategories([Answers: Variant]): Categorical",
         insertText: "DefinedCategories",
         definitionType: "function",
-        returnType: BasicTypeDefinitions.categorical ,
+        returnType: basicTypeDefinitions.categorical ,
         arguments: [
             {
                 name: "Answers",
-                type: BasicTypeDefinitions.categorical,
+                type: basicTypeDefinitions.categorical,
                 optional: true,
                 note: "Optional. *Variant* value of type *Categorical* or *Text*, specifying a set of categories. If omitted, all categoriesfrom the `VariableInstance` are returned.",
             }
@@ -8549,11 +8549,11 @@ export const builtInCallByDotCategoricalFunctions = new Set<BuiltInDefinition>([
         label: "DefinedElements([Types: Long]): Categorical",
         insertText: "DefinedElements",
         definitionType: "function",
-        returnType: BasicTypeDefinitions.categorical ,
+        returnType: basicTypeDefinitions.categorical ,
         arguments: [
             {
                 name: "Types",
-                type: BasicTypeDefinitions.long,
+                type: basicTypeDefinitions.long,
                 optional: true,
                 note: "Optional. Flags specifying which types of `Element` objects to include. The default is (Category + Base).",
             }
@@ -8610,11 +8610,11 @@ export const builtInCallByDotCategoricalFunctions = new Set<BuiltInDefinition>([
         label: "DefinedFactors([Answers: Variant]): Categorical",
         insertText: "DefinedFactors",
         definitionType: "function",
-        returnType: BasicTypeDefinitions.categorical ,
+        returnType: basicTypeDefinitions.categorical ,
         arguments: [
             {
                 name: "Answers",
-                type: BasicTypeDefinitions.variant,
+                type: basicTypeDefinitions.variant,
                 optional: true,
                 note: "Optional. *Variant* value of type *Categorical* or *Text*, specifying a set of categories to look for. If omitted, all categoriesfrom the object are used."
             }
@@ -8641,13 +8641,13 @@ export const builtInCallByDotCategoricalFunctions = new Set<BuiltInDefinition>([
         label: "Difference(Answers: String | Categorical): Categorical",
         insertText: "Difference",
         definitionType: "function",
-        returnType: BasicTypeDefinitions.categorical ,
+        returnType: basicTypeDefinitions.categorical ,
         arguments: [
             {
                 name: "Answers",
                 type: [
-                    BasicTypeDefinitions.string,
-                    BasicTypeDefinitions.categorical,
+                    basicTypeDefinitions.string,
+                    basicTypeDefinitions.categorical,
                 ],
                 note: "*Variant* value of type *Categorical* or *Text*, specifying a set of categories.",
             }
@@ -8686,7 +8686,7 @@ export const builtInCallByDotCategoricalFunctions = new Set<BuiltInDefinition>([
         label: "Factor(): Variant",
         insertText: "Factor",
         definitionType: "function",
-        returnType: BasicTypeDefinitions.variant,
+        returnType: basicTypeDefinitions.variant,
         note: [
             "```ds",
             "(function) Factor(): Variant",
@@ -8705,11 +8705,11 @@ export const builtInCallByDotCategoricalFunctions = new Set<BuiltInDefinition>([
         label: "GetAnswer(Index: Long): Categorical",
         insertText: "GetAnswer",
         definitionType: "function",
-        returnType: BasicTypeDefinitions.categorical ,
+        returnType: basicTypeDefinitions.categorical ,
         arguments: [
             {
                 name: "Index",
-                type: BasicTypeDefinitions.long,
+                type: basicTypeDefinitions.long,
                 note: "Position of category to retrieve from `Val`, starting from 0.",
             }
         ],
@@ -8743,11 +8743,11 @@ export const builtInCallByDotCategoricalFunctions = new Set<BuiltInDefinition>([
         label: "HasAnswer(Answer: Long): Boolean",
         insertText: "HasAnswer",
         definitionType: "function",
-        returnType: BasicTypeDefinitions.boolean,
+        returnType: basicTypeDefinitions.boolean,
         arguments: [
             {
                 name: "Answer",
-                type: BasicTypeDefinitions.long,
+                type: basicTypeDefinitions.long,
                 note: "Category to look for in `Val`."
             }
         ],
@@ -8782,13 +8782,13 @@ export const builtInCallByDotCategoricalFunctions = new Set<BuiltInDefinition>([
         label: "Intersection([Vals: String | Categorical ...]): Categorical",
         insertText: "Intersection",
         definitionType: "function",
-        returnType: BasicTypeDefinitions.categorical ,
+        returnType: basicTypeDefinitions.categorical ,
         arguments: [
             {
                 name: "Vals",
                 type: [
-                    BasicTypeDefinitions.string,
-                    BasicTypeDefinitions.categorical,
+                    basicTypeDefinitions.string,
+                    basicTypeDefinitions.categorical,
                 ],
                 ellipsis: true,
                 optional: true,
@@ -8831,13 +8831,13 @@ export const builtInCallByDotCategoricalFunctions = new Set<BuiltInDefinition>([
         label: "Union([Vals: Categorical | String ...]): Categorical",
         insertText: "Union",
         definitionType: "function",
-        returnType: BasicTypeDefinitions.categorical ,
+        returnType: basicTypeDefinitions.categorical ,
         arguments: [
             {
                 name: "Vals",
                 type: [
-                    BasicTypeDefinitions.categorical,
-                    BasicTypeDefinitions.string,
+                    basicTypeDefinitions.categorical,
+                    basicTypeDefinitions.string,
                 ],
                 ellipsis: true,
                 optional: true,
@@ -8880,13 +8880,13 @@ export const builtInCallByDotCategoricalFunctions = new Set<BuiltInDefinition>([
         label: "XUnion(Answers: Categorical | String): Categorical",
         insertText: "XUnion",
         definitionType: "function",
-        returnType: BasicTypeDefinitions.categorical ,
+        returnType: basicTypeDefinitions.categorical ,
         arguments: [
             {
                 name: "Answers",
                 type: [
-                    BasicTypeDefinitions.categorical,
-                    BasicTypeDefinitions.string
+                    basicTypeDefinitions.categorical,
+                    basicTypeDefinitions.string
                 ],
                 note: "*Variant* value of type *Categorical* or *Text*, specifying a set of categories."
             }
@@ -8926,23 +8926,23 @@ export const builtInCallByDotTextFunctions = new Set<BuiltInDefinition>([
         label: "Format([Style: String], [Width: Long], [Locale: Long]): String",
         insertText: "Format",
         definitionType: "function",
-        returnType: BasicTypeDefinitions.string,
+        returnType: basicTypeDefinitions.string,
         arguments: [
             {
                 name: "Style",
-                type: BasicTypeDefinitions.string,
+                type: basicTypeDefinitions.string,
                 optional: true,
                 note: "Optional. One or more formatting codes. Multiple codes must be separated by semicolons."
             },
             {
                 name: "Width",
-                type: BasicTypeDefinitions.long,
+                type: basicTypeDefinitions.long,
                 optional: true,
                 note: "Optional. The minimum width of the formatted string."
             },
             {
                 name: "Locale",
-                type: BasicTypeDefinitions.long,
+                type: basicTypeDefinitions.long,
                 optional: true,
                 note: "Optional. The output locale to use for regional variations in formatting. If `Locale` is omitted or is negative, the current output locale is used for formatting."
             }
@@ -9171,7 +9171,7 @@ export const builtInCallByDotTextFunctions = new Set<BuiltInDefinition>([
         label: "LCase(): String",
         insertText: "LCase",
         definitionType: "function",
-        returnType: BasicTypeDefinitions.string,
+        returnType: basicTypeDefinitions.string,
         note: [
             "```ds",
             "(function) LCase(): String",
@@ -9197,7 +9197,7 @@ export const builtInCallByDotTextFunctions = new Set<BuiltInDefinition>([
         label: "LTrim(): String",
         insertText: "LTrim",
         definitionType: "function",
-        returnType: BasicTypeDefinitions.string,
+        returnType: basicTypeDefinitions.string,
         note: [
             "```ds",
             "(function) LTrim(): String",
@@ -9223,7 +9223,7 @@ export const builtInCallByDotTextFunctions = new Set<BuiltInDefinition>([
         label: "RTrim(): String",
         insertText: "RTrim",
         definitionType: "function",
-        returnType: BasicTypeDefinitions.string,
+        returnType: basicTypeDefinitions.string,
         note: [
             "```ds",
             "(function) RTrim(): String",
@@ -9249,18 +9249,18 @@ export const builtInCallByDotTextFunctions = new Set<BuiltInDefinition>([
         label: "Split([Delimiter: String], [Count: Long]): Categorical",
         insertText: "Split",
         definitionType: "function",
-        returnType: BasicTypeDefinitions.categorical ,
+        returnType: basicTypeDefinitions.categorical ,
         arguments: [
             {
                 name: "Delimiter",
-                type: BasicTypeDefinitions.string,
+                type: basicTypeDefinitions.string,
                 optional: true,
                 defaultValue: "\" \"",
                 note: "Optional. `Delimiter` between substrings. The default is a single space (\" \")."
             },
             {
                 name: "Count",
-                type: BasicTypeDefinitions.long,
+                type: basicTypeDefinitions.long,
                 optional: true,
                 note: "Optional. The maximum number of substrings to return. If omitted or less than zero, all substrings are returned."
             }
@@ -9300,33 +9300,33 @@ export const builtInCallByDotTextFunctions = new Set<BuiltInDefinition>([
         label: "Replace(Key: Variant, Replacement: Variant, [Start: Long], [Count: Long], [IgnoreCase: Boolean]): Variant",
         insertText: "Replace",
         definitionType: "function",
-        returnType: BasicTypeDefinitions.variant,
+        returnType: basicTypeDefinitions.variant,
         arguments: [
             {
                 name: "Key",
-                type: BasicTypeDefinitions.variant,
+                type: basicTypeDefinitions.variant,
                 note: "Variant value to look for in `Val`, of the same type as `Val`."
             },
             {
                 name: "Replacement",
-                type: BasicTypeDefinitions.variant,
+                type: basicTypeDefinitions.variant,
                 note: "Variant value with which to replace `Key`, of the same type as `Val`."
             },
             {
                 name: "Start",
-                type: BasicTypeDefinitions.long,
+                type: basicTypeDefinitions.long,
                 optional: true,
                 note: "Optional. Position in `Val` (starting from 0), from which to start searching for `Key`. If omitted or less than 0, searching starts at the start of `Val`."
             },
             {
                 name: "Count",
-                type: BasicTypeDefinitions.long,
+                type: basicTypeDefinitions.long,
                 optional: true,
                 note: "Optional. Maximum number of replacements to make. If omitted or less than 0, all possible replacements are made."
             },
             {
                 name: "IgnoreCase",
-                type: BasicTypeDefinitions.boolean,
+                type: basicTypeDefinitions.boolean,
                 optional: true,
                 note: "Optional. Whether to do case-insensitive comparison for `Key`. The default is *False*."
             }
@@ -9361,7 +9361,7 @@ export const builtInCallByDotTextFunctions = new Set<BuiltInDefinition>([
         label: "Trim(): String",
         insertText: "Trim",
         definitionType: "function",
-        returnType: BasicTypeDefinitions.string,
+        returnType: basicTypeDefinitions.string,
         note: [
             "```ds",
             "(function) Trim(): String",
@@ -9387,7 +9387,7 @@ export const builtInCallByDotTextFunctions = new Set<BuiltInDefinition>([
         label: "UCase(): String",
         insertText: "UCase",
         definitionType: "function",
-        returnType: BasicTypeDefinitions.string,
+        returnType: basicTypeDefinitions.string,
         note: [
             "```ds",
             "(function) UCase(): String",

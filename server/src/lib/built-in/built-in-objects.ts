@@ -1,5 +1,5 @@
 import {
-    BasicTypeDefinitions,
+    basicTypeDefinitions,
     createBuiltInDefPlaceHolder,
     createArrayDefinition
 } from "./basic";
@@ -133,12 +133,12 @@ export const builtInVBSDictionary: BuiltInDefinition = {
             arguments: [
                 {
                     name: "Key",
-                    type: BasicTypeDefinitions.variant,
+                    type: basicTypeDefinitions.variant,
                     note: "Required. The key associated with the item being added."
                 },
                 {
                     name: "Item",
-                    type: BasicTypeDefinitions.variant,
+                    type: basicTypeDefinitions.variant,
                     note: "Required. The item associated with the key being added."
                 }
             ],
@@ -165,11 +165,11 @@ export const builtInVBSDictionary: BuiltInDefinition = {
         {
             name: "Exist",
             definitionType: "method",
-            returnType: BasicTypeDefinitions.boolean,
+            returnType: basicTypeDefinitions.boolean,
             arguments: [
                 {
                     name: "Key",
-                    type: BasicTypeDefinitions.variant,
+                    type: basicTypeDefinitions.variant,
                     note: "Required. `Key` value being searched for in the `Dictionary` object."
                 }
             ],
@@ -271,15 +271,15 @@ export const builtinVBSFileSystemObject: BuiltInDefinition = {
         {
             name: "BuildPath",
             definitionType: "method",
-            returnType: BasicTypeDefinitions.string,
+            returnType: basicTypeDefinitions.string,
             arguments: [
                 {
                     name: "Path",
-                    type: BasicTypeDefinitions.string,
+                    type: basicTypeDefinitions.string,
                 },
                 {
                     name: "Name",
-                    type: BasicTypeDefinitions.string
+                    type: basicTypeDefinitions.string
                 },
             ],
             note: [
@@ -306,15 +306,15 @@ export const builtinVBSFileSystemObject: BuiltInDefinition = {
             arguments: [
                 {
                     name: "Source",
-                    type: BasicTypeDefinitions.string,
+                    type: basicTypeDefinitions.string,
                 },
                 {
                     name: "Destination",
-                    type: BasicTypeDefinitions.string,
+                    type: basicTypeDefinitions.string,
                 },
                 {
                     name: "Overwrite",
-                    type: BasicTypeDefinitions.boolean,
+                    type: basicTypeDefinitions.boolean,
                     optional: true
                 }
             ],
@@ -356,15 +356,15 @@ export const builtinVBSFileSystemObject: BuiltInDefinition = {
             arguments: [
                 {
                     name: "Source",
-                    type: BasicTypeDefinitions.string,
+                    type: basicTypeDefinitions.string,
                 },
                 {
                     name: "Destination",
-                    type: BasicTypeDefinitions.string,
+                    type: basicTypeDefinitions.string,
                 },
                 {
                     name: "Overwrite",
-                    type: BasicTypeDefinitions.boolean,
+                    type: basicTypeDefinitions.boolean,
                     optional: true
                 }
             ],
@@ -404,7 +404,7 @@ export const builtinVBSFileSystemObject: BuiltInDefinition = {
             arguments: [
                 {
                     name: "FolderName",
-                    type: BasicTypeDefinitions.string,
+                    type: basicTypeDefinitions.string,
                 }
             ],
             note: [
@@ -426,16 +426,16 @@ export const builtinVBSFileSystemObject: BuiltInDefinition = {
             arguments: [
                 {
                     name: "FileName",
-                    type: BasicTypeDefinitions.string,
+                    type: basicTypeDefinitions.string,
                 },
                 {
                     name: "Overwrite",
-                    type: BasicTypeDefinitions.boolean,
+                    type: basicTypeDefinitions.boolean,
                     optional: true,
                 },
                 {
                     name: "Unicode",
-                    type: BasicTypeDefinitions.boolean,
+                    type: basicTypeDefinitions.boolean,
                     optional: true,
                 }
             ],
@@ -469,11 +469,11 @@ export const builtinVBSFileSystemObject: BuiltInDefinition = {
             arguments: [
                 {
                     name: "FileSpec",
-                    type: BasicTypeDefinitions.string,
+                    type: basicTypeDefinitions.string,
                 },
                 {
                     name: "Force",
-                    type: BasicTypeDefinitions.boolean,
+                    type: basicTypeDefinitions.boolean,
                     optional: true,
                     defaultValue: false
                 }
@@ -498,11 +498,11 @@ export const builtinVBSFileSystemObject: BuiltInDefinition = {
             arguments: [
                 {
                     name: "FileSpec",
-                    type: BasicTypeDefinitions.string,
+                    type: basicTypeDefinitions.string,
                 },
                 {
                     name: "Force",
-                    type: BasicTypeDefinitions.boolean,
+                    type: basicTypeDefinitions.boolean,
                     optional: true,
                     defaultValue: false
                 }
@@ -526,11 +526,11 @@ export const builtinVBSFileSystemObject: BuiltInDefinition = {
         {
             name: "DriveExists",
             definitionType: "method",
-            returnType: BasicTypeDefinitions.boolean,
+            returnType: basicTypeDefinitions.boolean,
             arguments: [
                 {
                     name: "DriveSpec",
-                    type: BasicTypeDefinitions.string,
+                    type: basicTypeDefinitions.string,
                 }
             ],
             note: [
@@ -549,11 +549,11 @@ export const builtinVBSFileSystemObject: BuiltInDefinition = {
         {
             name: "FileExists",
             definitionType: "method",
-            returnType: BasicTypeDefinitions.boolean,
+            returnType: basicTypeDefinitions.boolean,
             arguments: [
                 {
                     name: "FileSpec",
-                    type: BasicTypeDefinitions.string,
+                    type: basicTypeDefinitions.string,
                 }
             ],
             note: [
@@ -569,11 +569,11 @@ export const builtinVBSFileSystemObject: BuiltInDefinition = {
         {
             name: "FolderExists",
             definitionType: "method",
-            returnType: BasicTypeDefinitions.boolean,
+            returnType: basicTypeDefinitions.boolean,
             arguments: [
                 {
                     name: "FolderSpec",
-                    type: BasicTypeDefinitions.string,
+                    type: basicTypeDefinitions.string,
                 }
             ],
             note: [
@@ -589,11 +589,11 @@ export const builtinVBSFileSystemObject: BuiltInDefinition = {
         {
             name: "GetAbsolutePathName",
             definitionType: "method",
-            returnType: BasicTypeDefinitions.string,
+            returnType: basicTypeDefinitions.string,
             arguments: [
                 {
                     name: "PathSpec",
-                    type: BasicTypeDefinitions.string
+                    type: basicTypeDefinitions.string
                 }
             ],
             note: [
@@ -622,11 +622,11 @@ export const builtinVBSFileSystemObject: BuiltInDefinition = {
         {
             name: "GetBaseName",
             definitionType: "method",
-            returnType: BasicTypeDefinitions.string,
+            returnType: basicTypeDefinitions.string,
             arguments: [
                 {
                     name: "Path",
-                    type: BasicTypeDefinitions.string
+                    type: basicTypeDefinitions.string
                 }
             ],
             note: [
@@ -651,7 +651,7 @@ export const builtinVBSFileSystemObject: BuiltInDefinition = {
             arguments: [
                 {
                     name: "DriveSpec",
-                    type: BasicTypeDefinitions.string,
+                    type: basicTypeDefinitions.string,
                 }
             ],
             note: [
@@ -675,11 +675,11 @@ export const builtinVBSFileSystemObject: BuiltInDefinition = {
         {
             name: "GetDriveName",
             definitionType: "method",
-            returnType: BasicTypeDefinitions.string,
+            returnType: basicTypeDefinitions.string,
             arguments: [
                 {
                     name: "Path",
-                    type: BasicTypeDefinitions.string
+                    type: basicTypeDefinitions.string
                 }
             ],
             note: [
@@ -699,11 +699,11 @@ export const builtinVBSFileSystemObject: BuiltInDefinition = {
         {
             name: "GetExtensionName",
             definitionType: "method",
-            returnType: BasicTypeDefinitions.string,
+            returnType: basicTypeDefinitions.string,
             arguments: [
                 {
                     name: "Path",
-                    type: BasicTypeDefinitions.string,
+                    type: basicTypeDefinitions.string,
                 }
             ],
             note: [
@@ -727,7 +727,7 @@ export const builtinVBSFileSystemObject: BuiltInDefinition = {
             arguments: [
                 {
                     name: "FileSpec",
-                    type: BasicTypeDefinitions.string,
+                    type: basicTypeDefinitions.string,
                 }
             ],
             note: [
@@ -746,11 +746,11 @@ export const builtinVBSFileSystemObject: BuiltInDefinition = {
         {
             name: "GetFileName",
             definitionType: "method",
-            returnType: BasicTypeDefinitions.string,
+            returnType: basicTypeDefinitions.string,
             arguments: [
                 {
                     name: "PathSpec",
-                    type: BasicTypeDefinitions.string,
+                    type: basicTypeDefinitions.string,
                 }
             ],
             note: [
@@ -774,7 +774,7 @@ export const builtinVBSFileSystemObject: BuiltInDefinition = {
             arguments: [
                 {
                     name: "FolderSpec",
-                    type: BasicTypeDefinitions.string
+                    type: basicTypeDefinitions.string
                 }
             ],
             note: [
@@ -793,11 +793,11 @@ export const builtinVBSFileSystemObject: BuiltInDefinition = {
         {
             name: "GetParentFolderName",
             definitionType: "method",
-            returnType: BasicTypeDefinitions.string,
+            returnType: basicTypeDefinitions.string,
             arguments: [
                 {
                     name: "Path",
-                    type: BasicTypeDefinitions.string,
+                    type: basicTypeDefinitions.string,
                 }
             ],
             note: [
@@ -820,11 +820,11 @@ export const builtinVBSFileSystemObject: BuiltInDefinition = {
             arguments: [
                 {
                     name: "Source",
-                    type: BasicTypeDefinitions.string
+                    type: basicTypeDefinitions.string
                 },
                 {
                     name: "Destination",
-                    type: BasicTypeDefinitions.string
+                    type: basicTypeDefinitions.string
                 }
             ],
             note: [
@@ -852,11 +852,11 @@ export const builtinVBSFileSystemObject: BuiltInDefinition = {
             arguments: [
                 {
                     name: "Source",
-                    type: BasicTypeDefinitions.string
+                    type: basicTypeDefinitions.string
                 },
                 {
                     name: "Destination",
-                    type: BasicTypeDefinitions.string
+                    type: basicTypeDefinitions.string
                 }
             ],
             note: [
@@ -885,21 +885,21 @@ export const builtinVBSFileSystemObject: BuiltInDefinition = {
             arguments: [
                 {
                     name: "FileName",
-                    type: BasicTypeDefinitions.string,
+                    type: basicTypeDefinitions.string,
                 },
                 {
                     name: "IOMode",
-                    type: BasicTypeDefinitions.long,
+                    type: basicTypeDefinitions.long,
                     optional: true
                 },
                 {
                     name: "Create",
-                    type: BasicTypeDefinitions.boolean,
+                    type: basicTypeDefinitions.boolean,
                     optional: true,
                 },
                 {
                     name: "Format",
-                    type: BasicTypeDefinitions.long,
+                    type: basicTypeDefinitions.long,
                     optional: true
                 }
             ],
@@ -1022,11 +1022,11 @@ export const builtInVBSTextStreamObject: BuiltInDefinition = {
         {
             name: "Read",
             definitionType: "method",
-            returnType: BasicTypeDefinitions.string,
+            returnType: basicTypeDefinitions.string,
             arguments: [
                 {
                     name: "Characters",
-                    type: BasicTypeDefinitions.long,
+                    type: basicTypeDefinitions.long,
                 }
             ],
             note: [
@@ -1042,7 +1042,7 @@ export const builtInVBSTextStreamObject: BuiltInDefinition = {
         {
             name: "ReadAll",
             definitionType: "method",
-            returnType: BasicTypeDefinitions.string,
+            returnType: basicTypeDefinitions.string,
             note: [
                 "```ds",
                 "(method) ReadAll(): String",
@@ -1059,7 +1059,7 @@ export const builtInVBSTextStreamObject: BuiltInDefinition = {
         {
             name: "ReadLine",
             definitionType: "method",
-            returnType: BasicTypeDefinitions.string,
+            returnType: basicTypeDefinitions.string,
             note: [
                 "```ds",
                 "(method) ReadLine(): String",
@@ -1075,7 +1075,7 @@ export const builtInVBSTextStreamObject: BuiltInDefinition = {
             arguments: [
                 {
                     name: "Characters",
-                    type: BasicTypeDefinitions.long,
+                    type: basicTypeDefinitions.long,
                 }
             ],
             note: [
@@ -1112,7 +1112,7 @@ export const builtInVBSTextStreamObject: BuiltInDefinition = {
             arguments: [
                 {
                     name: "Text",
-                    type: BasicTypeDefinitions.string
+                    type: basicTypeDefinitions.string
                 }
             ],
             note: [
@@ -1134,7 +1134,7 @@ export const builtInVBSTextStreamObject: BuiltInDefinition = {
             arguments: [
                 {
                     name: "Lines",
-                    type: BasicTypeDefinitions.long,
+                    type: basicTypeDefinitions.long,
                 }
             ],
             note: [
@@ -1153,7 +1153,7 @@ export const builtInVBSTextStreamObject: BuiltInDefinition = {
             arguments: [
                 {
                     name: "Text",
-                    type: BasicTypeDefinitions.string,
+                    type: basicTypeDefinitions.string,
                     optional: true
                 }
             ],
@@ -1172,7 +1172,7 @@ export const builtInVBSTextStreamObject: BuiltInDefinition = {
         {
             name: "AtEndOfLine",
             definitionType: "property",
-            returnType: BasicTypeDefinitions.boolean,
+            returnType: basicTypeDefinitions.boolean,
             readonly: true,
             note: [
                 "```ds",
@@ -1200,7 +1200,7 @@ export const builtInVBSTextStreamObject: BuiltInDefinition = {
         {
             name: "AtEndOfStream",
             definitionType: "property",
-            returnType: BasicTypeDefinitions.boolean,
+            returnType: basicTypeDefinitions.boolean,
             readonly: true,
             note: [
                 "```ds",
@@ -1228,7 +1228,7 @@ export const builtInVBSTextStreamObject: BuiltInDefinition = {
         {
             name: "Column",
             definitionType: "property",
-            returnType: BasicTypeDefinitions.long,
+            returnType: basicTypeDefinitions.long,
             readonly: true,
             note: [
                 "```ds",
@@ -1245,7 +1245,7 @@ export const builtInVBSTextStreamObject: BuiltInDefinition = {
         {
             name: "Line",
             definitionType: "property",
-            returnType: BasicTypeDefinitions.long,
+            returnType: basicTypeDefinitions.long,
             readonly: true,
             note: [
                 "```ds",
@@ -1292,11 +1292,11 @@ export const builtInVBSFileObject: BuiltInDefinition = {
             arguments: [
                 {
                     name: "Destination",
-                    type: BasicTypeDefinitions.string,
+                    type: basicTypeDefinitions.string,
                 },
                 {
                     name: "Overwrite",
-                    type: BasicTypeDefinitions.boolean,
+                    type: basicTypeDefinitions.boolean,
                     optional: true,
                 }
             ],
@@ -1320,7 +1320,7 @@ export const builtInVBSFileObject: BuiltInDefinition = {
             arguments: [
                 {
                     name: "Force",
-                    type: BasicTypeDefinitions.boolean,
+                    type: basicTypeDefinitions.boolean,
                     optional: true,
                 }
             ],
@@ -1345,7 +1345,7 @@ export const builtInVBSFileObject: BuiltInDefinition = {
             arguments: [
                 {
                     name: "Destination",
-                    type: BasicTypeDefinitions.string,
+                    type: basicTypeDefinitions.string,
                 }
             ],
             note: [
@@ -1368,12 +1368,12 @@ export const builtInVBSFileObject: BuiltInDefinition = {
             arguments: [
                 {
                     name: "IOMode",
-                    type: BasicTypeDefinitions.long,
+                    type: basicTypeDefinitions.long,
                     optional: true,
                 },
                 {
                     name: "Format",
-                    type: BasicTypeDefinitions.long,
+                    type: basicTypeDefinitions.long,
                     optional: true,
                 },
             ],
@@ -1435,10 +1435,10 @@ export const builtInVBSFileObject: BuiltInDefinition = {
             definitionType: "property",
             index: {
                 name: "newattributes",
-                type: BasicTypeDefinitions.long,
+                type: basicTypeDefinitions.long,
                 optional: true,
             },
-            returnType: BasicTypeDefinitions.long,
+            returnType: basicTypeDefinitions.long,
             note: [
                 "```ds",
                 "(property) Attributes: Long",
@@ -1492,7 +1492,7 @@ export const builtInVBSFileObject: BuiltInDefinition = {
         {
             name: "DateCreated",
             definitionType: "property",
-            returnType: BasicTypeDefinitions.string,
+            returnType: basicTypeDefinitions.string,
             readonly: true,
             note: [
                 "```ds",
@@ -1517,7 +1517,7 @@ export const builtInVBSFileObject: BuiltInDefinition = {
         {
             name: "DateLastAccessed",
             definitionType: "property",
-            returnType: BasicTypeDefinitions.string,
+            returnType: basicTypeDefinitions.string,
             readonly: true,
             note: [
                 "```ds",
@@ -1546,7 +1546,7 @@ export const builtInVBSFileObject: BuiltInDefinition = {
         {
             name: "DateLastModified",
             definitionType: "property",
-            returnType: BasicTypeDefinitions.string,
+            returnType: basicTypeDefinitions.string,
             readonly: true,
             note: [
                 "```ds",
@@ -1574,7 +1574,7 @@ export const builtInVBSFileObject: BuiltInDefinition = {
         {
             name: "Drive",
             definitionType: "property",
-            returnType: BasicTypeDefinitions.string,
+            returnType: basicTypeDefinitions.string,
             readonly: true,
             note: [
                 "```ds",
@@ -1602,7 +1602,7 @@ export const builtInVBSFileObject: BuiltInDefinition = {
         {
             name: "Name",
             definitionType: "property",
-            returnType: BasicTypeDefinitions.string,
+            returnType: basicTypeDefinitions.string,
             note: [
                 "```ds",
                 "(property) Name: String",
@@ -1657,7 +1657,7 @@ export const builtInVBSFileObject: BuiltInDefinition = {
         {
             name: "Path",
             definitionType: "property",
-            returnType: BasicTypeDefinitions.string,
+            returnType: basicTypeDefinitions.string,
             readonly: true,
             note: [
                 "```ds",
@@ -1686,7 +1686,7 @@ export const builtInVBSFileObject: BuiltInDefinition = {
         {
             name: "ShortName",
             definitionType: "property",
-            returnType: BasicTypeDefinitions.string,
+            returnType: basicTypeDefinitions.string,
             readonly: true,
             note: [
                 "```ds",
@@ -1713,7 +1713,7 @@ export const builtInVBSFileObject: BuiltInDefinition = {
         {
             name: "ShortPath",
             definitionType: "property",
-            returnType: BasicTypeDefinitions.string,
+            returnType: basicTypeDefinitions.string,
             readonly: true,
             note: [
                 "```ds",
@@ -1740,7 +1740,7 @@ export const builtInVBSFileObject: BuiltInDefinition = {
         {
             name: "Size",
             definitionType: "property",
-            returnType: BasicTypeDefinitions.long,
+            returnType: basicTypeDefinitions.long,
             readonly: true,
             note: [
                 "```ds",
@@ -1765,7 +1765,7 @@ export const builtInVBSFileObject: BuiltInDefinition = {
         {
             name: "Type",
             definitionType: "property",
-            returnType: BasicTypeDefinitions.string,
+            returnType: basicTypeDefinitions.string,
             readonly: true,
             note: [
                 "```ds",
@@ -1820,7 +1820,7 @@ export const builtInVBSFolderObject: BuiltInDefinition = {
             arguments: [
                 {
                     name: "FolderName",
-                    type: BasicTypeDefinitions.string,
+                    type: basicTypeDefinitions.string,
                 }
             ],
             note: [
@@ -1839,11 +1839,11 @@ export const builtInVBSFolderObject: BuiltInDefinition = {
             arguments: [
                 {
                     name: "Destination",
-                    type: BasicTypeDefinitions.string
+                    type: basicTypeDefinitions.string
                 },
                 {
                     name: "Overwrite",
-                    type: BasicTypeDefinitions.boolean,
+                    type: basicTypeDefinitions.boolean,
                     optional: true,
                     defaultValue: true,
                 }
@@ -1869,16 +1869,16 @@ export const builtInVBSFolderObject: BuiltInDefinition = {
             arguments: [
                 {
                     name: "FileName",
-                    type: BasicTypeDefinitions.string,
+                    type: basicTypeDefinitions.string,
                 },
                 {
                     name: "Overwrite",
-                    type: BasicTypeDefinitions.boolean,
+                    type: basicTypeDefinitions.boolean,
                     optional: true,
                 },
                 {
                     name: "Unicode",
-                    type: BasicTypeDefinitions.boolean,
+                    type: basicTypeDefinitions.boolean,
                     optional: true,
                 }
             ],
@@ -1912,7 +1912,7 @@ export const builtInVBSFolderObject: BuiltInDefinition = {
             arguments: [
                 {
                     name: "Force",
-                    type: BasicTypeDefinitions.boolean,
+                    type: basicTypeDefinitions.boolean,
                     optional: true,
                 }
             ],
@@ -1937,7 +1937,7 @@ export const builtInVBSFolderObject: BuiltInDefinition = {
             arguments: [
                 {
                     name: "Destination",
-                    type: BasicTypeDefinitions.string,
+                    type: basicTypeDefinitions.string,
                 }
             ],
             note: [
@@ -2047,10 +2047,10 @@ export const builtInVBSFolderObject: BuiltInDefinition = {
             definitionType: "property",
             index: {
                 name: "newattributes",
-                type: BasicTypeDefinitions.long,
+                type: basicTypeDefinitions.long,
                 optional: true,
             },
-            returnType: BasicTypeDefinitions.long,
+            returnType: basicTypeDefinitions.long,
             note: [
                 "```ds",
                 "(property) Attributes: Long",
@@ -2104,7 +2104,7 @@ export const builtInVBSFolderObject: BuiltInDefinition = {
         {
             name: "DateCreated",
             definitionType: "property",
-            returnType: BasicTypeDefinitions.string,
+            returnType: basicTypeDefinitions.string,
             readonly: true,
             note: [
                 "```ds",
@@ -2129,7 +2129,7 @@ export const builtInVBSFolderObject: BuiltInDefinition = {
         {
             name: "DateLastAccessed",
             definitionType: "property",
-            returnType: BasicTypeDefinitions.string,
+            returnType: basicTypeDefinitions.string,
             readonly: true,
             note: [
                 "```ds",
@@ -2158,7 +2158,7 @@ export const builtInVBSFolderObject: BuiltInDefinition = {
         {
             name: "DateLastModified",
             definitionType: "property",
-            returnType: BasicTypeDefinitions.string,
+            returnType: basicTypeDefinitions.string,
             readonly: true,
             note: [
                 "```ds",
@@ -2186,7 +2186,7 @@ export const builtInVBSFolderObject: BuiltInDefinition = {
         {
             name: "Drive",
             definitionType: "property",
-            returnType: BasicTypeDefinitions.string,
+            returnType: basicTypeDefinitions.string,
             readonly: true,
             note: [
                 "```ds",
@@ -2214,7 +2214,7 @@ export const builtInVBSFolderObject: BuiltInDefinition = {
         {
             name: "Name",
             definitionType: "property",
-            returnType: BasicTypeDefinitions.string,
+            returnType: basicTypeDefinitions.string,
             note: [
                 "```ds",
                 "(property) Name: String",
@@ -2269,7 +2269,7 @@ export const builtInVBSFolderObject: BuiltInDefinition = {
         {
             name: "Path",
             definitionType: "property",
-            returnType: BasicTypeDefinitions.string,
+            returnType: basicTypeDefinitions.string,
             readonly: true,
             note: [
                 "```ds",
@@ -2298,7 +2298,7 @@ export const builtInVBSFolderObject: BuiltInDefinition = {
         {
             name: "ShortName",
             definitionType: "property",
-            returnType: BasicTypeDefinitions.string,
+            returnType: basicTypeDefinitions.string,
             readonly: true,
             note: [
                 "```ds",
@@ -2325,7 +2325,7 @@ export const builtInVBSFolderObject: BuiltInDefinition = {
         {
             name: "ShortPath",
             definitionType: "property",
-            returnType: BasicTypeDefinitions.string,
+            returnType: basicTypeDefinitions.string,
             readonly: true,
             note: [
                 "```ds",
@@ -2352,7 +2352,7 @@ export const builtInVBSFolderObject: BuiltInDefinition = {
         {
             name: "Size",
             definitionType: "property",
-            returnType: BasicTypeDefinitions.long,
+            returnType: basicTypeDefinitions.long,
             readonly: true,
             note: [
                 "```ds",
@@ -2377,7 +2377,7 @@ export const builtInVBSFolderObject: BuiltInDefinition = {
         {
             name: "Type",
             definitionType: "property",
-            returnType: BasicTypeDefinitions.string,
+            returnType: basicTypeDefinitions.string,
             readonly: true,
             note: [
                 "```ds",
@@ -2402,7 +2402,7 @@ export const builtInVBSFolderObject: BuiltInDefinition = {
         {
             name: "IsRootFolder",
             definitionType: "property",
-            returnType: BasicTypeDefinitions.boolean,
+            returnType: basicTypeDefinitions.boolean,
             readonly: true,
             note: [
                 "```ds",
@@ -2465,7 +2465,7 @@ export const builtInVBSDriveObject: BuiltInDefinition = {
         {
             name: "AvailableSpace",
             definitionType: "property",
-            returnType: BasicTypeDefinitions.long,
+            returnType: basicTypeDefinitions.long,
             readonly: true,
             note: [
                 "```ds",
@@ -2494,7 +2494,7 @@ export const builtInVBSDriveObject: BuiltInDefinition = {
         {
             name: "DriveLetter",
             definitionType: "property",
-            returnType: BasicTypeDefinitions.string,
+            returnType: basicTypeDefinitions.string,
             readonly: true,
             note: [
                 "```ds",
@@ -2523,7 +2523,7 @@ export const builtInVBSDriveObject: BuiltInDefinition = {
         {
             name: "DriveType",
             definitionType: "property",
-            returnType: BasicTypeDefinitions.long,
+            returnType: basicTypeDefinitions.long,
             readonly: true,
             note: [
                 "```ds",
@@ -2556,7 +2556,7 @@ export const builtInVBSDriveObject: BuiltInDefinition = {
         {
             name: "FileSystem",
             definitionType: "property",
-            returnType: BasicTypeDefinitions.string,
+            returnType: basicTypeDefinitions.string,
             readonly: true,
             note: [
                 "```ds",
@@ -2582,7 +2582,7 @@ export const builtInVBSDriveObject: BuiltInDefinition = {
         {
             name: "FreeSpace",
             definitionType: "property",
-            returnType: BasicTypeDefinitions.long,
+            returnType: basicTypeDefinitions.long,
             readonly: true,
             note: [
                 "```ds",
@@ -2611,7 +2611,7 @@ export const builtInVBSDriveObject: BuiltInDefinition = {
         {
             name: "IsReady",
             definitionType: "property",
-            returnType: BasicTypeDefinitions.boolean,
+            returnType: basicTypeDefinitions.boolean,
             readonly: true,
             note: [
                 "```ds",
@@ -2650,7 +2650,7 @@ export const builtInVBSDriveObject: BuiltInDefinition = {
         {
             name: "Path",
             definitionType: "property",
-            returnType: BasicTypeDefinitions.string,
+            returnType: basicTypeDefinitions.string,
             readonly: true,
             note: [
                 "```ds",
@@ -2679,7 +2679,7 @@ export const builtInVBSDriveObject: BuiltInDefinition = {
         {
             name: "RootFolder",
             definitionType: "property",
-            returnType: BasicTypeDefinitions.string,
+            returnType: basicTypeDefinitions.string,
             readonly: true,
             note: [
                 "```ds",
@@ -2695,7 +2695,7 @@ export const builtInVBSDriveObject: BuiltInDefinition = {
         {
             name: "SerialNumber",
             definitionType: "property",
-            returnType: BasicTypeDefinitions.double,
+            returnType: basicTypeDefinitions.double,
             readonly: true,
             note: [
                 "```ds",
@@ -2730,7 +2730,7 @@ export const builtInVBSDriveObject: BuiltInDefinition = {
         {
             name: "ShareName",
             definitionType: "property",
-            returnType: BasicTypeDefinitions.string,
+            returnType: basicTypeDefinitions.string,
             readonly: true,
             note: [
                 "```ds",
@@ -2756,7 +2756,7 @@ export const builtInVBSDriveObject: BuiltInDefinition = {
         {
             name: "TotalSize",
             definitionType: "property",
-            returnType: BasicTypeDefinitions.long,
+            returnType: basicTypeDefinitions.long,
             readonly: true,
             note: [
                 "```ds",
@@ -2785,7 +2785,7 @@ export const builtInVBSDriveObject: BuiltInDefinition = {
         {
             name: "VolumeName",
             definitionType: "property",
-            returnType: BasicTypeDefinitions.string,
+            returnType: basicTypeDefinitions.string,
             note: [
                 "```ds",
                 "(property) VolumeName: String",
