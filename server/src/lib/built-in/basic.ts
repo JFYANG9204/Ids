@@ -80,6 +80,7 @@ export function createBuiltInDefPlaceHolder(
     array?: ArrayDefinition) {
     const def = createDefinition({
         name: name,
+        defType: "default",
         isReadonly: false,
         isConst: false,
         isCollection: false,
@@ -100,6 +101,7 @@ export function createBuiltInDefPlaceHolder(
 export function createBasicTypeDefinition(valueType: ValueType) {
     const opt: DefinitionOptions = {
         name: valueType.label,
+        defType: "variant",
         isReadonly: false,
         isCollection: true,
         isConst: false,
@@ -110,6 +112,7 @@ export function createBasicTypeDefinition(valueType: ValueType) {
         }
     };
     const def = createDefinition(opt, VariantDefinition);
+    def.isBasic = true;
     def.return = valueType.definition;
     def.defType = valueType.array ? "array" : "variant";
     if (valueType.array) {
@@ -126,6 +129,7 @@ export function createArrayDefinition(
 ) {
     const opt: DefinitionOptions = {
         name: name,
+        defType: "array",
         isCollection: true,
         isConst: isConst,
         isReadonly: readonly,
@@ -144,6 +148,7 @@ export function createArrayDefinition(
 //
 const categoricalOptions: DefinitionOptions = {
     name: "categorical",
+    defType: "variant",
     isReadonly: false,
     isCollection: true,
     isConst: false,
@@ -155,6 +160,7 @@ const categoricalOptions: DefinitionOptions = {
 
 const stringOptions: DefinitionOptions = {
     name: "string",
+    defType: "variant",
     isReadonly: false,
     isCollection: false,
     isConst: false,

@@ -114,6 +114,7 @@ export type DefSection = {
 
 export interface DefinitionOptions {
     name: string;
+    defType: DefinitionType;
     insertText?: string;
     isReadonly: boolean;
     isCollection: boolean;
@@ -132,6 +133,7 @@ export class DefinitionBase {
     isReadonly: boolean;
     isCollection: boolean;
     isConst: boolean;
+    isBasic?: boolean;
     isBuiltIn?: boolean;
     note?: string;
     node?: NodeBase;
@@ -140,7 +142,7 @@ export class DefinitionBase {
     constructor(options: DefinitionOptions) {
         this.name = options.name;
         this.insertText = options.insertText;
-        this.defType = "variant";
+        this.defType = options.defType;
         this.isReadonly = options.isReadonly;
         this.isCollection = options.isCollection;
         this.isConst = options.isConst;
@@ -170,6 +172,7 @@ export class DefinitionBase {
 
 export const definitionPlaceHolder = new DefinitionBase({
     name: "PlaceHolder",
+    defType: "default",
     isReadonly: false,
     isConst: false,
     isCollection: false,

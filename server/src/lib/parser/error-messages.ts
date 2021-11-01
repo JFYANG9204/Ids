@@ -62,6 +62,7 @@ export const ErrorMessages: ErrorTemplates = makeErrorTemplates({
     PropertyOrObjectHasNoReturn:     "属性或方法没有返回值.",
     PreIncludeFileDontExist:         "路径'%0'对应文件不存在.",
     InterfaceOrObjectHasNoCorrectPropertyOrMethod: "类型为'%0'的接口或对象不包含名为'%1'的属性或方法.",
+    InterfaceOrObjectHasNoCorrectProperty: "类型为'%0'的接口或对象不包含名为'%1'的属性.",
     OperatorCanOnlyBeUsedInPreprocessor: "运算符'%0'只能在预处理中使用.",
     StringLineFeedNeedNewlineChar:   "字符串需要换行符('\\' 或 '_').",
     // Axis

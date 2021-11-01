@@ -67,6 +67,7 @@ export class TypeUtil extends UtilParser {
         node: PreDefineStatement) {
         const def = new MacroDefinition({
             name: name,
+            defType: "macro",
             isReadonly: true,
             isConst: true,
             isCollection: false,
@@ -517,7 +518,7 @@ export class TypeUtil extends UtilParser {
                     !this.scope.currentScope().isFunction) {
                     this.raiseAtNode(
                         prop,
-                        ErrorMessages["InterfaceOrObjectHasNoCorrectPropertyOrMethod"],
+                        ErrorMessages["InterfaceOrObjectHasNoCorrectProperty"],
                         false,
                         base.name,
                         (prop as Identifier).name

@@ -69,6 +69,7 @@ function loadDefinitonBase<T extends DefinitionBase>(
     n: new (options: DefinitionOptions) => T): T {
     const options: DefinitionOptions = {
         name: definition.name,
+        defType: definition.definitionType,
         insertText: definition.insertText,
         isReadonly: definition.readonly ?? false,
         isCollection: definition.isCollection ?? false,

@@ -911,6 +911,7 @@ export class StatementParser extends ExpressionParser {
         node.push(node.id, node.body);
         const option: DefinitionOptions = {
             name: node.id.name,
+            defType: "function",
             isReadonly: false,
             isConst: false,
             isCollection: false,
@@ -979,6 +980,7 @@ export class StatementParser extends ExpressionParser {
             }
             const arr = createDefinition({
                 name: node.name.name,
+                defType: "array",
                 isCollection: true,
                 isReadonly: false,
                 isConst: false,
