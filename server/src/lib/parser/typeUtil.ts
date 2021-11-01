@@ -476,6 +476,8 @@ export class TypeUtil extends UtilParser {
             this.addExtra(node, "definition", type);
         } else if (node instanceof MemberExpression) {
             type = this.getMemberExprType(node);
+        } else if (node instanceof CallExpression) {
+            type = this.getCallExprType(node);
         } else {
             type = this.scope.currentScope().headerType;
             this.addExtra(node, "definition", type);
