@@ -1,3 +1,4 @@
+import { readFileSync } from "fs";
 import {
     resolve,
 } from "path";
@@ -19,7 +20,8 @@ import { Parser } from "../../server/src/lib/parser";
 //if (file) {
 //    mdd = getCurrentParser(file, startPath);
 //}
-const testpath = resolve("./test/parser/fixture/dpgm");
-const parser = new Parser(createBasicOptions(testpath, true), "dmgrjob");
+const testpath = resolve("./test/parser/fixture/test.mrs");
+const content = readFileSync(testpath).toString();
+const parser = new Parser(createBasicOptions(testpath, true), content);
 parser.parse();
 console.log("end");

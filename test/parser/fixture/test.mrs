@@ -1,1 +1,54 @@
-dmgrjob
+
+Dim TableDoc,StartTime,EndTime
+Set TableDoc = CreateObject("TOM.Document")
+
+With TableDoc
+' trailing comment
+.DataSet.Description = "77414413 - OPPO Reno6 Campaign Evaluation"
+
+.Default.Annotations[0].Specification = "" '"{ProjectDescription \n}" 'With break line before and after the Description
+.Default.Annotations[1].Specification = "" '"{TableDescription} <br> Base: Total Respondents <font color='red'> ({TableBase}) </font> </br>" 'Set (Base) font color as red
+.Default.Annotations[2].Specification = "Top Break: By " + GLOBALLABEL 'Center Header
+.Default.Annotations[3].Specification = "" '"<right> <br> {Level \p} </br> </right>" 'Right Header NOTE: <right> format is not affected in Excel output
+.Default.Annotations[4].Specification = "" '"Done" 'Title Footer
+.Default.Annotations[5].Specification = "" '"<br> <b> NOTE: Among Rep </b> </br>" 'Left Footer
+.Default.Annotations[6].Specification = "" '"Current Table No: {TableNumber}" 'Center Footer
+.Default.Annotations[7].Specification = "Table No: {TableNumber} / {TotalNumberOfTables}" '"Total Table No: {TotalNumberOfTables}" 'Right Footer NOTE: <right> format is not affected in Excel output
+
+.Default.Properties["RoundingOptions"] = 1
+
+.Global.Filters.AddNew("GlobalFilter",GLOBALFILTER,"")
+
+With .Default
+    .CellItems.Clear()
+
+    If COUNTS = True Then
+        .CellItems.AddNew(0,0) '(0,0) Means showing Count and Decimals=0
+        .Properties["ShowPercentSigns"] = True
+    Else
+        .Properties["ShowPercentSigns"] = True
+    End If
+
+    If PERCENTS = True Then
+        .CellItems.AddNew(1,0) '(1,0) Means showing Column % and Decimals=0
+    End If
+
+    .Properties["ZeroCountSymbol"] = "0" 'If the count is 0, it will show "-"
+    .Properties["ZeroPercentSymbol"] = "0" 'If the % is 0, it will show "-"
+    .Properties["RoundZeroCountSymbol"] = ">" 'If the count is rounded to 0, it will show "-"
+    .Properties["RoundZeroPercentSymbol"] = ">" 'If the % is rounded to 0, it will show "*", usually we show ">" in QTM
+    .Properties["Show100Percent"] = False 'If TRUE, show 100% on base line
+    .Properties["ShowPercentSigns"] = False
+
+End With
+
+With .Tables
+
+Dim banner
+
+banner=TOPBREAK
+
+End With 'End .Tables
+
+End With 'TableDoc
+
