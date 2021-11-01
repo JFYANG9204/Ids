@@ -493,6 +493,7 @@ export class TypeUtil extends UtilParser {
         if (node.computed) {
             const collection = this.checkCollectionDefinition(node, base);
             if (collection) {
+                this.addExtra(node.property, "definition", collection);
                 return this.checkCollectionIndex(
                     node,
                     collection,
@@ -508,7 +509,8 @@ export class TypeUtil extends UtilParser {
             } else if (!this.checkIfObjectOrInterface(prop as Identifier, base)) {
                 return;
             } else {
-                propDef = (base as InterfaceDefinition).getProperty((prop as Identifier).name);
+                propDef = (base as InterfaceDefinition).getProperty((prop as Identifier).name) ||
+                          (base as InterfaceDefinition).getMethod((prop as Identifier).name);
             }
             if (!propDef) {
                 if (base === IQuestionDefinition) {
@@ -526,6 +528,7 @@ export class TypeUtil extends UtilParser {
                 }
                 return;
             }
+            this.addExtra(prop, "definition", propDef);
             return propDef;
         }
     }
