@@ -1052,9 +1052,10 @@ export class StatementParser extends ExpressionParser {
                 try {
                     content = fs.readFileSync(node.path).toString();
                 } catch (error) {
-                    this.raise(
-                        this.state.pos,
+                    this.raiseAtNode(
+                        node.inc,
                         ErrorMessages["PreIncludeFileDontExist"],
+                        false,
                         node.path
                     );
                 }
