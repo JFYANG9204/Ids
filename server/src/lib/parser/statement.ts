@@ -1099,7 +1099,7 @@ export class StatementParser extends ExpressionParser {
             this.scope.currentScope().join(node.file);
             if (node.file.errors.length > 0) {
                 this.raiseAtNode(
-                    node,
+                    node.inc,
                     ErrorMessages["IncludeFileExistError"],
                     false
                 );
