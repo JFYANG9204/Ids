@@ -20,7 +20,7 @@ import {
     preKeywordsCompletions
 } from "./completion";
 import { updateAndVaidateDocument } from "./util";
-import { positionAt } from "./lib/file/util";
+import { getHoverContentFromNode, positionAt } from "./lib/file/util";
 import { DefinitionBase } from "./lib/util/definition";
 
 let connection = createConnection(ProposedFeatures.all);
@@ -99,9 +99,9 @@ connection.onHover(params => {
     }
     const pos = document.offsetAt(params.position);
     const node = positionAt(current.program.body, pos, true);
-    if (node.extra["definition"]) {
-        const def: DefinitionBase = node.extra["definition"];
-        hover = { contents: def.getNote() };
+    const def: DefinitionBase = node.extra["definition"];
+    if (def) {
+        hover = { contents: getHoverContentFromNode(node, def) };
     }
     return hover;
 });

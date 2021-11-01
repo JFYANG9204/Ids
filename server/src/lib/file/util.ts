@@ -5,10 +5,12 @@ import * as iconv from "iconv-lite";
 import { lineBreak } from "../util/whitespace";
 import {
     File,
+    Identifier,
     NodeBase,
     WithStatement
 } from "../types";
 import { SourceType } from "../options";
+import { DefinitionBase } from "../util/definition";
 
 export function readFileAndConvertToUtf8(filePath: string): string {
     const file = fs.readFileSync(filePath);
@@ -163,7 +165,7 @@ export function positionAt<T extends NodeBase>(
         let cur;
         for (const sub of node.positionMap) {
             let dist = distanceTo(sub, pos);
-            if (maxDistance) {
+            if (maxDistance !== undefined) {
                 if (Math.abs(dist) <= maxDistance) {
                     cur = sub;
                 } else if (dist > 0) {
@@ -228,6 +230,14 @@ export function getCurrentParser(file: File, path: string): File | undefined {
         }
     }
     return undefined;
+}
+
+export function getHoverContentFromNode(node: NodeBase, def: DefinitionBase): string {
+    if (node instanceof Identifier &&
+        def.isBasic) {
+        return "```\n" + `(variant) ${node.name}: ${def.name}\n` + "```";
+    }
+    return def.getNote();
 }
 
 
