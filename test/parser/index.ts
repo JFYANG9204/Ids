@@ -23,5 +23,5 @@ import { Parser } from "../../server/src/lib/parser";
 const testpath = resolve("./test/parser/fixture/test.mrs");
 const content = readFileSync(testpath).toString();
 const parser = new Parser(createBasicOptions(testpath, true), content);
-parser.parse();
+const file = parser.parse();
 console.log("end");
