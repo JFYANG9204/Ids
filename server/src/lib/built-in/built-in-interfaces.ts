@@ -11132,9 +11132,10 @@ export const builtInQuesionInterface: BuiltInDefinition = {
     definitionType: "interface",
     defaultProperty: "Item",
     note: [
+        "```ds",
         "(interface) IQuestion",
         "```",
- "-----------------------------",
+        "-----------------------------",
         "The `Question` object is used to represent a question in the interview.",
         "",
         "### Remarks",
