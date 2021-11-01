@@ -1,6 +1,8 @@
 {
-  "name": "ids",
+  	"name": "ids",
 	"displayName": "Ids",
+    "publisher": "Yang",
+    "license": "MIT",
 	"description": "Vscode Support for IBM DataCollection Base Script and Metadata",
 	"version": "0.0.1",
 	"engines": {

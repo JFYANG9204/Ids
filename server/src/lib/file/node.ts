@@ -12,7 +12,7 @@ export type ParserFileNode = {
     fileTypeMark?: SourceType;
     parser?: ParserBase;
 
-}
+};
 
 export function createParserFileNode(
     path: string,
