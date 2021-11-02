@@ -4,8 +4,11 @@ import { DefinitionBase, EnumDefinition, VariantDefinition } from "./definition"
 function matchBaseDefinition(
     t1: DefinitionBase,
     t2: DefinitionBase) {
-    if (((t1 instanceof EnumDefinition) && t2 === BasicTypeDefinitions.long) ||
-        ((t2 instanceof EnumDefinition) && t1 === BasicTypeDefinitions.long)) {
+    if (((t1.defType === "enum") && t2 === BasicTypeDefinitions.long) ||
+        ((t2.defType === "enum") && t1 === BasicTypeDefinitions.long)) {
+        return true;
+    }
+    if (t1.defType === "constant" || t2.defType === "constant") {
         return true;
     }
     return t1 === t2 ||

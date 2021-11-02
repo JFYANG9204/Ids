@@ -3,6 +3,7 @@ import {
     BasicTypeDefinitions,
     IDocumentDefinition,
     IQuestionDefinition,
+    MrScriptConstantsDefinition,
     searchBuiltIn,
     VbsDictionaryDefinition,
     VbsFsoDefinition,
@@ -500,6 +501,8 @@ export class TypeUtil extends UtilParser {
             if ((base instanceof PropertyDefinition) &&
                 (base.return instanceof InterfaceDefinition)) {
                 propDef = base.return.getProperty((prop as Identifier).name)?.return;
+            } else if (base === MrScriptConstantsDefinition) {
+                return MrScriptConstantsDefinition;
             } else if (!this.checkIfObjectOrInterface(prop as Identifier, base)) {
                 return;
             } else if ((base instanceof ObjectDefinition) &&
