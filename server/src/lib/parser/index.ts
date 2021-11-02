@@ -16,11 +16,14 @@ export class Parser extends StatementParser {
             this.state.localDefinitions);
     }
 
-    parse(preDef?: Map<string, DefinitionBase>): File {
+    parse(preDef?: Map<string, DefinitionBase>, header?: DefinitionBase): File {
         const file = this.startNode(File);
         this.scope.enter(file, true);
         if (preDef) {
             this.scope.currentScope().joinMap(preDef);
+        }
+        if (header) {
+            this.scope.currentScope().enterHeader(header);
         }
         this.nextToken();
         try {

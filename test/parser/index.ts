@@ -20,7 +20,7 @@ import { Parser } from "../../server/src/lib/parser";
 //if (file) {
 //    mdd = getCurrentParser(file, startPath);
 //}
-const testpath = resolve("./test/parser/fixture/test.mrs");
+const testpath = resolve("./test/parser/fixture/dpgm/run.mrs");
 const content = readFileSync(testpath).toString();
 const parser = new Parser(createBasicOptions(testpath, true), content);
 const file = parser.parse();
