@@ -803,11 +803,14 @@ export class TypeUtil extends UtilParser {
         let final: DefinitionBase;
         if (!type ||
             ((final = this.getFinalDefinition(type, undefined, true)) && !final.isCollection)) {
-            this.raiseAtNode(
-                node,
-                ErrorMessages["PropertyOrObjectIsNotCollection"],
-                false
-            );
+            if (!this.scope.currentScope().isFunction &&
+                this.options.raiseTypeError) {
+                    this.raiseAtNode(
+                        node,
+                        ErrorMessages["PropertyOrObjectIsNotCollection"],
+                        false
+                );
+            }
             return;
         }
         if (element && final.return) {
