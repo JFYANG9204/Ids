@@ -231,10 +231,12 @@ export class TypeUtil extends UtilParser {
                 if (!type && obj === IQuestionDefinition) {
                     type = BasicTypeDefinitions.categorical.getMethod(funcName);
                 }
+                this.addExtra(node.callee.property, "definition", type);
             }
             if (obj instanceof PropertyDefinition &&
                 obj.return instanceof InterfaceDefinition) {
                 type = obj.return.getMethod(funcName);
+                this.addExtra(node.callee.property, "definition", type);
             }
         // Function(Args...)
         } else if (node.callee instanceof Identifier) {
@@ -246,8 +248,6 @@ export class TypeUtil extends UtilParser {
             type = this.scope.currentScope().get(node.callee.name);
             this.addExtra(node.callee, "definition", type);
         // .Method(Args...)
-        } else {
-            type = this.scope.currentScope().currentHeader();
         }
         if (!type ||
             !this.checkCalleeFunctionError(node.callee, funcName, type) ||
@@ -412,6 +412,7 @@ export class TypeUtil extends UtilParser {
         }
         if (right && expr.left instanceof Identifier) {
             this.scope.currentScope().updateType(expr.left.name, right);
+            this.addExtra(expr.left, "definition", right);
         }
     }
 
@@ -498,9 +499,11 @@ export class TypeUtil extends UtilParser {
             }
         } else {
             let propDef;
+            let extra;
             if ((base instanceof PropertyDefinition) &&
                 (base.return instanceof InterfaceDefinition)) {
-                propDef = base.return.getProperty((prop as Identifier).name)?.return;
+                extra = base.return.getProperty((prop as Identifier).name);
+                propDef = extra?.return;
             } else if (base === MrScriptConstantsDefinition) {
                 return MrScriptConstantsDefinition;
             } else if (!this.checkIfObjectOrInterface(prop as Identifier, base)) {
@@ -510,9 +513,11 @@ export class TypeUtil extends UtilParser {
                 const type = base.return as InterfaceDefinition;
                 propDef = type.getProperty((prop as Identifier).name) ||
                           type.getMethod((prop as Identifier).name);
+                extra = propDef;
             } else {
                 propDef = (base as InterfaceDefinition).getProperty((prop as Identifier).name) ||
                           (base as InterfaceDefinition).getMethod((prop as Identifier).name);
+                extra = propDef;
             }
             if (!propDef) {
                 if (base === IQuestionDefinition) {
@@ -530,7 +535,7 @@ export class TypeUtil extends UtilParser {
                 }
                 return;
             }
-            this.addExtra(prop, "definition", propDef);
+            this.addExtra(prop, "definition", extra);
             return propDef;
         }
     }
