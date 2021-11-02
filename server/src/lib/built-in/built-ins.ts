@@ -167,6 +167,7 @@ export const builtInObjectDefinitions: Map<string, ObjectDefinition> = new Map<s
 export const builtInFunctionDefinitions: Map<string, FunctionDefinition> = new Map<string, FunctionDefinition>();
 export const builtInEnumeratorDefinitions: Map<string, EnumDefinition> = new Map<string, EnumDefinition>();
 export const builtInAggregateDefinitions: Map<string, FunctionDefinition> = new Map<string, FunctionDefinition>();
+export const builtInConstantDefinitions: Map<string, ScriptConstantDefinition> = new Map<string, ScriptConstantDefinition>();
 
 (function loadBuiltIns() {
     builtInInterfaces.forEach(
@@ -184,6 +185,7 @@ export const builtInAggregateDefinitions: Map<string, FunctionDefinition> = new 
     builtInEnums.forEach(
         def => builtInEnumeratorDefinitions.set(def.name.toLowerCase(), loadEnumerator(def))
     );
+    builtInConstantDefinitions.set(builtInScriptConstants.name.toLowerCase(), loadScriptConstant(builtInScriptConstants));
 })();
 
 export const IDocumentDefinition: ObjectDefinition = loadInterfaceOrObject(builtInIDocumentInterface, ObjectDefinition);
@@ -216,6 +218,10 @@ export function searchFunction(name: string): FunctionDefinition | undefined {
 
 export function searchEnumerator(name: string): EnumDefinition | undefined {
     return builtInEnumeratorDefinitions.get(name.toLowerCase());
+}
+
+export function searchConstant(name: string): ScriptConstantDefinition | undefined {
+    return builtInConstantDefinitions.get(name.toLowerCase());
 }
 
 export function searchBuiltIn(name: string): DefinitionBase | undefined {

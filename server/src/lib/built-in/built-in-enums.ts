@@ -197,7 +197,9 @@ export const builtInEnums = new Set<BuiltInDefinition>([
         name: "ComparisonOperator",
         definitionType: "enum",
         note: [
+            "```ds",
             "(enum) ComparisonOperator",
+            "```",
             "----------------------------",
             "These constants define comparison operators for use in setting up table rules",
         ].join("\n"),
@@ -233,7 +235,9 @@ export const builtInEnums = new Set<BuiltInDefinition>([
         name: "FontEffects",
         definitionType: "enum",
         note: [
+            "```ds",
             "(enum) FontEffects",
+            "```",
             "----------------------------",
             "Font Effects.",
         ].join("\n"),
@@ -284,7 +288,9 @@ export const builtInEnums = new Set<BuiltInDefinition>([
         name: "QuotaResultConstants",
         definitionType: "enum",
         note: [
+            "```ds",
             "(enum) QuotaResultConstants",
+            "```",
             "----------------------------",
             "Describes the possible results of a quota test.",
         ].join("\n"),
@@ -315,7 +321,9 @@ export const builtInEnums = new Set<BuiltInDefinition>([
         name: "GlobalQuestionPositions",
         definitionType: "enum",
         note: [
+            "```ds",
             "(enum) GlobalQuestionPositions",
+            "```",
             "----------------------------",
             "Global question position modes. These control where the global question displays.",
         ].join("\n"),
@@ -336,7 +344,9 @@ export const builtInEnums = new Set<BuiltInDefinition>([
         name: "AxisType",
         definitionType: "enum",
         note: [
+            "```ds",
             "(enum) AxisType",
+            "```",
             "----------------------------",
             "These constants define whether the axis is on the side, the top or the layer of a table.",
         ].join("\n"),
@@ -362,7 +372,9 @@ export const builtInEnums = new Set<BuiltInDefinition>([
         name: "ValidateActions",
         definitionType: "enum",
         note: [
+            "```ds",
             "(enum) ValidateActions",
+            "```",
             "----------------------------",
             "Validation Actions.",
         ].join("\n"),
@@ -393,7 +405,10 @@ export const builtInEnums = new Set<BuiltInDefinition>([
         name: "BorderStyles",
         definitionType: "enum",
         note: [
+            "```ds",
+            "```ds",
             "(enum) BorderStyles",
+            "```",
             "----------------------------",
             "Border Styles.",
         ].join("\n"),
@@ -439,7 +454,9 @@ export const builtInEnums = new Set<BuiltInDefinition>([
         name: "DBIdentifierOptions",
         definitionType: "enum",
         note: [
+            "```ds",
             "(enum) DBIdentifierOptions",
+            "```",
             "----------------------------",
             "DB Identifiers options.",
         ].join("\n"),
@@ -465,7 +482,9 @@ export const builtInEnums = new Set<BuiltInDefinition>([
         name: "AskOptions",
         definitionType: "enum",
         note: [
+            "```ds",
             "(enum) AskOptions",
+            "```",
             "----------------------------",
             "Ask Options.",
         ].join("\n"),
@@ -486,7 +505,9 @@ export const builtInEnums = new Set<BuiltInDefinition>([
         name: "CategoryStyleTypes",
         definitionType: "enum",
         note: [
+            "```ds",
             "(enum) CategoryStyleTypes",
+            "```",
             "----------------------------",
             "Category style types.",
         ].join("\n"),
@@ -517,7 +538,9 @@ export const builtInEnums = new Set<BuiltInDefinition>([
         name: "InterviewModes",
         definitionType: "enum",
         note: [
+            "```ds",
             "(enum) InterviewModes",
+            "```",
             "----------------------------",
             "Interview modes.",
         ].join("\n"),
@@ -548,7 +571,9 @@ export const builtInEnums = new Set<BuiltInDefinition>([
         name: "ChartStructure",
         definitionType: "enum",
         note: [
+            "```ds",
             "(enum) ChartStructure",
+            "```",
             "----------------------------",
             "Specifies what part of the table is used to create a chart for any special statistical elements (mean, standard deviation, etc).",
         ].join("\n"),
@@ -579,7 +604,9 @@ export const builtInEnums = new Set<BuiltInDefinition>([
         name: "TableType",
         definitionType: "enum",
         note: [
+            "```ds",
             "(enum) TableType",
+            "```",
             "----------------------------",
             "The type of table. A table will either contain aggregated case data or the results of profiling the case data. The Table object behaves slightly differently depending on its type.",
         ].join("\n"),
@@ -600,7 +627,9 @@ export const builtInEnums = new Set<BuiltInDefinition>([
         name: "AudioControlPositions",
         definitionType: "enum",
         note: [
+            "```ds",
             "(enum) AudioControlPositions",
+            "```",
             "----------------------------",
             "Audio Control Positions.",
         ].join("\n"),
@@ -631,7 +660,9 @@ export const builtInEnums = new Set<BuiltInDefinition>([
         name: "ElementAlignments",
         definitionType: "enum",
         note: [
+            "```ds",
             "(enum) ElementAlignments",
+            "```",
             "----------------------------",
             "ElementAlignment.",
         ].join("\n"),
@@ -657,7 +688,9 @@ export const builtInEnums = new Set<BuiltInDefinition>([
         name: "DataSetView",
         definitionType: "enum",
         note: [
+            "```ds",
             "(enum) DataSetView",
+            "```",
             "----------------------------",
             "These constants select between the available views for the `DataSet` (`IDataSet` object).",
         ].join("\n"),
@@ -678,7 +711,9 @@ export const builtInEnums = new Set<BuiltInDefinition>([
         name: "NavigationTypes",
         definitionType: "enum",
         note: [
+            "```ds",
             "(enum) NavigationTypes",
+            "```",
             "----------------------------",
             "Navigation Types.",
         ].join("\n"),
@@ -724,7 +759,9 @@ export const builtInEnums = new Set<BuiltInDefinition>([
         name: "PostReturnTypes",
         definitionType: "enum",
         note: [
+            "```ds",
             "(enum) PostReturnTypes",
+            "```",
             "----------------------------",
             "Interview status codes.",
         ].join("\n"),
@@ -745,7 +782,9 @@ export const builtInEnums = new Set<BuiltInDefinition>([
         name: "OpenOptions",
         definitionType: "enum",
         note: [
+            "```ds",
             "(enum) OpenOptions",
+            "```",
             "----------------------------",
             "The options that can be used when opening a data set.",
         ].join("\n"),
@@ -766,7 +805,9 @@ export const builtInEnums = new Set<BuiltInDefinition>([
         name: "QuestionTypes",
         definitionType: "enum",
         note: [
+            "```ds",
             "(enum) QuestionTypes",
+            "```",
             "----------------------------",
             "Question Types.",
         ].join("\n"),
@@ -812,7 +853,9 @@ export const builtInEnums = new Set<BuiltInDefinition>([
         name: "QuotaPendModes",
         definitionType: "enum",
         note: [
+            "```ds",
             "(enum) QuotaPendModes",
+            "```",
             "----------------------------",
             "Describes the ways in which quota counts may be pended.",
         ].join("\n"),
@@ -847,7 +890,9 @@ export const builtInEnums = new Set<BuiltInDefinition>([
         name: "OrderConstants",
         definitionType: "enum",
         note: [
+            "```ds",
             "(enum) OrderConstants",
+            "```",
             "----------------------------",
             "The order in which to sort values (ascending/descending)",
         ].join("\n"),
@@ -868,7 +913,9 @@ export const builtInEnums = new Set<BuiltInDefinition>([
         name: "XmlOption",
         definitionType: "enum",
         note: [
+            "```ds",
             "(enum) XmlOption",
+            "```",
             "----------------------------",
             "These constants control the XML that is returned by the `IDocument.GetTablesXml()` method.",
         ].join("\n"),
@@ -904,7 +951,9 @@ export const builtInEnums = new Set<BuiltInDefinition>([
         name: "ScriptStateConstants",
         definitionType: "enum",
         note: [
+            "```ds",
             "(enum) ScriptStateConstants",
+            "```",
             "----------------------------",
             "Script state constants.",
         ].join("\n"),
@@ -940,7 +989,9 @@ export const builtInEnums = new Set<BuiltInDefinition>([
         name: "DisplayOption",
         definitionType: "enum",
         note: [
+            "```ds",
             "(enum) DisplayOption",
+            "```",
             "----------------------------",
             "Specifies whether the export should create tables only, charts only, or both tables and charts and whether the chart or the table should be shown first.",
         ].join("\n"),
@@ -971,7 +1022,9 @@ export const builtInEnums = new Set<BuiltInDefinition>([
         name: "DisplayOrientation",
         definitionType: "enum",
         note: [
+            "```ds",
             "(enum) DisplayOrientation",
+            "```",
             "----------------------------",
             "These constants determine the display orientation to use when constructing a grid from a grid or array field",
         ].join("\n"),
@@ -997,7 +1050,9 @@ export const builtInEnums = new Set<BuiltInDefinition>([
         name: "Alignments",
         definitionType: "enum",
         note: [
+            "```ds",
             "(enum) Alignments",
+            "```",
             "----------------------------",
             "Alignments.",
         ].join("\n"),
@@ -1033,7 +1088,9 @@ export const builtInEnums = new Set<BuiltInDefinition>([
         name: "RuleTarget",
         definitionType: "enum",
         note: [
+            "```ds",
             "(enum) RuleTarget",
+            "```",
             "----------------------------",
             "These constants define what is to be affected by a table rule (`IRule` object).",
         ].join("\n"),
@@ -1069,7 +1126,9 @@ export const builtInEnums = new Set<BuiltInDefinition>([
         name: "LicensableFeature",
         definitionType: "enum",
         note: [
+            "```ds",
             "(enum) LicensableFeature",
+            "```",
             "----------------------------",
             "These constants define the features of the Table Object Model that can be licensed. The `IDocument.LicensedFeatures` property returns a binary 'OR' of the features that are licensed.",
         ].join("\n"),
@@ -1110,7 +1169,9 @@ export const builtInEnums = new Set<BuiltInDefinition>([
         name: "AxisVariableOptions",
         definitionType: "enum",
         note: [
+            "```ds",
             "(enum) AxisVariableOptions",
+            "```",
             "----------------------------",
             "Options for the `CreateAxisVariable()` method.",
         ].join("\n"),
@@ -1131,7 +1192,9 @@ export const builtInEnums = new Set<BuiltInDefinition>([
         name: "DebugMsgBoxResults",
         definitionType: "enum",
         note: [
+            "```ds",
             "(enum) DebugMsgBoxResults",
+            "```",
             "----------------------------",
             "Debug message box results.",
         ].join("\n"),
@@ -1177,7 +1240,9 @@ export const builtInEnums = new Set<BuiltInDefinition>([
         name: "wtMethod",
         definitionType: "enum",
         note: [
+            "```ds",
             "(enum) wtMethod",
+            "```",
             "----------------------------",
             "The weighting method to apply: factor, target, or rim.",
         ].join("\n"),
@@ -1203,7 +1268,9 @@ export const builtInEnums = new Set<BuiltInDefinition>([
         name: "RoundOptions",
         definitionType: "enum",
         note: [
+            "```ds",
             "(enum) RoundOptions",
+            "```",
             "----------------------------",
             "The options that can be used when rounding occurs.",
         ].join("\n"),
@@ -1224,7 +1291,9 @@ export const builtInEnums = new Set<BuiltInDefinition>([
         name: "ImagePositions",
         definitionType: "enum",
         note: [
+            "```ds",
             "(enum) ImagePositions",
+            "```",
             "----------------------------",
             "The position to display an image relative to the text.",
         ].join("\n"),
@@ -1260,7 +1329,9 @@ export const builtInEnums = new Set<BuiltInDefinition>([
         name: "LabelStyleTypes",
         definitionType: "enum",
         note: [
+            "```ds",
             "(enum) LabelStyleTypes",
+            "```",
             "----------------------------",
             "Label style types.",
         ].join("\n"),
@@ -1301,7 +1372,9 @@ export const builtInEnums = new Set<BuiltInDefinition>([
         name: "QuotaFlags",
         definitionType: "enum",
         note: [
+            "```ds",
             "(enum) QuotaFlags",
+            "```",
             "----------------------------",
             "Describes how the quota should count respondents.",
         ].join("\n"),
@@ -1327,7 +1400,9 @@ export const builtInEnums = new Set<BuiltInDefinition>([
         name: "GridStyleTypes",
         definitionType: "enum",
         note: [
+            "```ds",
             "(enum) GridStyleTypes",
+            "```",
             "----------------------------",
             "Grid style types.",
         ].join("\n"),
@@ -1373,7 +1448,9 @@ export const builtInEnums = new Set<BuiltInDefinition>([
         name: "CategoryAttributes",
         definitionType: "enum",
         note: [
+            "```ds",
             "(enum) CategoryAttributes",
+            "```",
             "----------------------------",
             "Category Attributes.",
         ].join("\n"),
@@ -1424,7 +1501,9 @@ export const builtInEnums = new Set<BuiltInDefinition>([
         name: "DataTypeConstants",
         definitionType: "enum",
         note: [
+            "```ds",
             "(enum) DataTypeConstants",
+            "```",
             "----------------------------",
             "Used to identify the type of data stored in a Field e.g. Real, Text",
         ].join("\n"),
@@ -1480,7 +1559,9 @@ export const builtInEnums = new Set<BuiltInDefinition>([
         name: "PresentationStyle",
         definitionType: "enum",
         note: [
+            "```ds",
             "(enum) PresentationStyle",
+            "```",
             "----------------------------",
             "Specifies the style sheet (CSS file) to be used. See the topic HTML Tables Export - Customizing the Style Sheet for more information.",
         ].join("\n"),
@@ -1516,7 +1597,9 @@ export const builtInEnums = new Set<BuiltInDefinition>([
         name: "PropertyAttributeConstants",
         definitionType: "enum",
         note: [
+            "```ds",
             "(enum) PropertyAttributeConstants",
+            "```",
             "----------------------------",
             "The property attributes used to how the property can be accessed.",
         ].join("\n"),
@@ -1547,7 +1630,9 @@ export const builtInEnums = new Set<BuiltInDefinition>([
         name: "wtTotalType",
         definitionType: "enum",
         note: [
+            "```ds",
             "(enum) wtTotalType",
+            "```",
             "----------------------------",
             "Defines how the weighted total is to be calculated. It can be the sum of the target values or the sum of (count * factor), if factor weighting is being used, the unweighted count of cases contributing to the weighting matrix, or a specified value.",
         ].join("\n"),
@@ -1573,7 +1658,9 @@ export const builtInEnums = new Set<BuiltInDefinition>([
         name: "InterviewStatus",
         definitionType: "enum",
         note: [
+            "```ds",
             "(enum) InterviewStatus",
+            "```",
             "----------------------------",
             "Interview status codes.",
         ].join("\n"),
@@ -1619,7 +1706,9 @@ export const builtInEnums = new Set<BuiltInDefinition>([
         name: "AnnotationPosition",
         definitionType: "enum",
         note: [
+            "```ds",
             "(enum) AnnotationPosition",
+            "```",
             "----------------------------",
             "The positions around the outside of the table in which to display the annotation text.",
         ].join("\n"),
@@ -1670,7 +1759,9 @@ export const builtInEnums = new Set<BuiltInDefinition>([
         name: "Signals",
         definitionType: "enum",
         note: [
+            "```ds",
             "(enum) Signals",
+            "```",
             "----------------------------",
             "Standard signal codes for use with the `Terminate()` method",
         ].join("\n"),
@@ -1711,7 +1802,9 @@ export const builtInEnums = new Set<BuiltInDefinition>([
         name: "RecordModes",
         definitionType: "enum",
         note: [
+            "```ds",
             "(enum) RecordModes",
+            "```",
             "----------------------------",
             "Record Modes.",
         ].join("\n"),
@@ -1742,7 +1835,9 @@ export const builtInEnums = new Set<BuiltInDefinition>([
         name: "LayoutStyle",
         definitionType: "enum",
         note: [
+            "```ds",
             "(enum) LayoutStyle",
+            "```",
             "----------------------------",
             "Specifies the layout style to be used.",
         ].join("\n"),
@@ -1768,7 +1863,9 @@ export const builtInEnums = new Set<BuiltInDefinition>([
         name: "VerticalAlignments",
         definitionType: "enum",
         note: [
+            "```ds",
             "(enum) VerticalAlignments",
+            "```",
             "----------------------------",
             "Vertical Alignment.",
         ].join("\n"),
@@ -1824,7 +1921,9 @@ export const builtInEnums = new Set<BuiltInDefinition>([
         name: "LogLevels",
         definitionType: "enum",
         note: [
+            "```ds",
             "(enum) LogLevels",
+            "```",
             "----------------------------",
             "Log levels.",
         ].join("\n"),
@@ -1875,7 +1974,9 @@ export const builtInEnums = new Set<BuiltInDefinition>([
         name: "MinBaseOptionsConstants",
         definitionType: "enum",
         note: [
+            "```ds",
             "(enum) MinBaseOptionsConstants",
+            "```",
             "----------------------------",
             "The options that can be applied to control how the table is displayed when a base value is below that specified by `Table.Properties[\"MinBase\"]`.",
         ].join("\n"),
@@ -1921,7 +2022,9 @@ export const builtInEnums = new Set<BuiltInDefinition>([
         name: "PropertyTypeConstants",
         definitionType: "enum",
         note: [
+            "```ds",
             "(enum) PropertyTypeConstants",
+            "```",
             "----------------------------",
             "The property type used to determine how the property is stored.",
         ].join("\n"),
@@ -1972,7 +2075,9 @@ export const builtInEnums = new Set<BuiltInDefinition>([
         name: "ControlTypes",
         definitionType: "enum",
         note: [
+            "```ds",
             "(enum) ControlTypes",
+            "```",
             "----------------------------",
             "Control Types.",
         ].join("\n"),
@@ -2058,7 +2163,9 @@ export const builtInEnums = new Set<BuiltInDefinition>([
         name: "OffPathDataModes",
         definitionType: "enum",
         note: [
+            "```ds",
             "(enum) OffPathDataModes",
+            "```",
             "----------------------------",
             "Off-path data modes. These control how off-path data is handled.",
         ].join("\n"),
@@ -2089,7 +2196,9 @@ export const builtInEnums = new Set<BuiltInDefinition>([
         name: "CursorTypes",
         definitionType: "enum",
         note: [
+            "```ds",
             "(enum) CursorTypes",
+            "```",
             "----------------------------",
         ].join("\n"),
         enumerators: [
@@ -2163,7 +2272,9 @@ export const builtInEnums = new Set<BuiltInDefinition>([
         name: "QuestionStyleTypes",
         definitionType: "enum",
         note: [
+            "```ds",
             "(enum) QuestionStyleTypes",
+            "```",
             "----------------------------",
             "Question style types.",
         ].join("\n"),
@@ -2244,7 +2355,9 @@ export const builtInEnums = new Set<BuiltInDefinition>([
         name: "ChartType",
         definitionType: "enum",
         note: [
+            "```ds",
             "(enum) ChartType",
+            "```",
             "----------------------------",
             "These constants define the type of the chart that is to be created.",
         ].join("\n"),
@@ -2350,7 +2463,9 @@ export const builtInEnums = new Set<BuiltInDefinition>([
         name: "CellItemType",
         definitionType: "enum",
         note: [
+            "```ds",
             "(enum) CellItemType",
+            "```",
             "----------------------------",
             "These constants define types of cell contents for use in tables.",
         ].join("\n"),
@@ -2521,7 +2636,9 @@ export const builtInEnums = new Set<BuiltInDefinition>([
         name: "ElementType",
         definitionType: "enum",
         note: [
+            "```ds",
             "(enum) ElementType",
+            "```",
             "----------------------------",
             "These constants define the element type.",
         ].join("\n"),

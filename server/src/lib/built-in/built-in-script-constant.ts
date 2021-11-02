@@ -5,6 +5,21 @@ export const builtInScriptConstants: BuiltInDefinition = {
         name: "mr",
         label: "(constant) mr",
         definitionType: "constant",
+        note: [
+            "```ds",
+            "(constant) mr",
+            "```",
+            "---------------------",
+            "### Script Constants",
+            "A number of constants are built into mrScriptBasic. Constants provide a convenient way to use specific values without actually having to remember the value itself. Using constants also makes your code more maintainable should the value of any constant ever change. Because these constants are already defined in mrScriptBasic, you don't need to explicitly declare them in your code. Simply use them in place of the values they represent.",
+            "The constants build into mrScriptBasic fall into the following groups:",
+            "+ **Color**. Defines basic colors that can be used in scripting. ",
+            "+ **Date and Time**. Defines date and time constants used by date and time functions.",
+            "+ **Date and Time Format**. Defines constants used to format dates and times. ",
+            "+ **String**. Defines a variety of non-printable characters used in string manipulation.",
+            "+ **Type**. Defines the various Variant subtypes. ",
+            "",
+        ].join("\n"),
         constants: [
             {
                 name: "Cr",

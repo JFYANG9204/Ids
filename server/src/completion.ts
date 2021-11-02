@@ -14,6 +14,8 @@ import {
 import {
     BasicTypeDefinitions,
     builtInAggregateDefinitions,
+    builtInConstantDefinitions,
+    builtInEnumeratorDefinitions,
     builtInFunctionDefinitions,
     builtInObjectDefinitions
 } from "./lib/built-in/built-ins";
@@ -140,13 +142,35 @@ setBuiltInCompletions(builtInObjectDefinitions, CompletionItemKind.Module);
 setBuiltInCompletions(builtInFunctionDefinitions, CompletionItemKind.Function);
 setBuiltInCompletions(builtInAggregateDefinitions, CompletionItemKind.Function);
 
+builtInEnumeratorDefinitions.forEach(enumerator => {
+    builtInCompletions.push({
+        label: enumerator.name,
+        kind: CompletionItemKind.Enum,
+        documentation: {
+            kind: MarkupKind.Markdown,
+            value: enumerator.getNote()
+        }
+    });
+});
+
+builtInConstantDefinitions.forEach(constant => {
+    builtInCompletions.push({
+        label: constant.name,
+        kind: CompletionItemKind.Constant,
+        documentation: {
+            kind: MarkupKind.Markdown,
+            value: constant.getNote()
+        }
+    });
+});
+
 function getCompletionTypeFromDefinition(def: DefinitionBase): CompletionItemKind {
     if (def === BasicTypeDefinitions.string ||
         def === BasicTypeDefinitions.categorical) {
         return CompletionItemKind.Variable;
     }
     switch (def.defType) {
-        case "object":     return CompletionItemKind.Module;
+        case "object":     return CompletionItemKind.Variable;
         case "constant":   return CompletionItemKind.Constant;
         case "property":   return CompletionItemKind.Property;
         case "method":     return CompletionItemKind.Method;
