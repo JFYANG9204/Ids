@@ -111,7 +111,7 @@ connection.onCompletionResolve(
 
 connection.onHover(params => {
     let hover: Hover | undefined = undefined;
-    const document = documents.get(fileURLToPath(params.textDocument.uri));
+    const document = documents.get(params.textDocument.uri);
     if (!document) {
         return hover;
     }

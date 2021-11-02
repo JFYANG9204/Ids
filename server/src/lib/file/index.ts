@@ -95,6 +95,7 @@ export class ParserFileDigraph {
 
     clearStart() {
         this.start = undefined;
+        this.startPath = undefined;
     }
 
     startParse() {
