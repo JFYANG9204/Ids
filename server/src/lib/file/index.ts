@@ -35,7 +35,7 @@ export class ParserFileDigraph {
             const refMark = getFileReferenceMark(value);
             const typeMark = getFileTypeMark(value);
             const node = createParserFileNode(key, value, refMark, typeMark);
-            nodes.set(key.toLowerCase(), node);
+            nodes.set(key, node);
         });
         this.nodeMap = nodes;
         nodes.forEach((value, key) => {

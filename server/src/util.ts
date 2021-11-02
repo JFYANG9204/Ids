@@ -57,6 +57,7 @@ export function raiseErrorsFromFile(connection: _Connection, doc: TextDocument, 
 }
 
 export function updateResultFromFile(file: File, data: Map<string, File>) {
+    data.set(file.path.toLowerCase(), file);
     for (const inc of file.includes.values()) {
         data.set(inc.path.toLowerCase(), inc);
         updateResultFromFile(inc, data);
