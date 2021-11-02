@@ -11,7 +11,11 @@ import {
     TextDocumentSyncKind
 } from "vscode-languageserver/node";
 import { ParserFileDigraph } from "./lib/file";
-import { CallExpression, File, MemberExpression } from "./lib/types";
+import {
+    CallExpression,
+    File,
+    MemberExpression
+} from "./lib/types";
 import {
     builtInCompletions,
     getCompletionFromPosition,
@@ -19,8 +23,17 @@ import {
     keywordsCompletions,
     preKeywordsCompletions
 } from "./completion";
-import { updateAndVaidateDocument } from "./util";
-import { getHoverContentFromNode, positionAt } from "./lib/file/util";
+import {
+    createSingleParser,
+    raiseErrorsFromFile,
+    updateAndVaidateDocument,
+    updateMapFromMap,
+    updateResultFromFile
+} from "./util";
+import {
+    getHoverContentFromNode,
+    positionAt
+} from "./lib/file/util";
 import { DefinitionBase } from "./lib/util/definition";
 
 let connection = createConnection(ProposedFeatures.all);
@@ -51,7 +64,8 @@ connection.onInitialize((params) => {
 
 connection.onCompletion(
     (textDocumentPosition: TextDocumentPositionParams) => {
-        let doc = documents.get(textDocumentPosition.textDocument.uri);
+        let doc = documents.get(
+            fileURLToPath(textDocumentPosition.textDocument.uri));
         if (!doc) {
             return [];
         }
@@ -60,7 +74,8 @@ connection.onCompletion(
         if (text.endsWith("#")) {
             return preKeywordsCompletions;
         };
-        let lastFile = last.get(textDocumentPosition.textDocument.uri.toLowerCase());
+        let lastFile = last.get(
+            fileURLToPath(textDocumentPosition.textDocument.uri).toLowerCase());
         if (lastFile && (
             text.endsWith(".") ||
             text.endsWith("/") ||
@@ -75,7 +90,8 @@ connection.onCompletion(
             return find;
         }
         let completions: CompletionItem[] = builtInCompletions.concat(keywordsCompletions);
-        let currentFile = current.get(textDocumentPosition.textDocument.uri.toLowerCase());
+        let currentFile = current.get(
+            fileURLToPath(textDocumentPosition.textDocument.uri).toLowerCase());
         if (currentFile && currentFile.definitions) {
             let defs = getCompletionsFromDefinitions(currentFile.definitions);
             if (defs) {
@@ -95,11 +111,11 @@ connection.onCompletionResolve(
 
 connection.onHover(params => {
     let hover: Hover | undefined = undefined;
-    const document = documents.get(params.textDocument.uri);
+    const document = documents.get(fileURLToPath(params.textDocument.uri));
     if (!document) {
         return hover;
     }
-    let currentFile = current.get(params.textDocument.uri.toLowerCase());
+    let currentFile = current.get(fileURLToPath(params.textDocument.uri).toLowerCase());
     if (!currentFile) {
         return hover;
     }
@@ -120,14 +136,20 @@ connection.onHover(params => {
 });
 
 documents.onDidChangeContent(change => {
-    let file = updateAndVaidateDocument(change.document, graph, connection);
+    let file = updateAndVaidateDocument(change.document, connection, current, last, graph);
     if (file) {
-        let currentFile = current.get(change.document.uri.toLowerCase());
+        let currentFile = current.get(fileURLToPath(change.document.uri).toLowerCase());
+        updateMapFromMap(current, last);
         if (currentFile) {
-            last.set(change.document.uri.toLowerCase(), currentFile);
+            updateResultFromFile(currentFile, current);
         }
-        current.set(change.document.uri.toLowerCase(), file);
+        current.set(fileURLToPath(change.document.uri).toLowerCase(), file);
     }
+});
+
+documents.onDidOpen(listener => {
+    let file = updateAndVaidateDocument(listener.document, connection, current, last, graph);
+    raiseErrorsFromFile(connection, listener.document, file);
 });
 
 documents.listen(connection);

@@ -16,6 +16,7 @@ export enum ScriptFileType {
 }
 
 export type Options = {
+    uri: string,
     raiseTypeError: boolean,
     sourceType: SourceType,
     sourceFileName?: string,
@@ -31,6 +32,9 @@ export type Options = {
 
 
 export const defaultOptions: Options = {
+
+    uri: "",
+
     raiseTypeError: true,
     // metadata定义文件或script脚本文件
     sourceType: SourceType.script,
@@ -48,8 +52,9 @@ export const defaultOptions: Options = {
     commentType: MarkDownCommentType.inner,
 };
 
-export function createBasicOptions(path: string, raiseTypeError: boolean): Options {
+export function createBasicOptions(path: string, raiseTypeError: boolean, uri?: string): Options {
     return {
+        uri: uri ?? "",
         sourceType: SourceType.script,
         sourceFileName: path,
         raiseTypeError: raiseTypeError,

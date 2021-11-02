@@ -325,6 +325,8 @@ export type ParserOutput = {
 //
 
 export class File extends NodeBase {
+    uri: string;
+    path: string;
     program: Program;
     comments: Array<Comment> = [];
     errors: Array<ParsingError> = [];
@@ -337,6 +339,8 @@ export class File extends NodeBase {
         super(parser, pos, loc);
         this.type = "File";
         this.program = new Program(parser, 0, emptyLoc);
+        this.path = parser.fileName;
+        this.uri = parser.options.uri ?? parser.fileName;
     }
 }
 

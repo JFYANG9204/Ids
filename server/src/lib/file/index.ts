@@ -18,9 +18,11 @@ export class ParserFileDigraph {
     folder: string;
 
     vertex: ParserFileNode[] = [];
-    data: Map<string, string> = new Map();
+    nodeMap: Map<string, ParserFileNode> = new Map();
     start: ParserFileNode | undefined;
     current: ParserFileNode | undefined;
+
+    startPath?: string;
 
     constructor(folder: string) {
         this.folder = folder;
@@ -28,7 +30,6 @@ export class ParserFileDigraph {
 
     init() {
         const fileMap = getAllUsefulFile(this.folder);
-        this.data = fileMap;
         const nodes: Map<string, ParserFileNode> = new Map();
         fileMap.forEach((value, key) => {
             const refMark = getFileReferenceMark(value);
@@ -36,6 +37,7 @@ export class ParserFileDigraph {
             const node = createParserFileNode(key, value, refMark, typeMark);
             nodes.set(key.toLowerCase(), node);
         });
+        this.nodeMap = nodes;
         nodes.forEach((value, key) => {
             const refs = getAllIncludeInFile(value.content);
             refs.forEach(p => {
@@ -65,8 +67,7 @@ export class ParserFileDigraph {
     }
 
     updateData(filePath: string, content: string) {
-        this.data.set(filePath.toLowerCase(), content);
-        const find = this.search(filePath);
+        const find = this.nodeMap.get(filePath.toLowerCase());
         if (find) {
             find.content = content;
         }
@@ -79,22 +80,24 @@ export class ParserFileDigraph {
     }
 
     getData(filePath: string) {
-        return this.data.get(filePath.toLowerCase());
+        return this.nodeMap.get(filePath.toLowerCase());
     }
 
     setStart(filePath: string) {
+        this.clearStart();
         const head: { head?: ParserFileNode } = { head: this.start };
         this.current = this._dfs(this.vertex, head, true, node => {
             return node.filePath.toLowerCase() === filePath.toLowerCase();
         });
-        this.start = head.head;
+        this.start = head.head ?? this.getData(filePath);
+        this.startPath = filePath;
     }
 
     clearStart() {
         this.start = undefined;
     }
 
-    startParse(filePath?: string, content?: string) {
+    startParse() {
         if (this.start) {
             const parser = new Parser(
                 createBasicOptions(this.start.filePath, true),
@@ -106,26 +109,6 @@ export class ParserFileDigraph {
                 });
             };
             return parser.parse();
-        } else if (filePath) {
-            let fileText = content;
-            if (!fileText) {
-                const node = this.search(filePath);
-                if (node) {
-                    fileText = node.content;
-                }
-            }
-            if (fileText) {
-                const parser = new Parser(
-                    createBasicOptions(filePath, false),
-                    fileText
-                );
-                parser.searchParserNode = (filePath: string) => {
-                    return this._dfs(this.vertex, undefined, false, node => {
-                        return node.filePath.toLowerCase() === filePath.toLowerCase();
-                    });
-                };
-                return parser.parse();
-            }
         }
     }
 
