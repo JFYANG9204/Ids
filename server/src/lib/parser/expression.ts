@@ -368,7 +368,7 @@ export class ExpressionParser extends NodeUtils {
 
     parseBracket(): Expression {
         this.next();
-        if (this.match(tt.dot)) {
+        if (this.match(tt.dot) && this.lookahead().type === tt.dot) {
             const node = this.startNode(CollectionIteration);
             this.eat(tt.dot);
             this.expect(tt.dot);
