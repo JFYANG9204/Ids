@@ -889,7 +889,7 @@ export class AxisParser {
 
 }
 
-const maybeAxisRegex = /\{([a-zA-Z_][a-zA-Z0-9_$@]*[\s]*('[\S\s]*')?([a-zA-Z]*\([\s\S]*\)\s*(\[\s*\])?)?)*\}/i;
+const maybeAxisRegex = /(\{[\s\S]*\})|(axis\(\{[\s\S]*\}\))/i;
 const maybeAxisFunctionRegex = /axis\(\{[\S\s]*\}\)/i;
 
 export function maybeAxisExpression(input: string) {

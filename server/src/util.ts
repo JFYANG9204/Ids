@@ -25,6 +25,7 @@ export function updateAndVaidateDocument(
     const content = textdocument.getText();
     let file;
     if (graph && graph.getData(path)) {
+        graph.updateData(path, content);
         graph.setStart(path);
         const start = graph.startParse();
         if (start) {
@@ -34,16 +35,12 @@ export function updateAndVaidateDocument(
                 file = getCurrentParser(start, path);
             }
         }
-    } else {
+    }
+    if (!file) {
         file = createSingleParser(path, content, uri).parse();
     }
-    if (file) {
-        let cur = current.get(path.toLowerCase());
-        if (cur) {
-            last.set(path.toLowerCase(), cur);
-        }
-        current.set(path.toLowerCase(), file);
-    }
+    updateMapFromMap(current, last);
+    updateResultFromFile(file, current);
     raiseErrorsFromFile(connection, textdocument, file);
     return file;
 }
@@ -60,10 +57,10 @@ export function raiseErrorsFromFile(connection: _Connection, doc: TextDocument, 
 }
 
 export function updateResultFromFile(file: File, data: Map<string, File>) {
-    file.includes.forEach(inc => {
+    for (const inc of file.includes.values()) {
         data.set(inc.path.toLowerCase(), inc);
         updateResultFromFile(inc, data);
-    });
+    }
 }
 
 export function updateMapFromMap(source: Map<string, File>, target: Map<string, File>) {

@@ -64,18 +64,17 @@ connection.onInitialize((params) => {
 
 connection.onCompletion(
     (textDocumentPosition: TextDocumentPositionParams) => {
-        let doc = documents.get(
-            fileURLToPath(textDocumentPosition.textDocument.uri));
+        let doc = documents.get(textDocumentPosition.textDocument.uri);
         if (!doc) {
             return [];
         }
         let pos = doc.offsetAt(textDocumentPosition.position);
         let text = doc.getText().substring(0, pos);
+        let path = fileURLToPath(textDocumentPosition.textDocument.uri);
         if (text.endsWith("#")) {
             return preKeywordsCompletions;
         };
-        let lastFile = last.get(
-            fileURLToPath(textDocumentPosition.textDocument.uri).toLowerCase());
+        let lastFile = last.get(path.toLowerCase());
         if (lastFile && (
             text.endsWith(".") ||
             text.endsWith("/") ||
@@ -85,13 +84,10 @@ connection.onCompletion(
                 pos - 1,
                 text.slice(pos - 1, pos)
             );
-            const node = positionAt(lastFile.program.body, pos - 1);
-            connection.console.log(node.type + "   " + node.extra["definition"]);
             return find;
         }
         let completions: CompletionItem[] = builtInCompletions.concat(keywordsCompletions);
-        let currentFile = current.get(
-            fileURLToPath(textDocumentPosition.textDocument.uri).toLowerCase());
+        let currentFile = current.get(path.toLowerCase());
         if (currentFile && currentFile.definitions) {
             let defs = getCompletionsFromDefinitions(currentFile.definitions);
             if (defs) {
@@ -136,20 +132,11 @@ connection.onHover(params => {
 });
 
 documents.onDidChangeContent(change => {
-    let file = updateAndVaidateDocument(change.document, connection, current, last, graph);
-    if (file) {
-        let currentFile = current.get(fileURLToPath(change.document.uri).toLowerCase());
-        updateMapFromMap(current, last);
-        if (currentFile) {
-            updateResultFromFile(currentFile, current);
-        }
-        current.set(fileURLToPath(change.document.uri).toLowerCase(), file);
-    }
+    updateAndVaidateDocument(change.document, connection, current, last, graph);
 });
 
 documents.onDidOpen(listener => {
-    let file = updateAndVaidateDocument(listener.document, connection, current, last, graph);
-    raiseErrorsFromFile(connection, listener.document, file);
+    updateAndVaidateDocument(listener.document, connection, current, last, graph);
 });
 
 documents.listen(connection);

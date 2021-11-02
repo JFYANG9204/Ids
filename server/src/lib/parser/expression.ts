@@ -32,8 +32,6 @@ import {
     searchAggregate,
 } from "../built-in/built-ins";
 import { createBasicValueType } from "../built-in/basic";
-import { AxisParser, maybeAxisExpression } from "../util/axis";
-import { ErrorTemplate } from "./errors";
 import { isNewLine } from "../util/whitespace";
 
 export class ExpressionParser extends NodeUtils {
@@ -71,24 +69,16 @@ export class ExpressionParser extends NodeUtils {
     parseStringLiteral(value: string) {
         const node = this.parseLiteral(value, "StringLiteral", StringLiteral);
         node.value = createBasicValueType(value, false, BasicTypeDefinitions.string);
-        if (maybeAxisExpression(node.extra["raw"])) {
-            const axisParser = new AxisParser(node,
-                (start: number, end: number, template: ErrorTemplate, ...param: any) => {
-                    return this.raiseAtLocation(start, end, template, false, param);
-                });
-            axisParser.parse();
-        } else {
-            const strPos = this.state.start;
-            for (let i = 0; i < value.length; i++) {
-                const chr = value.charCodeAt(i);
-                const lastChr = value.charCodeAt(i - 1);
-                if (isNewLine(chr) && !isNewLine(lastChr) &&
-                    lastChr !== charCodes.backslash && lastChr !== charCodes.underscore) {
-                    this.raise(
-                        strPos + i,
-                        ErrorMessages["StringLineFeedNeedNewlineChar"]
-                    );
-                }
+        const strPos = this.state.start;
+        for (let i = 0; i < value.length; i++) {
+            const chr = value.charCodeAt(i);
+            const lastChr = value.charCodeAt(i - 1);
+            if (isNewLine(chr) && !isNewLine(lastChr) &&
+                lastChr !== charCodes.backslash && lastChr !== charCodes.underscore) {
+                this.raise(
+                    strPos + i,
+                    ErrorMessages["StringLineFeedNeedNewlineChar"]
+                );
             }
         }
         return node;
