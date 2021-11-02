@@ -246,6 +246,7 @@ export class StatementParser extends ExpressionParser {
     ): Program {
         const node = this.startNode(Program);
         node.sourceType = sourceType;
+        this.skipNewline();
         if (this.options.sourceType === SourceType.script) {
             node.body = this.parseBlock(end);
             node.push(node.body);
