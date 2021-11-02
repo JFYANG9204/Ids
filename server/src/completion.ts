@@ -23,9 +23,11 @@ import { distanceTo, positionAt, positionInWith } from "./lib/file/util";
 import { CallExpression, File, PreIncludeStatement } from "./lib/types";
 import {
     DefinitionBase,
+    EnumDefinition,
     FunctionDefinition,
     InterfaceDefinition,
-    ObjectDefinition
+    ObjectDefinition,
+    ScriptConstantDefinition
 } from "./lib/util/definition";
 
 
@@ -210,10 +212,48 @@ function getVariableCompletion(name: string, def: DefinitionBase): CompletionIte
     };
 }
 
+function getEnumCompletions(def: EnumDefinition): CompletionItem[] {
+    let completions: CompletionItem[] = [];
+    def.elements.forEach(ele => {
+        completions.push({
+            label: ele.label,
+            kind: CompletionItemKind.EnumMember,
+            documentation: {
+                kind: MarkupKind.Markdown,
+                value: "```ds\n" + `(enum) ${def.name}.${ele.label}: ${ele.value}` + "\n```" +
+                        ele.note ? "\n----------------\n" + ele.note : ""
+            }
+        });
+    });
+    return completions;
+}
+
+function getScriptConstantCompletions(def: ScriptConstantDefinition): CompletionItem[] {
+    let completions: CompletionItem[] = [];
+    def.constants.forEach(constant => {
+        completions.push({
+            label: constant.name,
+            kind: CompletionItemKind.Constant,
+            documentation: {
+                kind: MarkupKind.Markdown,
+                value: "```ds\n" + `(constant) ${def.name}.${constant.name}\n` + "```\n------------\n" +
+                        constant.note
+            }
+        });
+    });
+    return completions;
+}
+
 function getMemberCompletions(def: DefinitionBase): CompletionItem[] {
     let completions: CompletionItem[] = [];
     if (def instanceof ObjectDefinition && def.return) {
         return getMemberCompletions(def.return);
+    }
+    if (def instanceof EnumDefinition) {
+        return getEnumCompletions(def);
+    }
+    if (def instanceof ScriptConstantDefinition) {
+        return getScriptConstantCompletions(def);
     }
     if (def instanceof InterfaceDefinition) {
         def.methods.forEach(method => {
