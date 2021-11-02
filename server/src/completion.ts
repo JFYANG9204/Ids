@@ -312,7 +312,7 @@ export function getCompletionFromPosition(
         }
     }
     //
-    let def: DefinitionBase = ahead.extra["definition"];
+    let def: DefinitionBase = node.extra["definition"];
     if (def && triggerChar === ".") {
         return getMemberCompletions(def as InterfaceDefinition);
     }

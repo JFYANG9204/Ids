@@ -536,6 +536,7 @@ export class TypeUtil extends UtilParser {
                 return;
             }
             this.addExtra(prop, "definition", extra);
+            this.addExtra(node, "definition", propDef);
             return propDef;
         }
     }
