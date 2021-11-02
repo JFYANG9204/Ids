@@ -24,11 +24,7 @@ import {
     preKeywordsCompletions
 } from "./completion";
 import {
-    createSingleParser,
-    raiseErrorsFromFile,
     updateAndVaidateDocument,
-    updateMapFromMap,
-    updateResultFromFile
 } from "./util";
 import {
     getHoverContentFromNode,
@@ -116,7 +112,7 @@ connection.onHover(params => {
         return hover;
     }
     const pos = document.offsetAt(params.position);
-    const node = positionAt(currentFile.program.body, pos);
+    const node = positionAt(currentFile.program.body, pos, true, 0);
     let def: DefinitionBase;
     if (node instanceof MemberExpression) {
         def = node.property.extra["definition"];

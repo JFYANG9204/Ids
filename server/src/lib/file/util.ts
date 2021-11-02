@@ -163,21 +163,23 @@ export function positionAt<T extends NodeBase>(
     if (node.positionMap.length > 0 &&
         distanceTo(node, pos) === 0) {
         let cur;
+        let nearest = Infinity;
         for (const sub of node.positionMap) {
             let dist = distanceTo(sub, pos);
-            if (maxDistance !== undefined) {
-                if (Math.abs(dist) <= maxDistance) {
+            if (maxDistance !== undefined &&
+                maxDistance >= 0) {
+                if (dist <= 0 && Math.abs(dist) <= maxDistance) {
                     cur = sub;
-                } else if (dist > 0) {
                     break;
                 } else {
                     continue;
                 }
             } else {
-                if (dist <= 0) {
+                if (dist <= 0 && Math.abs(dist) < nearest) {
+                    nearest = dist;
                     cur = sub;
                 } else {
-                    break;
+                    continue;
                 }
             }
         }
