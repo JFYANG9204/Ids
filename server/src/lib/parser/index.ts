@@ -31,11 +31,13 @@ export class Parser extends StatementParser {
         if (header) {
             this.scope.currentScope().enterHeader(header);
         }
-        this.nextToken();
-        try {
-            file.program = this.parseProgram();
-        // eslint-disable-next-line no-empty
-        } catch (error) {
+        if (this.length > 0) {
+            this.nextToken();
+            try {
+                file.program = this.parseProgram();
+            // eslint-disable-next-line no-empty
+            } catch (error) {
+            }
         }
         this.checkLineMarkError();
         file.comments = this.state.comments;
