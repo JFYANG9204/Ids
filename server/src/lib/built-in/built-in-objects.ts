@@ -577,7 +577,7 @@ export const builtinVBSFileSystemObject: BuiltInDefinition = {
                 }
             ],
             note: [
-                "``ds",
+                "```ds",
                 "(method) FolderExists(FolderSpec: String): Boolean",
                 "```",
                 "------------------------",
@@ -599,7 +599,7 @@ export const builtinVBSFileSystemObject: BuiltInDefinition = {
             note: [
                 "```ds",
                 "(method) GetAbsolutePathName(PathSpec: String): String",
-                "``",
+                "```",
                 "------------------------",
                 "Returns a complete and unambiguous path from a provided path specification.",
                 "+ `PathSpec`: *String* - Required. Path specification to change to a complete and unambiguous path.",

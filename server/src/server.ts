@@ -11,7 +11,7 @@ import {
     TextDocumentSyncKind
 } from "vscode-languageserver/node";
 import { ParserFileDigraph } from "./lib/file";
-import { File } from "./lib/types";
+import { CallExpression, File, MemberExpression } from "./lib/types";
 import {
     builtInCompletions,
     getCompletionFromPosition,
@@ -25,8 +25,8 @@ import { DefinitionBase } from "./lib/util/definition";
 
 let connection = createConnection(ProposedFeatures.all);
 let documents = new TextDocuments(TextDocument);
-let current: File;
-let last: File;
+let current: Map<string, File> = new Map();
+let last: Map<string, File> = new Map();
 let graph: ParserFileDigraph;
 let folderPath: string;
 
@@ -60,22 +60,24 @@ connection.onCompletion(
         if (text.endsWith("#")) {
             return preKeywordsCompletions;
         };
-        if (last && (
+        let lastFile = last.get(textDocumentPosition.textDocument.uri.toLowerCase());
+        if (lastFile && (
             text.endsWith(".") ||
             text.endsWith("/") ||
             text.endsWith("\\"))) {
             let find = getCompletionFromPosition(
-                last,
+                lastFile,
                 pos - 1,
                 text.slice(pos - 1, pos)
             );
-            const node = positionAt(last.program.body, pos - 1);
+            const node = positionAt(lastFile.program.body, pos - 1);
             connection.console.log(node.type + "   " + node.extra["definition"]);
             return find;
         }
         let completions: CompletionItem[] = builtInCompletions.concat(keywordsCompletions);
-        if (current && current.definitions) {
-            let defs = getCompletionsFromDefinitions(current.definitions);
+        let currentFile = current.get(textDocumentPosition.textDocument.uri.toLowerCase());
+        if (currentFile && currentFile.definitions) {
+            let defs = getCompletionsFromDefinitions(currentFile.definitions);
             if (defs) {
                 completions = completions.concat(defs);
             }
@@ -97,9 +99,20 @@ connection.onHover(params => {
     if (!document) {
         return hover;
     }
+    let currentFile = current.get(params.textDocument.uri.toLowerCase());
+    if (!currentFile) {
+        return hover;
+    }
     const pos = document.offsetAt(params.position);
-    const node = positionAt(current.program.body, pos, true);
-    const def: DefinitionBase = node.extra["definition"];
+    const node = positionAt(currentFile.program.body, pos);
+    let def: DefinitionBase;
+    if (node instanceof MemberExpression) {
+        def = node.property.extra["definition"];
+    } else if (node instanceof CallExpression) {
+        def = node.callee.extra["definition"];
+    } else {
+        def = node.extra["definition"];
+    }
     if (def) {
         hover = { contents: getHoverContentFromNode(node, def) };
     }
@@ -109,8 +122,11 @@ connection.onHover(params => {
 documents.onDidChangeContent(change => {
     let file = updateAndVaidateDocument(change.document, graph, connection);
     if (file) {
-        last = current;
-        current = file;
+        let currentFile = current.get(change.document.uri.toLowerCase());
+        if (currentFile) {
+            last.set(change.document.uri.toLowerCase(), currentFile);
+        }
+        current.set(change.document.uri.toLowerCase(), file);
     }
 });
 

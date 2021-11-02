@@ -1091,9 +1091,6 @@ export class StatementParser extends ExpressionParser {
                 node.parser.options.sourceType = SourceType.metadata;
             }
             node.parser.fileName = node.parser.options.sourceFileName = node.path;
-            if (path.extname(node.path).toLowerCase() === ".dms") {
-                node.parser.options.scriptFileType = ScriptFileType.dms;
-            }
             let headerDef = this.scope.currentScope().currentHeader();
             node.file = node.parser.parse(this.scope.currentScope().storeMap, headerDef);
             this.state.includes.set(node.path.toLowerCase(), node.file);

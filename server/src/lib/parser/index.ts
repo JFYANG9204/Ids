@@ -1,4 +1,5 @@
-import { Options } from "../options";
+import { extname } from "path";
+import { Options, ScriptFileType } from "../options";
 import { StatementParser } from "./statement";
 import { File } from "../types";
 import { ScopeHandler } from "../util/scope";
@@ -14,6 +15,11 @@ export class Parser extends StatementParser {
         this.scope = new ScopeHandler(
             (node, template, ...params) => this.raiseAtLocation(node.start, node.end, template, false, ...params),
             this.state.localDefinitions);
+        if (extname(this.fileName).toLowerCase() === ".dms") {
+            this.options.scriptFileType = ScriptFileType.dms;
+        } else {
+            this.options.scriptFileType = ScriptFileType.mrs;
+        }
     }
 
     parse(preDef?: Map<string, DefinitionBase>, header?: DefinitionBase): File {
