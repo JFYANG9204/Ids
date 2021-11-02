@@ -5,7 +5,7 @@ import {
 import {
     ParserFileDigraph
 } from "../../server/src/lib/file";
-import { getCurrentParser, getFileTypeMark } from "../../server/src/lib/file/util";
+import { getCurrentParser, getFileTypeMark, readFileAndConvertToUtf8 } from "../../server/src/lib/file/util";
 import { createBasicOptions } from "../../server/src/lib/options";
 import { Parser } from "../../server/src/lib/parser";
 
@@ -21,7 +21,7 @@ const startPath = resolve("./test/parser/fixture/dpgm/Run.mrs");
 //    mdd = getCurrentParser(file, startPath);
 //}
 const testpath = resolve("./test/parser/fixture/dpgm/sbMetadata.mrs");
-const content = readFileSync(testpath).toString();
+const content = readFileAndConvertToUtf8(testpath);
 const type = getFileTypeMark(content);
 //const parser = new Parser(createBasicOptions(testpath, true), content);
 //const file = parser.parse();
