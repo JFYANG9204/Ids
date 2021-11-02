@@ -153,11 +153,9 @@ export class ExpressionParser extends NodeUtils {
 
     parseMember(
         base: Expression,
-        startPos: number,
-        startLoc: Position,
         computed: boolean
     ): MemberExpression {
-        const node = this.startNodeAt(startPos, startLoc, MemberExpression);
+        const node = this.startNodeAt(base.start, base.loc.start, MemberExpression);
         node.object = base;
         node.computed = computed;
         const property = computed ?
@@ -451,8 +449,6 @@ export class ExpressionParser extends NodeUtils {
     }
 
     parseCallOrMember(prefix?: Expression): Expression {
-        const startPos = this.state.pos;
-        const startLoc = this.state.startLoc;
         let expr = this.createEmptyExpression();
         if (prefix) {
             expr = prefix;
@@ -461,13 +457,13 @@ export class ExpressionParser extends NodeUtils {
         }
 
         if (this.match(tt.bracketL)) {
-            expr = this.parseMember(expr, startPos, startLoc, true);
+            expr = this.parseMember(expr, true);
             return this.parseCallOrMember(expr);
         }
 
         if (this.match(tt.dot)) {
             this.next();
-            expr = this.parseMember(expr, startPos, startLoc, false);
+            expr = this.parseMember(expr, false);
             return this.parseCallOrMember(expr);
         }
 
