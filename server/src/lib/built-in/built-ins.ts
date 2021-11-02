@@ -199,7 +199,6 @@ export const VbsDriveDefinition: ObjectDefinition = loadInterfaceOrObject(builtI
 export const MrScriptConstantsDefinition: ScriptConstantDefinition = loadScriptConstant(builtInScriptConstants);
 
 //
-
 export function searchAggregate(name: string): FunctionDefinition | undefined {
     return builtInAggregateDefinitions.get(name.toLowerCase());
 }
@@ -234,12 +233,19 @@ export function searchBuiltIn(name: string): DefinitionBase | undefined {
 }
 
 builtInCallByDotCategoricalFunctions.forEach(
-    func => basicTypeDefinitions.categorical.methods.set(
-        func.name.toLowerCase(),
-        loadFunctionBase(
-            func,
-            FunctionDefinition,
-            basicTypeDefinitions.categorical))
+    func => {
+        const funcDef = loadFunctionBase(func, FunctionDefinition, basicTypeDefinitions.categorical);
+        basicTypeDefinitions.categorical.methods.set(func.name.toLowerCase(), funcDef);
+        IQuestionDefinition.methods.set(func.name.toLowerCase(), funcDef);
+        const category = builtInInterfaceDefinitions.get("ICategory");
+        if (category) {
+            category.methods.set(func.name.toLowerCase(), funcDef);
+        }
+        const question = builtInInterfaceDefinitions.get("IQuestion");
+        if (question) {
+            question.methods.set(func.name.toLowerCase(), funcDef);
+        }
+    }
 );
 builtInCallByDotTextFunctions.forEach(
     func => basicTypeDefinitions.string.methods.set(
