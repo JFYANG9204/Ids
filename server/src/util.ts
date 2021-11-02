@@ -6,7 +6,7 @@ import {
 } from "vscode-languageserver-textdocument";
 import { raiseErrors } from "./errors";
 import { ParserFileDigraph } from "./lib/file";
-import { getCurrentParser, readFileAndConvertToUtf8 } from "./lib/file/util";
+import { getCurrentParser, getFileTypeMark, readFileAndConvertToUtf8 } from "./lib/file/util";
 import { createBasicOptions } from "./lib/options";
 import { Parser } from "./lib/parser";
 import { File } from "./lib/types";
@@ -37,7 +37,12 @@ export function updateAndVaidateDocument(
         }
     }
     if (!file) {
-        file = createSingleParser(path, content, uri).parse();
+        const parser = createSingleParser(path, content, uri);
+        const typeMark = getFileTypeMark(content);
+        if (typeMark) {
+            parser.options.sourceType = typeMark;
+        }
+        file = parser.parse();
     }
     updateMapFromMap(current, last);
     updateResultFromFile(file, current);

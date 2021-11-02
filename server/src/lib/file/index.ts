@@ -1,5 +1,5 @@
 import * as path from "path";
-import { createBasicOptions } from "../options";
+import { createBasicOptions, SourceType } from "../options";
 import { Parser } from "../parser";
 import {
     createParserFileNode,
@@ -69,7 +69,11 @@ export class ParserFileDigraph {
     updateData(filePath: string, content: string) {
         const find = this.nodeMap.get(filePath.toLowerCase());
         if (find) {
+            const refMark = getFileReferenceMark(content);
+            const typeMark = getFileTypeMark(content);
             find.content = content;
+            find.fileReferenceMark = refMark;
+            find.fileTypeMark = typeMark;
         }
     }
 
@@ -109,6 +113,9 @@ export class ParserFileDigraph {
                     return node.filePath.toLowerCase() === filePath.toLowerCase();
                 });
             };
+            if (this.start.fileTypeMark) {
+                parser.options.sourceType = this.start.fileTypeMark;
+            }
             return parser.parse();
         }
     }
