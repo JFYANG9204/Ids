@@ -38,11 +38,16 @@ export class ParserFileDigraph {
             nodes.set(key, node);
         });
         this.nodeMap = nodes;
-        nodes.forEach((value, key) => {
+        this.buildGraph();
+    }
+
+    buildGraph() {
+        this.vertex = [];
+        this.nodeMap.forEach((value, key) => {
             const refs = getAllIncludeInFile(value.content);
             refs.forEach(p => {
                 const fullPath = path.join(path.dirname(key), p).toLowerCase();
-                const existNode = nodes.get(fullPath);
+                const existNode = this.nodeMap.get(fullPath);
                 if (existNode) {
                     existNode.referenced.push(value);
                     value.include.push(existNode);
@@ -51,14 +56,14 @@ export class ParserFileDigraph {
             const mark = value.fileReferenceMark;
             if (mark) {
                 const refPath = path.join(path.dirname(value.filePath), mark.path).toLowerCase();
-                const refNode = nodes.get(refPath.toLowerCase());
+                const refNode = this.nodeMap.get(refPath.toLowerCase());
                 if (refNode) {
                     refNode.include.push(value);
                     value.referenced.push(refNode);
                 }
             }
         });
-        nodes.forEach((value) => {
+        this.nodeMap.forEach((value) => {
             if (value.referenced.length === 0 &&
                 value.include.length > 0) {
                 this.vertex.push(value);
@@ -74,6 +79,7 @@ export class ParserFileDigraph {
             find.content = content;
             find.fileReferenceMark = refMark;
             find.fileTypeMark = typeMark;
+            this.buildGraph();
         }
     }
 
