@@ -1,4 +1,12 @@
-dmgrjob.questions["A1"].response.value
+with dmgrjob
+    with .questions
+
+
+
+
+
+    end with
+end with
 
 
 

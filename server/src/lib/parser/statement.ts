@@ -494,6 +494,7 @@ export class StatementParser extends ExpressionParser {
     parseBlock(close: TokenType | Array<TokenType>): BlockStatement {
         const node = this.startNode(BlockStatement);
         const body: Statement[] = [];
+        this.skipNewline();
         while (!this.matchOne(close)) {
             this.skipNewline();
             body.push(this.parseStatementContent());

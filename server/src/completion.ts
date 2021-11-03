@@ -289,7 +289,7 @@ function checkIfDotStart(char: number) {
 export function getCompletionFromPosition(
     file: File, pos: number, triggerChar: string, lastChar: number) {
     const completions: CompletionItem[] = [];
-    let node = positionAt(file.program.body, pos);
+    let node = positionAt(file.program.body, pos, false, 0);
     // #include
     if (node.type === "PreIncludeStatement") {
         if (distanceTo((node as PreIncludeStatement).inc, pos) === 0 &&
