@@ -79,7 +79,14 @@ export class ParserFileDigraph {
             find.content = content;
             find.fileReferenceMark = refMark;
             find.fileTypeMark = typeMark;
-            this.buildGraph();
+            if (refMark) {
+                const refPath = path.join(filePath, refMark.path).toLowerCase();
+                const exist = this.nodeMap.get(refPath);
+                if (exist && !exist.include.includes(find)) {
+                    exist.include.push(find);
+                    find.referenced.push(exist);
+                }
+            }
         }
     }
 
