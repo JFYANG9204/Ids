@@ -319,8 +319,8 @@ export function getCompletionFromPosition(
         //
         let ahead = positionAt(file.program.body, pos, false, 0);
         let def: DefinitionBase = ahead.extra["definition"];
-        if (def) {
-            return getMemberCompletions(def as InterfaceDefinition);
+        if (def instanceof InterfaceDefinition) {
+            return getMemberCompletions(def);
         }
     }
     return completions;

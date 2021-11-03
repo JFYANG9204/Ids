@@ -75,12 +75,11 @@ connection.onCompletion(
             text.endsWith(".") ||
             text.endsWith("/") ||
             text.endsWith("\\"))) {
-            let lastChar = text.charCodeAt(pos - 2);
             return getCompletionFromPosition(
                 lastFile,
                 pos - 1,
                 text.slice(pos - 1, pos),
-                lastChar
+                text.charCodeAt(pos - 2)
             );
         }
         let completions: CompletionItem[] = builtInCompletions.concat(keywordsCompletions);
