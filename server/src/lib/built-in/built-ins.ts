@@ -284,6 +284,25 @@ function setBuiltInDefinition(defs: Map<string, PropertyDefinition | FunctionDef
             def.return.defType === "default") {
             def.return = searchBuiltIn(def.return.name);
         }
+        if (def instanceof FunctionDefinition) {
+            def.arguments.forEach(arg => {
+                if (arg.type instanceof Array) {
+                    arg.type.forEach((argType, index) => {
+                        if (argType.defType === "default") {
+                            let find = searchBuiltIn(argType.name);
+                            if (find) {
+                                arg.type[index] = find;
+                            }
+                        }
+                    });
+                } else {
+                    let find = searchBuiltIn(arg.type.name);
+                    if (find) {
+                        arg.type = find;
+                    }
+                }
+            });
+        }
     });
 }
 
