@@ -1476,7 +1476,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 isCollection: false,
                 note: [
                     "```ds",
-                    "(property) ILabel.Inserts: ILabelInserts",
+                    "(property) ILabel.Name: String",
                     "```",
                     "--------------------",
                     "A read-only property that returns the name of the label."
