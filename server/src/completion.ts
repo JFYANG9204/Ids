@@ -223,8 +223,8 @@ function getEnumCompletions(def: EnumDefinition): CompletionItem[] {
             kind: CompletionItemKind.EnumMember,
             documentation: {
                 kind: MarkupKind.Markdown,
-                value: "```ds\n" + `(enum) ${def.name}.${ele.label}: ${ele.value}` + "\n```" +
-                        ele.note ? "\n----------------\n" + ele.note : ""
+                value: "```ds\n" + `(enum) ${def.name}.${ele.label}: ${ele.value.toString()}` + "\n```" +
+                        (ele.note ? "\n----------------\n" + ele.note : "")
             }
         });
     });
@@ -323,7 +323,7 @@ export function getCompletionFromPosition(
         //
         let ahead = positionAt(file.program.body, pos, false, 0);
         let def: DefinitionBase = ahead.extra["definition"];
-        if (def instanceof InterfaceDefinition) {
+        if (def) {
             return getMemberCompletions(def);
         }
     }
