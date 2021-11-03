@@ -456,14 +456,14 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 ].join("\n"),
             },
             {
-                name: "GlobalVariables: IDataManagerGlobalVariables",
+                name: "GlobalVariables",
                 definitionType: "property",
                 returnType: createBuiltInDefPlaceHolder("IDataManagerGlobalVariables"),
                 readonly: true,
                 isCollection: true,
                 note: [
                     "```ds",
-                    "(property) IDataManagerJob.GlobalVariables",
+                    "(property) IDataManagerJob.GlobalVariables: IDataManagerGlobalVariables",
                     "```",
                     "--------------------",
                     "This property returns the Job's global variables collection.",
