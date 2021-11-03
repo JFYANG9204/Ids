@@ -509,6 +509,7 @@ export class ExpressionParser extends NodeUtils {
             this.input.slice(start, this.state.lastTokenEnd),
             false, BasicTypeDefinitions.categorical);
         node.pushArr(node.categories);
+        this.addExtra(node, "definition", BasicTypeDefinitions.categorical);
         return this.finishNode(node, "CategoricalLiteral");
     }
 

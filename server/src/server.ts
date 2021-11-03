@@ -75,8 +75,6 @@ connection.onCompletion(
             text.endsWith(".") ||
             text.endsWith("/") ||
             text.endsWith("\\"))) {
-            let node = positionAt(lastFile, pos);
-            connection.window.showInformationMessage(node.type);
             let find = getCompletionFromPosition(
                 lastFile,
                 pos - 1,

@@ -296,7 +296,7 @@ export function getCompletionFromPosition(
         }
         return [];
     }
-    let ahead = positionAt(file.program.body, pos, false, 1);
+    let ahead = positionAt(file.program.body, pos, false, 0);
     // with
     if (!["CallExpression", "MemberExpression", "Identifier"].includes(ahead.type) &&
         triggerChar === ".") {
@@ -312,7 +312,7 @@ export function getCompletionFromPosition(
         }
     }
     //
-    let def: DefinitionBase = node.extra["definition"];
+    let def: DefinitionBase = ahead.extra["definition"];
     if (def && triggerChar === ".") {
         return getMemberCompletions(def as InterfaceDefinition);
     }

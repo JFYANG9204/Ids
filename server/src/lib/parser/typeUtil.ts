@@ -521,6 +521,8 @@ export class TypeUtil extends UtilParser {
             }
             if (!propDef) {
                 if (base === IQuestionDefinition) {
+                    this.addExtra(node, "definition", IQuestionDefinition);
+                    this.addExtra(prop, "definition", IQuestionDefinition);
                     return IQuestionDefinition;
                 }
                 if (this.options.raiseTypeError &&
