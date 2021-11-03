@@ -1,4 +1,3 @@
-import { connect } from "http2";
 import { fileURLToPath } from "url";
 import { _Connection } from "vscode-languageserver";
 import {
@@ -44,8 +43,11 @@ export function updateAndVaidateDocument(
         }
         file = parser.parse();
     }
-    updateMapFromMap(current, last);
-    updateResultFromFile(file, current);
+    const cur = current.get(path.toLowerCase());
+    if (cur) {
+        last.set(path.toLowerCase(), cur);
+    }
+    current.set(path.toLowerCase(), file);
     raiseErrorsFromFile(connection, textdocument, file);
     return file;
 }

@@ -826,7 +826,7 @@ export class TypeUtil extends UtilParser {
             } else if (this.scope.currentScope().isUndefine(id)) {
                 this.scope.currentScope().updateUndef(id, final.return);
             }
-            this.addExtra(element, "definition", type.return);
+            this.addExtra(element, "definition", final.return);
         }
     }
 
