@@ -20,9 +20,9 @@ const startPath = resolve("./test/parser/fixture/dpgm/Run.mrs");
 //if (file) {
 //    mdd = getCurrentParser(file, startPath);
 //}
-const testpath = resolve("./test/parser/fixture/test.mrs");
+const testpath = resolve("./test/parser/fixture/dpgm/run.mrs");
 const content = readFileAndConvertToUtf8(testpath);
 const parser = new Parser(createBasicOptions(testpath, true), content);
 const file = parser.parse();
-const maybeWith = positionInWith(file.program.body, 40);
+const maybeWith = positionInWith(file.program.body, 2804);
 console.log("end");
