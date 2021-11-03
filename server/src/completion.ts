@@ -1,3 +1,4 @@
+import * as charCodes from "./lib/util/charcodes";
 import {
     existsSync,
     readdirSync
@@ -20,7 +21,7 @@ import {
     builtInObjectDefinitions
 } from "./lib/built-in/built-ins";
 import { distanceTo, positionAt, positionInWith } from "./lib/file/util";
-import { CallExpression, File, PreIncludeStatement } from "./lib/types";
+import { CallExpression, File, NodeBase, PreIncludeStatement } from "./lib/types";
 import {
     DefinitionBase,
     EnumDefinition,
@@ -29,6 +30,7 @@ import {
     ObjectDefinition,
     ScriptConstantDefinition
 } from "./lib/util/definition";
+import { isIdentifierChar } from "./lib/util/identifier";
 
 
 export function getPathCompletion(uri: string): CompletionItem[] {
@@ -278,8 +280,14 @@ export function getCompletionsFromDefinitions(defs: Map<string, DefinitionBase>)
     return completions;
 }
 
+function checkIfDotStart(char: number) {
+    return char !== charCodes.rightSquareBracket &&
+           char !== charCodes.rightParenthesis   &&
+           !isIdentifierChar(char);
+}
+
 export function getCompletionFromPosition(
-    file: File, pos: number, triggerChar: string) {
+    file: File, pos: number, triggerChar: string, lastChar: number) {
     const completions: CompletionItem[] = [];
     let node = positionAt(file.program.body, pos);
     // #include
@@ -296,25 +304,24 @@ export function getCompletionFromPosition(
         }
         return [];
     }
-    let ahead = positionAt(file.program.body, pos, false, 0);
-    // with
-    if (!["CallExpression", "MemberExpression", "Identifier"].includes(ahead.type) &&
-        triggerChar === ".") {
-        let maybeWith = positionInWith(file.program.body, pos);
-        if (maybeWith) {
-            const def: DefinitionBase = maybeWith.extra["definition"];
-            if (def) {
-                return getMemberCompletions(def);
+    if (triggerChar === ".") {
+        // with
+        if (checkIfDotStart(lastChar)) {
+            let maybeWith = positionInWith(file.program.body, pos);
+            if (maybeWith) {
+                const def: DefinitionBase = maybeWith.extra["definition"];
+                if (def) {
+                    return getMemberCompletions(def);
+                }
             }
             return [];
-        } else {
-            return [];
         }
-    }
-    //
-    let def: DefinitionBase = ahead.extra["definition"];
-    if (def && triggerChar === ".") {
-        return getMemberCompletions(def as InterfaceDefinition);
+        //
+        let ahead = positionAt(file.program.body, pos, false, 0);
+        let def: DefinitionBase = ahead.extra["definition"];
+        if (def) {
+            return getMemberCompletions(def as InterfaceDefinition);
+        }
     }
     return completions;
 }
