@@ -406,7 +406,6 @@ export const builtInEnums = new Set<BuiltInDefinition>([
         definitionType: "enum",
         note: [
             "```ds",
-            "```ds",
             "(enum) BorderStyles",
             "```",
             "----------------------------",
