@@ -28,6 +28,7 @@ import {
     FunctionDefinition,
     InterfaceDefinition,
     ObjectDefinition,
+    PropertyDefinition,
     ScriptConstantDefinition
 } from "./lib/util/definition";
 import { isIdentifierChar } from "./lib/util/identifier";
@@ -248,6 +249,9 @@ function getScriptConstantCompletions(def: ScriptConstantDefinition): Completion
 
 function getMemberCompletions(def: DefinitionBase): CompletionItem[] {
     let completions: CompletionItem[] = [];
+    if (def instanceof PropertyDefinition) {
+        return getMemberCompletions(def.return);
+    }
     if (def instanceof ObjectDefinition && def.return) {
         return getMemberCompletions(def.return);
     }
