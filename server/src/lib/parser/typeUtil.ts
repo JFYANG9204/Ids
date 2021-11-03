@@ -185,6 +185,17 @@ export class TypeUtil extends UtilParser {
 
     getIdentifierType(node: Identifier): DefinitionBase | undefined {
         let def = this.scope.currentScope().get(node.name);
+        if (!def) {
+            def = this.scope.currentScope().isUndefine(node.name);
+            if (def && this.options.raiseTypeError && !this.scope.currentScope().isFunction) {
+                this.raiseAtNode(
+                    node,
+                    ErrorMessages["VarIsNotDeclared"],
+                    false,
+                    node.name
+                );
+            }
+        }
         if (!def && this.options.treatUnkownAsQuesion) {
             def = IQuestionDefinition;
         } else if (!def && this.options.raiseTypeError &&
@@ -827,6 +838,8 @@ export class TypeUtil extends UtilParser {
                 this.scope.currentScope().updateType(id, final.return);
             } else if (this.scope.currentScope().isUndefine(id)) {
                 this.scope.currentScope().updateUndef(id, final.return);
+            } else {
+                this.scope.currentScope().setUndef(id, final.return);
             }
             this.addExtra(element, "definition", final.return);
         }
