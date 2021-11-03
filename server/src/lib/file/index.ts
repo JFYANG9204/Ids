@@ -1,5 +1,5 @@
 import * as path from "path";
-import { createBasicOptions, SourceType } from "../options";
+import { createBasicOptions } from "../options";
 import { Parser } from "../parser";
 import {
     createParserFileNode,

@@ -296,9 +296,9 @@ function setBuiltInDefinition(defs: Map<string, PropertyDefinition | FunctionDef
                         }
                     });
                 } else {
-                    let find = searchBuiltIn(arg.type.name);
-                    if (find) {
-                        arg.type = find;
+                    let search = searchBuiltIn(arg.type.name);
+                    if (search) {
+                        arg.type = search;
                     }
                 }
             });
