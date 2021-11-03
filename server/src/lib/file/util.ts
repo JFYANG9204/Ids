@@ -196,12 +196,18 @@ export function positionIn<T extends NodeBase>(
     callback: (node: NodeBase) => void) {
     if (distanceTo(node, pos) === 0) {
         callback(node);
+        let hasFind = false;
         for (const sub of node.positionMap) {
             if (distanceTo(sub, pos) === 0) {
                 callback(sub);
                 positionIn(sub, pos, callback);
+                hasFind = true;
             } else {
-                break;
+                if (!hasFind) {
+                    continue;
+                } else {
+                    break;
+                }
             }
         }
     }

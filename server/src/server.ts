@@ -28,7 +28,7 @@ import {
 } from "./util";
 import {
     getHoverContentFromNode,
-    positionAt
+    positionAt,
 } from "./lib/file/util";
 import { DefinitionBase } from "./lib/util/definition";
 
