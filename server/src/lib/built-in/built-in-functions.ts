@@ -3323,6 +3323,7 @@ export const builtInFunctions = new Set<BuiltInDefinition>([
                     basicTypeDefinitions.long,
                     basicTypeDefinitions.string,
                 ],
+                optional: true,
                 note: "Optional. *Long* or *String* value specifying local time zone to use."
             },
             {
