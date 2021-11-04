@@ -1,5 +1,5 @@
 import * as path from "path";
-import { createBasicOptions } from "../options";
+import { createBasicOptions, SourceType } from "../options";
 import { Parser } from "../parser";
 import {
     createParserFileNode,
@@ -77,8 +77,8 @@ export class ParserFileDigraph {
             const refMark = getFileReferenceMark(content);
             const typeMark = getFileTypeMark(content);
             find.content = content;
-            find.fileTypeMark = typeMark;
-            if (refMark) {
+            find.fileTypeMark = typeMark !== undefined ? typeMark : SourceType.script;
+            if (refMark !== undefined) {
                 const refPath = path.join(path.dirname(filePath), refMark.path).toLowerCase();
                 const exist = this.nodeMap.get(refPath);
                 if (exist && !exist.include.includes(find)) {

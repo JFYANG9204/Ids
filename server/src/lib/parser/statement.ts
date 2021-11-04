@@ -906,7 +906,6 @@ export class StatementParser extends ExpressionParser {
         node.body = this.parseBlock(tt._end);
         this.expect(tt._end);
         isFunction ? this.expect(tt._function) : this.expect(tt._sub);
-        this.expect(tt.newLine);
         this.scope.exit();
         const args: Array<Argument> = [];
         node.params.forEach(arg => {
@@ -2369,7 +2368,6 @@ export class StatementParser extends ExpressionParser {
     // axis ( "axis_spec" )
     parseMetadataAxisExpression(): MetadataAxisExpression {
         const node = this.startNode(MetadataAxisExpression);
-        this.next();
         this.expect(tt.braceL);
         node.expression = this.expectAndParseStringLiteral();
         this.expect(tt.braceR);
@@ -2379,7 +2377,6 @@ export class StatementParser extends ExpressionParser {
     // expression ("expression_text"[, ( deriveelements | noderiveelements ) ])
     parseMetadataSingleExpression(): MetadataExpression {
         const node = this.startNode(MetadataExpression);
-        this.next();
         this.expect(tt.braceL);
         node.script = this.expectAndParseStringLiteral();
         if (this.eat(tt.comma)) {
@@ -2405,7 +2402,6 @@ export class StatementParser extends ExpressionParser {
     // validation ("validation_text")
     parseMetadataValidation(): MetadataValidation {
         const node = this.startNode(MetadataValidation);
-        this.next();
         this.expect(tt.braceL);
         node.regex = this.expectAndParseStringLiteral();
         this.expect(tt.braceR);
@@ -2438,7 +2434,8 @@ export class StatementParser extends ExpressionParser {
         type?: "categorical" | "boolean" | "text" | "number"
     ) {
         if (this.match(tt.identifier)) {
-            const kw = this.state.value.text.toLowerCase();
+            const id = this.parseIdentifier();
+            const kw = id.name.toLowerCase();
             let val;
             switch (kw) {
                 case "axis":
@@ -2511,7 +2508,6 @@ export class StatementParser extends ExpressionParser {
     //
     parseMetadataCategoryOtherOrMultiplier(): MetadataCategoryOtherOrMultiplier {
         const node = this.startNode(MetadataCategoryOtherOrMultiplier);
-        this.next();
         if (this.match(tt.braceL)) {
             this.next();
             if (this.match(tt.identifier)) {
@@ -2546,7 +2542,6 @@ export class StatementParser extends ExpressionParser {
     // AnalysisTotal
     parseMetadataCategoryElementType(): MetadataCategoryElementType {
         const node = this.startNode(MetadataCategoryElementType);
-        this.next();
         this.expect(tt.braceL);
         if (this.matchOne([ tt.identifier, tt.string ])) {
             const typeVal = this.match(tt.identifier) ?
@@ -2601,13 +2596,11 @@ export class StatementParser extends ExpressionParser {
                     node.expression = this.parseMetadataSingleExpression();
                     break;
                 case "factor":
-                    this.next();
                     this.expect(tt.braceL);
                     node.factor = this.expectAndParseNumericLiteral();
                     this.expect(tt.braceR);
                     break;
                 case "keycode":
-                    this.next();
                     this.expect(tt.braceL);
                     if (this.match(tt.string)) {
                         node.keycode = this.parseStringLiteral(this.state.value.text);
@@ -2796,9 +2789,13 @@ export class StatementParser extends ExpressionParser {
         const node = this.startNode(MetadataCategoryList);
         node.categories = this.parseMetadataCategoryList();
         let existKw: string | undefined = undefined;
+        let cur = this.state.value.text.toLowerCase();
+        if (!MetadataSublistSuffix.includes(cur)) {
+            return this.finishNode(node, "MetadataCategoryList");
+        }
         while (!this.matchOne([ tt.semi, tt.braceR ])) {
             const kw = this.parseIdentifier();
-            const kwVal = this.state.value.text.toLowerCase();
+            const kwVal = kw.name.toLowerCase();
             if (MetadataSublistSuffix.includes(kwVal) && existKw) {
                 this.raiseAtNode(
                     kw,

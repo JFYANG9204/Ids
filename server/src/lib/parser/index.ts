@@ -5,6 +5,7 @@ import { File } from "../types";
 import { ScopeHandler } from "../util/scope";
 import { ErrorMessages } from "./error-messages";
 import { DefinitionBase } from "../util/definition";
+import { getFileTypeMark } from "../file/util";
 
 
 export class Parser extends StatementParser {
@@ -19,6 +20,10 @@ export class Parser extends StatementParser {
             this.options.scriptFileType = ScriptFileType.dms;
         } else {
             this.options.scriptFileType = ScriptFileType.mrs;
+        }
+        const typeMark = getFileTypeMark(input);
+        if (typeMark !== undefined) {
+            this.options.sourceType = typeMark;
         }
     }
 
