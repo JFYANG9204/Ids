@@ -78,7 +78,7 @@ export function getFileReferenceMark(content: string): FileReferenceMark | undef
     let match;
     if ((match = regex.exec(content))) {
         const firstLine = content.slice(0, match.index);
-        const markReg = /\s*[']+\s*"((?:[a-zA-Z]:(?:\/|\\.*?))|(?:\.|\.\.|.*?)(?:\\|\/).*?)"\s*[@]\s*([a-zA-Z_][a-zA-Z0-9_]*)/;
+        const markReg = /\s*[']+\s*"([.]{0,2}(?:(?:\\|\/)*.*?)*(?:[.].*?)?)"\s*[@]\s*([a-zA-Z_][a-zA-Z0-9_]*)/;
         if (markReg.test(firstLine)) {
             const check = markReg.exec(firstLine);
             if (check && check.length === 3) {

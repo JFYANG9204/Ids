@@ -56,7 +56,7 @@ export class ParserFileDigraph {
             const mark = value.fileReferenceMark;
             if (mark) {
                 const refPath = path.join(path.dirname(value.filePath), mark.path).toLowerCase();
-                const refNode = this.nodeMap.get(refPath.toLowerCase());
+                const refNode = this.nodeMap.get(refPath);
                 if (refNode) {
                     refNode.include.push(value);
                     value.referenced.push(refNode);
