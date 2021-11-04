@@ -1,28 +1,12 @@
-Dim TableDoc,StartTime,EndTime
-StartTime = Now()
-Set TableDoc = CreateObject("TOM.Document")
-With TableDoc
-
-With .Default
-
-    If COUNTS = True Then
-        .CellItems.AddNew(0,0) '(0,0) Means showing Count and Decimals=0
-        .Properties["ShowPercentSigns"] = True
-    Else
-        .Properties["ShowPercentSigns"] = True
-    End If
-
-    If PERCENTS = True Then
-        .CellItems.AddNew(1,0) '(1,0) Means showing Column % and Decimals=0
-    End If
-
-    .Properties["ZeroCountSymbol"] = "0" 'If the count is 0, it will show "-"
-    .Properties["ZeroPercentSymbol"] = "0" 'If the % is 0, it will show "-"
-    .Properties["RoundZeroCountSymbol"] = ">" 'If the count is rounded to 0, it will show "-"
-    .Properties["RoundZeroPercentSymbol"] = ">" 'If the % is rounded to 0, it will show "*", usually we show ">" in QTM
-    .Properties["Show100Percent"] = False 'If TRUE, show 100% on base line
-    .Properties["ShowPercentSigns"] = False
-
-End With
-
-End With 'TableDoc
+        strAxis = strAxis +  " '" +_
+        fnGetWeek(dtStartRolling) + "!to!" + _
+        fnGetWeek(dtEndRolling) + _
+        "' expression('yyyymmdd >=" + _
+        fnGetYear(dtStartRolling) + _
+        fngetMonth(dtStartRolling) + _
+        fngetDay(dtStartRolling) + _
+        " AND yyyymmdd <=" + _
+        fnGetYear(dtEndRolling) + _
+        fngetMonth(dtEndRolling) + _
+        fngetDay(dtEndRolling) + _
+        "'),"

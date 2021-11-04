@@ -659,6 +659,11 @@ export class Tokenizer extends ErrorParser {
             case charCodes.dash:
                 this.readToken_plus_min();
                 return;
+            // _
+            case charCodes.underscore:
+                ++this.state.pos;
+                this.finishToken(types.underscore, { text: "_" });
+                return;
 
             // & 8进制和16进制数字
             case charCodes.ampersand:

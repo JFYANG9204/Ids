@@ -90,6 +90,7 @@ export const types = {
     dot                          :     new TokenType("."),
     semi                         :     new TokenType(";"),
     backSlash                    :     new TokenType("\\"),
+    underscore                   :     new TokenType("_"),
 
     slash                        :     createBinop("/",            BinopType.operator,    4),
     star                         :     createBinop("*",            BinopType.operator,    4),

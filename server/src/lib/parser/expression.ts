@@ -179,15 +179,23 @@ export class ExpressionParser extends NodeUtils {
         return this.parseExprAtom();
     }
 
+    skipExprLineFeed() {
+        while (this.match(tt.underscore)) {
+            this.next();
+        }
+    }
+
     parseMaybeAssign(allowAssign = true, allowPre = false): Expression {
         const startPos = this.state.start;
         const startLoc = this.state.startLoc;
         const left = this.parseExprOps(allowAssign, allowPre);
+        this.skipExprLineFeed();
         if (this.state.type.binop === BinopType.assign && allowAssign) {
             const node = this.startNodeAt(startPos, startLoc, AssignmentExpression);
             node.operator = "=";
             this.next();
             node.left = left;
+            this.skipExprLineFeed();
             node.right = this.parseMaybeAssign(false, allowPre);
             node.push(left, node.right);
             return this.finishNodeAt(node, "AssignmentExpression", this.state.lastTokenEnd, this.state.lastTokenEndLoc);
@@ -251,6 +259,7 @@ export class ExpressionParser extends NodeUtils {
     }
 
     parseExprOps(allowAssign?: boolean, allowPre?: boolean): Expression {
+        this.skipExprLineFeed();
         const startPos = this.state.start;
         const startLoc = this.state.startLoc;
         const expr = this.parseMaybeUnary();
@@ -292,6 +301,7 @@ export class ExpressionParser extends NodeUtils {
     }
 
     parseExprOpRightExpr(prec: number): Expression {
+        this.skipExprLineFeed();
         const startPos = this.state.start;
         const startLoc = this.state.startLoc;
         return this.parseExprOp(
@@ -448,9 +458,9 @@ export class ExpressionParser extends NodeUtils {
         return args;
     }
 
-    parseCallOrMember(prefix?: Expression): Expression {
+    parseCallOrMember(prefix?: Expression, hasUnderscore?: boolean): Expression {
 
-        if (prefix && this.hasPrecedingLineBreak()) {
+        if (prefix && this.hasPrecedingLineBreak() && !hasUnderscore) {
             return prefix;
         }
 
