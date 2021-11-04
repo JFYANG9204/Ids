@@ -935,25 +935,6 @@ export class StatementParser extends ExpressionParser {
                     param,
                     BasicTypeDefinitions.variant
                 );
-            } else if (param instanceof ArrayDeclarator) {
-                let arrDef: DefinitionBase;
-                if (param.dimensions === 1) {
-                    arrDef = BasicTypeDefinitions.array;
-                } else {
-                    arrDef = createArrayDefinition(
-                        param.name.name,
-                        false,
-                        false,
-                        {
-                            dimensions: param.dimensions,
-                            boundaries: param.boundaries
-                        });
-                }
-                this.scope.currentScope().insert(
-                    param.name.name,
-                    param,
-                    arrDef
-                );
             }
         });
         return params;
