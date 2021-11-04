@@ -115,11 +115,12 @@ import { ParserBase } from "../base";
 import { Position } from "../util/location";
 import {
     Argument,
+    DefinitionBase,
     DefinitionOptions,
     FunctionDefinition,
     VariantDefinition
 } from "../util/definition";
-import { createDefinition } from "../built-in/basic";
+import { createArrayDefinition, createDefinition } from "../built-in/basic";
 import { ParserFileNode } from "../file/node";
 import { ErrorTemplate } from "./errors";
 
@@ -494,7 +495,7 @@ export class StatementParser extends ExpressionParser {
         }
         node.body = body;
         node.pushArr(node.body);
-        return this.finishNode(node, "BlockStatement");
+        return this.finishNodeAt(node, "BlockStatement", this.state.lastTokenEnd, this.state.lastTokenEndLoc);
     }
 
     parseIfStatement(): IfStatement {
@@ -527,7 +528,7 @@ export class StatementParser extends ExpressionParser {
                 node.consequent = this.parseExpression(true);
                 this.checkExprTypeError(node.consequent);
             }
-            if (this.match(tt._else)) {
+            if (this.match(tt._else) && !this.hasPrecedingLineBreak()) {
                 this.next();
                 node.alternate = this.parseExpression();
                 this.checkExprTypeError(node.alternate);
@@ -933,6 +934,25 @@ export class StatementParser extends ExpressionParser {
                     param.name,
                     param,
                     BasicTypeDefinitions.variant
+                );
+            } else if (param instanceof ArrayDeclarator) {
+                let arrDef: DefinitionBase;
+                if (param.dimensions === 1) {
+                    arrDef = BasicTypeDefinitions.array;
+                } else {
+                    arrDef = createArrayDefinition(
+                        param.name.name,
+                        false,
+                        false,
+                        {
+                            dimensions: param.dimensions,
+                            boundaries: param.boundaries
+                        });
+                }
+                this.scope.currentScope().insert(
+                    param.name.name,
+                    param,
+                    arrDef
                 );
             }
         });

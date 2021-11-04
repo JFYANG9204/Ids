@@ -1,12 +1,6 @@
-        strAxis = strAxis +  " '" +_
-        fnGetWeek(dtStartRolling) + "!to!" + _
-        fnGetWeek(dtEndRolling) + _
-        "' expression('yyyymmdd >=" + _
-        fnGetYear(dtStartRolling) + _
-        fngetMonth(dtStartRolling) + _
-        fngetDay(dtStartRolling) + _
-        " AND yyyymmdd <=" + _
-        fnGetYear(dtEndRolling) + _
-        fngetMonth(dtEndRolling) + _
-        fngetDay(dtEndRolling) + _
-        "'),"
+        If Not (qst.ContainsAny(CCategorical(code1)) and qst.containsany(CCategorical(code2))) Then
+            If qst.ContainsAny(CCategorical(code1)) then qst = qst - CCategorical(code1)
+            If qst.ContainsAny(CCategorical(code2)) then qst = qst - CCategorical(code2)
+        Else
+            If qst.ContainsAny(CCategorical(code1)) then qst = qst - CCategorical(code1)
+        End if
