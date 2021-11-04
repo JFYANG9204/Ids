@@ -1027,7 +1027,7 @@ export class MetadataLoopVariableBase extends MetadataBase {
     column?: Identifier;
     expand?: Identifier;
     grid?: Identifier;
-    iterationLabel?: StringLiteral;
+    iterationLabel?: StringLiteral | "-";
     fields: Array<MetadataBase> = [];
     constructor(parser: ParserBase, pos: number, loc: Position) {
         super(parser, pos, loc);
@@ -1455,6 +1455,7 @@ export const MetadataFieldValueType = [
     "compound",
     "block",
     "page",
+    "define"
 ];
 
 // eslint-disable-next-line @typescript-eslint/naming-convention

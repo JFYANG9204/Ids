@@ -1717,6 +1717,7 @@ export class StatementParser extends ExpressionParser {
     // <Properties> ::= ( [ AreaName: ] [ <property> (, <property> )* ] )*
     parseMetaCustomProperties(close: TokenType = tt.bracketR): MetadataProperty[] {
         const props: MetadataProperty[] = [];
+        this.next();
         while (!this.eat(close)) {
             this.skipNewline();
             if (this.match(tt.comma)) {
@@ -2281,7 +2282,7 @@ export class StatementParser extends ExpressionParser {
         allowExclude?: boolean, allowStep?: boolean, allowSingle?: boolean
     ): MetadataFieldTypeDefinition {
         const node = this.startNode(MetadataFieldTypeDefinition);
-        node.typeKw = this.parseIdentifier();
+        node.typeKw = this.parseIdentifier(true);
         this.skipSpace();
         this.skipNewline();
         if (this.match(tt.bracketL)) {
@@ -2295,7 +2296,6 @@ export class StatementParser extends ExpressionParser {
 
     parseMetadataUsageType(): MetadataUsageType {
         const node = this.startNode(MetadataUsageType);
-        this.next();
         this.expect(tt.braceL);
         if (this.match(tt.string)) {
             const str = this.state.value.text.toLowerCase();
@@ -3204,7 +3204,6 @@ export class StatementParser extends ExpressionParser {
         if (typeDef) {
             node.typeDef = typeDef;
         } else if (callback) {
-            this.next();
             this.skipSpaceAndNewLine();
             callback(node);
         }
@@ -3212,6 +3211,7 @@ export class StatementParser extends ExpressionParser {
         this.expectString("fields");
         this.next();
         if (this.state.value.text === "-") {
+            node.iterationLabel = "-";
             this.next();
         }
         this.skipSpaceAndNewLine();
@@ -3772,7 +3772,7 @@ export class StatementParser extends ExpressionParser {
     parseMetadataFields() {
         const fields: MetadataBase[] = [];
         this.skipSpaceAndNewLine();
-        while (this.match(tt.braceR)) {
+        while (!this.match(tt.braceR)) {
             this.skipSpaceAndNewLine();
             fields.push(this.parseMetadataField());
             this.skipSpaceAndNewLine();
@@ -3780,6 +3780,7 @@ export class StatementParser extends ExpressionParser {
                 this.unexpected(undefined, undefined, tt.semi, false);
                 this.next();
             }
+            this.skipSpaceAndNewLine();
         }
         return fields;
     }
