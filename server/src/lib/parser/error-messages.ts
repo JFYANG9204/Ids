@@ -71,6 +71,7 @@ export const ErrorMessages: ErrorTemplates = makeErrorTemplates({
     AxisUnknownProperty:             "未知名为'%0'的Axis表达式元素属性.",
     AxisUnknownElement:              "未知名为'%0'的Axis表达式元素类型.",
     // Metadata
+    MetadataCategoricalAlreadyExist:    "名为'%0'的Categorical项已存在.",
     MetadataRangeDontAllowExclude:      "此类型元数据区间不允许使用排除符'^'.",
     MetadataRangeDontAllowStep:         "此类型元数据区间不允许使用'step'.",
     MetadataRangeDontAllowSingle:       "此类型元数据区间不允许使用单值.",

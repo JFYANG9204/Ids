@@ -2761,12 +2761,27 @@ export class StatementParser extends ExpressionParser {
         const categories: MetadataCategory[] = [];
         let comma = true;
         this.expect(tt.curlyL);
+        let existCat: string[] = [];
         while (!this.eat(tt.curlyR)) {
             if (!comma) {
                 this.unexpected(undefined, undefined, tt.comma);
             }
             this.skipSpaceAndNewLine();
-            categories.push(this.parseMetadataCategory());
+            const cat = this.parseMetadataCategory();
+            if (cat.name instanceof Identifier) {
+                const catName = cat.name.name.toLowerCase();
+                if (existCat.includes(catName)) {
+                    this.raiseAtNode(
+                        cat,
+                        ErrorMessages["MetadataCategoricalAlreadyExist"],
+                        false,
+                        cat.name.name
+                    );
+                } else {
+                    existCat.push(catName);
+                }
+            }
+            categories.push(cat);
             this.skipSpaceAndNewLine();
             if (this.match(tt.comma)) {
                 comma = true;
