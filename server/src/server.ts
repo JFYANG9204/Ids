@@ -116,7 +116,8 @@ connection.onHover(params => {
     let def: DefinitionBase | undefined = node.extra["definition"];
     let declared = true;
     if (def) {
-        if (!(def.defType === "interface" || def.isBasic)) {
+        if (!(def.defType === "interface" ||
+            def.defType === "object" || def.isBasic)) {
             declared = false;
         }
         hover = { contents: getHoverContentFromNode(node, def, declared) };
