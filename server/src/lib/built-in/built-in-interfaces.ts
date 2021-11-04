@@ -604,7 +604,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                 readonly: true,
                 note: [
                     "```ds",
-                    "(property) IDataManagerJob.TableDocument: IDocument[]",
+                    "(property) IDataManagerJob.TableDocuments[Index: Variant]: IDocument",
                     "```",
                     "--------------------",
                     "Table documents collection, containing one Table document per output datasource",
