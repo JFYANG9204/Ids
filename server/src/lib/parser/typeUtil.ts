@@ -155,7 +155,7 @@ export class TypeUtil extends UtilParser {
                 this.addExtra(expr, "definition", BasicTypeDefinitions.string);
                 return BasicTypeDefinitions.string;
             case "CategoricalLiteral":
-                this.addExtra(expr, "definition", BasicTypeDefinitions.long);
+                this.addExtra(expr, "definition", BasicTypeDefinitions.categorical);
                 return BasicTypeDefinitions.categorical;
             case "NumericLiteral":
                 this.addExtra(expr, "definition", BasicTypeDefinitions.long);
@@ -440,6 +440,9 @@ export class TypeUtil extends UtilParser {
                 break;
             case "MemberExpression":
                 this.getMemberExprType(expr as MemberExpression);
+                break;
+            case "BinaryExpression":
+                this.getBinaryExprType(expr as BinaryExpression);
                 break;
 
             default:

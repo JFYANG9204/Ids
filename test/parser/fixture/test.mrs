@@ -1,13 +1,5 @@
-with dmgrjob
-    with .questions
-
-
-
-
-
-    end with
-end with
-
-
-
-
+for each cat in kpi_tvc.categories
+    if dmgrjob.questions["D" + right(cat.name, len(cat.name) - 1) + "a"].response * {V1}     then kpi_tvc[cat.name].column = kpi_tvc[cat.name].column + {aware}
+    if dmgrjob.questions["D" + right(cat.name, len(cat.name) - 1) + "b"].response * {v4,v5}  then kpi_tvc[cat.name].column = kpi_tvc[cat.name].column + {prefer}
+    if dmgrjob.questions["D" + right(cat.name, len(cat.name) - 1) + "c"].response * {v4,v5}  then kpi_tvc[cat.name].column = kpi_tvc[cat.name].column + {understand}
+next
