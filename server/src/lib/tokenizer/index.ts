@@ -661,8 +661,12 @@ export class Tokenizer extends ErrorParser {
                 return;
             // _
             case charCodes.underscore:
-                ++this.state.pos;
-                this.finishToken(types.underscore, { text: "_" });
+                if (!isIdentifierChar(this.input.charCodeAt(this.state.pos + 1))) {
+                    ++this.state.pos;
+                    this.finishToken(types.underscore, { text: "_" });
+                } else {
+                    this.readWord();
+                }
                 return;
 
             // & 8进制和16进制数字
