@@ -3,9 +3,12 @@ import { TextDocument } from "vscode-languageserver-textdocument";
 import {
     CompletionItem,
     createConnection,
+    Definition,
     Hover,
     InitializeResult,
+    LocationLink,
     ProposedFeatures,
+    Range,
     TextDocumentPositionParams,
     TextDocuments,
     TextDocumentSyncKind
@@ -14,6 +17,8 @@ import { ParserFileDigraph } from "./lib/file";
 import {
     CallExpression,
     File,
+    FunctionDeclaration,
+    Identifier,
     MemberExpression
 } from "./lib/types";
 import {
@@ -47,7 +52,7 @@ connection.onInitialize((params) => {
                 resolveProvider: true,
                 triggerCharacters: [ "#", ".", "\\", "/" ]
             },
-            hoverProvider: true
+            hoverProvider: true,
         }
     };
     if (params.workspaceFolders) {
@@ -94,7 +99,6 @@ connection.onCompletion(
     }
 );
 
-
 connection.onCompletionResolve(
     (item: CompletionItem) => {
         return item;
@@ -126,6 +130,7 @@ connection.onHover(params => {
     }
     return hover;
 });
+
 
 documents.onDidChangeContent(change => {
     updateAndVaidateDocument(change.document, connection, current, last, graph);

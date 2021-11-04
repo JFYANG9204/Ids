@@ -1057,6 +1057,28 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                     "--------------------",
                     "Get the collection item at the specified location. (This is the default property.)"
                 ].join("\n"),
+            },
+            {
+                name: "RespNum",
+                definitionType: "property",
+                returnType: basicTypeDefinitions.long,
+                note: [
+                    "```ds",
+                    "(property) IDataManagerGlobalVariables.RespNum: Long",
+                    "```",
+                    "--------------------",
+                ].join("\n")
+            },
+            {
+                name: "LogHelpVar",
+                definitionType: "property",
+                returnType: basicTypeDefinitions.variant,
+                note: [
+                    "```ds",
+                    "(property) IDataManagerGlobalVariables.LogHelpVar: Variant",
+                    "```",
+                    "--------------------",
+                ].join("\n")
             }
         ],
     },
@@ -3618,7 +3640,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                     "```ds",
                     "(method) IDataManagerLogging.LogMetric_2(LogEntry: String): Void",
                     "```",
- "---------------------",
+                    "---------------------",
                     "Writes a Metric-level error message, to the log file.",
                 ].join("\n"),
             },

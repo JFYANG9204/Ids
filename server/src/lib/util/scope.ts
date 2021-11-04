@@ -58,6 +58,7 @@ class SymbolTable {
                 node.type
             );
         } else {
+            def.node = node;
             this.table.set(
                 name.toLowerCase(),
                 def
