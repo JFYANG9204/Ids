@@ -412,7 +412,8 @@ export class TypeUtil extends UtilParser {
             return;
         }
         if ((right?.defType === "interface" || right?.defType === "object") &&
-            right !== BasicTypeDefinitions.string && right !== BasicTypeDefinitions.categorical) {
+            right !== BasicTypeDefinitions.string && right !== BasicTypeDefinitions.categorical &&
+            !(left === IQuestionDefinition || right === IQuestionDefinition)) {
             if (this.options.raiseTypeError && !this.scope.currentScope().isFunction) {
                 this.raiseAtNode(
                     expr,
