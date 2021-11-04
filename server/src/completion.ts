@@ -223,7 +223,7 @@ function getEnumCompletions(def: EnumDefinition): CompletionItem[] {
             kind: CompletionItemKind.EnumMember,
             documentation: {
                 kind: MarkupKind.Markdown,
-                value: "```ds\n" + `(enum) ${def.name}.${ele.label}: ${ele.value.toString()}` + "\n```" +
+                value: "```ds\n" + `(enum) ${def.name}.${ele.label} = ${ele.value.toString()}` + "\n```" +
                         (ele.note ? "\n----------------\n" + ele.note : "")
             }
         });

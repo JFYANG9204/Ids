@@ -1,5 +1,5 @@
-import { BasicTypeDefinitions } from "../built-in/built-ins";
-import { DefinitionBase, EnumDefinition, VariantDefinition } from "./definition";
+import { BasicTypeDefinitions, IQuestionDefinition } from "../built-in/built-ins";
+import { DefinitionBase, VariantDefinition } from "./definition";
 
 function matchBaseDefinition(
     t1: DefinitionBase,
@@ -9,6 +9,9 @@ function matchBaseDefinition(
         return true;
     }
     if (t1.defType === "constant" || t2.defType === "constant") {
+        return true;
+    }
+    if (t1 === IQuestionDefinition || t2 === IQuestionDefinition) {
         return true;
     }
     return t1 === t2 ||
