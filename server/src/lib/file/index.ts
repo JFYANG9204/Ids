@@ -77,15 +77,30 @@ export class ParserFileDigraph {
             const refMark = getFileReferenceMark(content);
             const typeMark = getFileTypeMark(content);
             find.content = content;
-            find.fileReferenceMark = refMark;
             find.fileTypeMark = typeMark;
             if (refMark) {
-                const refPath = path.join(filePath, refMark.path).toLowerCase();
+                const refPath = path.join(path.dirname(filePath), refMark.path).toLowerCase();
                 const exist = this.nodeMap.get(refPath);
                 if (exist && !exist.include.includes(find)) {
                     exist.include.push(find);
                     find.referenced.push(exist);
                 }
+                if (find.fileReferenceMark) {
+                    const oldPath = path.join(path.dirname(filePath), find.fileReferenceMark.path).toLowerCase();
+                    if (oldPath !== refPath) {
+                        find.referenced.forEach((val, ndx) => {
+                            if (val.filePath.toLowerCase() === oldPath) {
+                                val.include.forEach((inc, index) => {
+                                    if (inc.filePath.toLowerCase() === find.filePath.toLowerCase()) {
+                                        val.include.splice(index, 1);
+                                    }
+                                });
+                                find.referenced.splice(ndx, 1);
+                            }
+                        });
+                    }
+                }
+                find.fileReferenceMark = refMark;
             }
         }
     }
