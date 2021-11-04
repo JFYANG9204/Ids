@@ -14,6 +14,9 @@ function matchBaseDefinition(
     if (t1 === IQuestionDefinition || t2 === IQuestionDefinition) {
         return true;
     }
+    if (t1.defType === "macro" || t2.defType === "macro") {
+        return true;
+    }
     return t1 === t2 ||
         t1 === BasicTypeDefinitions.variant ||
         t2 === BasicTypeDefinitions.variant;
