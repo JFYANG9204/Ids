@@ -599,7 +599,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
             {
                 name: "TableDocuments",
                 definitionType: "property",
-                returnType: createBuiltInDefPlaceHolder("IDocument", "default", false, { dimensions: 1 }),
+                returnType: createBuiltInDefPlaceHolder("IDocument"),
                 isCollection: true,
                 readonly: true,
                 note: [

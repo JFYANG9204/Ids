@@ -83,7 +83,7 @@ export function createBuiltInDefPlaceHolder(
         defType: "default",
         isReadonly: false,
         isConst: false,
-        isCollection: false,
+        isCollection: array ? true : false,
         isBuiltIn: isBuiltIn,
         section: {
             name: "global",

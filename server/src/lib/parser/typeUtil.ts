@@ -456,7 +456,7 @@ export class TypeUtil extends UtilParser {
         if (!type) {
             if (this.options.raiseTypeError && !this.scope.currentScope().isFunction) {
                 this.raiseAtNode(
-                    node,
+                    node.property,
                     ErrorMessages["MissingParenObject"],
                     false
                 );
@@ -627,7 +627,7 @@ export class TypeUtil extends UtilParser {
                 if (this.options.raiseTypeError &&
                     !this.scope.currentScope().isFunction) {
                     this.raiseAtNode(
-                        node,
+                        (node instanceof MemberExpression) ? node.property : node,
                         ErrorMessages["PropertyOrObjectIsNotCollection"],
                         false
                     );
