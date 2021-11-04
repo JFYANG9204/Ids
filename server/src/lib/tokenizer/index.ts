@@ -260,22 +260,22 @@ export class Tokenizer extends ErrorParser {
                     }
                     break;
 
-                //case charCodes.carriageReturn:
-                //    if (this.input.charCodeAt(this.state.pos + 1) === charCodes.lineFeed) {
-                //        this.state.pos++;
-                //    } else {
-                //        this.state.pos++;
-                //        this.state.curLine++;
-                //        this.state.lineStart = this.state.pos;
-                //    }
-                //    break;
-                //case charCodes.lineFeed:
-                //case charCodes.lineSeparator:
-                //case charCodes.paragraphSeparator:
-                //    this.state.pos++;
-                //    this.state.curLine++;
-                //    this.state.lineStart = this.state.pos;
-                //    break;
+                case charCodes.carriageReturn:
+                    if (this.input.charCodeAt(this.state.pos + 1) === charCodes.lineFeed) {
+                        this.state.pos++;
+                    } else {
+                        this.state.pos++;
+                        this.state.curLine++;
+                        this.state.lineStart = this.state.pos;
+                    }
+                    break;
+                case charCodes.lineFeed:
+                case charCodes.lineSeparator:
+                case charCodes.paragraphSeparator:
+                    this.state.pos++;
+                    this.state.curLine++;
+                    this.state.lineStart = this.state.pos;
+                    break;
 
                 default:
                     if (isWhitespace(ch)) {
@@ -688,24 +688,24 @@ export class Tokenizer extends ErrorParser {
                 this.readString();
                 return;
             // 换行符
-            case charCodes.carriageReturn:
-                if (this.input.charCodeAt(this.state.pos + 1) === charCodes.lineFeed) {
-                    this.state.pos += 2;
-                } else {
-                    this.state.pos += 1;
-                }
-                this.state.curLine++;
-                this.state.lineStart = this.state.pos;
-                this.finishToken(types.newLine, { text: "newLine" });
-                return;
-            case charCodes.lineFeed:
-            case charCodes.lineSeparator:
-            case charCodes.paragraphSeparator:
-                this.state.pos++;
-                this.finishToken(types.newLine, { text: "newLine" });
-                this.state.curLine++;
-                this.state.lineStart = this.state.pos;
-                return;
+            //case charCodes.carriageReturn:
+            //    if (this.input.charCodeAt(this.state.pos + 1) === charCodes.lineFeed) {
+            //        this.state.pos += 2;
+            //    } else {
+            //        this.state.pos += 1;
+            //    }
+            //    this.state.curLine++;
+            //    this.state.lineStart = this.state.pos;
+            //    this.finishToken(types.newLine, { text: "newLine" });
+            //    return;
+            //case charCodes.lineFeed:
+            //case charCodes.lineSeparator:
+            //case charCodes.paragraphSeparator:
+            //    this.state.pos++;
+            //    this.finishToken(types.newLine, { text: "newLine" });
+            //    this.state.curLine++;
+            //    this.state.lineStart = this.state.pos;
+            //    return;
             // #if 预处理 !=
             case charCodes.exclamationMark:
                 if (this.input.charCodeAt(this.state.pos + 1) === charCodes.equalsTo) {

@@ -160,7 +160,7 @@ export const types = {
     _with                        :     createKeyword("with"),
     _xor                         :     createKeyword("xor", { binop: BinopType.logical, precedence: 1 }),
     //
-    newLine                      :     new TokenType("newline"),
+    //newLine                      :     new TokenType("newline"),
     eof                          :     new TokenType("eof"),
 };
 

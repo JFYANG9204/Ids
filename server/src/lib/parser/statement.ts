@@ -222,23 +222,23 @@ export class StatementParser extends ExpressionParser {
         }
     }
 
-    skipNewline() {
-        while (this.match(tt.newLine)) {
-            this.next();
-        }
-    }
+    //skipNewline() {
+    //    while (this.match(tt.newLine)) {
+    //        this.next();
+    //    }
+    //}
 
-    skipUntilNewLine() {
-        this.skipSpace();
-        if (!this.match(tt.eof)) {
-            this.expect(tt.newLine);
-        }
-    }
+    //skipUntilNewLine() {
+    //    this.skipSpace();
+    //    if (!this.match(tt.eof)) {
+    //        this.expect(tt.newLine);
+    //    }
+    //}
 
-    skipSpaceAndNewLine() {
-        this.skipSpace();
-        this.skipNewline();
-    }
+    //skipSpaceAndNewLine() {
+    //    this.skipSpace();
+    //    this.skipNewline();
+    //}
 
     parseProgram(
         end: TokenType = tt.eof,
@@ -246,7 +246,6 @@ export class StatementParser extends ExpressionParser {
     ): Program {
         const node = this.startNode(Program);
         node.sourceType = sourceType;
-        this.skipNewline();
         if (this.options.sourceType === SourceType.script) {
             node.body = this.parseBlock(end);
             node.push(node.body);
@@ -271,7 +270,6 @@ export class StatementParser extends ExpressionParser {
                     line.positionMap.push(line.id);
                     this.finishNode(line, "LineMark");
                     this.checkNewLineMark(line);
-                    this.skipUntilNewLine();
                     this.checkAheadLineMark(id);
                     return line;
                 } else if (next.type === tt.braceL) {
@@ -369,9 +367,9 @@ export class StatementParser extends ExpressionParser {
     parseConstDeclaration(): ConstDeclaration {
         const node = this.startNode(ConstDeclaration);
         this.next();
-        while (!this.match(tt.newLine)) {
+        while (!this.hasPrecedingLineBreak()) {
             node.declarators.push(this.parseConstDeclarator());
-            if (!this.match(tt.newLine)) {
+            if (!this.hasPrecedingLineBreak()) {
                 this.expect(tt.comma);
             }
         }
@@ -387,7 +385,7 @@ export class StatementParser extends ExpressionParser {
         const boundaries: number[] = [];
         let dimensions = 0;
         let last = false;
-        while(!this.match(tt.newLine) &&
+        while(!this.hasPrecedingLineBreak() &&
               !this.match(tt.comma)   &&
               !this.match(tt.braceR)) {
             if (this.match(tt.bracketL)) {
@@ -425,7 +423,7 @@ export class StatementParser extends ExpressionParser {
         const node = this.startNode(VariableDeclaration);
         const declarators: Array<Identifier | ArrayDeclarator> = [];
         let hasComma = false;
-        while (!this.match(tt.newLine)) {
+        while (!this.hasPrecedingLineBreak()) {
             if (this.lookahead().type === tt.bracketL) {
                 declarators.push(this.parseArrayDeclarator());
                 hasComma = false;
@@ -454,19 +452,17 @@ export class StatementParser extends ExpressionParser {
                 ","
             );
         }
-        this.eat(tt.newLine);
         node.declarations = declarators;
         node.pushArr(declarators);
-        return this.finishNode(node, "VariableDeclaration");
+        return this.finishNodeAt(node, "VariableDeclaration", this.state.lastTokenEnd, this.state.lastTokenEndLoc);
     }
 
     parseExpressionStatement(): ExpressionStatement {
         const node = this.startNode(ExpressionStatement);
         node.expression = this.parseExpression(true);
         node.push(node.expression);
-        this.skipUntilNewLine();
         this.checkExprTypeError(node.expression);
-        return this.finishNode(node, "ExpressionStatement");
+        return this.finishNodeAt(node, "ExpressionStatement", this.state.lastTokenEnd, this.state.lastTokenEndLoc);
     }
 
     parseSetStatement(): SetStatement {
@@ -486,7 +482,6 @@ export class StatementParser extends ExpressionParser {
                 this.addExtra(node.id, "definition", type);
             }
         }
-        this.skipUntilNewLine();
         node.push(node.id, node.assignment);
         return this.finishNode(node, "SetStatement");
     }
@@ -494,11 +489,8 @@ export class StatementParser extends ExpressionParser {
     parseBlock(close: TokenType | Array<TokenType>): BlockStatement {
         const node = this.startNode(BlockStatement);
         const body: Statement[] = [];
-        this.skipNewline();
         while (!this.matchOne(close)) {
-            this.skipNewline();
             body.push(this.parseStatementContent());
-            this.skipNewline();
         }
         node.body = body;
         node.pushArr(node.body);
@@ -511,8 +503,7 @@ export class StatementParser extends ExpressionParser {
         node.test = this.parseExpression();
         this.checkExprTypeError(node.test);
         this.expect(tt._then);
-        if (this.match(tt.newLine)) {
-            this.skipNewline();
+        if (this.hasPrecedingLineBreak()) {
             node.consequent = this.parseBlock([ tt._end, tt._else, tt._elseif ]);
             if (this.match(tt._else)) {
                 this.next();
@@ -545,7 +536,6 @@ export class StatementParser extends ExpressionParser {
         }
         node.push(node.test, node.consequent);
         this.finishNode(node, "IfStatement");
-        this.skipNewline();
         return node;
     }
 
@@ -591,11 +581,9 @@ export class StatementParser extends ExpressionParser {
                 );
             }
         }
-        this.skipUntilNewLine();
         node.body = this.parseBlock(tt._next);
         node.push(node.body);
         this.expect(tt._next);
-        this.skipUntilNewLine();
         return this.finishNode(node, "ForStatement");
     }
 
@@ -609,10 +597,8 @@ export class StatementParser extends ExpressionParser {
         const collection = this.parseExpression();
         this.checkIfCollection(collection, variable);
         node.collection = collection;
-        this.skipUntilNewLine();
         node.body = this.parseBlock(tt._next);
         this.expect(tt._next);
-        this.skipUntilNewLine();
         node.push(variable, collection, node.body);
         return this.finishNode(node, "ForEachStatement");
     }
@@ -633,7 +619,6 @@ export class StatementParser extends ExpressionParser {
         node.push(node.test, node.body);
         this.expect(tt._end);
         this.expect(tt._while);
-        this.skipUntilNewLine();
         return this.finishNode(node, "WhileStatement");
     }
 
@@ -669,7 +654,6 @@ export class StatementParser extends ExpressionParser {
             node.test = this.parseExpression();
         }
         node.push(node.test, node.body);
-        this.skipUntilNewLine();
         return this.finishNode(node, "DoWhileStatement");
     }
 
@@ -690,7 +674,6 @@ export class StatementParser extends ExpressionParser {
         this.expect(tt._end);
         this.expect(tt._with);
         this.scope.currentScope().exitHeader();
-        this.skipUntilNewLine();
         node.push(node.object, node.body);
         return this.finishNode(node, "WithStatement");
     }
@@ -704,11 +687,9 @@ export class StatementParser extends ExpressionParser {
         const node = this.startNode(SectionStatement);
         this.next();
         node.label = this.parseIdentifier();
-        this.skipUntilNewLine();
         node.body = this.parseBlock(tt._end);
         this.eat(tt._end);
         this.expect(tt._section);
-        this.skipUntilNewLine();
         node.push(node.label, node.body);
         return this.finishNode(node, "SectionStatement");
     }
@@ -726,11 +707,9 @@ export class StatementParser extends ExpressionParser {
         this.next();
         this.expect(tt._case);
         node.discriminant = this.parseExpression();
-        this.skipUntilNewLine();
         node.cases = this.parseSelectBody();
         this.expect(tt._end);
         this.expect(tt._select);
-        this.skipUntilNewLine();
         node.pushArr(node.cases);
         node.push(node.discriminant);
         return this.finishNode(node, "SelectStatement");
@@ -738,13 +717,11 @@ export class StatementParser extends ExpressionParser {
 
     parseSelectBody(): Array<SelectCaseStatement> {
         const body: Array<SelectCaseStatement> = [];
-        this.skipNewline();
         if (!this.match(tt._case)) {
             throw this.unexpected();
         }
         const state: { else: boolean } = { else: false };
         while (!this.match(tt._end)) {
-            this.skipNewline();
             if (!this.match(tt._case)) {
                 throw this.unexpected();
             }
@@ -764,7 +741,7 @@ export class StatementParser extends ExpressionParser {
                 );
             }
             const ranges: Array<SelectCaseRange> = [];
-            while (!this.eat(tt.newLine)) {
+            while (!this.hasPrecedingLineBreak()) {
                 this.eat(tt.comma);
                 ranges.push(this.parseSelectCaseRange());
             }
@@ -836,7 +813,6 @@ export class StatementParser extends ExpressionParser {
             default:
                 break;
         }
-        this.skipUntilNewLine();
         return this.finishNode(node, "ExitStatement");
     }
 
@@ -854,7 +830,6 @@ export class StatementParser extends ExpressionParser {
         } else {
             node.line = 0;
         }
-        this.skipUntilNewLine();
         return this.finishNode(node, "GotoStatement");
     }
 
@@ -871,7 +846,6 @@ export class StatementParser extends ExpressionParser {
             node.resume = true;
             this.next();
             this.expect(tt._next);
-            this.skipUntilNewLine();
         } else if (this.match(tt._goto)) {
             node.goto = this.parseGoto();
         } else {
@@ -902,7 +876,6 @@ export class StatementParser extends ExpressionParser {
         node.id = this.parseIdentifier();
         this.expect(tt.braceL);
         node.params = this.parseFunctionDeclarationParam();
-        this.expect(tt.newLine);
         node.body = this.parseBlock(tt._end);
         this.expect(tt._end);
         isFunction ? this.expect(tt._function) : this.expect(tt._sub);
@@ -1012,7 +985,6 @@ export class StatementParser extends ExpressionParser {
         node.push(node.id, node.init);
         this.finishNode(node, "PreDefineStatement");
         this.declareMacroVar(node.id.name, node);
-        this.skipUntilNewLine();
         return node;
     }
 
@@ -1023,7 +995,6 @@ export class StatementParser extends ExpressionParser {
         node.id = this.parseIdentifier();
         node.push(node.id);
         this.scope.currentScope().remove(node.id.name);
-        this.skipUntilNewLine();
         return this.finishNode(node, "PreUndefStatement");
     }
 
@@ -1104,7 +1075,6 @@ export class StatementParser extends ExpressionParser {
                 );
             }
         }
-        this.skipNewline();
         return node;
     }
 
@@ -1113,9 +1083,6 @@ export class StatementParser extends ExpressionParser {
         const node = this.startNode(PreErrorStatement);
         this.next();
         const text = this.startNode(Expression);
-        while (this.match(tt.newLine)) {
-            this.next();
-        }
         this.finishNode(text, "Expression");
         this.addExtra(text, "raw", this.input.slice(node.start, this.state.pos));
         node.text = text;
@@ -1130,7 +1097,6 @@ export class StatementParser extends ExpressionParser {
         if (this.match(tt.string)) {
             node.location = this.parseStringLiteral(this.state.value.text);
         }
-        this.skipUntilNewLine();
         return this.finishNode(node, "PreLineStatement");
     }
 
@@ -1146,7 +1112,6 @@ export class StatementParser extends ExpressionParser {
         const node = this.startNode(PreIfStatement);
         this.next();
         node.test = this.parseExpression(undefined, true);
-        this.skipNewline();
         node.consequent = this.parseBlock([ tt.pre_endif, tt.pre_elif, tt.pre_else ]);
         if (this.match(tt.pre_elif)) {
             node.alternate = this.parsePreIfStatement();
@@ -1154,7 +1119,6 @@ export class StatementParser extends ExpressionParser {
             node.alternate = this.parseBlock(tt.pre_endif);
         }
         this.expect(tt.pre_endif);
-        this.skipUntilNewLine();
         return this.finishNode(node, "PreIfStatement");
     }
 
@@ -1216,10 +1180,7 @@ export class StatementParser extends ExpressionParser {
             }
         }
         this.expect(tt.braceR);
-        this.skipUntilNewLine();
-        this.skipNewline();
         callback(node);
-        this.skipNewline();
         this.expect(tt._end);
         this.expectString(eventName);
         this.next();
@@ -1259,7 +1220,6 @@ export class StatementParser extends ExpressionParser {
         return this.parseEventBase(
             node => {
                 while (!this.match(tt._end)) {
-                    this.skipNewline();
                     const text = this.state.value.text.toLowerCase();
                     this.next();
                     this.expect(tt.equal);
@@ -1307,8 +1267,6 @@ export class StatementParser extends ExpressionParser {
                             this.next();
                             break;
                     }
-                    this.skipUntilNewLine();
-                    this.skipNewline();
                 }
             },
             LoggingSection,
@@ -1425,8 +1383,6 @@ export class StatementParser extends ExpressionParser {
                             this.next();
                             break;
                     }
-                    this.skipUntilNewLine();
-                    this.skipNewline();
                 }
                 if (!hasConnStr) {
                     this.raiseAtNode(
@@ -1534,8 +1490,6 @@ export class StatementParser extends ExpressionParser {
                             this.next();
                             break;
                     }
-                    this.skipUntilNewLine();
-                    this.skipNewline();
                 }
             },
             OutputDataSourceSection,
@@ -1578,8 +1532,6 @@ export class StatementParser extends ExpressionParser {
                             this.next();
                             break;
                     }
-                    this.skipUntilNewLine();
-                    this.skipNewline();
                 }
             },
             GlobalSQLVariablesSection,
@@ -1652,9 +1604,7 @@ export class StatementParser extends ExpressionParser {
             }
             this.expect(tt.braceR);
         }
-        this.skipSpaceAndNewLine();
         node.body = this.parseMetadata(tt._end);
-        this.skipSpaceAndNewLine();
         this.expect(tt._end);
         this.expectString("metadata");
         this.next();
@@ -1664,7 +1614,7 @@ export class StatementParser extends ExpressionParser {
 
     raiseErrorAndSkipLine(node: NodeBase, template: ErrorTemplate, ...params: any) {
         this.raiseAtNode(node, template, false, params);
-        while (!this.eat(tt.newLine)) {
+        while (!this.hasPrecedingLineBreak()) {
             this.next();
         }
     }
@@ -1675,7 +1625,6 @@ export class StatementParser extends ExpressionParser {
         callback: (node: T) => void) {
         let comma = false;
         while (this.eat(close)) {
-            this.skipNewline();
             if (this.match(tt.comma)) {
                 if (comma) {
                     this.raise(
@@ -1689,7 +1638,6 @@ export class StatementParser extends ExpressionParser {
             } else {
                 callback(node);
             }
-            this.skipNewline();
         }
     }
 
@@ -1697,15 +1645,12 @@ export class StatementParser extends ExpressionParser {
     parseMetaCustomProperty(): MetadataProperty {
         const node = this.startNode(MetadataProperty);
         node.name = this.parseIdentifier();
-        this.skipNewline();
         if (this.match(tt.colon)) {
             this.next();
             this.expect(tt.bracketL);
-            this.skipNewline();
             node.propValue = this.parseMetaCustomProperties();
         } else if (this.match(tt.braceL)) {
             this.next();
-            this.skipNewline();
             node.propValue = this.parseMetaCustomProperties(tt.braceR);
         } else {
             this.expect(tt.equal);
@@ -1719,14 +1664,11 @@ export class StatementParser extends ExpressionParser {
         const props: MetadataProperty[] = [];
         this.next();
         while (!this.eat(close)) {
-            this.skipNewline();
             if (this.match(tt.comma)) {
                 this.next();
             }
-            this.skipNewline();
             if (!this.match(close)) {
                 props.push(this.parseMetaCustomProperty());
-                this.skipNewline();
             }
         }
         return props;
@@ -1738,7 +1680,6 @@ export class StatementParser extends ExpressionParser {
     parseStyle(): MetadataStyle {
         const node = this.startNode(MetadataStyle);
         this.next();
-        this.skipNewline();
         this.expect(tt.braceL);
         this.parsePropertyList(
             tt.braceR,
@@ -1815,7 +1756,6 @@ export class StatementParser extends ExpressionParser {
                 node.borderStyle = enumVal;
             }
         } else {
-            this.skipNewline();
             this.expect(tt.braceL);
             this.parsePropertyList(
                 tt.braceR,
@@ -1899,7 +1839,6 @@ export class StatementParser extends ExpressionParser {
                 node.controlType = type;
             }
         } else {
-            this.skipNewline();
             this.expect(tt.braceL);
             this.parsePropertyList(
                 tt.braceR,
@@ -1955,7 +1894,6 @@ export class StatementParser extends ExpressionParser {
         if (this.eat(tt.equal)) {
             node.family = this.expectAndParseStringLiteral();
         } else {
-            this.skipNewline();
             this.expect(tt.braceL);
             this.parsePropertyList(
                 tt.braceR,
@@ -2037,7 +1975,6 @@ export class StatementParser extends ExpressionParser {
 
     parseTemplate(): MetadataTemplates {
         const node = this.startNode(MetadataTemplates);
-        this.skipNewline();
         this.expect(tt.braceL);
         this.parsePropertyList(
             tt.braceR,
@@ -2061,9 +1998,7 @@ export class StatementParser extends ExpressionParser {
         const node = this.startNode(MetadataFieldHeadDefinition);
         node.name = this.parseIdentifier();
         while (!this.checkIfHeaderEnd()) {
-            this.skipNewline();
             this.parseMetadataFieldHeaderAtom(node);
-            this.skipNewline();
         }
         return this.finishNode(node, "MetadataFieldHeaderDefinition");
     }
@@ -2074,11 +2009,9 @@ export class StatementParser extends ExpressionParser {
         switch (this.state.type) {
             case tt.string:
                 node.label = this.parseStringLiteral(this.state.value.text);
-                this.skipNewline();
                 return;
             case tt.bracketL:
                 node.properties = this.parseMetaCustomProperties();
-                this.skipNewline();
                 return;
             case tt.identifier:
                 propId = this.parseIdentifier();
@@ -2091,16 +2024,15 @@ export class StatementParser extends ExpressionParser {
                     node.templates = this.parseTemplate();
                 } else {
                     this.unexpected();
-                    while (!this.eat(tt.newLine)) {
+                    while (!this.hasPrecedingLineBreak()) {
                         this.next();
                     }
                 }
-                this.skipNewline();
                 return;
 
             default:
                 this.unexpected();
-                while (!this.eat(tt.newLine)) {
+                while (!this.hasPrecedingLineBreak()) {
                     this.next();
                 }
                 return;
@@ -2284,7 +2216,6 @@ export class StatementParser extends ExpressionParser {
         const node = this.startNode(MetadataFieldTypeDefinition);
         node.typeKw = this.parseIdentifier(true);
         this.skipSpace();
-        this.skipNewline();
         if (this.match(tt.bracketL)) {
             node.range = this.parseMetadataRanges(allowExclude, allowStep, allowSingle);
         }
@@ -2422,9 +2353,7 @@ export class StatementParser extends ExpressionParser {
     ): MetadataFieldTailDefinition {
         const node = this.startNode(MetadataFieldTailDefinition);
         while (!this.matchOne([ tt.semi, tt.braceR ])) {
-            this.skipNewline();
             this.parseMetadataFieldTailAtom(node, type);
-            this.skipNewline();
         }
         return this.finishNode(node, "MetadataFieldTailDefinition");
     }
@@ -2674,11 +2603,7 @@ export class StatementParser extends ExpressionParser {
             node.name = this.parseIdentifier();
         }
         while (!this.matchOne([ tt.comma, tt.curlyR ])) {
-            this.skipSpace();
-            this.skipNewline();
             this.parseMetadataCategorySuffixAtom(node);
-            this.skipSpace();
-            this.skipNewline();
         }
         return this.finishNode(node, "MetadataCategory");
     }
@@ -2766,7 +2691,6 @@ export class StatementParser extends ExpressionParser {
             if (!comma) {
                 this.unexpected(undefined, undefined, tt.comma);
             }
-            this.skipSpaceAndNewLine();
             const cat = this.parseMetadataCategory();
             if (cat.name instanceof Identifier) {
                 const catName = cat.name.name.toLowerCase();
@@ -2782,7 +2706,6 @@ export class StatementParser extends ExpressionParser {
                 }
             }
             categories.push(cat);
-            this.skipSpaceAndNewLine();
             if (this.match(tt.comma)) {
                 comma = true;
                 if (this.lookahead().type === tt.curlyR) {
@@ -2871,9 +2794,7 @@ export class StatementParser extends ExpressionParser {
         const node = this.startNodeAtNode(header, n);
         node.header = header;
         node.typeDef = typeDef;
-        this.skipSpaceAndNewLine();
         callback(node);
-        this.skipSpaceAndNewLine();
         node.tail = this.parseMetadataFieldTail(initialType);
         return this.finishNode(node, nodeType);
     }
@@ -2893,39 +2814,25 @@ export class StatementParser extends ExpressionParser {
             if (node instanceof MetadataLongVariable &&
                 this.state.value.text.toLowerCase() === "precision") {
                 this.next();
-                this.skipSpaceAndNewLine();
                 this.expect(tt.braceL);
-                this.skipSpaceAndNewLine();
                 node["precision"] = this.expectAndParseNumericLiteral();
-                this.skipSpaceAndNewLine();
                 this.expect(tt.braceR);
-                this.skipSpaceAndNewLine();
             }
             if ((node instanceof MetadataDoubleVariable) &&
                 this.state.value.text.toLowerCase() === "scale") {
-                this.skipSpaceAndNewLine();
                 this.next();
-                this.skipSpaceAndNewLine();
                 this.expect(tt.braceL);
-                this.skipSpaceAndNewLine();
                 (node as MetadataDoubleVariable).scale = this.expectAndParseNumericLiteral();
-                this.skipSpaceAndNewLine();
                 this.expect(tt.braceR);
-                this.skipSpaceAndNewLine();
             }
             if (this.match(tt.curlyL)) {
                 node["categories"] = this.parseMetadataCategories();
-                this.skipSpaceAndNewLine();
             }
             if (this.state.value.text.toLowerCase() === "codes") {
                 this.next();
-                this.skipSpaceAndNewLine();
                 this.expect(tt.braceL);
-                this.skipSpaceAndNewLine();
                 node["codes"] = this.parseMetadataCategories();
-                this.skipSpaceAndNewLine();
                 this.expect(tt.braceR);
-                this.skipSpaceAndNewLine();
             }
         }, initialType);
     }
@@ -3122,9 +3029,7 @@ export class StatementParser extends ExpressionParser {
         typeDef: MetadataFieldTypeDefinition) {
         const node = this.startNodeAtNode(header, MetadataCategoryList);
         node.defined = typeDef.typeKw;
-        this.skipSpaceAndNewLine();
         node.categories = this.parseMetadataCategoryList();
-        this.skipSpaceAndNewLine();
         return this.finishNode(node, "MetadataCategoryList");
     }
 
@@ -3138,15 +3043,12 @@ export class StatementParser extends ExpressionParser {
     parseMetadataInfoVariable(header: MetadataFieldHeadDefinition) {
         const node = this.startNodeAtNode(header, MetadataInfoVariable);
         node.header = header;
-        this.skipSpaceAndNewLine();
         node.typeDef = this.parseMetadataFieldTypeDefinition();
-        this.skipSpaceAndNewLine();
         return this.finishNode(node, "MetadataInfoVariable");
     }
 
 
     parseMetadataLoopVariableTail(node: MetadataLoopVariableBase) {
-        this.skipSpaceAndNewLine();
         while (!this.matchOne([ tt.semi, tt.braceR ])) {
             if (this.match(tt.identifier)) {
                 const kw = this.parseIdentifier();
@@ -3205,7 +3107,6 @@ export class StatementParser extends ExpressionParser {
                 this.unexpected(undefined, undefined, undefined, false);
                 this.next();
             }
-            this.skipSpaceAndNewLine();
         }
     }
 
@@ -3219,25 +3120,20 @@ export class StatementParser extends ExpressionParser {
         if (typeDef) {
             node.typeDef = typeDef;
         } else if (callback) {
-            this.skipSpaceAndNewLine();
             callback(node);
         }
-        this.skipSpaceAndNewLine();
         this.expectString("fields");
         this.next();
         if (this.state.value.text === "-") {
             node.iterationLabel = "-";
             this.next();
         }
-        this.skipSpaceAndNewLine();
         if (this.match(tt.string)) {
             node.iterationLabel = this.parseStringLiteral(this.state.value.text);
         }
-        this.skipSpaceAndNewLine();
         this.expect(tt.braceL);
         node.fields = this.parseMetadataFields();
         this.expect(tt.braceR);
-        this.skipSpaceAndNewLine();
         this.parseMetadataLoopVariableTail(node);
         return this.finishNode(node,
             typeDef ?
@@ -3364,9 +3260,7 @@ export class StatementParser extends ExpressionParser {
         if (this.state.value.text === "-") {
             this.next();
         }
-        this.skipSpaceAndNewLine();
         this.expect(tt.braceL);
-        this.skipSpaceAndNewLine();
         node.fields = this.parseMetadataFields();
         return this.finishNode(node, "MetadataBlockVariable");
     }
@@ -3383,7 +3277,6 @@ export class StatementParser extends ExpressionParser {
         const node = this.startNodeAtNode(header, MetadataPageVariable);
         this.expectString("page");
         this.next();
-        this.skipSpaceAndNewLine();
         const questions: Array<Identifier> = [];
         let comma = true;
         while (!this.eat(tt.braceR)) {
@@ -3402,7 +3295,6 @@ export class StatementParser extends ExpressionParser {
                 this.next();
                 comma = true;
             }
-            this.skipSpaceAndNewLine();
         }
         node.questions = questions;
         return this.finishNode(node, "MetadataPageVariable");
@@ -3421,9 +3313,7 @@ export class StatementParser extends ExpressionParser {
     parseMetadataDataBaseColumns(): MetadataDbColumnsDefinition {
         const node = this.startNode(MetadataDbColumnsDefinition);
         this.next();
-        this.skipSpaceAndNewLine();
         this.expect(tt.braceL);
-        this.skipSpaceAndNewLine();
         let existId = false, existLabel = false;
         while (!this.eat(tt.braceR)) {
             const kw = this.state.value.text.toLowerCase();
@@ -3453,12 +3343,11 @@ export class StatementParser extends ExpressionParser {
                         id,
                         ErrorMessages["MetadataUnkownProperty"],
                         false);
-                    while (!this.eat(tt.newLine)) {
+                    while (!this.hasPrecedingLineBreak()) {
                         this.next();
                     }
                     break;
             }
-            this.skipSpaceAndNewLine();
         }
         if (!existId || !existLabel) {
             this.raiseAtNode(
@@ -3493,9 +3382,7 @@ export class StatementParser extends ExpressionParser {
     parseMetadataDataBaseDbProperties(isLoop?: boolean): MetadataDbDefinition {
         const node = this.startNode(MetadataDbDefinition);
         this.next();
-        this.skipSpaceAndNewLine();
         this.expect(tt.braceL);
-        this.skipSpaceAndNewLine();
         let hasConnstr = false, hasTable = false, hasColumn = false;
         while (!this.eat(tt.braceR)) {
             const kw = this.state.value.text.toLowerCase();
@@ -3620,20 +3507,16 @@ export class StatementParser extends ExpressionParser {
         const node = this.startNodeAtNode(header, MetadataDataBaseNonLoopQuestion);
         node.typeDef = typeDef;
         this.next();
-        this.skipSpaceAndNewLine();
         this.expectString("db");
         node.definition = this.parseMetadataDataBaseDbProperties();
-        this.skipSpaceAndNewLine();
         if (this.match(tt.bracketL)) {
             node.range = this.parseMetadataRanges(true, true, true);
-            this.skipSpaceAndNewLine();
         }
         if (this.state.value.text.toLowerCase() === "codes") {
             this.next();
             this.expect(tt.braceL);
             node.codes = this.parseMetadataCategories();
             this.expect(tt.braceR);
-            this.skipSpaceAndNewLine();
         }
         node.tail = this.parseMetadataFieldTail("text");
         return this.finishNode(node, "MetadataDataBaseNonLoopQuestion");
@@ -3675,10 +3558,8 @@ export class StatementParser extends ExpressionParser {
         const node = this.startNodeAtNode(header, MetadataDataBaseLoopQuestion);
         node.header = header;
         node.typeDef = typeDef;
-        this.skipSpaceAndNewLine();
         this.expectString("db");
         node.definition = this.parseMetadataDataBaseDbProperties();
-        this.skipSpaceAndNewLine();
         this.expectString("fields");
         this.next();
         if (this.state.value.text === "-") {
@@ -3687,12 +3568,9 @@ export class StatementParser extends ExpressionParser {
         } else if (this.match(tt.string)) {
             node.iterationLabel = this.expectAndParseStringLiteral();
         }
-        this.skipSpaceAndNewLine();
         this.expect(tt.braceL);
-        this.skipSpaceAndNewLine();
         node.fields = this.parseMetadataFields();
         this.expect(tt.braceR);
-        this.skipSpaceAndNewLine();
         let rowOrColumn: string | undefined;
         while (!this.match(tt.semi)) {
             const text = this.state.value.text.toLowerCase();
@@ -3728,7 +3606,6 @@ export class StatementParser extends ExpressionParser {
                     this.next();
                     break;
             }
-            this.skipSpaceAndNewLine();
         }
         return this.finishNode(node, "MetadataDataBaseLoopQuestion");
     }
@@ -3737,7 +3614,6 @@ export class StatementParser extends ExpressionParser {
         header: MetadataFieldHeadDefinition,
         typeDef: MetadataFieldTypeDefinition
     ) {
-        this.skipSpaceAndNewLine();
         if (this.state.value.text.toLowerCase() === "db") {
             return this.parseMetadataDataBaseNonLoopVariable(
                 header, typeDef);
@@ -3754,7 +3630,6 @@ export class StatementParser extends ExpressionParser {
 
     parseMetadataField(): MetadataBase {
         const header = this.parseMetadataFieldHeader();
-        this.skipSpaceAndNewLine();
         const kw = this.state.value.text.toLowerCase();
         const allowExclude = kw !== "categorical" && kw !== "text";
         const allowStep = kw === "long";
@@ -3786,16 +3661,12 @@ export class StatementParser extends ExpressionParser {
 
     parseMetadataFields() {
         const fields: MetadataBase[] = [];
-        this.skipSpaceAndNewLine();
         while (!this.match(tt.braceR)) {
-            this.skipSpaceAndNewLine();
             fields.push(this.parseMetadataField());
-            this.skipSpaceAndNewLine();
             if (!this.eat(tt.semi) && this.lookahead().type !== tt.braceR) {
                 this.unexpected(undefined, undefined, tt.semi, false);
                 this.next();
             }
-            this.skipSpaceAndNewLine();
         }
         return fields;
     }
@@ -3803,15 +3674,12 @@ export class StatementParser extends ExpressionParser {
     parseMetadata(close: TokenType = tt.eof) {
         const metadata: NodeBase[] = [];
         while (!this.match(close)) {
-            this.skipSpaceAndNewLine();
             if (this.match(tt.pre_include)) {
                 metadata.push(this.parsePreIncludeStatement(true));
-                this.skipSpaceAndNewLine();
             } else {
                 metadata.push(this.parseMetadataField());
                 this.expect(tt.semi);
             }
-            this.skipSpaceAndNewLine();
         }
         return metadata;
     }

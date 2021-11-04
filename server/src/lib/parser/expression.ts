@@ -163,7 +163,7 @@ export class ExpressionParser extends NodeUtils {
             this.parseIdentifier(true);
         node.property = property;
         node.push(node.property, node.object);
-        return this.finishNode(node, "MemberExpression");
+        return this.finishNodeAt(node, "MemberExpression", this.state.lastTokenEnd, this.state.lastTokenEndLoc);
     }
 
     parseMaybeUnary(): Expression {
@@ -190,7 +190,7 @@ export class ExpressionParser extends NodeUtils {
             node.left = left;
             node.right = this.parseMaybeAssign(false, allowPre);
             node.push(left, node.right);
-            return this.finishNode(node, "AssignmentExpression");
+            return this.finishNodeAt(node, "AssignmentExpression", this.state.lastTokenEnd, this.state.lastTokenEndLoc);
         }
         return left;
     }
@@ -449,11 +449,19 @@ export class ExpressionParser extends NodeUtils {
     }
 
     parseCallOrMember(prefix?: Expression): Expression {
+
+        if (prefix && this.hasPrecedingLineBreak()) {
+            return prefix;
+        }
+
         let expr = this.createEmptyExpression();
         if (prefix) {
             expr = prefix;
         } else if (this.match(tt.identifier)) {
             expr = this.parseIdentifier();
+            if (this.hasPrecedingLineBreak()) {
+                return expr;
+            }
         }
 
         if (this.match(tt.bracketL)) {
