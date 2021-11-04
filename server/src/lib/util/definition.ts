@@ -119,6 +119,7 @@ export interface DefinitionOptions {
     isReadonly: boolean;
     isCollection: boolean;
     isConst: boolean;
+    isBuiltIn?: boolean;
     note?: string;
     node?: NodeBase;
     section: DefSection;
@@ -146,6 +147,7 @@ export class DefinitionBase {
         this.isReadonly = options.isReadonly;
         this.isCollection = options.isCollection;
         this.isConst = options.isConst;
+        this.isBuiltIn = options.isBuiltIn;
         this.section = options.section;
         this.return = options.return;
         this.note = options.note;

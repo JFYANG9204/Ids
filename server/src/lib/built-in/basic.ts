@@ -84,13 +84,13 @@ export function createBuiltInDefPlaceHolder(
         isReadonly: false,
         isConst: false,
         isCollection: false,
+        isBuiltIn: isBuiltIn,
         section: {
             name: "global",
             type: "global"
         }
     }, array ? VariantDefinition : DefinitionBase);
     def.defType = defType ?? "default";
-    def.isBuiltIn = isBuiltIn;
     if (array) {
         (def as VariantDefinition).boundaries = array.boundaries;
         (def as VariantDefinition).dimensions = array.dimensions;
@@ -105,6 +105,7 @@ export function createBasicTypeDefinition(valueType: ValueType) {
         isReadonly: false,
         isCollection: true,
         isConst: false,
+        isBuiltIn: true,
         return: valueType.definition,
         section: {
             name: "global",
@@ -133,6 +134,7 @@ export function createArrayDefinition(
         isCollection: true,
         isConst: isConst,
         isReadonly: readonly,
+        isBuiltIn: false,
         section: {
             name: "global",
             type: "global"
@@ -152,6 +154,7 @@ const categoricalOptions: DefinitionOptions = {
     isReadonly: false,
     isCollection: true,
     isConst: false,
+    isBuiltIn: true,
     section: {
         name: "global",
         type: "global"
@@ -164,6 +167,7 @@ const stringOptions: DefinitionOptions = {
     isReadonly: false,
     isCollection: false,
     isConst: false,
+    isBuiltIn: true,
     section: {
         name: "global",
         type: "global"

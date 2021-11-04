@@ -15,11 +15,7 @@ import {
 } from "vscode-languageserver/node";
 import { ParserFileDigraph } from "./lib/file";
 import {
-    CallExpression,
     File,
-    FunctionDeclaration,
-    Identifier,
-    MemberExpression
 } from "./lib/types";
 import {
     builtInCompletions,
