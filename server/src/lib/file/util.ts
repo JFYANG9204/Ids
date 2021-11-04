@@ -240,10 +240,10 @@ export function getCurrentParser(file: File, path: string): File | undefined {
     return undefined;
 }
 
-export function getHoverContentFromNode(node: NodeBase, def: DefinitionBase): string {
+export function getHoverContentFromNode(node: NodeBase, def: DefinitionBase, declared: boolean): string {
     if (node instanceof Identifier &&
-        def.isBasic) {
-        return "```\n" + `(variant) ${node.name}: ${def.name}\n` + "```";
+        declared && def.defType !== "macro") {
+        return "```ds\n" + `(variant) ${node.name}: ${def.name}\n` + "```";
     }
     return def.getNote();
 }

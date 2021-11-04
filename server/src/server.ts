@@ -117,16 +117,14 @@ connection.onHover(params => {
     }
     const pos = document.offsetAt(params.position);
     const node = positionAt(currentFile.program.body, pos, true, 0);
-    let def: DefinitionBase;
-    if (node instanceof MemberExpression) {
-        def = node.property.extra["definition"];
-    } else if (node instanceof CallExpression) {
-        def = node.callee.extra["definition"];
-    } else {
-        def = node.extra["definition"];
-    }
+    let def: DefinitionBase | undefined = node.extra["definition"];
+    let declared = true;
     if (def) {
-        hover = { contents: getHoverContentFromNode(node, def) };
+        if (node.treeParent?.type === "CallExpression" ||
+            node.treeParent?.type === "MemberExpression") {
+            declared = false;
+        }
+        hover = { contents: getHoverContentFromNode(node, def, declared) };
     }
     return hover;
 });
