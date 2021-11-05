@@ -18,6 +18,7 @@ import {
     MemberExpression,
     NodeBase,
     PreDefineStatement,
+    UnaryExpression,
 } from "../types";
 import {
     ArrayDefinition,
@@ -177,6 +178,8 @@ export class TypeUtil extends UtilParser {
                 return this.getCallExprType(expr as CallExpression);
             case "BinaryExpression":
                 return this.getBinaryExprType(expr as BinaryExpression);
+            case "UnaryExpression":
+                return this.getExprType(expr as UnaryExpression);
             default:
                 break;
         }
@@ -447,6 +450,9 @@ export class TypeUtil extends UtilParser {
                 break;
             case "BinaryExpression":
                 this.getBinaryExprType(expr as BinaryExpression);
+                break;
+            case "UnaryExpression":
+                this.checkExprTypeError((expr as UnaryExpression).argument);
                 break;
 
             default:
