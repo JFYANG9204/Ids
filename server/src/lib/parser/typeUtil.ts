@@ -329,6 +329,9 @@ export class TypeUtil extends UtilParser {
                     this.getDefinitionsText(args[index].type)
                 );
             }
+            if (arg instanceof CallExpression) {
+                this.checkConversion(arg, args[index].type);
+            }
         });
     }
 
@@ -750,13 +753,16 @@ export class TypeUtil extends UtilParser {
         }
     }
 
-    checkConversion(node: CallExpression) {
+    checkConversion(node: CallExpression, require?: DefinitionBase | DefinitionBase[]) {
         const type = this.checkIfConversionFunction(node);
         if (!type) {
             return;
         }
         const argType = this.getExprType(node.arguments[0]);
-        if (type === argType) {
+        if (type === argType || (
+            require &&
+            matchOneOfDefinitions(argType, require) &&
+            matchOneOfDefinitions(type, require))) {
             this.raiseAtNode(
                 node,
                 WarningMessages["RedundantTypeConvertion"],
