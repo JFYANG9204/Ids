@@ -17,6 +17,7 @@ import {
     builtInFunctions
 } from "./built-in-functions";
 import {
+    builtInExcelApplicationObject,
     builtInObjects,
     builtInVBSDictionary,
     builtInVBSDriveObject,
@@ -198,6 +199,7 @@ export const VbsFileDefinition: ObjectDefinition = loadInterfaceOrObject(builtIn
 export const VbsFolderDefinition: ObjectDefinition = loadInterfaceOrObject(builtInVBSFolderObject, ObjectDefinition);
 export const VbsDriveDefinition: ObjectDefinition = loadInterfaceOrObject(builtInVBSDriveObject, ObjectDefinition);
 export const MrScriptConstantsDefinition: ScriptConstantDefinition = loadScriptConstant(builtInScriptConstants);
+export const MsApplicationDefinition: ObjectDefinition = loadInterfaceOrObject(builtInExcelApplicationObject, ObjectDefinition);
 
 //
 export function searchAggregate(name: string): FunctionDefinition | undefined {
@@ -297,9 +299,11 @@ function setBuiltInDefinition(defs: Map<string, PropertyDefinition | FunctionDef
                         }
                     });
                 } else {
-                    let search = searchBuiltIn(arg.type.name);
-                    if (search) {
-                        arg.type = search;
+                    if (arg.type.defType === "default") {
+                        let search = searchBuiltIn(arg.type.name);
+                        if (search) {
+                            arg.type = search;
+                        }
                     }
                 }
             });
@@ -326,6 +330,7 @@ setBuiltInDefinition(IDocumentDefinition.properties);
 setBuiltInDefinition(IDocumentDefinition.methods);
 setBuiltInDefinition(IQuestionDefinition.properties);
 setBuiltInDefinition(IQuestionDefinition.methods);
+setBuiltInDefinition(MsApplicationDefinition.methods);
 
 function setVbsBuiltInDefinition(defs: Map<string, PropertyDefinition | FunctionDefinition>) {
     defs.forEach(def => {

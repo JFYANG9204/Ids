@@ -2819,6 +2819,47 @@ export const builtInEnums = new Set<BuiltInDefinition>([
             },
         ]
     },
+    {
+        name: "XlMSApplication",
+        definitionType: "enum",
+        enumerators: [
+            {
+                label: "xlMicrosoftAccess",
+                value: 4,
+                note: "Microsoft Office Access"
+            },
+            {
+                label: "xlMicrosoftFoxPro",
+                value: 5,
+                note: "Microsoft FoxPro"
+            },
+            {
+                label: "xlMicrosoftMail",
+                value: 3,
+                note: "Microsoft Office Outlook"
+            },
+            {
+                label: "xlMicrosoftPowerPoint",
+                value: 2,
+                note: "Microsoft Office PowerPoint"
+            },
+            {
+                label: "xlMicrosoftProject",
+                value: 6,
+                note: "Microsoft Office Project"
+            },
+            {
+                label: "xlMicrosoftSchedulePlus",
+                value: 7,
+                note: "Microsoft Schedule Plus"
+            },
+            {
+                label: "xlMicrosoftWord",
+                value: 1,
+                note: "Microsoft Office Word"
+            },
+        ]
+    }
 ]);
 
 

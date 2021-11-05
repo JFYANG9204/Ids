@@ -411,7 +411,7 @@ export class ExpressionParser extends NodeUtils {
         } else {
             this.raise(this.state.pos, ErrorMessages["MissingRightParen"]);
         }
-        return this.finishNode(node, "Expression");
+        return this.finishNode(node, node.type);
     }
 
     parseCallOrAggegateExpression(

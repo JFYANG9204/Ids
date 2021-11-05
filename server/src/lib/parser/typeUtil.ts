@@ -4,6 +4,7 @@ import {
     IDocumentDefinition,
     IQuestionDefinition,
     MrScriptConstantsDefinition,
+    MsApplicationDefinition,
     searchBuiltIn,
     VbsDictionaryDefinition,
     VbsFsoDefinition,
@@ -15,6 +16,7 @@ import {
     Expression,
     Identifier,
     LineMark,
+    LogicalExpression,
     MemberExpression,
     NodeBase,
     PreDefineStatement,
@@ -178,6 +180,8 @@ export class TypeUtil extends UtilParser {
                 return this.getCallExprType(expr as CallExpression);
             case "BinaryExpression":
                 return this.getBinaryExprType(expr as BinaryExpression);
+            case "LogicalExpression":
+                return this.getBinaryExprType(expr as LogicalExpression);
             case "UnaryExpression":
                 return this.getExprType(expr as UnaryExpression);
             default:
@@ -451,8 +455,14 @@ export class TypeUtil extends UtilParser {
             case "BinaryExpression":
                 this.getBinaryExprType(expr as BinaryExpression);
                 break;
+            case "LogicalExpression":
+                this.getBinaryExprType(expr as LogicalExpression);
+                break;
             case "UnaryExpression":
                 this.checkExprTypeError((expr as UnaryExpression).argument);
+                break;
+            case "Expression":
+                this.getExprType(expr);
                 break;
 
             default:
@@ -725,6 +735,8 @@ export class TypeUtil extends UtilParser {
                     return VbsFsoDefinition;
                 case "tom.document":
                     return IDocumentDefinition;
+                case "excel.application":
+                    return MsApplicationDefinition;
                 default:
                     this.raiseAtNode(
                         arg,
