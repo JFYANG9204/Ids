@@ -94,11 +94,15 @@ import {
     PreLineStatement,
     PreUndefStatement,
     Program,
+    PropertyDeclaration,
+    PropertyGet,
+    PropertySet,
     SectionStatement,
     SelectCaseRange,
     SelectCaseStatement,
     SelectStatement,
     SetStatement,
+    SingleVarDeclarator,
     Statement,
     StringLiteral,
     VariableDeclaration,
@@ -115,18 +119,34 @@ import { ParserBase } from "../base";
 import { Position } from "../util/location";
 import {
     Argument,
-    DefinitionBase,
     DefinitionOptions,
     FunctionDefinition,
     VariantDefinition
 } from "../util/definition";
-import { createArrayDefinition, createDefinition } from "../built-in/basic";
+import { createDefinition } from "../built-in/basic";
 import { ParserFileNode } from "../file/node";
 import { ErrorTemplate } from "./errors";
 
 export class StatementParser extends ExpressionParser {
 
     eventNames: string[] = [];
+
+    checkIfDeclareFile(kw?: string) {
+        if (this.options.sourceType !== SourceType.declare) {
+            if (kw) {
+                this.raise(
+                    this.state.pos,
+                    ErrorMessages["KeywordCanOnlyBeUsedInDeclareFile"],
+                    kw
+                );
+            } else {
+                this.raise(
+                    this.state.pos,
+                    ErrorMessages["TypeReferenceCanOnlyBeUsedInDeclareFile"]
+                );
+            }
+        }
+    }
 
     join(file: File) {
         file.definitions?.forEach((value, key) => {
@@ -350,6 +370,24 @@ export class StatementParser extends ExpressionParser {
         }
     }
 
+    parseSingleVarDeclarator(): SingleVarDeclarator {
+        const node = this.startNode(SingleVarDeclarator);
+        node.name = this.parseIdentifier();
+        if (this.eat(tt._as)) {
+            node.valueType = this.state.value.text;
+            if (this.options.sourceType !== SourceType.declare) {
+                this.raiseAtLocation(
+                    this.state.lastTokenStart,
+                    this.state.pos,
+                    ErrorMessages["TypeReferenceCanOnlyBeUsedInDeclareFile"],
+                    false
+                );
+            }
+            this.next();
+        }
+        return this.finishNode(node, "SingleVarDeclarator");
+    }
+
     parseConstDeclarator(): ConstDeclarator {
         const node = this.startNode(ConstDeclarator);
         node.id = this.parseIdentifier();
@@ -387,8 +425,9 @@ export class StatementParser extends ExpressionParser {
         let dimensions = 0;
         let last = false;
         while(!this.hasPrecedingLineBreak() &&
-              !this.match(tt.comma)   &&
-              !this.match(tt.braceR)) {
+              !this.match(tt.comma)         &&
+              !this.match(tt.braceR)        &&
+              !this.match(tt._as)) {
             if (this.match(tt.bracketL)) {
                 this.next();
                 if (this.match(tt.number)) {
@@ -408,6 +447,18 @@ export class StatementParser extends ExpressionParser {
             }
             this.next();
         }
+        if (this.eat(tt._as)) {
+            node.valueType = this.state.value.text;
+            if (this.options.sourceType !== SourceType.declare) {
+                this.raiseAtLocation(
+                    this.state.lastTokenStart,
+                    this.state.pos,
+                    ErrorMessages["TypeReferenceCanOnlyBeUsedInDeclareFile"],
+                    false
+                );
+            }
+            this.next();
+        }
         node.boundaries = boundaries;
         node.dimensions = dimensions;
         this.declareLocalVar(
@@ -422,15 +473,15 @@ export class StatementParser extends ExpressionParser {
         // 跳过dim
         this.next();
         const node = this.startNode(VariableDeclaration);
-        const declarators: Array<Identifier | ArrayDeclarator> = [];
+        const declarators: Array<SingleVarDeclarator | ArrayDeclarator> = [];
         let hasComma = false;
         while (!this.hasPrecedingLineBreak()) {
             if (this.lookahead().type === tt.bracketL) {
                 declarators.push(this.parseArrayDeclarator());
                 hasComma = false;
             } else {
-                const id = this.parseIdentifier();
-                this.declareLocalVar(id.name, id, undefined, BasicTypeDefinitions.variant);
+                const id = this.parseSingleVarDeclarator();
+                this.declareLocalVar(id.name.name, id, undefined, BasicTypeDefinitions.variant);
                 declarators.push(id);
                 hasComma = false;
             }
@@ -906,8 +957,8 @@ export class StatementParser extends ExpressionParser {
         return this.finishNode(node, "FunctionDeclaration");
     }
 
-    parseFunctionDeclarationParam(): Array<Identifier | ArrayDeclarator> {
-        const params: Array<Identifier | ArrayDeclarator> = [];
+    parseFunctionDeclarationParam(): Array<SingleVarDeclarator | ArrayDeclarator> {
+        const params: Array<SingleVarDeclarator | ArrayDeclarator> = [];
         let comma = false;
         while (!this.eat(tt.braceR)) {
             if (this.match(tt.identifier)) {
@@ -915,7 +966,7 @@ export class StatementParser extends ExpressionParser {
                     params.push(this.parseArrayDeclarator());
                     comma = false;
                 } else {
-                    params.push(this.parseIdentifier());
+                    params.push(this.parseSingleVarDeclarator());
                     comma = false;
                 }
             } else if (this.match(tt.comma)) {
@@ -940,10 +991,10 @@ export class StatementParser extends ExpressionParser {
         return params;
     }
 
-    getArgumentDefFromNode(node: Identifier | ArrayDeclarator): Argument {
-        if (node instanceof Identifier) {
+    getArgumentDefFromNode(node: SingleVarDeclarator | ArrayDeclarator): Argument {
+        if (node instanceof SingleVarDeclarator) {
             return new Argument(
-                node.name,
+                node.name.name,
                 BasicTypeDefinitions.variant,
                 false,
                 false);
@@ -975,6 +1026,81 @@ export class StatementParser extends ExpressionParser {
                 false);
         }
     }
+
+    // Declaration File   仅用于built in定义初始定义
+
+    parsePropertyGet(): PropertyGet {
+        const node = this.startNode(PropertyGet);
+        this.next();
+        node.body = this.parseBlock(tt._end);
+        this.next();
+        this.expect(tt._get);
+        return this.finishNode(node, "PropertyGet");
+    }
+
+    parsePropertySet(): PropertySet {
+        const node = this.startNode(PropertySet);
+        this.next();
+        this.expect(tt.braceL);
+        node.params = this.parseFunctionDeclarationParam();
+        node.body = this.parseBlock(tt._end);
+        this.next();
+        this.expect(tt._set);
+        return this.finishNode(node, "PropertySet");
+    }
+
+    // [Readonly] Property name([Param As Type]) [As Type]
+    //     [Get]
+    //     [Set]
+    // [End Property]
+    parsePropertyDeclaration(): PropertyDeclaration {
+        const node = this.startNode(PropertyDeclaration);
+        if (this.match(tt._readonly)) {
+            this.next();
+            node.readonly = true;
+        }
+        this.checkIfDeclareFile();
+        this.expect(tt._property);
+        node.memberName = this.parseIdentifier();
+        this.resetPreviousNodeTrailingComments(node.memberName);
+        this.expect(tt.braceL);
+        node.params = this.parseFunctionDeclarationParam();
+        if (this.match(tt._as)) {
+            this.next();
+            node.returnType = this.state.value.text;
+            this.next();
+        }
+        const ahead = this.lookahead();
+        if (ahead.type === tt.equal) {
+            this.next();
+            node.init = this.parseExpression();
+        } else if (ahead.type === tt._get || ahead.type === tt._set) {
+            while (!this.eat(tt._end)) {
+                if (this.match(tt._get)) {
+                    if (node.get) {
+                        this.raise(
+                            this.state.pos,
+                            ErrorMessages["PropertyAutoImplementAlreadyExist"],
+                            "Get"
+                        );
+                    }
+                    node.get = this.parsePropertyGet();
+                } else if (this.match(tt._set)) {
+                    if (node.set) {
+                        this.raise(
+                            this.state.pos,
+                            ErrorMessages["PropertyAutoImplementAlreadyExist"],
+                            "Set"
+                        );
+                    }
+                    node.set = this.parsePropertySet();
+                }
+            }
+            this.expect(tt._property);
+        }
+        return this.finishNode(node, "PropertyDeclaration");
+    }
+
 
     // Pre-Processor
     // #define identifier [ ["] value ["] ]

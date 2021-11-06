@@ -2,6 +2,7 @@
 
 'Removes DK and/or Other if coded as well as another code
 Sub sbCleanDKandOther(qst,code1,code2)
+'Removes DK and/or Other if coded as well as another code
 Select case (qst.AnswerCount())
     Case 2
         If Not (qst.ContainsAny(CCategorical(code1)) and qst.containsany(CCategorical(code2))) Then

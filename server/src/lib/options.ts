@@ -2,7 +2,8 @@ import { DefinitionBase } from "./util/definition";
 
 export enum SourceType {
     metadata,
-    script
+    script,
+    declare
 }
 
 export enum MarkDownCommentType {

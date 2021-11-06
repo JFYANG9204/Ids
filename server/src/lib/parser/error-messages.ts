@@ -65,6 +65,9 @@ export const ErrorMessages: ErrorTemplates = makeErrorTemplates({
     InterfaceOrObjectHasNoCorrectProperty: "类型为'%0'的接口或对象不包含名为'%1'的属性.",
     OperatorCanOnlyBeUsedInPreprocessor: "运算符'%0'只能在预处理中使用.",
     StringLineFeedNeedNewlineChar:   "字符串需要换行符('\\' 或 '_').",
+    PropertyAutoImplementAlreadyExist: "属性自动实现'%0'已存在.",
+    TypeReferenceCanOnlyBeUsedInDeclareFile: "'As'类型声明只能在声明文件(.d.mrs)中使用.",
+    KeywordCanOnlyBeUsedInDeclareFile: "'%0'关键字只能在声明文件(.d.mrs)中使用.",
     // Axis
     AxisElementRedeclared:           "Axis表达式元素'%0'被重定义.",
     AxisInvalidCharactor:            "无效字符.",

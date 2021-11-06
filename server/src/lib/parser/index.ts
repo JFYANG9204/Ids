@@ -1,5 +1,5 @@
 import { extname } from "path";
-import { Options, ScriptFileType } from "../options";
+import { Options, ScriptFileType, SourceType } from "../options";
 import { StatementParser } from "./statement";
 import { File } from "../types";
 import { ScopeHandler } from "../util/scope";
@@ -20,6 +20,9 @@ export class Parser extends StatementParser {
             this.options.scriptFileType = ScriptFileType.dms;
         } else {
             this.options.scriptFileType = ScriptFileType.mrs;
+        }
+        if (this.fileName.toLowerCase().endsWith(".d.mrs")) {
+            this.options.sourceType = SourceType.declare;
         }
         const typeMark = getFileTypeMark(input);
         if (typeMark !== undefined) {

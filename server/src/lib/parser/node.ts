@@ -21,6 +21,7 @@ export class NodeUtils extends TypeUtil {
         node.type = type;
         node.end = pos;
         node.loc.end = loc;
+        this.processComment(node);
         return node;
     }
 

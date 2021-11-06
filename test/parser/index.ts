@@ -23,5 +23,6 @@ const startPath = resolve("./test/parser/fixture/dpgm/Run.mrs");
 const testpath = resolve("./test/parser/fixture/test.mrs");
 const content = readFileAndConvertToUtf8(testpath);
 const parser = new Parser(createBasicOptions(testpath, true), content);
+parser.options.tokens = true;
 const file = parser.parse();
 console.log("end");

@@ -34,6 +34,7 @@ export class NodeBase {
     comments: Array<Comment> = [];
     leadingComments: Array<Comment> = [];
     innerComments: Array<Comment> = [];
+    trailingComments: Array<Comment> = [];
     extra: { [key: string]: any } = {};
     positionMap: NodeBase[] = [];
     treeParent?: NodeBase;
@@ -638,8 +639,19 @@ export type ForLike = ForStatement | ForEachStatement;
 
 // declaration
 
+export class SingleVarDeclarator extends NodeBase {
+    name: Identifier;
+    valueType: string = "variant";
+    constructor(parser: ParserBase, pos: number, loc: Position) {
+        super(parser, pos, loc);
+        this.name = new Identifier(parser, pos, loc);
+        this.type = "SingleVarDeclarator";
+    }
+}
+
 export class ArrayDeclarator extends NodeBase {
     name: Identifier;
+    valueType: string = "variant";
     dimensions: number;
     boundaries?: number[];
     constructor(parser: ParserBase, pos: number, loc: Position) {
@@ -651,7 +663,7 @@ export class ArrayDeclarator extends NodeBase {
 }
 
 export class VariableDeclaration extends DeclarationBase {
-    declarations: Array<Identifier | ArrayDeclarator> = [];
+    declarations: Array<SingleVarDeclarator | ArrayDeclarator> = [];
     constructor(parser: ParserBase, pos: number, loc: Position) {
         super(parser, pos, loc);
         this.type = "VariableDeclaration";
@@ -677,9 +689,10 @@ export class ConstDeclaration extends DeclarationBase {
     }
 }
 
+
 export class FunctionDeclaration extends DeclarationBase {
     id: Identifier;
-    params: Array<Identifier | ArrayDeclarator> = [];
+    params: Array<SingleVarDeclarator | ArrayDeclarator> = [];
     body: BlockStatement;
     needReturn = false;
     returnType?: FunctionDefinition;
@@ -1634,5 +1647,52 @@ export const MetadataRangeAllowedType = [
     "text",
     "date",
 ];
+
+
+// class & interface delcaration
+
+export class PropertyGet extends NodeBase {
+    body?: BlockStatement;
+    constructor(parser: ParserBase, pos: number, loc: Position) {
+        super(parser, pos, loc);
+        this.type = "PropertyGet";
+    }
+}
+
+export class PropertySet extends NodeBase {
+    body?: BlockStatement;
+    params: Array<SingleVarDeclarator | ArrayDeclarator> = [];
+    constructor(parser: ParserBase, pos: number, loc: Position) {
+        super(parser, pos, loc);
+        this.type = "PropertySet";
+    }
+}
+
+export class PropertyDeclaration extends NodeBase {
+    readonly?: boolean;
+    default?: boolean;
+    returnType: string = "variant";
+    init?: any;
+    memberName: Identifier;
+    params: Array<SingleVarDeclarator | ArrayDeclarator> = [];
+    get?: PropertyGet;
+    set?: PropertySet;
+    constructor(parser: ParserBase, pos: number, loc: Position) {
+        super(parser, pos, loc);
+        this.type = "PropertyDeclaration";
+        this.memberName = new Identifier(parser, pos, loc);
+    }
+}
+
+export class ClassOrInterfaceDeclaration extends NodeBase {
+    properties: Array<PropertyDeclaration> = [];
+    methods: Array<FunctionDeclaration> = [];
+    default?: PropertyDeclaration | FunctionDeclaration;
+    constructor(parser: ParserBase, pos: number, loc: Position) {
+        super(parser, pos, loc);
+        this.type = "ClassOrInterfaceDeclaration";
+    }
+}
+
 
 
