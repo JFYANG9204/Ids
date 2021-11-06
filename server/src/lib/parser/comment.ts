@@ -71,6 +71,7 @@ export class CommentParser extends ParserBase {
             } else {
                 if (commentEnd === nodeStart) {
                     commentWS.trailingNode = node;
+                    setLeadingComments(node, commentWS.comments);
                 }
                 break;
             }

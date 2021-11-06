@@ -8,6 +8,7 @@ import {
     ArrayDeclarator,
     BlockStatement,
     BooleanLiteral,
+    ClassOrInterfaceDeclaration,
     ConstDeclaration,
     ConstDeclarator,
     DecimalLiteral,
@@ -364,6 +365,11 @@ export class StatementParser extends ExpressionParser {
                 return this.parsePreLineStatement();
             case tt.pre_error:
                 return this.parsePreErrorStatement();
+
+            // declaration
+            case tt._class:
+            case tt._interface:
+                return this.parseClassOrInterface();
 
             default:
                 throw this.unexpected();
@@ -1101,6 +1107,33 @@ export class StatementParser extends ExpressionParser {
         return this.finishNode(node, "PropertyDeclaration");
     }
 
+    parseClassOrInterface(): ClassOrInterfaceDeclaration {
+        const node = this.startNode(ClassOrInterfaceDeclaration);
+        node.defType = this.match(tt._interface) ? "interface" : "class";
+        this.checkIfDeclareFile(this.state.value.text);
+        this.next();
+        while (!this.eat(tt._end)) {
+            switch(this.state.type) {
+                case tt._readonly:
+                case tt._property:
+                    node.properties.push(this.parsePropertyDeclaration());
+                    break;
+                case tt._sub:
+                case tt._function:
+                    node.methods.push(this.parseFunctionDeclaration());
+                    break;
+
+                default:
+                    throw this.unexpected();
+            }
+        }
+        if (node.defType === "class") {
+            this.expect(tt._class);
+        } else {
+            this.expect(tt._interface);
+        }
+        return this.finishNode(node, "ClassOrInterfaceDeclaration");
+    }
 
     // Pre-Processor
     // #define identifier [ ["] value ["] ]

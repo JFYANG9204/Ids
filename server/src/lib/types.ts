@@ -1685,6 +1685,7 @@ export class PropertyDeclaration extends NodeBase {
 }
 
 export class ClassOrInterfaceDeclaration extends NodeBase {
+    defType: "interface" | "class" = "interface";
     properties: Array<PropertyDeclaration> = [];
     methods: Array<FunctionDeclaration> = [];
     default?: PropertyDeclaration | FunctionDeclaration;
