@@ -1112,8 +1112,7 @@ export class StatementParser extends ExpressionParser {
         node.params = this.parseFunctionDeclarationParam();
         if (this.match(tt._as)) {
             this.next();
-            node.returnType = this.state.value.text;
-            this.next();
+            node.returnType = this.parseSingleVarDeclarator();
         }
         const ahead = this.lookahead();
         if (ahead.type === tt.equal) {

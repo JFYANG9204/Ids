@@ -1,0 +1,151 @@
+
+'!
+```ds
+(interface) IDataManagerLogging
+```
+-----------------------------
+A wrapper to the Logging component.
+!'
+Interface IDataManagerLogging
+
+    '!
+    ```ds
+    (method) IDataManagerLogging.CreateGroupLog(): Boolean
+    ```
+    ---------------------
+    Creates a public/group log file at the location designated by *m_Path* For full explanation of the parameters and their effect on logging please see the logging component documentation.
+    !'
+    Function CreateGroupLog() As Boolean
+    End Function
+
+    '!
+    ```ds
+    (method) IDataManagerLogging.CreatePrivateLog(): Boolean
+    ```
+    ---------------------
+    Creates a private log file at the location designated by *m_Path* For full explanation of the parameters and their effect on logging please see the logging component documentation.
+    !'
+    Function CreatePrivateLog() As Boolean
+    End Function
+
+    '!
+    ```ds
+    (method) IDataManagerLogging.LogError(Id: Long, LogEntry: String): Void
+    ```
+    ---------------------
+    Writes an Error-level error message, to the log file.
+    !'
+    Sub LogError(Id As Long, LogEntry As String)
+    End Sub
+
+    '!
+    ```ds
+    (method) IDataManagerLogging.LogError_2(LogEntry: String): Void
+    ```
+    ---------------------
+    Writes an Error-level error message, to the log file.
+    !'
+    Sub LogError_2(LogEntry As String)
+    End Sub
+
+    '!
+    ```ds
+    (method) IDataManagerLogging.LogFatal(Id: Long, LogEntry: String): Void
+    ```
+    ---------------------
+    Writes a Fatal-level error message, to the log file.
+    !'
+    Sub LogFatal(Id As Long, LogEntry As String)
+    End Sub
+
+    '!
+    ```ds
+    (method) IDataManagerLogging.LogFatal_2(LogEntry: String): Void
+    ```
+    ---------------------
+    Writes a Fatal-level error message, to the log file.
+    !'
+    Sub LogFatal_2(LogEntry As String)
+    End Sub
+
+    '!
+    ```ds
+    (method) IDataManagerLogging.LogInfo(Id: Long, LogEntry: String): Void
+    ```
+    ---------------------
+    Writes an Info-level error message, to the log file.
+    !'
+    Sub LogInfo(Id As Long, LogEntry As String)
+    End Sub
+
+    '!
+    ```ds
+    (method) IDataManagerLogging.LogInfo_2(LogEntry: String): Void
+    ```
+    ---------------------
+    Writes an Info-level error message, to the log file.
+    !'
+    Sub LogInfo_2(LogEntry As String)
+    End Sub
+
+    '!
+    ```ds
+    (method) IDataManagerLogging.LogMetric(Id: Long, LogEntry: String): Void
+    ```
+    ---------------------
+    Writes an Metric-level error message, to the log file.
+    !'
+    Sub LogMetric(Id As Long, LogEntry As String)
+    End Sub
+
+    '!
+    ```ds
+    (method) IDataManagerLogging.LogMetric_2(LogEntry: String): Void
+    ```
+    ---------------------
+    Writes a Metric-level error message, to the log file.
+    !'
+    Sub LogMetric_2(LogEntry As String)
+    End Sub
+
+    '!
+    ```ds
+    (method) IDataManagerLogging.LogScript(Id: Long, LogEntry: String): Void
+    ```
+    ---------------------
+    Writes a Script-level error message, to the log file.
+    !'
+    Sub LogScript(Id As Long, LogEntry As String)
+    End Sub
+
+    '!
+    ```ds
+    (method) IDataManagerLogging.LogScript_2(LogEntry: String): Void
+    ```
+    ---------------------
+    Writes a Script-level error message, to the log file.
+    !'
+    Sub LogScript_2(LogEntry As String)
+    End Sub
+
+    '!
+    ```ds
+    (method) IDataManagerLogging.LogTrace(Id: Long, LogEntry: String): Void
+    ```
+    ---------------------
+    Writes a Trace-level error message, to the log file.
+    !'
+    Sub LogTrace(Id As Long, LogEntry As String)
+    End Sub
+
+    '!
+    ```ds
+    (method) IDataManagerLogging.LogTrace_2(LogEntry: String): Void
+    ```
+    ---------------------
+    Writes a Trace-level error message, to the log file.
+    !'
+    Sub LogTrace_2(LogEntry As String)
+    End Sub
+
+End Interface

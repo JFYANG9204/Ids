@@ -1682,7 +1682,7 @@ export class PropertySet extends NodeBase {
 export class PropertyDeclaration extends NodeBase {
     readonly?: boolean;
     default?: boolean;
-    returnType: string = "variant";
+    returnType: SingleVarDeclarator | ArrayDeclarator;
     init?: any;
     memberName: Identifier;
     params: Array<ArgumentDeclarator> = [];
@@ -1692,6 +1692,7 @@ export class PropertyDeclaration extends NodeBase {
         super(parser, pos, loc);
         this.type = "PropertyDeclaration";
         this.memberName = new Identifier(parser, pos, loc);
+        this.returnType = new SingleVarDeclarator(parser, pos, loc);
     }
 }
 

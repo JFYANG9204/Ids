@@ -106,8 +106,124 @@ Interface ICategory
     --------------------
     This property returns the key code for the `category`.
     !'
-    Property KeyCode() As String
+    ReadOnly Property KeyCode() As String
 
+    '!
+    ```ds
+    (property) ICategory.Label: ILabel
+    ```
+    --------------------
+    This read-only property returns the label for the category.
+
+    ### Remarks
+    The *category* label that is returned is based on the *active language*, *context*, and *label type*. The category label can be modified, but any changes will not be written back into the MDM.
+    !'
+    ReadOnly Property Label() As ILabel
+
+    '!
+    ```ds
+    (property) ICategory.Name: String
+    ```
+    --------------------
+    A read-only property that returns the name of the category.
+    !'
+    ReadOnly Property Name() As String
+
+    '!
+    ```ds
+    (property) ICategory.OtherQuestion: IQuestion
+    ```
+    --------------------
+    This property returns the *Other Specify* question.
+
+    ### Remarks
+    An error is returned if the category is not an *other specify* category.
+    !'
+    ReadOnly Property OtherQuestion() As IQuestion
+
+    '!
+    ```ds
+    (property) ICategory.Parent: ICategory
+    ```
+    --------------------
+    A read-only property that returns the parent `category` if one exists.
+
+    ### Remarks
+    *NULL* is returned if the `category` does not have a parent.
+    !'
+    ReadOnly Property Parent() As ICategory
+
+    '!
+    ```ds
+    (property) ICategory.Properties: IProperties
+    ```
+    --------------------
+    A read-only property that returns the properties for the `category`.
+
+    ### Remarks
+    The `category` properties are taken from the `element` properties in the MDM.
+    !'
+    ReadOnly Property Properties() As IProperties
+
+    '!
+    ```ds
+    (property) ICategory.Style: IStyle
+    ```
+    --------------------
+    This read/write property returns a `Style` object for the category.
+
+    ### Remarks
+    The `Style` object is used to override or reset the default presentation styles for the category.
+    This property is not supported in mrDataManager 1.0
+    !'
+    Property Style() As IStyle
+
+    '!
+    ```ds
+    (property) ICategory.Value: Variant
+    ```
+    --------------------
+    A read-only property that returns the *categorical* value of the `category`. (Default Property)
+    !'
+    ReadOnly Property Value() As Variant
+
+    '!
+    ```ds
+    (property) ICategory.Filter: Variant
+    ```
+    --------------------
+    This property is used to get or set the categories filter.
+
+    ### Remarks
+    This property is only supported on `category` objects of `CategoryType` `ctCategoryList`. Refer to the `Categories` `Filter` property for a description of the how to apply a filter.
+    This property is not supported in mrDataManager 1.0
+    !'
+    Property Filter() As Variant
+
+    '!
+    ```ds
+    (property) ICategory.Item[Index: Variant]: Variant
+    ```
+    --------------------
+    The `Item` property is used to return a sub-category. (Default Property)
+
+    ### Remarks
+    The `index` parameter on `Item` is optional. If the `index` is not specified, then the property gets the *category* value.
+    !'
+    Property Item(Index As Variant) As Variant
+
+    '!
+    ```ds
+    (property) ICategory.Order: OrderConstants
+    ```
+    --------------------
+    The order of the categories in the collection
+
+    ### Remarks
+    Setting the `order` property controls the sequence in which `Category` objects are returned by the `Item` property when using a numeric index and also by the `For-Each` enumerator.
+    This property is not supported in mrDataManager 1.0
+    !'
+    Property Order() As OrderConstants
 
 
 End Interface
