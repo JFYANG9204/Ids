@@ -1,0 +1,614 @@
+'!
+```ds
+(interface) IQuestion
+```
+-----------------------------
+The `Question` object is used to represent a question in the interview.
+
+### Remarks
+With the properties and methods of a `Question` object, you can:
++ Ask the question.
++ Add and remove banners to the question.
++ Show the question and its current response value.
++ Get and set the current response value.
++ Mark the question as preserved so that it cannot be re-asked.
++ Determine the question type and response data type.
++ Set the question label.
++ Set the error labels and styles for the question.
++ Set the styles for the question.
++ List the sub-questions available for the question.
++ Modify the validation of the question response.
++ List the valid categorical responses for the question.
++ Set the styles for each of the categorical responses.
++ Get and set any custom properties for the question.
++ Get and set additional interview paradata.
+
+There are three different types of `Question` object. The properties which are available, and the property defined as the default varies for each type:
+
++ **Simple**: The *Simple* question type is a single ask, with a response type of *Long*, *Double*, *Text*, *Date*, *Categorical*, or *Boolean*. The Simple question type supports all of the properties except `Item` and `Count` and has `Value` as its default property.
+```ds
+' Example - Simple question usage
+' Ask Q1
+Q1.Ask()
+' Set Q1 color to red
+Q1.Style.Color = mr.Red
+```
+
++ **Loop**: The *Loop* (*Categorical* or *Numeric*) question type defines an array of sub-questions. Each index or iteration of the array can contain one or more different sub-questions. The *Loop* question type supports all of the question properties except value and has `Item` as its default property.
+
+```ds
+' Multi-ask the loop
+Loop1.Ask()
+
+' Ask the sub-questions for Exhibit A
+Loop1[{ExhibitA}].Ask()
+
+' Ask the sub-question Rating for Exhibit B
+Loop1[{ExhibitB}].Rating.Ask()
+```
+
++ **Block**: The *Block* (or Compound, Page) question type defines a list of sub-questions. The Block question type supports all of the question properties except Value and has Item as its default property.
+
+```ds
+' Ask all of the questions in the block
+Block1.Ask()
+
+' Ask Q1 from the block
+Block1.Q1.Ask()
+
+' Ask the Demo sub-question using Item
+Block1[\"Q1\"].Ask()
+```
+
+To support a consistent interface for all question types, as well as supporting a dynamic interface based on sub-question names, the names of sub-questions cannot match those of question object properties. To demonstrate why, if a sub-question was named 'Style', there needs to be a way to ask just the sub-question:
+
+```ds
+' Ask the sub-question of Block1
+Block1.Style.Ask()
+```
+
+Unfortunately, `Style` is also a property of the question object. It also needs to be possible to set a property on the style object:
+
+```ds
+' Set the default color for the block
+Block1.Style.Color = mr.Blue
+```
+
+Hence, there is a name clash between the `Style` sub-question and the `Style` question property. While it will still be possible to have sub-questions whose names match question properties, the question property will always take precedence:
+
+```ds
+' VALID: Set the default color for the block
+Block1.Style.Color = mr.Blue
+
+' INVALID: Ask the sub-question for the block
+Block1.Style.Ask()
+```
+
+The second statement is invalid because the `Style` question property takes precedence. As the `Style` object does not have an `Ask` method, the parser will raise an error. To use reserved property names as sub-question names, the Item method must be used to ask the question:
+
+```ds
+' VALID: Ask the sub-question for the block
+Block1[\"Style\"].Ask()
+```
+
+The list of keywords that should not be used as sub-question names:
+
+*Categories* *Count* *Errors* *Item* *Label* *LayoutTemplate* *ParentQuestion* *Properties* *QuestionName* *QuestionFullName* *QuestionInfo* *QuestionType* *Response* *Style* *Validation*
+!'
+Interface IQuestion
+
+    '!
+    ```ds
+    (method) IQuestion.Ask(LabelArgs: Variant[]): Void
+    ```
+    --------------------
+    Asks a question in an interview.
+
+    ### Remarks
+    The `Ask` method causes the Interview state machine to stop script execution, save the interview state, and to generate question output. The question output generated is dependent on the type of question and the properties that have been set on the interview, next page, and question objects.
+
+    The `Ask` method is ignored if:
+
+    + `MustAnswer` is *False* AND
+    + The question is a *categorical* or *compound* question and there are no categories OR
+    + The question is a *categorical* or *compound* question and the only category is a NA (No Answer) category OR
+    + The question is a block, compound, page, or loop and it doesn't have any sub-questions.
+
+    The most common situation in which a question is skipped automatically is when all responses or sub-questions have been filtered out due to the response given to a previous question.
+
+    ### Example
+    ```ds
+    '  q1 and q2 are lists of brands
+    IOM.MustAnswer = False
+    q1.Ask()
+    q2.Categories = q1.Response
+
+    '  If the respondant doesn't choose any brands at q1 then q2 has
+    '  no categories and the following line won't have any effect.
+    q2.Ask()
+    ```
+    If the question label has inserts then the `LabelArgs` parameter can be used to specify
+    values for those inserts.  For example, if the question label for Spend was \"How
+    much did you spend? (e.g. {ExampleValue:f})\" then the question could be asked as
+    `Spend.Ask(123.45)` and 123.45 would be inserted into the label and formatted appropriately
+    for the current locale, e.g. \"123.45\" or \"123,45\".
+
+    This method is not supported in mrDataManager 1.0
+    !'
+    Sub Ask(LabelArgs As Variant[])
+    End Sub
+
+    '!
+    ```ds
+    (method) IQuestion.BuildDBFilter([bstrFieldName: String = \"L\"]): String
+    ```
+    --------------------
+    This method is used to build a database filter according to its response value.
+
+    ### Remarks
+    This method is only supported by single and multiple response database questions. If the `bstrFieldName` is omitted, the `QuestionName` will be used as the `bstrFieldName`.
+
+    ### Example
+    ```ds
+    Make.Ask() 'A DB multiple response question for favorite automobile makers.
+    'Model is filtered based on the Make response. For example, if BMW and Audi is
+    'selected above, the return value of Make.BuildDBFilter will be (MakeID='BMW') OR (MakeID='Audi').
+    Model.DBFilter = Make.BuildDBFilter(\"MakeID\")
+    Model.Ask()
+    ```
+    !'
+    Function BuildDBFilter(Optional bstrFieldName As String = "L") As String
+    End Function
+
+    '!
+    ```ds
+    (method) IQuestion.ClearOffPathResponse(): Void
+    ```
+    --------------------
+    Clears the off-path response to the question (if applicable)
+
+    ### Remarks
+    Normally when a question becomes off-path the response in the case data is cleared (exactly when that happens depends on the OffPathDataMode property) but the response is kept so that it is presented to the respondent if the question is redisplayed. The `ClearOffPathResponse()` method can be used to clear the response to the question if the response is off-path. The `ClearOffPathResponse()` also clears the responses to any \"other specify\" and sub-questions that the question may have. Compare this to setting `Question.Info.OffPathResponse` to *Null* which will only clear the response of the immediate question object.
+    The typical use of the `ClearOffPathResponse()` method is to clear all off-path responses (using `IOM.Questions[..].ClearOffPathResponse()`) when the respondent changes an answer that invalidates all off-path responses.
+    For example, imagine an interview that asks which fruit the respondent likes the most, and then asks questions like why they like that fruit and how often they eat it. If the respondent navigates back to the question about which fruit they liked the most, and then changes their answer then the answers to the subsequent questions should be completely discarded as they might have been applicable to apples but the respondent might have now selected oranges as their favorite fruit.
+    !'
+    Sub ClearOffPathResponse()
+    End Sub
+
+    '!
+    ```ds
+    (method) IQuestion.Delete(vtIndex: Variant): Void
+    ```
+    --------------------
+    This method is used to delete the given iteration of the question.
+
+    ### Remarks
+    This method is only supported by unbound loop question.
+    !'
+    Sub Delete(vtIndex As Variant)
+    End Sub
+
+    '!
+    ```ds
+    (method) IQuestion.Exists(vtIndex: Variant): Boolean
+    ```
+    --------------------
+    This method is used to check given iteration exists or not.
+
+    ### Remarks
+    This method is only supported by numeric loop question for now.
+    !'
+    Function Exists(vtIndex As Variant) As Boolean
+    End Function
+
+    '!
+    ```ds
+    (method) IQuestion.Preserve(): Void
+    ```
+    --------------------
+    Preserves the response of a question such that the question can never be re-asked or reviewed.
+
+    ### Remarks
+    `Preserve` could be used in CAPI where a respondent will only answer questions if they cannot be reviewed by the interviewer.
+    This method is not supported in mrDataManager 1.0
+    !'
+    Sub Preserve()
+    End Sub
+
+    '!
+    ```ds
+    (method) IQuestion.Show(LableArgs: Variant[]): Void
+    ```
+    --------------------
+    Shows a question with its associated value or values.
+
+    ### Remarks
+    The `Show` method is identical to `Ask` method except that the user is not able to set a response value for the question.
+    This method is not supported in mrDataManager 1.0
+    !'
+    Sub Show(LableArgs As Variant[])
+    End Sub
+
+    '!
+    ```ds
+    (property) IQuestion.Banners: ILabels
+    ```
+    --------------------
+    A read-only property that returns a collection of Label objects.
+
+    ### Remarks
+    Question banners are displayed only when the question is asked.
+    This property is not supported in mrDataManager 1.0
+    !'
+    ReadOnly Property Banners() As ILabels
+
+    '!
+    ```ds
+    (property) IQuestion.Categories: ICategories
+    ```
+    --------------------
+    A read-only property that returns a collection of category objects.
+
+    ### Remarks
+    The `Categories` collection supports the standard collection properties and methods: `Item`, `Count`, and `_NewEnum`. The collection also supports a helper property, Filter.
+    The `Categories` properties is not used for *Block* or *Page* questions, but can be used for all other question types. For a Compound question, the `Categories` property returns the shared category list for the sub-questions. For a *categorical* loop question, the `Categories` property returns the categories which define the loop iterations. Finally, for a Simple question, this property returns the possible categorical responses for the question. All simple data types, except Boolean, can have categorical responses associated with them.
+    !'
+    ReadOnly Property Categories() As ICategories
+
+    '!
+    ```ds
+    (property) IQuestion.Codes: ICategories
+    ```
+    --------------------
+    A read only property that returns a collection of category objects.
+
+    ### Remarks
+    The categories returned by the `Codes` property represent the alternative categorical responses for a question. Optionally used on simple questions, these categorical responses typically include categories such as *Don't Know*, *No Answer*, or *Refused*
+    !'
+    ReadOnly Property Codes() As ICategories
+
+    '!
+    ```ds
+    (property) IQuestion.Count: Long
+    ```
+    --------------------
+    The number of items in the collection.
+    !'
+    ReadOnly Property Count() As Long
+
+    '!
+    ```ds
+    (property) IQuestion.Errors: ILabels
+    ```
+    --------------------
+    This property returns a collection of label objects for the question error texts.
+
+    ### Remarks
+    The `IQuestion.Errors` collection can be used to display errors associated with a question when the question is asked. The default formatting causes error texts to be displayed in red.
+    After a question has been answered some standard validation is performed on the response. If one of these validation checks fails then an appropriate error is automatically added to the `Errors` collection and the question is re-asked, displaying the error message. If the standard validation checks pass and a custom validation function has been defined (using `IValidation`.Function) then that custom validation function is executed. That custom validation function can add additional errors to the `IQuestion.Errors` collection.
+    The `IQuestion.Errors` collection is automatically cleared before the standard validation is performed.
+    This property is not supported in mrDataManager 1.0
+    !'
+    ReadOnly Property Errors() As ILabels
+
+    '!
+    ```ds
+    (property) IQuestion.Info: IQuestionInfo
+    ```
+    --------------------
+    This read-only property indicates whether the question is a `Database` question.
+
+    ### Remarks
+    This property is not supported in mrDataManager 1.0
+    !'
+    ReadOnly Property Info() As IQuestionInfo
+
+    '!
+    ```ds
+    (property) IQuestion.IsDBQuestion: Boolean
+    ```
+    --------------------
+    This read-only property indicates whether the question is a Database question.
+    !'
+    ReadOnly Property IsDBQuestion() As Boolean
+
+    '!
+    ```ds
+    (property) IQuestion.Label: ILabel
+    ```
+    --------------------
+    This read-only property returns the label for the question.
+
+    ### Remarks
+    The question label that is returned is based on the active language, context, and label type. The question label can be modified, but any changes will not be written back into the MDM.
+    !'
+    ReadOnly Property Label() As ILabel
+
+    '!
+    ```ds
+    (property) IQuestion.OtherCategories: ICategories
+    ```
+    --------------------
+    A read-only property that returns a collection of \"other specify\" categories.
+
+    ### Remarks
+    The categories returned by the `OtherCategories` property represent the \"Other Specify\" categorical responses for a question.
+    The `OtherCategories` collection is similar to the `Categories` collection except it is a flattened list and only contains categories that have an associated \"other specify\" question
+    !'
+    ReadOnly Property OtherCategories() As ICategories
+
+    '!
+    ```ds
+    (property) IQuestion.ParentQuestion: IQuestion
+    ```
+    --------------------
+    A read-only property that returns the parent question if one exists.
+
+    ### Remarks
+    *NULL* is returned if the question does not have a parent question.
+    !'
+    ReadOnly Property ParentQuestion() As IQuestion
+
+    '!
+    ```ds
+    (property) IQuestion.Properties: IProperties
+    ```
+    --------------------
+    A read-only property that returns the properties for the question.
+
+    ### Remarks
+    *NULL* is returned if the question does not have a parent question.
+    !'
+    ReadOnly Property Properties() As IProperties
+
+    '!
+    ```ds
+    (property) IQuestion.QuestionDataType: DataTypeContants
+    ```
+    --------------------
+    A read-only property that returns the question data type.
+
+    ### Remarks
+    This property is only valid for questions with a `QuestionType` of *qtSimple*.
+    !'
+    ReadOnly Property QuestionDataType() As DataTypeContants
+
+    '!
+    ```ds
+    (property) IQuestion.QuestionFullName: String
+    ```
+    --------------------
+    A read-only property that returns the full name of the question.
+
+    ### Remarks
+    If the question is a sub-question of another question object, then the full-name will not match the name.
+    !'
+    ReadOnly Property QuestionFullName() As String
+
+    '!
+    ```ds
+    (property) IQuestion.QuestionName: String
+    ```
+    --------------------
+    A read-only property that returns the name of the question or sub-question.
+    !'
+    ReadOnly Property QuestionName() As String
+
+    '!
+    ```ds
+    (property) IQuestion.QuestionType: QuestionTypes
+    ```
+    --------------------
+    A read-only property that returns the question type.
+
+    ### Remarks
+    The question type determines which properties are available.
+    !'
+    ReadOnly Property QuestionType() As QuestionTypes
+
+    '!
+    ```ds
+    (property) IQuestion.Response: IResponse
+    ```
+    --------------------
+    The read-only Response property returns the response object for the question.
+
+    ### Remarks
+    The `response` object can be used to set and unset a question value, as well as setting the default value. The `Response` object is only available for *Simple* questions, for which it is the default property. The following examples show how the `Response` object can be used:
+    ```ds
+    ' Unset the response for Q1
+    Q1.Response = NULL
+
+    ' Set the default value for Q1
+    Q1.Response.Default = {Female}
+
+    ' Use the response value of Q1 in an expression
+    Total.Response = Total.Response + Q1
+    ```
+    !'
+    Default ReadOnly Property Response() As IResponse
+
+    '!
+    ```ds
+    (property) IQuestion.Style: IStyle
+    ```
+    --------------------
+    This property returns a `Style` object for the question.
+
+    ### Remarks
+    The `Style` object is used to override or reset the default presentation styles for the question. For *Loop*, *Block*, *Page*, and *Compound* question types, the `Style` object can be used to set styles for all of the sub-questions. Any styles set in a parent question can be further overridden in a sub-question.
+    This property is not supported in mrDataManager 1.0
+    !'
+    ReadOnly Property Style() As IStyle
+
+    '!
+    ```ds
+    (property) IQuestion.Validation: IValidation
+    ```
+    --------------------
+    This read-only property that defines the validation for the question.
+
+    ### Remarks
+    The validation object is used only with Simple question types.
+    !'
+    ReadOnly Property Validation() As IValidation
+
+    '!
+    ```ds
+    (property) IQuestion.BannerTemplacte: String
+    ```
+    --------------------
+    This property is used to get or set the name of a `Banner` template for the question.
+
+    ### Remarks
+    The banner template is used when replacing mrBanner tags.
+    This property is not supported in mrDataManager 1.0
+    !'
+    Property BannerTemplacte() As String
+
+    '!
+    ```ds
+    (property) IQuestion.DBFilter: String
+    ```
+    --------------------
+    This property is used to get and set the `Database` filter for the question.
+    !'
+    Property DBFilter() As String
+
+    '!
+    ```ds
+    (property) IQuestion.ErrorTemplate: String
+    ```
+    --------------------
+    This property is used to get or set the name of a `Error` template for the question.
+
+    ### Remarks
+    The error template is used when replacing mrError tags.
+    This property is not supported in mrDataManager 1.0
+    !'
+    Property ErrorTemplate() As String
+
+    '!
+    ```ds
+    (property) IQuestion.Item: Variant
+    ```
+    --------------------
+    The `Item` property is used to return a sub-question. (Default Property)
+
+    ### Remarks
+    The `Item` property is only available for the *Loop*, *Block*, *Compound*, and *Page* question types, for which it is the default property. The Item method is used to return the sub-questions from an iteration of a *Loop* or to return a sub-question from a *Block*, *Compound*, or *Page*. The `Item` property would not normally be used for *Blocks*, *Compounds* and *Pages*, except when a sub-question has the same name as a property.
+    ```ds
+    ' Item example: Ask the sub-questions on the loop
+    Loop1[{ExA}].Ask() ' Equivalent to: Loop1.Item[{ExA}].Ask()
+
+    ' Item example: Block sub-question uses reserved name
+    Block1[\"Style\"].Ask()
+    ```
+    The index parameter on `Item` is optional.  If the index is not specified, then the property sets or gets the `Response` value.
+
+    ```ds
+    ' Equivalent to Q1.Response = {Female}
+    Q1 = {Female}
+
+    ' Equivalent to TotalQ.Response = TotalQ.Response + 1
+    TotalQ = TotalQ + 1
+    ```
+    !'
+    Property Item(Index As Variant) As Variant
+
+    '!
+    ```ds
+    (property) IQuestion.LayoutTemplate: String
+    ```
+    --------------------
+    This read/write property is used to get or set the layout template for the question.
+
+    ### Remarks
+    The layout template is typically the name of a file which defines where the questions on a page should be rendered.
+    This property is not supported in mrDataManager 1.0
+    !'
+    Property LayoutTemplate() As String
+
+    '!
+    ```ds
+    (property) IQuestion.MustAnswer: Boolean
+    ```
+    --------------------
+    This read/write property is used to enable or disable automatic no answer questions.
+
+    ### Remarks
+    If the `MustAnswer` property is set, the question must be answered. If `MustAnswer` is set to *False*, then any questions with a default value or a no answer (NA) special response will automatically be answered. If `MustAnswer` is set to *False* and a question does not have a *default* or *NA* as a valid response, then the question needs to be answered before proceeding to the next question.
+    If no value is set for this property then the `MustAnswer` setting of the parent question is used, i.e. the iterations of a loop or the questions in a block will use the MustAnswer setting for the loop or block question respectively. Top level questions will use the `IOM.MustAnswer` (which has a default of *True*) if no `MustAnswer` value has been set.
+    !'
+    Property MustAnswer() As Boolean
+
+    '!
+    ```ds
+    (property) IQuestion.NarBarTemplate: String
+    ```
+    --------------------
+    This property is used to get or set the name of a `NavBar` template for the question.
+
+    ### Remarks
+    The navigation bar template is used when replacing *mrNavBar* tags.
+    This property is not supported in mrDataManager 1.0
+    !'
+    Property NarBarTemplate() As String
+
+    '!
+    ```ds
+    (property) IQuestion.QuestionFilter: Variant
+    ```
+    --------------------
+    The sub-questions of this question that are to be asked.
+
+    ### Remarks
+    This is similar to the `Filter` property of `ICategories` and `ICategory`. It determines the sub-questions that are returned by the Item property when using a numeric index and by the `For-Each` enumerator. It also affects the value returned by the `Count` property. All questions are still accessible from the `Item` property using the question name. Unlike the `Filter` property of `ICategories` and `ICategory`, this `Filter` property only affects the immediate sub-questions.
+    For a categorical loop the `QuestionFilter` property can be a categorical value or a range expression, e.g. *{Monday, Tuesday, Wednesday}* or \"Monday..Wednesday\"
+    For a numeric loop the `QuestionFilter` property can be a range expression or a numeric value. A numeric value is interpreted as a range expression expression of \"..n\" where n is the numeric value, e.g. the following are equivalent:
+    ```ds
+    PersonLoop.QuestionFilter '\"..5\"
+
+    PersonLoop.QuestionFilter `5
+    ```
+
+    A typical example of filtering a numeric loop would be to reduce the number if iterations asked based on the response to a previous question, e.g:
+    ```ds
+    ' Filter the numeric loop sub-questions based on a previous question
+    PersonLoop.QuestionFilter = PeopleInHousehold
+    ```
+    For a compound, block, or page question the `QuestionFilter` property is a range expression containing a list of the questions to ask, e.g.
+    ```ds
+    Demographics.QuestionFilter ' \"age, gender, education\"
+    ```
+    The `QuestionFilter` is not supported in mrDataManager 1.0
+    !'
+    Property QuestionFilter() As Variant
+
+    '!
+    ```ds
+    (property) IQuestion.QuestionOrder: OrderConstants
+    ```
+    --------------------
+    The order of the sub-questions of this question.
+
+    ### Remarks
+    Setting the order property controls the sequence in which `Questions` objects are returned by the Item property when using a numeric index and also by the `For-Each` enumerator.
+    This property is not supported in mrDataManager 1.0
+    !'
+    Property QuestionOrder() As OrderConstants
+
+    '!
+    ```ds
+    (property) IQuestion.QuestionTemplate: String
+    ```
+    --------------------
+    This property is used to get or set the name of a question template for the question.
+
+    ### Remarks
+    The question template is used when replacing mrData tags that do not specify a question element.
+    This property is not supported in mrDataManager 1.0
+    !'
+    Property QuestionTemplate() As String
+
+End Interface

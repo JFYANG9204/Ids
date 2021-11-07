@@ -1,0 +1,70 @@
+
+
+'!
+```ds
+(interface) ILabels
+```
+-----------------------------
+A collection object that contains label objects.
+!'
+Interface ILabels
+
+    '!
+    ```ds
+    (method) ILabels.Add(Name: String, pLabel: ILabel): Void
+    ```
+    --------------------
+    Adds an existing label to the collection.
+    !'
+    Sub Add(Name As String, pLabel As ILabel)
+    End Sub
+
+    '!
+    ```ds
+    (method) ILabels.AddNew(Name: String, Text: String): ILabel
+    ```
+    --------------------
+    Adds a new label to the collection.
+    !'
+    Function AddNew(Name As String, Text As String) As ILabel
+    End Function
+
+    '!
+    ```ds
+    (method) ILabels.Clear(): Void
+    ```
+    --------------------
+    Removes all items from the collection.
+    !'
+    Sub Clear()
+    End Sub
+
+    '!
+    ```ds
+    (method) ILabels.Remove(Index: Variant): Void
+    ```
+    --------------------
+    Removes an item from the collection.
+    !'
+    Sub Remove(Index As Variant)
+    End Sub
+
+    '!
+    ```ds
+    (property) ILabels.Count: Long
+    ```
+    --------------------
+    The number of items in the collection.
+    !'
+    ReadOnly Property Count() As Long
+
+    '!
+    ```ds
+    (property) ILabels.Item[Index: Variant]: ILabel
+    ```
+    --------------------
+    Get the collection item at the specified location. (Default Property)
+    !'
+    Default Property Item(Index As Variant) As ILabel
+
+End Interface

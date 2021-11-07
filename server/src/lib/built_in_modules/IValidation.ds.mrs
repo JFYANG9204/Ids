@@ -1,0 +1,14 @@
+
+'!
+```ds
+(interface) IValidation
+```
+-----------------------------
+The Validation object is used to manage the question validation.
+With the properties of a Validation object, you can:
++ Get or set the minimum and maximum allowed values.
++ Get or set the allowed text or numeric value ranges.
+!'
+Interface IValidation
+
+End Interface

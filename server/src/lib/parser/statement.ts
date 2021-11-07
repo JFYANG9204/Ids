@@ -121,8 +121,6 @@ import { ParserBase } from "../base";
 import { Position } from "../util/location";
 import {
     Argument,
-    DefinitionOptions,
-    FunctionDefinition,
     VariantDefinition
 } from "../util/definition";
 import { createDefinition } from "../built-in/basic";
@@ -132,6 +130,14 @@ import { ErrorTemplate } from "./errors";
 export class StatementParser extends ExpressionParser {
 
     eventNames: string[] = [];
+
+    convertVarToArrayDeclarator(varDec: SingleVarDeclarator, type: string) {
+        const node = this.startNodeAtNode(varDec, ArrayDeclarator);
+        node.name = varDec.name;
+        node.dimensions = 1;
+        node.valueType = type;
+        return node;
+    }
 
     checkIfDeclareFile(kw?: string) {
         if (this.options.sourceType !== SourceType.declare) {
@@ -377,7 +383,7 @@ export class StatementParser extends ExpressionParser {
         }
     }
 
-    parseSingleVarDeclarator(): SingleVarDeclarator {
+    parseSingleVarDeclarator(): SingleVarDeclarator | ArrayDeclarator {
         const node = this.startNode(SingleVarDeclarator);
         node.name = this.parseIdentifier();
         if (this.eat(tt._as)) {
@@ -391,6 +397,17 @@ export class StatementParser extends ExpressionParser {
                 );
             }
             this.next();
+            if (this.eat(tt.bracketL)) {
+                this.expect(tt.bracketR);
+                this.finishNode(node, "SingleVarDeclarator");
+                if (this.match(tt.bracketL)) {
+                    while(this.matchOne([tt.bracketL, tt.bracketR])) {
+                        this.unexpected(undefined,  undefined, undefined, false);
+                        this.next();
+                    }
+                }
+                return this.convertVarToArrayDeclarator(node, node.valueType);
+            }
         }
         return this.finishNode(node, "SingleVarDeclarator");
     }

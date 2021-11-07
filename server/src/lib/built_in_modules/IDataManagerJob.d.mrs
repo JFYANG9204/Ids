@@ -100,8 +100,8 @@ Interface IDataManagerJob
     --------------------
     Sets the internal environment value.
     !'
-    Sub EnvironmentInit(Value As String) As String
-    End Sub
+    Function EnvironmentInit(Value As String) As String
+    End Function
 
     '!
     ```ds

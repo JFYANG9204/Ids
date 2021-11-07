@@ -1,0 +1,121 @@
+
+'!
+```ds
+(interface) IResponse
+```
+-----------------------------
+The `Response` object is used to get or set a response value on a question.
+With the properties and methods of a `Response` object, you can:
++ Get the data type for the question response with the `Type` property.
++ Get and set the current value for the question using the `Value` property.
++ Get and set the default value for the question using the `Default` property.
++ Get and set the initial value for the question using the `Initial` property.
++ Get and set the other values for the question using the `Other` collection property.
+!'
+Interface IResponse
+
+    '!
+    ```ds
+    (property) IResponse.Label: String
+    ```
+    -----------------------------
+    The label corresponding to a *categorical* response
+    !'
+    ReadOnly Property Label() As String
+
+    '!
+    ```ds
+    (property) IResponse.Name: String
+    ```
+    -----------------------------
+    This read-only property returns the name of an other response category.
+    !'
+    ReadOnly Property Name() As String
+
+    '!
+    ```ds
+    (property) IResponse.Other: IResponses
+    ```
+    -----------------------------
+    This read only property returns a collection of `Response` objects.
+    !'
+    ReadOnly Property Other() As IResponses
+
+    '!
+    ```ds
+    (property) IResponse.Coded: Variant
+    ```
+    -----------------------------
+    A read/write property that returns the coded value for the question.
+    !'
+    Property Coded() As Variant
+
+    '!
+    ```ds
+    (property) IResponse.DataType: DataTypeConstants
+    ```
+    -----------------------------
+    Read-only property that returns the value object data type.
+    !'
+    ReadOnly Property DataType() As DataTypeConstants
+
+    '!
+    ```ds
+    (property) IResponse.Default: Variant
+    ```
+    -----------------------------
+    This read/write property is used to set the default value for the question.
+    !'
+    Property Default() As Variant
+
+    '!
+    ```ds
+    (property) IResponse.Initial: Variant
+    ```
+    -----------------------------
+    This read/write property is used to set the initial value for the question.
+
+    ### Remarks
+    The `Initial` value differs from the `Default` value in that it is the initially selected response when the question is first asked. Regardless of the setting of `MustAnswer`, a question does not require an answer when an initial value is set. Hence, when a question has an initial value, the *default* is ignored.
+
+    ### Example
+    ```ds
+    ' Set the default value for Gender
+    Gender.Response.Default = {Female}
+    Gender.Ask()
+    ```
+    !'
+    Property Initial() As Variant
+
+    '!
+    ```ds
+    (property) IResponse.IsDirty: Boolean
+    ```
+    -----------------------------
+    A read/write property that is automatically set to *True* when a value is updated.
+
+    ### Remarks
+    The `IsDirty` property has no impact on how data is written and is merely a way of checking for changes in question values. For example, the `IsDirty` property could get set to *False* at one point in the script and then later it could be checked to see if value has been updated.
+    !'
+    Property IsDirty() As Boolean
+
+    '!
+    ```ds
+    (property) IResponse.Value: Variant
+    ```
+    -----------------------------
+    This read/write property is the actual value assigned to the value object. (Default Property)
+    !'
+    Default Property Value() As Variant
+
+    '!
+    ```ds
+    (property) IResponse.ValueObj: IValue
+    ```
+    -----------------------------
+    The value object assigned to the `Response` object. The value object is an alternative mechanism for setting a value on a response.
+    !'
+    Property ValueObj() As IValue
+
+End Interface
+

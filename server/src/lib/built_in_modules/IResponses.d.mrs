@@ -1,0 +1,29 @@
+
+'!
+```ds
+(interface) IResponses
+```
+-----------------------------
+A collection object containing response objects.
+!'
+Interface IResponses
+
+    '!
+    ```ds
+    (property) IResponses.Count: Long
+    ```
+    --------------------
+    The number of items in the collection.
+    !'
+    ReadOnly Property Count() As Long
+
+    '!
+    ```ds
+    (property) IResponses.Item[Index: Variant]: Variant
+    ```
+    --------------------
+    Get the collection item at the specified location. (Default Property)
+    !'
+    Default ReadOnly Property Item(Index As Variant) As Variant
+
+End Interface
