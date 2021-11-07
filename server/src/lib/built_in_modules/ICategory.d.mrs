@@ -1,0 +1,113 @@
+
+'!
+```ds
+(interface) ICategory
+```
+-----------------------------
+The `Category` object is used to represent a possible *category* response for a question.
+
+### Remarks
+With the properties and methods of a `Category` object, you can:
++ Determine the category type.
++ Set the category label.
++ Get the category name and full-name.
++ Get the category index, its unique value, and any associated factor value.
++ Set the styles for the category.
++ List any sub-categories for the category.
++ Get and set any custom properties for the category.
++ Determine whether the category is exclusive or an other specify using the `Attributes` property.
+!'
+Interface ICategory
+
+    '!
+    ```ds
+    (property) ICategory.Attributes: Long
+    ```
+    --------------------
+    A read-only property that returns the CategoryAttributes. CategoryAttributes specify a category as exclusive, fixed, other etc.
+
+    ### Remarks
+    The default value of 0 indicates the category has no special `CategoryAttributes`.
+    `CategoryAttributes` can be checked using the `IsSet` function. E.g.
+    ```ds
+    If Q1.Categories[\"Other\"].Attributes.IsSet(CategoryAttributes.caExclusive) Then
+    ```
+    !'
+    ReadOnly Property Attributes() As Long
+
+    '!
+    ```ds
+    (property) ICategory.Categories: ICategories
+    ```
+    --------------------
+    A read-only property that returns a collection of category objects.
+
+    ### Remarks
+    The `Categories` collection supports the standard collection properties and methods: `Item`, `Count`, and `_NewEnum`. The use of the `Categories` property is the same as that for the `Question` object.
+    !'
+    ReadOnly Property Categories() As ICategories
+
+    '!
+    ```ds
+    (property) ICategory.CategoryType: CategoryTypes
+    ```
+    --------------------
+    A read-only property that returns the `CategoryType`. `CategoryTypes` specify a category as a single category or a category list.
+    !'
+    ReadOnly Property CategoryType() As CategoryTypes
+
+    '!
+    ```ds
+    (property) ICategory.Count: Long
+    ```
+    --------------------
+    This is a read only property that returns the number of sub-categories.
+
+    ### Remarks
+    The `Count` is the total number of sub-categories of type `Category` or `CategoryList`. The `Count` property takes into account the effect of the filter and corresponds to the number of items in the collection that can be accessed using a numeric index. Note that all items in the collection can be indexed by name even if they have been filtered out.
+    !'
+    ReadOnly Property Count() As Long
+
+    '!
+    ```ds
+    (property) ICategory.Factor: Variant
+    ```
+    --------------------
+    A read-only property that returns a factor value that can be used for tabulating the category.
+    !'
+    ReadOnly Property Factor() As Variant
+
+    '!
+    ```ds
+    (property) ICategory.FullName: String
+    ```
+    --------------------
+    A read-only property that returns the full name of the `category`.
+
+    ### Remarks
+    If a category is defined as a sub-category of another `category` object, then the full name will not match the name. For example, if a `categories` were grouped into positive and negative *category* lists, the *category* names might be \"Good\" and \"Bad\", while the full names would be \"Positive.Good\" and \"Negative.Bad\".
+    @note- Look-up by name into the `categories` collection is based on the full name.
+    !'
+    ReadOnly Property FullName() As String
+
+    '!
+    ```ds
+    (property) ICategory.Index: Long
+    ```
+    --------------------
+    A read-only property that returns the 0-based index for the position of the *category* in its parent *category* list.
+    !'
+    ReadOnly Property Index() As Long
+
+    '!
+    ```ds
+    (property) ICategory.KeyCode: String
+    ```
+    --------------------
+    This property returns the key code for the `category`.
+    !'
+    Property KeyCode() As String
+
+
+
+End Interface

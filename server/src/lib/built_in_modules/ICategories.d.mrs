@@ -1,0 +1,149 @@
+
+'!
+```ds
+(interface) ICategories
+```
+-----------------------------
+A collection object that contains `Category` objects.
+!'
+Interface ICategories
+
+    '!
+    ```ds
+    (property) ICategories.Count: Long
+    ```
+    --------------------
+    The number of items in the collection.
+    !'
+    ReadOnly Property Count() As Long
+
+    '!
+    ```ds
+    (property) ICategories.Filter: Variant
+    ```
+    --------------------
+    A read/write property that returns the filter used to select categories. The filter can be specified as a range or a categorical value. (Default Property)
+
+    ### Remarks
+    The `Filter` property is used to limit the category objects returned by the collection. If a `Filter` is set, then the final list of categories returned is the intersection of the `Filter` and the category list:
+    + ***Categories*** `Question Categories * Filter`
+    The `Filter` property can be used to limit the categories displayed by a question to just those categories chosen in a previous question.
+
+    ### Example
+    ```ds
+    ' Filtering a simple category list
+    ' Q1 and Q2 have categories {a,b,c,d}
+
+    ' Ask the categories answered in a previous question
+    ' NOTE: Q2.Categories is the same as Q2.Categories.Filter
+    Q2.Categories = Q1
+    Q2.Ask()
+
+    ' Ask the categories not answered in a previous question
+    Q2.Categories = Q2.DefinedCategories() ?Q1
+    Q2.Ask()
+
+    ' Ask the categories based on a range
+    Q2.Categories = \"a..c\"
+    Q2.Ask()
+    ```
+    The `Filter` property can be used to limit the categories in a categorical loop or compound.
+
+    ```ds
+    BrandsUsed.Ask()           ' Simple question for brands used
+
+    ' Set the Loop filter so that only the brands used are presented
+    BrandsLoop.Categories.Filter = BrandsUsed
+    ```
+    For questions, the `Filter` property only applies to the current list and does not cascade to sub-lists.  However, for categories, the filter setting is passed to sub-lists.  This is done to ensure that a filter can be based on an answer to a previous question.
+
+    ```ds
+    ' Filtering a category list with sub-lists
+    ' Q1 has categories {a, b{x,y}, c{i,j},d}
+    ' The sub-lists are name-spaced.
+
+    ' Filter {a,b{x},c{i,j}}
+    Q1.Categories = {a,b.x,c.i,c.j}
+
+    ' After setting the filter:
+    ' Q1.Categories returns {a,b,c}
+    ' Q1.Categories.b returns {x}
+    ' Q1.Categories.c returns {i,j}
+
+    ' Filter {a,b{..}}
+    Q1.Categories = {a,b}
+
+    ' Filter {a,b{..},b.x}
+    ' NOTE: b.x has no effect because it is already selected by b
+    Q1.Categories = {a,b,b.x}
+
+    To clear a filter, assign \"..\" (all categories) or NULL to the Filter property or
+    use the DefinedCategories function.
+
+    ' Different ways to reset the filter
+    Q2.Categories = Q2.DefinedCategories()
+    Q2.Categories = \"..\"
+    Q2.Categories.Filter = NULL
+    Q2.Categories = NULL
+    ```
+    The `Filter` property is the default parameterless property.  So the previous examples could have been written without explicitly specifying 'Filter':
+
+    ```ds
+    ' Set the Filter, ask the questions and remove the filter
+    BrandsLoop.Categories = BrandsUsed
+    BrandsLoop[..].Ask()
+    BrandsLoop.Categories = NULL
+    ```
+    The `Filter` setting only impacts how items are returned by the enumerator and using numeric indexes.  Even if an item it not selected by the filter, it will still be possible to get the item by its name.
+    Note that in the example below, when defining the filter in the script, the value can be set as a string (a category expression) or a *categorical* value (a categorical literal {}).
+    When assigning the filter as a string (for example, \"a\"), the category names will be validated against the question's categories, because *category* expressions need to be evaluated to resolve any range expressions.
+    On the other hand, a *category* value (for example, {a}) is only validated against the *category* map at parse time, but is not checked when setting the filter.  The filter property does not consider this an error because filters can be set based on the answers to a previous question that could contain additional categories that are not included in the current question. The additional categories are ignored.  This distinction is important for database questions. Given that the categories for database questions are not known at parse time, *category* expressions must be used. This does mean that hard coded filters set for database questions will be validated at run time against the categories read from the database.
+    ```ds
+    'Example for unusual case of setting filter.
+    q1 \"Test question 1\"
+    categorical
+    {
+    A \"A\",
+    B \"B\"
+    };
+    q1.Categories.Filter = \"C\" ==> the error \"The range expression 'C' is not valid\" is produced.
+    q1.Categories.Filter = {C} ==> no error is produced
+    ```
+    This property is not supported in mrDataManager 1.0
+    !'
+    Property Filter() As Variant
+
+    '!
+    ```ds
+    (property) ICategories.Item[Index: Variant]: ICategory
+    ```
+    --------------------
+    Get the `Category` at the specified location. (Default Property)
+
+    ### Remarks
+    `Val` can be a numeric index or *category* name.
+
+    ### Example
+    ```ds
+    ' These three lines are equivalent
+    Q1.Categories[0].Label.Style.Color = \"blue\"
+    Q1.Categories[\"Cat1\"].Label.Style.Color = \"blue\"
+    Q1.Categories.Cat1.Label.Style.Color = \"blue\"
+    ```
+    !'
+    Property Item(Index As Variant) As ICategory
+
+    '!
+    ```ds
+    (property) ICategories.Order: OrderConstants
+    ```
+    --------------------
+    The order of the categories in the collection
+
+    ### Remarks
+    Setting the order property controls the sequence in which `Category` objects are returned by the `Item` property when using a numeric index and also by the `For-Each` enumerator.
+    This property is not supported in mrDataManager 1.0
+    !'
+    Property Order() As OrderConstants
+
+End Interface

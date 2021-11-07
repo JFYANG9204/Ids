@@ -11,4 +11,145 @@ With the properties of a Validation object, you can:
 !'
 Interface IValidation
 
+    '!
+    ```ds
+    (property) IValidation.Options: IValidationOptions
+    ```
+    -----------------------------
+    Additional validation options that differ between question types.
+
+    ### Remarks
+    The `Options` property is a collection of additional validation options that are specific to each question type. Currently there are only two validation options; 'AllowThousandsSeparator' which is applicable to Long and Double questions and 'AllowXHTML' which is applicable to Text questions.
+    + ***AllowThousandsSeparator***: By default the 'thousands separator character' (e.g. the ',' character in English) is not allowed in responses to Long and Double questions. Setting the `AllowThousandsSeparator` option to True will allow the thousands separator character in responses.
+    + ***AllowXHTML***: By default XHTML is not allowed in responses to Text questions. This is done to prevent Cross Site Scripting attacks as any script entered as the response may be executed when the response is re-displayed. If AllowXHTML is set to True, for example to allow respondents to enter XHTML formating in their response, then custom validation for the text question should be used.
+
+    ### Example
+    ```ds
+    ' Allow the thousands separator character for the Spend question
+    Spend.Validation.Options[\"AllowThousandsSeparator\"] = True
+
+    ' A short-hand way to specify the same option that takes
+    ' advantage of dynamic property expansion
+    Spend.Validation.AllowThousandsSeparator = True
+    ```
+    !'
+    ReadOnly Property Options() As IValidationOptions
+
+    '!
+    ```ds
+    (property) IValidation.Function: String
+    ```
+    -----------------------------
+    The custom validation function to use.
+
+    ### Remarks
+    Custom validation can be performed in addition to the standard validation implemented by the `Validation` object. This is done by specifying the name of a function for the `IValidation.Function` property.
+    Any function that takes the form \"FuncName(Question, IOM, Attempt)\" can be used. The parameters are:
+    + ***Question***: The Question object that is being validated.
+    + ***IOM***: The Interview object.
+    + ***Attempt***: The number of the current custom validation attempt.
+    The custom validation function is automatically called during the validation of a response entered for a Ask() statement. The custom validation function is called after the standard validation has been performed. If the question that was asked has child questions, and they also have custom validation functions, then those functions will also be invoked.
+    The custom validation function must return a Boolean value. True indicates that the validation was successful and the interview should move on to the next question. False indicates the response is invalid and the question should be re-asked. If the question has sub-questions with validate functions then the question will be re-asked if any validation function returns *False*.
+    The custom validation function is also invoked during a call to `IValidation.Validate()` when the validate action is `vaUpdateErrors`.
+    The `Attempt` parameter indicates the number of times the custom validation function has been called for the particular question. The first time custom validation is performed the `Attempt` parameter has the value 1 and it is incremented on each subsequent attempt. The Attempt count is reset whenever the custom validation function returns *True*. The Attempt count can be used to give the respondent a limited number of attempts at the question before just accepting whatever response they gave and continuing with the interview.
+
+    ### Example
+    ```ds
+    ' TimeAllocation is a block of numeric questions.  The interview
+    ' will not proceed to the next question until the responses of all
+    ' the numeric questions add to 100.
+    TimeAllocation.Validation.Function = \"Validate100Percent\"
+    TimeAllocation.Ask()
+
+    Function Validate100Percent(Question, IOM, Attempt)
+    Dim SubQuestion, Total
+
+    Total = 0
+    For Each SubQuestion In Question
+        Total = Total + SubQuestion.Response.Value
+    Next
+    If Total = 100 Then
+        Validate100Percent = True
+    Else
+        Question.Errors.AddNew(\"IncorrectTotal\", \"Responses don't add up to 100%\")
+        Validate100Percent = False
+    End If
+    End Function
+    ```
+    !
+    Property Function() As String
+
+    '!
+    ```ds
+    (property) IValidation.MaxValue: Variant
+    ```
+    -----------------------------
+    This read/write property returns the maximum possible value.
+
+    ### Remarks
+    The maximum value is interpreted as follows for the different types:
+    + **Double**. The maximum double value (default = 1.79769313486232E308)
+    + **Long**. The maximum long value (default = 2,147,483,647)
+    + **Text**. The maximum number of characters (default = 2,147,483,647)
+    + **Date**. The maximum date value (default = 31 December 9999)
+    + **Categorical**. The maximum number of categories (default = total categories)
+    + **Boolean**. not applicable
+    !'
+    Property MaxValue() As Variant
+
+    '!
+    ```ds
+    (property) IValidation.MinValue: Variant
+    ```
+    -----------------------------
+    This read/write property returns the minimum possible value.
+
+    ### Remarks
+    The minimum value is interpreted as follows for the different types:
+    + **Double**. The minimum double value (default = -1.79769313486232E308)
+    + **Long**. The minimum long value (default = -2,147,483,648)
+    + **Text**. The minimum number of characters (default = 0)
+    + **Date**. The minimum date value (default = 1 January 100)
+    + **Categorical**. The minimum number of categories (default = 0)
+    + **Boolean**. not applicable
+    Note that the `IQuestion.MustAnswer` and `IInterview.MustAnswer` properties override the `MinValue` property for *Text* questions. i.e. if `MinValue` is 0 but `MustAnswer` is *True* then at least 1 character must be entered.
+    !'
+    Property MinValue() As Variant
+
+    '!
+    ```ds
+    (property) IValidation.Precision: Long
+    ```
+    -----------------------------
+    The total number of digits that can be specified for a numeric value
+
+    ### Remarks
+    The `Precision` property can only be set for numeric questions (i.e. questions of type *Double* or *Long*). Attempting to read the property for any other question will return a value of -1. For a double value, the precision specifies the total number of digits, including those after the decimal point.
+    !'
+    Property Precision() As Long
+
+    '!
+    ```ds
+    (property) IValidation.Scale: Long
+    ```
+    -----------------------------
+    The number of digits after the decimal point for a double value
+
+    ### Remarks
+    The `Scale` property can only be set for questions of type 'Double'. Attempting to read the property for any other question will return a value of -1. If no `Scale` value has been specified then -1 is returned.
+    !'
+    Property Scale() As Long
+
+    '!
+    ```ds
+    (property) IValidation.ValidateExpression: String
+    ```
+    -----------------------------
+    This read/write property returns the validation expression. (Default Property)
+
+    ### Remarks
+    The validation expression is only used for numeric and text types. For numeric types, it is the range expression that defines the ranges of values that are valid. For the text type it defines the validation expression defined in metadata.
+    !'
+    Property ValidateExpression() As String
+
 End Interface
