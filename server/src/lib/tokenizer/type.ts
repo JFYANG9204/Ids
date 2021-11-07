@@ -150,6 +150,7 @@ export const types = {
     _null                        :     createKeyword("null"),
     _on                          :     createKeyword("on"),
     _option                      :     createKeyword("option"),
+    _optional                    :     createKeyword("optional"),
     _or                          :     createKeyword("or",  { binop: BinopType.logical, precedence: 1 }),
     _paper                       :     createKeyword("paper"),
     _property                    :     createKeyword("property"),

@@ -5,6 +5,7 @@ import { Parser } from ".";
 import { createBasicOptions, ScriptFileType, SourceType } from "../options";
 import { TokenType, types as tt } from "../tokenizer/type";
 import {
+    ArgumentDeclarator,
     ArrayDeclarator,
     BlockStatement,
     BooleanLiteral,
@@ -268,7 +269,7 @@ export class StatementParser extends ExpressionParser {
     ): Program {
         const node = this.startNode(Program);
         node.sourceType = sourceType;
-        if (this.options.sourceType === SourceType.script) {
+        if (this.options.sourceType !== SourceType.metadata) {
             node.body = this.parseBlock(end);
             node.push(node.body);
         } else {
@@ -934,55 +935,69 @@ export class StatementParser extends ExpressionParser {
         node.id = this.parseIdentifier();
         this.expect(tt.braceL);
         node.params = this.parseFunctionDeclarationParam();
+        if (this.match(tt._as)) {
+            this.checkIfDeclareFile();
+            this.next();
+            node.return = this.state.value.text;
+            this.next();
+        }
         node.body = this.parseBlock(tt._end);
         this.expect(tt._end);
         isFunction ? this.expect(tt._function) : this.expect(tt._sub);
         this.scope.exit();
-        const args: Array<Argument> = [];
-        node.params.forEach(arg => {
-            args.push(this.getArgumentDefFromNode(arg));
-        });
-        node.pushArr(node.params);
-        node.push(node.id, node.body);
-        const option: DefinitionOptions = {
-            name: node.id.name,
-            defType: "function",
-            isReadonly: false,
-            isConst: false,
-            isCollection: false,
-            section: this.scope.currentSection()
-        };
-        const def = createDefinition(option, FunctionDefinition);
-        def.arguments = args;
-        this.declareLocalVar(
-            node.id.name,
-            node,
-            undefined,
-            def,
-            false);
+        //const args: Array<Argument> = [];
+        //node.params.forEach(arg => {
+        //    args.push(this.getArgumentDefFromNode(arg));
+        //});
+        //node.pushArr(node.params);
+        //node.push(node.id, node.body);
+        //const option: DefinitionOptions = {
+        //    name: node.id.name,
+        //    defType: "function",
+        //    isReadonly: false,
+        //    isConst: false,
+        //    isCollection: false,
+        //    section: this.scope.currentSection()
+        //};
+        //const def = createDefinition(option, FunctionDefinition);
+        //def.arguments = args;
+        //this.declareLocalVar(
+        //    node.id.name,
+        //    node,
+        //    undefined,
+        //    def,
+        //    false);
         return this.finishNode(node, "FunctionDeclaration");
     }
 
-    parseFunctionDeclarationParam(): Array<SingleVarDeclarator | ArrayDeclarator> {
-        const params: Array<SingleVarDeclarator | ArrayDeclarator> = [];
+    parseArgumentDeclarator(): ArgumentDeclarator {
+        const node = this.startNode(ArgumentDeclarator);
+        if (this.eat(tt._optional)) {
+            node.optional = true;
+        }
+        if (this.lookahead().type === tt.bracketL) {
+            node.declarator = this.parseArrayDeclarator();
+        } else {
+            node.declarator = this.parseSingleVarDeclarator();
+        }
+        if (this.eat(tt.equal)) {
+            node.defaultValue = this.parseExpression();
+        }
+        return this.finishNode(node, "ArgumentDeclarator");
+    }
+
+    parseFunctionDeclarationParam(): Array<ArgumentDeclarator> {
+        const params: Array<ArgumentDeclarator> = [];
         let comma = false;
         while (!this.eat(tt.braceR)) {
-            if (this.match(tt.identifier)) {
-                if (this.lookahead().type === tt.bracketL) {
-                    params.push(this.parseArrayDeclarator());
-                    comma = false;
-                } else {
-                    params.push(this.parseSingleVarDeclarator());
-                    comma = false;
-                }
-            } else if (this.match(tt.comma)) {
+            if (this.match(tt.comma)) {
                 if (comma || this.lookahead().type === tt.braceR) {
                     this.unexpected();
                 }
                 comma = true;
                 this.next();
             } else {
-                throw this.unexpected();
+                params.push(this.parseArgumentDeclarator());
             }
         }
         params.forEach(param => {
@@ -1059,15 +1074,22 @@ export class StatementParser extends ExpressionParser {
     //     [Get]
     //     [Set]
     // [End Property]
-    parsePropertyDeclaration(): PropertyDeclaration {
+    parsePropertyDeclaration(
+        object: ClassOrInterfaceDeclaration
+    ): PropertyDeclaration {
         const node = this.startNode(PropertyDeclaration);
+        if (this.match(tt._default)) {
+            node.default = true;
+            object.default = node;
+            this.next();
+        }
         if (this.match(tt._readonly)) {
             this.next();
             node.readonly = true;
         }
         this.checkIfDeclareFile();
         this.expect(tt._property);
-        node.memberName = this.parseIdentifier();
+        node.memberName = this.parseIdentifier(true);
         this.resetPreviousNodeTrailingComments(node.memberName);
         this.expect(tt.braceL);
         node.params = this.parseFunctionDeclarationParam();
@@ -1112,11 +1134,13 @@ export class StatementParser extends ExpressionParser {
         node.defType = this.match(tt._interface) ? "interface" : "class";
         this.checkIfDeclareFile(this.state.value.text);
         this.next();
+        node.name = this.parseIdentifier();
         while (!this.eat(tt._end)) {
             switch(this.state.type) {
+                case tt._default:
                 case tt._readonly:
                 case tt._property:
-                    node.properties.push(this.parsePropertyDeclaration());
+                    node.properties.push(this.parsePropertyDeclaration(node));
                     break;
                 case tt._sub:
                 case tt._function:

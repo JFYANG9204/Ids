@@ -20,7 +20,7 @@ const startPath = resolve("./test/parser/fixture/dpgm/Run.mrs");
 //if (file) {
 //    mdd = getCurrentParser(file, startPath);
 //}
-const testpath = resolve("./test/parser/fixture/test.mrs");
+const testpath = resolve("./server/src/lib/built_in_modules/IValue.d.mrs");
 const content = readFileAndConvertToUtf8(testpath);
 const parser = new Parser(createBasicOptions(testpath, true), content);
 const file = parser.parse();

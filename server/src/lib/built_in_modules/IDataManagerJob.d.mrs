@@ -1,0 +1,370 @@
+
+'!
+```ds
+(interface) IDataManagerJob
+```
+-----------------------------
+This interface enables script writers to access the Job object from thmrScripBasic section of the DMS file. The Job object is registered in the mrScriptBasic engine as Job.",
+
+### Remarks
+The Job object is accessible in the following sections in the DMS file:
++ OnJobStart Section
++ OnNextCase Section
++ OnJobEnd Section
+
+The Job object registers a set of variables with the mrScriptBasic engineThese are:",
++ Log
++ Global
++ Questions
+
+In addition Global SQL Variables are created as variables within thmrScriptBasic engine and can be accessed through mrScriptBasic.",
+These variables are accessible in the following sections in the DMS file:
++ OnJobStart Section
++ OnNextCase Section
++ OnJobEnd Section
+
+The variables can be accessed by calling the variable directly or through th`Job` object.",
+The `Log` object is accessed as:
+```ds
+dmgrLog.LogFatal(\"Some Fatal Error\")
+```
+Or through the Job object:
+```ds
+dmgrJob.Log.LogFatal(\"Some Fatal Error\")
+```
+The `Global` variables object is accessed as:
+```ds
+dmgrGlobal.Item[\"SomeVar\"]
+dmgrGlobal[\"SomeVar\"]
+dmgrGlobal.SomeVar
+Dim somevalue
+somevalue = CreateObject(\"SomeValue\")
+dmgrGlobal.Add(\"SomeNewVar\", somevalue)
+```
+Or through the Job object:
+```ds
+dmgrJob.GlobalVariables.Item[\"SomeVar\"]
+dmgrJob.GlobalVariables[\"SomeVar\"]
+dmgrJob.GlobalVariables.SomeVar
+Dim somevalue
+somevalue = CreateObject(\"SomeValue\")
+dmgrJob.GlobalVariables.Add(\"SomeNewVar\", somevalue)
+```
+`Global` SQL Variables are accessed as:
+```ds
+If age.Response Is Null Then
+    age.Response = @SomeSQLVariable
+End If
+```
+The Questions collection can be accessed as:
+```ds
+Dim response
+response = dmgrJob.Questions.Q1.response
+```
+Or:
+```ds
+Dim response
+response = dmgrQuestions.Q1.response
+```
+Or:
+```ds
+Dim response
+response = Q1.response
+```
+The Weighting component can be accessed through the Job object:
+```ds
+Dim W
+Set W = dmgrJob.WeightEngine
+```
+The Weighting component is accesible in the following sections:
++ OnJobStart Section
++ OnNextCase Section
++ OnJobEnd Section
+!'
+Interface IDataManagerJob
+
+    '!
+    ```ds
+    (method) DropCurrentCase()
+    ```
+    --------------------
+    By calling this method, the current respondent's data will not be written to the output data source.
+    !'
+    Sub DropCurrentCase()
+    End Sub
+
+    '!
+    ```ds
+    (method) IDataManagerJob.EnvironmentInit(Value: String): string
+    ```
+    --------------------
+    Sets the internal environment value.
+    !'
+    Sub EnvironmentInit(Value As String) As String
+    End Sub
+
+    '!
+    ```ds
+    (property) IDataManagerJob.CurrentInputDataSource
+    ```
+    --------------------
+    Returns the first input datasource which is currently in use in the transformatio.
+    !'
+    ReadOnly Property CurrentInputDataSource() As Long
+
+    '!
+    ```ds
+    (property) IDataManagerJob.GlobalVariables: IDataManagerGlobalVariables
+    ```
+    --------------------
+    This property returns the Job's global variables collection.
+
+    ### Example
+    To return the Job's global variables collection:
+    ```ds
+    dmgrJob.GlobalVariables.Item[\"SomeVar\"]
+    dmgrJob.GlobalVariables[\"SomeVar\"]
+    dmgrJob.GlobalVariables.SomeVar
+    ```
+    To add an object to the collection:
+    ```ds
+    Dim somevalue
+    somevalue = CreateObject(\"SomeValue\")
+    dmgrJob.GlobalVariables.Add(\"SomeNewVar\", somevalue)
+    ```
+    !'
+    ReadOnly Property GlobalVariables() As IDataManagerGlobalVariables
+
+    '!
+    ```ds
+    (property) IDataManagerJob.GlobalVariables: IDataManagerGlobalVariables
+    ```
+    --------------------
+    This property returns the Job's global variables collection.
+
+    ### Example
+    To return the Job's global variables collection:
+    ```ds
+    dmgrJob.GlobalVariables.Item[\"SomeVar\"]
+    dmgrJob.GlobalVariables[\"SomeVar\"]
+    dmgrJob.GlobalVariables.SomeVar
+    ```
+    To add an object to the collection:
+    ```ds
+    Dim somevalue
+    somevalue = CreateObject(\"SomeValue\")
+    dmgrJob.GlobalVariables.Add(\"SomeNewVar\", somevalue)
+    ```
+    !'
+    ReadOnly Property InputCaseNumbers(Index As Variant) As Long
+
+    '!
+    ```ds
+    (property) IDataManagerJob.Log: Object
+    ```
+    --------------------
+    Return the Logging component.
+
+    ### Remarks
+    The Logging object can be accessed in either of the following ways:
+    ```ds
+    dmgrLog.LogFatal(\"Some Fatal Error\")
+    dmgrJob.Log.LogFatal(\"Some Fatal Error\")
+    ```
+    !'
+    ReadOnly Property Log() As Object
+
+    '!
+    ```ds
+    (property) IDataManagerJob.OutputCaseNumber: Long
+    ```
+    --------------------
+    Returns the current output case number.
+    !'
+    ReadOnly Property OutputCaseNumber() As Long
+
+    '!
+    ```ds
+    (property) IDataManagerJob.Questions: IQuestions
+    ```
+    --------------------
+    This property returns the Job's **Questions** collection.
+
+    ### Example
+    ```ds
+    Dim response
+    response = dmgrJob.Questions.Q1.response
+    ```
+    !'
+    ReadOnly Property Questions() As IQuestions
+
+    '!
+    ```ds
+    (property) IDataManagerJob.TableDocument: IDocument
+    ```
+    --------------------
+    Default Table document i.e. the Table document assigned to the first output datasource.
+
+    ### Example
+    In a DMS Script this could be done as:
+    ```ds
+    Event(OnAfterJobEnd, TOM stuff)
+        Dim TOM
+        Set TOM = dmgrJob.TableDocument
+        With TOM
+            .Tables.AddNew(\"Table1\", \"age*gender\", _
+                \"Table1 - age by gender\")
+            .Save(\"D:\\Development\\Museum\\TOMDemo.mtd\")
+            .Exports(\"mrHtmlExport\").Export( _
+                \"D:\\Development\\Museum\\TOMDemo.htm\", _
+                \"Table1\")
+        End With
+    End Event
+    ```
+    !'
+    ReadOnly Property TableDocument() As IDocument
+
+    '!
+    ```ds
+    (property) IDataManagerJob.TableDocuments[Index: Variant]: IDocument
+    ```
+    --------------------
+    Table documents collection, containing one Table document per output datasource
+
+    ### Example
+    In a DMS Script this could be done as:
+    ```ds
+    Event(OnAfterJobEnd, TOM stuff)
+        Dim TOM
+        Set TOM = dmgrTableDocuments[\"XMLOutput\"]
+        With TOM
+            .DataSet.View = 0
+            .Tables.AddNew(\"Table1\", \"age*gender\", _
+                \"Table1 - age by gender\")
+            .Populate()
+            .Save(\"D:\\Development\\Museum\\TOMDemo.mtd\")
+        End With
+    End Event
+
+    OutputDataSource(XMLOutput, Output XML data source)
+        ConnectionString = Provider=mrOleDB.Provider.2; _
+            Data Source=mrXmlDsc; _
+            Location=D:\\TOMDemo.xml; _
+            Initial Catalog=\"\"; _
+            Mode=ReadWrite; _
+            MR Init MDM Access=0
+        MetaDataOutputName = D:\\TOMDemo.mdd
+    End OutputDataSource
+    ```
+    !'
+    ReadOnly Property TableDocuments(Index As Variant) As IDocument
+
+    '!
+    ```ds
+    (property) IDataManagerJob.TransformedInputMetaData[Index: Variant]: IDataManagerMetaDataSources
+    ```
+    --------------------
+    Returns a collection of input metadata filenames, one for each input data source.
+
+    ### Example
+    In a DMS Script this could be done as:
+    ```ds
+    InputDataSource(SomeInput, the output)
+        ConnectionString = Provider......
+        .
+        .
+    End InputDataSource
+
+    Event (OnAfterMetaDataTransformations, dddd)
+        ' accesssing the weight engine by output datasource name
+        Dim weName
+        Set weName = dmgrJob.TransformedInputMetaData[\"SomeInput\"]
+        ' accesssing the weight engine by by ordinal
+        Dim weOrdinal
+        Set weOrdinal = dmgrJob.TransformedInputMetaData[0]
+    End Event
+    ```
+    !'
+    ReadOnly Property TransformedInputMetaData(Index As Variant) As IDataManagerMetaDataSources
+
+    '!
+    ```ds
+    (property) IDataManagerJob.TransformedOutputMetaData[Index: Variant]: IDataManagerMetaDataSources
+    ```
+    --------------------
+    Returns a collection of output metadata filenames, one for each input data source.
+
+    ### Example
+    In a DMS Script this could be done as:
+    ```ds
+    OutputDataSource(SomeOutput, the output)
+        ConnectionString = Provider......
+        .
+        .
+    End OutputDataSource
+
+    Event (OnAfterMetaDataTransformations, dddd)
+        ' accesssing the weight engine by output datasource name
+        Dim weName
+        Set weName = dmgrJob.TransformedOutputMetaData[\"SomeOutput\"]
+        ' accesssing the weight engine by by ordinal
+        Dim weOrdinal
+        Set weOrdinal = dmgrJob.TransformedOutputMetaData[0]
+    End Event
+    ```
+    !'
+    ReadOnly Property TransformedOutputMetaData(Index As Variant) As IDataManagerMetaDataSources
+
+    '!
+    ```ds
+    (property) IDataManagerJob.WeightEngine: IWeightEngine
+    ```
+    --------------------
+    This property returns the interface pointer to the weight engine interface for the first output data source.
+
+    ### Example
+    ```ds
+    Dim we
+    we = dmgrJob.WeightEngine
+    ```
+    !'
+    ReadOnly Property WeightEngine() As IWeightEngine
+
+    '!
+    ```ds
+    (property) IDataManagerJob.WeightEngines[Index: Variant]: IDataManagerWeightEngines
+    ```
+    --------------------
+    Returns a collection of weight engines, one for each output data source.
+
+    ### Example
+    ```ds
+    OutputDataSource(SomeOutput, the output)
+        ConnectionString = Provider......
+        .
+        .
+    End OutputDataSource
+
+    Event (OnJobStart, job start)
+        ' accesssing the weight engine by output datasource name
+        Dim weName
+        Set weName = dmgrJob.WeightEngines[\"SomeOutput\"]
+        ' accesssing the weight engine by by ordinal
+        Dim weOrdinal
+        Set weOrdinal = dmgrJob.WeightEngines[0]
+    End Event
+    ```
+    !'
+    ReadOnly Property WeightEngines(Index As Variant) As IDataManagerWeightEngines
+
+    '!
+    ```ds
+    (property) IDataManagerJob.TempDirectory: String
+    ```
+    --------------------
+    Get / Set the temporary directory to use during the transformation
+    !'
+    Property TempDirectory() As String
+
+End Interface
+

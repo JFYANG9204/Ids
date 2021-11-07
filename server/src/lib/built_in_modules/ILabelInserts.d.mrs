@@ -1,0 +1,30 @@
+
+'!
+```ds
+(interface) ILabelInserts
+```
+-----------------------------
+A collection object that contains LabelInsert objects.
+!'
+Interface ILabelInserts
+
+    '!
+    ```ds
+    (property) ILabelInserts.Count: Long
+    ```
+    --------------------
+    The number of items in the collection.
+    !'
+    ReadOnly Property Count() As Long
+
+    '!
+    ```ds
+    (property) ILabelInserts.Item: ILabelInsert
+    ```
+    --------------------
+    Get the collection item at the specified location. (Default Property).
+    !'
+    Default Property Item(Index As Variant) As ILabelInsert
+
+
+End Interface

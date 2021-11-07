@@ -1,0 +1,54 @@
+
+'!
+```ds
+(interface) ILabel
+```
+-----------------------------
+The Label object is used to get or set a label for questions, banners, errors, and navigation controls.
+
+### Remarks
+With the properties and methods of a `Label` object, you can:
++ Get or set label text using the `Text` property.
++ Set label presentation styles using the `Style` property.
++ Set label insertion text using the `Inserts` collection.
+!'
+Interface ILabel
+
+    '!
+    ```ds
+    (property) ILabel.Inserts: ILabelInserts
+    ```
+    --------------------
+    A read-only collection of ILabelInsert objects.
+    !'
+    ReadOnly Property Inserts() As ILabelInserts
+
+    '!
+    ```ds
+    (property) ILabel.Name: String
+    ```
+    --------------------
+    A read-only property that returns the name of the label.
+    !'
+    ReadOnly Property Name() As String
+
+    '!
+    ```ds
+    (property) ILabel.Style: IStyle
+    ```
+    --------------------
+    This property returns a Style object for the label.
+    !'
+    ReadOnly Property Style() As IStyle
+
+    '!
+    ```ds
+    (property) ILabel.Text: String
+    ```
+    --------------------
+    This property contains the text for the label. (Default Property)
+    !'
+    Default Property Text() As String
+
+End Interface
+

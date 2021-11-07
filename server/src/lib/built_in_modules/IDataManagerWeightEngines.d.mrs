@@ -1,0 +1,31 @@
+
+'!
+```ds
+(interface) IDataManagerWeightEngines
+```
+-----------------------------
+A collection object containing weightengine objects.
+!'
+Interface IDataManagerWeightEngines
+
+    '!
+    ```ds
+    (property) IDataManagerMetaDataSources.Item[Index: Variant]: IWeightEngine
+    ```
+    --------------------
+    Get the collection item at the specified location. (Default Property)
+    !'
+    Default Property Item(Index As Variant) As IWeightEngine
+
+    '!
+    ```ds
+    (property) IDataManagerMetaDataSources.Count: Long
+    ```
+    --------------------
+    The number of items in the collection.
+    !'
+    ReadOnly Property Count() As Long
+
+End Interface
+
+

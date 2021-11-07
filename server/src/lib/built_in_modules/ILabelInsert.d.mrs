@@ -1,0 +1,29 @@
+
+'!
+```ds
+(interface) ILabelInsert
+```
+-----------------------------
+The LabelInsert object is used to get or set the text for a named insert of a label.
+!'
+Interface ILabelInsert
+
+    '!
+    ```ds
+    (property) ILabelInsert.Name: String
+    ```
+    --------------------
+    A read-only property that returns the name of the label insert.
+    !'
+    ReadOnly Property Name() As String
+
+    '!
+    ```ds
+    (property) ILabelInsert.Text: String
+    ```
+    --------------------
+    This property contains the text for the label insert. (Default Property)
+    !'
+    Default Property Text() As String
+
+End Interface

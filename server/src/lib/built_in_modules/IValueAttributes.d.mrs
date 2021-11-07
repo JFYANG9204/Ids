@@ -1,0 +1,28 @@
+'!
+```ds
+(interface) IValueAttributes
+```
+-----------------------------
+A collection object that contains the attributes relating to a value.
+!'
+Interface IValueAttributes
+
+    '!
+    ```ds",
+    (property) IValueAttributes.Count: Long",
+    ```",
+    --------------------",
+    The number of items in the collection.",
+    !'
+    ReadOnly Property Count() As Long
+
+    '!
+    ```ds
+    (property) IValueAttributes.Item[Index: Variant]: IValueAttribute
+    ```
+    --------------------
+    Get the collection item at the specified location.
+    !'
+    Property Item(Index As Variant) As IValueAttribute
+
+End Interface

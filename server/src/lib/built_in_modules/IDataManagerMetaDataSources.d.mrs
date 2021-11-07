@@ -1,0 +1,65 @@
+
+
+'!
+```ds
+(interface) IDataManagerMetaDataSources
+```
+-----------------------------
+Get the collection item at the specified location. (This is the default property.)
+!'
+Interface IDataManagerMetaDataSources
+
+    '!
+    ```ds
+    (property) IDataManagerMetaDataSources.Count: Long
+    ```
+    --------------------
+    The number of items in the collection.
+    !'
+    ReadOnly Property Count() As Long
+
+    '!
+    ```ds
+    (property) IDataManagerMetaDataSources.Item[Index: Variant]: Variant
+    ```
+    --------------------
+    Get the collection item at the specified location. (Default Property)
+    !'
+    Default ReadOnly Property Item(Index As Variant) As Variant
+
+    '!
+    ```ds
+    (method) IDataManagerMetaDataSources.Add(Name: String [, Value: Variant]): Void
+    ```
+    --------------------
+    Add an item to the collection.
+    !'
+    Sub Add(Name As String, Optional Value As Variant)
+    End Sub
+
+    '!
+    ```ds
+    (method) IDataManagerMetaDataSources.Append(Item: IDataManagerGlobalVariable): Void
+    ```
+    --------------------
+    Append a global variable object to the collection
+    !'
+    Sub Append(Item As IDataManagerGlobalVariable)
+    End Sub
+
+    '!
+    ```ds
+    (method) IDataManagerMetaDataSources.Remove(Index: Variant): Void
+    ```
+    --------------------
+    Remove an item from the collection.
+    !'
+    Sub Remove(Index As Variant)
+    End Sub
+
+End Interface
+
+
+
+
+

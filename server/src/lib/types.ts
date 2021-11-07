@@ -689,12 +689,23 @@ export class ConstDeclaration extends DeclarationBase {
     }
 }
 
+export class ArgumentDeclarator extends DeclarationBase {
+    optional: boolean = false;
+    declarator: ArrayDeclarator | SingleVarDeclarator;
+    defaultValue?: any;
+    constructor(parser: ParserBase, pos: number, loc: Position) {
+        super(parser, pos, loc);
+        this.type = "ArgumentDeclarator";
+        this.declarator = new SingleVarDeclarator(parser, pos, loc);
+    }
+}
 
 export class FunctionDeclaration extends DeclarationBase {
     id: Identifier;
-    params: Array<SingleVarDeclarator | ArrayDeclarator> = [];
+    params: Array<ArgumentDeclarator> = [];
     body: BlockStatement;
     needReturn = false;
+    return?: string;
     returnType?: FunctionDefinition;
     constructor(parser: ParserBase, pos: number, loc: Position) {
         super(parser, pos, loc);
@@ -1661,7 +1672,7 @@ export class PropertyGet extends NodeBase {
 
 export class PropertySet extends NodeBase {
     body?: BlockStatement;
-    params: Array<SingleVarDeclarator | ArrayDeclarator> = [];
+    params: Array<ArgumentDeclarator> = [];
     constructor(parser: ParserBase, pos: number, loc: Position) {
         super(parser, pos, loc);
         this.type = "PropertySet";
@@ -1674,7 +1685,7 @@ export class PropertyDeclaration extends NodeBase {
     returnType: string = "variant";
     init?: any;
     memberName: Identifier;
-    params: Array<SingleVarDeclarator | ArrayDeclarator> = [];
+    params: Array<ArgumentDeclarator> = [];
     get?: PropertyGet;
     set?: PropertySet;
     constructor(parser: ParserBase, pos: number, loc: Position) {
@@ -1685,6 +1696,7 @@ export class PropertyDeclaration extends NodeBase {
 }
 
 export class ClassOrInterfaceDeclaration extends NodeBase {
+    name: Identifier;
     defType: "interface" | "class" = "interface";
     properties: Array<PropertyDeclaration> = [];
     methods: Array<FunctionDeclaration> = [];
@@ -1692,6 +1704,7 @@ export class ClassOrInterfaceDeclaration extends NodeBase {
     constructor(parser: ParserBase, pos: number, loc: Position) {
         super(parser, pos, loc);
         this.type = "ClassOrInterfaceDeclaration";
+        this.name = new Identifier(parser, pos, loc);
     }
 }
 

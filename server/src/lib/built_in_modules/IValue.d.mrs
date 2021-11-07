@@ -1,0 +1,88 @@
+
+'!
+```ds
+(interface) IDataManagerGlobalVariable
+```
+-----------------------------
+Appends data to a binary value. The `AppendChunk` method is only supported for values of type mtObject. The Source property 'Stream Binary' must be set to True for the `AppendChunk` method to be used, otherwise the error *E_NOTIMPL* will be generated.
+
+### Remarks
+When returning values from the `Value` object, the CDM data types are mapped to Variants:
++ **Variant** - *VT_EMPTY* or *VT_NULL*. In VB this is an unassigned Variant or a variant assigned Empty.
++ **Double** - *VT_R8*. In VB this is a *Double*.
++ **Long** - *VT_I4*. In VB this is a *Long*.
++ **Date** - *VT_DATE*. In VB this is the *Date* data type.
++ **Text** - *VT_BSTR* or *VT_BSTR*|*VT_BYREF*. In VB a text variable is a *String*.
++ **Categorical** - *VT_ARRAY*|*VT_VARIANT* or *VT_ARRAY*|*VT_VARIANT*|*VT_BYREF*. In VB this is an array of Variants. Each variant must contain a *Long* value.
++ **Boolean** - *VT_BOOL*. In VB this is a *Boolean*.
++ **Object** - *VT_DISPATCH*. In VB this is an *Object*.
+!'
+Interface IValue
+
+    '!
+    ```ds
+    (method) IValue.AppendChunk(Data: Variant): Void
+    ```
+    --------------------
+    Appends data to a binary value. The `AppendChunk` method is only supported for values of type *mtObject*. The `Source` property 'Stream Binary' must be set to *True* for the `AppendChunk` method to be used, otherwise the error *E_NOTIMPL* will be generated.
+    !'
+    Sub AppendChunk(Data As Variant)
+    End Sub
+
+    '!
+    ```ds
+    (method) IValue.AppendChunk(Data: Variant): Void
+    ```
+    --------------------
+    Clears the current contents of the value.
+    !'
+    Sub AppendChunk(Data As Variant)
+    End Sub
+
+    '!
+    ```ds
+    (method) IValue.GetChunk(lSize: Long): Variant
+    ```
+    --------------------
+    Returns all, or a portion, of the contents of a binary value. The `GetChunk` method is only supported for values of type *mtObject*. The `Source` property 'Stream Binary' must be set to *True* for the `GetChunk` method to be used, otherwise the error *E_NOTIMPL* will be generated.
+    !'
+    Sub GetChunk(lSize As Long) As Variant
+    End Sub
+
+    '!
+    ```ds
+    (property) IValue.Attributes: IValueAttributes
+    ```
+    --------------------
+    Indicates whether the value should be included in a base aggregate. Normally, a value is included in the base if it is not *NULL*.
+    !'
+    ReadOnly Property Attributes() As IValueAttributes
+
+    '!
+    ```ds
+    (property) IValue.IsDirty: Boolean
+    ```
+    --------------------
+    Indicates whether the value should be included in an update.
+    !'
+    Property IsDirty() As Boolean
+
+    '!
+    ```ds
+    (property) IValue.Type: DataTypeConstants
+    ```
+    --------------------
+    Property that returns the value data type.
+    !'
+    Property Type() As DataTypeConstants
+
+    '!
+    ```ds
+    (property) IValue.Value: Variant
+    ```
+    --------------------
+    The actual value assigned to the value object.
+    !'
+    Property Value(Optional Index As Boolean = -1) As Variant
+
+End Interface
