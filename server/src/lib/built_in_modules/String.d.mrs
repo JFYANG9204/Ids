@@ -1,0 +1,1280 @@
+
+Class String
+
+    '!
+    ```ds
+    (function) Format([Style: String], [Width: Long], [Locale: Long]): String
+    ```
+    -----------------------------------
+    Returns a string that is the result of formatting a value according to one or more specified styles.
+    + `Style`: *String* - Optional. One or more formatting codes. Multiple codes must be separated by semicolons.
+    + `Width`: *Long* - Optional. The minimum width of the formatted string.
+    + `Locale`: *Long* - Optional. The output locale to use for regional variations in formatting. If `Locale` is omitted or is negative, the current output locale is used for formatting.
+    + `return`: *String* - `Val` formatted as a text string.
+
+    ### Remarks
+    `Val` is formatted according to `Style`, as described below. If `Width` is supplied and the formatted string is shorter than the absolute value of `Width`, the string is padded with space characters to make it up to (the absolute value of) `Width` characters. If `Width` is negative, spaces are added at the end of the string; otherwise, spaces are added at the start.
+    An error occurs if Val is an array with more than one dimension. Locale, if specified, is used for regional variations in formatting, but not for error messages. Custom formatting is not currently supported.
+    If the metadata to be used for formatting needs to provided by a separate variable from `Val`, use the `FormatValue` function.
+
+    #### Style Code Syntax
+    `Style` consists of one or more formatting codes. Multiple codes must be separated by semicolons. Each code is of the form C[p][=t], where:
+    + *C* is a letter specifying the type of formatting to do.
+    + *p* is an optional integer that modifies the formatting in some way, depending on *C*.
+    + *t* is an optional text argument whose meaning depends on *C*.
+
+    If *C* is an unknown code, the formatting described under None in the table below is used (and no error occurs), using the values of p and t, if supplied. The argument p may not have a plus or minus sign, so it can only be a non-negative integer. If *p* or *t* is inappropriate for *C*, it is ignored (and no error occurs).
+
+    #### Applying a Style
+    Except for the Count style (s, described in the table below), if Val is an array or a categorical value, the result is a comma-separated list of the results of applying the given style code (or codes) to each item or element in turn (in this case, `Val` in the table below refers to each individual item or element, not the whole array). No attempt is made to differentiate the separator character from any occurrences of the same character in the individual formatted values. Note that this gives the same result for a categorical value as for an array of long values. Note also that, if an array contains values of different types, the style code (or codes) may be interpreted differently for different items. If `Width` is specified, it is applied to the whole list, not to individual items.
+    Except for special cases described in the table below, the value is converted to the expected type, using the input locale where necessary to interpret strings. For an object, the value of the object’s default property is used (in this case, `Val` below refers to the retrieved value). If any error occurs in retrieving an object’s properties, or in converting a value to the expected type, the result for that value is “”, except where noted below.
+    Where formatting is affected by locale settings, the system settings for the locale are used, ignoring any “user overrides” (changes made to regional settings by the user currently logged in to the server).
+    Except for the Count style (s, described below), if `Val` is *NULL*, the result is an empty string (\"\").
+
+    #### Applying Multiple Styles
+    If `Style` consists of more than one formatting code, each code is applied in turn to Val as described in “Applying a Style” above. Because the result of applying the first code will always be a text value, subsequent codes should only be those that are relevant to text values, for example, LowerFirst, Count, or UpperAll (*l*, *s*, or *U*, described below).
+    Any padding required by `Width` is done after all codes have been applied.
+
+    #### Style Code Definitions
+    + **None** -
+        - For an MDMLabeledObject, the same as for *Label* (*b*), using *t* if supplied.
+        - For any other object, the same as for *Value* (*v*), using *t* if supplied.
+        - For other types, the same as `CText(Val)`, ignoring *p* and *t*.
+    + **a**: *Name* -
+        - For an MDMLabeledObject, the Name property. If an error occurs retrieving the name, the result is “”.
+        - For any other object, the result of applying the Name format to the object's default property value.
+        - For other types, the Name of the MDM Element whose value is `CLong(Val)`. If the MDM Element or its Name cannot be accessed, the Name of the MDM mapped category value whose value is `CLong(Val)`. If the MDM mapped category value does not exist, the result is the same as for *Decimal1* (*d*), using *p* if supplied.
+    + **A**: *NameFull* - Same as for *Name* (*a*), but using the FullName instead of the Name for an MDMLabeledObject or MDM Element.
+    + **b**: *Label* -
+        - For an MDMLabeledObject, its Label. If an error occurs retrieving the label, the result is “”.
+        - For any other object, the result of applying the Label format to the object’s default property value.
+        - For other types, the Label of the MDM Element (in the current MDM object) whose value is `CLong(Val)`. If an error occurs retrieving the label, the result is the same as *Decimal1* (*d*), using *p* if supplied.
+        - Labels are retrieved using the current Context and Language in the metadata. If t is given, it’s the name of the LabelType to use. If t is omitted, or specifies a nonexistent *LabelType*, the current LabelType is used.
+    + **B**: *LabelFull* - Same as for *Label* (*b*), but using the FullLabel instead of the Label for an MDMLabeledObject or MDM Element. The FullLabel can only be retrieved for the MDM document’s current LabelType, so t is ignored.
+    + **c**: *Currency* - `Val` converted to double and formatted as a currency, using the currency symbol and format specified by the output locale. The number of decimal places is adjusted to p by rounding Val (away from zero, for borderline cases), or by adding zeros at the end. If `p = 0`, the result has no decimal separator and no fractional part. If *p* is omitted, the default for the output locale is used.
+    + **C**: *Currency-Code* - Same as for *Currency* (*c*), but using the three-character international monetary symbol specified by the output locale.
+    + **d**: *DateShort,Decimal1* -
+        - For a date value, short date format specified by the output locale (ignoring time of day in `Val`).
+        - The string length is increased to *p*, if given, by inserting zeros before the first digit.
+    + **D**: *DateLong, Decimal2* -
+        - For a date value, long date format specified by the output locale (ignoring time of day in `Val`).
+        - For other types, `Val` converted to long and formatted as follows:
+            - A minus sign (-) if `Val` < 0. Followed by...
+            - One or more decimal digits (0-9).
+        - For other types, same as for Decimal1 (*d*).
+    + **e**: *Scientific-Lower* -
+        - `Val` converted to double and formatted as follows:
+            - A minus sign (-) if Val < 0. Followed by...
+            - One decimal digit (0-9). Followed by...
+            - A decimal point (.). Followed by...
+            - p decimal digits (0-9). Followed by...
+            - Lower-case e. Followed by...
+            - A plus or minus sign (+ or -). Followed by...
+            - Three decimal digits (0-9).
+        - The part before the *e* (the mantissa) is `Val` scaled by a power of 10 so that its absolute value is `>= 1.0` and `< 10.0`, unless `Val` is 0.0. The number of decimal places is adjusted by rounding the mantissa (away from zero, for borderline cases), or by adding zeros at the end. If *p* = 0, the mantissa has no decimal separator and no fractional part. If *p* is omitted, it has 6 decimal places.
+        - The part after the *e* (the exponent) is the power of 10 by which the mantissa must be multiplied to give `Val`. The exponent length is increased to 3 digits, if necessary, by adding zeros at the left. If `Val` is 0.0, the mantissa and exponent are both zero. If the absolute value of `Val` is `> 0.0` and `< 1.0`, the exponent is negative, otherwise it is positive.
+    + **E**: *Scientific-Upper* - Same as for ScientificLower (*e*), but with an upper-case E.
+    + **f,F**: *DateTime,FixedPoint* -
+        - For a date value, long date and time formats specified by the output locale, separated by a space.
+        - For other types, `Val` converted to double and formatted as follows:
+            - A minus sign (-) if Val < 0. Followed by...
+            - One or more decimal digits (0-9). Followed by...
+            - *A* decimal separator (specified by the output locale). Followed by...
+            - *p* decimal digits.
+        - The number of decimal places is adjusted by rounding Val (away from zero, for borderline cases), or by adding zeros at the end. If *p* = 0, the result has no decimal separator and no fractional part. If *p* is omitted, the default for the output locale is used.
+    + **l**: *LowerFirst* - `CText(Val)`, with the first alphanumeric character converted to lower case (if it’s an upper-case letter) according to the rules for the output locale.
+    + **L**: *LowerAll* - `CText(Val)`, with all alphabetic characters converted to lower case according to the rules for the output locale.
+    + **n,N**: *Fixed-Grouped* - `Val` converted to double and formatted as for FixedPoint1 (*f*), but with digits before the decimal separator grouped according to the rules for the output locale.
+    + **p,P**: *Percent* - `Val` converted to double and multiplied by 100.0, formatted as for FixedPoint (f), followed by a percent sign (%).
+    + **s,S**: *Count* -
+        - For an array or categorical value, the number of items/elements it contains.
+        - For text, the number of characters in the string.
+        - For NULL, 0.
+        - For other types, 1.
+        - For all types, the count is formatted as for *Decimal1* (*d*), using p if supplied.
+    + **t,T**: *Time* - `Val` converted to date and formatted according to the time format specified by the output locale (ignoring the date part of `Val`).
+    + **u**: *UpperFirst* - `CText(Val)`, with the first alphanumeric character converted to upper case (if it’s a lower-case letter) according to the rules for the output locale.
+    + **U**: *UpperAll* - `CText(Val)`, with all alphabetic characters converted to upper case according to the rules for the output locale.
+    + **v**: *Value* - For an object value, the value of a specified property, converted to text. If t is given, it’s the name of the property to use. If t is omitted, or the value of the specified property can’t be retrieved, the default property of the object is used, if it exists. If no suitable property is found, the result is “”. The first property that returns a value is used, even if the value it returns is “”.
+    For other types, `Val` converted to long and formatted as for *Decimal1* (*d*), using *p* if supplied.
+    + **V**: *ValueNative* -
+        - For an object value, the value of a specified property (same as for *Value* (*v*)).
+        - For other types, the native value (for the current DataSource in the metadata) of the MDM ElementInstance whose value is `CLong(Val)`, formatted as for *Decimal1* (*d*), using *p* if supplied. If the native value can’t be retrieved, the result is “”.
+    + **w**: *TitleFirst* - `CText(Val)`, with the first alphanumeric character converted to upper case, and the rest of the string converted to lower case according to the rules for the output locale.
+    + **W**: *TitleAll* - `CText(Val)`, with the first character of each word (any alphanumeric character that isn’t preceded by an alphanumeric character) converted to upper case, and the rest of the string converted to lower case according to the rules for the output locale.
+    + **x**: *HexLower* -
+        - `Val` converted to long and formatted as one or more hexadecimal digits (0-9 and a-f).
+        - `Val` is treated as an unsigned value; this means that if `Val` < 0, the value formatted is equivalent to Val + Pow(2, 31). Thus the range of possible non-negative long values (0 to 2147483647) is formatted as “0” to “7fffffff”, and the range of negative values (-2147483648 to -1) is formatted as “80000000” to “ffffffff”. This is consistent with the hexadecimal syntax for expressing integers in mrScript, eg &H80000000 = -2147483648.
+        - The string length is increased to *p*, if given, by inserting zeros before the first digit.
+    + **X**: *HexUpper* - Same as for HexLower (*x*), but with upper-case A-F for the hexadecimal digits.
+
+    ### Examples
+    #### 1. Using the Format function in mrScriptBasic
+    Note: Many of the examples in the table below make use of the Household sample metadata document, household.mdd, that is installed with the DDL.
+
+    | Function call                                             | Result             |
+    | :---------                                                | :-----------------------  |
+    | Format(CDate(\"2004-12-02 15:49:31\"), \"f\", , 1046)                   | \"quinta-feira, 2 de dezembro de 2004 15:49:31\"                                     |
+    | Format(CDate(\"2004-12-02 15:49:31\"), \"f\", , 1052)                   | \"2004-12-02 3:49:31.MD \"                                                           |
+    | Format(MDM.Fields[\"person.trip.purpose\"], \"a\")                      | \"purpose\"                                                                          |
+    | Format(MDM.Fields[\"person.trip.purpose\"], \"A\")                      | \"person[..].trip[..].purpose\"                                                      |
+    | Format(MDM.Fields[\"person.trip.purpose\"], \"b\")                      | \"Purpose of trip\"                                                                  |
+    | Format(MDM.Variables[\"person[2].tvdays[{Channel_3}].Column\"], \"a\")  | \"Column\"                                                                           |
+    | Format(MDM.Variables[\"person[2].tvdays[{Channel_3}].Column\"], \"A\")  | \"person[2].tvdays[{Channel_3}].Column\"                                             |
+    | Format(MDM.Variables[\"person[2].tvdays[{Channel_3}].Column\"], \"b\")  | \"Number of days watched last week\"                                                 |
+    | Format(MDM.Variables[\"person[2].tvdays[{Channel_3}].Column\"], \"B\")  | \"2,{Channel_3} : Number of days watched last week\"                                 |
+    | Format(MDM.Fields[\"person.newspapers\"], \"v=EffectiveMaxValue\")      | \"12\"                                                                               |
+    | Format(MDM.CategoryMap, \"v=Count\")                                    | \"125\"                                                                              |
+    | Format(MDM.Variables[\"person[6].occupation\"], \"V=hascasedata\")      | \"True\"                                                                             |
+    | Format(MDM, \"V=URL\")                                                  | \"[INSTALL_FOLDER]\\IBM\\SPSS\\DataCollection\\6\\DDL\\Data\\Data Collection File\\household.mdd\"    |
+    | Format(MDM.URL, \"L\")                                                  | \"[INSTALL_FOLDER]\\ibm\\spss\\datacollection\\6\\ddl\\data\\data collection file\\household.mdd\"  |
+    | Format(MDM.URL, \"U\")                                                  | \"[INSTALL_FOLDER]\\IBM\\SPSSDATACOLLECTION\\6\\DDL\\DATA\\DATA COLLECTION FILE\\HOUSEHOLD.MDD\" |
+    | MDM.MDMVersion.Split(\".\").Format(\"d4\")                              | \"0002,0010,0000,1664\" |
+    | Format(MDM.Variables[\"person[2].tvdays[{Channel_3}].Column\"], \"b;l\")| \"number of days watched last week\" |
+
+    #### 2. Using the Format function in an SQL query
+    This example shows the use of the `Format` function in an SQL query that can be run against the IBM® SPSS® Data Collection Data File version of the Household sample data set, *household.ddf*. The function is used to display the value of a decimal variable called Satisfaction as a fixed point decimal and as a percentage figure:
+    ```sql
+    SELECT DISTINCT
+        satisfaction,
+        satisfaction.Format('f2') AS FixedPoint,
+        Format(satisfaction / 10.0, 'p0') AS Percentage
+    FROM hdata.person.trip
+    ```
+    Here is the result set:
+
+    | satisfaction     | FixedPoint | Percentage     |
+    | :--------------- | :--------- | :---------     |
+    | 8.5              | 8.50       | 85%    |
+    | 9                | 9.00       | 90%    |
+    | 7.75             | 7.75       | 78%    |
+    | 8                | 8.00       | 80%    |
+    | 7.5              | 7.50       | 75%    |
+    | 9.5              | 9.50       | 95%    |
+    | 10               | 10.00      | 100%   |
+    | 5                | 5.00       | 50%    |
+    | 8.30000019073486 | 8.30       | 83%    |
+    | 7.90000009536743 | 7.90       | 79%    |
+    | 8.19999980926514 | 8.20       | 82%    |
+    | 6.30000019073486 | 6.30       | 63%    |
+    | 5.5              | 5.50       | 55%    |
+
+    This next example shows another SQL query that can be run against the Household sample data set, *household.ddf*. The Format function is used to display the value of a categorical variable called Country in five alternative formats:
+    ```sql
+    SELECT DISTINCT
+        country,
+        country.Format('v2') AS Value,
+        country.Format('a') AS Name,
+        country.Format('b') AS Label,
+        country.Format('b;U') AS LabelUpperCase,
+        country.Format('s4') AS [Count]
+    FROM hdata.person.trip
+    ```
+    Here is the result set:
+
+    | country         |  Value | Name          | Label         | LabelUpperCase | Count  |
+    | :-------------- |  :----- | :------------ | :------------ | :------------ |  :----- |
+    | {united_states} |  85    | United_States | United States | UNITED STATES  | 0001  |
+    | {switzerland}   |  83    | Switzerland   | Switzerland   | SWITZERLAND    | 0001  |
+    | {india}         |  68    | India         | India         | INDIA          | 0001  |
+    | {portugal}      |  78    | Portugal      | Portugal      | PORTUGAL       | 0001  |
+    | {holland}       |  67    | Holland       | Holland       | HOLLAND        | 0001  |
+    | {morocco}       |  75    | Morocco       | Morocco       | MOROCCO        | 0001  |
+    | {australia}     |  57    | Australia     | Australia     | AUSTRALIA      | 0001  |
+    | {france,spain}  |  64,81 | France,Spain  | France,Spain  | FRANCE,SPAIN   | 0002  |
+    | {china,japan}   |  61,71 | China,Japan   | China,Japan   | CHINA,JAPAN    | 0002  |
+    | {germany}       |  65    | Germany       | Germany       | GERMANY        | 0001 |
+
+    The first column shows the categorical variable without any formatting, the second column shows the categorical values, the third and fourth columns show the values of the Name and Label properties respectively, the fifth column shows the result of applying two style codes, and the sixth column shows the number of elements in the categorical variable.
+
+    #### 3. Using the Format function in an interview script
+    The next example shows the `Format` function being used in an interview script that will run in version 3.0 (or later) of IBM® SPSS® Data Collection Interviewer Server. The Format function is used to display the labels and formatted values of the categories selected in the LikeColors question:
+    ```ds
+    Metadata(en-US, Question, label)
+        LikeColors \"Which colors do you like?\" categorical
+        {
+            red \"I like Red\",
+            blue \"I like Blue\",
+            green \"I like Green\",
+            yellow \"I like Yellow\",
+            pink \"I like Pink\",
+            purple \"I like Purple\",
+            orange \"I like Orange\"
+        };
+
+        LikeColorsResponse \"{InsertHere}\" info;
+    End Metadata
+
+    Routing(Web)
+        LikeColors.Ask()
+
+        Dim labels, values, str
+        labels = LikeColors.Format(\"b\")    ' labels of responses
+        labels = labels.Replace(\",\", mr.CrLf)
+        values = LikeColors.Format(\"d3\")   ' response values with leading zeroes
+        str = \"You chose these:\" + mr.CrLf + labels + mr.CrLf
+        str = str + \"Their numerical values are (\" + values + \").\"
+
+        LikeColorsResponse.Ask(str)
+    End Routing
+    ```
+    !'
+    Function Format(Optional Style As String, Optional Width As Long, Optional Locale As Long) As String
+    End Function
+
+    '!
+    ```ds
+    (function) LCase(): String
+    ```
+    -----------------------------------
+    Returns a string that has been converted to lower case.
+    + `return`: *String* - Lowercase copy of `Val`.
+
+    ### Remarks
+    The input string is converted to lower case, according to the rules of the input locale.
+    If the current data value is *NULL*, `Val` is \"\" and the return value is \"\".
+    How you specify a text string as an argument depends on whether you are using the function in an SQL query or in mrScriptBasic or mrScriptMetadata. In an SQL query, enclose text strings in single quotation marks (' '). In mrScriptBasic or mrScriptMetadata, enclose text strings in double quotation marks (\" \").
+
+    ### Examples
+    This example uses the `LCase` function to return a copy of the contents of the address variable converted to lower case:
+    ```ds
+    address.LCase()
+    ```
+    !'
+    Function LCase() As String
+    End Function
+
+    '!
+    ```ds
+    (function) LTrim(): String
+    ```
+    -----------------------------------
+    Returns a copy of a string with any leading spaces removed.
+    + `return`: *String* - Copy of `Val` with leading spaces removed.
+
+    ### Remarks
+    `LTrim` removes white space (such as space and tab characters) that appears at the beginning of the input string. `LTrim` uses the rules of the input locale when interpreting white space.
+    If the current data value is *NULL*, `Val` is \"\" and the return value is \"\".
+    How you specify a text string as an argument depends on whether you are using the function in an SQL query or in mrScriptBasic or mrScriptMetadata. In an SQL query, enclose text strings in single quotation marks (' '). In mrScriptBasic or mrScriptMetadata, enclose text strings in double quotation marks (\" \").
+
+    ### Examples
+    This example uses the `LTrim` function to return a copy of the contents of the address variable with any leading spaces removed:
+    ```ds
+    address.LTrim()
+    ```
+    !'
+    Function LTrim() As String
+    End Function
+
+    '!
+    ```ds
+    (function) RTrim(): String
+    ```
+    -----------------------------------
+    Returns a copy of a string with any trailing spaces removed.
+    + `return`: *String* - Copy of `Val` with trailing spaces removed.
+
+    ### Remarks
+    `RTrim` removes white space (such as space and tab characters) that appears at the end of the input string. RTrim uses the rules of the input locale when interpreting white space.
+    If the current data value is *NULL*, `Val` is \"\" and the return value is \"\".
+    How you specify a text string as an argument depends on whether you are using the function in an SQL query or in mrScriptBasic or mrScriptMetadata. In an SQL query, enclose text strings in single quotation marks (' '). In mrScriptBasic or mrScriptMetadata, enclose text strings in double quotation marks (\" \").
+
+    ### Examples
+    This example uses the `RTrim` function to return a copy of the contents of the address variable with any trailing spaces removed:
+    ```ds
+    address.RTrim()
+    ```
+    !'
+    Function RTrim() As String
+    End Function
+
+    '!
+    ```ds
+    (function) Split([Delimiter: String = \" \"], [Count: Long]): Categorical
+    ```
+    -----------------------------------
+    Returns an array that contains substrings.
+    + `Delimiter`: *String* - Optional. `Delimiter` between substrings. The default is a single space (\" \").
+    + `Count`: *Long* - Optional. The maximum number of substrings to return. If omitted or less than zero, all substrings are returned.
+    + `return`: *Categorical* - An *array* containing the substrings from `Val`.
+
+    ### Remarks
+    This function is useful when you are parsing text strings that contain a number of substrings separated by a character such as a comma (,). For example, the lines of an address are often separated by a comma.
+    If `Val` is an empty string, the return value is an empty array. Otherwise, if Delimiter is an empty string or is not found in `Val`, the return value is an array containing one item, a copy of `Val`. If the current data value is *NULL*, `Val` is an empty string and the return value is an empty array.
+    How you specify a text string as an argument depends on whether you are using the function in an SQL query or elsewhere, such as in mrScriptBasic or mrScriptMetadata, or when creating filters in IBM® SPSS® Data Collection Survey Tabulation or quotas in IBM® SPSS® Data Collection Interviewer Server. Enclose text strings in single quotation marks (' ') in SQL queries and enclose text strings in double quotation marks (\" \") everywhere else.
+
+    @Note - The `Split` function returns a categorical value, making it impossible to assign elements of the returned array. It should also be noted that the result from the `Split` function is not a real categorical value, because the elements of a categorical must be of type *Long* (int - VT_I4), not text. The parser treats the value as a categorical, but an error is returned when attempting to pass the value into a function that expects a real categorical (ContainsAny for example).
+
+    ### Examples
+    This mrScriptBasic example uses the `Split` function to return the first line and the first two lines of an address that is stored in a single variable with the lines separated by commas. It also shows an example of using the function using the default parameters:
+    ```ds
+    Dim Address, FirstLine, FirstTwoLines, Defaults
+
+    Address = \"363 Park Road, Ashford, Kent\"
+
+    FirstLine = Address.Split(",", 1)      ' Returns {363 Park Road}
+    FirstTwoLines = Address.Split(",", 2)  ' Returns {363 Park Road, Ashford}
+    Defaults = Address.Split()             ' Returns {363,Park,Road,,Ashford,,Kent}
+    ```
+    !'
+    Function Split(Optional Delimiter As String = " ", Optional Count As Long) As Categorical
+    End Function
+
+    '!
+    ```ds
+    (function) Replace(Key: Variant, Replacement: Variant, [Start: Long], [Count: Long], [IgnoreCase: Boolean]): Variant
+    ```
+    -----------------------------------
+    Replaces part of a text or categorical value with another value of the same type.
+    + `Key`: *Variant* - Variant value to look for in `Val`, of the same type as `Val`.
+    + `Replacement`: *Variant* - Variant value with which to replace `Key`, of the same type as `Val`.
+    + `Start`: *Long* - Optional. Position in `Val` (starting from 0), from which to start searching for `Key`. If omitted or less than 0, searching starts at the start of `Val`.
+    + `Count`: *Long* - Optional. Maximum number of replacements to make. If omitted or less than 0, all possible replacements are made.
+    + `IgnoreCase`: *Boolean* - Optional. Whether to do case-insensitive comparison for `Key`. The default is *False*.
+    + `return`: *Variant* - Copy of `Val` with `Key` replaced with `Replacement`.
+
+    ### Remarks
+    If `Val` is of type `Text`, `Key` and `Replacement` are converted to text values, unless they are already text values or *NULL*. If `Val` is of type *Categorical*, `Key` and `Replacement` are converted to categorical values, unless they are already categorical values or *NULL*. An error occurs if `Key` or `Replacement` cannot be converted to the required type.
+    If `Val` is *NULL*, the return value is *NULL*. If `Key` is *NULL*, no replacements are made. If `Replacement` is *NULL*, occurrences of `Key` are removed instead of being replaced. If `Val` is of any other type, an error occurs.
+
+    ### Examples
+    The following mrScriptBasic example shows the use of the `Replace` function to replace all the hyphens in a text variable with spaces.
+    ```ds
+    strVal = strVal.Replace(\"-\", \" \")
+    ```
+    !'
+    Function Replace(Key As Variant, Replacement As Variant, Optional Start As Long, Optional Count As Long, Optional IgnoreCase As Boolean) As Variant
+    End Function
+
+    '!
+    ```ds
+    (function) Trim(): String
+    ```
+    -----------------------------------
+    Returns a copy of a string with any leading and trailing spaces removed.
+    + `return`: *String* - Copy of `Val` with leading and trailing spaces removed.
+
+    ### Remarks
+    `Trim` removes white space (such as space and tab characters) that appears at the beginning and end of the input string. `Trim` uses the rules of the input locale when interpreting white space.
+    If the current data value is *NULL*, `Val` is \"\" and the return value is \"\".
+    How you specify a text string as an argument depends on whether you are using the function in an SQL query or in mrScriptBasic or mrScriptMetadata. In an SQL query, enclose text strings in single quotation marks (' '). In mrScriptBasic or mrScriptMetadata, enclose text strings in double quotation marks (\" \").
+
+    ### Examples
+    This example uses the `Trim` function to return a copy of the contents of the address variable with any leading and trailing spaces removed:
+    ```ds
+    address.Trim()
+    ```
+    !'
+    Function Trim() As String
+    End Function
+
+    '!
+    ```ds
+    (function) UCase(): String
+    ```
+    -----------------------------------
+    Returns a string that has been converted to upper case.
+    + `return`: *String* - Uppercase copy of `Val`.
+
+    ### Remarks
+    The input string is converted to upper case, according to the rules of the input locale.
+    If the current data value is *NULL*, `Val` is \"\" and the return value is \"\".
+    How you specify a text string as an argument depends on whether you are using the function in an SQL query or in mrScriptBasic or mrScriptMetadata. In an SQL query, enclose text strings in single quotation marks (' '). In mrScriptBasic or mrScriptMetadata, enclose text strings in double quotation marks (\" \").
+
+    ### Examples
+    This example returns an uppercase copy of the contents of the *name* variable:
+    ```ds
+    name.UCase()
+    ```
+    The next example uses the `Trim` and `Mid` functions in addition to the `UCase` function. The example returns characters 5-10 of the name variable converted to upper case and with any leading or trailing spaces removed:
+    ```ds
+    Trim(UCase(name.Mid(4, 5)))
+    ```
+    !'
+    Function UCase() As String
+    End Function
+
+    '!
+    ```ds
+    (function) Find(Key: Variant, [Skip: Long = 0], [Reverse: Boolean = False], [IgnoreCase: Boolean = True]): Long
+    ```
+    -----------------------------------
+    Searches a string, a category list, or an array, for a specified substring, subcategory list, or subarray, and if it is found, returns its start position.
+    + `Key`: *Variant* - Value to search for in `Val`.
+    + `Skip`: *Long* - Optional. The number of positions to skip in `Val` before starting the search. If `Reverse` is *True*, `Skip` is the number of positions to skip from the end of `Val`. If `Reverse` is omitted or *False*, Skip is the number of positions to skip from the start of `Val`. Treated as 0 if omitted or is < 0.
+    + `Reverse`: *Boolean* - Optional. If *True*, `Val` is searched backwards. If `Reverse` is omitted or *False*, `Val` is searched forwards.
+    + `IgnoreCase`: *Boolean* - Optional. If *False*, the comparison is case-sensitive. If `IgnoreCase` is omitted or *True*, the comparison is case-insensitive.
+    + `return`: *Long* - Position in `Val`, relative to the start of `Val`, of `Key` if found, -1 otherwise.
+
+    ### Remarks
+    If `Val` is *Text*, `Key` is converted to text if necessary and is searched for as a substring of `Val`. Unless `IgnoreCase` is *False*, the comparison is case-insensitive.
+    If `Val` is *Categorical* or an *Array* (which can contain values of any type), Key can be a *long*, *double*, *text*, *date*, *boolean*, or *categorical* value, or an *array*. When comparing `Key` (or the items in `Key`) with the items in `Val`, the normal conversion and comparison rules for variant types are used if necessary. Unless IgnoreCase is False, the comparison of text items (or items converted to text) is case-insensitive. If either item is *Null*, they are equal only if both are *Null*. If `Key` is a categorical value or an array, it is found only if its items occur as a sequence of consecutive items in `Val` and in the same order.
+    If either `Val` or Key is *NULL*, the return value is -1 (not found). If `Val` is not *Text*, *Categorical*, or an *Array*, an error occurs.
+    How you specify a text string as an argument depends on whether you are using the function in an SQL query or in mrScriptBasic or mrScriptMetadata. In an SQL query, enclose text strings in single quotation marks (' '). In mrScriptBasic or mrScriptMetadata, enclose text strings in double quotation marks (\" \").
+
+    ### Examples
+
+    | Function call             | Val                            | Key                  |  Result |
+    | :----------------         | :-----------                   | :-------------       | :-----  |
+    | Find(Val, Key)            | 24 St John's Road, Barnes      | barnes               | 19      |
+    | Find(Val, Key, , True)    | 3 Glasgow Hill, Glasgow        | glasgow              | 16      |
+    | Find(Val, Key)            | {3,7,8,1,9,10,5,4}             | 5                    | 6       |
+    | Find(Val, Key, 7)         | {3,7,8,1,9,10,5,4}             | 5                    | -1      |
+    | Find(Val, Key, , , False) | 24 St John's Road, Barnes      | barnes               | -1      |
+    | Find(Val, Key)            | Split(\"The quick brown fox\") | Split(\"brown fox\") | 2       |
+
+    **Text variables**. These examples use the name and address variables, which are text variables that store respondents' names and addresses, respectively. These examples show how you would use the Find function in mrScriptBasic or mrScriptMetadata. In SQL queries, you should enclose text strings in single quotation marks (' ') instead of double quotation marks (\" \").
+    The following example selects any respondent whose address contains \"London\" in upper case, lower case, or a mixture of both cases. Find returns -1 when the search string has not been found. In this example the <> operator is used to test that the return value is not -1, which means that \"London\" exists somewhere in the text being searched.
+    ```ds
+    address.Find(\"London\") <> -1
+    ```
+    Find lets you search for a string in a particular position. This is useful when the position of the search string in the text you are searching is important. For example, the following selects respondents whose names begin with the string \"Brian\":
+    ```ds
+    Find(name, \"Brian\") = 0
+    ```
+
+    **Categorical variables**. These examples use the *remember* multiple response variable.
+    This example selects all respondents who chose the *Dinosaurs* category regardless of its position in the list of categories chosen:
+    ```ds
+    remember.Find({dinosaurs}) <> -1
+    ```
+    The next example selects respondents for whom the *Dinosaurs* category is the first category in the list of their responses:
+    ```ds
+    remember.Find({dinosaurs}) = 0
+    ```
+    !'
+    Function Find(Key As Variant, Optional Skip As Long = 0, Optional Reverse As Boolean = False, Optional IgnoreCase As Boolean = True) As Long
+    End Function
+
+    '!
+    ```ds
+    (function) Left(Length: Long): Variant
+    ```
+    -----------------------------------
+    Returns a string containing the first characters from a string, a category list containing the first categories from a category list, or an array containing the first elements from an array.
+    + `Val`: *String* | *Categorical* | *Array* - *Text* value, *categorical* value, or *Array* to operate on.
+    + `Length`: *Long* - Number of characters, categories, or elements to return. If `Length` is greater than the number of items available, all of the items are returned.
+    + `return`: *Variant* - The required characters, categories, or elements from `Val`.
+
+    ### Remarks
+    For type *Text*, the return value is of type *Text*, and contains `Length` characters from the start of `Val`. For type *Categorical*, the return value is of type *Categorical*, and contains Length categories from the start of `Val`. For an array (which can contain values of any type), the return value is an array, and contains `Length` elements from the start of `Val`. For any other type, an error occurs.
+    When `Val` is *NULL*, the return value is *NULL*.
+
+    ### Examples
+
+    | Function call     | Val                            | Length | Result            |
+    | :-------------    | :-------------                 | :----- | :---------------- |
+    | Left(Val, Length) | 24 St John's Road, Barnes      | 10     | 24 St John        |
+    | Left(Val, Length) | {4,2,9}                        | 1      | {4}               |
+    | Left(Val, Length) | Split(\"The quick brown fox\") | 2      | {The,quick}       |
+
+    The following example returns the first six characters of the *name* text variable:
+    ```ds
+    name.Left(6)
+    ```
+    The following example returns the first three categories stored in the *remember* multiple response variable:
+    ```ds
+    remember.Left(3)
+    ```
+    !'
+    Function Left(Length As Long) As Variant
+    End Function
+
+    '!
+    ```ds
+    (function) Len(): Long
+    ```
+    -----------------------------------
+    Returns a *Long* containing the number of characters in a string, the number of categories in a category list, or the number of elements in an array.
+    + `Val`: *String* | *Categorical* | *Array* - *Text* value, *Categorical* value, or *Array* to operate on.
+    + `return`: *Long* - Numbers of characters, categories, or elements in `Val`.
+
+    ### Remarks
+    For type *Text*, the return value is the number of characters in `Val`. For type *Categorical*, the return value is the number of categories in `Val`. For an *Array* (which can contain values of any type), the return value is the number of elements in `Val`. For any other type, an error occurs.
+    When `Val` is *NULL*, the return value is zero.
+
+    ### Examples
+
+    | Function call | Val                            | Result |
+    | :------------ | :---------------               | :----  |
+    | Len(Val)      | 24 St John's Road, Barnes      | 25 |
+    | Len(Val)      | {4,2,9}                        | 3 |
+    | Len(Val)      | Split(\"The quick brown fox\") | 4 |
+
+    The following example returns the number of characters stored in the *address* text variable:
+    ```ds
+    address.Len()
+    ```
+    The following example returns the number of categories selected by the respondent in response to the *remember* multiple response question:
+    ```ds
+    remember.Len()
+    ```
+    !'
+    Function Len() As Long
+    End Function
+
+    '!
+    ```ds
+    (function) Mid(Start: Long, [Length: Long]): Variant
+    ```
+    -----------------------------------
+    + `Val`: *String* | *Categorical* | *Array* - *Text* value, *categorical* value, or *array* to operate on.
+    + `Start`: *Long* - Position in `Val` of the first character, category, or element wanted (counting from 0). If `Start` is greater than the number of items in `Val`, no items are returned. If `Start` is less than 0, items are returned from the start of `Val`.
+    + `Length`: *Long* - Optional. Number of characters, categories, or elements to return. If `Length` is omitted, or if there are fewer than *Lengthcharacters* (including the `Start` character), all characters from `Start` to the end of the string are returned. If `Start` + `Length` is < 1, no items are returned.
+    + `return`: *Variant* - The required characters, categories, or elements from `Val`.
+
+    ### Remarks
+    For type *Text*, the return value is of type *Text*, and contains `Length` characters from the position `Start` in `Val`. For type *Categorical*, the value is of type *Categorical*, and contains `Length` categories from the position `Start` in `Val`. For an *array* (which can contain values of any type), the return value is an *array*, and contains `Length` elements from the position `Start` in `Val`. For any other type, an error occurs.
+    When `Val` is *NULL*, the return value is *NULL*.
+
+    ### Examples
+
+    | Function call           | Val                            | Start | Length | Result      |
+    | :-------------          | :---------------               | :---- | :----- | :---------- |
+    | Mid(Val, Start, Length) | 24 St John's Road, Barnes      | 10    | 15     | 's Road, Barnes |
+    | Mid(Val, Start, Length) | {4,2,9}                        | 2     | 1      | {9}             |
+    | Mid(Val, Start, Length) | {4,2,9}                        | 6     | 3      | {}              |
+    | Mid(Val, Start, Length) | {4,2,9}                        | 0     | 2      | {4,2}           |
+    | Mid(Val, Start, Length) | {4,2,9}                        | 0     |        | {4,2,9}         |
+    | Mid(Val, Start, Length) | Split(\"The quick brown fox\") | 1     | 2      | {quick,brown}   |
+
+    The following example returns characters 8-17 from the *address* text variable:
+    ```ds
+    address.Mid(7, 10)
+    ```
+    The following example returns the fourth category from the list of categories stored in the *remember* multiple response variable:
+    ```ds
+    remember.Mid(3, 1)
+    ```
+    For respondents who chose less than four categories, this returns an empty category list ({}).
+    !'
+    Function Mid(Start As Long, Optional Length As Long) As Variant
+    End Function
+
+    '!
+    ```ds
+    (function) Right(Length: Long): Variant
+    ```
+    -----------------------------------
+    Returns a string containing the last characters from a string, a category list containing the last categories from a category list, or an array containing the last elements from an array.
+    + `Val`: *String* | *Categorical* | *Array* - *Text* value, *categorical* value, or *array* to operate on.
+    + `Length`: *Long* - Number of characters, categories, or elements to return. If `Length` is greater than the number of items available, all of the items are returned.
+    + `return`: *Variant* - The required characters, categories, or elements from `Val`.
+
+    ### Remarks
+    For type *Text*, the return value is of type *Text*, and contains Length characters from the end of `Val`. For type *Categorical*, the return value is of type *Categorical*, and contains `Length` categories from the end of `Val`. For an *array* (which can contain values of any type), the return value is an *array*, and contains `Length` elements from the end of `Val`. For any other type, an error occurs.
+    When `Val` is *NULL*, the return value is *NULL*.
+
+    ### Examples
+
+    | Function call      | Val                            | Length | Result       |
+    | :----------------  | :--------------------          | :----- | :----------- |
+    | Right(Val, Length) | 24 St John's Road, Barnes      | 6      | Barnes       |
+    | Right(Val, Length) | {4,2,9,15,6,7}                 | 1      | {7}          |
+    | Right(Val, Length) | Split(\"The quick brown fox\") | 3      | {quick,brown,fox} |
+
+    The following example returns the 10 rightmost characters stored in the *address* text variable:
+    ```ds
+    address.Right(10)
+    ```
+    The following example returns the last two categories in the list of categories stored in the *remember* multiple response variable:
+    ```ds
+    remember.Right(2)
+    ```
+    !'
+    Function Right(Length As Long) As Variant
+    End Function
+
+End Class
+
+'!
+```ds
+(function) AscW(Val: String): Long
+```
+-----------------------------------
+Returns an integer value representing the Unicode character code (sometimes called the code point) for a character
++ `Val`: *String* - *Text* value.
++ `return`: *Long* - Unicode character code for first character of `Val`.
+
+### Remarks
+A Unicode character code is an integer from 0 to 65535.
+This function returns 0 if `Val` is empty. If the current data value is *NULL*, `Val` is an empty string and 0 is returned.
+How you specify a text string as an argument depends on whether you are using the function in an SQL query or in mrScriptBasic or mrScriptMetadata. In an SQL query, enclose text strings in single quotation marks (' '). In mrScriptBasic or mrScriptMetadata, enclose text strings in double quotation marks (\" \").
+
+### Examples
+This mrScriptBasic example uses the `AscW` function to return the character code for a single character:
+```ds
+AscW(\"a\")
+```
+The return value is 97.
+The next example shows an SQL query that uses the AscW function to return the character code for the first character of the *name* variable (which stores the respondent's name).
+```sql
+SELECT AscW(name) FROM vdata
+```
+!'
+Function AscW(Val As String) As Long
+End Function
+
+'!
+```ds
+(function) ChrW(Val: Long): String
+```
+-----------------------------------
+Returns the character that corresponds to a Unicode character code (sometimes called the code point).
++ `Val`: *Long* - Unicode character code for a character.
++ `return`: *String* - Character corresponding to `Val`.
+
+### Remarks
+Valid Unicode character codes are integers from 0 to 65535. An error occurs if Val is less than 0 or greater than 65535.
+If the current data value is *NULL*, `Val` is 0 and the return value is a string containing a single null character. `ChrW` cannot distinguish between a 0 received for a *NULL* value and an actual 0 passed in.
+All values in the range 0-65535 are treated as valid Unicode characters, even though some of these values are not currently assigned as Unicode characters. In addition some values correspond to non-printable characters. Note that the returned character will be displayed correctly only if the font you are using supports that character.
+
+### Examples
+This example uses the `ChrW` function to return the character for a specified character code:
+```ds
+ChrW(97)
+```
+The return value is \"a\".
+!'
+Function ChrW(Val As Long) As String
+End Function
+
+'!
+```ds
+(function) Format(Val: Variant, [Style: String], [Width: Long], [Locale: Long]): String
+```
+-----------------------------------
+Returns a string that is the result of formatting a value according to one or more specified styles.
++ `Val`: *Variant* - The value to be formatted.
++ `Style`: *String* - Optional. One or more formatting codes. Multiple codes must be separated by semicolons.
++ `Width`: *Long* - Optional. The minimum width of the formatted string.
++ `Locale`: *Long* - Optional. The output locale to use for regional variations in formatting. If `Locale` is omitted or is negative, the current output locale is used for formatting.
++ `return`: *String* - `Val` formatted as a text string.
+
+### Remarks
+`Val` is formatted according to `Style`, as described below. If `Width` is supplied and the formatted string is shorter than the absolute value of `Width`, the string is padded with space characters to make it up to (the absolute value of) `Width` characters. If `Width` is negative, spaces are added at the end of the string; otherwise, spaces are added at the start.
+An error occurs if Val is an array with more than one dimension. Locale, if specified, is used for regional variations in formatting, but not for error messages. Custom formatting is not currently supported.
+If the metadata to be used for formatting needs to provided by a separate variable from `Val`, use the `FormatValue` function.
+
+#### Style Code Syntax
+`Style` consists of one or more formatting codes. Multiple codes must be separated by semicolons. Each code is of the form C[p][=t], where:
++ *C* is a letter specifying the type of formatting to do.
++ *p* is an optional integer that modifies the formatting in some way, depending on *C*.
++ *t* is an optional text argument whose meaning depends on *C*.
+
+If *C* is an unknown code, the formatting described under None in the table below is used (and no error occurs), using the values of p and t, if supplied. The argument p may not have a plus or minus sign, so it can only be a non-negative integer. If *p* or *t* is inappropriate for *C*, it is ignored (and no error occurs).
+
+#### Applying a Style
+Except for the Count style (s, described in the table below), if Val is an array or a categorical value, the result is a comma-separated list of the results of applying the given style code (or codes) to each item or element in turn (in this case, `Val` in the table below refers to each individual item or element, not the whole array). No attempt is made to differentiate the separator character from any occurrences of the same character in the individual formatted values. Note that this gives the same result for a categorical value as for an array of long values. Note also that, if an array contains values of different types, the style code (or codes) may be interpreted differently for different items. If `Width` is specified, it is applied to the whole list, not to individual items.
+Except for special cases described in the table below, the value is converted to the expected type, using the input locale where necessary to interpret strings. For an object, the value of the object’s default property is used (in this case, `Val` below refers to the retrieved value). If any error occurs in retrieving an object’s properties, or in converting a value to the expected type, the result for that value is “”, except where noted below.
+Where formatting is affected by locale settings, the system settings for the locale are used, ignoring any “user overrides” (changes made to regional settings by the user currently logged in to the server).
+Except for the Count style (s, described below), if `Val` is *NULL*, the result is an empty string (\"\").
+
+#### Applying Multiple Styles
+If `Style` consists of more than one formatting code, each code is applied in turn to Val as described in “Applying a Style” above. Because the result of applying the first code will always be a text value, subsequent codes should only be those that are relevant to text values, for example, LowerFirst, Count, or UpperAll (*l*, *s*, or *U*, described below).
+Any padding required by `Width` is done after all codes have been applied.
+
+#### Style Code Definitions
++ **None** -
+    - For an MDMLabeledObject, the same as for *Label* (*b*), using *t* if supplied.
+    - For any other object, the same as for *Value* (*v*), using *t* if supplied.
+    - For other types, the same as `CText(Val)`, ignoring *p* and *t*.
++ **a**: *Name* -
+    - For an MDMLabeledObject, the Name property. If an error occurs retrieving the name, the result is “”.
+    - For any other object, the result of applying the Name format to the object's default property value.
+    - For other types, the Name of the MDM Element whose value is `CLong(Val)`. If the MDM Element or its Name cannot be accessed, the Name of the MDM mapped category value whose value is `CLong(Val)`. If the MDM mapped category value does not exist, the result is the same as for *Decimal1* (*d*), using *p* if supplied.
++ **A**: *NameFull* - Same as for *Name* (*a*), but using the FullName instead of the Name for an MDMLabeledObject or MDM Element.
++ **b**: *Label* -
+    - For an MDMLabeledObject, its Label. If an error occurs retrieving the label, the result is “”.
+    - For any other object, the result of applying the Label format to the object’s default property value.
+    - For other types, the Label of the MDM Element (in the current MDM object) whose value is `CLong(Val)`. If an error occurs retrieving the label, the result is the same as *Decimal1* (*d*), using *p* if supplied.
+    - Labels are retrieved using the current Context and Language in the metadata. If t is given, it’s the name of the LabelType to use. If t is omitted, or specifies a nonexistent *LabelType*, the current LabelType is used.
++ **B**: *LabelFull* - Same as for *Label* (*b*), but using the FullLabel instead of the Label for an MDMLabeledObject or MDM Element. The FullLabel can only be retrieved for the MDM document’s current LabelType, so t is ignored.
++ **c**: *Currency* - `Val` converted to double and formatted as a currency, using the currency symbol and format specified by the output locale. The number of decimal places is adjusted to p by rounding Val (away from zero, for borderline cases), or by adding zeros at the end. If `p = 0`, the result has no decimal separator and no fractional part. If *p* is omitted, the default for the output locale is used.
++ **C**: *Currency-Code* - Same as for *Currency* (*c*), but using the three-character international monetary symbol specified by the output locale.
++ **d**: *DateShort,Decimal1* -
+    - For a date value, short date format specified by the output locale (ignoring time of day in `Val`).
+    - The string length is increased to *p*, if given, by inserting zeros before the first digit.
++ **D**: *DateLong, Decimal2* -
+    - For a date value, long date format specified by the output locale (ignoring time of day in `Val`).
+    - For other types, `Val` converted to long and formatted as follows:
+        - A minus sign (-) if `Val` < 0. Followed by...
+        - One or more decimal digits (0-9).
+    - For other types, same as for Decimal1 (*d*).
++ **e**: *Scientific-Lower* -
+    - `Val` converted to double and formatted as follows:
+        - A minus sign (-) if Val < 0. Followed by...
+        - One decimal digit (0-9). Followed by...
+        - A decimal point (.). Followed by...
+        - p decimal digits (0-9). Followed by...
+        - Lower-case e. Followed by...
+        - A plus or minus sign (+ or -). Followed by...
+        - Three decimal digits (0-9).
+    - The part before the *e* (the mantissa) is `Val` scaled by a power of 10 so that its absolute value is `>= 1.0` and `< 10.0`, unless `Val` is 0.0. The number of decimal places is adjusted by rounding the mantissa (away from zero, for borderline cases), or by adding zeros at the end. If *p* = 0, the mantissa has no decimal separator and no fractional part. If *p* is omitted, it has 6 decimal places.
+    - The part after the *e* (the exponent) is the power of 10 by which the mantissa must be multiplied to give `Val`. The exponent length is increased to 3 digits, if necessary, by adding zeros at the left. If `Val` is 0.0, the mantissa and exponent are both zero. If the absolute value of `Val` is `> 0.0` and `< 1.0`, the exponent is negative, otherwise it is positive.
++ **E**: *Scientific-Upper* - Same as for ScientificLower (*e*), but with an upper-case E.
++ **f,F**: *DateTime,FixedPoint* -
+    - For a date value, long date and time formats specified by the output locale, separated by a space.
+    - For other types, `Val` converted to double and formatted as follows:
+        - A minus sign (-) if Val < 0. Followed by...
+        - One or more decimal digits (0-9). Followed by...
+        - *A* decimal separator (specified by the output locale). Followed by...
+        - *p* decimal digits.
+    - The number of decimal places is adjusted by rounding Val (away from zero, for borderline cases), or by adding zeros at the end. If *p* = 0, the result has no decimal separator and no fractional part. If *p* is omitted, the default for the output locale is used.
++ **l**: *LowerFirst* - `CText(Val)`, with the first alphanumeric character converted to lower case (if it’s an upper-case letter) according to the rules for the output locale.
++ **L**: *LowerAll* - `CText(Val)`, with all alphabetic characters converted to lower case according to the rules for the output locale.
++ **n,N**: *Fixed-Grouped* - `Val` converted to double and formatted as for FixedPoint1 (*f*), but with digits before the decimal separator grouped according to the rules for the output locale.
++ **p,P**: *Percent* - `Val` converted to double and multiplied by 100.0, formatted as for FixedPoint (f), followed by a percent sign (%).
++ **s,S**: *Count* -
+    - For an array or categorical value, the number of items/elements it contains.
+    - For text, the number of characters in the string.
+    - For NULL, 0.
+    - For other types, 1.
+    - For all types, the count is formatted as for *Decimal1* (*d*), using p if supplied.
++ **t,T**: *Time* - `Val` converted to date and formatted according to the time format specified by the output locale (ignoring the date part of `Val`).
++ **u**: *UpperFirst* - `CText(Val)`, with the first alphanumeric character converted to upper case (if it’s a lower-case letter) according to the rules for the output locale.
++ **U**: *UpperAll* - `CText(Val)`, with all alphabetic characters converted to upper case according to the rules for the output locale.
++ **v**: *Value* - For an object value, the value of a specified property, converted to text. If t is given, it’s the name of the property to use. If t is omitted, or the value of the specified property can’t be retrieved, the default property of the object is used, if it exists. If no suitable property is found, the result is “”. The first property that returns a value is used, even if the value it returns is “”.
+For other types, `Val` converted to long and formatted as for *Decimal1* (*d*), using *p* if supplied.
++ **V**: *ValueNative* -
+    - For an object value, the value of a specified property (same as for *Value* (*v*)).
+    - For other types, the native value (for the current DataSource in the metadata) of the MDM ElementInstance whose value is `CLong(Val)`, formatted as for *Decimal1* (*d*), using *p* if supplied. If the native value can’t be retrieved, the result is “”.
++ **w**: *TitleFirst* - `CText(Val)`, with the first alphanumeric character converted to upper case, and the rest of the string converted to lower case according to the rules for the output locale.
++ **W**: *TitleAll* - `CText(Val)`, with the first character of each word (any alphanumeric character that isn’t preceded by an alphanumeric character) converted to upper case, and the rest of the string converted to lower case according to the rules for the output locale.
++ **x**: *HexLower* -
+    - `Val` converted to long and formatted as one or more hexadecimal digits (0-9 and a-f).
+    - `Val` is treated as an unsigned value; this means that if `Val` < 0, the value formatted is equivalent to Val + Pow(2, 31). Thus the range of possible non-negative long values (0 to 2147483647) is formatted as “0” to “7fffffff”, and the range of negative values (-2147483648 to -1) is formatted as “80000000” to “ffffffff”. This is consistent with the hexadecimal syntax for expressing integers in mrScript, eg &H80000000 = -2147483648.
+    - The string length is increased to *p*, if given, by inserting zeros before the first digit.
++ **X**: *HexUpper* - Same as for HexLower (*x*), but with upper-case A-F for the hexadecimal digits.
+
+### Examples
+#### 1. Using the Format function in mrScriptBasic
+Note: Many of the examples in the table below make use of the Household sample metadata document, household.mdd, that is installed with the DDL.
+
+| Function call                                             | Result             |
+| :---------                                                | :-----------------------  |
+| Format(CDate(\"2004-12-02 15:49:31\"), \"f\", , 1046)                   | \"quinta-feira, 2 de dezembro de 2004 15:49:31\"                                     |
+| Format(CDate(\"2004-12-02 15:49:31\"), \"f\", , 1052)                   | \"2004-12-02 3:49:31.MD \"                                                           |
+| Format(MDM.Fields[\"person.trip.purpose\"], \"a\")                      | \"purpose\"                                                                          |
+| Format(MDM.Fields[\"person.trip.purpose\"], \"A\")                      | \"person[..].trip[..].purpose\"                                                      |
+| Format(MDM.Fields[\"person.trip.purpose\"], \"b\")                      | \"Purpose of trip\"                                                                  |
+| Format(MDM.Variables[\"person[2].tvdays[{Channel_3}].Column\"], \"a\")  | \"Column\"                                                                           |
+| Format(MDM.Variables[\"person[2].tvdays[{Channel_3}].Column\"], \"A\")  | \"person[2].tvdays[{Channel_3}].Column\"                                             |
+| Format(MDM.Variables[\"person[2].tvdays[{Channel_3}].Column\"], \"b\")  | \"Number of days watched last week\"                                                 |
+| Format(MDM.Variables[\"person[2].tvdays[{Channel_3}].Column\"], \"B\")  | \"2,{Channel_3} : Number of days watched last week\"                                 |
+| Format(MDM.Fields[\"person.newspapers\"], \"v=EffectiveMaxValue\")      | \"12\"                                                                               |
+| Format(MDM.CategoryMap, \"v=Count\")                                    | \"125\"                                                                              |
+| Format(MDM.Variables[\"person[6].occupation\"], \"V=hascasedata\")      | \"True\"                                                                             |
+| Format(MDM, \"V=URL\")                                                  | \"[INSTALL_FOLDER]\\IBM\\SPSS\\DataCollection\\6\\DDL\\Data\\Data Collection File\\household.mdd\"    |
+| Format(MDM.URL, \"L\")                                                  | \"[INSTALL_FOLDER]\\ibm\\spss\\datacollection\\6\\ddl\\data\\data collection file\\household.mdd\"  |
+| Format(MDM.URL, \"U\")                                                  | \"[INSTALL_FOLDER]\\IBM\\SPSSDATACOLLECTION\\6\\DDL\\DATA\\DATA COLLECTION FILE\\HOUSEHOLD.MDD\" |
+| MDM.MDMVersion.Split(\".\").Format(\"d4\")                              | \"0002,0010,0000,1664\" |
+| Format(MDM.Variables[\"person[2].tvdays[{Channel_3}].Column\"], \"b;l\")| \"number of days watched last week\" |
+
+#### 2. Using the Format function in an SQL query
+This example shows the use of the `Format` function in an SQL query that can be run against the IBM® SPSS® Data Collection Data File version of the Household sample data set, *household.ddf*. The function is used to display the value of a decimal variable called Satisfaction as a fixed point decimal and as a percentage figure:
+```sql
+SELECT DISTINCT
+    satisfaction,
+    satisfaction.Format('f2') AS FixedPoint,
+    Format(satisfaction / 10.0, 'p0') AS Percentage
+FROM hdata.person.trip
+```
+Here is the result set:
+
+| satisfaction     | FixedPoint | Percentage     |
+| :--------------- | :--------- | :---------     |
+| 8.5              | 8.50       | 85%    |
+| 9                | 9.00       | 90%    |
+| 7.75             | 7.75       | 78%    |
+| 8                | 8.00       | 80%    |
+| 7.5              | 7.50       | 75%    |
+| 9.5              | 9.50       | 95%    |
+| 10               | 10.00      | 100%   |
+| 5                | 5.00       | 50%    |
+| 8.30000019073486 | 8.30       | 83%    |
+| 7.90000009536743 | 7.90       | 79%    |
+| 8.19999980926514 | 8.20       | 82%    |
+| 6.30000019073486 | 6.30       | 63%    |
+| 5.5              | 5.50       | 55%    |
+
+This next example shows another SQL query that can be run against the Household sample data set, *household.ddf*. The Format function is used to display the value of a categorical variable called Country in five alternative formats:
+```sql
+SELECT DISTINCT
+    country,
+    country.Format('v2') AS Value,
+    country.Format('a') AS Name,
+    country.Format('b') AS Label,
+    country.Format('b;U') AS LabelUpperCase,
+    country.Format('s4') AS [Count]
+FROM hdata.person.trip
+```
+Here is the result set:
+
+| country         |  Value | Name          | Label         | LabelUpperCase | Count  |
+| :-------------- |  :----- | :------------ | :------------ | :------------ |  :----- |
+| {united_states} |  85    | United_States | United States | UNITED STATES  | 0001  |
+| {switzerland}   |  83    | Switzerland   | Switzerland   | SWITZERLAND    | 0001  |
+| {india}         |  68    | India         | India         | INDIA          | 0001  |
+| {portugal}      |  78    | Portugal      | Portugal      | PORTUGAL       | 0001  |
+| {holland}       |  67    | Holland       | Holland       | HOLLAND        | 0001  |
+| {morocco}       |  75    | Morocco       | Morocco       | MOROCCO        | 0001  |
+| {australia}     |  57    | Australia     | Australia     | AUSTRALIA      | 0001  |
+| {france,spain}  |  64,81 | France,Spain  | France,Spain  | FRANCE,SPAIN   | 0002  |
+| {china,japan}   |  61,71 | China,Japan   | China,Japan   | CHINA,JAPAN    | 0002  |
+| {germany}       |  65    | Germany       | Germany       | GERMANY        | 0001 |
+
+The first column shows the categorical variable without any formatting, the second column shows the categorical values, the third and fourth columns show the values of the Name and Label properties respectively, the fifth column shows the result of applying two style codes, and the sixth column shows the number of elements in the categorical variable.
+
+#### 3. Using the Format function in an interview script
+The next example shows the `Format` function being used in an interview script that will run in version 3.0 (or later) of IBM® SPSS® Data Collection Interviewer Server. The Format function is used to display the labels and formatted values of the categories selected in the LikeColors question:
+```ds
+Metadata(en-US, Question, label)
+    LikeColors \"Which colors do you like?\" categorical
+    {
+        red \"I like Red\",
+        blue \"I like Blue\",
+        green \"I like Green\",
+        yellow \"I like Yellow\",
+        pink \"I like Pink\",
+        purple \"I like Purple\",
+        orange \"I like Orange\"
+    };
+
+    LikeColorsResponse \"{InsertHere}\" info;
+End Metadata
+
+Routing(Web)
+    LikeColors.Ask()
+
+    Dim labels, values, str
+    labels = LikeColors.Format(\"b\")    ' labels of responses
+    labels = labels.Replace(\",\", mr.CrLf)
+    values = LikeColors.Format(\"d3\")   ' response values with leading zeroes
+    str = \"You chose these:\" + mr.CrLf + labels + mr.CrLf
+    str = str + \"Their numerical values are (\" + values + \").\"
+
+    LikeColorsResponse.Ask(str)
+End Routing
+```
+!'
+Function Format(Val As Variant, Optional Style As String, Optional Width As Long, Optional Locale As Long) As String
+End Function
+
+'!
+```ds
+(function) FormatValue(ValFormat: Variant, Val: Variant, [Style: String], [Width: Long], [Locale: Long]): String
+```
+-----------------------------------
+Returns a string that is the result of formatting a value according to one or more specified styles. The `FormatValue` function is identical to the `Format` function, except that the metadata to be used for formatting is provided by one variable, while the value to be formatted may come from elsewhere.
++ `ValFormat`: *Variant* - A variable that provides the metadata to be used for formatting.
++ `Val`: *Variant* - The value to be formatted.
++ `Style`: *String* - Optional. One or more formatting codes. Multiple codes must be separated by semicolons.
++ `Width`: *Long* - Optional. The minimum width of the formatted string.
++ `Locale`: *Long* - Optional. The output locale to use for regional variations in formatting. If `Locale` is omitted or is negative, the current output locale is used for formatting.
++ `return`: *String* - `Val` formatted as a text string.
+
+### Remarks
+`Val` is formatted according to Style, as described below. For those formatting codes that can use metadata information, such as Name, Label, and ValueNative (*a*, *b*, and *V*, described in the table below), `Val` is formatted using the metadata information provided by `ValFormat`. That is, `Val` is formatted as if it were the current value of the `ValFormat` variable.
+If `Width` is supplied and the formatted string is shorter than the absolute value of `Width`, the string is padded with space characters to make it up to (the absolute value of) `Width` characters. If `Width` is negative, spaces are added at the end of the string; otherwise, spaces are added at the start.
+
+#### Style Code Syntax
+`Style` consists of one or more formatting codes. Multiple codes must be separated by semicolons. Each code is of the form C[p][=t], where:
+- *C* is a letter specifying the type of formatting to do.
+- *p* is an optional integer that modifies the formatting in some way, depending on *C*.
+- *t* is an optional text argument whose meaning depends on *C*.
+
+If *C* is an unknown code, the formatting described under None in the table below is used (and no error occurs), using the values of *p* and *t*, if supplied. The argument *p* may not have a plus or minus sign, so it can only be a non-negative integer. If *p* or *t* is inappropriate for *C*, it is ignored (and no error occurs).
+
+#### Applying a Style
+Except for the Count style (s, described in the table below), if `Val` is an array or a categorical value, the result is a comma-separated list of the results of applying the given style code (or codes) to each item or element in turn (in this case, “Val” in the table below refers to each individual item or element, not the whole array). No attempt is made to differentiate the separator character from any occurrences of the same character in the individual formatted values. Note that this gives the same result for a categorical value as for an array of long values. Note also that, if an array contains values of different types, the style code (or codes) may be interpreted differently for different items. If Width is specified, it is applied to the whole list, not to individual items.
+Except for special cases described in the table below, the value is converted to the expected type, using the input locale where necessary to interpret strings. For an object, the value of the object’s default property is used (in this case, “Val” below refers to the retrieved value). If any error occurs in retrieving an object’s properties, or in converting a value to the expected type, the result for that value is “”, except where noted below.
+Where formatting is affected by locale settings, the system settings for the locale are used, ignoring any “user overrides” (changes made to regional settings by the user currently logged in to the server).
+Except for the *Count style* (*s*, described below), if Val is NULL, the result is an empty string (\"\").
+
+#### Applying Multiple Styles
+If `Style` consists of more than one formatting code, each code is applied in turn to Val as described in “Applying a Style” above. Because the result of applying the first code will always be a text value, subsequent codes should only be those that are relevant to text values, for example, *LowerFirst*, *Count*, or *UpperAll* (*l*, *s*, or *U*, described below).
+Any padding required by `Width` is done after all codes have been applied.
+
+#### Style Code Definitions
++ **None** -
+    - For an MDMLabeledObject, the same as for *Label* (*b*), using t if supplied.
+    - For any other object, the same as for *Value* (*v*), using t if supplied.
+    - For other types, the same as `CText(Val)`, ignoring *p* and *t*.
++ **a**: *Name* -
+    - For an MDMLabeledObject, the *Name* property. If an error occurs retrieving the name, the result is “”.
+    - For any other object, the result of applying the *Name* format to the object's default property value.
+    - For other types, the Name of the MDM Element whose value is `CLong(Val)`. If the MDM Element or its *Name* cannot be accessed, the *Name* of the MDM mapped category value whose value is `CLong(Val)`. If the MDM mapped category value does not exist, the result is the same as for *Decimal1* (*d*), using *p* if supplied.
++ **A**: *NameFull* - Same as for *Name* (*a*), but using the *FullName* instead of the *Name* for an MDMLabeledObject or MDM Element.
++ **b**: *Label* -
+    - For an MDMLabeledObject, its Label. If an error occurs retrieving the label, the result is “”.
+    - For any other object, the result of applying the *Label* format to the object’s default property value.
+    - For other types, the Label of the MDM Element (in the current MDM object) whose value is `CLong(Val)`. If an error occurs retrieving the label, the result is the same as *Decimal1* (*d*), using p if supplied.
+    - Labels are retrieved using the current *Context* and *Language* in the metadata. If t is given, it’s the name of the *LabelType* to use. If t is omitted, or specifies a nonexistent *LabelType*, the current *LabelType* is used.
++ **B**: *LabelFull* - Same as for *Label* (*b*), but using the *FullLabel* instead of the *Label* for an MDMLabeledObject or MDM Element. The *FullLabel* can only be retrieved for the MDM document’s current LabelType, so *t* is ignored.
++ **c**: *Currency* - `Val` converted to double and formatted as a currency, using the currency symbol and format specified by the output locale. The number of decimal places is adjusted to *p* by rounding Val (away from zero, for borderline cases), or by adding zeros at the end. If `p = 0`, the result has no decimal separator and no fractional part. If *p* is omitted, the default for the output locale is used.
++ **C**: *Currency-Code* - Same as for *Currency* (*c*), but using the three-character international monetary symbol specified by the output locale.
++ **d**: *DateShort,Decimal1* -
+    - For a date value, short date format specified by the output locale (ignoring time of day in Val).
+    - For other types, `Val` converted to long and formatted as follows:
+        - A minus sign (-) if Val < 0. Followed by...
+        - One or more decimal digits (0-9).
+    - The string length is increased to *p*, if given, by inserting zeros before the first digit.
++ **D**: *DateLong,Decimal2* -
+    - For a *date* value, long date format specified by the output locale (ignoring time of day in `Val`).
+    - For other types, same as for *Decimal1* (*d*).
++ **e**: *Scientific-Lower* -
+    - `Val` converted to double and formatted as follows:
+        - A minus sign (-) if Val < 0. Followed by...
+        - One decimal digit (0-9). Followed by...
+        - A decimal point (.). Followed by...
+        - *p* decimal digits (0-9). Followed by...
+        - *Lower-case* *e*. Followed by...
+        - A plus or minus sign (+ or -). Followed by...
+        - Three decimal digits (0-9).
+    - The part before the *e* (the mantissa) is `Val` scaled by a power of 10 so that its absolute value is `>= 1.0` and `< 10.0`, unless Val is 0.0. The number of decimal places is adjusted by rounding the mantissa (away from zero, for borderline cases), or by adding zeros at the end. If `p = 0`, the mantissa has no decimal separator and no fractional part. If *p* is omitted, it has 6 decimal places.
+    - The part after the *e* (the exponent) is the power of 10 by which the mantissa must be multiplied to give `Val`. The exponent length is increased to 3 digits, if necessary, by adding zeros at the left. If `Val` is 0.0, the mantissa and exponent are both zero. If the absolute value of Val is `> 0.0` and `< 1.0`, the exponent is negative, otherwise it is positive.
++ **E**: *Scientific-Upper* - Same as for *ScientificLower* (*e*), but with an *upper-case* *E*.
++ **f**: *DateTime,FixedPoint* -
+    - For a *date* value, long date and time formats specified by the output locale, separated by a space.
+    - For other types, `Val` converted to double and formatted as follows:
+        - A minus sign (-) if `Val < 0`. Followed by...
+        - One or more decimal digits (0-9). Followed by...
+        - A decimal separator (specified by the output locale). Followed by...
+        - *p* decimal digits.
+    - The number of decimal places is adjusted by rounding Val (away from zero, for borderline cases), or by adding zeros at the end. If `p = 0`, the result has no decimal separator and no fractional part. If *p* is omitted, the default for the output locale is used.
++ **l**: *LowerFirst* - `CText(Val)`, with the first alphanumeric character converted to lower case (if it’s an upper-case letter) according to the rules for the output locale.
++ **L**: *LowerAll* - `CText(Val)`, with all alphabetic characters converted to lower case according to the rules for the output locale.
++ **n,N**: *Fixed-Grouped* - `Val` converted to double and formatted as for *FixedPoint1* (*f*), but with digits before the decimal separator grouped according to the rules for the output locale.
++ **p,P**: *Percent* - `Val` converted to double and multiplied by 100.0, formatted as for *FixedPoint* (*f*), followed by a percent sign (%).
++ **s,S**: *Count* -
+    - For an *array* or *categorical* value, the number of items/elements it contains.
+    - For *text*, the number of characters in the string.
+    - For *NULL*, 0.
+    - For other types, 1.
+    - For all types, the count is formatted as for *Decimal1* (*d*), using p if supplied.
++ **t,T**: *Time* - `Val` converted to date and formatted according to the time format specified by the output locale (ignoring the date part of `Val`).
++ **u**: *UpperFirst* - `CText(Val)`, with the first alphanumeric character converted to upper case (if it’s a lower-case letter) according to the rules for the output locale.
++ **U**: *UpperAll* - `CText(Val)`, with all alphabetic characters converted to upper case according to the rules for the output locale.
++ **v**: *Value* -
+    - For an object value, the value of a specified property, converted to text. If *t* is given, it’s the name of the property to use. If *t* is omitted, or the value of the specified property can’t be retrieved, the default property of the object is used, if it exists. If no suitable property is found, the result is “”. The first property that returns a value is used, even if the value it returns is “”.
+    - For other types, `Val` converted to long and formatted as for *Decimal1* (*d*), using *p* if supplied.
++ **V**: *ValueNative* -
+    - For an object value, the value of a specified property (same as for *Value* (*v*)).
+    - For other types, the native value (for the current DataSource in the metadata) of the MDM ElementInstance whose value is `CLong(Val)`, formatted as for *Decimal1* (*d*), using p if supplied. If the native value can’t be retrieved, the result is “”.
++ **w**: *TitleFirst* - `CText(Val)`, with the first alphanumeric character converted to upper case, and the rest of the string converted to lower case according to the rules for the output locale.
++ **W**: *TitleAll* - `CText(Val)`, with the first character of each word (any alphanumeric character that isn’t preceded by an alphanumeric character) converted to upper case, and the rest of the string converted to lower case according to the rules for the output locale.
++ **x**: *HexLower* -
+    - `Val` converted to long and formatted as one or more hexadecimal digits (0-9 and a-f).
+    - `Val` is treated as an unsigned value; this means that if `Val < 0`, the value formatted is equivalent to Val + Pow(2, 31). Thus the range of possible non-negative long values (0 to 2147483647) is formatted as “0” to “7fffffff”, and the range of negative values (-2147483648 to -1) is formatted as “80000000” to “ffffffff”. This is consistent with the hexadecimal syntax for expressing integers in mrScript, eg &H80000000 = -2147483648.
+    - The string length is increased to *p*, if given, by inserting zeros before the first digit.
++ **X**: *HexUpper* - Same as for *HexLower* (*x*), but with upper-case A-F for the hexadecimal digits.
+
+### Examples
+#### 1. Using the FormatValue function in an SQL query
+This example shows the use of the FormatValue function in an SQL query that can be run against the Museum sample data set provided with the IBM® SPSS® Data Collection Developer Library (DDL). The query lists the categories in the museums variable, and for each category shows the total number of male and female respondents who selected that category:
+```sql
+SELECT FormatValue(museums, GROUPBY.COL[0], 'b') Museum,
+    SUM(gender = {male}) Male,
+    SUM(gender = {female}) Female
+FROM vdata GROUP BY museums ON DefinedCategories(museums)
+```
+In the above example, the `FormatValue` function is effectively used to display the label of each category in the set returned by `DefinedCategories(museums)`. Because the result of `DefinedCategories(museums)` is a set of category values with no connection to the metadata for the museums variable, it is not possible to use the Format function to return the label of each category in the set. Instead, the `FormatValue` function is used so that the museums variable can be specified as providing the metadata for the formatting of the category values returned by `DefinedCategories(museums)`.
+Here is the result set of running the example query:
+
+| Museum                            | Male | Female |
+| :-------------------------------- | :---- | :----- |
+| National Museum of Science        |  209 |    124 |
+| Museum of Design                  |   49 |     43 |
+| Institute of Textiles and Fashion |   31 |     16 |
+| Archeological Museum              |   18 |      8 |
+| National Art Gallery              |    7 |     12 |
+| Northern Gallery                  |   11 |     10 |
+| Other                             |   16 |     21 |
+| (null)                            |    0 |      0 |
+
+!'
+Function FormatValue(ValFormat As Variant, Val As Variant, Optional Style As String, Optional Width As Long, Optional Locale As Long) As String
+End Function
+
+'!
+```ds
+(function) Hex(Val: Long): String
+```
+-----------------------------------
+Returns a string representing the hexadecimal value of a number.
++ `Val`: *Long* - Numeric value.
++ `return`: *String* - Hexadecimal representation of `Val`.
+
+### Remarks
+`Val` is treated as an unsigned number, so values of -2147483648 to -1 are represented as \"80000000\" to \"FFFFFFFF\" respectively. If the current data value is *NULL*, `Val` is 0 and the return value is \"0\".
+This function is similar to the Hex function in Visual Basic.
+
+### Examples
+This example uses the Hex function to return the hexadecimal value of 99:
+```ds
+Dim x, y
+
+x = 99
+y = Hex(x)
+```
+The return value is \"63\".
+!'
+Function Hex(Val As Long) As String
+End Function
+
+'!
+```ds
+(function) LCase(Val: String): String
+```
+-----------------------------------
+Returns a string that has been converted to lower case.
++ `Val`: *String* - *String* value to be converted to lower case.
++ `return`: *String* - Lowercase copy of `Val`.
+
+### Remarks
+The input string is converted to lower case, according to the rules of the input locale.
+If the current data value is *NULL*, `Val` is \"\" and the return value is \"\".
+How you specify a text string as an argument depends on whether you are using the function in an SQL query or in mrScriptBasic or mrScriptMetadata. In an SQL query, enclose text strings in single quotation marks (' '). In mrScriptBasic or mrScriptMetadata, enclose text strings in double quotation marks (\" \").
+
+### Examples
+This example uses the `LCase` function to return a copy of the contents of the address variable converted to lower case:
+```ds
+address.LCase()
+```
+!'
+Function LCase(Val As String) As String
+End Function
+
+'!
+```ds
+(function) LTrim(Val: String): String
+```
+-----------------------------------
+Returns a copy of a string with any leading spaces removed.
++ `Val`: *String* - *String* value from which you want to remove leading spaces.
++ `return`: *String* - Copy of `Val` with leading spaces removed.
+
+### Remarks
+`LTrim` removes white space (such as space and tab characters) that appears at the beginning of the input string. `LTrim` uses the rules of the input locale when interpreting white space.
+If the current data value is *NULL*, `Val` is \"\" and the return value is \"\".
+How you specify a text string as an argument depends on whether you are using the function in an SQL query or in mrScriptBasic or mrScriptMetadata. In an SQL query, enclose text strings in single quotation marks (' '). In mrScriptBasic or mrScriptMetadata, enclose text strings in double quotation marks (\" \").
+
+### Examples
+This example uses the `LTrim` function to return a copy of the contents of the address variable with any leading spaces removed:
+```ds
+address.LTrim()
+```
+!'
+Function LTrim(Val As String) As String
+End Function
+
+'!
+```ds
+(function) MakeMDMName(Val: String): String
+```
+-----------------------------------
+This function replaces characters in a text string that are not allowed in the name of an MDM object, to produce a valid name.
++ `Val`: *String* - *String* value to encode.
++ `return`: *String* - Copy of `Val` with changes to make it a valid name for an MDM object.
+
+### Remarks
+The following changes are made:
++ Leading and trailing spaces are removed.
++ *Null*, *blank*, or *empty* names are converted to \"No_name__\".
++ Any occurrence of the character # is replaced by #23 (23 is the hexadecimal representation of the Unicode character code for #).
++ Any character that is not allowed anywhere in an MDM name is replaced by # followed by its two-digit hexadecimal character code.
++ If the resulting text starts with any character that is not allowed at the start of an MDM name, then the string _#00 is inserted at the start of the text.
+
+These conversions ensure that
++ The resulting text is a valid MDM name.
++ Different input strings always produce distinct output strings.
++ It is possible to \"decode\" the resulting text to get the original (although no library function is provided to do this).
+!'
+Function MakeMDMName(Val As String) As String
+End Function
+
+'!
+```ds
+(function) MakeString([Vals: Variant ...]): String
+```
+-----------------------------------
++ `Vals`: *Variant* - A comma-delimited list of values to be concatenated together as a string.
++ `return`: *String* - String that is the concatenation of the values specified in `Vals`.
+
+### Remarks
+The string arguments can be of any type--each value is coerced to a text value. If no arguments are specified, an empty string is returned.
+
+### Examples
+This example shows using the MakeString function to create a text string:
+```ds
+Dim A, B
+B = CDate(\"25 January 2002 12:05\")
+A = MakeString(\"On \", B.DatePart(\"d\"), \"/\", B.DatePart(\"m\"))
+' A now contains \"On 25/1\"
+```
+!'
+Function MakeString(Optional ParamArray Vals As Variant) As String
+End Function
+
+'!
+```ds
+(function) Oct(Val: Long): String
+```
+-----------------------------------
+Returns a string representing the octal value of a number.
++ `Val`: *Long* - Numeric value.
++ `return`: *String* - Octal representation of `Val`.
+
+### Remarks
+`Val` is treated as an unsigned number, so values of -2147483648 to -1 are represented as \"20000000000\" to \"37777777777\" respectively. If the current data value is *NULL*, `Val` is 0 and the return value is \"0\".
+This function is similar to the `Oct` function in Visual Basic.
+
+### Examples
+This example uses the `Oct` function to return the octal value of 99:
+```ds
+Dim x, y
+
+x = 99
+y = Oct(x)
+```
+The return value is \"143\".
+!'
+Function Oct(Val As Long) As String
+End Function
+
+'!
+```ds
+(function) RTrim(Val: String): String
+```
+-----------------------------------
+Returns a copy of a string with any trailing spaces removed.
++ `Val`: *String* - *String* value from which you want to remove trailing spaces.
++ `return`: *String* - Copy of `Val` with trailing spaces removed.
+
+### Remarks
+`RTrim` removes white space (such as space and tab characters) that appears at the end of the input string. RTrim uses the rules of the input locale when interpreting white space.
+If the current data value is *NULL*, `Val` is \"\" and the return value is \"\".
+How you specify a text string as an argument depends on whether you are using the function in an SQL query or in mrScriptBasic or mrScriptMetadata. In an SQL query, enclose text strings in single quotation marks (' '). In mrScriptBasic or mrScriptMetadata, enclose text strings in double quotation marks (\" \").
+
+### Examples
+This example uses the `RTrim` function to return a copy of the contents of the address variable with any trailing spaces removed:
+```ds
+address.RTrim()
+```
+!'
+Function RTrim(Val As String) As String
+End Function
+
+'!
+```ds
+(function) Split(Val: String, [Delimiter: String = \" \"], [Count: Long]): Categorical
+```
+-----------------------------------
+Returns an array that contains substrings.
++ `Val`: *String* - *String* value to split.
++ `Delimiter`: *String* - Optional. `Delimiter` between substrings. The default is a single space (\" \").
++ `Count`: *Long* - Optional. The maximum number of substrings to return. If omitted or less than zero, all substrings are returned.
++ `return`: *Categorical* - An *array* containing the substrings from `Val`.
+
+### Remarks
+This function is useful when you are parsing text strings that contain a number of substrings separated by a character such as a comma (,). For example, the lines of an address are often separated by a comma.
+If `Val` is an empty string, the return value is an empty array. Otherwise, if Delimiter is an empty string or is not found in `Val`, the return value is an array containing one item, a copy of `Val`. If the current data value is *NULL*, `Val` is an empty string and the return value is an empty array.
+How you specify a text string as an argument depends on whether you are using the function in an SQL query or elsewhere, such as in mrScriptBasic or mrScriptMetadata, or when creating filters in IBM® SPSS® Data Collection Survey Tabulation or quotas in IBM® SPSS® Data Collection Interviewer Server. Enclose text strings in single quotation marks (' ') in SQL queries and enclose text strings in double quotation marks (\" \") everywhere else.
+
+@Note - The `Split` function returns a categorical value, making it impossible to assign elements of the returned array. It should also be noted that the result from the `Split` function is not a real categorical value, because the elements of a categorical must be of type *Long* (int - VT_I4), not text. The parser treats the value as a categorical, but an error is returned when attempting to pass the value into a function that expects a real categorical (ContainsAny for example).
+
+### Examples
+This mrScriptBasic example uses the `Split` function to return the first line and the first two lines of an address that is stored in a single variable with the lines separated by commas. It also shows an example of using the function using the default parameters:
+```ds
+Dim Address, FirstLine, FirstTwoLines, Defaults
+
+Address = \"363 Park Road, Ashford, Kent\"
+
+FirstLine = Address.Split(",", 1)      ' Returns {363 Park Road}
+FirstTwoLines = Address.Split(",", 2)  ' Returns {363 Park Road, Ashford}
+Defaults = Address.Split()             ' Returns {363,Park,Road,,Ashford,,Kent}
+```
+!'
+Function Split(Val As String, Optional Delimiter As String = " ", Optional Count As Long) As Categorical
+End Function
+
+'!
+```ds
+(function) Replace(Val: Variant, Key: Variant, Replacement: Variant, [Start: Long], [Count: Long], [IgnoreCase: Boolean]): Variant
+```
+-----------------------------------
+Replaces part of a text or categorical value with another value of the same type.
++ `Val`: *Variant* - Variant value of type *Text* or *Categorical*.
++ `Key`: *Variant* - Variant value to look for in `Val`, of the same type as `Val`.
++ `Replacement`: *Variant* - Variant value with which to replace `Key`, of the same type as `Val`.
++ `Start`: *Long* - Optional. Position in `Val` (starting from 0), from which to start searching for `Key`. If omitted or less than 0, searching starts at the start of `Val`.
++ `Count`: *Long* - Optional. Maximum number of replacements to make. If omitted or less than 0, all possible replacements are made.
++ `IgnoreCase`: *Boolean* - Optional. Whether to do case-insensitive comparison for `Key`. The default is *False*.
++ `return`: *Variant* - Copy of `Val` with `Key` replaced with `Replacement`.
+
+### Remarks
+If `Val` is of type `Text`, `Key` and `Replacement` are converted to text values, unless they are already text values or *NULL*. If `Val` is of type *Categorical*, `Key` and `Replacement` are converted to categorical values, unless they are already categorical values or *NULL*. An error occurs if `Key` or `Replacement` cannot be converted to the required type.
+If `Val` is *NULL*, the return value is *NULL*. If `Key` is *NULL*, no replacements are made. If `Replacement` is *NULL*, occurrences of `Key` are removed instead of being replaced. If `Val` is of any other type, an error occurs.
+
+### Examples
+The following mrScriptBasic example shows the use of the `Replace` function to replace all the hyphens in a text variable with spaces.
+```ds
+strVal = strVal.Replace(\"-\", \" \")
+```
+!'
+Function Replace(Val As Variant, Key As Variant, Replacement As Variant, Optional Start As Long, Optional Count As Long, Optional IgnoreCase As Boolean) As Variant
+End Function
+
+'!
+```ds
+(function) Trim(Val: String): String
+```
+-----------------------------------
+Returns a copy of a string with any leading and trailing spaces removed.
++ `Val`: *String* - Text value from which you want to remove leading and trailing spaces.
++ `return`: *String* - Copy of `Val` with leading and trailing spaces removed.
+
+### Remarks
+`Trim` removes white space (such as space and tab characters) that appears at the beginning and end of the input string. `Trim` uses the rules of the input locale when interpreting white space.
+If the current data value is *NULL*, `Val` is \"\" and the return value is \"\".
+How you specify a text string as an argument depends on whether you are using the function in an SQL query or in mrScriptBasic or mrScriptMetadata. In an SQL query, enclose text strings in single quotation marks (' '). In mrScriptBasic or mrScriptMetadata, enclose text strings in double quotation marks (\" \").
+
+### Examples
+This example uses the `Trim` function to return a copy of the contents of the address variable with any leading and trailing spaces removed:
+```ds
+address.Trim()
+```
+!'
+Function Trim(Val As String) As String
+End Function
+
+'!
+```ds
+(function) UCase(Val: String): String
+```
+-----------------------------------
+Returns a string that has been converted to upper case.
++ `Val`: *String* - *String* value to be converted to upper case.
++ `return`: *String* - Uppercase copy of `Val`.
+
+### Remarks
+The input string is converted to upper case, according to the rules of the input locale.
+If the current data value is *NULL*, `Val` is \"\" and the return value is \"\".
+How you specify a text string as an argument depends on whether you are using the function in an SQL query or in mrScriptBasic or mrScriptMetadata. In an SQL query, enclose text strings in single quotation marks (' '). In mrScriptBasic or mrScriptMetadata, enclose text strings in double quotation marks (\" \").
+
+### Examples
+This example returns an uppercase copy of the contents of the *name* variable:
+```ds
+name.UCase()
+```
+The next example uses the `Trim` and `Mid` functions in addition to the `UCase` function. The example returns characters 5-10 of the name variable converted to upper case and with any leading or trailing spaces removed:
+```ds
+Trim(UCase(name.Mid(4, 5)))
+```
+!'
+Function UCase(Val As String) As String
+End Function
+
+
+

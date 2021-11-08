@@ -1,0 +1,195 @@
+
+Class Array Implements IEnumerable
+
+    '!
+    ```ds
+    (function) Find(Key: Variant, [Skip: Long = 0], [Reverse: Boolean = False], [IgnoreCase: Boolean = True]): Long
+    ```
+    -----------------------------------
+    Searches a string, a category list, or an array, for a specified substring, subcategory list, or subarray, and if it is found, returns its start position.
+    + `Key`: *Variant* - Value to search for in `Val`.
+    + `Skip`: *Long* - Optional. The number of positions to skip in `Val` before starting the search. If `Reverse` is *True*, `Skip` is the number of positions to skip from the end of `Val`. If `Reverse` is omitted or *False*, Skip is the number of positions to skip from the start of `Val`. Treated as 0 if omitted or is < 0.
+    + `Reverse`: *Boolean* - Optional. If *True*, `Val` is searched backwards. If `Reverse` is omitted or *False*, `Val` is searched forwards.
+    + `IgnoreCase`: *Boolean* - Optional. If *False*, the comparison is case-sensitive. If `IgnoreCase` is omitted or *True*, the comparison is case-insensitive.
+    + `return`: *Long* - Position in `Val`, relative to the start of `Val`, of `Key` if found, -1 otherwise.
+
+    ### Remarks
+    If `Val` is *Text*, `Key` is converted to text if necessary and is searched for as a substring of `Val`. Unless `IgnoreCase` is *False*, the comparison is case-insensitive.
+    If `Val` is *Categorical* or an *Array* (which can contain values of any type), Key can be a *long*, *double*, *text*, *date*, *boolean*, or *categorical* value, or an *array*. When comparing `Key` (or the items in `Key`) with the items in `Val`, the normal conversion and comparison rules for variant types are used if necessary. Unless IgnoreCase is False, the comparison of text items (or items converted to text) is case-insensitive. If either item is *Null*, they are equal only if both are *Null*. If `Key` is a categorical value or an array, it is found only if its items occur as a sequence of consecutive items in `Val` and in the same order.
+    If either `Val` or Key is *NULL*, the return value is -1 (not found). If `Val` is not *Text*, *Categorical*, or an *Array*, an error occurs.
+    How you specify a text string as an argument depends on whether you are using the function in an SQL query or in mrScriptBasic or mrScriptMetadata. In an SQL query, enclose text strings in single quotation marks (' '). In mrScriptBasic or mrScriptMetadata, enclose text strings in double quotation marks (\" \").
+
+    ### Examples
+
+    | Function call             | Val                            | Key                  |  Result |
+    | :----------------         | :-----------                   | :-------------       | :-----  |
+    | Find(Val, Key)            | 24 St John's Road, Barnes      | barnes               | 19      |
+    | Find(Val, Key, , True)    | 3 Glasgow Hill, Glasgow        | glasgow              | 16      |
+    | Find(Val, Key)            | {3,7,8,1,9,10,5,4}             | 5                    | 6       |
+    | Find(Val, Key, 7)         | {3,7,8,1,9,10,5,4}             | 5                    | -1      |
+    | Find(Val, Key, , , False) | 24 St John's Road, Barnes      | barnes               | -1      |
+    | Find(Val, Key)            | Split(\"The quick brown fox\") | Split(\"brown fox\") | 2       |
+
+    **Text variables**. These examples use the name and address variables, which are text variables that store respondents' names and addresses, respectively. These examples show how you would use the Find function in mrScriptBasic or mrScriptMetadata. In SQL queries, you should enclose text strings in single quotation marks (' ') instead of double quotation marks (\" \").
+    The following example selects any respondent whose address contains \"London\" in upper case, lower case, or a mixture of both cases. Find returns -1 when the search string has not been found. In this example the <> operator is used to test that the return value is not -1, which means that \"London\" exists somewhere in the text being searched.
+    ```ds
+    address.Find(\"London\") <> -1
+    ```
+    Find lets you search for a string in a particular position. This is useful when the position of the search string in the text you are searching is important. For example, the following selects respondents whose names begin with the string \"Brian\":
+    ```ds
+    Find(name, \"Brian\") = 0
+    ```
+
+    **Categorical variables**. These examples use the *remember* multiple response variable.
+    This example selects all respondents who chose the *Dinosaurs* category regardless of its position in the list of categories chosen:
+    ```ds
+    remember.Find({dinosaurs}) <> -1
+    ```
+    The next example selects respondents for whom the *Dinosaurs* category is the first category in the list of their responses:
+    ```ds
+    remember.Find({dinosaurs}) = 0
+    ```
+    !'
+    Function Find(Key As Variant, Optional Skip As Long = 0, Optional Reverse As Boolean = False, Optional IgnoreCase As Boolean = True) As Long
+    End Function
+
+    '!
+    ```ds
+    (function) Left(Length: Long): Variant
+    ```
+    -----------------------------------
+    Returns a string containing the first characters from a string, a category list containing the first categories from a category list, or an array containing the first elements from an array.
+    + `Val`: *String* | *Categorical* | *Array* - *Text* value, *categorical* value, or *Array* to operate on.
+    + `Length`: *Long* - Number of characters, categories, or elements to return. If `Length` is greater than the number of items available, all of the items are returned.
+    + `return`: *Variant* - The required characters, categories, or elements from `Val`.
+
+    ### Remarks
+    For type *Text*, the return value is of type *Text*, and contains `Length` characters from the start of `Val`. For type *Categorical*, the return value is of type *Categorical*, and contains Length categories from the start of `Val`. For an array (which can contain values of any type), the return value is an array, and contains `Length` elements from the start of `Val`. For any other type, an error occurs.
+    When `Val` is *NULL*, the return value is *NULL*.
+
+    ### Examples
+
+    | Function call     | Val                            | Length | Result            |
+    | :-------------    | :-------------                 | :----- | :---------------- |
+    | Left(Val, Length) | 24 St John's Road, Barnes      | 10     | 24 St John        |
+    | Left(Val, Length) | {4,2,9}                        | 1      | {4}               |
+    | Left(Val, Length) | Split(\"The quick brown fox\") | 2      | {The,quick}       |
+
+    The following example returns the first six characters of the *name* text variable:
+    ```ds
+    name.Left(6)
+    ```
+    The following example returns the first three categories stored in the *remember* multiple response variable:
+    ```ds
+    remember.Left(3)
+    ```
+    !'
+    Function Left(Length As Long) As Variant
+    End Function
+
+    '!
+    ```ds
+    (function) Len(): Long
+    ```
+    -----------------------------------
+    Returns a *Long* containing the number of characters in a string, the number of categories in a category list, or the number of elements in an array.
+    + `Val`: *String* | *Categorical* | *Array* - *Text* value, *Categorical* value, or *Array* to operate on.
+    + `return`: *Long* - Numbers of characters, categories, or elements in `Val`.
+
+    ### Remarks
+    For type *Text*, the return value is the number of characters in `Val`. For type *Categorical*, the return value is the number of categories in `Val`. For an *Array* (which can contain values of any type), the return value is the number of elements in `Val`. For any other type, an error occurs.
+    When `Val` is *NULL*, the return value is zero.
+
+    ### Examples
+
+    | Function call | Val                            | Result |
+    | :------------ | :---------------               | :----  |
+    | Len(Val)      | 24 St John's Road, Barnes      | 25 |
+    | Len(Val)      | {4,2,9}                        | 3 |
+    | Len(Val)      | Split(\"The quick brown fox\") | 4 |
+
+    The following example returns the number of characters stored in the *address* text variable:
+    ```ds
+    address.Len()
+    ```
+    The following example returns the number of categories selected by the respondent in response to the *remember* multiple response question:
+    ```ds
+    remember.Len()
+    ```
+    !'
+    Function Len() As Long
+    End Function
+
+    '!
+    ```ds
+    (function) Mid(Start: Long, [Length: Long]): Variant
+    ```
+    -----------------------------------
+    + `Val`: *String* | *Categorical* | *Array* - *Text* value, *categorical* value, or *array* to operate on.
+    + `Start`: *Long* - Position in `Val` of the first character, category, or element wanted (counting from 0). If `Start` is greater than the number of items in `Val`, no items are returned. If `Start` is less than 0, items are returned from the start of `Val`.
+    + `Length`: *Long* - Optional. Number of characters, categories, or elements to return. If `Length` is omitted, or if there are fewer than *Lengthcharacters* (including the `Start` character), all characters from `Start` to the end of the string are returned. If `Start` + `Length` is < 1, no items are returned.
+    + `return`: *Variant* - The required characters, categories, or elements from `Val`.
+
+    ### Remarks
+    For type *Text*, the return value is of type *Text*, and contains `Length` characters from the position `Start` in `Val`. For type *Categorical*, the value is of type *Categorical*, and contains `Length` categories from the position `Start` in `Val`. For an *array* (which can contain values of any type), the return value is an *array*, and contains `Length` elements from the position `Start` in `Val`. For any other type, an error occurs.
+    When `Val` is *NULL*, the return value is *NULL*.
+
+    ### Examples
+
+    | Function call           | Val                            | Start | Length | Result      |
+    | :-------------          | :---------------               | :---- | :----- | :---------- |
+    | Mid(Val, Start, Length) | 24 St John's Road, Barnes      | 10    | 15     | 's Road, Barnes |
+    | Mid(Val, Start, Length) | {4,2,9}                        | 2     | 1      | {9}             |
+    | Mid(Val, Start, Length) | {4,2,9}                        | 6     | 3      | {}              |
+    | Mid(Val, Start, Length) | {4,2,9}                        | 0     | 2      | {4,2}           |
+    | Mid(Val, Start, Length) | {4,2,9}                        | 0     |        | {4,2,9}         |
+    | Mid(Val, Start, Length) | Split(\"The quick brown fox\") | 1     | 2      | {quick,brown}   |
+
+    The following example returns characters 8-17 from the *address* text variable:
+    ```ds
+    address.Mid(7, 10)
+    ```
+    The following example returns the fourth category from the list of categories stored in the *remember* multiple response variable:
+    ```ds
+    remember.Mid(3, 1)
+    ```
+    For respondents who chose less than four categories, this returns an empty category list ({}).
+    !'
+    Function Mid(Start As Long, Optional Length As Long) As Variant
+    End Function
+
+    '!
+    ```ds
+    (function) Right(Length: Long): Variant
+    ```
+    -----------------------------------
+    Returns a string containing the last characters from a string, a category list containing the last categories from a category list, or an array containing the last elements from an array.
+    + `Val`: *String* | *Categorical* | *Array* - *Text* value, *categorical* value, or *array* to operate on.
+    + `Length`: *Long* - Number of characters, categories, or elements to return. If `Length` is greater than the number of items available, all of the items are returned.
+    + `return`: *Variant* - The required characters, categories, or elements from `Val`.
+
+    ### Remarks
+    For type *Text*, the return value is of type *Text*, and contains Length characters from the end of `Val`. For type *Categorical*, the return value is of type *Categorical*, and contains `Length` categories from the end of `Val`. For an *array* (which can contain values of any type), the return value is an *array*, and contains `Length` elements from the end of `Val`. For any other type, an error occurs.
+    When `Val` is *NULL*, the return value is *NULL*.
+
+    ### Examples
+
+    | Function call      | Val                            | Length | Result       |
+    | :----------------  | :--------------------          | :----- | :----------- |
+    | Right(Val, Length) | 24 St John's Road, Barnes      | 6      | Barnes       |
+    | Right(Val, Length) | {4,2,9,15,6,7}                 | 1      | {7}          |
+    | Right(Val, Length) | Split(\"The quick brown fox\") | 3      | {quick,brown,fox} |
+
+    The following example returns the 10 rightmost characters stored in the *address* text variable:
+    ```ds
+    address.Right(10)
+    ```
+    The following example returns the last two categories in the list of categories stored in the *remember* multiple response variable:
+    ```ds
+    remember.Right(2)
+    ```
+    !'
+    Function Right(Length As Long) As Variant
+    End Function
+
+End Class

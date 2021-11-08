@@ -1,0 +1,231 @@
+
+'!
+```ds
+(function) CBoolean(Val: Variant): Boolean
+```
+-----------------------------------
+Converts a value of any data type to a *Boolean* value.
++ `Val`: *Variant* - *Variant* value to be converted.
++ `return`: *Boolean* - *Boolean* value derived from `Val`.
+
+### Remarks
+The result of the conversion depends on the data type of `Val`, as follows:
++ **Boolean**        - `Val` is returned unchanged.
++ **Long or Double** - If `Val` is zero, the return value is *False*, otherwise it is *True*.
++ **Date**           - If `Val` is *30 December 1899 00:00:00*, the return value is *False*, otherwise it is *True*.
++ **Text**           - The string is parsed according to the locale to extract the value. An error occurs if the string does not contain a recognizable *Boolean* value (numeric, or a string representing *True* or *False*).
++ **Categorical**    - The conversion results in a value of *False* if the categorical value is empty ({}) and a value of *True* for all other categorical values.
++ **Object**         - If the object has a default property, the value of that property is converted. Otherwise an error occurs.
++ **NULL**           - If `Val` is *NULL*, the return value is *False*.
+
+This function is similar to CBool in Visual Basic.
+
+### Examples
+
+| Data Type   | Value                    | Result |
+| :---------  | :----------------------- | :----- |
+| Long        | 133                      | True  |
+| Long        | 0                        | False  |
+| Double      | 4.5                      | True  |
+| Date        | 30                       | December 1899 00:00:00 False  |
+| Date        | 14                       | April 2001 4:14:06 True  |
+| Text        | 24                       | St John's Road, Barnes Error  |
+| Text        | 0                        | False  |
+| Text        | true                     | True  |
+| Categorical | {}                       | False  |
+| Categorical | {Whales}                 | True  |
+
+!'
+Function CBoolean(Val As Variant) As Boolean
+End Function
+
+'!
+```ds
+(function) CCategorical(Val: Variant): Categorical
+```
+-----------------------------------
+Converts a value of any data type to a *Categorical* value.
++ `Val`: *Variant* - *Variant* value to be converted.
++ `return`: *Categorical* - *Categorical* value derived from `Val`.
+
+### Remarks
+The result of the conversion depends on the data type of Val, as follows:
++ **Long** - The return value contains a single category whose value is `Val`.
++ **Text** - The function parses the string as a comma-separated list of either category values or names. Category values must be of the form \"{1,2,0}\", and the return value contains each listed value, in the order given. Category names must be of the form \"{married,single,widowed,other}\", which the function will convert to a list of category values. You can omit the braces if the value to be converted is a single category value or name. Note that Val cannot consist of a category expression.
++ **Categorical** - `Val` is returned unchanged.
++ **Double, Date, or Boolean** - An error occurs.
++ **Object** - If the object has a default property, the value of that property is converted. Otherwise an error occurs.
++ **NULL** - If `Val` is *NULL*, the return value is an empty *Categorical* value ({}).
+
+There is no equivalent function in Visual Basic.
+
+### Examples
+
+| Data Type   | Value                     | Result |
+| :---------  | :-----------------------  | :----- |
+| Boolean     | True                      | Error   |
+| Categorical | {2,8,9,3,1}               | {2,8,9,3,1}   |
+| Long        | 459                       | {459}   |
+| Text        | {3,6,8}                   | {3,6,8}   |
+| Text        | {dinosaurs,birds,mammals} | {31,35,38}   |
+| Text        | 24                        | {24}   |
+| Text        | Some text                 | Error   |
+
+!'
+Function CCategorical(Val As Variant) As Categorical
+End Function
+
+'!
+```ds
+(function) CDate(Val: Variant): Date
+```
+-----------------------------------
+Converts a value of any data type to a *Date* value.
++ `Val`: *Variant* - *Variant* value to be converted.
++ `return`: *Date* - *Date* value derived from `Val`.
+
+### Remarks
+The converted dates are held in Microsoft variant date standard format. Converting other data types to a date is likely to give meaningless results.
+The result of the conversion depends on the data type of `Val`, as follows:
++ **Boolean** - The return value is likely to be meaningless.
++ **Long** - The day is `Val` days after *30 December 1899* (or before, if `Val` is negative) and the time is *00:00:00*.
++ **Double** - The return value is the date and time resulting from using `Val` as the internal representation of the date.
++ **Date** - `Val` is returned unchanged.
++ **Text** - The string is parsed according to the locale to extract the value. An error occurs if the string does not contain a properly formatted date.
++ **Categorical** - An error occurs.
++ **Object** - If the object has a default property, the value of that property is converted. Otherwise an error occurs.
++ **NULL** - If `Val` is *NULL*, the return value is *30 December 1899 00:00:00*.
+
+This function is similar to `CDate` in Visual Basic.
+
+### Examples
+
+| Data Type   | Value                     | Result |
+| :---------  | :-----------------------  | :----- |
+| Long        | 37430                     | 6/23/2002    |
+| Double      | 37429.56                  | 6/22/2002 1:26:24 PM    |
+| Text        | 14 April 2001 20:30:02    | 4/14/2001 8:30:02 PM    |
+| Text        | Fossils                   | Error    |
+| Categorical | {5,3,1,9}                 | Error    |
+
+!'
+Function CDate(Val As Variant) As Date
+End Function
+
+'!
+```ds
+(function) CDouble(Val: Variant): Double
+```
+-----------------------------------
+Converts a value of any data type to a *Double* value.
++ `Val`: *Variant* - *Variant* value to be converted.
++ `return`: *Double* - *Double* value derived from `Val`.
+
+### Remarks
+The result of the conversion depends on the data type of `Val`, as follows:
++ **Boolean** - The return value is 1.0 (*True*) or 0.0 (*False*).
++ **Long** - The return value is equal to `Val`, with a fractional part of zero.
++ **Double** - `Val` is returned unchanged.
++ **Date** - The return value is the floating-point number used internally to represent the date.
++ **Text** - The string is parsed according to the locale to extract the value. An error occurs if the string does not contain a properly formatted double.
++ **Categorical** - An error occurs.
++ **Object** - If the object has a default property, the value of that property is converted. Otherwise an error occurs.
++ **NULL** - If `Val` is *NULL*, the return value is 0.0.
+
+This function is similar to `CDbl` in Visual Basic.
+
+### Examples
+
+| Data Type   | Value                     | Result |
+| :---------  | :-----------------------  | :----- |
+| Boolean     | True                      | 1.0   |
+| Long        | 345                       | 345.0   |
+| Double      | 56.798                    | 56.798   |
+| Text        | 14 April 2001 20:30:02    | 36995.8541898148   |
+| Text        | Fossils                   | Error   |
+| Categorical | {5,3,1,9}                 | Error   |
+
+!'
+Function CDouble(Val As Variant) As Double
+End Function
+
+'!
+```ds
+(function) CLong(Val: Variant): Long
+```
+-----------------------------------
+Converts a value of any data type to a *Long* value.
++ `Val`: *Variant* - *Variant* value to be converted.
++ `return`: *Long* - *Long* value derived from `Val`.
+
+### Remarks
+The result of the conversion depends on the data type of `Val`, as follows:
++ **Boolean** -  The return value is 1 (*True*) or 0 (*False*).
++ **Long** -  `Val` is returned unchanged.
++ **Double** - The return value is `Val` rounded to the nearest whole number except when the decimal places are exactly 5. In these cases, it rounds to the even integer. This means that of the two possible rounded values, the one that has an even number as the last significant digit is returned. For example, 14.5 is rounded to 14 rather than 15.
++ **Date** - The return value is the whole number part of the floating-point number used internally to represent the date.
++ **Text** - The string is parsed according to the locale to extract the value. An error occurs if the string does not contain a properly formatted integer.
++ **Categorical** - If the categorical value contains one category, the return value is the category value. Otherwise an error occurs.
++ **Object** - If the object has a default property, the value of that property is converted. Otherwise an error occurs.
++ **NULL** - If `Val` is *NULL*, the return value is 0.
+
+This function is similar to `CLng` in Visual Basic.
+
+### Examples
+
+| Data Type   | Value                     | Result |
+| :---------  | :-----------------------  | :----- |
+| Boolean     | False                     | 0  |
+| Long        | 345                       | 345  |
+| Double      | 567.8903                  | 568  |
+| Double      | 3.5                       | 4  |
+| Double      | -3.5                      | -4  |
+| Double      | 2.5                       | 2  |
+| Double      | -2.5                      | -2  |
+| Double      | 2.50000001                | 3  |
+| Double      | 2.49999999                | 2  |
+| Date        | 14 April 2001             | 36995  |
+| Text        | 100.56                    | 101  |
+| Categorical | {4,7}                     | Error  |
+| Categorical | {4}                       | 4  |
+
+!'
+Function CLong(Val As Variant) As Long
+End Function
+
+'!
+```ds
+(function) CText(Val: Variant): String
+```
+-----------------------------------
+Converts a value of any data type to a *Text* value.
++ `Val`: *Variant* - *Variant* value to be converted.
++ `return`: *Text* - *Text* value derived from `Val`.
+
+### Remarks
+The result of the conversion depends on the data type of `Val`, as follows:
++ **Boolean** - The return value is \"True\" or \"False\" or their locale equivalents.
++ **Long or Double** - The string contains the number formatted according to the locale.
++ **Date** - The string contains the date formatted according to the locale.
++ **Text** - `Val` is returned unchanged.
++ **Categorical** - The string is of the form \"{1,2,0}\", where the numbers are the values of the categories in `Val` (formatted using digits only, ignoring the locale).
++ **Object** - If the object has a default property, the value of that property is converted. Otherwise an error occurs.
++ **NULL** - If `Val` is *NULL*, the return value is an empty string (\"\").
+
+This function is similar to `CStr` in Visual Basic.
+
+### Examples
+
+| Data Type   | Value                     | Result |
+| :---------  | :-----------------------  | :----- |
+| Categorical | {4,7}                     | {4,7}  |
+| Boolean     | 6                         | True  |
+| Long        | 345                       | 345  |
+| Double      | 6004.67                   | 6004.67  |
+| Date        | 14 April 2001             | 14/04/2001  |
+
+!'
+Function CText(Val As Variant) As String
+End Function
+
+

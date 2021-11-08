@@ -1,0 +1,704 @@
+
+Class Categorical Implements IEnumerable
+
+    '!
+    ```ds
+    (function) AnswerCount(): Long
+    ```
+    ------------------------------------------
+    Returns the number of categories selected in a category list.
+    + `return`: *Long* - Number of categories in Val.
+    ### Example
+    For example, to define a quota for respondentswho can name more than five brands of fizzy drinks:
+    ```ds
+    fizzy.AnswerCount() > 5
+    ```
+    !'
+    Function AnswerCount() As Long
+    End Function
+
+    '!
+    ```ds
+    (function) ContainsAll(Answers: Variant, [Exactly: Boolean]): Boolean
+    ```
+    -----------------------------------
+    Identifies whether a category list contains all of the categories in a given list.
+    + `Answers`: *Variant* - Variant value of type *Categorical* or *Text*, specifying a set of categories to look for in `Val`. If `Answers` is empty, the function returns *True*, unless `Exactly` is *True* and `Val` is not empty.
+    + `Exactly`: *Boolean* - Optional. If *True*, the function returns *True* only if `Val` contains all of the categories in `Answers` and no others. If `Exactly` is omitted or *False*, the function returns *True* if all of the categories in `Answers` are in `Val`, even if `Val` contains other categories.
+    + `return`: *Boolean* - *True* if `Val` contains all of the categories in `Answers`, otherwise *False*.
+
+    ### Remark
+    + If the current value is *NULL*, `Val` is an empty *Categorical* value ({}) and the return value is *False*. If `Answers` is *NULL*, the return value is *False*.
+    + This function is equivalent to the >= comparison operator for *Categorical* values, except that the *NULL* behavior is different. However, using the >= operator is generally faster than using the `ContainsAll` function.
+
+    ### Examples
+    Like `ContainsAny` and `ContainsSome`, `ContainsAll` is typically used to filter multiple response data. The Museum sample data set contains a multiple response variable called *remember*, which records the galleries that respondents remember viewing. You could use the following example to create a filter to select respondents who chose the *Fossils* and *Dinosaurs* categories in response to the question:
+
+    ```ds
+    remember.ContainsAll({fossils, dinosaurs})
+    ```
+
+    This filter will select respondents who chose both *Fossils* and *Dinosaurs* regardless of whether they chose any additional categories. To restrict the filter to respondents who chose *Fossils* and *Dinosaurs* and no other categories, set `Exactly` to *True*:
+
+    ```ds
+    remember.ContainsAll({fossils, dinosaurs}, True)
+    ```
+    !'
+    Function ContainsAll(Answers As Variant, Optional Exactly As Boolean) As Boolean
+    End Function
+
+    '!
+    ```ds
+    (function) ContainsAny(Answers: Variant, [Exactly: Boolean]): Boolean
+    ```
+    -----------------------------------
+    Identifies whether a category list contains one or more categories in a given list.
+    + `Answers`: *Variant* - *Variant* value of type *Categorical* or *Text*, specifying a set of categories to look for in `Val`. If `Answers` is empty, the function returns *False*.
+    + `Exactly`: *Boolean* - Optional. If *True*, the function returns *False* if `Val` contains any categories that are not in `Answers`. If `Exactly` is omitted or *False*, the function returns *True* if any of the categories in `Answers` are in `Val`, even if `Val` contains other categories.
+    + `return`: *Boolean* - *True* if `Val` contains the categories as specified, otherwise *False*.
+
+    ### Remarks
+    If the current value is *NULL*, `Val` is an empty *Categorical* value ({}) and the return value is *False*. If `Answers` is *NULL*, the return value is *False*.
+
+    ### Examples
+    Like `ContainsAll` and `ContainsSome`, `ContainsAny` is typically used to filter multiple response data. The Museum sample data set contains a multiple response variable called *remember*, which records the galleries that respondents *remember* viewing. You could use the following example to create a filter to select respondents who chose either or both of the *Fossils* and *Dinosaurs* categories in response to the question:
+    ```ds
+    remember.ContainsAny({fossils, dinosaurs})
+    ```
+    This filter will select respondents who chose either one or both of the two categories regardless of whether they chose any additional categories. For example, it will select respondents who chose any of the following:
+    + The *Fossils* category only.
+    + The *Dinosaurs* category only.
+    + The *Fossils* and *Dinosaurs* categories only.
+    + The *Fossils* category and any other category.
+    + The *Dinosaurs* category and any other category.
+
+    To restrict the filter to respondents who chose either or both of the two specified categories and no others, set `Exactly` to *True*:
+    ```ds
+    remember.ContainsAny({fossils, dinosaurs}, True)
+    ```
+    !'
+    Function ContainsAny(Answers As Variant, Optional Exactly As Boolean) As Boolean
+    End Function
+
+    '!
+    ```ds
+    (function) ContainsSome(Answers: Variant, [Min: Long], [Max: Long], [Exactly: Boolean]): Boolean
+    ```
+    -----------------------------------
+    Identifies whether a category list contains some of the categories in a given list.
+    + `Answers`: *Variant* - *Variant* value of type *Categorical* or *Text*, specifying a set of categories to look for in `Val`. If `Answers` is empty, the function returns *True* (unless `Exactly` is *True* and `Val` is not empty).
+    + `Min`: *Long* - Optional. The minimum number of categories in `Answers` that must be in `Val` for the function to return *True*. If omitted, the minimum is one.
+    + `Max`: *Long* - Optional. The maximum number of categories in `Answers` that must be in `Val` for the function to return *True*. If omitted, the maximum is the number of categories in `Answers`.
+    + `Exactly`: *Boolean* - Optional. If *True*, the function returns *True* only if `Val` contains the specified number of categories and no others. If `Exactly` is omitted or *False*, the function returns *True* if the specifiednumber of categories in `Answers` are in `Val`, even if `Val` contains other categories.
+    + `return`: *Boolean* - *True* if `Val` contains the specified categories, otherwise *False*.
+
+    ### Remarks
+    If the current value is *NULL*, `Val` is an empty Categorical value ({}) and the return value is *False*. If `Answers` is *NULL*, the return value is *False*.
+
+    ### Examples
+    Like `ContainsAll` and `ContainsAny`, `ContainsSome` is typically used to filter multiple response data. The Museum sample data set contains a multiple response variable called *remember*, which records the galleries that respondents *remember* viewing. You could use the following example to create a filter to select respondents who chose two or more of four specified categories in response to the question:
+    ```ds
+    remember.ContainsSome({fossils, dinosaurs, birds, whales}, 2)
+    ```
+    To restrict the filter to respondents who chose at least two, but not more than three, of the four categories, set `Max` to 3:
+    ```
+    remember.ContainsSome({fossils, dinosaurs, birds, whales}, 2, 3)
+    ```
+    To restrict the filter to respondents who chose at least two, but not more than three, of the four categories and no others, set `Exactly` to *True*:
+    ```
+    remember.ContainsSome({fossils, dinosaurs, birds, whales}, 2, 3, True)
+    ```
+    !'
+    Function ContainsSome(Answers As Variant, Optional Min As Long, Optional Max As Long, Optional Exactly As Boolean) As Boolean
+    End Function
+
+    '!
+    ```ds
+    (function) DefinedCategories([Answers: Variant]): Categorical
+    ```
+    -----------------------------------
+    Returns a set of categories of a categorical variable.
+    + `Answers`: *Variant* - Optional. *Variant* value of type *Categorical* or *Text*, specifying a set of categories. If omitted, all categoriesfrom the `VariableInstance` are returned.
+    + `return`: *Categorical* - Set of category numbers as defined in the VariableInstance.
+
+    ### Remarks
+    `Val` may refer to any type of MDM object that has elements, for example, `Field`, `Array` , `Grid` or `VariableInstance`, or it may be an Elements list itself.
+    If `Answers` is of type Text, it is assumed to be a category expression and is resolved to a list of categories. If `Answers` is of type *Categorical* and contains category names, they are converted to category numbers.
+    This function requires the case data to be opened with an MDM document or for a script to have an open MDM document available to it. Otherwise, an error will occur.
+    If the current value is *NULL*, `Val` is an empty *Categorical* value ({}) and the return value is also an empty *Categorical* value. If `Answers` is *NULL*, the return value is all of the categories defined in the current variable.
+
+    ### Examples
+    This example shows how the `DefinedCategories` function can be used in an SQL query on a multiple response variable to define groups based on the categories.
+    ```sql
+    SELECT groupby.col[0] AS Museums,
+        BASE(museums) AS 'Base'
+    FROM vdata
+    WHERE museums IS NOT NULL
+    GROUP BY museums ON museums.DefinedCategories()
+    ```
+
+    Here is the result set:
+
+    | Museums                               | Base    |
+    | :------------------------------------ | :------ |
+    | {national_museum_of_science}          | 333     |
+    | {museum_of_design}                    | 92      |
+    | {institute_of_textiles_and_fashion}   | 47      |
+    | {archeological_museum}                | 26      |
+    | {national_art_gallery}                | 19      |
+    | {northern_gallery}                    | 21      |
+    | {other}                               | 37      |
+    | {not_answered}                        | 0       |
+
+    !'
+    Function DefinedCategories(Optional Answers As Variant) As Categorical
+    End Function
+
+    '!
+    ```ds
+    (function) DefinedElements([Types: Long]): Categorical
+    ```
+    -----------------------------------
+    Returns a set of elements of a categorical variable.
+    The possible values for Types are shown in the following table.
+    + `Types`: *Long* - Optional. Flags specifying which types of `Element` objects to include. The default is (Category + Base).
+    + `return`: *Categorical* - Set of category numbers as defined in the VariableInstance.
+
+    | Value       | Description           |
+    | :---------- | :-------------------- |
+    | 1           | Category elements     |
+    | 2           | Base elements         |
+    | 4           | Subtotal elements     |
+    | 8           | Summary data elements |
+    | 16          | Derived elements      |
+    | 32          | Subheading elements   |
+
+    The flags may be used in any combination, to select elements of more than one type. For example, to select all Category and Base elements, use `1 + 2 = 3`.
+
+    ### Remarks
+    `Val` may refer to any type of MDM object that has elements, for example, Field, Array , Grid or VariableInstance, or it may be an Elements list itself.
+    If the current value is *NULL*, `Val` is an empty Categorical value ({}) and the return value is also an empty Categorical value.
+    This function requires the case data to be opened with an MDM document or for a script to have an open MDM document available to it. Otherwise, an error will occur.
+    Like `DefinedCategories`, `DefinedElements` is typically used to define groups in SQL queries. However, whereas `DefinedCategories` defines groups based on categories only, you can use `DefinedElements` to define groups based on any element type that stores case data or a combination of these element types.
+
+    ### Examples
+    The following query creates groups based on all categories and any base elements in the gender and *gender.Ex* variables in the Museum IBM® SPSS® Quanvert™ sample data base. The *gender.Ex* variable is included in the GROUP BY statement because Quanvert DSC stores special elements in a separate variable that has an *.Ex* suffix.
+    ```sql
+    SELECT groupby.col[0] AS Gender,
+        SUM(visits) AS 'Sum of visits'
+    FROM vdata
+    WHERE visits > 0
+    GROUP BY gender.EX + gender
+        ON gender.Ex.Definedelements() + gender.Definedelements()
+    ```
+
+    Here is the result set:
+
+    | Gender      | Sum of visits |
+    | :---------- | :------------ |
+    | {base}      | 2131          |
+    | {male}      | 1309          |
+    | {female}    | 822           |
+
+    !'
+    Function DefinedElements(Optional Types As Long) As Categorical
+    End Function
+
+    '!
+    ```ds
+    (function) DefinedFactors([Answers: Variant]): Categorical
+    ```
+    -----------------------------------
+    Returns a set of factor numbers as defined on the categories in a variable.
+    + `Answers`: *Categorical* - Optional. *Variant* value of type *Categorical* or *Text*, specifying a set of categories to look for. If omitted, all categoriesfrom the object are used.
+    + `return`: *Categorical* - Set of factor numbers as defined in on the categories, matching the order of the categories in *Answers*.
+
+    ### Remarks
+    `Val` may refer to any type of MDM object that has elements, for example, Field, Array , Grid or VariableInstance, or it may be an Elements list itself.
+    If `Answers` is of type Text, it is assumed to be a category expression and is resolved to a list of categories. If `Answers` is of type Categorical and contains category names, they are converted to category numbers.
+    This function requires the case data to be opened with an MDM document or for a script to have an open MDM document available to it. Otherwise, an error will occur.
+    The function returns a factor of 0 for sublists and for categories with no factor defined. Factors can be long or double values.
+    To sort the returned values, use *SortAsc* or *SortDesc*.
+    !'
+    Function DefinedFactors(Optional Answers As Variant) As Categorical
+    End Function
+
+    '!
+    ```ds
+    (function) Difference(Answers: Variant): Categorical
+    ```
+    -----------------------------------
+    Returns the difference of two category lists--that is, it returns the categories that are in the first category list but not in the second. The categories are returned in the order in which they appear in the first category list.
+    + `Answers`: *String* | *Categorical* - *Variant* value of type *Categorical* or *Text*, specifying a set of categories.
+    + `return`: *Categorical* - Set of categories that are in `Val` but not in `Answers`, in the order in which they appear in `Val`.
+
+    ### Remarks
+    If the current value is *NULL*, `Val` is an empty Categorical value ({}) and the return value is also an empty Categorical value. If `Answers` is *NULL*, the return value is `Val`.
+    This function is equivalent to the `subtract (-) arithmetic operator` for Categorical values, except that `Difference` can operate on named categories and the *NULL* behavior is different.
+    However, using the `subtract (-) operator` is generally faster than using the `Difference` function.
+
+    ### Examples
+
+    | Function call       | Q1            | Q2            | Result     |
+    | :------------------ | :------------ | :------------ | :--------- |
+    | Q1.Difference(Q2)   | {1,2,3}       | {4,5,6}       | {1,2,3}    |
+    | Q1.Difference(Q2)   | {1,2,3,4,5,6} | {4,5,6}       | {1,2,3}    |
+    | Difference(Q1, Q2)  | {1,2,3,4,5,6} | {3,6,4,1,2,5} | {}         |
+
+    Like `Intersection` and `XUnion`, `Difference` is useful when categorical variables have identical or overlapping category lists.
+    For example, the *remember* and *interest* variables are categorical variables that have similar category lists. *remember* is a multiple response variable that records which galleries the respondents *remember* viewing, and interest is a single response variable that records which gallery respondents found most interesting. In the following example, the `Difference` function is used to remove the responses given to the *interest* question from the responses given to the *remember* question. The `>=` operator then tests whether the resulting list of categories includes the *Fossils* category. You could use this expression to create a filter to select respondents who remember the *Fossils* gallery, but who did not find it the most interesting gallery.
+    ```ds
+    Difference(remember, interest) >= {FOSSILS}
+    ```
+    !'
+    Function Difference(Answers As Variant) As Categorical
+    End Function
+
+    '!
+    ```ds
+    (function) Factor(): Variant
+    ```
+    -----------------------------------
+    Returns the factor defined for an element of a categorical variable.
+    + `return`: *Variant* - Factor number as defined on the element.
+
+    ### Remarks
+    If `Val` contains more than one element, only the factor for the first element is returned. If Val is {}, the return value is *NULL*. If the current data value is *NULL*, Val is {} and the return value is *NULL*.
+    If the first \"element\" in `Val` is actually (the MDM value of) an element list, the sublist is expanded until an actual element is found, if any. If the element does not have a factor defined, the return value is *NULL*. Note that the factor can be a *Long* or *Double* value.
+    !'
+    Function Factor() As Variant
+    End Function
+
+    '!
+    ```ds
+    (function) GetAnswer(Index: Long): Categorical
+    ```
+    -----------------------------------
+    Returns a specified category in a category list.
+    + `Index`: *Long* - Position of category to retrieve from `Val`, starting from 0.
+    + `return`: *Categorical* - The category at the requested position in Val, if found, or an empty *Categorical* value if it is not found
+
+    ### Remarks
+    If the current value is *NULL*, `Val` is an empty *Categorical* value ({}) and the return value is also an empty *Categorical* value.
+
+    ### Examples
+
+    | Function call  | Q1        | Index     | Result |
+    | :------------- | :-------- | --------- | ------ |
+    | GetAnswer(Q1, Index) | {5,1,6,3,2,4} | 0 | {5} |
+    | Q1.GetAnswer(Index) | {5,1,6,3,2,4} | 3 | {3} |
+
+    The following example tests whether the Fossils category is in the first position in the list of responses stored for each respondent in the remember multiple response variable:
+    ```ds
+    remember.GetAnswer(0) = {FOSSILS}
+    ```
+    !'
+    Function GetAnswer(Index As Long) As Categorical
+    End Function
+
+    '!
+    ```ds
+    (function) HasAnswer(Answer: Long): Boolean
+    ```
+    -----------------------------------
+    Identifies whether a specified category is in a category list.
+    + `Answer`: *Long* - Category to look for in `Val`.
+    + `return`: *Boolean* - *True* if `Val` contains the category, *False* otherwise.
+
+    ### Remarks
+    If the current value is *NULL*, Val is an empty *Categorical* value ({}) and the return value is *False*.
+    The `HasAnswer` function has been superseded by `ContainsAll`, `ContainsAny`, and `ContainsSome`. However, `HasAnswer` has been retained for backwards compatibility.
+
+    ### Examples
+
+    | Function call         | Response      | Filter  | Result |
+    | :-------------------- | :------------ | :------ | :----- |
+    | Q1.HasAnswer(Filter)  | {4,2,9,6,1,7} | 10      | False  |
+    | HasAnswer(Q1, Filter) | {4,2,9,6,1,7} | 6       | True   |
+
+    The following example selects respondents who chose the category with the mapped category value of 31 (which is the *Dinosaurs* category) in response to the *remember* question. In a multiple response variable, `HasAnswer` returns *True* regardless of whether any other category was chosen in response to the question. This example therefore selects all respondents who chose the *Dinosaurs* category regardless of whether they also chose any other category.
+    ```ds
+    remember.HasAnswer(31)
+    ```
+    !'
+    Function HasAnswer(Answer As Long) As Boolean
+    End Function
+
+    '!
+    ```ds
+    (function) Intersection([Vals: Variant ...]): Categorical
+    ```
+    -----------------------------------
+    Returns the intersection of two or more category lists--that is, it returns the categories that appear in all of the category lists. The categories are returned in the order in which they appear in the first category list.
+    + `Vals`: *String* | *Categorical* - One or more variant values of type *Categorical* or *Text*. Each value specifies a set of categories.
+    + `return`: *Categorical* - Set of categories that are in all of `Val` and `Vals`, in the order in which they occur in `Val`.
+
+    ### Remarks
+    If the current value is *NULL*, `Val` is an empty *Categorical* value ({}) and the return value is also an empty Categorical value. If an item in `Vals` is *NULL*, the item is ignored.
+    This function is equivalent to the `* arithmetic operator` for *Categorical* values, except that `Intersection` can operate on named categories and the *NULL* behavior is different. However, using the `* operator` is generally **faster** than using the `Intersection` function.
+
+    ### Examples
+
+    | Function call        | Q1            | Q2            | Result    |
+    | :-------------       | :--------     | :------------ | :-------- |
+    | Q1.Intersection(Q2)  | {4,2,9,6,1,7} | {6,10,3,5,9}  | {9,6}     |
+    | Intersection(Q1, Q2) | {4,2,9,6,1,7} | {3}           | {}        |
+
+    | Function call            | Q1            | Q2            | Q3           | Result    |
+    | :-------------------     | :------------ | :------------ | :----------- | :-------- |
+    | Q1.Intersection(Q2, Q3)  | {5,6,8,2,3}   | {1,3,4,6}     | {2,4,6,7,8}  | {6}       |
+    | Intersection(Q1, Q2, Q3) | {5,6,8,2,3}   | NULL          | {2,4,6,7,8}  | {6,8,2}   |
+
+    Like `Difference` and `XUnion`, `Intersection` is useful when categorical variables have identical or overlapping response lists. The *biology* and *education* variables are single response categorical variables that have identical category lists (*Yes*, *No*, and *Not answered*). You could use the `Intersection` function to return the categories that are in both of the category lists. In the following example, the `= operator` tests whether the result is the *Yes* category. You could therefore use this example to select respondents who chose the Yes category in response to both questions.
+    ```ds
+    biology.Intersection(education) = {yes}
+    ```
+    !'
+    Function Intersection(Optional ParamArray Vals As Variant) As Categorical
+    End Function
+
+    '!
+    ```ds
+    (function) Union([Vals: Variant ...]): Categorical
+    ```
+    -----------------------------------
+    Returns the union of two or more category lists--that is, it returns all of the categories that are in any one or more of the category lists.
+    + `Vals`: *Categorical* | *String* - One or more variant values of type *Categorical* or *Text*. Each value specifies a set of categories.
+    + `return`: *Categorical* - All of the categories in `Val` , followed by any other categories that are in `Vals`.
+
+    ### Remarks
+    If an item in `Vals` is *NULL*, the item is ignored. If the current value is *NULL*, `Val` is an empty *Categorical* value ({}) and the return value is the union of all non-NULL items in `Vals`.
+    This function is equivalent to the `+ arithmetic operator` for *Categorical* values, except that Union can operate on named categories and the *NULL* behavior is different. However, using the `+ operator` is generally faster than using the `Union` function.
+
+    ### Examples
+
+    | Function call       | Q1             | Q2                | Result          |
+    | :------------------ | :------------- | :---------------- | :------------   |
+    | Union(Q1, Q2)       | {5,1,6,3,2,4}  | {3,6,7,5}         | {5,1,6,3,2,4,7} |
+    | Q1.Union(Q2)        | {4,2,9,6,1,7}  | {}                | {4,2,9,6,1,7}   |
+
+    | Function call       | Q1             | Q2                | Q3               | Result          |
+    | :------------------ | :------------- | :---------------- | :--------------- | :------------   |
+    | Q1.Union(Q2, Q3)    | {6,8,2,3}      | {3,4,6}           | {1,7,8}          | {6,8,2,3,4,1,7} |
+    | Union(Q1, Q2, Q3)   | {6,8,2,3}      | {3,4,6}           | NULL             | {6,8,2,3,4}     |
+
+    The following example uses `Union` to combine the results of two single response categorical variables that have similar category lists and tests whether the result includes the *Yes* category. For example, you could use this example to select respondents who chose *Yes* in response to at least one of the questions.
+    ```ds
+    Union(biology, education) >= {yes}
+    ```
+    !'
+    Function Union(Optional ParamArray Vals As Variant) As Categorical
+    End Function
+
+    '!
+    ```ds
+    (function) XUnion(Answers: Variant): Categorical
+    ```
+    -----------------------------------
+    Returns the exclusive union of two category lists--that is, it returns all of the categories that are in either one of the category lists, but not in both.
+    + `Answers`: *Categorical* | *String* - *Variant* value of type *Categorical* or *Text*, specifying a set of categories.
+    + `return`: *Categorical* - Set of categories that are in either `Val` or `Answers` but not in both.
+
+    ### Remarks
+    If the current value is *NULL*, `Val` is an empty *Categorical* value ({}) and the return value is `Answers`. If `Answers` is *NULL*, the return value is `Val`.
+    This function is equivalent to the `/ arithmetic operator` for *Categorical* values, except that it can operate on named categories and the *NULL* behavior is different. However, using the `/ operator` is generally faster than using the `XUnion` function.
+
+    ### Examples
+
+    | Function call  | Q1                | Q2               | Result          |
+    | :------------  | :------------     | :------------    | :----------     |
+    | XUnion(Q1, Q2) | {3,5,9,10,23,5,6} | {5,16,4,10}      | {3,9,23,6,16,4} |
+    | Q1.XUnion( Q2) | {3,5,9,}          | {5,3,9}          | {}              |
+
+    Like the `Difference` and `Intersection` functions, `XUnion` is useful when categorical variables have identical or overlapping category lists. For example the *biology* and *education* variables have identical response lists. In the following example, `XUnion` is used to return any categories that are in either one of the category lists, but not in both and the `>= operator` tests whether the result contains the *Yes* category. For example, you could use this expression to select respondents who chose the *Yes* category in response to either one of the questions, but not to both.
+    ```ds
+    XUnion(biology, education) >= {yes}
+    ```
+    !'
+    Function XUnion(Answers As Variant) As Categorical
+    End Function
+
+    '!
+    ```ds
+    (function) Find(Key: Variant, [Skip: Long = 0], [Reverse: Boolean = False], [IgnoreCase: Boolean = True]): Long
+    ```
+    -----------------------------------
+    Searches a string, a category list, or an array, for a specified substring, subcategory list, or subarray, and if it is found, returns its start position.
+    + `Key`: *Variant* - Value to search for in `Val`.
+    + `Skip`: *Long* - Optional. The number of positions to skip in `Val` before starting the search. If `Reverse` is *True*, `Skip` is the number of positions to skip from the end of `Val`. If `Reverse` is omitted or *False*, Skip is the number of positions to skip from the start of `Val`. Treated as 0 if omitted or is < 0.
+    + `Reverse`: *Boolean* - Optional. If *True*, `Val` is searched backwards. If `Reverse` is omitted or *False*, `Val` is searched forwards.
+    + `IgnoreCase`: *Boolean* - Optional. If *False*, the comparison is case-sensitive. If `IgnoreCase` is omitted or *True*, the comparison is case-insensitive.
+    + `return`: *Long* - Position in `Val`, relative to the start of `Val`, of `Key` if found, -1 otherwise.
+
+    ### Remarks
+    If `Val` is *Text*, `Key` is converted to text if necessary and is searched for as a substring of `Val`. Unless `IgnoreCase` is *False*, the comparison is case-insensitive.
+    If `Val` is *Categorical* or an *Array* (which can contain values of any type), Key can be a *long*, *double*, *text*, *date*, *boolean*, or *categorical* value, or an *array*. When comparing `Key` (or the items in `Key`) with the items in `Val`, the normal conversion and comparison rules for variant types are used if necessary. Unless IgnoreCase is False, the comparison of text items (or items converted to text) is case-insensitive. If either item is *Null*, they are equal only if both are *Null*. If `Key` is a categorical value or an array, it is found only if its items occur as a sequence of consecutive items in `Val` and in the same order.
+    If either `Val` or Key is *NULL*, the return value is -1 (not found). If `Val` is not *Text*, *Categorical*, or an *Array*, an error occurs.
+    How you specify a text string as an argument depends on whether you are using the function in an SQL query or in mrScriptBasic or mrScriptMetadata. In an SQL query, enclose text strings in single quotation marks (' '). In mrScriptBasic or mrScriptMetadata, enclose text strings in double quotation marks (\" \").
+
+    ### Examples
+
+    | Function call             | Val                            | Key                  |  Result |
+    | :----------------         | :-----------                   | :-------------       | :-----  |
+    | Find(Val, Key)            | 24 St John's Road, Barnes      | barnes               | 19      |
+    | Find(Val, Key, , True)    | 3 Glasgow Hill, Glasgow        | glasgow              | 16      |
+    | Find(Val, Key)            | {3,7,8,1,9,10,5,4}             | 5                    | 6       |
+    | Find(Val, Key, 7)         | {3,7,8,1,9,10,5,4}             | 5                    | -1      |
+    | Find(Val, Key, , , False) | 24 St John's Road, Barnes      | barnes               | -1      |
+    | Find(Val, Key)            | Split(\"The quick brown fox\") | Split(\"brown fox\") | 2       |
+
+    **Text variables**. These examples use the name and address variables, which are text variables that store respondents' names and addresses, respectively. These examples show how you would use the Find function in mrScriptBasic or mrScriptMetadata. In SQL queries, you should enclose text strings in single quotation marks (' ') instead of double quotation marks (\" \").
+    The following example selects any respondent whose address contains \"London\" in upper case, lower case, or a mixture of both cases. Find returns -1 when the search string has not been found. In this example the <> operator is used to test that the return value is not -1, which means that \"London\" exists somewhere in the text being searched.
+    ```ds
+    address.Find(\"London\") <> -1
+    ```
+    Find lets you search for a string in a particular position. This is useful when the position of the search string in the text you are searching is important. For example, the following selects respondents whose names begin with the string \"Brian\":
+    ```ds
+    Find(name, \"Brian\") = 0
+    ```
+
+    **Categorical variables**. These examples use the *remember* multiple response variable.
+    This example selects all respondents who chose the *Dinosaurs* category regardless of its position in the list of categories chosen:
+    ```ds
+    remember.Find({dinosaurs}) <> -1
+    ```
+    The next example selects respondents for whom the *Dinosaurs* category is the first category in the list of their responses:
+    ```ds
+    remember.Find({dinosaurs}) = 0
+    ```
+    !'
+    Function Find(Key As Variant, Optional Skip As Long = 0, Optional Reverse As Boolean = False, Optional IgnoreCase As Boolean = True) As Long
+    End Function
+
+    '!
+    ```ds
+    (function) Left(Length: Long): Variant
+    ```
+    -----------------------------------
+    Returns a string containing the first characters from a string, a category list containing the first categories from a category list, or an array containing the first elements from an array.
+    + `Val`: *String* | *Categorical* | *Array* - *Text* value, *categorical* value, or *Array* to operate on.
+    + `Length`: *Long* - Number of characters, categories, or elements to return. If `Length` is greater than the number of items available, all of the items are returned.
+    + `return`: *Variant* - The required characters, categories, or elements from `Val`.
+
+    ### Remarks
+    For type *Text*, the return value is of type *Text*, and contains `Length` characters from the start of `Val`. For type *Categorical*, the return value is of type *Categorical*, and contains Length categories from the start of `Val`. For an array (which can contain values of any type), the return value is an array, and contains `Length` elements from the start of `Val`. For any other type, an error occurs.
+    When `Val` is *NULL*, the return value is *NULL*.
+
+    ### Examples
+
+    | Function call     | Val                            | Length | Result            |
+    | :-------------    | :-------------                 | :----- | :---------------- |
+    | Left(Val, Length) | 24 St John's Road, Barnes      | 10     | 24 St John        |
+    | Left(Val, Length) | {4,2,9}                        | 1      | {4}               |
+    | Left(Val, Length) | Split(\"The quick brown fox\") | 2      | {The,quick}       |
+
+    The following example returns the first six characters of the *name* text variable:
+    ```ds
+    name.Left(6)
+    ```
+    The following example returns the first three categories stored in the *remember* multiple response variable:
+    ```ds
+    remember.Left(3)
+    ```
+    !'
+    Function Left(Length As Long) As Variant
+    End Function
+
+    '!
+    ```ds
+    (function) Len(): Long
+    ```
+    -----------------------------------
+    Returns a *Long* containing the number of characters in a string, the number of categories in a category list, or the number of elements in an array.
+    + `Val`: *String* | *Categorical* | *Array* - *Text* value, *Categorical* value, or *Array* to operate on.
+    + `return`: *Long* - Numbers of characters, categories, or elements in `Val`.
+
+    ### Remarks
+    For type *Text*, the return value is the number of characters in `Val`. For type *Categorical*, the return value is the number of categories in `Val`. For an *Array* (which can contain values of any type), the return value is the number of elements in `Val`. For any other type, an error occurs.
+    When `Val` is *NULL*, the return value is zero.
+
+    ### Examples
+
+    | Function call | Val                            | Result |
+    | :------------ | :---------------               | :----  |
+    | Len(Val)      | 24 St John's Road, Barnes      | 25 |
+    | Len(Val)      | {4,2,9}                        | 3 |
+    | Len(Val)      | Split(\"The quick brown fox\") | 4 |
+
+    The following example returns the number of characters stored in the *address* text variable:
+    ```ds
+    address.Len()
+    ```
+    The following example returns the number of categories selected by the respondent in response to the *remember* multiple response question:
+    ```ds
+    remember.Len()
+    ```
+    !'
+    Function Len() As Long
+    End Function
+
+    '!
+    ```ds
+    (function) Mid(Start: Long, [Length: Long]): Variant
+    ```
+    -----------------------------------
+    + `Val`: *String* | *Categorical* | *Array* - *Text* value, *categorical* value, or *array* to operate on.
+    + `Start`: *Long* - Position in `Val` of the first character, category, or element wanted (counting from 0). If `Start` is greater than the number of items in `Val`, no items are returned. If `Start` is less than 0, items are returned from the start of `Val`.
+    + `Length`: *Long* - Optional. Number of characters, categories, or elements to return. If `Length` is omitted, or if there are fewer than *Lengthcharacters* (including the `Start` character), all characters from `Start` to the end of the string are returned. If `Start` + `Length` is < 1, no items are returned.
+    + `return`: *Variant* - The required characters, categories, or elements from `Val`.
+
+    ### Remarks
+    For type *Text*, the return value is of type *Text*, and contains `Length` characters from the position `Start` in `Val`. For type *Categorical*, the value is of type *Categorical*, and contains `Length` categories from the position `Start` in `Val`. For an *array* (which can contain values of any type), the return value is an *array*, and contains `Length` elements from the position `Start` in `Val`. For any other type, an error occurs.
+    When `Val` is *NULL*, the return value is *NULL*.
+
+    ### Examples
+
+    | Function call           | Val                            | Start | Length | Result      |
+    | :-------------          | :---------------               | :---- | :----- | :---------- |
+    | Mid(Val, Start, Length) | 24 St John's Road, Barnes      | 10    | 15     | 's Road, Barnes |
+    | Mid(Val, Start, Length) | {4,2,9}                        | 2     | 1      | {9}             |
+    | Mid(Val, Start, Length) | {4,2,9}                        | 6     | 3      | {}              |
+    | Mid(Val, Start, Length) | {4,2,9}                        | 0     | 2      | {4,2}           |
+    | Mid(Val, Start, Length) | {4,2,9}                        | 0     |        | {4,2,9}         |
+    | Mid(Val, Start, Length) | Split(\"The quick brown fox\") | 1     | 2      | {quick,brown}   |
+
+    The following example returns characters 8-17 from the *address* text variable:
+    ```ds
+    address.Mid(7, 10)
+    ```
+    The following example returns the fourth category from the list of categories stored in the *remember* multiple response variable:
+    ```ds
+    remember.Mid(3, 1)
+    ```
+    For respondents who chose less than four categories, this returns an empty category list ({}).
+    !'
+    Function Mid(Start As Long, Optional Length As Long) As Variant
+    End Function
+
+    '!
+    ```ds
+    (function) Right(Length: Long): Variant
+    ```
+    -----------------------------------
+    Returns a string containing the last characters from a string, a category list containing the last categories from a category list, or an array containing the last elements from an array.
+    + `Val`: *String* | *Categorical* | *Array* - *Text* value, *categorical* value, or *array* to operate on.
+    + `Length`: *Long* - Number of characters, categories, or elements to return. If `Length` is greater than the number of items available, all of the items are returned.
+    + `return`: *Variant* - The required characters, categories, or elements from `Val`.
+
+    ### Remarks
+    For type *Text*, the return value is of type *Text*, and contains Length characters from the end of `Val`. For type *Categorical*, the return value is of type *Categorical*, and contains `Length` categories from the end of `Val`. For an *array* (which can contain values of any type), the return value is an *array*, and contains `Length` elements from the end of `Val`. For any other type, an error occurs.
+    When `Val` is *NULL*, the return value is *NULL*.
+
+    ### Examples
+
+    | Function call      | Val                            | Length | Result       |
+    | :----------------  | :--------------------          | :----- | :----------- |
+    | Right(Val, Length) | 24 St John's Road, Barnes      | 6      | Barnes       |
+    | Right(Val, Length) | {4,2,9,15,6,7}                 | 1      | {7}          |
+    | Right(Val, Length) | Split(\"The quick brown fox\") | 3      | {quick,brown,fox} |
+
+    The following example returns the 10 rightmost characters stored in the *address* text variable:
+    ```ds
+    address.Right(10)
+    ```
+    The following example returns the last two categories in the list of categories stored in the *remember* multiple response variable:
+    ```ds
+    remember.Right(2)
+    ```
+    !'
+    Function Right(Length As Long) As Variant
+    End Function
+
+    '!
+    ```ds
+    (function) IsEmpty(): Boolean
+    ```
+    -----------------------------------
+    Returns *True* if the value is empty. An empty string is one that contains no characters or just contains white spaces. An empty category list is one that contains no categories. A *NULL* value is deemed to be empty. Unless *NULL*, other data types are always deemed to be not empty.
+    + `return`: *Boolean* - *True* if `Val` is empty, otherwise *False*.
+
+    ### Remarks
+    If `Val` is *NULL*, the return value is *True*.
+
+    ### Examples
+
+    | Function call  | Value of Q1                 |  Result    |
+    | :------------- | :-------------------------  | :--------- |
+    | IsEmpty(Q1)    | 24 St John's Road, Barnes   |  False     |
+    | IsEmpty(Q1)    |                             |  True      |
+    | Q1.IsEmpty()   | {3}                         |  False     |
+    | Q1.IsEmpty()   | {}                          |  True      |
+    | Q1.IsEmpty()   | 17.50                       |  False     |
+    | Q1.IsEmpty()   | 0.00                        |  False     |
+    | Q1.IsEmpty()   | NULL                        |  True      |
+
+    The *address* variable is a text variable that stores respondents' addresses. However, for some respondents the address has not been recorded and the variable stores an empty string. You could use the following to exclude those respondents:
+    ```ds
+    NOT (address.IsEmpty())
+    ```
+    !'
+    Function IsEmpty() As Boolean
+    End Function
+
+    '!
+    ```ds
+    (function) IsDBNull(): Boolean
+    ```
+    -----------------------------------
+    Returns true if a value is a *NULL* data value that can be used by ADO.
+    + `return`: *Boolean* - *True* if `Val` is a *NULL* data value that can be used by ADO, *False* otherwise.
+
+    ### Remarks
+    ADO requires nulls to be variants of type *VT_NULL*. By default, mrScriptBasic uses type *VT_EMPTY* when setting nulls, and therefore this function can be used to test if a *NULL* data value can be used by ADO.
+
+    ### Examples
+    The following mrScriptBasic example tests a variable to see if its value is a *NULL* data value that can be used by ADO:
+    ```ds
+    If MyVariable.IsDBNull() Then
+        ...                        ' Can be used with ADO
+    End If
+    ```
+    !'
+    Function IsDBNull() As Boolean
+    End Function
+
+    '!
+    ```ds
+    (function) IsOneOf([Vals: Variant ...]): Boolean
+    ```
+    -----------------------------------
+    Returns *true* if a value is equal to at least one of the other listed values.
+    + `Vals`: *Variant* - Variable number of other values.
+    + `return`: *Boolean* - *True* if `Val1` is equal to one or more of `Vals`, otherwise *False*.
+
+    ### Remarks
+    If `Val1` is *NULL* and at least one of `Vals` is *NULL*, the return value is *True*. If `Vals` is not supplied, the return value is *False*.
+    In SQL statements, the `IsOneOf` function can be used in place of the IN operator, which is not supported by the IBM® SPSS® Data Collection Data Model.
+
+    ### Examples
+
+    | Function Call       |  Val1     | Vals                                               | Result |
+    | :--------------     | :-------- | :------------------------------------------------- | :----- |
+    | IsOneOf(Val1, Vals) |  {4}      | {7}, {3}, {4}, {8}                                 | True   |
+    | IsOneOf(Val1, Vals) |  \"song\" | \"Cuckoo\", \"song\", \"is\", \"summer\", \"song\" | True   |
+    | Val1.IsOneOf(Vals)  |  17.9     | 17, 17.4, 17.98                                    | False  |
+    | Val1.IsOneOf(Vals)  |  NULL     | NULL, 0, 1, -1                                     | True   |
+
+    The following example shows the use of the `IsOneOf` function in an SQL query, which will be executed against the Short Drinks sample data set provided with the IBM® SPSS® Data Collection Developer Library:
+    ```sql
+    SELECT respondent.serial AS 'Serial', gender, occup
+    FROM vdata
+    WHERE occup.IsOneOf('sailor', 'doctor', 'soldier', 'postman')
+    ```
+    Here is the result set:
+
+    | Serial | gender   | occup     |
+    | :----- | :------  | :------   |
+    | 100    | {male}   | postman   |
+    | 115    | {female} | doctor    |
+
+    !'
+    Function IsOneOf(Optional ParamArray Vals As Variant) As Boolean
+    End Function
+
+End Class

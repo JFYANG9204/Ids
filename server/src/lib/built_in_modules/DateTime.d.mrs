@@ -1,0 +1,587 @@
+
+'!
+```ds
+(function) DateAdd(Val: Date, Interval: String, Count: Long): Date
+```
+-----------------------------------
+Returns a date to which a specified time interval (year, quarter, month, day, week, hour, minute, or second) has been added.
++ `Val`: *Date* - The date and/or time to which you want to add the interval(s).
++ `Interval`: *String* - The type of interval to be added, as specified in the table below.
++ `Count`: *Long* - Specifies the number of intervals to add. Can be negative to give an earlier date.
++ `return`: *Date* - `Val` + (`Count` * `Interval`)
+
+### Remarks
+The following table shows the valid values for Interval.
+
+| Value of Interval |  Description  |
+|  :--------------  |  :----------  |
+| \"yyyy\"          |  Year   |
+| \"q\"             |  Quarter   |
+| \"m\"             |  Month   |
+| \"d\"             |  Day   |
+| \"y\"             |  Day   |
+| \"w\"             |  Day   |
+| \"ww\"            |  Week   |
+| \"h\"             |  Hour   |
+| \"n\"             |  Minute   |
+| \"s\"             |  Second   |
+
+Note that if you are using the function in an SQL query, use single quotation marks (' ') instead of double quotation marks (\" \") when specifying the Interval parameter.
+When you add or subtract intervals of years, quarters, or months, when necessary the day is adjusted to fit the expected month. For example, when you add one month to 29 January 2003, the result is 28 February 2003.
+
+### Examples
+This example uses the DateAdd function to return the date and time three months from the date recorded in the *DataCollection.FinishTime*. For example, if the date and time in the variable is *20 May 2002 2:15:43 P.M.*, this example would return *20 August 2002 2:15:43 P.M.*
+```ds
+DateAdd(DataCollection.FinishTime, \"m\", 3)
+```
+!'
+Function DateAdd(Val As Date, Interval As String, Count As Long) As Date
+End Function
+
+'!
+```ds
+(function) DateDiff(Val1: Date, Val2: Date, Interval: String): Long
+```
+-----------------------------------
+Returns the time interval between two dates.
++ `Val1`: *Date* - First date value.
++ `Val2`: *Date* - Second date value.
++ `Interval`: *String* - Type of interval in which the difference between the two dates is to be reported.
++ `return`: *Long* - Number of intervals by which `Val2` is later than `Val1`.
+
+### Remarks
+The return value is negative if `Val2` is earlier than `Val1`. If the current data value is *NULL*, `Val1` is *30 December 1899, 00:00:00*.
+The following table shows the valid values for Interval.
+
+| Value of Interval | Description |
+| :---------------- | :---------- |
+| \"yyyy\"            | Calendar years  |
+| \"q\"               | Calendar quarters  |
+| \"m\"               | Calendar months  |
+| \"d\"               | Day  |
+| \"y\"               | Day of year (same as \"d\")  |
+| \"w\"               | Week (seven-day periods)  |
+| \"ww\"              | Calendar weeks (using first-day-of-week setting from input locale)  |
+| \"h\"               | Hour  |
+| \"n\"               | Minute  |
+| \"s\"               | Second  |
+
+For the calendar intervals, the return value is the number of occurrences of the beginning of the type of interval from `Val1` up to and including `Val2`, but not including `Val1`. For example, from *31 December 2001* to *1 January 2002* is counted as one year, even though the dates are only one day apart. For the \"w\" interval, the return value is the number of occurrences of whichever day of the week `Val1` is, from `Val1` up to and including `Val2`, but not including `Val1`.
+
+### Examples
+This example shows the use of the `DateDiff` function in an SQL query that returns the average time taken, in seconds, to complete a survey:
+```sql
+SELECT
+    AVG(
+        DateDiff(DataCollection.StartTime,
+                 DataCollection.FinishTime,
+                 's')
+       ) AS Average
+FROM vdata
+WHERE DataCollection.Status = {completed}
+```
+If this query is run against the IBM® SPSS® Data Collection Data File version of the *Museum* sample data set, the result set is:
+
+| Average |
+| ------- |
+| 2171400 |
+
+!'
+Function DateDiff(Val1 As Date, Val2 As Date, Interval As String) As Long
+End Function
+
+'!
+```ds
+(function) DateNow([Val: Variant], [IgnoreDaylightSaving: Boolean = False]): Date
+```
+-----------------------------------
+Returns the current local date in a particular time zone.
++ `Val`: *Variant* - Optional. *Long* or *String* value specifying local time zone to use.
++ `IgnoreDaylightSaving`: *Boolean* - Optional. Whether to ignore adjustments for daylight-saving time. Default is *False*.
++ `return`: *Date* - The current local date in the time zone.
+
+### Remarks
+The return value is the current local date in the time zone, with the time of day set to *00:00:00*. If `Val` is a *Long* value, it is the index value of a time zone defined in the registry on the server, or -1 to specify UTC time. If `Val` is a *Text* value, it is the name of a time zone defined in the registry on the server, or \"UTC\" to specify UTC time. If `Val` is omitted, *NULL* or empty, the time zone associated with the program in which the function is called is used. By default, the program's time zone is the local time zone of the server, but this can be changed by calling `SetTimeZone`. If `Val` is any other type, an error occurs. If the time zone specified by `Val` cannot be found in the registry, an error occurs (thus this function can be used to determine whether a specific value represents a valid time zone).
+
+### Examples
+This example returns the current local date for the program's time zone:
+```ds
+DateNow()
+```
+!'
+Function DateNow(Optional Val As Variant, Optional IgnoreDaylightSaving As Boolean = False) As Date
+End Function
+
+'!
+```ds
+(function) DateOnly(Val: Date): Date
+```
+-----------------------------------
+Returns the date from a date and time value.
++ `Val`: *Date* - *Date* value.
++ `reture`: *Date* - The date from `Val` (year, month and day).
+
+### Remarks
+The return value is the same as `Val`, but with the time of day set to *00:00:00*.
+!'
+Function DateOnly(Val As Date) As Date
+End Function
+
+'!
+```ds
+(function) DatePart(Val: Date, Interval: String): Long
+```
+-----------------------------------
+Returns a specified part of a given date.
++ `Val`: *Date* - The date of which you want to return a part.
++ `Interval`: *String* - Defines the part of the date that is to be returned, as specified in the table below.
++ `return`: *Long* - The specified part of the date, as specified in the table below.
+
+### Remarks
+The following table shows the valid values for `Interval`.
+
+| Value of Interval  |  Description  |
+| :----------------  |  :----------  |
+| \"yyyy\"           |  Year   |
+| \"q\"              |  Quarter (1 to 4)   |
+| \"m\"              |  Month (1 to 12)   |
+| \"d\"              |  Day of month (1 to 31)   |
+| \"y\"              |  Day of year (1 to 366)   |
+| \"w\"              |  Day of week (1 to 7, using the first day of week setting from the input locale)   |
+| \"ww\"             |  Week of year (1 to 53, using the first week of year setting from the input locale)   |
+| \"h\"              |  Hour (0 to 23)   |
+| \"n\"              |  Minute (0 to 59)   |
+| \"s\"              |  Second (0 to 59)   |
+
+Note that if you are using the function in an SQL query, use single quotation marks (' ') instead of double quotation marks (\" \") when specifying the `Interval` parameter.
+`Val` is interpreted according to the input locale.
+In some locales, when you use the \"ww\" option to return the week of the year, the week number for the first days of January may be returned as 53 and for the last days of December it may be returned as 1. For example, if the locale defines the first day of the week as Monday and the first week of the year as the first full week, the week number is returned as 53 for the first few days in a year in which the first Monday falls on January 7.
+
+### Examples
+In this example the DatePart function is used to return the year from the current system date (which is in turn returned by the Now function). For example, on 20 May 2002, this example would return 2002.
+```ds
+DatePart(Now(), \"yyyy\")
+```
+!'
+Function DatePart(Val As Date, Interval As String) As Long
+End Function
+
+'!
+```ds
+(function) Day(Val: Date): Long
+```
+-----------------------------------
+Returns a whole number between 1 and 31, inclusive, representing the day of the month.
++ `Val`: *Date* - The date for which you want to return the day.
++ `return`: *Long* - The day of the month (1 to 31).
+
+### Remarks
+This is equivalent to `DatePart(\"d\", Val)`.
+
+### Examples
+This example uses the Day function to return the day of the month from the current date (which is in turn returned by the Now function). For example, on *20 May 2002*, this example would return 20.
+```ds
+Day(Now())
+```
+The next example uses the Day function to return the day stored in the *DataCollection.FinishTime*.
+```ds
+DataCollection.FinishTime.Day()
+```
+!'
+Function Day(Val As Date) As Long
+End Function
+
+'!
+```ds
+(function) GetTimeZone([Val: Variant]): Long
+```
+-----------------------------------
+Returns the index value of a time zone defined in the registry on the server.
++ `Val`: *Variant* - Optional. *Long* or *Text* value specifying time zone to use.
++ `return`: *Long* - Index of the local time zone.
+
+### Remarks
+If `Val` is a *Long* value, it is the index value of a time zone defined in the registry on the server. If `Val` is a *Text* value, it is the name of a time zone defined in the registry on the server. If `Val` is omitted, *NULL* or empty, the time zone associated with the program in which the function is called is used. By default, the program's time zone is the local time zone of the server, but this can be changed by calling SetTimeZone. If a time zone name is used, it is case-insensitive. The special values of -1 and \"UTC\" can be used for the time zone; these do not correspond to anything in the registry, but instead refer to UTC time, with no offset or daylight saving defined. If `Val` is any other type, an error occurs. If the time zone specified by `Val` cannot be found in the registry, an error occurs (thus this function can be used to determine whether a specific value represents a valid time zone).
+
+### Examples
+The following example returns the index value of the Central Standard Time time zone from the registry.
+```ds
+GetTimeZone(\"Central Standard Time\")
+```
+!'
+Function GetTimeZone(Optional Val As Variant) As Long
+End Function
+
+'!
+```ds
+(function) GetTimeZoneDaylightSaving([Val: Variant], [Time: Date]): Boolean
+```
+-----------------------------------
+Returns True if daylight saving is currently in effect at the specified time (or now) in the specified time zone (or the program's time zone).
++ `Val`: *Variant* - Optional. *Long* or *String* value specifying time zone to use.
++ `Time`: *Date* - Optional. Local date and time to use.
++ `return`: *Boolean* - Whether daylight-saving is in effect at the specified time in the specified time zone.
+
+### Remarks
+If `Val` is a *Long* value, it is the index value of a time zone defined in the registry on the server. If `Val` is a *Text* value, it is the name of a time zone defined in the registry on the server. If `Val` is omitted, *NULL* or empty, the time zone associated with the program in which the function is called is used. By default, the program's time zone is the local time zone of the server, but this can be changed by calling `SetTimeZone`. If a time zone name is used, it is case-insensitive. The special values of -1 and \"UTC\" can be used for the time zone; these do not correspond to anything in the registry, but instead refer to UTC time, with no offset or daylight saving defined. If `Val` is any other type, an error occurs. If the time zone specified by `Val` cannot be found in the registry, an error occurs.
+If Time is omitted, or equal to *30 December 1899, 00:00:00* (the date internally represented by the numeric value 0), then the current local date and time for the time zone are used.
+
+@Note - For some time zones (for example, 275 \"West Pacific Standard Time\") this function always returns *False*, because the time zone does not use daylight saving.
+
+### Examples
+The following example returns True if daylight-saving is in effect for the current local date and time in the Central Standard Time time zone.
+```ds
+GetTimeZoneDaylightSaving(\"Central Standard Time\")
+```
+!'
+Function GetTimeZoneDaylightSaving(Optional Val As Variant, Optional Time As Date) As Boolean
+End Function
+
+'!
+```ds
+(function) GetTimeZoneName([Val: Variant]): String
+```
+-----------------------------------
+Returns the name of the local time zone.
++ `Val`: *Variant* - Optional. *Long* or *String* value specifying time zone to use.
++ `return`: *String* - Name of the local time zone.
+
+### Remarks
+If `Val` is a *Long* value, it is the index value of a time zone defined in the registry on the server. If `Val` is a *Text* value, it is the name of a time zone defined in the registry on the server. If `Val` is omitted, *NULL* or empty, the time zone associated with the program in which the function is called is used. By default, the program's time zone is the local time zone of the server, but this can be changed by calling `SetTimeZone`. If a time zone name is used, it is case-insensitive. The special values of -1 and \"UTC\" can be used for the time zone; these do not correspond to anything in the registry, but instead refer to UTC time, with no offset or daylight saving defined. If `Val` is any other type, an error occurs. If the time zone specified by `Val` cannot be found in the registry, an error occurs (thus this function can be used to determine whether a specific value represents a valid time zone).
+
+### Examples
+The following example returns the name of the time zone with index value 235 (Tokyo Standard Time) in the list of time zones defined in the registry.
+```ds
+GetTimeZoneName(235)
+```
+!'
+Function GetTimeZoneName(Optional Val As Variant) As String
+End Function
+
+'!
+```ds
+(function) GetTimeZoneOffset([Val: Variant], [Time: Date], [IgnoreDaylightSaving: Boolean = False]): Long
+```
+-----------------------------------
+Returns the number of minutes to add to or subtract from UTC time to get the local time.
++ `Val`: *Variant* - Optional. *Long* or *String* value specifying time zone to use.
++ `Time`: *Date* - Optional. Local date and time to use.
++ `IgnoreDaylightSaving`: *Boolean* - Optional. Whether to ignore adjustments for daylight-saving time. Default is *False*.
++ `return`: *Long* - Offset from UTC time in minutes.
+
+### Remarks
+If `Val` is a *Long* value, it is the index value of a time zone defined in the registry on the server. If `Val` is a *Text* value, it is the name of a time zone defined in the registry on the server. If `Val` is omitted, *NULL* or empty, the time zone associated with the program in which the function is called is used. By default, the program's time zone is the local time zone of the server, but this can be changed by calling `SetTimeZone`. If a time zone name is used, it is case-insensitive. The special values of -1 and \"UTC\" can be used for the time zone; these do not correspond to anything in the registry, but instead refer to UTC time, with no offset or daylight saving defined. If `Val` is any other type, an error occurs. If the time zone specified by `Val` cannot be found in the registry, an error occurs.
+If `Time` is omitted, or equal to *30 December 1899, 00:00:00* (the date internally represented by the numeric value 0), then the current local date and time for the time zone are used.
+The return value is the number of minutes (possibly negative) to add to UTC time to get the local time. This includes an adjustment for daylight saving, if daylight saving is currently in effect in the time zone and `IgnoreDaylightSaving` is *false*.
+!'
+Function GetTimeZoneOffset(Optional Val As Variant, Optional Time As Date, Optional IgnoreDaylightSaving As Boolean = False) As Long
+End Function
+
+'!
+```ds
+(function) Hour(Val: Date): Long
+```
+-----------------------------------
+Returns a whole number between 0 and 23, inclusive, representing the hour of the day.
++ `Val`: *Date* - The date for which you want to return the hour of the day.
++ `return`: *Long* - The hour of the day (0 to 23).
+
+### Remarks
+This is equivalent to `DatePart(\"h\", Val)`.
+
+### Examples
+This example uses the Hour function to return the hour of the current system date and time, which is returned using the `Now` function.
+```ds
+Hour(Now())
+```
+The next example uses the Hour function to return the hour stored in the *DataCollection.FinishTime*.
+```ds
+DataCollection.FinishTime.Hour()
+```
+!'
+Function Hour(Val As Date) As Long
+End Function
+
+'!
+```ds
+(function) LocalToUTCTime(Val: Date, [Zone: Variant], [IgnoreDaylightSaving: Boolean = False]): Date
+```
+-----------------------------------
+Returns the UTC time that corresponds to a given local time.
++ `Val`: *Date* - Local date/time value.
++ `Zone`: *Variant* - Optional. *Long* or *String* value specifying local time zone to use.
++ `IgnoreDaylightSaving`: *Boolean* - Optional. Whether to ignore adjustments for daylight-saving time. Default is *False*.
++ `return`: *Date* - The corresponding UTC date/time.
+
+### Remarks
+If `Zone` is a *Long* value, it is the index value of a time zone defined in the registry on the server. If `Zone` is a *Text* value, it is the name of a time zone defined in the registry on the server. If `Zone` is omitted, *NULL* or empty, the time zone associated with the program in which the function is called is used. By default, the program's time zone is the local time zone of the server, but this can be changed by calling `SetTimeZone`. If a time zone name is used, it is case-insensitive. The special values of -1 and \"UTC\" can be used for the time zone; these do not correspond to anything in the registry, but instead refer to UTC time, with no offset or daylight saving defined. If `Zone` is any other type, an error occurs. If the time zone specified by `Zone` can’t be found in the registry, an error occurs.
+Note that if the time zone uses daylight saving (and `IgnoreDaylightSaving` is *False*), there will be certain times of the year that do not correspond to a UTC time; for example, if local time jumps from 0200 to 0300 when daylight saving comes into effect, then there is no local 0215 on that day. In such cases, the supplied local time is taken to be what the local time would have been if daylight saving were not in effect (thus, in the previous example, 0215 would return the same result as 0315). Also, on days when daylight saving ends, certain times of the day occur more than once; for example, if at 0300 (with daylight saving on) the local time is reset to 0200, then 0215 occurs twice on that day. In such cases, the supplied local time is taken to be the first occurrence, when daylight saving was in effect.
+!'
+Function LocalToUTCTime(Val As Date, Optional Zone As Variant, Optional IgnoreDaylightSaving As Boolean = False) As Date
+End Function
+
+'!
+```ds
+(function) Minute(Val: Date): Long
+```
+-----------------------------------
+Returns a whole number between 0 and 59, inclusive, representing the minute of the hour.
++ `Val`: *Date* - The date for which you want to return the minute.
++ `return`: *Long* - The minute of the hour (0 to 59).
+
+### Remarks
+This is equivalent to `DatePart(\"n\", Val)`.
+
+### Examples
+This example uses the Minute function to return the minute of the current system time, which is returned using the `TimeNow` function.
+```ds
+Minute(TimeNow())
+```
+!'
+Function Minute(Val As Date) As Long
+End Function
+
+'!
+```ds
+(function) Month(Val: Date): Long
+```
+-----------------------------------
+Returns a whole number between 1 and 12, inclusive, representing the month of the year.
++ `Val`: *Date* - The date for which you want to return the month.
++ `return`: *Long* - The month of the year (1 to 12).
+
+### Remarks
+This is equivalent to `DatePart(\"m\", Val)`.
+
+### Examples
+This example uses the `Month` function to return the month from the current date (which is in turn returned by the `Now` function). For example, on *20 May 2002*, this example would return 5.
+```ds
+Month(Now())
+```
+!'
+Function Month(Val As Date) As Long
+End Function
+
+'!
+```ds
+(function) MonthName(Val: Long , [Abbreviate: Boolean = False], [Locale: Long]): String
+```
+-----------------------------------
+Returns a string indicating the specified month.
++ `Val`: *Long* - An integer between 1 and 13 representing the month, or a date.
++ `Abbreviate`: *Boolean* - Optional. Whether a short form of the month name isto be used. The default is *False*.
++ `Locale`: *Long* - Optional. The output locale to use for regional variations in month names. If `Locale` is omitted or negative, or does not match a known Locale ID (LCID), the current output locale is used.
++ `return`: *String* - The name of the month, as specified for the output locale.
+
+### Remarks
+For locales that do not have a 13th month (which is most locales), the return value is a zero-length string when `Val` is 13.
+If `Locale` is specified, it is not used for error messages.
+If `Val` is *NULL*, the return value is a zero-length string. Otherwise, an error occurs if `Val` is not in the range 1 to 13 or is not a valid date.
+
+### Examples
+This example returns the full name of the 12th month. In an English-speaking locale, this would typically be \"December\".
+```ds
+MonthName(12)
+```
+To return the abbreviated name of the 12th month, set `Abbreviate` to True. In an English-speaking locale, this would typically return \"Dec\".
+```ds
+MonthName(12, True)
+```
+To return the month name for a specific locale, set `Locale` to a Locale ID (LCID) number. In the following example, the Chinese (Traditional) name for the 6th month is returned.
+```ds
+MonthName(6, , 1028)
+```
+The next example uses the `MonthName` and `Now` functions to return the name of the current month:
+```ds
+MonthName(Now())
+```
+!'
+Function MonthName(Val As Long, Optional Abbreviate As Boolean = False, Optional Locale As Long) As String
+End Function
+
+'!
+```ds
+(function) Now([Val: Variant], [IgnoreDaylightSaving: Boolean = False]): Date
+```
+-----------------------------------
+Returns the current local date and time in a particular time zone.
++ `Val`: *Variant* - Optional. *Long* or *String* value specifying local time zone to use.
++ `IgnoreDaylightSaving`: *Boolean* - Optional. Whether to ignore adjustments for daylight-saving time. Default is *False*.
++ `return`: *Date* - The current local date and time in the time zone.
+
+### Remarks
+If `Val` is a *Long* value, it is the index value of a time zone defined in the registry on the server, or -1 to specify UTC time. If `Val` is a *Text* value, it is the name of a time zone defined in the registry on the server, or \"UTC\" to specify UTC time. If `Val` is omitted, *NULL* or empty, the time zone associated with the program in which the function is called is used. By default, the program's time zone is the local time zone of the server, but this can be changed by calling `SetTimeZone`. If `Val` is any other type, an error occurs. If the time zone specified by `Val` cannot be found in the registry, an error occurs (thus this function can be used to determine whether a specific value represents a valid time zone).
+
+### Examples
+This example returns the current local date and time for the program's time zone:
+```ds
+Now()
+```
+!'
+Function Now(Optional Val As Variant, Optional IgnoreDaylightSaving As Boolean = False) As Date
+End Function
+
+'!
+```ds
+(function) Second(Val: Date): Long
+```
+-----------------------------------
+Returns a whole number between 0 and 59, inclusive, representing the second of the minute.
++ `Val`: *Date* - The date for which you want to return the second.
++ `return`: *Long* - The second of the minute (0 to 59).
+
+### Remarks
+This is equivalent to `DatePart(\"s\", Val)`.
+
+### Examples
+This example uses the Second function to return the second of the current system time, which is returned using the `TimeNow` function.
+```ds
+Second(TimeNow())
+```
+!'
+Function Second(Val As Date) As Long
+End Function
+
+'!
+```ds
+SetTimeZone(Val: Variant): Long
+```
+-----------------------------------
+Sets the time zone associated with a program.
++ `Val`: *Variant* - *Long* or *String* value specifying time zone to use.
++ `return`: *Long* - Index of the new time zone.
+
+### Remarks
+This function changes the time zone associated with the program in which the function is called, as specified by `Val`. By default, the program's time zone is the local time zone of the server. If `Val` is a *Long* value, it is the index value of a time zone defined in the registry on the server. If `Val` is a *Text* value, it is the name of a time zone defined in the registry on the server. If `Val` is *NULL* or empty, the time zone associated with the program is not changed. If a time zone name is used, it is case-insensitive. The special values of -1 and \"UTC\" can be used for the time zone; these do not correspond to anything in the registry, but instead refer to UTC time, with no offset or daylight saving defined. If `Val` is any other type, an error occurs. If the time zone specified by `Val` cannot be found in the registry, an error occurs.
+!'
+Function SetTimeZone(Val As Variant) As Long
+End Function
+
+'!
+```ds
+(function) TimeNow([Val: Variant], [IgnoreDaylightSaving: Boolean = False]): Date
+```
+-----------------------------------
+Returns the current local time in a particular time zone.
++ `Val`: *Variant* - Optional. *Long* or *String* value specifying local time zone to use.
++ `IgnoreDaylightSaving`: *Boolean* - Optional. Whether to ignore adjustments for daylight-saving time. Default is *False*.
++ `return`: *Date* - The current local time in the time zone.
+
+### Remarks
+The return value is the current local time in the time zone, with the date set to *30 December 1899*. If `Val` is a *Long* value, it is the index value of a time zone defined in the registry on the server, or -1 to specify UTC time. If `Val` is a *Text* value, it is the name of a time zone defined in the registry on the server, or \"UTC\" to specify UTC time. If `Val` is omitted, *NULL* or empty, the time zone associated with the program in which the function is called is used. By default, the program's time zone is the local time zone of the server, but this can be changed by calling `SetTimeZone`. If `Val` is any other type, an error occurs. If the time zone specified by Val cannot be found in the registry, an error occurs (thus this function can be used to determine whether a specific value represents a valid time zone).
+
+### Examples
+This example returns the current local time for the program's time zone:
+```ds
+TimeNow()
+```
+!'
+Function TimeNow(Optional Val As Variant, Optional IgnoreDaylightSaving As Boolean = False) As Date
+End Function
+
+'!
+```ds
+(function) TimeOnly(Val: Date): Date
+```
+-----------------------------------
+The return value is the same as `Val`, but with the date set to *30 December 1899*.
++ `Val`: *Date* - *Date* value.
++ `return`: *Date* - The time from `Val` (hours, minutes, and seconds).
+
+### Remarks
+The return value is the same as `Val`, but with the date set to *30 December 1899*.
+!'
+Function TimeOnly(Val As Date) As Date
+End Function
+
+'!
+```ds
+(function) UTCToLocalTime(Val: Date, [Zone: Variant], [IgnoreDaylightSaving: Boolean = False]): Date
+```
+-----------------------------------
+Returns the local time that corresponds to a given UTC time.
++ `Val`: *Date* - UTC date/time value.
++ `Zone`: *Variant* - Optional. *Long* or *String* value specifying the local time zone to use.
++ `IgnoreDaylightSaving`: *Boolean* - Optional. Whether to ignore adjustments for daylight-saving time. Default is *False*.
++ `return`: *Date* - The corresponding date/time in the local time zone.
+
+### Remarks
+If `Zone` is a *Long* value, it is the index value of a time zone defined in the registry on the server. If `Zone` is a *Text* value, it is the name of a time zone defined in the registry on the server. If `Zone` is omitted, *NULL* or empty, the time zone associated with the program in which the function is called is used. By default, the program's time zone is the local time zone of the server, but this can be changed by calling `SetTimeZone`. If a time zone name is used, it is case-insensitive. The special values of -1 and \"UTC\" can be used for the time zone; these do not correspond to anything in the registry, but instead refer to UTC time, with no offset or daylight saving defined. If `Zone` is any other type, an error occurs. If the time zone specified by Zone cannot be found in the registry, an error occurs.
+!'
+Function UTCToLocalTime(Val As Date, Optional Zone As Variant, Optional IgnoreDaylightSaving As Boolean = False) As Date
+End Function
+
+'!
+```ds
+(function) WeekdayName(Val: Variant, [Abbreviate: Boolean = False], [Locale: Long]): String
+```
+-----------------------------------
+Returns a string indicating the specified day of the week.
++ `Val`: *Variant* - A integer between 1 and 7 representing the day of the week, or a date. The input locale defines which days are considered the first and last days of the week.
++ `Abbreviate`: *Boolean* - Optional. Whether a short form of the day name is to be used. The default is *False*.
++ `Locale`: *Long* - Optional. The output locale to use for regional variations in day names. If Locale is omitted or negative, or does not match a known Locale ID (LCID), the current output locale is used.
++ `return`: *String* - The name of the day, as specified for the output locale.
+
+### Remarks
+If `Locale` is specified, it is not used for error messages.
+If `Val` is *NULL*, the return value is a zero-length string. Otherwise, an error occurs if Val is not in the range 1 to 7 or is not a valid date.
+
+### Examples
+This example uses the WeekdayName function to return the full name of the third day of the week. If the first day of the week is defined as Sunday, this example would return \"Tuesday\".
+```ds
+WeekdayName(3)
+```
+To return the abbreviated weekday name, set `Abbreviate` to *True*. If the first day of the week is defined as Sunday, this example would return \"Tue\".
+```ds
+WeekdayName(3, True)
+```
+To return the day name for a specific locale, set `Locale` to a Locale ID (LCID) number. In the following example, the Arabic name for the 4th day is returned.
+```ds
+WeekdayName(4, , 1025)
+```
+The following example SQL query uses the `WeekdayName` function to return the name of the day on which interviews were completed:
+```sql
+SELECT Respondent.Serial,
+    DataCollection.FinishTime,
+    WeekdayName(DataCollection.FinishTime) AS Day
+FROM vdata
+WHERE DataCollection.Status = {Completed}
+```
+Here are the results for the first five respondents:
+
+| Respondent.Serial | DataCollection.FinishTime | Day  |
+| :---------------- | :------------------------ | :----------  |
+| 6                 | 16/10/2002 13:57:03       | Wednesday  |
+| 7                 | 16/10/2002 18:23:12       | Wednesday  |
+| 8                 | 16/10/2002 22:23:47       | Wednesday  |
+| 9                 | 17/10/2002 02:24:05       | Thursday  |
+| 10                | 17/10/2002 06:24:00       | Thursday  |
+
+!'
+Function WeekdayName(Val As Variant, Optional Abbreviate As Boolean = False, Optional Locale As Long) As String
+End Function
+
+'!
+```ds
+(function) Year(Val: Date): Long
+```
+-----------------------------------
+Returns a whole number representing the year.
++ `Val`: *Date* - The date for which you want to return the year.
++ `return`: *Long* - The Year.
+
+### Remarks
+This is equivalent to `DatePart(\"yyyy\", Val)`.
+
+### Examples
+This example uses the Year function to return the year from the date recorded in the *DataCollection.FinishTime*. For example, if the date in the variable is *20 May 2002*, this example would return 2002.
+```ds
+Year(DataCollection.FinishTime)
+```
+!'
+Function Year(Val As Date) As Long
+End Function
+
+
+
+
