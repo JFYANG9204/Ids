@@ -50,7 +50,7 @@ End If
 
 Only the syntax `Job.GlobalVariables.SomeVar = SomeValue` can be used to SET the value of a global variable.
 !'
-Interface IDataManagerGlobalVariable
+Interface IDataManagerGlobalVariable Implements Object
 
     '!
     ```ds

@@ -17,7 +17,7 @@ With the properties and methods of a `Category` object, you can:
 + Get and set any custom properties for the category.
 + Determine whether the category is exclusive or an other specify using the `Attributes` property.
 !'
-Interface ICategory
+Interface ICategory Implements Object
 
     '!
     ```ds

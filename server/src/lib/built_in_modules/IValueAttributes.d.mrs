@@ -5,7 +5,7 @@
 -----------------------------
 A collection object that contains the attributes relating to a value.
 !'
-Interface IValueAttributes
+Interface IValueAttributes Implements IEnumerable, Object
 
     '!
     ```ds",

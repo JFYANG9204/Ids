@@ -5,7 +5,7 @@
 -----------------------------
 A collection object that contains the questions for the current interview.
 !'
-Interface IQuestions
+Interface IQuestions Implements IEnumerable, Object
 
     '!
     ```ds

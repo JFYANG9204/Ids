@@ -6,7 +6,7 @@
 -----------------------------
 A `CellItem` is a type of value that appears in each cell of the table. Each `CellItem` defines a single value that appears in each of the cells of the table. An example of a cell item is a count or column percentage.
 !'
-Interface ICellItem
+Interface ICellItem Implements Object
 
     '!
     ```ds

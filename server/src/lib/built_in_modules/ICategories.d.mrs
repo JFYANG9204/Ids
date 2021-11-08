@@ -6,7 +6,7 @@
 -----------------------------
 A collection object that contains `Category` objects.
 !'
-Interface ICategories
+Interface ICategories Implements IEnumerable, Object
 
     '!
     ```ds

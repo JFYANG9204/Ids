@@ -12,7 +12,7 @@ With the properties and methods of a `Response` object, you can:
 + Get and set the initial value for the question using the `Initial` property.
 + Get and set the other values for the question using the `Other` collection property.
 !'
-Interface IResponse
+Interface IResponse Implements Object
 
     '!
     ```ds

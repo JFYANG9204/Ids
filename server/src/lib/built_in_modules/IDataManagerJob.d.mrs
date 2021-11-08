@@ -81,7 +81,7 @@ The Weighting component is accesible in the following sections:
 + OnNextCase Section
 + OnJobEnd Section
 !'
-Interface IDataManagerJob
+Interface IDataManagerJob Implements Object
 
     '!
     ```ds

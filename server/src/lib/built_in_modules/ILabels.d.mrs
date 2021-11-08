@@ -7,7 +7,7 @@
 -----------------------------
 A collection object that contains label objects.
 !'
-Interface ILabels
+Interface ILabels Implements IEnumerable, Object
 
     '!
     ```ds

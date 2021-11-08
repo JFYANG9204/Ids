@@ -1,0 +1,79 @@
+
+'!
+```ds
+(interface) IProperties
+```
+-----------------------------
+A collection of property objects.
+!'
+Interface IProperties Implements IEnumerable, Object
+
+    '!
+    ```ds
+    (property) IProperties.Count: Long
+    ```
+    --------------------
+    The number of items in the collection.
+    !'
+    ReadOnly Property Count() As Long
+
+    '!
+    ```ds
+    (property) IProperties.Item[Index: Variant]: IProperty
+    ```
+    --------------------
+    Get the collection item at the specified location.
+    !'
+    Default ReadOnly Property Item(Index As Variant) As IProperty
+
+    '!
+    ```ds
+    (property) IProperties.Copy: IProperties
+    ```
+    --------------------
+    Returns a copy of the current property object.
+    !'
+    ReadOnly Property Copy() As IProperties
+
+    '!
+    ```ds
+    (method) IProperties.Add(Property: IProperty): Void
+    ```
+    --------------------
+    Adds an item to the collection.
+    !'
+    Sub Add(Property As IProperty)
+    End Sub
+
+    '!
+    ```ds
+    (method) IProperties.CopyTo(Properties: IProperties): Void
+    ```
+    --------------------
+    Copies the properties collection to the supplied properties collection object.
+    !'
+    Sub CopyTo(Properties As IProperties)
+    End Sub
+
+    '!
+    ```ds
+    (method) IProperties.CreateProperty(): IProperty
+    ```
+    --------------------
+    Creates a new property object.
+    !'
+    Function CreateProperty() As IProperty
+    End Function
+
+    '!
+    ```ds
+    (method) IProperties.Remove(Property: IProperty): Void
+    ```
+    --------------------
+    Removes an item from the collection.
+    !'
+    Sub Remove(Property As IProperty)
+    End Sub
+
+End Interface
+

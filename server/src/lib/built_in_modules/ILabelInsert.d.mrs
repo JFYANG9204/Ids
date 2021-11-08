@@ -6,7 +6,7 @@
 -----------------------------
 The LabelInsert object is used to get or set the text for a named insert of a label.
 !'
-Interface ILabelInsert
+Interface ILabelInsert Implements Object
 
     '!
     ```ds

@@ -17,7 +17,7 @@ When returning values from the `Value` object, the CDM data types are mapped to 
 + **Boolean** - *VT_BOOL*. In VB this is a *Boolean*.
 + **Object** - *VT_DISPATCH*. In VB this is an *Object*.
 !'
-Interface IValue
+Interface IValue Implements Object
 
     '!
     ```ds

@@ -12,7 +12,7 @@ With the properties and methods of a `Label` object, you can:
 + Set label presentation styles using the `Style` property.
 + Set label insertion text using the `Inserts` collection.
 !'
-Interface ILabel
+Interface ILabel Implements Object
 
     '!
     ```ds

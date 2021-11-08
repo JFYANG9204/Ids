@@ -9,7 +9,7 @@ The Table object defines the structure of a table in terms of `Axes`, as well as
 ### Remarks
 Only the 'Side' and 'Top' axes are currently supported. 'Layer' axes may be added in the future.
 !'
-Interface ITable
+Interface ITable Implements Object
 
     '!
     ```ds

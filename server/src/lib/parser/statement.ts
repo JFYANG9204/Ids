@@ -1159,8 +1159,14 @@ export class StatementParser extends ExpressionParser {
         this.next();
         node.name = this.parseIdentifier();
         if (this.eat(tt._implements)) {
-            node.implements = this.state.value.text;
-            this.next();
+            for (;;) {
+                node.implements.push(this.state.value.text);
+                this.next();
+                if (this.hasPrecedingLineBreak()) {
+                    break;
+                }
+                this.expect(tt.comma);
+            }
         }
         while (!this.eat(tt._end)) {
             switch(this.state.type) {

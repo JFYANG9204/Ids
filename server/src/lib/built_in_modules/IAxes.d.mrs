@@ -5,7 +5,7 @@
 "-----------------------------
 "A collection of Axis objects. Each Axis object is used to describe the content of the side, the top, or a layer of a table.
 !'
-Interface IAxes
+Interface IAxes Implements IEnumerable, Object
 
 '!
 ```ds

@@ -6,7 +6,7 @@
 -----------------------------
 A wrapper to the Logging component.
 !'
-Interface IDataManagerLogging
+Interface IDataManagerLogging Implements Object
 
     '!
     ```ds

@@ -6,7 +6,7 @@
 -----------------------------
 The `Axis` object defines the composition of a table axis. An `Axis` consists of elements and nested axes.
 !'
-Interface IAxis
+Interface IAxis Implements Object
 
     '!
     ```ds

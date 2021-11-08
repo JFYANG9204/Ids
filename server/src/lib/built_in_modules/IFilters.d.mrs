@@ -1,0 +1,97 @@
+
+'!
+```ds
+(interface) IFilters
+```
+-----------------------------
+A collection of `Filter` objects. During population of the table, all filters in the collection are combined (ANDed together).
+!'
+Interface IFilters Implements IEnumerable, Object
+
+    '!
+    ```ds
+    (property) IFilters.Count: Long
+    ```
+    --------------------
+    The number of items in the collection.
+    !'
+    ReadOnly Property Count() As Long
+
+    '!
+    ```ds
+    (property) IFilters.Item[Index: Variant]: Variant
+    ```
+    --------------------
+    Get the collection item at the specified location.
+    !'
+    Property Item(Index As Variant) As Variant
+
+    '!
+    ```ds
+    (property) IFilters.Parent: Variant
+    ```
+    --------------------
+    The parent object
+    !'
+    ReadOnly Property Parent() As Variant
+
+    '!
+    ```ds
+    (method) IFilters.Add(Index: Variant): IFilter
+    ```
+    --------------------
+    Adds a copy of a filter object in the `IDocument.Filters` collection to the current collection.
+
+    ### Remarks
+    The `IDocument.Filters` collection is intended to be used as a 'toolbox' of filters that can be applied to multiple tables. The Add method makes a copy of the filter such that original Filter object can be modified without affecting the per-table filters.
+    !'
+    Function Add(Index As Variant) As IFilter
+    End Function
+
+    '!
+    ```ds
+    (method) IFilters.AddNew(Name: String, Expression: String, [Description: String = \"\"], [Level: String = HDATA], [IsInterviewFilter: Boolean = 0]): IFilter
+    ```
+    --------------------
+    Adds a new `Filter` object to the collection.
+
+    ### Parameters
+    + `Name`: *String* - The filter name. This is used to reference the filter within the collection.
+    + `Expression`: *String* - An *mrEvalulate* expression that is evaluated for each case in the case data. Only cases for which the expression evaluates to True are included.
+    + `Description`: *String* - Filter description
+    + `Level`: *String* - The level the filter is to be applied at. The expression used must be relative to the specified level. The default level is *HDATA*.
+    + `IsInterviewFilter`: *Boolean* - *True* if the new filter is intended to filter based on the interview status. The default is *False*. This flag does not effect the evaluation of the filter, it just allows a distinction to be made between interview and non-interview filters for the purpose of generating table annotations.
+
+    ### Remarks
+    The `Name`, `Expression`, `Description`, `Level`, and `IsInterviewFilter` properties of the new `Filter` object are set as specified by the parameters to this function.
+
+    ### Examples
+    ```ds
+    Table.Filters.AddNew(\"Exclude11_16s\", \"Not age.ContainsAny({e1116_years})\")
+    ```
+    !'
+    Function AddNew(Name As String, Expression As String, Optional Description As String = "", Optional Level As String = "HDATA", Optional IsInterviewFilter As Boolean = 0) As IFilter
+    End Function
+
+    '!
+    ```ds
+    (method) IFilters.Clear(): Void
+    ```
+    --------------------
+    Removes all `Filter` objects from the collection.
+    !'
+    Sub Clear()
+    End Sub
+
+    '!
+    ```ds
+    (method) IFilters.Remove(Index: Variant): Void
+    ```
+    --------------------
+    Removes a `Filter` object from the collection.
+    !'
+    Sub Remove(Index As Variant)
+    End Sub
+
+End Interface
+

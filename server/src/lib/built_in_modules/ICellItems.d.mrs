@@ -6,7 +6,7 @@
 -----------------------------
 The `CellItems` object is a collection of `CellItem` objects. The collection represents the contents of each cell in the populated table. Adding a statistics test may automatically add extra cell items.
 !'
-Interface ICellItems Implements IEnumerable
+Interface ICellItems Implements IEnumerable, Object
 
     '!
     ```ds

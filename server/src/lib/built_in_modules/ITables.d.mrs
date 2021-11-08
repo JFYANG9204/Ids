@@ -6,7 +6,7 @@
 -----------------------------
 A collection of Table objects.
 !'
-Interface ITables
+Interface ITables  Implements IEnumerable, Object
 
     '!
     ```ds

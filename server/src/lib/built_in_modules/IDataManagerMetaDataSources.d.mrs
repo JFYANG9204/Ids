@@ -7,7 +7,7 @@
 -----------------------------
 Get the collection item at the specified location. (This is the default property.)
 !'
-Interface IDataManagerMetaDataSources
+Interface IDataManagerMetaDataSources Implements IEnumerable, Object
 
     '!
     ```ds

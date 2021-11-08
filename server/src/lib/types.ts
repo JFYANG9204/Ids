@@ -1705,7 +1705,7 @@ export class ClassOrInterfaceDeclaration extends NodeBase {
     properties: Array<PropertyDeclaration> = [];
     methods: Array<FunctionDeclaration> = [];
     default?: PropertyDeclaration | FunctionDeclaration;
-    implements?: string;
+    implements: string[] = [];
     constructor(parser: ParserBase, pos: number, loc: Position) {
         super(parser, pos, loc);
         this.type = "ClassOrInterfaceDeclaration";

@@ -6,7 +6,7 @@
 -----------------------------
 A collection object containing weightengine objects.
 !'
-Interface IDataManagerWeightEngines
+Interface IDataManagerWeightEngines Implements IEnumerable, Object
 
     '!
     ```ds

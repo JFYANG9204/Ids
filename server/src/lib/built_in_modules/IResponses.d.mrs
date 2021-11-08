@@ -6,7 +6,7 @@
 -----------------------------
 A collection object containing response objects.
 !'
-Interface IResponses
+Interface IResponses Implements IEnumerable, Object
 
     '!
     ```ds

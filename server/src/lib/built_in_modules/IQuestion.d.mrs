@@ -95,7 +95,7 @@ The list of keywords that should not be used as sub-question names:
 
 *Categories* *Count* *Errors* *Item* *Label* *LayoutTemplate* *ParentQuestion* *Properties* *QuestionName* *QuestionFullName* *QuestionInfo* *QuestionType* *Response* *Style* *Validation*
 !'
-Interface IQuestion
+Interface IQuestion Implements Object
 
     '!
     ```ds

@@ -6,7 +6,7 @@
 -----------------------------
 A collection object that contains LabelInsert objects.
 !'
-Interface ILabelInserts
+Interface ILabelInserts Implements IEnumerable
 
     '!
     ```ds
