@@ -1,0 +1,261 @@
+
+'!
+```ds
+(interface) ITableListNode
+```
+-----------------------------
+The `IDocument.GroupedTables` property represents tables arranged into hierarchical groupings. This can be thought of as groups of tables that can in turn contain other groups, like folders that contain files or other folders.
+
+### Remarks
+The `GroupedTables` property is a `TableListNode`. Each `TableListNode` can reference a Table object and has a collection of child `TableListNode` objects. Although it's possible for a `TableListNode` to both reference a `Table` object and have child `TableListNode` objects it will typically have either one or the other.
+Using the concept of groups of tables, a `TableListNode` with child nodes represents a group and a `TableListNode` that references a table represents a table in a group.
+
+### Example
+The following script will produce 7 tables arranged into 3 groups in the
+following arrangement:
+
+GroupedTables
++ Group1 - Age tables
+    + Table1 - age * gender
+    + Table2 - age * biology
++ Table3 - education * biology
++ Group2 - Gender tables
+    + Table4 - gender * biology
+    + Table5 - gender * before
+    + Group2b - Sub-group of gender tables
+        +Table6 - gender * entrance
++ Table7 - education * age
+
+```ds
+Set TableDoc = CreateObject(\"TOM.Document\")
+TableDoc.DataSet.Load(\"C:\\Program Files\\IBM\\SPSS\\DataCollection\\6\\DDL\\Data\\XML\\museum.mdd\")
+
+Set Group1 = TableDoc.GroupedTables.AddNewNode(\"Group1\", \"Age tables\")
+Group1.AddNewTable(\"Table1\", \"age * gender\", \"Age by Gender\")
+Group1.AddNewTable(\"Table2\", \"age * biology\", \"Age by Biology\")
+TableDoc.GroupedTables.AddNewTable(\"Table3\", \"education * biology\", \"Education by Biology\")
+Set Group2 = TableDoc.GroupedTables.AddNewNode(\"Group2\", \"Gender tables\")
+Group2.AddNewTable(\"Table4\", \"gender * biology\", \"Gender by Biology\")
+Group2.AddNewTable(\"Table5\", \"gender * before\", \"Gender by Before\")
+Set Group2b = Group2.AddNewNode(\"Group2b\", \"Sub-group of Gender tables\")
+Group2b.AddNewTable(\"Table6\", \"gender * entrance\", \"Gender by Entrance\")
+TableDoc.GroupedTables.AddNewTable(\"Table7\", \"education * age\", \"Education by Age\")
+```
+!'
+Interface ITableListNode Implements Object
+
+    '!
+    ```ds
+    (property) ITableListNode.ChildNode[Index: Variant]: ITableListNode
+    ```
+    -----------------------------
+    Returns the specified child node.
+    !'
+    ReadOnly Property ChildNode(Index As Variant) As ITableListNode
+
+    '!
+    ```ds
+    (property) ITableListNode.Count: Long
+    ```
+    -----------------------------
+    The number of child nodes the current node has.
+    !'
+    ReadOnly Property Count() As Long
+
+    '!
+    ```ds
+    (property) ITableListNode.HasChildNodes: Boolean
+    ```
+    -----------------------------
+    *True* if this node has at least one child node
+    !'
+    ReadOnly Property HasChildNodes() As Boolean
+
+    '!
+    ```ds
+    (property) ITableListNode.HasTable: Boolean
+    ```
+    -----------------------------
+    *True* if this node references a table.
+    !'
+    ReadOnly Property HasTable() As Boolean
+
+    '!
+    ```ds
+    (property) ITableListNode.Item[Index: Variant]: ITableListNode
+    ```
+    -----------------------------
+    Returns the specified child node. This is the default property.
+    !'
+    ReadOnly Property Item(Index As Variant) As ITableListNode
+
+    '!
+    ```ds
+    (property) ITableListNode.Name: String
+    ```
+    -----------------------------
+    The name of the node.
+    !'
+    ReadOnly Property Name() As String
+
+    '!
+    ```ds
+    (property) ITableListNode.Parent: Variant
+    ```
+    -----------------------------
+    The parent object
+
+    ### Remarks
+    The `Parent` property of the `TableListNode` object will return either the parent `TableListNode` or a `Document` object
+    !'
+    ReadOnly Property Parent() As Variant
+
+    '!
+    ```ds
+    (property) ITableListNode.Description: String
+    ```
+    -----------------------------
+    A description of the node.
+    !'
+    Property Description() As String
+
+    '!
+    ```ds
+    (property) ITableListNode.Table: ITable
+    ```
+    -----------------------------
+    The table object associated with the node.
+
+    ### Remarks
+    When a `Table` object is removed from the `IDocument.Tables` collection any node that references that `Table` object is also removed.
+    !'
+    Property Table() As ITable
+
+    '!
+    ```ds
+    (method) ITableListNode.AddNewGrid(Name: String, Field: String, [Orientation: DisplayOrientation = doDefault], [Description: String = \"\"], [Index: Long = -1]): ITable
+    ```
+    -----------------------------
+    Adds a new child node that references grid table.
+
+    ### Remarks
+    The `AddNewGrid` method simplifies the three steps that are normally required to add a child node that references a grid table. This steps the `AddNewGrid` method performs are:
+    + Creates a new node using `ITableListNode.AddNewNode()`
+    + Creates a new table using `IDocument.Tables.AddNewGrid()`
+    + Assigns the table to the node using the `ITableListNode.Table` property of the new node
+    The `AddNewGrid` method can be thought of as adding a new table object to a group of tables. The new node will have the same name as the table object. For information about the rest of the parameters see the `ITables.AddNewGrid` method.
+    The `AddNewGrid` method creates a new node and a new table object. Removing the node doesn't automatically remove the table from the `IDocument.Tables` collection as it's possible that other nodes are also referencing the same table. Removing the table from the `IDocument.Tables` collection will however remove all nodes that reference that table.
+    !'
+    Function AddNewGrid(Name As String, Field As String, Optional Orientation As DisplayOrientation = doDefault, Optional Description As String = "", Optional Index As Long = -1) As ITable
+    End Function
+
+    '!
+    ```ds
+    (method) ITableListNode.AddNewNode(Name: String, [Description: String = \"\"], [Index: Long = -1]): ITableListNode
+    ```
+    -----------------------------
+    Adds a new child node
+
+    ### Parameters
+    - `Name`: *String* - The name of the node
+    - `Description`: *String* - An optional description for the node
+    - `Index`: *Long* - The position in the collection to insert the new node. The new node is inserted at the specified integer position. The index of the node that is currently at that position and all following nodes is increased by one. If the index is not specified, or is specified as -1, then the node is appended to the end of the collection.
+
+    ### Return Value
+    The newly added `TableListNode` object.
+
+    ### Remarks
+    The `AddNewNode` method creates a new `TableListNode` object and adds it as a child of the current node.
+
+    ### Examples
+    ```ds
+    Set Group1 = TableDoc.GroupedTables.AddNewNode(\"Group1\", \"A group of related tables\")
+    Group1.AddNewNode(\"Group1b\", \"A sub-group of Group 1\")
+    ```
+    !'
+    Function AddNewNode(Name As String, Optional Description As String = "", Optional Index As Long = -1) As ITableListNode
+    End Function
+
+    '!
+    ```ds
+    (method) ITableListNode.AddNewTable(Name: String, [Specification: String = \"\"], [Description: String = \"\"], [Index: Long = -1]): ITable
+    ```
+    -----------------------------
+    Adds a new child node that references table.
+
+    ### Remarks
+    The `AddNewTable` method simplifies the three steps that are normally required to add a child node that references a table. This steps the `AddNewTable` method performs are:
+    + Creates a new node using `ITableListNode.AddNewNode()`
+    + Creates a new table using `IDocument.Tables.AddNew()`
+    + Assigns the table to the node using the `ITableListNode.Table` property of the new node
+
+    The `AddNewTable` method can be thought of as adding a new `Table` object to a group of tables. The new node will have the same name as the table object. For information about the rest of the parameters see the `ITables.AddNew` method.
+    The `AddNewTable` method creates a new node and a new table object. Removing the node doesn't automatically remove the table from the `IDocument.Tables` collection as it's possible that other nodes are also referencing the same table. Removing the table from the `IDocument.Tables` collection will however remove all nodes that reference that table.
+    !'
+    Function AddNewTable(Name As String, Optional Specification As String = "", Optional Description As String = "", Optional Index As Long = -1) As ITable
+    End Function
+
+    '!
+    ```ds
+    (method) ITableListNode.AddNode(Node: ITableListNode, [Index: Long = -1]): ITableListNode
+    ```
+    -----------------------------
+    Add an existing node as a child of the current node.
+
+    ### Remarks
+    The `AddNode` method can be used to move an existing node to a new position in the hierarchy of nodes. If the node being added still exists at another position in the hierarchy of nodes then it is removed from that position before being added as a child of the current node.
+
+    ### Examples
+    To move *Group1b* which is a child of *Group1* so that it is instead a child of *Group2*:
+    ```ds
+    Set Group1b = TableDoc.GroupedTables[\"Group1\"].ChildNode[\"Group1b\"]
+    TableDoc.GroupedTables[\"Group2\"].AddNode(Group1b)
+    ```
+    !'
+    Function AddNode(Node As ITableListNode, Optional Index As Long = -1) As ITableListNode
+    End Function
+
+    '!
+    ```ds
+    (method) ITableListNode.AddTable(Table: ITable, [Index: Long = -1]): ITableListNode
+    ```
+    -----------------------------
+    Add an existing table as new node that is a child of the current node.
+
+    ### Remarks
+    The `AddTable` method adds a new child node to represent and reference the specified table. The `AddTable` method simplifies the 3 steps that are normally required to achieve this. The steps the `AddTable` method performs are:
+    + Retrieves the name of the table object using ITable.Name
+    + Adds a new node using `ITableListNode.AddNewNode()`
+    + Set the new node to reference the table by setting the `ITableListNode.Table` property of the new node
+
+    ### Examples
+    To add a table called \"Rating\" as a child of the *Group1* node.
+    ```ds
+    Set RatingTable = TableDoc.Table[\"Rating\"]
+    ITableDoc.GroupedTables[\"Group1\"].AddTable(RatingTable)
+    ```
+    !'
+    Function AddTable(Table As ITable, Optional Index As Long = -1) As ITableListNode
+    End Function
+
+    '!
+    ```ds
+    (method) ITableListNode.Clear(): Void
+    ```
+    -----------------------------
+    Removes all child nodes
+    !'
+    Sub Clear()
+    End Sub
+
+    '!
+    ```ds
+    (method) ITableListNode.Remove(Index: Variant): Void
+    ```
+    -----------------------------
+    Removes a child node
+    !'
+    Sub Remove(Index As Variant)
+    End Sub
+
+End Interface

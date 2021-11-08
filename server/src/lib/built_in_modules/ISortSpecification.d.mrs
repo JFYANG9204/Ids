@@ -1,0 +1,93 @@
+
+'!
+```ds
+(interface) ISortSpecification
+```
+-----------------------------
+The `ISortSpecification` object defines the row or column to sort and the sort order (ascending/descending).
+!'
+Interface ISortSpecification Implements Object
+
+    '!
+    ```ds
+    (property) ISortSpecification.IsActive: Boolean
+    ```
+    --------------------
+    *True* if the sort specification is active
+
+    ### Remarks
+    The `IsActive` property is *True* if a value has been set for the *ElementRef* property.
+    !'
+    ReadOnly Property IsActive() As Boolean
+
+    '!
+    ```ds
+    (property) ISortSpecification.Parent: Variant
+    ```
+    --------------------
+    The parent object
+
+    ### Remarks
+    The Parent property of the `SortSpecification` object returns either a `Table` or `TableDefaults` object.
+    !'
+    ReadOnly Property Parent() As Variant
+
+    '!
+    ```ds
+    (property) ISortSpecification.ElementRef: String
+    ```
+    --------------------
+    A reference to the element to sort on
+
+    ### Remarks
+    The reference to the element to sort on is specified as \"AxisName{ElementName}\" where `AxisName` must be the name of an axis within the 'Side' axis for a `SortRow` and the 'Top' axis for a `SortColumn`. `ElementName` must be the name of an element within that axis. Nested axes can be referenced by using the '>' symbol.
+    The first or last row/column can be referenced by specifying the keyword \"First\" or \"Last\" as the `ElementRef`.
+    The single row or column that exists in a frequency table can be referenced by specifying the keyword \"Base\".
+    If no value is specified for the `ElementRef` property then the table is not sorted.
+    `ElementRef` is the default property for the `SortSpecification` object and so is optional as shown in the following examples.
+
+    ### Examples
+    ```ds
+    Table.SortRow = \"\"          ' No sorting
+    Table.SortColumn = \"Base\"   ' Sort on the base column in a frequency table
+    Table.SortRow = \"Age{Base}\"
+    Table.SortRow.ElementRef = \"Age{Base}\"      ' Equivalent to above as ElementRef is the default property
+    Table.SortRow = \"Age{E1116_years}>Gender{Female}\"
+    Table.SortColumn = \"Last\"   ' Sort on the last column in a table (that has multiple columns)
+    ```
+    !'
+    Property ElementRef() As String
+
+    '!
+    ```ds
+    (property) ISortSpecification.Order: OrderConstants
+    ```
+    --------------------
+    The order (ascending/descending) in which to sort the values.
+
+    ### Remarks
+    The `Order` property is *oDescending* by default which means the values are sorted from largest first to smallest last.
+
+    ### Examples
+    ```ds
+    Table.SortRow.Order = 0   ' 0 = oAscending
+    ```
+    !'
+    Property Order() As OrderConstants
+
+    '!
+    ```ds
+    (method) ISortSpecification.Clear(): Void
+    ```
+    --------------------
+    Clears the sort specification
+
+    ### Remarks
+    Clearing the sort specification removes any `ElementRef` value that has been set. It also resets the `Order` property to *oDescending*.
+    !'
+    Sub Clear()
+    End Sub
+
+
+End Interface
+

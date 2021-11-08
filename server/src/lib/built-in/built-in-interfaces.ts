@@ -8277,7 +8277,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                     "```ds",
                     "(property) ITableDefaults.Rules: IRules",
                     "```",
-                "-----------------------------",
+                    "-----------------------------",
                     "A collection of `Rule` objects. These are copied to the `Rules` collection of the `Table` object when a new table is created. This collection is initially empty.",
                 ].join("\n"),
             },

@@ -38,4 +38,6 @@ End Class
 Class Double Implements Long
 End Class
 
+Class Variant
+End Class
 
