@@ -2,13 +2,42 @@
 Class Long
 End Class
 
-Class Date
+Class Date Implements String
 End Class
 
-Class Boolean
+Class Boolean Implements Long
+
+
+    '!
+    ```ds
+    (function) IsSet(Mask: Long): Boolean
+    ```
+    -----------------------------------
+    Returns *True* if an integer value matches a specified mask.
+    + `Mask`: *Long* - Pattern of bits to check.
+    + `return`: *Boolean* - Whether all the bits set in `Mask` are set in `Val`.
+
+    ### Remarks
+    If `Mask` is zero (no bits set), the return value is *True*. If the current data value is *NULL*, `Val` is 0 and the return value is *False*.
+    This function is equivalent to the expression:
+    ```ds
+    BitAnd(Val, Mask) = Mask
+    ```
+
+    ### Examples
+    The following example selects only records where *Respondent.Serial* is an odd number.
+    ```sql
+    SELECT * FROM vdata
+    WHERE Respondent.Serial.IsSet(1)
+    ```
+    !'
+    Function IsSet(Mask As Long) As Boolean
+    End Function
+
+
 End Class
 
-Class Double
+Class Double Implements Long
 End Class
 
 Class String
@@ -1207,6 +1236,98 @@ Class Categorical Implements IEnumerable
     ```
     !'
     Function Right(Length As Long) As Variant
+    End Function
+
+    '!
+    ```ds
+    (function) IsEmpty(): Boolean
+    ```
+    -----------------------------------
+    Returns *True* if the value is empty. An empty string is one that contains no characters or just contains white spaces. An empty category list is one that contains no categories. A *NULL* value is deemed to be empty. Unless *NULL*, other data types are always deemed to be not empty.
+    + `return`: *Boolean* - *True* if `Val` is empty, otherwise *False*.
+
+    ### Remarks
+    If `Val` is *NULL*, the return value is *True*.
+
+    ### Examples
+
+    | Function call  | Value of Q1                 |  Result    |
+    | :------------- | :-------------------------  | :--------- |
+    | IsEmpty(Q1)    | 24 St John's Road, Barnes   |  False     |
+    | IsEmpty(Q1)    |                             |  True      |
+    | Q1.IsEmpty()   | {3}                         |  False     |
+    | Q1.IsEmpty()   | {}                          |  True      |
+    | Q1.IsEmpty()   | 17.50                       |  False     |
+    | Q1.IsEmpty()   | 0.00                        |  False     |
+    | Q1.IsEmpty()   | NULL                        |  True      |
+
+    The *address* variable is a text variable that stores respondents' addresses. However, for some respondents the address has not been recorded and the variable stores an empty string. You could use the following to exclude those respondents:
+    ```ds
+    NOT (address.IsEmpty())
+    ```
+    !'
+    Function IsEmpty() As Boolean
+    End Function
+
+    '!
+    ```ds
+    (function) IsDBNull(): Boolean
+    ```
+    -----------------------------------
+    Returns true if a value is a *NULL* data value that can be used by ADO.
+    + `return`: *Boolean* - *True* if `Val` is a *NULL* data value that can be used by ADO, *False* otherwise.
+
+    ### Remarks
+    ADO requires nulls to be variants of type *VT_NULL*. By default, mrScriptBasic uses type *VT_EMPTY* when setting nulls, and therefore this function can be used to test if a *NULL* data value can be used by ADO.
+
+    ### Examples
+    The following mrScriptBasic example tests a variable to see if its value is a *NULL* data value that can be used by ADO:
+    ```ds
+    If MyVariable.IsDBNull() Then
+        ...                        ' Can be used with ADO
+    End If
+    ```
+    !'
+    Function IsDBNull() As Boolean
+    End Function
+
+    '!
+    ```ds
+    (function) IsOneOf([Vals: Variant ...]): Boolean
+    ```
+    -----------------------------------
+    Returns *true* if a value is equal to at least one of the other listed values.
+    + `Vals`: *Variant* - Variable number of other values.
+    + `return`: *Boolean* - *True* if `Val1` is equal to one or more of `Vals`, otherwise *False*.
+
+    ### Remarks
+    If `Val1` is *NULL* and at least one of `Vals` is *NULL*, the return value is *True*. If `Vals` is not supplied, the return value is *False*.
+    In SQL statements, the `IsOneOf` function can be used in place of the IN operator, which is not supported by the IBM® SPSS® Data Collection Data Model.
+
+    ### Examples
+
+    | Function Call       |  Val1     | Vals                                               | Result |
+    | :--------------     | :-------- | :------------------------------------------------- | :----- |
+    | IsOneOf(Val1, Vals) |  {4}      | {7}, {3}, {4}, {8}                                 | True   |
+    | IsOneOf(Val1, Vals) |  \"song\" | \"Cuckoo\", \"song\", \"is\", \"summer\", \"song\" | True   |
+    | Val1.IsOneOf(Vals)  |  17.9     | 17, 17.4, 17.98                                    | False  |
+    | Val1.IsOneOf(Vals)  |  NULL     | NULL, 0, 1, -1                                     | True   |
+
+    The following example shows the use of the `IsOneOf` function in an SQL query, which will be executed against the Short Drinks sample data set provided with the IBM® SPSS® Data Collection Developer Library:
+    ```sql
+    SELECT respondent.serial AS 'Serial', gender, occup
+    FROM vdata
+    WHERE occup.IsOneOf('sailor', 'doctor', 'soldier', 'postman')
+    ```
+    Here is the result set:
+
+    | Serial | gender   | occup     |
+    | :----- | :------  | :------   |
+    | 100    | {male}   | postman   |
+    | 115    | {female} | doctor    |
+
+    !'
+    Function IsOneOf(Optional ParamArray Vals As Variant) As Boolean
     End Function
 
 End Class

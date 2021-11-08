@@ -1,0 +1,1274 @@
+
+'!
+```ds
+(function) Band(Val: Double, Min: Double, Size: Double, [Count: Long]): Categorical
+```
+-----------------------------------
+Calculates categories (called bands) for a numeric variable and returns the appropriate category for a specified value in the numeric variable.
++ `Val`: *Long* | *Double* - *Variant* value of type *Long* or *Double*.
++ `Min`: *Double* - *Double* value specifying the (inclusive) lower boundary of the first band.
++ `Size`: *Double* - *Double* value specifying the size of each band. If `Size <= 0.0`, an empty *categorical* value is returned.
++ `Count`: *Long* - Optional. The number of bands to define. If omitted or < 0, the number of bands is unlimited.
++ `return`: *Categorical* - *Categorical* value containing the number of the band into whichthe value falls, if it is in the specified range; an empty *categorical* value otherwise.
+
+### Remarks
+The first band is numbered 1.
+The numeric value is considered to fall into band N if
+```ds
+    Val < (Min + N * Size) and
+    Val >= (Min + (N - 1) * Size) and
+      N <= Count (if given)
+```
+If `Val` is *NULL*, the return value is an empty *Categorical* value ({}).
+
+### Examples
+
+| Function call            | Val    | Result   |
+| :---------------------   | :----- | :-----  |
+| Band(Val, 1.0, 5.0, 10)  | 30     | {6}   |
+| Band(Val, 1.0, 5.0, 10)  | 300    | {}   |
+| Band(Val, 1.0, 5.0, 100) | 300    | {60}   |
+| Band(Val, 1.0, 50, 10)   | 300    | {6}   |
+
+The following example could be used to create a derived categorical case data variable from the *visits* numeric variable, which records the number of times respondents have previously visited the museum. This example would create categories corresponding to 1-5 visits, 6-10 visits, 11-15 visits, etc.
+```ds
+visits.Band(1, 5)
+```
+!'
+Function Band(Val As Double, Min As Double, Size As Double, Optional Count As Long) As Categorical
+End Function
+
+'!
+```ds
+(function) BitAnd(Val1: Long, [Vals: Variant ...]): Long
+```
+-----------------------------------
+Performs a bitwise `AND` on two or more numeric values and returns the result.
++ `Val1`: *Long* - First data value.
++ `Vals`: *Variant* - Variable number of other values.
++ `return`: *Long* - All values AND-ed together.
+
+### Remarks
+`Vals` is a list if variants, which are converted to *Long* before they are used. If one or more of them cannot be converted to a *Long* value, an error occurs.
+The return value is a number with only the bits set that are set in `Val1` and in all the other value arguments. If the current data value is *NULL*, `Val1` is 0 and the return value is 0. If no other arguments are supplied, the return value is `Val1`.
+This function is similar to using `And` as a bitwise operator in Visual Basic.
+
+### Examples
+`BitAnd` is useful for testing whether certain bits have been set. For example, some properties store a numeric value in which the bits are used to record true or false values that represent whether various flags have been set. A type definition is typically used to define the various flags. For example, the *Element.Flag* property in the MDM is used to record whether a category is one or more of various special category types, such as *Other Specify*, *Don't know*, or *Exclusive* (which means that the category is single-choice when it is used in a multiple response question). The values are defined in the *CategoryFlagConstants* type definition and because the *Flag* is used as a bit field, it can store more than one \"value\".
+The following mrScriptBasic code snippet loops through a variable's categories and uses the `BitAnd` function to test each one to see whether it is defined as exclusive:
+```ds
+Dim myCategory
+For each myCategory in Field.ElementInstances
+   If BitAnd(myCategory.Flag, CategoryFlagConstants.flExclusive) Then
+      ' This is an exclusive category...
+   End If
+Next
+```
+!'
+Function BitAnd(Val1 As Long, Optional ParamArray Vals As Variant) As Long
+End Function
+
+'!
+```ds
+(function) BitNot(Val: Long): Long
+```
+-----------------------------------
+Performs a bitwise `NOT` on a numeric value and returns the result.
++ `Val`: *Long* - *Data* value.
++ `return`: *Long* - Ones-complement of `Val`.
+
+### Remarks
+The return value is a number with only the bits set that are not set in `Val`. If the current data value is *NULL*, `Val` is 0 and the return value is -1.
+This function is similar to using `Not` as a bitwise operator in Visual Basic.
+
+### Examples
+`BitNot` enables you to refer to all of the bits in a bit pattern apart from one specific bit or group of bits. This is particularly useful when you want to clear certain bits without affecting the other bits. Like the other bit functions, `BitNot`, is useful when working with properties that store a numeric value in which the bits are used to record true or false values that represent whether various flags have been set. Typically a type definition is used to define the various flags.
+For example, the *Element.Flag* property in the MDM is used to record whether a category is one or more of various special category types, such as *Other Specify*, *Don't know*, or *Exclusive* (which means that the category is single-choice when it is used in a multiple response question). The values are defined in the *CategoryFlagConstants* type definition and because the *Flag* is used as a bit field, it can store more than one \"value\".
+This mrScriptBasic example uses `BitNot` in combination with BitAnd to get a category's flags, but without the bit pattern that corresponds to the *flExclusive* flag:
+```ds
+Dim ElemFlags
+
+ElemFlags = BitAnd(MDM.Fields[\"remember\"].Categories[\"Not_answered\"].Flag, _
+   BitNot(CategoryFlagConstants.flExclusive))
+```
+!'
+Function BitNot(Val As Long) As Long
+End Function
+
+'!
+```ds
+(function) BitOr(Val1: Long, [Vals: Variant ...]): Long
+```
+-----------------------------------
+Performs a bitwise `OR` on two or more numeric values and returns the result.
++ `Val1`: *Long* - First data value.
++ `Vals`: *Variant* - Variable number of other values.
++ `return`: *Long* - All values OR-ed together.
+
+### Remarks
+`Vals` is a list if variants, which are converted to *Long* before they are used. If one or more of them cannot be converted to a *Long* value, an error occurs.
+The return value is a number with only the bits set that are set in `Val1` or in at least one of the other value arguments. If the current data value is *NULL*, `Val1` is 0 and the return value is the combination of the other value arguments. If no other arguments are supplied, the return value is `Val1`.
+This function is similar to using `Or` as a bitwise operator in Visual Basic.
+
+### Examples
+`BitOr` is used to combine bit patterns and can be used to test more than one bit at the same time. Like the other bit functions, `BitOr`, is useful when working with properties that store a numeric value in which the bits are used to record true or false values that represent whether various flags have been set. Typically a type definition is used to define the various flags.
+This mrScriptBasic example refers to the MDM *ObjectTypeValue* property, which is used to record an object's types. The values are defined in the *ObjectTypesConstants* type definition. The example uses `BitOr` in combination with `BitAnd` to test for two bit patterns that correspond to the *mtArray* and *mtGrid* constants in the *ObjectTypesConstants* type definition:
+```ds
+Dim MyObject
+
+For Each MyObject In MDM.Fields
+   If BitAnd(MyObject.ObjectTypeValue, _
+         BitOr(ObjectTypesConstants.mtArray, ObjectTypesConstants.mtGrid)) Then
+      ' This is an an Array or Grid object ...
+   End If
+Next
+```
+This is equivalent to:
+```ds
+For Each MyObject In MDM.Fields
+   If BitAnd(MyObject.ObjectTypeValue, ObjectTypesConstants.mtArray) OR _
+         BitAnd(MyObject.ObjectTypeValue, ObjectTypesConstants.mtGrid) Then
+      ' This is an an Array or Grid object ...
+   End If
+Next
+```
+`BitOr` is also useful for making sure that certain bits are set, without affecting the other bits. For example:
+```ds
+Dim ElemFlags
+
+ElemFlags = BitOr(MDM.Fields[\"remember\"].Categories[\"Not_answered\"].Flag, _
+   CategoryFlagConstants.flExclusive)
+```
+!'
+Function BitOr(Val1 As Long, Optional ParamArray Vals As Variant) As Long
+End Function
+
+'!
+```ds
+(function) BitXor(Val1: Long, [Vals: Variant ...]): Long
+```
+-----------------------------------
+Performs a bitwise `XOR` (exclusive `OR`) on two or more numeric values and returns the result.
++ `Val1`: *Long* - First data value.
++ `Vals`: *None* - Variable number of other values.
++ `return`: *Long* - All values exclusively OR-ed together.
+
+### Remarks
+`Vals` is a list of variants, which are converted to *Long* before being used. If one or more of them cannot be converted to a long value, an error occurs.
+The return value is a number with only the bits set that are set in an odd number of the input values `Val1` and the other value arguments. If the current data value is *NULL*, `Val1` is 0 and the return value is the combination of the other value arguments. If no other arguments are supplied, the return value is `Val1`. If only `Val1` and one other value are supplied, the bits set in the return value are those bits that are set in `Val1` or in the other value, but not in both.
+This function is similar to using `Xor` as a bitwise operator in Visual Basic.
+
+### Examples
+`BitXor` can be used for reversing certain bits in a bit pattern. Like the other bit functions, `BitXor`, is useful when working with properties that store a numeric value in which the bits are used to record true or false values that represent whether various flags have been set. Typically a type definition is used to define the various flags. However, be aware that switching bits on and off individually is not generally recommended when using the bit field properties in the IBM® SPSS® Data Collection object models.
+This mrScriptBasic example clears the bit that represents the *vtFilter* usage type constant if it is set and sets it if it is not set:
+```ds
+MyVariable.UsageType = BitXor(MyVariable.UsageType, VariableUsageConstants.vtFilter)
+```
+!'
+Function BitXor(Val1 As Long, Optional ParamArray Vals As Variant) As Long
+End Function
+
+'!
+```ds
+(function) Categorize(Val: Variant, CategorizedVariable: String): Categorical
+```
+-----------------------------------
+Converts the value of a *Numeric*, *Text*, or *Date* value to a *Categorical* value according to the definition of the specified categorical variable.
+
+@Note - The categories must be created before the `Categorize` function can be used. The function does not create categories.
++ `Val`: *Long* | *Double* | *String* | *Date* - *Variant* value of type *Long*, *Double*, *Text*, or *Date*
++ `CategorizedVariable`: *Text* - The name of the *categorical* variable, which will be used to ensure the generated category name exists.
++ `return`: *Categorical* - The converted *Categorical* value related to `Val`.
+
+### Remarks
+The conversion is based on the definition of the categorical variable named in the `CategorizedVariable` parameter. The conversion process starts by generating an MDM name from the value Val. The `MDMName` function is used for this process. When a generated category name does not exist in the specified categorical variable, the ‘Other’ category is returned (if it exists), otherwise the empty *categorical*,*{}*, is returned.
+If the value is *Null* or an empty string, ‘NA’ is returned (if it exists) on the specified variable, otherwise *NULL* is returned.
+
+### Examples
+```ds
+_Queue \"Sample queue\"
+    categorical [1..1]
+     {
+        FRESH \"Fresh\",
+        ACTIVE \"Active\",
+        TIMEDOUT \"Timed Out\",
+        NA \"No Answer\" na,
+        other \"Other\" other
+    };
+```
+The following result is returned:
+```ds
+Result = Categorize(Val, \"_Queue\")
+```
+
+| Val          | Result |
+| :-------     | :------ |
+| \"Active\"   | {ACTIVE}  |
+| \" \"        | {NA}  |
+| \"NoAnswer\" | {other}  |
+
+!'
+Function Categorize(Val As Variant, CategorizedVariable As String) As Categorical
+End Function
+
+'!
+```ds
+(function) CategorizeLoopVariable(Val: Variant, CategorizedVariable: String): Categorical
+```
+-----------------------------------
+Converts the value of a *Numeric*, *Text*, or *Date* value to a *Categorical* value according to the definition of the specified categorical loop variable.
++ `Val`: *None* - *Variant* value of type *Long*, *Double*, *Text*, or *Date*
++ `CategorizedVariable`: *String* - The name of the *categorical* loop variable, which will be used to ensure the generated category name exists and to check if *Other* and *NA* should be used.
++ `return`: *Categorical* - The converted *Categorical* value related to `Val`.
+
+### Remarks
+The function looks up in the parent level of the current level for the `CategorizedVariable` and checks to see if the parent supports `IArray` or the parent is the document level. If no parent level exists for the given `CategorizedVariable`, an error is returned.
+The conversion is based on the definition of the *categorical* loop variable named in the `CategorizedVariable` parameter. The conversion process starts by generating an MDM name from the value `Val`. The `MDMName` function is used for this process.
++ When a generated category name does not exist in the specified *categorical* loop variable, the ‘Other’ category is returned (if it exists), otherwise the empty *categorical*, *{}*, is returned.
++ If the value is an empty string and ‘NA’ is not defined, an empty *categorical*, *{}*, is returned.
++ If the value is *Null* and ‘NA’ is not defined, *NULL* is returned.
+
+### Examples
+```ds
+Model \"Model\"
+loop [1..3] fields -
+(
+    DBID \"DBID\"
+    text [1..20]
+    {
+        Audi1 \"Audi1\" factor(\"Audi1\"),
+        BMW1 \"BMW1\" factor(\"BMW1\"),
+        Ferrari1 \"Ferrari1\" factor(\"Ferrari1\")
+    };
+
+) column expand;
+```
+The following is the metadata script for the derived variable in the “Model” helper fields:
+```ds
+DBCodes \"q1 label\"
+categorical
+{
+    BMW1 \"BMW1\"
+        [
+            Value = 6
+        ]
+    fix keycode(\"Ctrl+1\") factor(\"BMW1\"),
+    other(\"Other\" \"Other\"
+        [
+            IsUserDefined = true,
+            IsForeverHidden = true
+        ]
+    text ) keycode(\"Ctrl+2\")
+} expression(\"SUM(Model.(CategorizeLoopVariable(DBID,\"\"Model.DBCodes\"\")))\", NoDeriveElements) usagetype(\"HelperField\");
+```
+The following result is returned:
+```ds
+Result = CategorizeLoopVariable(DBID, \"Model.DBCodes\")
+```
+
+| DBID    | Result (NA if defined) | Result (NA is not defined)   |
+| :------ | :--------------------  | :------------------------   |
+| \"BMW1\"  | {BMW1}                 | {BMW1}    |
+| \"Audi1\" | {other}                | {other}    |
+| \" \"     | {NA}                   | { }    |
+| NULL    | {NA}                   | NULL    |
+
+!'
+Function CategorizeLoopVariable(Val As Variant, CategorizedVariable As String) As Categorical
+End Function
+
+'!
+```ds
+(function) DBNull(): Variant
+```
+-----------------------------------
+Returns a *NULL* data value for use with ADO.
++ `return`: *Variant* - *Variant* of type *VT_NULL*, containing a *NULL* data value.
+
+### Remarks
+ADO requires nulls to be variants of type VT_NULL. By default, mrScriptBasic uses type *VT_EMPTY* when setting nulls, and therefore this function must be used when setting nulls for use with ADO.
+
+### Examples
+The following mrScriptBasic example sets a variable to a *null* value that can be used with ADO:
+```ds
+Dim MyADOVariable
+
+MyADOVariable = DBNull()
+```
+!'
+Function DBNull() As Variant
+End Function
+
+'!
+```ds
+(function) CreateObject(Class: String): Object
+```
+-----------------------------------
+Creates and returns a reference to an Automation object.
++ `Class`: *String* - The COM class name of the object to be created.
++ `return`: *Object* - The created object.
+
+### Remarks
+If the object cannot be created, an error occurs.
+
+### Examples
+The following mrScriptBasic example uses the CreateObject function as follows:
++ **Line 5** - The CreateObject function is used to create a IBM SPSS Data Collection OLE DB Provider DataLinkHelper object so that the *DisplayWizard* method can be used to display the Data Link Properties dialog box.
++ **Line 12** - The CreateObject function is used to create an ADO Connection object, which is then used to open a connection to the data source and to return a recordset by executing a query against VDATA.
++ **Line 17** - The CreateObject function is used to create a Word Application object, so that the recordset can be inserted into a Word document.
+
+```ds
+Dim Wizard, ConnectionString, wordApp, wordDoc
+
+' Use the Display wizard to open the Data Link Properties
+' dialog box to get the connection string
+Set Wizard = CreateObject(\"mrOleDB.DataLinkHelper\")                 ' Line 5
+ConnectionString = Wizard.DisplayWizard()
+
+If Len(ConnectionString) > 0 Then
+   ' Create a connection and use it to create a recordset
+   ' by executing a query against VDATA
+   Dim adoConnection, adoRS
+   Set adoConnection = CreateObject(\"ADODB.Connection\")             ' Line 12
+   adoConnection.Open(ConnectionString)
+   Set adoRS = adoConnection.Execute(\"SELECT age, gender FROM VDATA WHERE Serial < 10\")
+
+   ' Copy the recordset into Word
+   Set wordApp = CreateObject(\"Word.Application\")                   ' Line 17
+   wordApp.Visible = true
+   Set wordDoc = wordApp.Documents.Add()
+   wordDoc.ActiveWindow.Selection.Text = adoRS.GetString()
+End if
+```
+!'
+Function CreateObject(Class As String) As Object
+End Function
+
+'!
+```ds
+(function) Decode(Expression: Variant, Search: Variant, Result: Variant, [Search1: Variant, Result1: Variant]...[,defaultValue]): Void
+```
+-----------------------------------
+Provides the same functionality as an *IF-THEN-ELSE* statement (used for `OnNextCase` events).
++ `Expression`: *Variant* - The value to compare.
++ `Search`: *Variant* - The value that is compared against `Expression`.
++ `Result`: *Variant* - The returned value if `Expression` is equal to `Search`.
++ `defaultValue`: *Variant* - Optional. If no matches are found, it returns the default. If the default is omitted, then the decode statement returns *null*.
+@note - There are variable pairs for *Search* and *Result*.
+
+### Remarks
+The function searches `Expression` and returns the related `Result` if `Search` is found. Otherwise, the function returns defaultvalue. If defaultvalue is not set, the function returns *null*.
+There are restrictions when using this function:
++ `Expression` can include the following types: *Long*, *Double*, *Text*, *Date*, *Categorical*, *Boolean*.
++ `Expression` and Search should be the same data type; the function will issue an error if they are different.
+
+### Examples
+```ds
+Decode(Expression, \"USA\", \"America\",
+		    \"UK\", \"UnitedKindom\",
+		    \"OtherCountries\")
+```
+The following table shows the Expression and retrieved result values:
+
+| Expression | Result by Decode() |
+| :--------- | :----------------- |
+| “USA”	  | “America”          |
+| “UK”	      | “UnitedKindom”     |
+| “German”   | “OtherCountries”   |
+
+```ds
+Decode(Expression, 1, \"Red\",
+		    2, \"Yellow\")
+```
+The following table shows the `Expression` and retrieved result values:
+
+| Expression | Result by Decode() |
+| :--------- | :----------------- |
+| 1	       | “Red”              |
+| 2          | “Yellow”           |
+| 3          | null               |
+
+!'
+Sub Decode(Expression As Variant, Search As Variant, Result As Variant, Optional ParamArray Search1 As Variant, Optional ParamArray Result1 As Variant, Optional defaultValue As Variant)
+End Sub
+
+'!
+```ds
+(function) EngineVersion([Val: Long = 0], [Number: Boolean = False]): Varaint
+```
+-----------------------------------
+Returns part or all of the engine's version number.
++ `Val`: *Long* - Optional. Which parts of the version number to return, according to the list of options below. Treated as 0 if omitted or not a valid option.
++ `Number`: *Boolean* - Optional. If *True*, a number is returned. If Number is omitted or *False*, a string is returned.
++ `return`: *None* - Part or all of the engine's version number.
+
+### Remarks
+The possible values for `Val` are:
+
+| Value | Description |
+| :---- | :------------------ |
+| 0     | The whole version number as a string in the form \"major.minor.revision.build\". |
+| 1     | The Major version number. |
+| 2     | The Minor version number. |
+| 3     | The Revision number. |
+| 4     | The Build number. |
+| 5     | The Major and Minor version numbers as a string in the form \"major.minor\". |
+| 6     | The Major, Minor and Revision numbers as a string in the form \"major.minor.revision\". |
+
+If `Number` is *True*, a number is returned only when `Val` is set to 1, 2, 3 or 4. In all other cases, a string is returned. If the current data value is *NULL*, `Val` is 0.
+
+### Examples
+The following mrScriptBasic example sets a variable to the Major and Minor version numbers of the mrScriptBasic engine:
+```ds
+Dim MyVariable
+MyVariable = EngineVersion(5)    ' Returns 1.4 (for example)
+```
+!'
+Function EngineVersion(Optional Val As Long = 0, Optional Number As Boolean = False) As Varaint
+End Function
+
+'!
+```ds
+(function) EqualBand(Val: Long | Double, Count: Long, Min: Double, Max: Double): Categorical
+```
+-----------------------------------
+Calculates a specified number of equal categories (called bands) for a numeric variable and returns the appropriate category for a specified value in the numeric variable.
++ `Val`: *Long* | *Double* - Variant value of type *Long* or *Double*.
++ `Count`: *Long* - The number of bands to define between `Min` and `Max`. If `Count` < 1, an empty *categorical* value is returned.
++ `Min`: *Double* - *Double* value specifying the (inclusive) lower bound of the first band.
++ `Max`: *Double* - *Double* value specifying the (exclusive) upper bound of the last band.
++ `return`: *Categorical* - *Categorical* value containing the number of the band into which the value falls, if it is in the specified range; an empty *categorical* value otherwise.
+
+### Remarks
+The first band is numbered 1.
+The numeric value is considered to fall into band N if
+```ds
+Val < Min + N * (Max - Min) / Count and
+Val >= Min + (N - 1) * (Max - Min) / Count
+```
+If `Val` is *NULL*, the return value is an empty *Categorical* value ({}).
+
+### Examples
+
+| Function call               | Val   | Result |
+| :------------               | :---- | :----- |
+| EqualBand(Val, 30, 0, 400)  | 300   | {23}   |
+| EqualBand(Val, 10, 50, 400) | 300   | {8}    |
+
+The following example could be used to create a derived categorical case data variable from the *visits* numeric variable, which records the number of times respondents have previously visited the museum. This example would create ten categories. Respondents who have visited between 1 and 10 times would be in the first category, those who have visited between 11 and 20 times would be in the second category, etc.
+```ds
+visits.EqualBand(10, 1, 100)
+```
+!'
+Function EqualBand(Val As Double, Count As Long, Min As Double, Max As Double) As Categorical
+End Function
+
+'!
+```ds
+(function) Eval(Expr: String): Variant
+```
+-----------------------------------
+Evaluates an expression and returns the result.
++ `Expr`: *String* - Expression to evaluate.
++ `return`: *Variant* - The result of evaluating the expression.
+
+### Remarks
+The input and output locales and the variables in use in the calling program are passed to this function and used to parse and evaluate the expression. When used in an SQL statement, the values of variables that aren't available in the calling program are taken to be *NULL*. However, this does not apply when you use the function in mrScriptBasic.
+The state of the calling program is shared with the new expression, so that any calls to other functions such as Rot and Ran have the same effect as they would if they were called directly by the calling program.
+The type of the return value depends on the type of the expression. If `Expr` is empty, the return value is *NULL*. In a scripting environment, the return value is the value of the first statement in the script.
+How you specify a text string as an argument depends on whether you are using the function in an SQL query or in mrScriptBasic or mrScriptMetadata. In an SQL query, enclose text strings in single quotation marks (' '). In IBM® SPSS® Data Collection Survey Tabulation, mrScriptBasic, and mrScriptMetadata, enclose text strings in double quotation marks (\" \").
+This function is similar to the Eval function in VBScript.
+
+### Examples
+In mrScriptBasic, you can build up a text string and pass it to the Eval function as if the string were an actual expression. For example, in the following mrScriptBasic code, Eval returns 3:
+```ds
+Dim Total
+Total = Eval(\"1 + 2\")
+```
+If the text string passed to `Eval` contains the name of a function, `Eval` returns the return value of the function. For example, in the following code, `Eval` returns the current date and time returned by the `Now` function:
+```ds
+Dim Time
+Time = Eval(\"Now()\")
+```
+The following example returns 97, which is the value returned by the `AscW` function for the \"a\" character:
+```ds
+Dim MyCheck
+MyCheck  = Eval(\"AscW(\"\"a\"\")\")
+```
+If the text string passed to `Eval` in a scripting environment contains more than one statement, Eval executes the statements from left to right but returns the result of the first statement only. For example, the following code includes the mr.CrLf mrScriptBasic constant, which inserts a carriage return/line feed character into a text string. When the code is executed, `Eval` tests whether the initial values of *x* and *y* have the same value and returns *True* or *False* accordingly, and then sets the value of *x* to 5.
+```ds
+Dim Test
+Test = Eval(\"x = y\" + mr.CrLf + \"x = 5\")
+```
+Notice that this result is different from executing the code outside of the `Eval` function in mrScriptBasic, where first *x* would be set to the value of *y* and then *x* would be set to 5:
+```ds
+x = y
+x = 5
+```
+This is because when `x = y` is the first statement passed to Eval, it is interpreted as an expression that tests whether *x* and *y* have the same value, whereas `x = y` is generally interpreted in mrScriptBasic as an assignment statement, where the value of *y* is assigned to *x*.
+Outside of the `Eval` function, the equivalent code would be:
+```ds
+If x = y Then
+End If
+x = 5
+```
+However, if you passed similar code to the `Eval` function you would get an error:
+```ds
+Test = Eval(\"If x = y Then\" + mr.CrLf + \"End If\" + mr.CrLf + \"x = 5\") ' Gives an error
+```
+You should therefore take care to make sure that the string passed to `Eval` is suitable.
+!'
+Function Eval(Expr As String) As Variant
+End Function
+
+'!
+```ds
+(function) EvaluateDerivedIteration(LevelID: String): Variant
+```
+-----------------------------------
+Used by the derived grid feature to look up the value for the variable at the parent level with the same name as the supplied `LevelID` variable. The function takes the name of the `LevelID` and returns the value of that variable down-levelled into the grid level.
++ `LevelID`: *String* - The variable that identifies the current iteration in the grid. This is typically the `LevelID` variable.
++ `return`: *Variant* - The value of variable at the parent level that has the same name as the current iteration.
+
+### Remarks
+The `EvaluateDerivedIteration` function is used to obtain the value of the variable at the parent level that has the same name as the current iteration. The function is used when creating derived grids, where each iteration of the grid is a parent level variable.
+The function can be useful in the following situations:
+- You want to create grids from flat data, and you do not want end users to create these grids on their own.
+- You are scripting tables and want grids, but do not want to set them up in the user interface.
+When setting up derived grids, keep the following tips in mind:
+- The nested variable should have a source type of *sExpression*.
+- The category list of the nested variable should contain the union of the categories referenced by the parent level variables, and the *noDeriveElements* property should be set up.
+- The grid categories (iterators) must match the actual \"next level up\" question names. This ensures that the `LevelID` can be matched to a question name.
+- The *mlExpand* property must be set. You cannot use this function on an unbounded level; the iterator must be *categorical*.
+
+### Examples
+The following example creates a new derived grid variable that is based on three top level variables:
+```ds
+NEWGRID \"\" loop {
+	Rating_BrandA \"BrandA\",
+	Rating_BrandB \"BrandB\",
+	Rating_BrandC \"BrandC
+} fields
+(
+	Rating \"how do you rate this brand?\" categorical [1]
+	{ use \\ratingList -  } expression (\"EvaluateDerivedIteration(LevelID)\");
+) expand grid;
+```
+- The category names (category ID's) for the grid iterator match the question names of the top level questions they look up.
+- The expression `EvaluateDerivedIteration(LevelID)` is added to the Rating question inside the grid.
+!'
+Function EvaluateDerivedIteration(LevelID As String) As Variant
+End Function
+
+'!
+```ds
+(function) Execute(Script: String): Long
+```
+-----------------------------------
+Executes one or more specified statements.
++ `Script`: *String* - Statements to execute.
++ `return`: *Long* - Always zero.
+
+### Remarks
+`Script` is parsed (using the first available parser) and executed. This function can be used from scripts only and you will get an error if you attempt to use it in an expression that is executed by the IBM® SPSS® Data Collection Data Model.
+The input and output locales and the variables in use in the calling program are passed to this function and used when parsing and executing the script. The state of the calling program is shared with the new program, so that any calls to other functions such as Rot and Ran have the same effect as they would if they were called directly by the calling program.
+This function is similar to the Execute function in VBScript.
+
+### Examples
+In the following mrScriptBasic example, `Execute` assigns the value returned by the `DateNow` function to the *MyDate* variable.
+```ds
+Dim MyDate
+Execute(\"MyDate = DateNow()\")
+```
+!'
+Function Execute(Script As String) As Long
+End Function
+
+'!
+```ds
+(function) GetInterface(Object: Object, InterfaceID: String): Object
+```
+-----------------------------------
+Returns an alternate interface for an object.
++ `Object`: *Object* - The object to query for the alternate interface.
++ `InterfaceID`: *String* - The identifier of the interface as a string. This is a string representation of the `Interface ID` in the form {xxxxxx-...-xxxx}
++ `return`: *Object* - The alternate interface for the object.
+
+### Remarks
+An error is returned if the object does not support the requested interface.
+The results may be unpredictable if the alternate interface does not derive from IDispatch.
+
+### Examples
+The following mrScriptBasic example uses the `GetInterface` function to return the *IArray* interface for an MDM Grid object:
+```ds
+Dim MyDocument, MyObject, MyCategory
+Set MyDocument = CreateObject(\"MDM.Document\")
+
+MyDocument.Open(\"C:\\Program Files\\IBM\\SPSS\\DataCollection\\6\\DDL\\Data\\MDD\\short_drinks.mdd\", , _
+    MDMLib.openConstants.oREAD)
+
+' Get the IArray interface for the Grid object named childhhz...
+
+Set MyObject = MyDocument.Fields[\"childhhz\"].GetInterface( _
+    \"{7A17758A-8D4F-4c5d-A9D8-D4CF574D9B14}\")
+
+' The Grid object can now be treated as an Array object. For
+' example, the IArray.Categories property can be used to
+' loop through all the categories of the Grid object...
+
+For Each MyCategory In MyObject.Categories
+    Debug.Log(MyCategory.Name)
+Next
+```
+Here is the output:
+```ds
+YEARS_0_5
+YEARS_6_10
+YEARS_11_15
+```
+!'
+Function GetInterface(Object As Object, InterfaceID As String) As Object
+End Function
+
+'!
+```ds
+(function) IIf(Val: Boolean, TruePart: Varaint, FalsePart: Variant): Variant
+```
+-----------------------------------
+Returns the value passed as the `TruePart` parameter if the expression evaluates to *True*, otherwise returns the value passed as the `FalsePart` parameter.
++ `Val`: *Boolean* - *Boolean* value.
++ `TruePart`: *Variant* - Value of any type, to be returned if `Val` is *True*.
++ `FalsePart`: *Variant* - Value of any type, to be returned if `Val` is *False*.
++ `return`: *Variant* - Either `TruePart` or `FalsePart`.
+
+### Remarks
+If `Val` is *True*, the function returns the value of `TruePart`. Otherwise, it returns the value of FalsePart.
+If the current data value is *NULL*, `Val` is *False* and the return value is `FalsePart`. `TruePart` or `FalsePart` (or both) may be *NULL*.
+
+### Examples
+This example uses IIf to test the value of the *visits* variable and return the text \"Frequent visitor\" if it has a value greater than 5 and a blank string otherwise:
+```ds
+IIf(visits > 5, \"Frequent visitor\", \"\")
+```
+The next example uses `IIf` in a data manipulation statement that is being used to clean \"dirty\" case data. The WHERE clause restricts the data manipulation to cases for which more than one response has been selected for a particular question. The `Rev` function is used to return {0} and {1} in alternating calls. Depending on the result, `SortAsc` and `SortDesc` are called alternately to return the first or last response in the list of responses. Note that the `AnswerCount` function is used to test whether more than one response was selected.
+```ds
+UPDATE vdata
+SET rating_ent[{Fossils}].Column = IIf(Rev({0,1}, 1, 2) = {0},
+    rating_ent[{Fossils}].Column.SortAsc(1),
+    rating_ent[{Fossils}].Column.SortDesc(1))
+WHERE rating_ent[{Fossils}].Column.AnswerCount() > 1
+```
+
+### Usage considerations
+The following behavior should be kept in mind when using the `IIF` function:
+Both `TruePart` and the `FalsePart` are evaluated, regardless of which one is actually returned. For example:
+```ds
+value = 10
+result = IIf(value = 10, TrueFunction, FalseFunction)
+```
+Although `TrueFunction` is the function intended to be called, IIf will cause both `TrueFunction` and `FalseFunction` to be run.
+```ds
+a = 10
+b = 0
+result = IIf(b <> 0, a / b, 0)
+```
+While the above example intends to avoid raising an error by performing a division by zero, whenever b is zero, the error will actually happen. This is due to the fact that the code in the sample will be read as:
+```ds
+a = 10
+b = 0
+_temp1 = a / b ' Error if b = 0
+_temp2 = 0
+_temp3 = b <> 0
+result = IIf(_temp3, _temp1 , _temp2)
+```
+This issue makes the `IIf()` call less useful than the conditional operator.
+!'
+Function IIf(Val As Boolean, TruePart As Varaint, FalsePart As Variant) As Variant
+End Function
+
+'!
+```ds
+(function) InputBox(Prompt: String, [Default: String], [Title: String]): String
+```
+-----------------------------------
+Displays a dialog containing a specified message, a text box for input, an OK button, and a Cancel button.
++ `Prompt`: *String* - Message to display in the dialog box.
++ `Default`: *String* - Optional. Initial contents of the dialog box.
++ `Title`: *String* - Optional. *Text* to display in the title bar.
++ `return`: *String* - Final contents of the text box, or an empty string.
+
+### Remarks
+The user may change the contents of the text box. If the user clicks OK or presses the Enter key, the current contents of the text box are returned. If the user clicks Cancel or presses the Escape key, the return value is \"\". If `Default` is omitted, the text box is initially empty. If `Title` is omitted or is \"\", the dialog's title will be \"IBM® SPSS® Data Collection\".
+The dialog's height is adjusted (up to the height of the screen) to include as much as possible of the *Prompt* text. All text entered in the text box is returned. This is different from the Visual Basic InputBox, which displays only 1023 characters of the prompt, allows only 1023 characters of input, and returns only 254 of the input characters.
+The dialog is modal, meaning that the `InputBox` function does not return until the user closes it, for example, by clicking OK or Cancel. However, if the dialog is being called from a Windows application, the application is not suspended while the dialog is open.
+!'
+Function InputBox(Prompt As String, Optional Default As String, Optional Title As String) As String
+End Function
+
+'!
+```ds
+(function) IsDBNull(Val: Variant): Boolean
+```
+-----------------------------------
+Returns true if a value is a *NULL* data value that can be used by ADO.
++ `Val`: *Variant* - The value to test.
++ `return`: *Boolean* - *True* if `Val` is a *NULL* data value that can be used by ADO, *False* otherwise.
+
+### Remarks
+ADO requires nulls to be variants of type *VT_NULL*. By default, mrScriptBasic uses type *VT_EMPTY* when setting nulls, and therefore this function can be used to test if a *NULL* data value can be used by ADO.
+
+### Examples
+The following mrScriptBasic example tests a variable to see if its value is a *NULL* data value that can be used by ADO:
+```ds
+If MyVariable.IsDBNull() Then
+    ...                        ' Can be used with ADO
+End If
+```
+!'
+Function IsDBNull(Val As Variant) As Boolean
+End Function
+
+'!
+```ds
+(function) IsElementInVersions(Val: Variant, Elem: Variant, Versions: String): Boolean
+```
+-----------------------------------
+Tests whether an element or list exists in all specified versions of a variable.
++ `Val`: *String* - Variant value, used only to specify which MDM object to use.
++ `Elem`: *String* | *Categorical* - *String* or *Categorical* value specifying an element or Elements list in `Val`.
++ `Versions`: *String* - Optional. Names of versions to check.
++ `return`: *Boolean* - Whether the element/list exists in all specified versions of `Val`.
+
+`Val` may refer to any type of MDM object that has elements, for example, *Field*, *Array*, *Grid* or *VariableInstance*, or it may be an Elements list itself.
+If `Elem` is of type *Text*, it is assumed to be the full name or numeric value of either a single Element or an Elements list. If `Elem` is of type Long, it is assumed to be the numeric value of an Element or Elements list. If Elem is of type *Categorical*, its first value is used to specify the Element or Elements list. If `Elem` is empty or *NULL*, the return value is *False*. If `Elem` is of any other type, an error occurs. If `Elem` specifies a value that does not correspond to an Element or Elements list in the MDM document, the return value is *False*.
+`Versions` is a version expression as used in the Open method of an MDM Document. If `Versions` is omitted or blank, all versions of `Val` that are currently selected in the MDM document are used.
+!'
+Function IsElementInVersions(Val As Variant, Elem As Variant, Versions As String) As Boolean
+End Function
+
+'!
+```ds
+(function) IsEmpty(Val: Variant): Boolean
+```
+-----------------------------------
+Returns *True* if the value is empty. An empty string is one that contains no characters or just contains white spaces. An empty category list is one that contains no categories. A *NULL* value is deemed to be empty. Unless *NULL*, other data types are always deemed to be not empty.
++ `Val`: *Variant* - Variant value to be tested.
++ `return`: *Boolean* - *True* if `Val` is empty, otherwise *False*.
+
+### Remarks
+If `Val` is *NULL*, the return value is *True*.
+
+### Examples
+
+| Function call  | Value of Q1                 |  Result    |
+| :------------- | :-------------------------  | :--------- |
+| IsEmpty(Q1)    | 24 St John's Road, Barnes   |  False     |
+| IsEmpty(Q1)    |                             |  True      |
+| Q1.IsEmpty()   | {3}                         |  False     |
+| Q1.IsEmpty()   | {}                          |  True      |
+| Q1.IsEmpty()   | 17.50                       |  False     |
+| Q1.IsEmpty()   | 0.00                        |  False     |
+| Q1.IsEmpty()   | NULL                        |  True      |
+
+The *address* variable is a text variable that stores respondents' addresses. However, for some respondents the address has not been recorded and the variable stores an empty string. You could use the following to exclude those respondents:
+```ds
+NOT (address.IsEmpty())
+```
+!'
+Function IsEmpty(Val As Variant) As Boolean
+End Function
+
+'!
+```ds
+(function) IsEqualObject(Val1: Object, Val2: Object): Boolean
+```
+-----------------------------------
+Returns *True* if two values refer to the same object.
++ `Val1`: *Object* - The first value to test.
++ `Val2`: *Object* - The second value to test.
++ `return`: *Boolean* - *True* if `Val1` and `Val2` refer to the same object or are both *NULL*, otherwise *False*.
+
+### Examples
+The following mrScriptBasic example tests two variables to see if they refer to the same object:
+```ds
+If MyVariable1.IsEqualObject(MyVariable2) Then
+    ...                          ' The same object, or both NULL
+Else
+    ...                          ' Not the same object
+End If
+```
+!'
+Function IsEqualObject(Val1 As Object, Val2 As Object) As Boolean
+End Function
+
+'!
+```ds
+(function) IsNullObject(Val: Variant): Boolean
+```
+-----------------------------------
+Returns *true* if an variable is *NULL*, without testing the default property of the object being referenced.
++ `Val`: *Variant* - The value to test.
++ `return`: *Boolean* - *True* if `Val` is *NULL*, *False* otherwise.
+
+### Examples
+The following mrScriptBasic example uses the `IsNullObject` function to test if a variable is *NULL*:
+```ds
+Dim Identifier, Identifiers
+Set Identifier = CreateObject(\"mrEvaluate.Identifier\")
+Set Identifiers = CreateObject(\"mrEvaluate.Identifiers\")
+
+Identifier.Name = \"MyID\"
+Identifier.Value = NULL
+Identifiers.Add(Identifier)
+
+Set Identifier = Identifiers.FindItem(\"MyID\")
+
+If Identifier.IsNullObject() Then
+    Debug.Log(\"MyID not found\")
+Else
+    Debug.Log(\"MyID found\")
+End If
+```
+This script will correctly output the message \"MyID found\" because the value of *Identifier* is not *NULL*. However, if *Identifier* was tested using the following line instead, the message \"MyID not found\" would be output:
+```ds
+If Identifier Is Null Then
+```
+This is because although *Identifier* is not *NULL*, the value of its default property (*Identifier.Value*) is *NULL*.
+!'
+Function IsNullObject(Val As Variant) As Boolean
+End Function
+
+'!
+```ds
+(function) IsOneOf(Val1: Variant, [Vals: Variant ...]): Boolean
+```
+-----------------------------------
+Returns *true* if a value is equal to at least one of the other listed values.
++ `Val1`: *Variant* - The value to test.
++ `Vals`: *Variant* - Variable number of other values.
++ `return`: *Boolean* - *True* if `Val1` is equal to one or more of `Vals`, otherwise *False*.
+
+### Remarks
+If `Val1` is *NULL* and at least one of `Vals` is *NULL*, the return value is *True*. If `Vals` is not supplied, the return value is *False*.
+In SQL statements, the `IsOneOf` function can be used in place of the IN operator, which is not supported by the IBM® SPSS® Data Collection Data Model.
+
+### Examples
+
+| Function Call       |  Val1     | Vals                                               | Result |
+| :--------------     | :-------- | :------------------------------------------------- | :----- |
+| IsOneOf(Val1, Vals) |  {4}      | {7}, {3}, {4}, {8}                                 | True   |
+| IsOneOf(Val1, Vals) |  \"song\" | \"Cuckoo\", \"song\", \"is\", \"summer\", \"song\" | True   |
+| Val1.IsOneOf(Vals)  |  17.9     | 17, 17.4, 17.98                                    | False  |
+| Val1.IsOneOf(Vals)  |  NULL     | NULL, 0, 1, -1                                     | True   |
+
+The following example shows the use of the `IsOneOf` function in an SQL query, which will be executed against the Short Drinks sample data set provided with the IBM® SPSS® Data Collection Developer Library:
+```sql
+SELECT respondent.serial AS 'Serial', gender, occup
+FROM vdata
+WHERE occup.IsOneOf('sailor', 'doctor', 'soldier', 'postman')
+```
+Here is the result set:
+
+| Serial | gender   | occup     |
+| :----- | :------  | :------   |
+| 100    | {male}   | postman   |
+| 115    | {female} | doctor    |
+
+!'
+Function IsOneOf(Val1 As Variant, Optional ParamArray Vals As Variant) As Boolean
+End Function
+
+'!
+```ds
+(function) IsSet(Val: Long, Mask: Long): Boolean
+```
+-----------------------------------
+Returns *True* if an integer value matches a specified mask.
++ `Val`: *Long* - Data value to test.
++ `Mask`: *Long* - Pattern of bits to check.
++ `return`: *Boolean* - Whether all the bits set in `Mask` are set in `Val`.
+
+### Remarks
+If `Mask` is zero (no bits set), the return value is *True*. If the current data value is *NULL*, `Val` is 0 and the return value is *False*.
+This function is equivalent to the expression:
+```ds
+BitAnd(Val, Mask) = Mask
+```
+
+### Examples
+The following example selects only records where *Respondent.Serial* is an odd number.
+```sql
+SELECT * FROM vdata
+WHERE Respondent.Serial.IsSet(1)
+```
+!'
+Function IsSet(Val As Long, Mask As Long) As Boolean
+End Function
+
+'!
+```ds
+(function) RGB(Red: Long, Green: Long, Blue: Long): Long
+```
+-----------------------------------
++ `Red`: *Long* - Red value.
++ `Green`: *Long* - Green value.
++ `Blue`: *Long* - Blue value.
++ `return`: *Long* - Color value.
+
+### Remarks
+The return value is an RGB color value using the given intensities of red, green and blue. If any of the input values is less than 0, it is converted to 0. If any of the input values is greater than 255, it is converted to 255.
+This function is similar to the `RGB` function in Visual Basic.
+
+### Examples
+This example shows how the RGB function can be used to return a whole number that represents the RGB value for the color yellow:
+```ds
+Dim Yellow
+Yellow = RGB(255, 255, 0)
+```
+!'
+Function RGB(Red As Long, Green As Long, Blue As Long) As Long
+End Function
+
+'!
+```ds
+(function) SampleCategorize(Val: Variant, CategorizedVariable: String): Variant
+```
+-----------------------------------
+A simple version of the `Categorize` function that is used with the Sample Reporting MDSC (Phone Reports).
++ `Val`: *Variant* - Variant value of type *Long*, *Double*, *Text*, or *Date*
++ `CategorizedVariable`: *String* - The name of the *categorical* variable, which will be used to ensure the generated category name exists.
++ `return`: *Variant* - If the generated category name exists in the metadata, the category is returned, otherwise *NULL* is returned.
+
+### Remarks
+Similar to `Categorize`, the conversion process starts by generating an MDM name from the value `Val`. The `MDMName` function is used for this process. If the generated category name exists in the metadata, the category is returned, otherwise *NULL* is returned.
+Unlike `Categorize`, `SampleCategorize` does not return *NA* or *Other* based on a variable definition.
+
+### Examples
+```ds
+_Queue \"Sampe queue\"
+    categorical [1..1]
+     {
+        FRESH \"Fresh\",
+        ACTIVE \"Active\",
+        TIMEDOUT \"Timed Out\",
+        NA \"No Answer\" na,
+        other \"Other\" other
+    };
+```
+The following result is returned:
+```ds
+Result = SampleCategorize(Val, \"_Queue\")
+```
+
+| Val           | Result    |
+| :----------   | :-----    |
+| \"Active\"    | {ACTIVE}  |
+| \" \"         | NULL  |
+| \"NoAnswer\"  | NULL  |
+
+!'
+Function SampleCategorize(Val As Variant, CategorizedVariable As String) As Variant
+End Function
+
+'!
+```ds
+(function) ShellExecute(File: String, [HWnd: Long], [Verb: String], [Parameters: String], [Directory: String], [ShowCmd: Long]): Long
+```
+-----------------------------------
+Performs an operation on a specified file.
++ `File`: *String* - File or object on which to execute the specified verb.
++ `HWnd`: *Long* - Optional. Handle to a parent window. This window receives any message boxes that the invoked application produces, such as error reporting. If omitted, message boxes will not be tied to a window.
++ `Verb`: *String* - Optional. Action to be performed. If omitted, the default verb for the file type is used if it is valid; otherwise, the \"open\" verb is used. For Windows 2000 and later systems, if neither verb is available, the first available verb for the file type is used.
++ `Parameters`: *String* - Optional. If `File` is an executable file, the parameters to be passed to the application. Otherwise, ignored.
++ `Directory`: *String* - Optional. Default directory for the application. The default is the current directory.
++ `ShowCmd`: *Long* - Optional. A value that specifies how the application is to be displayed. The default is 1. Possible values are shown in the table below.
++ `return`: *Long* - A value greater than 32.
+
+The following table shows the possible values for the `ShowCmd` parameter.
+
++ **0** - Hides the window and activates another window.
++ **1** - Activates and displays a window. If the window is minimized or maximized, Windows restores it to its original size and position. An application should specify this flag when displaying the window for the first time.
++ **2** - Activates the window and displays it as a minimized window.
++ **3** - Activates the window and displays it as a maximized window.
++ **4** - Displays a window in its most recent size and position. The active window remains active.
++ **5** - Activates the window and displays it in its current size and position.
++ **6** - Minimizes the specified window and activates the next top-level window in the z-order.
++ **7** - Displays the window as a minimized window. The active window remains active
++ **8** - Displays the window in its current state. The active window remains active.
++ **9** - Activates and displays the window. If the window is minimized or maximized, Windows restores it to its original size and position. An application should specify this flag when restoring a minimized window.
++ **10** - Sets the show state based on the SW_ flag specified in the STARTUPINFO structure passed to the CreateProcess function by the program that started the application. An application should call ShowWindow with this flag to set the initial show state of its main window.
+
+### Remarks
+If the command cannot be executed, an error occurs.
+@note - If you want your script to wait for the program to finish before continuing, use the `WshShell` object that is part of the Microsoft Windows Script Host object model.
+
+### Examples
+The following example opens the Short Drinks example .mdd file in IBM® SPSS® Data Collection Questionnaire Viewer:
+```ds
+ShellExecute(\"[INSTALL_FOLDER]\\IBM\\SPSS\\DataCollection\\6\\DDL\\Data\\Mdd\\short_drinks.mdd\")
+```
+The following example opens the IBM® SPSS® Data Collection Metadata Model Version Utility:
+```ds
+ShellExecute(\"[INSTALL_FOLDER]\\IBM\\SPSS\\DataCollection\\6\\\\Accessories\\MDMVersionUtility.exe\")
+```
+The following example opens a specified text file in Wordpad, and maximizes the window:
+```ds
+ShellExecute(\"C:\\Program Files\\Windows NT\\Accessories\\Wordpad.exe\", , , \"C:\\Samples\\funlib.txt\", , 3)
+```
+!'
+Function ShellExecute(File As String, Optional HWnd As Long, Optional Verb As String, Optional Parameters As String, Optional Directory As String, Optional ShowCmd As Long) As Long
+End Function
+
+'!
+```ds
+(function) Sleep(Val: Long)
+```
+-----------------------------------
+Suspends the thread in which it is called.
++ `Val`: *Long* - Number of milliseconds to suspend the thread for.
+
+### Remarks
+This function suspends the thread in which the function is called for at least the time specified by Val. If there are other threads in the process, they will continue to execute. After Val milliseconds have elapsed, the next time the system is ready to resume the thread that was suspended, it will continue execution and this function will return.
+The return value is not useful.
+
+### Examples
+The following mrScriptBasic example suspends the thread for at least two seconds:
+```ds
+Sleep(2000)
+```
+!'
+Sub Sleep(Val As Long)
+End Sub
+
+'!
+```ds
+(function) Validate(Val: Variant, [Min: Double], [Max: Double], [Expr: String], [Describe: Boolean]): Boolean
+```
+-----------------------------------
+Validates a specified value based on specified minimum and maximum values and optionally a validating expression.
++ `Val`: *Variant* - The value to test.
++ `Min`: *Double* - Optional. The minimum value allowed. The default is -1.79769313486232e308.
++ `Max`: *Double* - Optional. The maximum value allowed. The default is 1.79769313486232e308.
++ `Expr`: *String* - Optional. Expression for a text, numeric, or date value. For a numeric or date value, the expression can specify one or more valid ranges. For a text value, the expression defines a regular expression that can be used to validate the text.
++ `Describe`: *Boolean* - Optional. Whether to generate a description for a failed test. The default is *False*
++ `return`: *Boolean* - *True* if `Val` fits the conditions, *False* otherwise.
+
+### Remarks
+The following table explains the conditions in which `Validate` returns *False*. In all other cases, `Validate` returns *True*. Note that if `Val` is *Null* or a *Boolean* or *Object* value, `Min`, `Max` and `Expr` are ignored, and the return value is always *True*.
+When Val is:
+- **Text** -
+    - `Min` is supplied and `Val` has fewer than `Min` characters.
+    - `Max` is supplied and `Val` has more than `Max` characters.
+    - `Expr` is supplied and `Val` doesn’t match the regular expression (see below). Note that the whole text value needs to match the expression in order to pass validation.
+- **Numeric (Long or Double)** -
+    - `Min` is supplied and `Val < Min`
+    - `Max` is supplied and `Val > Max`.
+    - `Expr` is supplied and `Val` isn’t in any of the defined valid ranges (see below).
+- **Categorical** -
+    - `Min` is supplied and `Val` has fewer than `Min` responses.
+    - `Max` is supplied and `Val` has more than `Max` responses.
+- **Date** -
+    - `Min` is supplied and `Val` is earlier than the date whose internal representation is `Min`.
+    - `Max` is supplied and `Val` is later than the date whose internal representation is `Max`.
+    - `Expr` is supplied and `Val` isn't in any of the defined valid ranges (see below).
+
+Since the `Expr` argument is a string, it must be enclosed in double quotation marks (double quotation marks in a script or filter in IBM® SPSS® Data Collection Survey Tabulation, single quotation marks in an SQL query). If the expression itself contains quotation marks, they should be duplicated within the string. For example, in a script, the function call `Name.Validate(2, 80, \"[^\"\"]*\")` will result in the Expr argument having the value `[^\"]*`.
+If *Describe* is *True* and `Validate` returns *False*, it generates an error message describing the failed validation (formatted using the output locale) and stores it on the current thread. This means that any calling code that instantiates the Function Library objects and calls the `Validate` function directly can immediately inspect the thread's error information if the validation fails. Note that the next call to a function will clear the stored error information, so it must be inspected as soon as possible after the call to `Validate`. It is not possible to access the error message when `Validate` is called in SQL or mrScriptBasic.
+
+#### Range expression syntax
+When you use the Expr parameter to define a range expression to be used to validate a numeric or date value, the expression can contain one or more ranges, separated by commas. The syntax for a range is as follows:
++ An optional negation operator, which is the caret symbol (^).
++ An optional lower bound value.
++ An optional upper bound value.
++ If both values are supplied, they must be separated by the range operator, which is two periods with no space in between (..).
++ The range operator can appear when either or both values are missing.
++ A range lower or upper bound value is a sequence of characters that can be interpreted as a floating point number (if Val is Long or Double), or as a date or a floating point number (if `Val` is a *Date*), according to the given input locale.
++ Any value can optionally be enclosed in single or double quotation marks. This is necessary if the value contains either a comma or a pair of periods, in order that they are not interpreted as separators between ranges or between range values.
+
+The following table provides some examples.
+
+| Range Expression                     | Description  |
+| :------------------------------      | :-------------------------  |
+| 5 .. 25                              | `Val` must be >= 5 and <= 25.  |
+| ^ 5 .. 25                            | `Val` must not be >= 5 and <= 25 (in other words, it must be < 5 or > 25).  |
+| .. 10, 20, 30 .., ^70                | `Val` must be <= 10, or 20, or >= 30, but not 70.  |
+| '10,5' .. \"11,5\", ^ '11,0'         | With a Danish (or similar) input locale, `Val` must be >= 10.5 and <= 11.5, but not 11.0.  |
+| 'Jan 1, 1960' .. 1980-12-31 23:59:59 | `Val` must be (a date) later than or equal to 00:00:00 on January 1st 1960 and before or equal to 23:59:59 on December 31st 1980.  |
+| ..                                   | Any value is allowed.  |
+| ^                                    | No value is allowed.  |
+
+#### Regular expression syntax
+Regular expressions are a concise and flexible notation that can be used for defining and validating patterns of text. The Function Library uses the Boost technology for regular expressions.
+When a regular expression contains characters, it usually means that the text being searched must match those characters. However, regular expressions use a number of characters that have a special meaning. The following table provides a summary of the most common special characters used in regular expressions. (The special characters are shown in bold and are case sensitive--for example, \\U is not the same as \\u.) Note that the whole text value needs to match the expression in order to pass validation.
+
+| Regular Expression | Description  |
+| :----------------- | :-------------------------------  |
+| .                  | Any character (including newline).  |
+| [abcn-z]           | Any of the characters a, b, c, n, o, p, ..., z.  |
+| \\w                | Any alphanumeric character (including accents) or underscore (_).  |
+| \\l                | Any lower-case character (including accents).  |
+| \\u                | Any upper-case character (including accents).  |
+| \\d                | Any numeric character.  |
+| \\s                | A whitespace character.  |
+| xxx|yyy            | Either xxx or yyy.  |
+| (xxx)              | Grouping (subexpression).  |
+| x*                 | Zero or more occurrences of x.  |
+| x+                 | One or more occurrences of x.  |
+| x?                 | Zero or one occurrences of x.  |
+| (xxx){m}           | Exactly m occurrences of xxx.  |
+| (xxx){m,n}         | At least m and at most n occurrences of xxx.  |
+| \\                 | The escape character that you use to match characters that have a special meaning in regular expressions, such as the following characters , . ? { } [ ] ( ) $ ^ *. For example, to match the { character, you would specify {.  |
+
+### Examples
+
+#### 1. Validating a numeric variable
+The following SQL example provides a simple example of using the Validate function to test whether the value in a numeric variable is within a given range. In this example, the range has been specified using the `Min` and `Max` parameters.
+```sql
+SELECT Respondent.Serial,
+    Visits,
+    Validate(Visits, 5, 10) AS Valid
+FROM vdata
+WHERE Visits IS NOT NULL
+```
+Here are the results for the first five respondents in the result set:
+
+| Respondent.Serial | Visits | Valid   |
+| :---------------  | :----- | :----   |
+| 1                 | 1      | False   |
+| 4                 | 6      | True    |
+| 5                 | 2      | False   |
+| 6                 | 1      | False   |
+| 7                 | 1      | False   |
+
+We could achieve exactly the same results by specifying a range expression in the `Expr` parameter instead of using the `Min` and `Max` parameters:
+```sql
+SELECT Respondent.Serial,
+    Visits,
+    Visits.Validate(, , '5..10') AS Valid
+FROM vdata
+WHERE Visits IS NOT NULL
+```
+Notice that this time instead of passing the name of the variable (*Visits*) as a parameter, we have preceded the function call with the variable's name and omitted the variable parameter. This is an alternative way of calling the function.
+Using the `Expr` parameter enables you to specify quite complex requirements. When you are filtering data, using the `Validate` function and a range expression can be easier than defining the filter using a complex expression. For example, in the following example, `Validate` has been used in the WHERE clause to select respondents for whom the Visits variable has a value from 5 to 10, with the exception of 7, or a value of 50 or more.
+```sql
+SELECT Respondent.Serial, Visits
+FROM vdata
+WHERE Visits IS NOT NULL
+    AND Validate(Visits, , , '5..10, ^7, 50..')
+```
+Note that `IS NOT NULL` has been used to exclude respondents for whom the *Visits* variable stores *Null*. If we remove this from the `WHERE` clause, all the respondents for whom the *Visits* variable stores *Null* will be included, because `Validate` always returns *True* when the value is *Null*.
+#### 2. Validating a text variable
+You can use the `Validate` function to check whether a text response meets certain requirements. For example, you can check that it has a specified number of characters, is all uppercase, is a valid product or postal code, etc. The following example, uses `Validate` to test whether an input text is a valid email address. (It doesn't check that the email address actually exists, it just checks that the text is a valid combination of characters--in this case, any combination of alphanumeric, hyphen, and period characters followed by the at sign (@), followed by any combination of alphanumeric, hyphen, and period characters.)
+```ds
+Dim Valid
+Valid = Validate(\"John-Smith@SPSS.com\", , , \"[-.\\w]+\\@[-.\\w]+\")
+```
+The next example tests that a product code is made up of two uppercase letters followed by a hyphen (-) followed by eight numbers.
+```ds
+Dim Valid
+Valid = Validate(\"ID-86442000\", , , \"\\u{2}-\\d{8}\")
+```
+The next example is an SQL query that can be run on the *Museum* sample data. This query uses `Validate` to check that the texts stored in the *Name* variable are between one and 45 characters long and are composed of one or more words separated by single spaces, with no punctuation.
+```sql
+SELECT Respondent.Serial,
+    Name,
+    Name.Validate(1, 45, '\\w+(\\s\\w+)+')
+FROM vdata
+```
+!'
+Function Validate(Val As Variant, Optional Min As Double, Optional Max As Double, Optional Expr As String, Optional Describe As Boolean) As Boolean
+End Function
+
+'!
+```ds
+(function) VarType(Val: Long): Long
+```
+-----------------------------------
+Returns a numeric value indicating the type of a variable.
++ `Val`: *Long* - The data value.
++ `return`: *Long* - The type of `Val`.
+
+### Remarks
+The return value is a number representing the type of `Val`, as shown in the following table.
+
+| Value  | Description          |
+| :----- | :-----------         |
+| 0      | None (Val is NULL)   |
+| 1      | Long                 |
+| 2      | Text                 |
+| 3      | Categorical          |
+| 4      | Object               |
+| 5      | Date                 |
+| 6      | Double               |
+| 7      | Boolean              |
+
+An error occurs if `Val` has any other type.
+This function is similar to the `VarType` function in Visual Basic.
+
+### Examples
+
+The following mrScriptBasic example uses the `VarType` function to determine the type of a variable:
+```ds
+Dim MyVar, MyTest
+
+MyVar = 34
+MyTest = VarType(MyVar)     ' Returns 1
+
+MyVar = \"Hullo\"
+MyTest = VarType(MyVar)     ' Returns 2
+
+MyVar = {1, 2, 3, 4}
+MyTest = VarType(MyVar)     ' Returns 3
+```
+!'
+Function VarType(Val As Long) As Long
+End Function
+
+'!
+```ds
+(function) VarTypeName(Val: Long): String
+```
+-----------------------------------
+Returns a string indicating the type of a variable.
++ `Val`: *Long* - The data value.
++ `return`: *Text* - The type of `Val`.
+
+### Remarks
+The return value is a string representing the type of `Val`, as shown in the following table.
+
+| Value           | Description |
+| :-------------- | :-------------  |
+| \"None\"        | None (Val is NULL)  |
+| \"Long\"        | Long    |
+| \"Text\"        | Text    |
+| \"Categorical\" | Categorical |
+| \"Object\"      | Object  |
+| \"Date\"        | Date    |
+| \"Double\"      | Double  |
+| \"Boolean\"     | Boolean |
+
+An error occurs if `Val` has any other type.
+This function is similar to the `TypeName` function in Visual Basic.
+
+### Examples
+The following mrScriptBasic example uses the `VarTypeName` function to determine the type of a variable:
+```ds
+Dim MyTest, MyVar
+
+MyVar = 34
+MyTest = VarTypeName(MyVar)     ' Returns \"Long\"
+
+MyVar = \"Hullo\"
+MyTest = VarTypeName(MyVar)     ' Returns \"Text\"
+
+MyVar = {1, 2, 3, 4}
+MyTest = VarTypeName(MyVar)     ' Returns \"Categorical\"
+```
+!'
+Function VarTypeName(Val As Long) As String
+End Function
+
+
+
+
+
