@@ -22,7 +22,7 @@ Interface ITable
 
     '!
     ```ds
-    (property) ITable.AvailableLevels: Variant[]
+    (property) ITable.AvailableLevels: Array
     ```
     --------------------
     A list of levels that the table can be aggregated at.
@@ -30,7 +30,7 @@ Interface ITable
     ### Remarks
     If the `IDataSet.View` property is set to *dvHDATA* then it is possible to set the level at which data processing occurs. This property is an array of level names that are able to be used as the value for the Level property. The list of available levels depends on the variables that are currently being used on the table.
     !'
-    ReadOnly Property AvailableLevels() As Variant[]
+    ReadOnly Property AvailableLevels() As Array
 
     '!
     ```ds

@@ -386,6 +386,18 @@ export class StatementParser extends ExpressionParser {
     parseSingleVarDeclarator(): SingleVarDeclarator | ArrayDeclarator {
         const node = this.startNode(SingleVarDeclarator);
         node.name = this.parseIdentifier();
+        if (this.match(tt.braceL)) {
+            if (node.name.name.toLowerCase() !== "ienumerable") {
+                this.unexpected();
+            }
+            this.checkIfDeclareFile("IEnumerable");
+            this.eat(tt.braceL);
+            this.expect(tt._of);
+            node.name = this.parseIdentifier();
+            this.expect(tt.braceR);
+            node.enumerable = true;
+            return this.finishNode(node, "SingleVarDeclarator");
+        }
         if (this.eat(tt._as)) {
             node.valueType = this.state.value.text;
             if (this.options.sourceType !== SourceType.declare) {
@@ -992,6 +1004,9 @@ export class StatementParser extends ExpressionParser {
         if (this.eat(tt._optional)) {
             node.optional = true;
         }
+        if (this.eat(tt._paramarray)) {
+            node.paramArray = true;
+        }
         if (this.lookahead().type === tt.bracketL) {
             node.declarator = this.parseArrayDeclarator();
         } else {
@@ -1015,17 +1030,9 @@ export class StatementParser extends ExpressionParser {
                 this.next();
             } else {
                 params.push(this.parseArgumentDeclarator());
+                comma = false;
             }
         }
-        params.forEach(param => {
-            if (param instanceof Identifier) {
-                this.scope.currentScope().insert(
-                    param.name,
-                    param,
-                    BasicTypeDefinitions.variant
-                );
-            }
-        });
         return params;
     }
 
@@ -1151,6 +1158,10 @@ export class StatementParser extends ExpressionParser {
         this.checkIfDeclareFile(this.state.value.text);
         this.next();
         node.name = this.parseIdentifier();
+        if (this.eat(tt._implements)) {
+            node.implements = this.state.value.text;
+            this.next();
+        }
         while (!this.eat(tt._end)) {
             switch(this.state.type) {
                 case tt._default:

@@ -1,0 +1,72 @@
+
+'!
+```ds
+(interface) ICellItems
+```
+-----------------------------
+The `CellItems` object is a collection of `CellItem` objects. The collection represents the contents of each cell in the populated table. Adding a statistics test may automatically add extra cell items.
+!'
+Interface ICellItems Implements IEnumerable
+
+    '!
+    ```ds
+    (property) ICellItems.Count: Long
+    ```
+    --------------------
+    The number of items in the collection.
+    !'
+    ReadOnly Property Count() As Long
+
+    '!
+    ```ds
+    (property) ICellItems.Item[Index: Variant]: ICellItem
+    ```
+    --------------------
+    Returns a specified item in the collection.
+    !'
+    ReadOnly Property Item(Index As Variant) As ICellItem
+
+    '!
+    ```ds
+    (property) ICellItems.Parent: Variant
+    ```
+    --------------------
+    The parent object
+
+    ### Remarks
+    The `Parent` property of the `CellItems` object will return either a `Table`, `TableDefaults` or `TableGlobals` object.
+    !'
+    ReadOnly Property Parent() As Variant
+
+    '!
+    ```ds
+    (method) ICellItems.AddNew(Type: CellItemType, [Decimals: Long = 0], [Variable: String = \"\"], [Index: Long = -1]): ICellItem
+    ```
+    --------------------
+    Creates a new `CellItem` object and adds it to the collection.
+    !'
+    Function AddNew(Type As CellItemType, Optional Decimals As Long = 0, Optional Variable As String = "", Optional Index As Long = -1) As ICellItem
+    End Function
+
+    '!
+    ```ds
+    (method) ICellItems.Clear(): Void
+    ```
+    --------------------
+    Removes all `CellItem` objects from the collection
+    !'
+    Sub Clear()
+    End Sub
+
+    '!
+    ```ds
+    (method) ICellItems.Remove(Index: Variant): Void
+    ```
+    --------------------
+    Removes the specified cell item from the collection.
+    !'
+    Sub Remove(Index As Variant)
+    End Sub
+
+
+End Interface

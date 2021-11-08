@@ -99,7 +99,7 @@ Interface IQuestion
 
     '!
     ```ds
-    (method) IQuestion.Ask(LabelArgs: Variant[]): Void
+    (method) IQuestion.Ask(LabelArgs: Array): Void
     ```
     --------------------
     Asks a question in an interview.
@@ -135,7 +135,7 @@ Interface IQuestion
 
     This method is not supported in mrDataManager 1.0
     !'
-    Sub Ask(LabelArgs As Variant[])
+    Sub Ask(LabelArgs As Array)
     End Sub
 
     '!
@@ -217,7 +217,7 @@ Interface IQuestion
 
     '!
     ```ds
-    (method) IQuestion.Show(LableArgs: Variant[]): Void
+    (method) IQuestion.Show(LableArgs: Array): Void
     ```
     --------------------
     Shows a question with its associated value or values.
@@ -226,7 +226,7 @@ Interface IQuestion
     The `Show` method is identical to `Ask` method except that the user is not able to set a response value for the question.
     This method is not supported in mrDataManager 1.0
     !'
-    Sub Show(LableArgs As Variant[])
+    Sub Show(LableArgs As Array)
     End Sub
 
     '!

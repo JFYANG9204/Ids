@@ -102,6 +102,7 @@ export class Statement extends NodeBase {
 
 export class DeclarationBase extends NodeBase {
     declare?: true;
+    enumerable: boolean = false;
     constructor(parser: ParserBase, pos: number, loc: Position) {
         super(parser, pos, loc);
     }
@@ -639,7 +640,7 @@ export type ForLike = ForStatement | ForEachStatement;
 
 // declaration
 
-export class SingleVarDeclarator extends NodeBase {
+export class SingleVarDeclarator extends DeclarationBase {
     name: Identifier;
     valueType: string = "variant";
     constructor(parser: ParserBase, pos: number, loc: Position) {
@@ -649,7 +650,7 @@ export class SingleVarDeclarator extends NodeBase {
     }
 }
 
-export class ArrayDeclarator extends NodeBase {
+export class ArrayDeclarator extends DeclarationBase {
     name: Identifier;
     valueType: string = "variant";
     dimensions: number;
@@ -659,6 +660,7 @@ export class ArrayDeclarator extends NodeBase {
         this.name = new Identifier(parser, pos, loc);
         this.type = "ArrayDeclarator";
         this.dimensions = 0;
+        this.enumerable = true;
     }
 }
 
@@ -691,6 +693,7 @@ export class ConstDeclaration extends DeclarationBase {
 
 export class ArgumentDeclarator extends DeclarationBase {
     optional: boolean = false;
+    paramArray: boolean = false;
     declarator: ArrayDeclarator | SingleVarDeclarator;
     defaultValue?: any;
     constructor(parser: ParserBase, pos: number, loc: Position) {
@@ -1702,6 +1705,7 @@ export class ClassOrInterfaceDeclaration extends NodeBase {
     properties: Array<PropertyDeclaration> = [];
     methods: Array<FunctionDeclaration> = [];
     default?: PropertyDeclaration | FunctionDeclaration;
+    implements?: string;
     constructor(parser: ParserBase, pos: number, loc: Position) {
         super(parser, pos, loc);
         this.type = "ClassOrInterfaceDeclaration";
