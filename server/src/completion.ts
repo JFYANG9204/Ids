@@ -12,14 +12,6 @@ import {
     CompletionItemKind,
     MarkupKind
 } from 'vscode-languageserver-types';
-import {
-    BasicTypeDefinitions,
-    builtInAggregateDefinitions,
-    builtInConstantDefinitions,
-    builtInEnumeratorDefinitions,
-    builtInFunctionDefinitions,
-    builtInObjectDefinitions
-} from "./lib/built-in/built-ins";
 import { distanceTo, positionAt, positionInWith } from "./lib/file/util";
 import { CallExpression, File, NodeBase, PreIncludeStatement } from "./lib/types";
 import {

@@ -116,16 +116,10 @@ import {
 import { ErrorMessages } from "./error-messages";
 import { ExpressionParser } from "./expression";
 import {
-    BasicTypeDefinitions,
     isEventName
 } from "../built-in/built-ins";
 import { ParserBase } from "../base";
 import { Position } from "../util/location";
-import {
-    Argument,
-    VariantDefinition
-} from "../util/definition";
-import { createDefinition } from "../built-in/basic";
 import { ParserFileNode } from "../file/node";
 import { ErrorTemplate } from "./errors";
 import { BindTypes, ScopeFlags } from "../util/scope";
@@ -950,6 +944,7 @@ export class StatementParser extends ExpressionParser {
             node.needReturn = true;
             isFunction = true;
         }
+        this.scope.enter(ScopeFlags.function);
         this.next();
         node.id = this.parseIdentifier();
         this.expect(tt.braceL);
@@ -957,35 +952,13 @@ export class StatementParser extends ExpressionParser {
         if (this.match(tt._as)) {
             this.checkIfDeclareFile();
             this.next();
-            node.return = this.state.value;
+            node.returnType = this.state.value;
             this.next();
         }
         node.body = this.parseBlock(tt._end);
         this.expect(tt._end);
         isFunction ? this.expect(tt._function) : this.expect(tt._sub);
         this.scope.exit();
-        //const args: Array<Argument> = [];
-        //node.params.forEach(arg => {
-        //    args.push(this.getArgumentDefFromNode(arg));
-        //});
-        //node.pushArr(node.params);
-        //node.push(node.id, node.body);
-        //const option: DefinitionOptions = {
-        //    name: node.id.name,
-        //    defType: "function",
-        //    isReadonly: false,
-        //    isConst: false,
-        //    isCollection: false,
-        //    section: this.scope.currentSection()
-        //};
-        //const def = createDefinition(option, FunctionDefinition);
-        //def.arguments = args;
-        //this.declareLocalVar(
-        //    node.id.name,
-        //    node,
-        //    undefined,
-        //    def,
-        //    false);
         return this.finishNode(node, "FunctionDeclaration");
     }
 
@@ -1019,47 +992,13 @@ export class StatementParser extends ExpressionParser {
                 comma = true;
                 this.next();
             } else {
-                params.push(this.parseArgumentDeclarator());
+                let arg = this.parseArgumentDeclarator();
+                params.push(arg);
+                this.scope.declareName(arg.declarator.name.name, BindTypes.var, arg);
                 comma = false;
             }
         }
         return params;
-    }
-
-    getArgumentDefFromNode(node: SingleVarDeclarator | ArrayDeclarator): Argument {
-        if (node instanceof SingleVarDeclarator) {
-            return new Argument(
-                node.name.name,
-                BasicTypeDefinitions.variant,
-                false,
-                false);
-        } else {
-            if (node.dimensions === 1) {
-                return new Argument(
-                    node.name.name,
-                    BasicTypeDefinitions.array,
-                    true,
-                    false
-                );
-            }
-            const arr = createDefinition({
-                name: node.name.name,
-                defType: "array",
-                isCollection: true,
-                isReadonly: false,
-                isConst: false,
-                insertText: node.name.name,
-                section: this.scope.currentSection(),
-            }, VariantDefinition);
-            arr.isArray = true;
-            arr.boundaries = node.boundaries;
-            arr.dimensions = node.dimensions;
-            return new Argument(
-                node.name.name,
-                arr,
-                true,
-                false);
-        }
     }
 
     // Declaration File   仅用于built in定义初始定义

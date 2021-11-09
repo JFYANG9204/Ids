@@ -79,9 +79,7 @@ export type ValueTypes = Array<ValueType>;
 
 export class Argument {
     name: string;
-    type: DefinitionBase | DefinitionBase[];
-    isCollection: boolean;
-    isOptional: boolean;
+    type: string;
     defaultValue?: string | number | boolean;
     ellipsis?: boolean;
     note?: string;
@@ -90,13 +88,9 @@ export class Argument {
 
     constructor(
         name: string,
-        type: DefinitionBase | DefinitionBase[],
-        isCollection = false,
-        isOptional = false) {
+        type: string) {
         this.name = name;
         this.type = type;
-        this.isCollection = isCollection;
-        this.isOptional = isOptional;
     }
 
 }
@@ -250,15 +244,6 @@ export class FunctionDefinition extends DefinitionBase {
         let first = true;
         this.arguments.forEach(arg => {
             let argText = "";
-            if (arg.type instanceof Array) {
-                let argTypes: string[] = [];
-                arg.type.forEach(t => {
-                    argTypes.push(t.name);
-                });
-                argText = arg.name + ": " + argTypes.join(" | ");
-            } else {
-                argText = arg.name + ": " + arg.type.name;
-            }
             if (arg.isOptional) {
                 argText = "[" + argText + "]";
             }

@@ -707,8 +707,7 @@ export class FunctionDeclaration extends DeclarationBase {
     params: Array<ArgumentDeclarator> = [];
     body: BlockStatement;
     needReturn = false;
-    return?: string;
-    returnType?: FunctionDefinition;
+    returnType?: string;
     constructor(parser: ParserBase, pos: number, loc: Position) {
         super(parser, pos, loc);
         this.type = "FunctionDeclaration",

@@ -6,9 +6,7 @@ import {
     DeclarationBase,
     Expression,
     FunctionDeclaration,
-    Identifier,
     MacroDeclaration,
-    NamespaceDeclaration,
     NodeBase,
     SingleVarDeclarator
 } from "../types";
@@ -18,7 +16,7 @@ export type RaiseFunction = (node: NodeBase, template: ErrorTemplate, warning: b
 export enum ScopeFlags {
     program,
     function,
-    interfaceOrClass,
+    classOrInterface,
     namespace,
     event
 }
@@ -77,7 +75,7 @@ export class ScopeHandler {
     }
 
     get inClassOrInterface() {
-        return this.currentScope().flags === ScopeFlags.interfaceOrClass;
+        return this.currentScope().flags === ScopeFlags.classOrInterface;
     }
 
     get inNameSpace() {
