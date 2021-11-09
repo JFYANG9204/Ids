@@ -32,6 +32,7 @@ import {
     LineMark,
     Literal,
     LoggingSection,
+    MacroDeclaration,
     MetadataAreaName,
     MetadataAxisExpression,
     MetadataBase,
@@ -85,6 +86,7 @@ import {
     MetadataUsageTypeValues,
     MetadataUserContexts,
     MetadataValidation,
+    NamespaceDeclaration,
     NodeBase,
     NumericLiteral,
     OnErrorStatement,
@@ -126,6 +128,7 @@ import {
 import { createDefinition } from "../built-in/basic";
 import { ParserFileNode } from "../file/node";
 import { ErrorTemplate } from "./errors";
+import { BindTypes, ScopeFlags } from "../util/scope";
 
 export class StatementParser extends ExpressionParser {
 
@@ -157,11 +160,9 @@ export class StatementParser extends ExpressionParser {
     }
 
     join(file: File) {
-        file.definitions?.forEach((value, key) => {
-            if (!this.scope.currentScope().get(key)) {
-                this.scope.currentScope().insert(key, file, value);
-            }
-        });
+        if (file.scope) {
+            this.scope.joinScope(file.scope);
+        }
     }
 
     expectAndParseLiteral<T extends Literal>(
@@ -378,6 +379,9 @@ export class StatementParser extends ExpressionParser {
             case tt._interface:
                 return this.parseClassOrInterface();
 
+            case tt._nameSpace:
+                return this.parseNamespaceDeclaration();
+
             default:
                 throw this.unexpected();
         }
@@ -426,16 +430,11 @@ export class StatementParser extends ExpressionParser {
 
     parseConstDeclarator(): ConstDeclarator {
         const node = this.startNode(ConstDeclarator);
-        node.id = this.parseIdentifier();
+        node.declarator = this.parseSingleVarDeclarator();
         this.expect(tt.equal);
         node.init = this.parseExpression(true);
-        node.push(node.id, node.init);
-        this.declareLocalVar(
-            node.id.name,
-            node,
-            undefined,
-            BasicTypeDefinitions.variant,
-            true);
+        node.push(node.declarator, node.init);
+        this.declareLocalVar(node.declarator.name.name, node);
         return this.finishNode(node, "ConstDeclarator");
     }
 
@@ -497,12 +496,21 @@ export class StatementParser extends ExpressionParser {
         }
         node.boundaries = boundaries;
         node.dimensions = dimensions;
-        this.declareLocalVar(
-            id.name,
-            node,
-            { dimensions, boundaries },
-            BasicTypeDefinitions.array);
+        this.declareLocalVar(id.name, node);
         return this.finishNode(node, "ArrayDeclarator");
+    }
+
+    parseMacroDeclaration(): MacroDeclaration {
+        const node = this.startNode(MacroDeclaration);
+        node.name = this.parseIdentifier();
+        if (!this.hasPrecedingLineBreak()) {
+            node.init = this.parseExpression();
+            if (node.init.extra["raw"]) {
+                node.initValue = node.init.extra["raw"];
+            }
+        }
+        this.declareMacroVar(node.name.name, node);
+        return this.finishNode(node, "MacroDeclaration");
     }
 
     parseDeclaration(): VariableDeclaration {
@@ -517,7 +525,7 @@ export class StatementParser extends ExpressionParser {
                 hasComma = false;
             } else {
                 const id = this.parseSingleVarDeclarator();
-                this.declareLocalVar(id.name.name, id, undefined, BasicTypeDefinitions.variant);
+                this.declareLocalVar(id.name.name, id);
                 declarators.push(id);
                 hasComma = false;
             }
@@ -549,7 +557,6 @@ export class StatementParser extends ExpressionParser {
         const node = this.startNode(ExpressionStatement);
         node.expression = this.parseExpression(true);
         node.push(node.expression);
-        this.checkExprTypeError(node.expression);
         return this.finishNodeAt(node, "ExpressionStatement", this.state.lastTokenEnd, this.state.lastTokenEndLoc);
     }
 
@@ -560,15 +567,7 @@ export class StatementParser extends ExpressionParser {
         this.expect(tt.equal);
         node.assignment = this.parseExpression(true);
         if (node.id instanceof Identifier) {
-            const declared = this.checkVarDeclared(node.id.name, node.id, true);
-            const type = this.getExprType(node.assignment);
-            if (type && declared) {
-                this.scope.currentScope().updateType(
-                    node.id.name,
-                    type
-                );
-                this.addExtra(node.id, "definition", type);
-            }
+            const declared = this.checkVarDeclared(node.id.name, node.id);
         }
         node.push(node.id, node.assignment);
         return this.finishNode(node, "SetStatement");
@@ -589,7 +588,6 @@ export class StatementParser extends ExpressionParser {
         const node = this.startNode(IfStatement);
         this.next();
         node.test = this.parseExpression();
-        this.checkExprTypeError(node.test);
         this.expect(tt._then);
         if (this.hasPrecedingLineBreak()) {
             node.consequent = this.parseBlock([ tt._end, tt._else, tt._elseif ]);
@@ -613,12 +611,10 @@ export class StatementParser extends ExpressionParser {
                 node.consequent = this.parseExit();
             } else {
                 node.consequent = this.parseExpression(true);
-                this.checkExprTypeError(node.consequent);
             }
             if (this.match(tt._else) && !this.hasPrecedingLineBreak()) {
                 this.next();
                 node.alternate = this.parseExpression();
-                this.checkExprTypeError(node.alternate);
                 node.push(node.alternate);
             }
         }
@@ -648,7 +644,7 @@ export class StatementParser extends ExpressionParser {
         this.next();
         node.variable = this.parseIdentifier();
         node.push(node.variable);
-        this.checkVarDeclared((node.variable as Identifier).name, node, true);
+        this.checkVarDeclared((node.variable as Identifier).name, node);
         this.expect(tt.equal);
         const lbound = this.parseForBoundary();
         this.expect(tt._to);
@@ -680,10 +676,9 @@ export class StatementParser extends ExpressionParser {
         this.next();
         this.expect(tt._each);
         const variable = this.parseIdentifier();
-        this.checkVarDeclared(variable.name, variable, true);
+        this.checkVarDeclared(variable.name, variable);
         this.expect(tt._in);
         const collection = this.parseExpression();
-        this.checkIfCollection(collection, variable);
         node.collection = collection;
         node.body = this.parseBlock(tt._next);
         this.expect(tt._next);
@@ -755,13 +750,9 @@ export class StatementParser extends ExpressionParser {
         const node = this.startNode(WithStatement);
         this.next();
         node.object = this.parseExpression();
-        const header = this.getExprType(node.object);
-        this.addExtra(node, "definition", header);
-        this.scope.currentScope().enterHeader(header);
         node.body = this.parseBlock(tt._end);
         this.expect(tt._end);
         this.expect(tt._with);
-        this.scope.currentScope().exitHeader();
         node.push(node.object, node.body);
         return this.finishNode(node, "WithStatement");
     }
@@ -954,7 +945,6 @@ export class StatementParser extends ExpressionParser {
     //
     parseFunctionDeclaration(): FunctionDeclaration {
         const node = this.startNode(FunctionDeclaration);
-        this.scope.enter(node, false);
         let isFunction = false;
         if (this.match(tt._function)) {
             node.needReturn = true;
@@ -1192,16 +1182,42 @@ export class StatementParser extends ExpressionParser {
         return this.finishNode(node, "ClassOrInterfaceDeclaration");
     }
 
+    parseNamespaceDeclaration(): NamespaceDeclaration {
+        const node = this.startNode(NamespaceDeclaration);
+        this.checkIfDeclareFile("NameSpace");
+        this.next();
+        while (this.lookahead().type === tt.dot) {
+            node.level.push(this.parseIdentifier().name);
+            this.eat(tt.dot);
+        }
+        node.name = this.parseIdentifier();
+        while (!this.eat(tt._end)) {
+            switch (this.state.type) {
+                case tt._class:
+                case tt._interface:
+                    node.body.push(this.parseClassOrInterface());
+                    break;
+                case tt._function:
+                case tt._sub:
+                    node.body.push(this.parseFunctionDeclaration());
+                    break;
+
+                default:
+                    this.unexpected();
+            }
+        }
+        this.expect(tt._nameSpace);
+        return this.finishNode(node, "NamespaceDeclaration");
+    }
+
     // Pre-Processor
     // #define identifier [ ["] value ["] ]
     parsePreDefineStatement(): PreDefineStatement {
         const node = this.startNode(PreDefineStatement);
         this.next();
-        node.id = this.parseIdentifier();
-        node.init = this.parseExpression();
-        node.push(node.id, node.init);
+        node.declaration = this.parseMacroDeclaration();
+        node.push(node.declaration);
         this.finishNode(node, "PreDefineStatement");
-        this.declareMacroVar(node.id.name, node);
         return node;
     }
 
@@ -1211,7 +1227,7 @@ export class StatementParser extends ExpressionParser {
         this.next();
         node.id = this.parseIdentifier();
         node.push(node.id);
-        this.scope.currentScope().remove(node.id.name);
+        this.scope.delete(node.id.name);
         return this.finishNode(node, "PreUndefStatement");
     }
 
@@ -1280,10 +1296,10 @@ export class StatementParser extends ExpressionParser {
                 node.parser.options.sourceType = SourceType.metadata;
             }
             node.parser.fileName = node.parser.options.sourceFileName = node.path;
-            let headerDef = this.scope.currentScope().currentHeader();
-            node.file = node.parser.parse(this.scope.currentScope().storeMap, headerDef);
+            let headerDef = this.scope.currentScope().currentHeader;
+            node.file = node.parser.parse(this.scope.store, headerDef);
             this.state.includes.set(node.path.toLowerCase(), node.file);
-            this.scope.currentScope().join(node.file);
+            this.scope.joinScope(node.file.scope);
             if (node.file.errors.length > 0) {
                 this.raiseAtNode(
                     node.inc,
@@ -1359,7 +1375,7 @@ export class StatementParser extends ExpressionParser {
         allowDiscription: boolean
     ): T {
         const node = this.startNode(n);
-        this.scope.enter(node, false);
+        this.scope.enter(ScopeFlags.event);
         this.next();
         this.expect(tt.braceL);
         const name = this.parseIdentifier(true);

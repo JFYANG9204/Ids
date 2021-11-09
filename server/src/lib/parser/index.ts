@@ -2,7 +2,7 @@ import { extname } from "path";
 import { Options, ScriptFileType, SourceType } from "../options";
 import { StatementParser } from "./statement";
 import { File } from "../types";
-import { ScopeHandler } from "../util/scope";
+import { Scope, ScopeHandler } from "../util/scope";
 import { ErrorMessages } from "./error-messages";
 import { DefinitionBase } from "../util/definition";
 import { getFileTypeMark } from "../file/util";
@@ -30,11 +30,10 @@ export class Parser extends StatementParser {
         }
     }
 
-    parse(preDef?: Map<string, DefinitionBase>, header?: DefinitionBase): File {
+    parse(preDef?: Scope, header?: DefinitionBase): File {
         const file = this.startNode(File);
-        this.scope.enter(file, true);
         if (preDef) {
-            this.scope.currentScope().joinMap(preDef);
+            this.scope.joinScope(preDef);
         }
         if (header) {
             this.scope.currentScope().enterHeader(header);
@@ -52,7 +51,7 @@ export class Parser extends StatementParser {
         file.errors = this.state.errors;
         file.warnings = this.state.warnings;
         file.includes = this.state.includes;
-        file.definitions = this.scope.currentScope().storeMap;
+        file.scope = this.scope.store;
         this.scope.exit();
         return this.finishNode(file, "File");
     }

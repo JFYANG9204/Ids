@@ -10,6 +10,7 @@ import {
     ValueType
 } from "./util/definition";
 import { Position, SourceLocation } from "./util/location";
+import { Scope } from "./util/scope";
 
 export type Value = {
     text: string,
@@ -255,13 +256,11 @@ export class PreprocessorBase extends NodeBase {
 }
 
 export class PreDefineStatement extends PreprocessorBase {
-    id: Identifier;
-    init: Expression;
+    declaration: MacroDeclaration;
     constructor(parser: ParserBase, pos: number, loc: Position) {
         super(parser, pos, loc);
         this.type = "PreDefineStatement";
-        this.id = new Identifier(parser, pos, loc);
-        this.init = new Expression(parser, pos, loc);
+        this.declaration = new MacroDeclaration(parser, pos, loc);
     }
 }
 
@@ -335,7 +334,7 @@ export class File extends NodeBase {
     warnings: Array<ParsingError> = [];
     tokens?: Array<Token>;
     includes: Map<string, File> = new Map();
-    definitions?: Map<string, DefinitionBase>;
+    scope?: Scope;
 
     constructor(parser: ParserBase, pos: number, loc: Position) {
         super(parser, pos, loc);
@@ -673,11 +672,11 @@ export class VariableDeclaration extends DeclarationBase {
 }
 
 export class ConstDeclarator extends DeclarationBase {
-    id: Identifier;
+    declarator: SingleVarDeclarator;
     init: Expression;
     constructor(parser: ParserBase, pos: number, loc: Position) {
         super(parser, pos, loc);
-        this.id = new Identifier(parser, pos, loc);
+        this.declarator = new SingleVarDeclarator(parser, pos, loc);
         this.init = new Expression(parser, pos, loc);
         this.type = "ConstDeclarator";
     }
@@ -1682,7 +1681,7 @@ export class PropertySet extends NodeBase {
     }
 }
 
-export class PropertyDeclaration extends NodeBase {
+export class PropertyDeclaration extends DeclarationBase {
     readonly?: boolean;
     default?: boolean;
     returnType: SingleVarDeclarator | ArrayDeclarator;
@@ -1699,7 +1698,7 @@ export class PropertyDeclaration extends NodeBase {
     }
 }
 
-export class ClassOrInterfaceDeclaration extends NodeBase {
+export class ClassOrInterfaceDeclaration extends DeclarationBase {
     name: Identifier;
     defType: "interface" | "class" = "interface";
     properties: Array<PropertyDeclaration> = [];
@@ -1713,5 +1712,25 @@ export class ClassOrInterfaceDeclaration extends NodeBase {
     }
 }
 
+export class NamespaceDeclaration extends DeclarationBase {
+    name: Identifier;
+    body: Array<DeclarationBase> = [];
+    level: Array<string> = [];
+    constructor(parser: ParserBase, pos: number, loc: Position) {
+        super(parser, pos, loc);
+        this.type = "NamespaceDeclaration";
+        this.name = new Identifier(parser, pos, loc);
+    }
+}
 
+export class MacroDeclaration extends DeclarationBase {
+    name: Identifier;
+    init?: Expression;
+    initValue?: string | boolean | number;
+    constructor(parser: ParserBase, pos: number, loc: Position) {
+        super(parser, pos, loc);
+        this.type = "MacroDeclaration";
+        this.name = new Identifier(parser, pos, loc);
+    }
+}
 

@@ -85,7 +85,7 @@ connection.onCompletion(
         }
         let completions: CompletionItem[] = builtInCompletions.concat(keywordsCompletions);
         let currentFile = current.get(path.toLowerCase());
-        if (currentFile && currentFile.definitions) {
+        if (currentFile && currentFile.scope) {
             let defs = getCompletionsFromDefinitions(currentFile.definitions);
             if (defs) {
                 completions = completions.concat(defs);

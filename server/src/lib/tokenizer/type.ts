@@ -146,6 +146,7 @@ export const types = {
     _like                        :     createKeyword("like", { binop: BinopType.realational, precedence: 3}),
     _loop                        :     createKeyword("loop"),
     _mod                         :     createKeyword("mod",{ binop: BinopType.operator, precedence: 4 }),
+    _nameSpace                   :     createKeyword("namespace"),
     _next                        :     createKeyword("next"),
     _not                         :     createKeyword("not",  { prefix }),
     _null                        :     createKeyword("null"),

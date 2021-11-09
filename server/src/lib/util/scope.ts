@@ -1,246 +1,302 @@
-import {
-    BasicTypeDefinitions,
-    searchAggregate,
-    searchBuiltIn,
-    searchEnumerator,
-    searchFunction
-} from "../built-in/built-ins";
 import { ErrorMessages } from "../parser/error-messages";
-import { ErrorTemplate } from "../parser/errors";
+import { ErrorTemplate, ParsingError } from "../parser/errors";
 import {
-    EventSection,
+    ArrayDeclarator,
+    ClassOrInterfaceDeclaration,
+    DeclarationBase,
+    Expression,
     FunctionDeclaration,
-    NodeBase
+    Identifier,
+    MacroDeclaration,
+    NamespaceDeclaration,
+    NodeBase,
+    SingleVarDeclarator
 } from "../types";
-import {
-    DefinitionBase,
-    DefSection,
-} from "./definition";
-import { File } from "../types";
 
-class SymbolTable {
+export type RaiseFunction = (node: NodeBase, template: ErrorTemplate, warning: boolean, ...params: any) => ParsingError;
 
-    store: boolean;
-    storeMap?: Map<string, DefinitionBase>;
-    table: Map<string, DefinitionBase> = new Map();
-    section: NodeBase;
-    headerType: Array<DefinitionBase | undefined> = [];
-    unDefined: Map<string, DefinitionBase> = new Map();
-    raise: (node: NodeBase, template: ErrorTemplate, warning: boolean, ...params: any) => void;
+export enum ScopeFlags {
+    program,
+    function,
+    interfaceOrClass,
+    namespace,
+    event
+}
 
-    constructor(
-        section: NodeBase,
-        raiseFunction: (node: NodeBase, template: ErrorTemplate, ...params: any) => void,
-        store?: boolean,
-        storeMap?: Map<string, DefinitionBase>) {
-        this.section = section;
-        this.raise = raiseFunction;
-        this.store = store ?? false;
-        this.storeMap = storeMap;
+export enum BindTypes {
+    var,
+    const,
+    function,
+    classOrInterface,
+    namespace,
+    undefined
+}
+
+export type ScopeSearchResult = {
+    type: BindTypes,
+    result?: DeclarationBase
+};
+
+export class Scope {
+
+    flags: ScopeFlags;
+    withHeader: Array<string> = [];
+    currentHeader?: DeclarationBase;
+    dims: Map<string, DeclarationBase> = new Map();
+    consts: Map<string, DeclarationBase> = new Map();
+    macros: Map<string, DeclarationBase> = new Map();
+    functions: Map<string, DeclarationBase> = new Map();
+    classes: Map<string, DeclarationBase> = new Map();
+    namespaces: Map<string, DeclarationBase> = new Map();
+    undefined: Map<string, DeclarationBase> = new Map();
+
+    constructor(flags: ScopeFlags) {
+        this.flags = flags;
     }
-
-    insert(name: string, node: NodeBase, def: DefinitionBase) {
-        if (this.table.has(name.toLowerCase()) || (
-            !this.isFunction && searchBuiltIn(name)
-        )) {
-            this.raise(
-                node,
-                ErrorMessages["VarRedeclaration"],
-                false,
-                name
-            );
-        } else if (!this.canDeclareFunction &&
-            node.type === "FunctionDeclaration") {
-            this.raise(
-                node,
-                ErrorMessages["DontAllowDeclareFunction"],
-                false,
-                node.type
-            );
-        } else {
-            def.node = node;
-            this.table.set(
-                name.toLowerCase(),
-                def
-            );
-            if (this.store && this.storeMap) {
-                this.storeMap.set(
-                    name.toLowerCase(),
-                    def
-                );
-            }
-        }
-    }
-
-    get(name: string) {
-        if (this.isFunction) {
-            return searchFunction(name) ||
-                searchAggregate(name) ||
-                searchEnumerator(name) ||
-                this.table.get(name.toLowerCase());
-        } else {
-            return searchBuiltIn(name) ||
-                this.table.get(name.toLowerCase());
-        }
-    }
-
-    isUndefine(name: string) {
-        return this.unDefined.get(name.toLowerCase());
-    }
-
-    setUndef(name: string, def?: DefinitionBase) {
-        if (!this.unDefined.has(name.toLowerCase())) {
-            this.unDefined.set(
-                name.toLowerCase(),
-                def ?? BasicTypeDefinitions.variant
-            );
-        }
-    }
-
-    updateUndef(name: string, def: DefinitionBase) {
-        if (this.isUndefine(name)) {
-            this.unDefined.set(name.toLowerCase(), def);
-        }
-    }
-
-    remove(name: string) {
-        const exist = this.table.get(name.toLowerCase());
-        if (exist) {
-            this.table.delete(name);
-        }
-    }
-
-    get isFunction() {
-        return this.section.type === "FunctionDeclaration";
-    }
-
-    get isDmsSection() {
-        return this.section.type === "EventSection";
-    }
-
-    get isWith() {
-        return this.section.type === "WithStatement";
-    }
-
-    get isLoop() {
-        return this.section.type === "WhileStatement"   ||
-               this.section.type === "DoWhileStatement" ||
-               this.section.type === "ForEachStatement" ||
-               this.section.type === "ForStatement";
-    }
-
-    get isEvent() {
-        return this.section instanceof EventSection;
-    }
-
-    get inIf() {
-        return this.section.type === "IfStatement";
-    }
-
-    get canDeclareFunction() {
-        return !this.isLoop &&
-            !this.isWith &&
-            !this.isFunction &&
-            !this.inIf;
-    }
-
-    updateType(name: string, def: DefinitionBase) {
-        if (this.table.has(name.toLowerCase())) {
-            this.table.set(name.toLowerCase(), def);
-            if (this.storeMap && this.store) {
-                this.storeMap.set(name.toLowerCase(), def);
-            }
-        }
-    }
-
-    join(file: File) {
-        file.definitions?.forEach((value, key) => {
-            if (!this.get(key)) {
-                this.table.set(key, value);
-            }
-            if (this.store && this.storeMap && !this.storeMap.has(key)) {
-                this.storeMap.set(key, value);
-            }
-        });
-    }
-
-    joinMap(defMap: Map<string, DefinitionBase>) {
-        defMap.forEach((value, key) => {
-            if (!this.table.get(key)) {
-                this.table.set(key, value);
-            }
-            if (this.store && this.storeMap && !this.storeMap.has(key)) {
-                this.storeMap.set(key, value);
-            }
-        });
-    }
-
-    enterHeader(def: DefinitionBase | undefined) {
-        this.headerType.push(def);
-    }
-
-    exitHeader() {
-        this.headerType.pop();
-    }
-
-    currentHeader() {
-        if (this.headerType.length > 0) {
-            return this.headerType[this.headerType.length - 1];
-        }
-        return undefined;
-    }
-
 }
 
 export class ScopeHandler {
 
-    storeMap: Map<string, DefinitionBase>;
-    stack: Array<SymbolTable> = [];
-    raise: (node: NodeBase, template: ErrorTemplate, ...params: any) => void;
+    store: Scope;
+    stack: Array<Scope> = [];
+    raise: RaiseFunction;
 
     constructor(
-        raise: (node: NodeBase, template: ErrorTemplate, ...params: any) => void,
-        storeMap: Map<string, DefinitionBase>) {
+        raise: RaiseFunction,
+        store: Scope) {
         this.raise = raise;
-        this.storeMap = storeMap;
+        this.store = store;
     }
 
-    enter(node: NodeBase, store?: boolean) {
-        this.stack.push(new SymbolTable(node, this.raise, store, this.storeMap));
+    get inFunction() {
+        return this.currentScope().flags === ScopeFlags.function;
+    }
+
+    get inWith() {
+        return this.currentScope().withHeader.length === 0;
+    }
+
+    get inClassOrInterface() {
+        return this.currentScope().flags === ScopeFlags.interfaceOrClass;
+    }
+
+    get inNameSpace() {
+        return this.currentScope().flags === ScopeFlags.namespace;
+    }
+
+    enter(flags: ScopeFlags) {
+        this.stack.push(new Scope(flags));
     }
 
     exit() {
         this.stack.pop();
     }
 
+    declareName(name: string, bindingType: BindTypes, node: NodeBase) {
+        const scope = this.currentScope();
+        this.checkRedeclarationInScope(scope, name, node);
+        if ((bindingType === BindTypes.function) &&
+            node instanceof FunctionDeclaration) {
+            if (this.inFunction || this.inWith) {
+                this.raise(
+                    node.id,
+                    ErrorMessages["DontAllowDeclareFunction"],
+                    false,
+                    this.inWith ? "With" : "Function或Sub"
+                );
+                return;
+            }
+            scope.functions.set(name.toLowerCase(), node);
+        } else if ((bindingType === BindTypes.var) &&
+            (node instanceof SingleVarDeclarator || node instanceof ArrayDeclarator)) {
+            if (node instanceof SingleVarDeclarator) {
+                const variant = this.get("Variant")?.result;
+                if (variant) {
+                    scope.dims.set(name.toLowerCase(), variant);
+                }
+            } else {
+                const array = this.get("Array")?.result;
+                if (array) {
+                    scope.dims.set(name.toLowerCase(), array);
+                }
+            }
+        } else if ((bindingType === BindTypes.classOrInterface) &&
+            node instanceof ClassOrInterfaceDeclaration) {
+            scope.classes.set(name.toLowerCase(), node);
+        } else if ((bindingType === BindTypes.const)) {
+            if (node instanceof MacroDeclaration) {
+                scope.macros.set(name.toLowerCase(), node);
+            } else if (node instanceof SingleVarDeclarator) {
+                const variant = this.get("Variant")?.result;
+                if (variant) {
+                    scope.consts.set(name.toLowerCase(), variant);
+                }
+            }
+        }
+    }
+
+    declareUndefined(name: string) {
+        const question = this.get("IQuestion")?.result;
+        if (question) {
+            this.currentScope().undefined.set(name.toLowerCase(), question);
+        }
+    }
+
+    checkRedeclarationInScope(
+        scope: Scope,
+        name: string,
+        node: NodeBase
+    ) {
+        if (this.isRedeclared(scope, name)) {
+            this.raise(node, ErrorMessages["VarRedeclaration"], false, name);
+        }
+    }
+
+    isRedeclared(scope: Scope, name: string) {
+        const checkName = name.toLowerCase();
+        return scope.classes.has(checkName)   ||
+               scope.consts.has(checkName)    ||
+               scope.dims.has(checkName)      ||
+               scope.functions.has(checkName) ||
+               scope.macros.has(checkName)    ||
+               scope.namespaces.has(checkName);
+    }
+
+    isConst(name: string) {
+        return this.currentScope().consts.has(name.toLowerCase());
+    }
+
+    isUndefine(name: string) {
+        return this.currentScope().undefined.has(name.toLowerCase());
+    }
+
     currentScope() {
         return this.stack[this.stack.length - 1];
     }
 
-    declareName(name: string, node: NodeBase, def: DefinitionBase) {
-        const scope = this.currentScope();
-        scope.insert(name, node, def);
+    currentWith() {
+        return this.currentScope().withHeader[this.currentScope().withHeader.length - 1];
     }
 
-    currentSection(): DefSection {
-        const global: DefSection = {
-            name: "Program",
-            type: "global"
-        };
-        const cur = this.currentScope().section;
-        if (cur instanceof FunctionDeclaration) {
+    enterHeader(type: string) {
+        this.currentScope().withHeader.push(type);
+        let search = this.get(type);
+        this.currentScope().currentHeader = search?.result;
+    }
+
+    getName(scope: Scope, name: string): ScopeSearchResult | undefined {
+        const lowerName = name.toLowerCase();
+        let result;
+        if ((result = scope.dims.get(lowerName))) {
             return {
-                name: cur.id.name,
-                type: "function"
+                type: BindTypes.var,
+                result: result
             };
         }
-        if (cur instanceof EventSection) {
+        if ((result = scope.consts.get(lowerName)) ||
+            (result = scope.macros.get(lowerName))) {
             return {
-                name: cur.name.name,
-                type: "event"
+                type: BindTypes.const,
+                result: result
             };
         }
-        return global;
+        if ((result = scope.classes.get(lowerName))) {
+            return {
+                type: BindTypes.classOrInterface,
+                result: result
+            };
+        }
+        if ((result = scope.functions.get(lowerName))) {
+            return {
+                type: BindTypes.function,
+                result: result
+            };
+        }
+        if ((result = scope.namespaces.get(lowerName))) {
+            return {
+                type: BindTypes.classOrInterface,
+                result: result
+            };
+        }
+    }
+
+    get(name: string) {
+        return this.getName(this.store, name) ||
+               this.getName(this.currentScope(), name);
+    }
+
+    getUndefined(name: string) {
+        return this.currentScope().undefined.get(name.toLowerCase());
+    }
+
+    deleteName(scope: Scope, name: string) {
+        const lowerName = name.toLowerCase();
+        if (scope.dims.has(lowerName)) {
+            scope.dims.delete(lowerName);
+        } else if (scope.consts.has(lowerName)) {
+            scope.consts.delete(lowerName);
+        } else if (scope.functions.has(lowerName)) {
+            scope.functions.delete(lowerName);
+        } else if (scope.macros.has(lowerName)) {
+            scope.macros.delete(lowerName);
+        } else if (scope.classes.has(lowerName)) {
+            scope.classes.delete(lowerName);
+        } else if (scope.namespaces.has(lowerName)) {
+            scope.namespaces.delete(lowerName);
+        }
+    }
+
+    delete(name: string) {
+        this.deleteName(this.currentScope(), name);
+        this.deleteName(this.store, name);
+    }
+
+    update(
+        name: string,
+        newBindingType: BindTypes,
+        newType: DeclarationBase,
+        assignExpr: Expression) {
+        let exist = this.get(name);
+        if (!exist) {
+            this.raise(
+                assignExpr,
+                ErrorMessages["VarIsNotDeclared"],
+                false,
+                name);
+            return;
+        }
+        if (exist.type === BindTypes.const) {
+            this.raise(
+                assignExpr,
+                ErrorMessages["ConstVarCannotBeAssigned"],
+                false,
+            );
+            return;
+        }
+        this.delete(name);
+        this.declareName(name, newBindingType, newType);
+    }
+
+    updateUndefine(name: string, newType: DeclarationBase) {
+        this.currentScope().undefined.set(name.toLowerCase(), newType);
+    }
+
+    joinScope(scope?: Scope) {
+        if (!scope) {
+            return;
+        }
+        this.mergeMap(scope.dims, "dims");
+        this.mergeMap(scope.consts, "consts");
+        this.mergeMap(scope.macros, "macros");
+        this.mergeMap(scope.functions, "functions");
+        this.mergeMap(scope.classes, "classes");
+        this.mergeMap(scope.namespaces, "namespaces");
+    }
+
+    mergeMap<K, V>(source: Map<K, V>, map: string) {
+        source.forEach((value, key) => {
+            this.store[map].set(key, value);
+        });
     }
 
 }
