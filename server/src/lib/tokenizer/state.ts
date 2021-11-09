@@ -6,13 +6,12 @@ import { ParsingError } from "../parser/errors";
 import {
     Comment,
     CommentWhitespace,
-    defaultValue,
     LineMark,
-    Value,
     File
 } from "../types";
 import { DefinitionBase } from "../util/definition";
 import { Position } from "../util/location";
+import { Scope, ScopeFlags } from "../util/scope";
 import { TokenType, types } from "./type";
 
 
@@ -44,7 +43,7 @@ export class State {
      */
     globalVarName?: string;
 
-    localDefinitions: Map<string, DefinitionBase> = new Map();
+    localDefinitions: Scope = new Scope(ScopeFlags.program);
     /**
      * __严格模式__:
      * - *true*: script中未知变量抛出错误
@@ -81,7 +80,7 @@ export class State {
     lineStart = 0;
 
     // Token对应值，默认为defaultValue
-    value: Value = defaultValue;
+    value: string = "";
 
     // 当前Token的开始和结束位置
     start = 0;
@@ -132,7 +131,7 @@ export class State {
 
 export type LookaheadState = {
     pos: number,
-    value: Value,
+    value: string,
     type: TokenType,
     start: number,
     end: number,

@@ -172,7 +172,7 @@ export class StatementParser extends ExpressionParser {
         n: new(parser: ParserBase, pos: number, loc: Position) => T,
         ) {
         if (this.matchOne(type)) {
-            return this.parseLiteral(this.state.value.text, typeStr, n);
+            return this.parseLiteral(this.state.value, typeStr, n);
         } else {
             this.raise(
                 this.state.pos,
@@ -303,7 +303,7 @@ export class StatementParser extends ExpressionParser {
                     this.checkAheadLineMark(id);
                     return line;
                 } else if (next.type === tt.braceL) {
-                    const text = this.state.value.text.toLowerCase();
+                    const text = this.state.value.toLowerCase();
                     switch (text) {
                         case "event":
                             return this.parseEventSection();
@@ -403,7 +403,7 @@ export class StatementParser extends ExpressionParser {
             return this.finishNode(node, "SingleVarDeclarator");
         }
         if (this.eat(tt._as)) {
-            node.valueType = this.state.value.text;
+            node.valueType = this.state.value;
             if (this.options.sourceType !== SourceType.declare) {
                 this.raiseAtLocation(
                     this.state.lastTokenStart,
@@ -466,7 +466,7 @@ export class StatementParser extends ExpressionParser {
             if (this.match(tt.bracketL)) {
                 this.next();
                 if (this.match(tt.number)) {
-                    boundaries.push(Number(this.state.value.text));
+                    boundaries.push(Number(this.state.value));
                     dimensions++;
                     this.next();
                 } else if (this.match(tt.bracketR)) {
@@ -483,7 +483,7 @@ export class StatementParser extends ExpressionParser {
             this.next();
         }
         if (this.eat(tt._as)) {
-            node.valueType = this.state.value.text;
+            node.valueType = this.state.value;
             if (this.options.sourceType !== SourceType.declare) {
                 this.raiseAtLocation(
                     this.state.lastTokenStart,
@@ -633,7 +633,7 @@ export class StatementParser extends ExpressionParser {
 
     parseForBoundary(): NumericLiteral | Expression {
         if (this.match(tt.number)) {
-            return this.parseNumericLiteral(this.state.value.text);
+            return this.parseNumericLiteral(this.state.value);
         } else {
             return this.parseExpression();
         }
@@ -846,7 +846,7 @@ export class StatementParser extends ExpressionParser {
             node.push(lbound, ubound);
         // > 70
         } else if (this.match(tt.relational)) {
-            const op = this.state.value.text;
+            const op = this.state.value;
             let up = false;
             if (op === "<=" || op === "<") {
                 up = true;
@@ -898,7 +898,7 @@ export class StatementParser extends ExpressionParser {
     parseGoto(): GotoStatement {
         const node = this.startNode(GotoStatement);
         this.next();
-        if (this.state.value.text !== "0") {
+        if (this.state.value !== "0") {
             const id = this.parseIdentifier();
             const line = this.checkExistLineMark(id);
             if (line) {
@@ -957,7 +957,7 @@ export class StatementParser extends ExpressionParser {
         if (this.match(tt._as)) {
             this.checkIfDeclareFile();
             this.next();
-            node.return = this.state.value.text;
+            node.return = this.state.value;
             this.next();
         }
         node.body = this.parseBlock(tt._end);
@@ -1145,12 +1145,12 @@ export class StatementParser extends ExpressionParser {
     parseClassOrInterface(): ClassOrInterfaceDeclaration {
         const node = this.startNode(ClassOrInterfaceDeclaration);
         node.defType = this.match(tt._interface) ? "interface" : "class";
-        this.checkIfDeclareFile(this.state.value.text);
+        this.checkIfDeclareFile(this.state.value);
         this.next();
         node.name = this.parseIdentifier();
         if (this.eat(tt._implements)) {
             for (;;) {
-                node.implements.push(this.state.value.text);
+                node.implements.push(this.state.value);
                 this.next();
                 if (this.hasPrecedingLineBreak()) {
                     break;
@@ -1326,9 +1326,9 @@ export class StatementParser extends ExpressionParser {
     parsePreLineStatement(): PreLineStatement {
         const node = this.startNode(PreLineStatement);
         this.next();
-        node.sequence = this.parseNumericLiteral(this.state.value.text);
+        node.sequence = this.parseNumericLiteral(this.state.value);
         if (this.match(tt.string)) {
-            node.location = this.parseStringLiteral(this.state.value.text);
+            node.location = this.parseStringLiteral(this.state.value);
         }
         return this.finishNode(node, "PreLineStatement");
     }
@@ -1453,7 +1453,7 @@ export class StatementParser extends ExpressionParser {
         return this.parseEventBase(
             node => {
                 while (!this.match(tt._end)) {
-                    const text = this.state.value.text.toLowerCase();
+                    const text = this.state.value.toLowerCase();
                     this.next();
                     this.expect(tt.equal);
                     switch (text) {
@@ -1468,7 +1468,7 @@ export class StatementParser extends ExpressionParser {
                                 );
                                 this.next();
                             } else {
-                                const val = this.parseStringLiteral(this.state.value.text);
+                                const val = this.parseStringLiteral(this.state.value);
                                 node.push(val);
                                 if (text === "path") {
                                     node.path = val;
@@ -1488,7 +1488,7 @@ export class StatementParser extends ExpressionParser {
                                 );
                                 this.next();
                             } else {
-                                node.fileSize = this.parseNumericLiteral(this.state.value.text);
+                                node.fileSize = this.parseNumericLiteral(this.state.value);
                                 node.push(node.fileSize);
                             }
                             break;
@@ -1519,7 +1519,7 @@ export class StatementParser extends ExpressionParser {
         return this.parseEventBase(
             node => {
                 if (this.match(tt.identifier)) {
-                    const text = this.state.value.text;
+                    const text = this.state.value;
                     if (text.toLowerCase() === "tempdirectory") {
                         this.next();
                         this.expect(tt.equal);
@@ -1553,7 +1553,7 @@ export class StatementParser extends ExpressionParser {
             node => {
                 let hasConnStr = false;
                 while (!this.match(tt._end)) {
-                    const text = this.state.value.text.toLowerCase();
+                    const text = this.state.value.toLowerCase();
                     this.next();
                     this.expect(tt.equal);
                     let value;
@@ -1595,7 +1595,7 @@ export class StatementParser extends ExpressionParser {
                             break;
 
                         case "jointype":
-                            value = this.state.value.text.toLowerCase();
+                            value = this.state.value.toLowerCase();
                             if (value !== "full" && value !== "inner" && value !== "left") {
                                 this.raise(
                                     this.state.pos,
@@ -1650,7 +1650,7 @@ export class StatementParser extends ExpressionParser {
                 const hasinputAsOutput = false;
                 let order;
                 while (!this.match(tt._end)) {
-                    const text = this.state.value.text.toLowerCase();
+                    const text = this.state.value.toLowerCase();
                     this.next();
                     this.expect(tt.equal);
                     switch (text) {
@@ -1680,7 +1680,7 @@ export class StatementParser extends ExpressionParser {
                             break;
 
                         case "variableorder":
-                            order = this.state.value.text.toUpperCase();
+                            order = this.state.value.toUpperCase();
                             if (order === "SELECTORDER" && this.match(tt.string)) {
                                 node.variableOrder = "SELECTORDER";
                             } else {
@@ -1742,7 +1742,7 @@ export class StatementParser extends ExpressionParser {
         return this.parseEventBase(
             node => {
                 while (!this.match(tt._end)) {
-                    const text = this.state.value.text.toLowerCase();
+                    const text = this.state.value.toLowerCase();
                     this.next();
                     this.expect(tt.equal);
                     let val;
@@ -1779,10 +1779,10 @@ export class StatementParser extends ExpressionParser {
     //
 
     checkAndParseIdentifierOrString(check: string[]) {
-        const text = this.state.value.text.toLowerCase();
+        const text = this.state.value.toLowerCase();
         if (check.includes(text)) {
             return this.match(tt.identifier) ? this.parseIdentifier() :
-                this.parseStringLiteral(this.state.value.text);
+                this.parseStringLiteral(this.state.value);
         } else {
             if (this.match(tt.identifier)) {
                 return this.parseIdentifier();
@@ -2241,7 +2241,7 @@ export class StatementParser extends ExpressionParser {
         let propId, propName;
         switch (this.state.type) {
             case tt.string:
-                node.label = this.parseStringLiteral(this.state.value.text);
+                node.label = this.parseStringLiteral(this.state.value);
                 return;
             case tt.bracketL:
                 node.properties = this.parseMetaCustomProperties();
@@ -2273,7 +2273,7 @@ export class StatementParser extends ExpressionParser {
     }
 
     checkIfHeaderEnd() {
-        const text = this.state.value.text.toLowerCase();
+        const text = this.state.value.toLowerCase();
         return MetadataFieldValueType.includes(text);
     }
 
@@ -2286,7 +2286,7 @@ export class StatementParser extends ExpressionParser {
             this.next();
         }
         if (this.match(tt.string)) {
-            node.label = this.parseStringLiteral(this.state.value.text);
+            node.label = this.parseStringLiteral(this.state.value);
         } else if (next === charCodes.dash) {
             node.label = this.parseIdentifier();
         } else {
@@ -2462,7 +2462,7 @@ export class StatementParser extends ExpressionParser {
         const node = this.startNode(MetadataUsageType);
         this.expect(tt.braceL);
         if (this.match(tt.string)) {
-            const str = this.state.value.text.toLowerCase();
+            const str = this.state.value.toLowerCase();
             node.usageTypeValue = MetadataUsageTypeValues[str];
             if (!node.usageTypeValue) {
                 this.raise(
@@ -2492,13 +2492,13 @@ export class StatementParser extends ExpressionParser {
             switch (this.state.type) {
 
                 case tt.string:
-                    node.label = this.parseStringLiteral(this.state.value.text);
+                    node.label = this.parseStringLiteral(this.state.value);
                     break;
 
                 case tt.identifier:
                     if (this.checkIfHeaderEnd()) {
                         node.typeDef = this.parseMetadataFieldTypeDefinition();
-                    } else if (this.state.value.text.toLowerCase() === "usagetype") {
+                    } else if (this.state.value.toLowerCase() === "usagetype") {
                         node.usageType = this.parseMetadataUsageType();
                     } else {
                         this.unexpected();
@@ -2673,7 +2673,7 @@ export class StatementParser extends ExpressionParser {
         if (this.match(tt.braceL)) {
             this.next();
             if (this.match(tt.identifier)) {
-                const kw = this.state.value.text.toLowerCase();
+                const kw = this.state.value.toLowerCase();
                 if (kw === "use") {
                     this.next();
                     node.specify = this.expectAndParseStringLiteral();
@@ -2708,7 +2708,7 @@ export class StatementParser extends ExpressionParser {
         if (this.matchOne([ tt.identifier, tt.string ])) {
             const typeVal = this.match(tt.identifier) ?
                 this.parseIdentifier() :
-                this.parseStringLiteral(this.state.value.text);
+                this.parseStringLiteral(this.state.value);
             if (!MetadataCategoryElementTypeValues.includes(
                     typeVal instanceof Identifier ?
                     typeVal.name.toLowerCase() : typeVal.extra["raw"].toLowerCase()
@@ -2740,7 +2740,7 @@ export class StatementParser extends ExpressionParser {
     //
     parseMetadataCategorySuffixAtom(node: MetadataCategory) {
         if (this.match(tt.string)) {
-            node.label = this.parseStringLiteral(this.state.value.text);
+            node.label = this.parseStringLiteral(this.state.value);
         } else if (this.match(tt.identifier)) {
             const id = this.parseIdentifier();
             const name = id.name.toLowerCase();
@@ -2765,9 +2765,9 @@ export class StatementParser extends ExpressionParser {
                 case "keycode":
                     this.expect(tt.braceL);
                     if (this.match(tt.string)) {
-                        node.keycode = this.parseStringLiteral(this.state.value.text);
+                        node.keycode = this.parseStringLiteral(this.state.value);
                     } else if (this.match(tt.number)) {
-                        node.keycode = this.parseNumericLiteral(this.state.value.text);
+                        node.keycode = this.parseNumericLiteral(this.state.value);
                     } else if (this.match(tt.plusMin)) {
                         node.keycode = this.expectAndParseNumericLiteral();
                     } else if (this.matchOne([ tt._true, tt._false ])) {
@@ -2824,12 +2824,12 @@ export class StatementParser extends ExpressionParser {
         //                [ "list_label" ]
         //                [ fix ]
         //
-        if (this.state.value.text.toLowerCase() === "use" || (
-            ahead.type === tt.identifier && ahead.value.text.toLowerCase() === "use")) {
+        if (this.state.value.toLowerCase() === "use" || (
+            ahead.type === tt.identifier && ahead.value.toLowerCase() === "use")) {
             node.useList = this.parseMetadataCategoryUseList();
             return this.finishNode(node, "MetadataCategory");
         }
-        if (this.state.value.text === "-") {
+        if (this.state.value === "-") {
             node.name = "-";
             this.next();
         } else {
@@ -2851,7 +2851,7 @@ export class StatementParser extends ExpressionParser {
     //
     parseMetadataCategoryUseList(): MetadataCategoryUseList {
         const node = this.startNode(MetadataCategoryUseList);
-        const cur = this.state.value.text.toLowerCase();
+        const cur = this.state.value.toLowerCase();
         if ((this.match(tt.identifier) && cur !== "use") || cur === "-") {
             if (cur === "-") {
                 node.listName = "-";
@@ -2869,14 +2869,14 @@ export class StatementParser extends ExpressionParser {
         }
         node.useList = this.parseIdentifier();
         if (this.match(tt.identifier) &&
-            this.state.value.text.toLowerCase() === "sublist") {
+            this.state.value.toLowerCase() === "sublist") {
             node.subList = this.parseMetadataSublist();
         }
         if (this.match(tt.string)) {
-            node.listLabel = this.parseStringLiteral(this.state.value.text);
+            node.listLabel = this.parseStringLiteral(this.state.value);
         }
         if (this.match(tt.identifier) &&
-            this.state.value.text.toLowerCase() === "fix") {
+            this.state.value.toLowerCase() === "fix") {
             node.fix = this.parseIdentifier();
         }
         return this.finishNode(node, "MetadataCategoryUseList");
@@ -2885,7 +2885,7 @@ export class StatementParser extends ExpressionParser {
     parseMetadataSublist(): MetadataSubList {
         const node = this.startNode(MetadataSubList);
         this.next();
-        const text = this.state.value.text.toLowerCase();
+        const text = this.state.value.toLowerCase();
         if (this.match(tt.identifier) &&
             MetadataSublistSuffix.includes(text)) {
             const val = this.parseIdentifier();
@@ -2960,7 +2960,7 @@ export class StatementParser extends ExpressionParser {
         const node = this.startNode(MetadataCategoryList);
         node.categories = this.parseMetadataCategoryList();
         let existKw: string | undefined = undefined;
-        let cur = this.state.value.text.toLowerCase();
+        let cur = this.state.value.toLowerCase();
         if (!MetadataSublistSuffix.includes(cur)) {
             return this.finishNode(node, "MetadataCategoryList");
         }
@@ -3045,14 +3045,14 @@ export class StatementParser extends ExpressionParser {
             n,
             node => {
             if (node instanceof MetadataLongVariable &&
-                this.state.value.text.toLowerCase() === "precision") {
+                this.state.value.toLowerCase() === "precision") {
                 this.next();
                 this.expect(tt.braceL);
                 node["precision"] = this.expectAndParseNumericLiteral();
                 this.expect(tt.braceR);
             }
             if ((node instanceof MetadataDoubleVariable) &&
-                this.state.value.text.toLowerCase() === "scale") {
+                this.state.value.toLowerCase() === "scale") {
                 this.next();
                 this.expect(tt.braceL);
                 (node as MetadataDoubleVariable).scale = this.expectAndParseNumericLiteral();
@@ -3061,7 +3061,7 @@ export class StatementParser extends ExpressionParser {
             if (this.match(tt.curlyL)) {
                 node["categories"] = this.parseMetadataCategories();
             }
-            if (this.state.value.text.toLowerCase() === "codes") {
+            if (this.state.value.toLowerCase() === "codes") {
                 this.next();
                 this.expect(tt.braceL);
                 node["codes"] = this.parseMetadataCategories();
@@ -3357,12 +3357,12 @@ export class StatementParser extends ExpressionParser {
         }
         this.expectString("fields");
         this.next();
-        if (this.state.value.text === "-") {
+        if (this.state.value === "-") {
             node.iterationLabel = "-";
             this.next();
         }
         if (this.match(tt.string)) {
-            node.iterationLabel = this.parseStringLiteral(this.state.value.text);
+            node.iterationLabel = this.parseStringLiteral(this.state.value);
         }
         this.expect(tt.braceL);
         node.fields = this.parseMetadataFields();
@@ -3415,7 +3415,7 @@ export class StatementParser extends ExpressionParser {
     parseMetadataNumericLoopVariable(
         header: MetadataFieldHeadDefinition) {
         const typeDef = this.parseMetadataFieldTypeDefinition();
-        if (this.lookahead().value.text.toLowerCase() === "db") {
+        if (this.lookahead().value.toLowerCase() === "db") {
             return this.parseMetadataDataBaseLoopVariable(header, typeDef);
         }
         return this.parseMetadataLoopVariableBase(
@@ -3485,12 +3485,12 @@ export class StatementParser extends ExpressionParser {
     //
     parseMetadataBlockVariable(header: MetadataFieldHeadDefinition) {
         const node = this.startNodeAtNode(header, MetadataBlockVariable);
-        if (this.state.value.text.toLowerCase() === "block") {
+        if (this.state.value.toLowerCase() === "block") {
             this.next();
         }
         this.expectString("fields");
         this.next();
-        if (this.state.value.text === "-") {
+        if (this.state.value === "-") {
             this.next();
         }
         this.expect(tt.braceL);
@@ -3549,7 +3549,7 @@ export class StatementParser extends ExpressionParser {
         this.expect(tt.braceL);
         let existId = false, existLabel = false;
         while (!this.eat(tt.braceR)) {
-            const kw = this.state.value.text.toLowerCase();
+            const kw = this.state.value.toLowerCase();
             if (!this.match(tt.identifier)) {
                 throw this.unexpected();
             }
@@ -3618,7 +3618,7 @@ export class StatementParser extends ExpressionParser {
         this.expect(tt.braceL);
         let hasConnstr = false, hasTable = false, hasColumn = false;
         while (!this.eat(tt.braceR)) {
-            const kw = this.state.value.text.toLowerCase();
+            const kw = this.state.value.toLowerCase();
             if (!this.match(tt.identifier)) {
                 throw this.unexpected();
             }
@@ -3627,11 +3627,11 @@ export class StatementParser extends ExpressionParser {
             let type;
             switch (kw) {
                 case "connectionstring":
-                    node.connectionString = this.parseStringLiteral(this.state.value.text);
+                    node.connectionString = this.parseStringLiteral(this.state.value);
                     hasConnstr = true;
                     break;
                 case "table":
-                    node.table = this.parseStringLiteral(this.state.value.text);
+                    node.table = this.parseStringLiteral(this.state.value);
                     hasTable = true;
                     break;
                 case "minanswers":
@@ -3669,7 +3669,7 @@ export class StatementParser extends ExpressionParser {
                             ErrorMessages["MetadataUnkownProperty"]);
                         break;
                     }
-                    type = this.state.value.text.toLowerCase();
+                    type = this.state.value.toLowerCase();
                     if (["text", "double", "long", "date"].includes(type)) {
                         node.iterationIdType = this.expectAndParseStringLiteral();
                     } else {
@@ -3745,7 +3745,7 @@ export class StatementParser extends ExpressionParser {
         if (this.match(tt.bracketL)) {
             node.range = this.parseMetadataRanges(true, true, true);
         }
-        if (this.state.value.text.toLowerCase() === "codes") {
+        if (this.state.value.toLowerCase() === "codes") {
             this.next();
             this.expect(tt.braceL);
             node.codes = this.parseMetadataCategories();
@@ -3795,7 +3795,7 @@ export class StatementParser extends ExpressionParser {
         node.definition = this.parseMetadataDataBaseDbProperties();
         this.expectString("fields");
         this.next();
-        if (this.state.value.text === "-") {
+        if (this.state.value === "-") {
             node.iterationLabel = "-";
             this.next();
         } else if (this.match(tt.string)) {
@@ -3806,7 +3806,7 @@ export class StatementParser extends ExpressionParser {
         this.expect(tt.braceR);
         let rowOrColumn: string | undefined;
         while (!this.match(tt.semi)) {
-            const text = this.state.value.text.toLowerCase();
+            const text = this.state.value.toLowerCase();
             let kw;
             switch (text) {
                 case "row":
@@ -3815,7 +3815,7 @@ export class StatementParser extends ExpressionParser {
                         this.raise(
                             this.state.pos,
                             ErrorMessages["MetadataKeyCantExistMeanwhile"],
-                            this.state.value.text,
+                            this.state.value,
                             rowOrColumn
                         );
                         this.next();
@@ -3827,7 +3827,7 @@ export class StatementParser extends ExpressionParser {
                     } else {
                         node.column = kw;
                     }
-                    rowOrColumn = this.state.value.text;
+                    rowOrColumn = this.state.value;
                     break;
 
                 case "noexpand":
@@ -3847,7 +3847,7 @@ export class StatementParser extends ExpressionParser {
         header: MetadataFieldHeadDefinition,
         typeDef: MetadataFieldTypeDefinition
     ) {
-        if (this.state.value.text.toLowerCase() === "db") {
+        if (this.state.value.toLowerCase() === "db") {
             return this.parseMetadataDataBaseNonLoopVariable(
                 header, typeDef);
         }
@@ -3863,7 +3863,7 @@ export class StatementParser extends ExpressionParser {
 
     parseMetadataField(): MetadataBase {
         const header = this.parseMetadataFieldHeader();
-        const kw = this.state.value.text.toLowerCase();
+        const kw = this.state.value.toLowerCase();
         const allowExclude = kw !== "categorical" && kw !== "text";
         const allowStep = kw === "long";
         const allowSingle = kw !== "text";

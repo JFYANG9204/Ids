@@ -1,10 +1,9 @@
 import { extname } from "path";
 import { Options, ScriptFileType, SourceType } from "../options";
 import { StatementParser } from "./statement";
-import { File } from "../types";
+import { DeclarationBase, File } from "../types";
 import { Scope, ScopeHandler } from "../util/scope";
 import { ErrorMessages } from "./error-messages";
-import { DefinitionBase } from "../util/definition";
 import { getFileTypeMark } from "../file/util";
 
 
@@ -30,13 +29,13 @@ export class Parser extends StatementParser {
         }
     }
 
-    parse(preDef?: Scope, header?: DefinitionBase): File {
+    parse(preDef?: Scope, header?: DeclarationBase): File {
         const file = this.startNode(File);
         if (preDef) {
             this.scope.joinScope(preDef);
         }
         if (header) {
-            this.scope.currentScope().enterHeader(header);
+            this.scope.enterHeader(header);
         }
         if (this.length > 0) {
             this.nextToken();

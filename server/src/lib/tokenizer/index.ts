@@ -10,7 +10,6 @@ import { isNewLine, isWhitespace, lineBreakG, skipWhiteSpace } from "../util/whi
 import { LookaheadState, State } from "./state";
 import { keywords, Token, TokenType, types } from "./type";
 import { isIdentifierChar, isIdentifierStart } from "../util/identifier";
-import { BasicTypeDefinitions } from "../built-in/built-ins";
 import { DefinitionBase } from "../util/definition";
 
 const allowedNumberCharactor = {
@@ -154,7 +153,7 @@ export class Tokenizer extends ErrorParser {
         if (!this.isLookahead) this.state.startLoc = this.state.curPostion();
         const ch = this.input.codePointAt(this.state.pos);
         if (this.state.pos >= this.length || !ch) {
-            this.finishToken(types.eof, { text: "" });
+            this.finishToken(types.eof, "");
             return;
         }
         this.getTokenFromCode(ch);
@@ -300,7 +299,7 @@ export class Tokenizer extends ErrorParser {
 
     //
 
-    finishToken(type: TokenType, val: Value) {
+    finishToken(type: TokenType, val: string) {
         this.state.end = this.state.pos;
         this.state.type = type;
         this.state.value = val;
@@ -312,7 +311,7 @@ export class Tokenizer extends ErrorParser {
     finishOp(type: TokenType, size: number) {
         const text = this.input.slice(this.state.pos, this.state.pos + size);
         this.state.pos += size;
-        this.finishToken(type, { text: text });
+        this.finishToken(type, text);
     }
 
     // Read
@@ -359,11 +358,7 @@ export class Tokenizer extends ErrorParser {
         }
 
         out = this.input.slice(chunckStart, this.state.pos++);
-        this.finishToken(types.string, {
-            text: out,
-            definition: BasicTypeDefinitions.string,
-            isBasic: true,
-        });
+        this.finishToken(types.string, out);
     }
 
     readInt(radix: number, positive = true) {
@@ -440,11 +435,7 @@ export class Tokenizer extends ErrorParser {
             throw this.raise(this.state.pos, ErrorMessages["NumberIdentifier"]);
         }
 
-        this.finishToken(types.number, {
-            text: val ? val.toString() : "",
-            isBasic: true,
-            definition: BasicTypeDefinitions.long
-        });
+        this.finishToken(types.number, val ? val.toString() : "");
     }
 
     readNumber(startWithDot: boolean) {
@@ -468,13 +459,7 @@ export class Tokenizer extends ErrorParser {
         const text = this.input.slice(start, this.state.pos);
         this.finishToken(
             isDecimal ? types.decimal : types.number,
-            {
-                text: text,
-                isBasic: true,
-                definition: isDecimal ?
-                BasicTypeDefinitions.double :
-                BasicTypeDefinitions.long
-        });
+            text);
     }
 
     readIdentifier(firstCode?: number): string {
@@ -504,7 +489,7 @@ export class Tokenizer extends ErrorParser {
         if (!type) {
             type = types.identifier;
         }
-        this.finishToken(type, { text: word });
+        this.finishToken(type, word);
     }
 
     readToken_numberSign() {
@@ -513,31 +498,31 @@ export class Tokenizer extends ErrorParser {
         const kw = this.readIdentifier(this.input.charCodeAt(this.state.pos));
         switch (kw) {
             case "include":
-                this.finishToken(types.pre_include, { text: "include" });
+                this.finishToken(types.pre_include, "include");
                 return;
             case "define":
-                this.finishToken(types.pre_define, { text: "define" });
+                this.finishToken(types.pre_define, "define");
                 return;
             case "undef":
-                this.finishToken(types.pre_undef, { text: "undef" });
+                this.finishToken(types.pre_undef, "undef");
                 return;
             case "if":
-                this.finishToken(types.pre_if, { text: "if" });
+                this.finishToken(types.pre_if, "if");
                 return;
             case "elif":
-                this.finishToken(types.pre_elif, { text: "elif" });
+                this.finishToken(types.pre_elif, "elif");
                 return;
             case "else":
-                this.finishToken(types.pre_else, { text: "else" });
+                this.finishToken(types.pre_else, "else");
                 return;
             case "endif":
-                this.finishToken(types.pre_endif, { text: "endif" });
+                this.finishToken(types.pre_endif, "endif");
                 return;
             case "error":
-                this.finishToken(types.pre_error, { text: "error" });
+                this.finishToken(types.pre_error, "error");
                 return;
             case "line":
-                this.finishToken(types.pre_line, { text: "line" });
+                this.finishToken(types.pre_line, "line");
                 return;
 
             default:
@@ -552,7 +537,7 @@ export class Tokenizer extends ErrorParser {
             return;
         }
         ++this.state.pos;
-        this.finishToken(types.dot, { text: "." });
+        this.finishToken(types.dot, ".");
     }
 
     readToken_lt_gt(code: number) {
@@ -577,7 +562,7 @@ export class Tokenizer extends ErrorParser {
         //    this.finishToken(types.number, { text: val });
         //    return;
         //}
-        this.finishToken(types.plusMin, { text: this.input.slice(start, this.state.pos) });
+        this.finishToken(types.plusMin, this.input.slice(start, this.state.pos));
     }
 
     getTokenFromCode(code: number) {
@@ -585,57 +570,57 @@ export class Tokenizer extends ErrorParser {
             // 符号
             case charCodes.leftParenthesis:
                 ++this.state.pos;
-                this.finishToken(types.braceL, { text: "(" });
+                this.finishToken(types.braceL, "(");
                 return;
             case charCodes.rightParenthesis:
                 ++this.state.pos;
-                this.finishToken(types.braceR, { text: ")" });
+                this.finishToken(types.braceR, ")");
                 return;
             case charCodes.semicolon:
                 ++this.state.pos;
-                this.finishToken(types.semi, { text: ";" });
+                this.finishToken(types.semi, ";");
                 return;
             case charCodes.comma:
                 ++this.state.pos;
-                this.finishToken(types.comma, { text: "," });
+                this.finishToken(types.comma, ",");
                 return;
             case charCodes.leftSquareBracket:
                 ++this.state.pos;
-                this.finishToken(types.bracketL, { text: "[" });
+                this.finishToken(types.bracketL, "[");
                 return;
             case charCodes.rightSquareBracket:
                 ++this.state.pos;
-                this.finishToken(types.bracketR, { text: "]" });
+                this.finishToken(types.bracketR, "]");
                 return;
             case charCodes.leftCurlyBrace:
                 ++this.state.pos;
-                this.finishToken(types.curlyL, { text: "{" });
+                this.finishToken(types.curlyL, "{");
                 return;
             case charCodes.rightCurlyBrace:
                 ++this.state.pos;
-                this.finishToken(types.curlyR, { text: "}" });
+                this.finishToken(types.curlyR, "}");
                 return;
             case charCodes.colon:
                 ++this.state.pos;
-                this.finishToken(types.colon, { text: ":" });
+                this.finishToken(types.colon, ":");
                 return;
             case charCodes.slash:
                 ++this.state.pos;
-                this.finishToken(types.slash, { text: "/" });
+                this.finishToken(types.slash, "/");
                 return;
             case charCodes.asterisk:
                 ++this.state.pos;
-                this.finishToken(types.star, { text: "*" });
+                this.finishToken(types.star, "*");
                 return;
             case charCodes.equalsTo:
                 ++this.state.pos;
                 // #if 预处理 ==
                 if (this.input.charCodeAt(this.state.pos) === charCodes.equalsTo) {
                     ++this.state.pos;
-                    this.finishToken(types.pre_logical, { text: "==" });
+                    this.finishToken(types.pre_logical, "==");
                     return;
                 }
-                this.finishToken(types.equal, { text: "=" });
+                this.finishToken(types.equal, "=");
                 return;
             // .
             case charCodes.dot:
@@ -643,7 +628,7 @@ export class Tokenizer extends ErrorParser {
                 return;
             // ^
             case charCodes.caret:
-                this.finishToken(types.caret, { text: "^" });
+                this.finishToken(types.caret, "^");
                 return;
             // </ >
             case charCodes.lessThan:
@@ -663,7 +648,7 @@ export class Tokenizer extends ErrorParser {
             case charCodes.underscore:
                 if (!isIdentifierChar(this.input.charCodeAt(this.state.pos + 1))) {
                     ++this.state.pos;
-                    this.finishToken(types.underscore, { text: "_" });
+                    this.finishToken(types.underscore, "_");
                 } else {
                     this.readWord();
                 }
@@ -674,7 +659,7 @@ export class Tokenizer extends ErrorParser {
                 // #if 预处理语法 &&
                 if (this.input.charCodeAt(this.state.pos + 1) === charCodes.ampersand) {
                     this.state.pos += 2;
-                    this.finishToken(types.pre_logical, { text: "&&" });
+                    this.finishToken(types.pre_logical, "&&");
                     return;
                 }
                 this.readRadixNumber();
@@ -719,7 +704,7 @@ export class Tokenizer extends ErrorParser {
             case charCodes.exclamationMark:
                 if (this.input.charCodeAt(this.state.pos + 1) === charCodes.equalsTo) {
                     this.state.pos += 2;
-                    this.finishToken(types.pre_logical, { text: "!=" });
+                    this.finishToken(types.pre_logical, "!=");
                     return;
                 }
                 break;
@@ -727,7 +712,7 @@ export class Tokenizer extends ErrorParser {
             case charCodes.verticalBar:
                 if (this.input.charCodeAt(this.state.pos + 1) === charCodes.verticalBar) {
                     this.state.pos += 2;
-                    this.finishToken(types.pre_logical, { text: "||" });
+                    this.finishToken(types.pre_logical, "||");
                     return;
                 }
                 break;

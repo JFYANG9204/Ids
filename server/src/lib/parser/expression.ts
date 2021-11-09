@@ -120,7 +120,7 @@ export class ExpressionParser extends NodeUtils {
         let name: string;
         const { type } = this.state;
         if (type === tt.identifier) {
-            name = this.state.value.text;
+            name = this.state.value;
         } else if (type.keyword) {
             name = type.keyword;
         } else {
@@ -169,7 +169,7 @@ export class ExpressionParser extends NodeUtils {
     parseMaybeUnary(): Expression {
         if (this.state.type.prefix) {
             const node = this.startNode(UnaryExpression);
-            node.operator = this.state.value.text;
+            node.operator = this.state.value;
             node.prefix = true;
             this.next();
             node.argument = this.parseMaybeUnary();
@@ -218,7 +218,7 @@ export class ExpressionParser extends NodeUtils {
             if (this.match(tt.caret)) {
                 return this.parseLevelExpr(op);
             }
-            const id = this.state.value.text;
+            const id = this.state.value;
             // ^.Sum(Vehicle.(VehicleType = {Motorbike}))
             if (searchAggregate(id)) {
                 const startPos = this.state.pos;
@@ -282,7 +282,7 @@ export class ExpressionParser extends NodeUtils {
                 this.raise(
                     this.state.pos,
                     ErrorMessages["OperatorCanOnlyBeUsedInPreprocessor"],
-                    this.state.value.text);
+                    this.state.value);
             }
             if (op.binop === BinopType.logical) {
                 node = this.startNodeAt(leftStartPos, leftStartLoc, LogicalExpression);
@@ -290,7 +290,7 @@ export class ExpressionParser extends NodeUtils {
                 node = this.startNodeAt(leftStartPos, leftStartLoc, BinaryExpression);
             }
             node.left = left;
-            node.operator = this.state.value.text;
+            node.operator = this.state.value;
             this.next();
             node.right = this.parseExprOpRightExpr(prec);
             node.push(node.left, node.right);
@@ -318,14 +318,14 @@ export class ExpressionParser extends NodeUtils {
         switch (this.state.type) {
 
             case tt.identifier: return this.parseCallOrMember();
-            case tt.number:     return this.parseNumericLiteral(this.state.value.text);
-            case tt.decimal:    return this.parseDecimalLiteral(this.state.value.text);
-            case tt.string:     return this.parseStringLiteral(this.state.value.text);
+            case tt.number:     return this.parseNumericLiteral(this.state.value);
+            case tt.decimal:    return this.parseDecimalLiteral(this.state.value);
+            case tt.string:     return this.parseStringLiteral(this.state.value);
             case tt._null:      return this.parseNullLiteral();
 
             case tt._true:
             case tt._false:
-                return this.parseBooleanLiteral(this.state.value.text);
+                return this.parseBooleanLiteral(this.state.value);
 
             case tt.braceL:
                 return this.parseParen();
@@ -343,9 +343,9 @@ export class ExpressionParser extends NodeUtils {
                         DecimalLiteral:
                         NumericLiteral
                     );
-                    let val = this.state.value.text;
+                    let val = this.state.value;
                     this.next();
-                    val += this.state.value.text;
+                    val += this.state.value;
                     node.value = {
                         label: val,
                         defType: "literal",
@@ -540,7 +540,7 @@ export class ExpressionParser extends NodeUtils {
         ) {
             return this.parseCategoryRange();
         } else if (this.match(tt.number)) {
-            return this.parseNumericLiteral(this.state.value.text);
+            return this.parseNumericLiteral(this.state.value);
         } else {
             return this.parseIdentifier(true);
         }
@@ -561,7 +561,7 @@ export class ExpressionParser extends NodeUtils {
             lbound = this.parseIdentifier(true);
             node.push(lbound);
         } else if (this.match(tt.number)) {
-            lbound = this.parseNumericLiteral(this.state.value.text);
+            lbound = this.parseNumericLiteral(this.state.value);
             node.push(lbound);
         } else if (this.match(tt.dot)) {
             if (exclude) {
@@ -593,7 +593,7 @@ export class ExpressionParser extends NodeUtils {
                 );
             }
         } else if (this.match(tt.number)) {
-            ubound = this.parseNumericLiteral(this.state.value.text);
+            ubound = this.parseNumericLiteral(this.state.value);
             node.push(ubound);
             if (lbound && !(lbound instanceof NumericLiteral)) {
                 this.raiseAtNode(

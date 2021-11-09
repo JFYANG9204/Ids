@@ -40,7 +40,7 @@ export type ScopeSearchResult = {
 export class Scope {
 
     flags: ScopeFlags;
-    withHeader: Array<string> = [];
+    withHeader: Array<DeclarationBase> = [];
     currentHeader?: DeclarationBase;
     dims: Map<string, DeclarationBase> = new Map();
     consts: Map<string, DeclarationBase> = new Map();
@@ -178,10 +178,9 @@ export class ScopeHandler {
         return this.currentScope().withHeader[this.currentScope().withHeader.length - 1];
     }
 
-    enterHeader(type: string) {
+    enterHeader(type: DeclarationBase) {
         this.currentScope().withHeader.push(type);
-        let search = this.get(type);
-        this.currentScope().currentHeader = search?.result;
+        this.currentScope().currentHeader = type;
     }
 
     getName(scope: Scope, name: string): ScopeSearchResult | undefined {

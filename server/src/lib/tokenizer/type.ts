@@ -181,7 +181,7 @@ export const types = {
 export class Token {
 
     type: TokenType;
-    value: Value;
+    value: string;
     start: number;
     end: number;
     loc: SourceLocation;
