@@ -25,7 +25,7 @@ export class UtilParser extends Tokenizer {
             code: "DATACOLLECTION_SCRIPT_PARSER_SYNTAX_ERROR",
             reasonCode: "UnexpectedToken",
             template: tokenType ? `期望外的标识符. 应为"${tokenType.label}"` :
-                `期望外的标识符 '${this.state.value.text}'.`
+                `期望外的标识符 '${this.state.value}'.`
         };
         const err = this.raise(pos ? pos : this.state.start, errTemplate);
         if (throwError) {
@@ -35,7 +35,7 @@ export class UtilParser extends Tokenizer {
 
     expectString(text: string) {
         if (!(this.match(tt.identifier) &&
-            this.state.value.text.toLowerCase() === text.toLowerCase())) {
+            this.state.value.toLowerCase() === text.toLowerCase())) {
             this.raise(
                 this.state.pos,
                 ErrorMessages["ExpectToken"],
@@ -45,7 +45,7 @@ export class UtilParser extends Tokenizer {
     }
 
     isRelational(op: "<" | ">"): boolean {
-        return this.match(tt.relational) && this.state.value.text === op;
+        return this.match(tt.relational) && this.state.value === op;
     }
 
     expectRelational(op: "<" | ">") {
