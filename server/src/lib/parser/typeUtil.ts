@@ -10,12 +10,14 @@ import {
     VbsFsoDefinition,
 } from "../built-in/built-ins";
 import {
+    ArgumentDeclarator,
     AssignmentExpression,
     BinaryExpression,
     CallExpression,
     ClassOrInterfaceDeclaration,
     DeclarationBase,
     Expression,
+    FunctionDeclaration,
     Identifier,
     LineMark,
     LogicalExpression,
@@ -23,6 +25,7 @@ import {
     MemberExpression,
     NodeBase,
     PreDefineStatement,
+    PropertyDeclaration,
     UnaryExpression,
 } from "../types";
 import {
@@ -46,6 +49,29 @@ export class TypeUtil extends UtilParser {
 
     getVariant() {
         return this.scope.get("Variant")?.result;
+    }
+
+    matchType(base: string, check: string, node: NodeBase) {
+        let checkString = check.toLowerCase();
+        let baseString = base.toLowerCase();
+        let checkResult: boolean;
+        if (checkString === "variant" ||
+            baseString  === "variant" || (
+            baseString === "enum"   && checkString === "long") || (
+            baseString === "double" && checkString === "long")) {
+            checkResult = true;
+        } else {
+            checkResult = checkString === baseString;
+        }
+        if (!checkResult) {
+            this.raiseAtNode(
+                node,
+                ErrorMessages["UnmatchedVarType"],
+                false,
+                checkString,
+                baseString);
+        }
+        return checkResult;
     }
 
     declareLocalVar(
@@ -114,6 +140,34 @@ export class TypeUtil extends UtilParser {
         }
     }
 
+    raiseIndexError(node: NodeBase, type: string) {
+        this.raiseAtNode(
+            node,
+            ErrorMessages["UnmatchedIndexType"],
+            false,
+            type
+        );
+    }
+
+    getExprType(expr: Expression) {
+        let type;
+        switch (expr.type) {
+            case "Identifier":
+                type = this.getIdentifierType(expr as Identifier)?.name.name;
+                break;
+            case "MemberExpression":
+                type = this.getMemberType(expr as MemberExpression)?.name.name;
+                break;
+            case "CallExpression":
+                type = this.getCallExprType(expr as CallExpression)?.name.name;
+                break;
+
+            default:
+                break;
+        }
+        return type ?? "Variant";
+    }
+
     getIdentifierType(id: Identifier) {
         const name = id.name;
         let find = this.scope.get(name)?.result;
@@ -129,7 +183,9 @@ export class TypeUtil extends UtilParser {
             case "Identifier":
                 return this.getIdentifierType(obj as Identifier);
             case "MemberExpression":
-                return this.getMemberType(member);
+                return this.getMemberType(obj as MemberExpression);
+            case "CallExpression":
+                return this.getCallExprType(obj as CallExpression);
             case "Expression":
                 return this.scope.currentScope().currentHeader;
             default:
@@ -143,8 +199,10 @@ export class TypeUtil extends UtilParser {
         if (!obj) {
             return this.getVariant();
         }
-        if (!(obj instanceof ClassOrInterfaceDeclaration)) {
-            if (!this.scope.inFunction && this.options.raiseTypeError) {
+        if ((obj.type !== "ClassOrInterfaceDeclaration") &&
+            (obj.type !== "PropertyDeclaration")) {
+            if (!this.scope.inFunction &&
+                this.options.raiseTypeError) {
                 this.raiseAtNode(
                     member.object,
                     ErrorMessages["MissingParenObject"],
@@ -153,25 +211,82 @@ export class TypeUtil extends UtilParser {
             }
             return this.getVariant();
         }
-        const prop = member.property;
-        if (prop instanceof Identifier) {
-            const child = this.getPropertyOrMethod(prop.name, obj);
+        let prop = member.property;
+        // Object.Member
+        if (prop.type === "Identifier") {
+            let child: DeclarationBase | undefined;
+            if (obj.type === "PropertyDeclaration") {
+                const objReturn = (obj as PropertyDeclaration).returnType.name.name;
+                child = this.scope.get(objReturn, obj.namespace)?.result;
+            } else {
+                child = this.getPropertyOrMethod(
+                    (prop as Identifier).name,
+                    (obj as ClassOrInterfaceDeclaration));
+            }
             if (!child) {
                 this.raiseAtNode(
                     prop,
                     ErrorMessages["MissingProperty"],
                     false,
-                    prop.name
+                    (prop as Identifier).name
                 );
                 return this.getVariant();
             }
             return child;
         }
         // Object.Member[Index]
-        const collection = this.getFinalType(obj, true);
-        if (collection) {
-            return collection;
+        let memberDec;
+        let needParam;
+        let exprType = this.getExprType(member.property);
+        if (obj.type === "PropertyDeclaration") {
+            memberDec = obj as PropertyDeclaration;
+            if (memberDec.params.length === 0) {
+                let search = this.scope.get(
+                    memberDec.returnType.name.name,
+                    obj.namespace)?.result;
+                if (!search ||
+                    search.type !== "ClassOrInterfaceDeclaration") {
+                    if (this.options.raiseTypeError &&
+                        !this.scope.inFunction) {
+                        this.raiseIndexError(member.property, exprType);
+                    }
+                    return this.getVariant();
+                }
+                memberDec = this.getFinalType(
+                    search as ClassOrInterfaceDeclaration,
+                    true);
+            }
+        } else {
+            memberDec = this.getFinalType(
+                obj as ClassOrInterfaceDeclaration, true);
+            if (memberDec.type === "ClassOrInterfaceDeclaration" &&
+                !this.isCollection(memberDec as ClassOrInterfaceDeclaration)) {
+                if (this.options.raiseTypeError) {
+                    this.raiseIndexError(member.property, exprType);
+                }
+                return this.getVariant();
+            }
         }
+        if (memberDec instanceof PropertyDeclaration &&
+            memberDec.params.length === 0) {
+            this.raiseIndexError(member.property, "");
+        } else if (memberDec instanceof PropertyDeclaration) {
+            needParam = memberDec.params[0].declarator.name.name;
+        } else {
+            if (this.isCollection(memberDec as ClassOrInterfaceDeclaration)) {
+                if (memberDec.name.name === "Array") {
+                    needParam = "Long";
+                } else {
+                    needParam = (memberDec as ClassOrInterfaceDeclaration).default?.name.name;
+                }
+            } else {
+                needParam = memberDec.name.name;
+            }
+        }
+        if (needParam) {
+            this.matchType(needParam, exprType, member.property);
+        }
+        return memberDec;
     }
 
     getMemberType(member: MemberExpression): DeclarationBase | undefined {
@@ -183,24 +298,102 @@ export class TypeUtil extends UtilParser {
 
     getPropertyOrMethod(name: string, node: ClassOrInterfaceDeclaration) {
         for (const prop of node.properties) {
-            if (prop.memberName.name.toLowerCase() === name.toLowerCase()) {
+            if (prop.name.name.toLowerCase() === name.toLowerCase()) {
                 return prop;
             }
         }
         for (const method of node.methods) {
-            if (method.id.name.toLowerCase() === name.toLowerCase()) {
+            if (method.name.name.toLowerCase() === name.toLowerCase()) {
                 return method;
             }
         }
         return undefined;
     }
 
+    getCallExprType(callExpr: CallExpression) {
+        const callee = callExpr.callee;
+        let objType: DeclarationBase | undefined;
+        if (callee.type === "Identifier") {
+            objType = this.getIdentifierType(callee as Identifier);
+        } else {
+            objType = this.getMemberType(callee as MemberExpression);
+        }
+
+        let funcName;
+        if (callee.type === "Identifier") {
+            funcName = (callee as Identifier).name;
+        } else {
+            funcName = ((callee as MemberExpression).property as Identifier).name;
+        }
+
+        if (!objType) {
+            if (this.options.raiseTypeError) {
+                this.raiseAtNode(
+                    callee.type === "Identifier" ?
+                    callee : (callee as MemberExpression).property,
+                    ErrorMessages["UnknownFunction"],
+                    false,
+                    funcName);
+            }
+            return this.getVariant();
+        } else if (objType.type !== "FunctionDeclaration") {
+            this.raiseAtNode(
+                callee.type === "Identifier" ?
+                callee : (callee as MemberExpression).property,
+                ErrorMessages["IdentifierIsNotFunction"],
+                false,
+                funcName);
+            return this.getVariant();
+        }
+
+        this.checkFunctionParams(callExpr, objType as FunctionDeclaration);
+
+        const func = objType as FunctionDeclaration;
+        if (func.returnType) {
+            return this.scope.get(func.returnType)?.result;
+        } else {
+            return undefined;
+        }
+    }
+
+    checkFunctionParams(callExpr: CallExpression, func: FunctionDeclaration) {
+        let cur: ArgumentDeclarator | undefined;
+        let index = 0;
+        const params = callExpr.arguments;
+        const args = func.params;
+        for (const param of params) {
+            const paramType = this.getExprType(param);
+            if (index < params.length) {
+                const arg = args[index];
+                if (arg.paramArray) {
+                    cur = arg;
+                }
+                this.matchType(arg.declarator.valueType, paramType, param);
+            } else if (cur) {
+                this.matchType(cur.declarator.valueType, paramType, param);
+            }
+            index++;
+        }
+        if (args.length < params.length && !cur) {
+            this.raiseAtNode(callExpr,
+                ErrorMessages["IncorrectFunctionArgumentNumber"],
+                false,
+                params.length.toString(),
+                args.length.toString());
+        }
+    }
+
+    checkIfCollection(node: Expression) {
+
+    }
+
     getFinalType(
         node: ClassOrInterfaceDeclaration,
-        untilCollection?: boolean): DeclarationBase | undefined {
+        untilCollection?: boolean,
+        otherType?: (node: DeclarationBase) => boolean): DeclarationBase {
         if (!node.default || (
-            untilCollection && this.isCollection(node)
-        )) {
+            untilCollection && this.isCollection(node)) || (
+            otherType && otherType(node))) {
             return node;
         }
         let type;

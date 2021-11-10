@@ -104,8 +104,11 @@ export class Statement extends NodeBase {
 export class DeclarationBase extends NodeBase {
     declare?: true;
     enumerable: boolean = false;
+    name: Identifier;
+    namespace?: string;
     constructor(parser: ParserBase, pos: number, loc: Position) {
         super(parser, pos, loc);
+        this.name = new Identifier(parser, pos, loc);
     }
 }
 
@@ -641,7 +644,7 @@ export type ForLike = ForStatement | ForEachStatement;
 
 export class SingleVarDeclarator extends DeclarationBase {
     name: Identifier;
-    valueType: string = "variant";
+    valueType: string = "Variant";
     constructor(parser: ParserBase, pos: number, loc: Position) {
         super(parser, pos, loc);
         this.name = new Identifier(parser, pos, loc);
@@ -651,7 +654,7 @@ export class SingleVarDeclarator extends DeclarationBase {
 
 export class ArrayDeclarator extends DeclarationBase {
     name: Identifier;
-    valueType: string = "variant";
+    valueType: string = "Array";
     dimensions: number;
     boundaries?: number[];
     constructor(parser: ParserBase, pos: number, loc: Position) {
@@ -663,7 +666,7 @@ export class ArrayDeclarator extends DeclarationBase {
     }
 }
 
-export class VariableDeclaration extends DeclarationBase {
+export class VariableDeclaration extends NodeBase {
     declarations: Array<SingleVarDeclarator | ArrayDeclarator> = [];
     constructor(parser: ParserBase, pos: number, loc: Position) {
         super(parser, pos, loc);
@@ -671,7 +674,7 @@ export class VariableDeclaration extends DeclarationBase {
     }
 }
 
-export class ConstDeclarator extends DeclarationBase {
+export class ConstDeclarator extends NodeBase {
     declarator: SingleVarDeclarator;
     init: Expression;
     constructor(parser: ParserBase, pos: number, loc: Position) {
@@ -682,7 +685,7 @@ export class ConstDeclarator extends DeclarationBase {
     }
 }
 
-export class ConstDeclaration extends DeclarationBase {
+export class ConstDeclaration extends NodeBase {
     declarators: ConstDeclarator[] = [];
     constructor(parser: ParserBase, pos: number, loc: Position) {
         super(parser, pos, loc);
@@ -690,7 +693,7 @@ export class ConstDeclaration extends DeclarationBase {
     }
 }
 
-export class ArgumentDeclarator extends DeclarationBase {
+export class ArgumentDeclarator extends NodeBase {
     optional: boolean = false;
     paramArray: boolean = false;
     declarator: ArrayDeclarator | SingleVarDeclarator;
@@ -703,7 +706,7 @@ export class ArgumentDeclarator extends DeclarationBase {
 }
 
 export class FunctionDeclaration extends DeclarationBase {
-    id: Identifier;
+    name: Identifier;
     params: Array<ArgumentDeclarator> = [];
     body: BlockStatement;
     needReturn = false;
@@ -711,7 +714,7 @@ export class FunctionDeclaration extends DeclarationBase {
     constructor(parser: ParserBase, pos: number, loc: Position) {
         super(parser, pos, loc);
         this.type = "FunctionDeclaration",
-        this.id = new Identifier(parser, 0, emptyLoc);
+        this.name = new Identifier(parser, 0, emptyLoc);
         this.body = new BlockStatement(parser, 0, emptyLoc);
     }
 }
@@ -810,7 +813,7 @@ export class ObjectMemberBase extends Expression {
 }
 
 export class MemberExpression extends Expression {
-    object: Identifier | MemberExpression | Expression;
+    object: Identifier | MemberExpression | CallExpression | Expression;
     property: Expression;
     computed?: boolean;
     constructor(parser: ParserBase, pos: number, loc: Position) {
@@ -1683,16 +1686,16 @@ export class PropertySet extends NodeBase {
 export class PropertyDeclaration extends DeclarationBase {
     readonly?: boolean;
     default?: boolean;
-    returnType: SingleVarDeclarator | ArrayDeclarator;
+    returnType: SingleVarDeclarator;
     init?: any;
-    memberName: Identifier;
+    name: Identifier;
     params: Array<ArgumentDeclarator> = [];
     get?: PropertyGet;
     set?: PropertySet;
     constructor(parser: ParserBase, pos: number, loc: Position) {
         super(parser, pos, loc);
         this.type = "PropertyDeclaration";
-        this.memberName = new Identifier(parser, pos, loc);
+        this.name = new Identifier(parser, pos, loc);
         this.returnType = new SingleVarDeclarator(parser, pos, loc);
     }
 }

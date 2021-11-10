@@ -7,6 +7,7 @@ import {
     Expression,
     FunctionDeclaration,
     MacroDeclaration,
+    NamespaceDeclaration,
     NodeBase,
     SingleVarDeclarator
 } from "../types";
@@ -97,7 +98,7 @@ export class ScopeHandler {
             node instanceof FunctionDeclaration) {
             if (this.inFunction || this.inWith) {
                 this.raise(
-                    node.id,
+                    node.name,
                     ErrorMessages["DontAllowDeclareFunction"],
                     false,
                     this.inWith ? "With" : "Function或Sub"
@@ -217,7 +218,22 @@ export class ScopeHandler {
         }
     }
 
-    get(name: string) {
+    get(name: string, namespace?: string): ScopeSearchResult | undefined {
+        if (namespace) {
+            const field = this.store.namespaces.get(namespace.toLowerCase()) ||
+                          this.currentScope().namespaces.get(namespace.toLowerCase());
+            if (!field) {
+                return undefined;
+            }
+            for (const dec of (field as NamespaceDeclaration).body) {
+                if (dec.name.name.toLowerCase() === name.toLowerCase()) {
+                    return {
+                        type: BindTypes.classOrInterface,
+                        result: dec
+                    };
+                }
+            }
+        }
         return this.getName(this.store, name) ||
                this.getName(this.currentScope(), name);
     }

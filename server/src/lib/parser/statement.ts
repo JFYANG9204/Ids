@@ -946,7 +946,7 @@ export class StatementParser extends ExpressionParser {
         }
         this.scope.enter(ScopeFlags.function);
         this.next();
-        node.id = this.parseIdentifier();
+        node.name = this.parseIdentifier();
         this.expect(tt.braceL);
         node.params = this.parseFunctionDeclarationParam();
         if (this.match(tt._as)) {
@@ -1042,14 +1042,12 @@ export class StatementParser extends ExpressionParser {
         }
         this.checkIfDeclareFile();
         this.expect(tt._property);
-        node.memberName = this.parseIdentifier(true);
-        this.resetPreviousNodeTrailingComments(node.memberName);
+        node.name = this.parseIdentifier(true);
+        this.resetPreviousNodeTrailingComments(node.name);
         this.expect(tt.braceL);
         node.params = this.parseFunctionDeclarationParam();
-        if (this.match(tt._as)) {
-            this.next();
-            node.returnType = this.parseSingleVarDeclarator();
-        }
+        this.expect(tt._as);
+        node.returnType = this.parseSingleVarDeclarator();
         const ahead = this.lookahead();
         if (ahead.type === tt.equal) {
             this.next();
@@ -1134,11 +1132,15 @@ export class StatementParser extends ExpressionParser {
             switch (this.state.type) {
                 case tt._class:
                 case tt._interface:
-                    node.body.push(this.parseClassOrInterface());
+                    const classOrInterface = this.parseClassOrInterface();
+                    classOrInterface.namespace = node.name.name;
+                    node.body.push(classOrInterface);
                     break;
                 case tt._function:
                 case tt._sub:
-                    node.body.push(this.parseFunctionDeclaration());
+                    const func = this.parseFunctionDeclaration();
+                    func.namespace = node.name.name;
+                    node.body.push(func);
                     break;
 
                 default:
