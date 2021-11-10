@@ -1,8 +1,5 @@
-import { BuiltInDefinition } from "./types";
 
-
-
-export const builtInAggregate = new Set<BuiltInDefinition>([
+export const builtInAggregate = new Set([
     {
         name: "AVG",
         label: "AVG(expr)",

@@ -116,14 +116,12 @@ import {
 } from "../types";
 import { ErrorMessages } from "./error-messages";
 import { ExpressionParser } from "./expression";
-import {
-    isEventName
-} from "../built-in/built-ins";
 import { ParserBase } from "../base";
 import { Position } from "../util/location";
 import { ParserFileNode } from "../file/node";
 import { ErrorTemplate } from "./errors";
 import { BindTypes, ScopeFlags } from "../util/scope";
+import { isEventName } from "../util/match";
 
 export class StatementParser extends ExpressionParser {
 
@@ -417,6 +415,8 @@ export class StatementParser extends ExpressionParser {
                         this.next();
                     }
                 }
+                let find = this.scope.get(node.valueType)?.result;
+                this.scope.declareName(node.name.name, BindTypes.var, node, find);
                 return this.convertVarToArrayDeclarator(node, node.valueType);
             }
         }
@@ -668,7 +668,7 @@ export class StatementParser extends ExpressionParser {
             const stepExpr = this.parseExpression();
             node.push(stepExpr);
             if (stepExpr instanceof NumericLiteral) {
-                node.range.step = Number(stepExpr.value?.label);
+                node.range.step = Number(stepExpr.extra["raw"]);
             } else {
                 this.raiseAtNode(
                     stepExpr,
@@ -764,9 +764,15 @@ export class StatementParser extends ExpressionParser {
         const node = this.startNode(WithStatement);
         this.next();
         node.object = this.parseExpression();
+        let type: DeclarationBase | undefined;
+        this.getExprType(node.object, { type: type });
+        if (type) {
+            this.scope.enterHeader(type);
+        }
         node.body = this.parseBlock(tt._end);
         this.expect(tt._end);
         this.expect(tt._with);
+        this.scope.exitHeader();
         node.push(node.object, node.body);
         return this.finishNode(node, "WithStatement");
     }

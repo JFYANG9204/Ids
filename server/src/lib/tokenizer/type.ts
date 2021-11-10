@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import { Value } from "../types";
 import { SourceLocation } from "../util/location";
 import { State } from "./state";
 

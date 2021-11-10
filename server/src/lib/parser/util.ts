@@ -70,8 +70,7 @@ export class UtilParser extends Tokenizer {
         }
         for (let i = 0; i < this.state.lineMarks.length; ++i) {
             const ele = this.state.lineMarks[i];
-            if (ele.value && line.value &&
-                ele.value.toString().toLowerCase() === line.value.toString().toLowerCase()) {
+            if (ele.id.name.toLowerCase() === line.id.name.toLowerCase()) {
                 return true;
             }
         }

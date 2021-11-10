@@ -1,7 +1,5 @@
-import { BuiltInDefinition } from "./types";
 
-
-export const builtInEnums = new Set<BuiltInDefinition>([
+export const builtInEnums = new Set([
     {
         name: "LoopIterations",
         definitionType: "enum",

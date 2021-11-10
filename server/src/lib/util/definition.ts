@@ -239,23 +239,6 @@ export class FunctionDefinition extends DefinitionBase {
     return?: DefinitionBase;
     arguments: Array<Argument> = [];
 
-    override getLable(): string {
-        let args = "";
-        let first = true;
-        this.arguments.forEach(arg => {
-            let argText = "";
-            if (arg.isOptional) {
-                argText = "[" + argText + "]";
-            }
-            if (first) {
-                args = argText;
-            } else {
-                args += ", " + argText;
-            }
-            first = false;
-        });
-        return `(function) ${this.name}(${args}): ${this.return ? this.return.name : "Void"}`;
-    }
 }
 
 export class MethodDefinition extends FunctionDefinition {

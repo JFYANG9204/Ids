@@ -135,37 +135,7 @@ function setBuiltInCompletions(
     });
 }
 
-setBuiltInCompletions(builtInObjectDefinitions, CompletionItemKind.Module);
-setBuiltInCompletions(builtInFunctionDefinitions, CompletionItemKind.Function);
-setBuiltInCompletions(builtInAggregateDefinitions, CompletionItemKind.Function);
-
-builtInEnumeratorDefinitions.forEach(enumerator => {
-    builtInCompletions.push({
-        label: enumerator.name,
-        kind: CompletionItemKind.Enum,
-        documentation: {
-            kind: MarkupKind.Markdown,
-            value: enumerator.getNote()
-        }
-    });
-});
-
-builtInConstantDefinitions.forEach(constant => {
-    builtInCompletions.push({
-        label: constant.name,
-        kind: CompletionItemKind.Constant,
-        documentation: {
-            kind: MarkupKind.Markdown,
-            value: constant.getNote()
-        }
-    });
-});
-
 function getCompletionTypeFromDefinition(def: DefinitionBase): CompletionItemKind {
-    if (def === BasicTypeDefinitions.string ||
-        def === BasicTypeDefinitions.categorical) {
-        return CompletionItemKind.Variable;
-    }
     switch (def.defType) {
         case "object":     return CompletionItemKind.Variable;
         case "constant":   return CompletionItemKind.Constant;
@@ -325,29 +295,6 @@ export function getCompletionFromPosition(
 function getFunctionParamText(def: FunctionDefinition, index: number) {
     let text = def.name;
     let argTexts: string[] = [];
-    def.arguments.forEach((arg, ndx) => {
-        let typeText = "";
-        if (arg.type instanceof Array) {
-            let textArr: string[] = [];
-            arg.type.forEach(t => textArr.push(t.name));
-            typeText = textArr.join(" | ");
-        } else {
-            typeText = arg.type.name;
-        }
-        let argText = `${arg.name}: ${typeText}`;
-        if (arg.isOptional) {
-            argText = "[" + argText + "]";
-        }
-        if (ndx === index) {
-            argTexts.push(`__${argText}__`);
-        } else {
-            argTexts.push(argText);
-        }
-    });
-    if (argTexts.length > 0) {
-        text += argTexts.join(", ");
-    }
-    text += "): " + def.return ? def.return?.name : "Void";
     return text;
 }
 

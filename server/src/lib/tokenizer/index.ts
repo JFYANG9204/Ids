@@ -4,7 +4,7 @@ import * as charCodes from "../util/charcodes";
 import { Options } from "../options";
 import { ErrorMessages } from "../parser/error-messages";
 import { ErrorParser } from "../parser/errors";
-import { Comment, Value } from "../types";
+import { Comment } from "../types";
 import { SourceLocation } from "../util/location";
 import { isNewLine, isWhitespace, lineBreakG, skipWhiteSpace } from "../util/whitespace";
 import { LookaheadState, State } from "./state";
@@ -724,11 +724,6 @@ export class Tokenizer extends ErrorParser {
                 }
         }
         throw this.raise(this.state.pos, ErrorMessages["InvalidOrUnexpectedToken"]);
-    }
-
-    updateValue(val: Value, option: { def?: DefinitionBase, isBasic?: boolean }) {
-        val.definition = option.def;
-        val.isBasic = option.isBasic;
     }
 
 }

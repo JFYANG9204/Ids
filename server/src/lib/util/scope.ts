@@ -190,6 +190,14 @@ export class ScopeHandler {
         this.currentScope().currentHeader = type;
     }
 
+    exitHeader() {
+        this.currentScope().withHeader.pop();
+        if (this.currentScope().withHeader.length > 0) {
+            this.currentScope().currentHeader =
+                this.currentScope().withHeader[this.currentScope().withHeader.length - 1];
+        }
+    }
+
     getName(scope: Scope, name: string): ScopeSearchResult | undefined {
         const lowerName = name.toLowerCase();
         let result;

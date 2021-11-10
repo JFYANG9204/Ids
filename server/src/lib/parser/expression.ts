@@ -27,12 +27,8 @@ import { canBeReservedWord } from "../util/identifier";
 import { ErrorMessages } from "./error-messages";
 import { Position } from "../util/location";
 import { ParserBase } from "../base";
-import {
-    BasicTypeDefinitions,
-    searchAggregate,
-} from "../built-in/built-ins";
-import { createBasicValueType } from "../built-in/basic";
 import { isNewLine } from "../util/whitespace";
+import { isAggregateFunction } from "../util/match";
 
 export class ExpressionParser extends NodeUtils {
 
@@ -68,7 +64,6 @@ export class ExpressionParser extends NodeUtils {
 
     parseStringLiteral(value: string) {
         const node = this.parseLiteral(value, "StringLiteral", StringLiteral);
-        node.value = createBasicValueType(value, false, BasicTypeDefinitions.string);
         const strPos = this.state.start;
         for (let i = 0; i < value.length; i++) {
             const chr = value.charCodeAt(i);
@@ -86,26 +81,22 @@ export class ExpressionParser extends NodeUtils {
 
     parseNumericLiteral(value: string) {
         const node = this.parseLiteral(value, "NumericLiteral", NumericLiteral);
-        node.value = createBasicValueType(value, false, BasicTypeDefinitions.long);
         return node;
     }
 
     parseDecimalLiteral(value: string) {
         const node = this.parseLiteral(value, "DecimalLiteral", DecimalLiteral);
-        node.value = createBasicValueType(value, false, BasicTypeDefinitions.double);
         return node;
     }
 
     parseBooleanLiteral(value: string) {
         const node = this.startNode(BooleanLiteral);
-        node.value = createBasicValueType(value, false, BasicTypeDefinitions.boolean);
         this.next();
         return this.finishNode(node, "BooleanLiteral");
     }
 
     parseNullLiteral() {
         const node = this.startNode(NullLiteral);
-        node.value = createBasicValueType("null", false, BasicTypeDefinitions.null);
         this.next();
         return this.finishNode(node, "NullLiteral");
     }
@@ -142,10 +133,6 @@ export class ExpressionParser extends NodeUtils {
 
     createIdentifier(node: Identifier, name: string): Identifier {
         node.name = name;
-        node.value = {
-            label: name,
-            defType: "variant",
-        };
         node.loc.identifierName = name;
         const id = this.finishNode(node, "Identifier");
         return id;
@@ -220,7 +207,7 @@ export class ExpressionParser extends NodeUtils {
             }
             const id = this.state.value;
             // ^.Sum(Vehicle.(VehicleType = {Motorbike}))
-            if (searchAggregate(id)) {
+            if (isAggregateFunction(id)) {
                 const startPos = this.state.pos;
                 const startLoc = this.state.curPostion();
                 node.suffix = this.parseAggregate(
@@ -346,10 +333,6 @@ export class ExpressionParser extends NodeUtils {
                     let val = this.state.value;
                     this.next();
                     val += this.state.value;
-                    node.value = {
-                        label: val,
-                        defType: "literal",
-                    };
                     this.addExtra(node, "raw", val);
                     this.addExtra(node, "rawValue", val);
                     this.finishNode(node,
@@ -421,7 +404,7 @@ export class ExpressionParser extends NodeUtils {
         const startLoc = callee.loc.start;
         if (callee instanceof Identifier) {
             const name = callee.name;
-            if (searchAggregate(name)) {
+            if (isAggregateFunction(name)) {
                 return this.parseAggregate(callee, startPos, startLoc);
             }
         }
@@ -506,9 +489,8 @@ export class ExpressionParser extends NodeUtils {
      */
     parseCategoricalLiteral(): CategoricalLiteral {
         // 跳过'{'
-        const start = this.state.start;
-        this.next();
         const node = this.startNode(CategoricalLiteral);
+        this.next();
         let comma = false;
         while (!this.eat(tt.curlyR)) {
             if (this.match(tt.comma)) {
@@ -523,11 +505,8 @@ export class ExpressionParser extends NodeUtils {
                 comma = false;
             }
         }
-        node.value = createBasicValueType(
-            this.input.slice(start, this.state.lastTokenEnd),
-            false, BasicTypeDefinitions.categorical);
         node.pushArr(node.categories);
-        this.addExtra(node, "definition", BasicTypeDefinitions.categorical);
+        this.addExtra(node, "declaration", this.scope.get("Categorical")?.result);
         return this.finishNode(node, "CategoricalLiteral");
     }
 

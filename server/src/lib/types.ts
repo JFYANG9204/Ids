@@ -1,34 +1,15 @@
 import { ParserBase } from "./base";
-import { BasicTypeDefinitions } from "./built-in/built-ins";
 import { SourceType } from "./options";
 import { Parser } from "./parser";
 import { ParsingError } from "./parser/errors";
 import { Token } from "./tokenizer/type";
-import {
-    DefinitionBase,
-    FunctionDefinition,
-    ValueType
-} from "./util/definition";
 import { Position, SourceLocation } from "./util/location";
 import { Scope } from "./util/scope";
-
-export type Value = {
-    text: string,
-    definition?: DefinitionBase,
-    isBasic?: boolean,
-};
-
-export const defaultValue: Value = {
-    text: "default",
-    definition: BasicTypeDefinitions.variant,
-    isBasic: false,
-};
 
 const emptyLoc = new Position(0, 0);
 
 export class NodeBase {
     type: string;
-    value?: ValueType;
     start: number;
     end: number;
     loc: SourceLocation;
@@ -125,12 +106,12 @@ export class Identifier extends NodeBase {
 }
 
 export class LineMark extends NodeBase {
+    id: Identifier;
     constructor(parser: ParserBase, pos: number, loc: Position) {
         super(parser, pos, loc);
         this.type = "LineMark";
         this.id = new Identifier(parser, pos, loc);
     }
-    id: Identifier;
 }
 
 export class PrivateName extends NodeBase {
