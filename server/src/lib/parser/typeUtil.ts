@@ -1,14 +1,3 @@
-import { createArrayDefinition } from "../built-in/basic";
-import {
-    BasicTypeDefinitions,
-    IDocumentDefinition,
-    IQuestionDefinition,
-    MrScriptConstantsDefinition,
-    MsApplicationDefinition,
-    searchBuiltIn,
-    VbsDictionaryDefinition,
-    VbsFsoDefinition,
-} from "../built-in/built-ins";
 import {
     ArgumentDeclarator,
     AssignmentExpression,
@@ -26,21 +15,9 @@ import {
     NodeBase,
     PreDefineStatement,
     PropertyDeclaration,
-    UnaryExpression,
 } from "../types";
-import {
-    DefinitionBase,
-    FunctionDefinition,
-    InterfaceDefinition,
-    ObjectDefinition,
-    PropertyDefinition,
-    ValueType,
-    VariantDefinition,
-} from "../util/definition";
-import { matchOneOfDefinitions } from "../util/match";
 import { BindTypes } from "../util/scope";
 import { ErrorMessages, WarningMessages } from "./error-messages";
-import { ErrorTemplate } from "./errors";
 import { UtilParser } from "./util";
 
 export class TypeUtil extends UtilParser {
@@ -55,10 +32,12 @@ export class TypeUtil extends UtilParser {
         let checkString = check.toLowerCase();
         let baseString = base.toLowerCase();
         let checkResult: boolean;
-        if (checkString === "variant" ||
-            baseString  === "variant" || (
-            baseString === "enum"   && checkString === "long") || (
-            baseString === "double" && checkString === "long")) {
+        if (checkString === "variant"   ||
+            baseString  === "variant"   ||
+            checkString === "iquestion" ||
+            baseString  === "iquestion" || (
+            baseString  === "enum"   && checkString === "long") || (
+            baseString  === "double" && checkString === "long")) {
             checkResult = true;
         } else {
             checkResult = checkString === baseString;
@@ -140,39 +119,241 @@ export class TypeUtil extends UtilParser {
         }
     }
 
-    raiseIndexError(node: NodeBase, type: string) {
-        this.raiseAtNode(
-            node,
-            ErrorMessages["UnmatchedIndexType"],
-            false,
-            type
-        );
-    }
-
-    getExprType(expr: Expression) {
-        let type;
-        switch (expr.type) {
-            case "Identifier":
-                type = this.getIdentifierType(expr as Identifier)?.name.name;
+    checkAssignmentLeft(type: DeclarationBase, node: NodeBase) {
+        switch (type.type) {
+            case "PropertyDeclaration":
+                const prop = type as PropertyDeclaration;
+                if (prop.readonly &&
+                    this.options.raiseTypeError) {
+                    this.raiseAtNode(
+                        node,
+                        ErrorMessages["ReadonlyPropertCannotBeLeft"],
+                        false,
+                        prop.name.name);
+                }
                 break;
-            case "MemberExpression":
-                type = this.getMemberType(expr as MemberExpression)?.name.name;
+            case "FunctionDeclaration":
+                if (this.options.raiseTypeError) {
+                    this.raiseAtNode(
+                        node,
+                        ErrorMessages["FunctionCannotBeLeft"],
+                        false);
+                }
                 break;
-            case "CallExpression":
-                type = this.getCallExprType(expr as CallExpression)?.name.name;
+            case "MacroDeclaration":
+            case "ClassOrInterfaceDeclaration":
+                if (this.options.raiseTypeError) {
+                    this.raiseAtNode(
+                        node,
+                        ErrorMessages["ConstVarCannotBeAssigned"],
+                        false);
+                }
                 break;
 
             default:
                 break;
         }
+    }
+
+    checkLogicalLeftRight(type: DeclarationBase, node: NodeBase) {
+        switch (type.type) {
+            case "FunctionDeclaration":
+                const func = type as FunctionDeclaration;
+                if (!func.returnType) {
+                    this.needReturn(node);
+                }
+                break;
+
+            default:
+                break;
+        }
+    }
+
+    raiseIndexError(node: NodeBase, type: string) {
+        if (this.options.raiseTypeError &&
+            !this.scope.inFunction) {
+                this.raiseAtNode(
+                    node,
+                    ErrorMessages["UnmatchedIndexType"],
+                    false,
+                    type);
+        }
+    }
+
+    needReturn(expr: Expression) {
+        if (this.options.raiseTypeError &&
+            !this.scope.inFunction) {
+            this.raiseAtNode(
+                expr,
+                ErrorMessages["ExpressionNeedReturn"],
+                false);
+        }
+    }
+
+    needCollection(expr: Expression) {
+        if (this.options.raiseTypeError &&
+            !this.scope.inFunction) {
+            this.raiseAtNode(
+                expr,
+                ErrorMessages["PropertyOrObjectIsNotCollection"],
+                false);
+        }
+    }
+
+    undefined(node: NodeBase, name: string) {
+        if (this.options.raiseTypeError &&
+            !this.scope.inFunction) {
+            this.raiseAtNode(
+                node,
+                ErrorMessages["VarIsNotDeclared"],
+                false,
+                name);
+        }
+    }
+
+    checkExprError(expr: Expression) {
+        this.getExprType(expr);
+    }
+
+    getExprType(expr: Expression,
+        findType?: { type: DeclarationBase | undefined }) {
+        let type;
+        let find: DeclarationBase | undefined;
+        switch (expr.type) {
+
+            case "StringLiteral":
+                find = this.scope.get("String")?.result;
+                break;
+            case "NumericLiteral":
+                find = this.scope.get("Long")?.result;
+                break;
+            case "DecimalLiteral":
+                find = this.scope.get("Double")?.result;
+                break;
+            case "BooleanLiteral":
+                find = this.scope.get("Boolean")?.result;
+                break;
+            case "NullLiteral":
+                find = this.scope.get("Null")?.result;
+                break;
+
+            case "Identifier":
+                find = this.getIdentifierType(expr as Identifier);
+                break;
+            case "MemberExpression":
+                find = this.getMemberType(expr as MemberExpression);
+                break;
+            case "CallExpression":
+                find = this.getCallExprType(expr as CallExpression);
+                break;
+            case "UnaryExpression":
+                find = this.scope.get("Boolean")?.result;
+                break;
+            case "BinaryExpression":
+                find = this.getBinaryExprType(expr as BinaryExpression);
+                break;
+            case "AssignmentExpression":
+                find = this.getAssignExprType(expr as AssignmentExpression);
+                break;
+
+            default:
+                break;
+        }
+        if (findType) {
+            findType.type = find;
+        }
+        type = find?.name.name;
         return type ?? "Variant";
+    }
+
+    getLogicalExprType(expr: LogicalExpression): DeclarationBase | undefined {
+        let leftReturn: DeclarationBase | undefined;
+        let rightReturn: DeclarationBase | undefined;
+        this.getExprType(expr.left, { type: leftReturn });
+        this.getExprType(expr.right, { type: rightReturn });
+        if (leftReturn) {
+            this.checkLogicalLeftRight(leftReturn, expr.left);
+        }
+        if (rightReturn) {
+            this.checkLogicalLeftRight(rightReturn, expr.right);
+        }
+        return this.scope.get("Boolean")?.result;
+    }
+
+    getBinaryExprType(expr: BinaryExpression): DeclarationBase | undefined {
+        let leftReturn: DeclarationBase | undefined;
+        let rightReturn: DeclarationBase | undefined;
+        const left = this.getExprType(expr.left, { type: leftReturn });
+        const right = this.getExprType(expr.right, { type: rightReturn });
+        if (!leftReturn || !rightReturn) {
+            if (!leftReturn) {
+                this.needReturn(expr.left);
+            }
+            if (!rightReturn) {
+                this.needReturn(expr.right);
+            }
+            return this.getVariant();
+        }
+        if (this.matchType(left, right, expr.right)) {
+            return left.toLowerCase() === "variant" ? rightReturn : leftReturn;
+        } else {
+            return this.getVariant();
+        }
+    }
+
+    getAssignExprType(expr: AssignmentExpression) {
+        let left;
+        let rightType: DeclarationBase | undefined;
+        this.getExprType(expr.right, { type: rightType });
+        if (!rightType) {
+            this.needReturn(expr.right);
+            return this.getVariant();
+        }
+        if (expr.left instanceof Identifier) {
+            const leftResult = this.scope.get(expr.left.name);
+            left = leftResult?.result;
+            if (leftResult?.type === BindTypes.const) {
+                this.raiseAtNode(
+                    expr.left,
+                    ErrorMessages["ConstVarCannotBeAssigned"],
+                    false);
+            } else if (left) {
+                this.scope.update(
+                    expr.left.name,
+                    BindTypes.var,
+                    rightType,
+                    expr);
+            } else {
+                this.undefined(expr.left, expr.left.name);
+                this.scope.declareUndefined(
+                    expr.left.name,
+                    rightType);
+            }
+        } else {
+            let leftType: DeclarationBase | undefined;
+            left = this.getExprType(expr.right, { type: leftType });
+            if (leftType) {
+                this.checkAssignmentLeft(leftType, expr.left);
+            }
+        }
+        return rightType;
     }
 
     getIdentifierType(id: Identifier) {
         const name = id.name;
         let find = this.scope.get(name)?.result;
         if (find) {
+            this.addExtra(id, "declaration", find);
             return find;
+        } else {
+            if (this.options.treatUnkownAsQuesion) {
+                let question = this.scope.get("IQuestion")?.result;
+                this.scope.declareUndefined(id.name);
+                this.addExtra(id, "declaration", question);
+                return question;
+            } else {
+                this.undefined(id, id.name);
+            }
         }
         return this.scope.getUndefined(name);
     }
@@ -246,10 +427,7 @@ export class TypeUtil extends UtilParser {
                     obj.namespace)?.result;
                 if (!search ||
                     search.type !== "ClassOrInterfaceDeclaration") {
-                    if (this.options.raiseTypeError &&
-                        !this.scope.inFunction) {
-                        this.raiseIndexError(member.property, exprType);
-                    }
+                    this.raiseIndexError(member.property, exprType);
                     return this.getVariant();
                 }
                 memberDec = this.getFinalType(
@@ -261,9 +439,7 @@ export class TypeUtil extends UtilParser {
                 obj as ClassOrInterfaceDeclaration, true);
             if (memberDec.type === "ClassOrInterfaceDeclaration" &&
                 !this.isCollection(memberDec as ClassOrInterfaceDeclaration)) {
-                if (this.options.raiseTypeError) {
-                    this.raiseIndexError(member.property, exprType);
-                }
+                this.raiseIndexError(member.property, exprType);
                 return this.getVariant();
             }
         }
@@ -383,8 +559,57 @@ export class TypeUtil extends UtilParser {
         }
     }
 
-    checkIfCollection(node: Expression) {
-
+    checkIfCollection(node: Expression, element?: NodeBase) {
+        let type: DeclarationBase | undefined;
+        this.getExprType(node, { type: type });
+        if (!type) {
+            this.needCollection(node);
+            return false;
+        }
+        let final: DeclarationBase | undefined = type;
+        if (type.type === "PropertyDeclaration") {
+            const prop = type as PropertyDeclaration;
+            final = this.scope.get(prop.returnType.name.name)?.result;
+            if (!final) {
+                this.needCollection(node);
+                return false;
+            }
+        }
+        if (type.type !== "ClassOrInterfaceDeclaration") {
+            this.needCollection(node);
+            return false;
+        }
+        final = type as ClassOrInterfaceDeclaration;
+        if (!this.isCollection(final as ClassOrInterfaceDeclaration)) {
+            final = this.getFinalType(
+                final as ClassOrInterfaceDeclaration,
+                true);
+        }
+        if (!this.isCollection(final as ClassOrInterfaceDeclaration)) {
+            this.needCollection(node);
+            return false;
+        }
+        const variant = this.getVariant();
+        if (!(final as ClassOrInterfaceDeclaration).default) {
+            if (element) {
+                this.addExtra(element, "declaration", variant);
+            }
+            return variant;
+        } else {
+            const name = (final as ClassOrInterfaceDeclaration).default?.name.name;
+            if (name) {
+                const find = this.scope.get(name)?.result;
+                if (element) {
+                    this.addExtra(element, "declaration", find);
+                }
+                return find;
+            } else {
+                if (element) {
+                    this.addExtra(element, "declaration", variant);
+                }
+                return variant;
+            }
+        }
     }
 
     getFinalType(

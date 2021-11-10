@@ -41,3 +41,5 @@ End Class
 Class Variant
 End Class
 
+Class NULL
+End Class

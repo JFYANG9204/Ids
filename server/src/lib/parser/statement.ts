@@ -13,6 +13,7 @@ import {
     ConstDeclaration,
     ConstDeclarator,
     DecimalLiteral,
+    DeclarationBase,
     DoWhileStatement,
     EventSection,
     ExitStatement,
@@ -428,7 +429,13 @@ export class StatementParser extends ExpressionParser {
         this.expect(tt.equal);
         node.init = this.parseExpression(true);
         node.push(node.declarator, node.init);
-        this.declareLocalVar(node.declarator.name.name, node);
+        let right: DeclarationBase | undefined;
+        this.getExprType(node.init, { type: right });
+        this.scope.declareName(
+            node.declarator.name.name,
+            BindTypes.const,
+            node.declarator,
+            right);
         return this.finishNode(node, "ConstDeclarator");
     }
 
@@ -490,7 +497,10 @@ export class StatementParser extends ExpressionParser {
         }
         node.boundaries = boundaries;
         node.dimensions = dimensions;
-        this.declareLocalVar(id.name, node);
+        this.scope.declareName(
+            node.name.name,
+            BindTypes.var,
+            node);
         return this.finishNode(node, "ArrayDeclarator");
     }
 
@@ -503,7 +513,15 @@ export class StatementParser extends ExpressionParser {
                 node.initValue = node.init.extra["raw"];
             }
         }
-        this.declareMacroVar(node.name.name, node);
+        let rightType: DeclarationBase | undefined;
+        if (node.init) {
+            this.getExprType(node.init, { type: rightType });
+        }
+        this.scope.declareName(
+            node.name.name,
+            BindTypes.const,
+            node,
+            rightType);
         return this.finishNode(node, "MacroDeclaration");
     }
 
@@ -519,7 +537,7 @@ export class StatementParser extends ExpressionParser {
                 hasComma = false;
             } else {
                 const id = this.parseSingleVarDeclarator();
-                this.declareLocalVar(id.name.name, id);
+                this.scope.declareName(id.name.name, BindTypes.var, id);
                 declarators.push(id);
                 hasComma = false;
             }
@@ -551,6 +569,7 @@ export class StatementParser extends ExpressionParser {
         const node = this.startNode(ExpressionStatement);
         node.expression = this.parseExpression(true);
         node.push(node.expression);
+        this.checkExprError(node.expression);
         return this.finishNodeAt(node, "ExpressionStatement", this.state.lastTokenEnd, this.state.lastTokenEndLoc);
     }
 
@@ -674,6 +693,7 @@ export class StatementParser extends ExpressionParser {
         this.expect(tt._in);
         const collection = this.parseExpression();
         node.collection = collection;
+        this.checkIfCollection(collection, node.variable);
         node.body = this.parseBlock(tt._next);
         this.expect(tt._next);
         node.push(variable, collection, node.body);

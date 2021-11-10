@@ -91,7 +91,7 @@ export class ScopeHandler {
         this.stack.pop();
     }
 
-    declareName(name: string, bindingType: BindTypes, node: NodeBase) {
+    declareName(name: string, bindingType: BindTypes, node: NodeBase, type?: DeclarationBase) {
         const scope = this.currentScope();
         this.checkRedeclarationInScope(scope, name, node);
         if ((bindingType === BindTypes.function) &&
@@ -126,18 +126,26 @@ export class ScopeHandler {
             if (node instanceof MacroDeclaration) {
                 scope.macros.set(name.toLowerCase(), node);
             } else if (node instanceof SingleVarDeclarator) {
-                const variant = this.get("Variant")?.result;
-                if (variant) {
-                    scope.consts.set(name.toLowerCase(), variant);
+                if (type) {
+                    scope.consts.set(name.toLowerCase(), type);
+                } else {
+                    const variant = this.get("Variant")?.result;
+                    if (variant) {
+                        scope.consts.set(name.toLowerCase(), variant);
+                    }
                 }
             }
         }
     }
 
-    declareUndefined(name: string) {
-        const question = this.get("IQuestion")?.result;
-        if (question) {
-            this.currentScope().undefined.set(name.toLowerCase(), question);
+    declareUndefined(name: string, type?: DeclarationBase) {
+        if (!type) {
+            const question = this.get("IQuestion")?.result;
+            if (question) {
+                this.currentScope().undefined.set(name.toLowerCase(), question);
+            }
+        } else {
+            this.currentScope().undefined.set(name.toLowerCase(), type);
         }
     }
 
