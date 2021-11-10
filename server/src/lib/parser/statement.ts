@@ -1148,6 +1148,7 @@ export class StatementParser extends ExpressionParser {
     parseNamespaceDeclaration(): NamespaceDeclaration {
         const node = this.startNode(NamespaceDeclaration);
         this.checkIfDeclareFile("NameSpace");
+        this.scope.enter(ScopeFlags.namespace);
         this.next();
         while (this.lookahead().type === tt.dot) {
             node.level.push(this.parseIdentifier().name);
@@ -1174,6 +1175,7 @@ export class StatementParser extends ExpressionParser {
             }
         }
         this.expect(tt._nameSpace);
+        this.scope.exit();
         return this.finishNode(node, "NamespaceDeclaration");
     }
 
