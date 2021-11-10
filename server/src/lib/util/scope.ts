@@ -43,10 +43,10 @@ export class Scope {
     currentHeader?: DeclarationBase;
     dims: Map<string, DeclarationBase> = new Map();
     consts: Map<string, DeclarationBase> = new Map();
-    macros: Map<string, DeclarationBase> = new Map();
-    functions: Map<string, DeclarationBase> = new Map();
-    classes: Map<string, DeclarationBase> = new Map();
-    namespaces: Map<string, DeclarationBase> = new Map();
+    macros: Map<string, MacroDeclaration> = new Map();
+    functions: Map<string, FunctionDeclaration> = new Map();
+    classes: Map<string, ClassOrInterfaceDeclaration> = new Map();
+    namespaces: Map<string, NamespaceDeclaration> = new Map();
     undefined: Map<string, DeclarationBase> = new Map();
 
     constructor(flags: ScopeFlags) {
@@ -62,9 +62,9 @@ export class ScopeHandler {
 
     constructor(
         raise: RaiseFunction,
-        store: Scope) {
+        store?: Scope) {
         this.raise = raise;
-        this.store = store;
+        this.store = store ?? new Scope(ScopeFlags.program);
     }
 
     get inFunction() {
@@ -91,7 +91,11 @@ export class ScopeHandler {
         this.stack.pop();
     }
 
-    declareName(name: string, bindingType: BindTypes, node: NodeBase, type?: DeclarationBase) {
+    declareName(
+        name: string,
+        bindingType: BindTypes,
+        node: NodeBase,
+        type?: DeclarationBase) {
         const scope = this.currentScope();
         this.checkRedeclarationInScope(scope, name, node);
         if ((bindingType === BindTypes.function) &&
@@ -105,34 +109,32 @@ export class ScopeHandler {
                 );
                 return;
             }
-            scope.functions.set(name.toLowerCase(), node);
+            this.insertName(scope, name, node, "functions");
         } else if ((bindingType === BindTypes.var) &&
             (node instanceof SingleVarDeclarator || node instanceof ArrayDeclarator)) {
             if (node instanceof SingleVarDeclarator) {
                 const variant = this.get("Variant")?.result;
                 if (variant) {
-                    scope.dims.set(name.toLowerCase(), variant);
+                    this.insertName(scope, name, variant, "dims");
                 }
             } else {
                 const array = this.get("Array")?.result;
                 if (array) {
-                    scope.dims.set(name.toLowerCase(), array);
+                    this.insertName(scope, name, array, "dims");
                 }
             }
         } else if ((bindingType === BindTypes.classOrInterface) &&
             node instanceof ClassOrInterfaceDeclaration) {
-            scope.classes.set(name.toLowerCase(), node);
+            this.insertName(scope, name, node, "classes");
         } else if ((bindingType === BindTypes.const)) {
             if (node instanceof MacroDeclaration) {
-                scope.macros.set(name.toLowerCase(), node);
+                this.insertName(scope, name, node, "macros");
             } else if (node instanceof SingleVarDeclarator) {
+                let variant;
                 if (type) {
-                    scope.consts.set(name.toLowerCase(), type);
-                } else {
-                    const variant = this.get("Variant")?.result;
-                    if (variant) {
-                        scope.consts.set(name.toLowerCase(), variant);
-                    }
+                    this.insertName(scope, name, type, "consts");
+                } else if ((variant = this.get("Variant")?.result)) {
+                    this.insertName(scope, name, variant, "consts");
                 }
             }
         }
@@ -319,15 +321,46 @@ export class ScopeHandler {
         this.mergeMap(scope.macros, "macros");
         this.mergeMap(scope.functions, "functions");
         this.mergeMap(scope.classes, "classes");
-        this.mergeMap(scope.namespaces, "namespaces");
+        this.mergeNamespace(scope.namespaces, this.store.namespaces);
     }
 
-    mergeMap<K, V>(source: Map<K, V>, map: string) {
+    private mergeMap<K, V>(source: Map<K, V>, map: string) {
         source.forEach((value, key) => {
             this.store[map].set(key, value);
         });
     }
 
+    private mergeNamespace(
+        source: Map<string, NamespaceDeclaration>,
+        map: Map<string, NamespaceDeclaration>) {
+        source.forEach((value, key) => {
+            let exist;
+            if ((exist = map.get(key))) {
+                this.mergeSingleNamespace(value, exist);
+            } else {
+                map.set(key, value);
+            }
+        });
+    }
+
+    private mergeSingleNamespace(
+        source: NamespaceDeclaration,
+        map: NamespaceDeclaration) {
+        source.body.forEach(member => {
+            map.body.push(member);
+        });
+    }
+
+    private insertName(
+        scope: Scope,
+        name: string,
+        type: DeclarationBase,
+        key: string) {
+        scope[key].set(name.toLowerCase(), type);
+        if (!this.inFunction) {
+            this.store[key].set(name.toLowerCase(), type);
+        }
+    }
 
 }
 
