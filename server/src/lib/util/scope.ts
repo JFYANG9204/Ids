@@ -4,6 +4,7 @@ import {
     ArrayDeclarator,
     ClassOrInterfaceDeclaration,
     DeclarationBase,
+    EnumDeclaration,
     Expression,
     FunctionDeclaration,
     MacroDeclaration,
@@ -136,6 +137,8 @@ export class ScopeHandler {
                 } else if ((variant = this.get("Variant")?.result)) {
                     this.insertName(scope, name, variant, "consts");
                 }
+            } else if (node instanceof EnumDeclaration) {
+                this.insertName(scope, name, node, "consts");
             }
         } else if ((bindingType === BindTypes.namespace) &&
             node instanceof NamespaceDeclaration) {

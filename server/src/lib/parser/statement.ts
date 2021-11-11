@@ -1201,7 +1201,8 @@ export class StatementParser extends ExpressionParser {
         }
         node.pushArr(node.enumItems);
         this.expect(tt._enum);
-        return  this.finishNode(node, "EnumDeclaration");
+        this.scope.declareName(node.name.name, BindTypes.const, node);
+        return this.finishNode(node, "EnumDeclaration");
     }
 
     parseNamespaceDeclaration(): NamespaceDeclaration {

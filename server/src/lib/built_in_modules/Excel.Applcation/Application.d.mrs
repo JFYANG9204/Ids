@@ -1828,7 +1828,7 @@ NameSpace Excel
 
         '!
         ```ds
-        (property) Application.ActiveChart
+        (property) Application.ActiveChart: Chart
         ```
         ------------------------
         Returns a `Chart` object that represents the active chart (either an embedded chart or a chart sheet). An embedded chart is considered active when it's either selected or activated. When no chart is active, this property returns Nothing.
@@ -1850,6 +1850,305 @@ NameSpace Excel
         ```
         !'
         ReadOnly Property ActiveChart() As Chart
+
+        '!
+        ```ds
+        (property) Application.ActiveEncryptionSession: Long
+        ```
+        ------------------------
+        Read-only.
+
+        ### Syntax
+        ```vb
+        expression.ActiveEncryptionSession
+        ```
+        *expression* - A variable that represents an `Application` object.
+
+        ### Return Value
+        Long
+        !'
+        ReadOnly Property ActiveEncryptionSession() As Long
+
+        '!
+        ```ds
+        (property) Application.ActivePrinter: String
+        ```
+        ------------------------
+        Returns or sets the name of the active printer. Read/write `String`.
+
+        ### Syntax
+        ```vb
+        expression.ActivePrinter
+        ```
+        *expression* - A variable that represents an `Application` object.
+
+        ### Example
+        This example displays the name of the active printer.
+        ```vb
+        MsgBox "The name of the active printer is " & _
+            Application.ActivePrinter
+        ```
+        !'
+        Property ActivePrinter() As String
+
+        '!
+        ```ds
+        (property) Application.ActiveSheet: Worksheet
+        ```
+        ------------------------
+        Returns an object that represents the active sheet (the sheet on top) in the active workbook or in the specified window or workbook. Returns `Nothing` if no sheet is active.
+
+        ### Syntax
+        ```vb
+        expression.ActiveSheet
+        ```
+        *expression* - A variable that represents an `Application` object.
+
+        ### Remarks
+        If you don’t specify an object qualifier, this property returns the active sheet in the active workbook.
+        If a workbook appears in more than one window, the `ActiveSheet` property may be different in different windows.
+
+        ### Example
+        This example displays the name of the active sheet.
+        ```vb
+        MsgBox "The name of the active sheet is " & ActiveSheet.Name
+        ```
+        !'
+        ReadOnly Property ActiveSheet() As Worksheet
+
+        '!
+        ```ds
+        (property) Application.ActiveWindow: Window
+        ```
+        ------------------------
+        Returns a `Window` object that represents the active window (the window on top). Read-only. Returns `Nothing` if there are no windows open.
+
+        ### Syntax
+        ```vb
+        expression.ActiveWindow
+        ```
+        *expression* - A variable that represents an `Application` object.
+
+        ### Example
+        This example displays the name (`Caption` property) of the active window.
+        ```vb
+        MsgBox "The name of the active window is " & ActiveWindow.Caption
+        ```
+        !'
+        ReadOnly Property ActiveWindow() As Window
+
+        '!
+        ```ds
+        (property) Application.ActiveWorkbook: Workbook
+        ```
+        ------------------------
+        Returns a `Workbook` object that represents the workbook in the active window (the window on top). Read-only. Returns `Nothing` if there are no windows open or if either the Info window or the Clipboard window is the active window. Returns `Nothing` if there are no windows open.
+
+        ### Syntax
+        ```vb
+        expression.ActiveWorkbook
+        ```
+        *expression* - A variable that represents an `Application` object.
+
+        ### Example
+        This example displays the name of the active workbook.
+        ```vb
+        MsgBox "The name of the active workbook is " & ActiveWorkbook.Name
+        ```
+        !'
+        ReadOnly Property ActiveWorkbook() As Workbook
+
+        '!
+        ```ds
+        (property) Application.AddIns: Workbook
+        ```
+        ------------------------
+        Returns an `AddIns` collection that represents all the add-ins listed in the Add-Ins dialog box (Tools menu). Read-only.
+
+        ### Syntax
+        ```vb
+        expression.AddIns
+        ```
+        *expression* - A variable that represents an `Application` object.
+
+        ### Remarks
+        Using this method without an object qualifier is equivalent to `Application.Addins`
+
+        ### Example
+        This example displays the status of the Analysis ToolPak add-in. Note that the string used as the index to the `AddIns` collection is the title of the add-in, not the add-in’s file name.
+        ```vb
+        If AddIns("Analysis ToolPak").Installed = True Then
+            MsgBox "Analysis ToolPak add-in is installed"
+        Else
+            MsgBox "Analysis ToolPak add-in is not installed"
+        End If
+        ```
+        !'
+        ReadOnly Property AddIns() As AddIns
+
+        '!
+        ```ds
+        (property) Application.AlertBeforeOverwriting: Boolean
+        ```
+        ------------------------
+        *True* if Microsoft Excel displays a message before overwriting nonblank cells during a drag-and-drop editing operation. Read/write *Boolean*.
+
+        ### Syntax
+        ```vb
+        expression.AlertBeforeOverwriting
+        ```
+        *expression* - A variable that represents an `Application` object.
+
+        ### Example
+        This example causes Microsoft Excel to display an alert before overwriting nonblank cells during drag-and-drop editing.
+        ```vb
+        Application.AlertBeforeOverwriting = True
+        ```
+        !'
+        Property AlertBeforeOverwriting() As Boolean
+
+        '!
+        ```ds
+        (property) Application.AltStartupPath: String
+        ```
+        ------------------------
+        Returns or sets the name of the alternate startup folder. Read/write *String*.
+
+        ### Syntax
+        ```vb
+        expression.AltStartupPath
+        ```
+        *expression* - A variable that represents an `Application` object.
+
+        ### Example
+        This example sets the alternate startup folder.
+        ```vb
+        Application.AltStartupPath = "C:\EXCEL\MACROS"
+        ```
+        !'
+        Property AltStartupPath() As String
+
+        '!
+        ```ds
+        (property) Application.AlwaysUseClearType: String
+        ```
+        ------------------------
+        Returns or sets a *Boolean* that represents whether to use ClearType to display fonts in the menu, Ribbon, and dialog box text. Read/write *Boolean*.
+
+        ### Syntax
+        ```vb
+        expression.AlwaysUseClearType
+        ```
+        *expression* - A variable that represents an `Application` object.
+
+        ### Remarks
+        Even if the Microsoft Windows setting for ClearType is turned off, setting this property to *True* overrides the Windows setting and uses ClearType in all Microsoft Office applications.
+        !'
+        Property AlwaysUseClearType() As String
+
+        '!
+        ```ds
+        (property) Application.AnswerWizard: AnswerWizard
+        ```
+        ------------------------
+        Returns the `AnswerWizard` object for Microsoft Excel. Read-only.
+
+        ### Syntax
+        ```vb
+        expression.AnswerWizard
+        ```
+        *expression* - A variable that represents an `Application` object.
+
+        ### Example
+        This example resets the Answer Wizard file list.
+        ```vb
+        Application.AnswerWizard.ResetFileList
+        ```
+        !'
+        ReadOnly Property AnswerWizard() As AnswerWizard
+
+        '!
+        ```ds
+        (property) Application.Application: Application
+        ```
+        ------------------------
+        When used without an object qualifier, this property returns an `Application` object that represents the Microsoft Excel application. When used with an object qualifier, this property returns an Application object that represents the creator of the specified object (you can use this property with an OLE Automation object to return the application of that object). Read-only.
+
+        ### Syntax
+        ```vb
+        expression.Application
+        ```
+        *expression* - A variable that represents an `Application` object.
+
+        ### Example
+        This example displays a message about the application that created *myObject*.
+        ```vb
+        Set myObject = ActiveWorkbook
+        If myObject.Application.Value = "Microsoft Excel" Then
+            MsgBox "This is an Excel Application object."
+        Else
+            MsgBox "This is not an Excel Application object."
+        End If
+        ```
+        !'
+        ReadOnly Property Application() As Application
+
+
+        '!
+        ```ds
+        (property) Application.ArbitraryXMLSupportAvailable: Boolean
+        ```
+        ------------------------
+        Returns a *Boolean* value that indicates whether the XML features in Microsoft Excel are available. Read-only.
+
+        ### Syntax
+        ```vb
+        expression.ArbitraryXMLSupportAvailable
+        ```
+        *expression* - A variable that represents an `Application` object.
+        !'
+        ReadOnly Property ArbitraryXMLSupportAvailable() As Boolean
+
+
+        '!
+        ```ds
+        (property) Application.AskToUpdateLinks: Boolean
+        ```
+        ------------------------
+        *True* if Microsoft Excel asks the user to update links when opening files with links. *False* if links are automatically updated with no dialog box. Read/write *Boolean*.
+
+        ### Syntax
+        ```vb
+        expression.AskToUpdateLinks
+        ```
+        *expression* - A variable that represents an `Application` object.
+
+        ### Example
+        This example sets Microsoft Excel to ask the user to update links whenever a file that contains links is opened.
+        ```vb
+        Application.AskToUpdateLinks = True
+        ```
+        !'
+        Property AskToUpdateLinks() As Boolean
+
+
+        '!
+        ```ds
+        (property) Application.Assistance: IAssistance
+        ```
+        ------------------------
+        Returns an `IAssistance` object for Excel 2007 that represents the Microsoft Office Help Viewer. Read-only.
+
+        ### Syntax
+        ```vb
+        expression.Assistance
+        ```
+        *expression* - A variable that represents an `Application` object.
+
+        ### Remarks
+        The `IAssistance` object allows developers to show custom help and help that is installed with Office in the Office Help Viewer.
+        !'
+        ReadOnly Property Assistance() As IAssistance
 
     End Class
 
