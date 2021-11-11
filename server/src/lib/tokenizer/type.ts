@@ -127,6 +127,7 @@ export const types = {
     _else                        :     createKeyword("else",  { beforeExpr }),
     _elseif                      :     createKeyword("elseif"),
     _end                         :     createKeyword("end"),
+    _enum                        :     createKeyword("enum"),
     _error                       :     createKeyword("error"),
     _exit                        :     createKeyword("exit"),
     _explicit                    :     createKeyword("explicit"),

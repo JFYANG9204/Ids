@@ -253,7 +253,9 @@ export class ScopeHandler {
         }
     }
 
-    get(name: string, namespace?: string | NamespaceDeclaration): ScopeSearchResult | undefined {
+    get(name: string,
+        namespace?: string | NamespaceDeclaration):
+        ScopeSearchResult | undefined {
         if (namespace) {
             if (typeof namespace === "string") {
                 const field = this.store.namespaces.get(namespace.toLowerCase()) ||
@@ -372,7 +374,9 @@ export class ScopeHandler {
         }
     }
 
-    private searchInNamespace(namespace: NamespaceDeclaration, name: string): ScopeSearchResult | undefined {
+    private searchInNamespace(
+        namespace: NamespaceDeclaration,
+        name: string): ScopeSearchResult | undefined {
         for (const child of namespace.body) {
             if (name.toLowerCase() === child.name.name.toLowerCase()) {
                 let type = child.type === "ClassOrInterfaceDeclaration" ?

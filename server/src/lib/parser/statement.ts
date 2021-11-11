@@ -15,6 +15,8 @@ import {
     DecimalLiteral,
     DeclarationBase,
     DoWhileStatement,
+    EnumDeclaration,
+    EnumItemDeclarator,
     EventSection,
     ExitStatement,
     Expression,
@@ -374,6 +376,9 @@ export class StatementParser extends ExpressionParser {
 
             case tt._nameSpace:
                 return this.parseNamespaceDeclaration();
+
+            case tt._enum:
+                return this.parseEnumDeclaration();
 
             default:
                 throw this.unexpected();
@@ -1170,6 +1175,33 @@ export class StatementParser extends ExpressionParser {
             BindTypes.classOrInterface,
             node);
         return this.finishNode(node, "ClassOrInterfaceDeclaration");
+    }
+
+    parseEnumItemDeclarator(): EnumItemDeclarator {
+        const node = this.startNode(EnumItemDeclarator);
+        node.name = this.parseIdentifier();
+        if (this.eat(tt.equal)) {
+            if (this.match(tt.number)) {
+                const num = this.parseNumericLiteral(this.state.value);
+                node.enumValue = Number(num.extra["rawValue"]);
+            } else {
+                this.unexpected(undefined, undefined, undefined, false);
+                this.next();
+            }
+        }
+        return this.finishNode(node, "EnumItemDeclarator");
+    }
+
+    parseEnumDeclaration(): EnumDeclaration {
+        const node = this.startNode(EnumDeclaration);
+        this.next();
+        node.name = this.parseIdentifier();
+        while (!this.eat(tt._end)) {
+            node.enumItems.push(this.parseEnumItemDeclarator());
+        }
+        node.pushArr(node.enumItems);
+        this.expect(tt._enum);
+        return  this.finishNode(node, "EnumDeclaration");
     }
 
     parseNamespaceDeclaration(): NamespaceDeclaration {

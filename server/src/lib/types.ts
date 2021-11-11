@@ -1720,3 +1720,19 @@ export class MacroDeclaration extends DeclarationBase {
     }
 }
 
+export class EnumItemDeclarator extends DeclarationBase {
+    enumValue?: number;
+    constructor (parser: ParserBase, pos: number, loc: Position) {
+        super (parser, pos, loc);
+        this.type = "EnumItemDeclarator";
+    }
+}
+
+export class EnumDeclaration extends DeclarationBase {
+    enumItems: Array<EnumItemDeclarator> = [];
+    constructor(parser: ParserBase, pos: number, loc: Position) {
+        super(parser, pos, loc);
+        this.type = "EnumDeclaration";
+    }
+}
+
