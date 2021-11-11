@@ -1,0 +1,408 @@
+
+Namespace TOMLib
+
+    '!
+    ```ds
+    (interface) IElement
+    ```
+    -----------------------------
+    An `Element` is the smallest discrete unit in an axis. An element in a side axis corresponds to a row in the resulting two-dimensional table and an element in the top axis corresponds to a column. For an aggregated table an `Element` object typically corresponds to an MDM element (normally a category), but additional analysis elements that are not part of the MDM variable can also be created. For a profile table an `Element` object in the top axis corresponds to a variable to profile.
+    !'
+    Interface IElement Implements Object
+
+        '!
+        ```ds
+        (property) IElement.HasCellValues: Boolean
+        ```
+        -----------------------------
+        `HasCellValues` is *True* if there is a row or field in the `CellValues` ADO recordset corresponding to this Element object.
+
+        ### Remarks
+        If `HasCellValues` is *False* then there are no cell values corresponding to this element. This property will typically be False in the following situations:
+        + For elements (except elements of type *eBase* and *eCategory*) that are part of an axis that is not located at the inner-most nest. `Elements` like *eMean*, *eMinimum*, *eSampleVar*, etc, only have `HasCellValues = True` if they are at the inner-most nest on the table.
+        + For 'system' elements. A system element is generally any element marked as `'Hidden = True'` in the metadata, or an element of the type; *eSumWeightsSquared*, *eSumWeightsSquared*, *eSumN*, *eSumX*, *eSumXSquared*, or *eSumUnweightedN*.
+        !'
+        ReadOnly Property HasCellValues() As Boolean
+
+        '!
+        ```ds
+        (property) IElement.Name: String
+        ```
+        -----------------------------
+        The name used to reference the `Element` object.
+
+        ### Remarks
+        If the element type is *eCategory* then there will also be an element with the same name in the associated MDM field or variable. If the element type is *eProfile* then there will exist an MDM variable of the same name.
+        !'
+        ReadOnly Property Name() As String
+
+        '!
+        ```ds
+        (property) IElement.Parent: IElements
+        ```
+        -----------------------------
+        The parent object
+
+        ### Remarks
+        The `Parent` property of the `Element` object will return an `Elements` collection (either the `SubElements` collection of a `Net` or `Combine` element, or the `Elements` collection of a axis)
+        !'
+        ReadOnly Property Parent() As IElements
+
+        '!
+        ```ds
+        (property) IElement.ShownOnTable: Boolean
+        ```
+        -----------------------------
+        `ShownOnTable` is *True* if this element object is to be displayed on the table.
+
+        ### Remarks
+        This property is independent of the `HasCellValues` property. Normally `ShownOnTable` will be False if `HasCellValues` is *False*. But it is possible that the element should still be shown in the axis even if `HasCellValues` is *False*. This property will typically be *False* in the following situations:
+        + For cell values that have been hidden due to a hide rule
+        + In most situations where `HasCellValues = False`.
+        + When `IsHidden = True`
+        !'
+        ReadOnly Property ShownOnTable() As Boolean
+
+        '!
+        ```ds
+        (property) IElement.Specification: String
+        ```
+        --------------------------
+        The specification of the element as it appears in the axis expression.
+        !'
+        ReadOnly Property Specification() As String
+
+        '!
+        ```ds
+        (property) IElement.Style: IStyle
+        ```
+        --------------------------
+        Controls the formatting of the element when displayed and exported.
+        !'
+        ReadOnly Property Style() As IStyle
+
+        '!
+        ```ds
+        (property) IElement.SubElements: IElements
+        ```
+        --------------------------
+        A collection of `Elements` objects that make up a net or combine element
+
+        ### Remarks
+        It is only possible to add elements to this collection if the element type is *eNet* or *eCombine*. Currently any type of element can be added to the `SubElements` collection, but this may be restricted in the future if it is determined that some elements are not valid.
+        !'
+        ReadOnly Property SubElements() As IElements
+
+        '!
+        ```ds
+        (property) IElement.Type: ElementType
+        ```
+        --------------------------
+        The type of element
+        !'
+        ReadOnly Property Type() As ElementType
+
+        '!
+        ```ds
+        (property) IElement.AnalysisVariable: String
+        ```
+        --------------------------
+        The name of the analysis variable used by an analysis element
+
+        ### Remarks
+        The `AnalysisVariable` property can optionally be specified for the following element types (if not specified then the factors of the preceding elements are used):
+        + eMean
+        + eStdDev
+        + eStdErr
+        + eSampleVar
+        + eTValue
+        + eTProb
+
+        The `AnalysisVariable` property **MUST** be specified for the following element types:
+        + eMinimum
+        + eMaximum
+        + eMedian
+        + eMode
+        + ePercentile
+        + eNumeric
+        + eSum
+        !'
+        Property AnalysisVariable() As String
+
+        '!
+        ```ds
+        (property) IElement.CalculationScope: CalculationScopeType
+        ```
+        --------------------------
+        Determines the elements used in the calculation of some summary statistic elements
+
+        ### Remarks
+        The `CalculationScope` property currently affects *eMean*, *eStdDev*, *eStdErr*,*eSampleVar*, *eTValue* and *eTProb* elements that are calculated based on factors. It also affects the `Net` element.
+        When the `CalculationScope` property of one of these summary statistic elements is set to csAllElements, the calculation searches both the preceding and following elements for elements to include in the calculation.
+        When the `CalculationScope` property is set to *csPrecedingElements*, the calculation only searches the preceding elements for elements to include in the calculation.
+        The search for elements to include in the calculation of a summary statistic stops at:
+        + any *eBase* element
+        + the limits of the axis (i.e. the start or end of an axis)
+        + the limits of a net (if the summary statistic element is inside a net)
+
+        By default non-category elements, that can be filtered by an expression, are filtered by the net when added to a net. For example, the mean element in the net only includes the elements in the net. If the `CalculationScope` property of net element is set with *csAllElements*, the factor mean includes all elements, including elements in top and elements within nets. The default `CalculationScope` property for a net element is *csPrecedingElements*.
+        In versions prior to 2.2 the behavior of the *eMean*, *eStdDev*, *eStdErr*, and *eSampleVar* elements was equivalent to *csPrecedingElements*. The default `CalculationScope` for these elements when added via the `IElements.AddNew` method in version 2.2 and subsequent versions is *csAllElements*. Any *eMean*, *eStdDev*, *eStdErr*, or *eSampleVar* that exists in the metadata (and added via the `IElements.Add` method) will have a default of *csPrecedingElements* and therefore retain the original behavior.
+        Any element created in version 2.2 and later of TOM (by using `IElements.AddNew`) will have its `CalculationScope` property initially set to *csAllElements*. Any *eMean*, *eStdDev*, *eStdErr*, or *eSampleVar* element generated by adding a metadata element to TOM (using `IElements.Add`) will have its `CalculationScope` property initially set to *csPrecedingElements*. This preserves the original behavior for metadata elements. These default values will also apply for MTD files saved before version 2.2 when the CalculationScope property didn't exist.
+        !'
+        Property CalculationScope() As CalculationScopeType
+
+        '!
+        ```ds
+        (property) IElement.ColumnText: String
+        ```
+        --------------------------
+        The text to insert in the cell for each column.
+
+        ### Remarks
+        This property is only valid for text elements and it is ignored when the text element is on the top axis. For a text element on the side axis, it inserts the text into the cell for each column. For example, if a side axis expression is specified as {.., T1 '' text() [ColumnText='-----'], T2 'Total' total()} then a row with ----- in each column will be displayed just above the total row.
+        !'
+        Property ColumnText() As String
+
+        '!
+        ```ds
+        (property) IElement.CountsOnly: Boolean
+        ```
+        --------------------------
+        When set to *True*, this specifies that only the counts should be displayed for the row or column, regardless of what `CellItems` are specified for the table.
+
+        ### Remarks
+        This property is allowed on the following element types:
+        + eCategory
+        + eBase
+        + eTotal
+        + eSubTotal
+        + eNet
+        + eCombine
+        + eExpression
+        + eDerived
+
+        A table cell will display only counts if either the row or the column has `CountsOnly` set to True
+        !'
+        Property CountsOnly() As Boolean
+
+        '!
+        ```ds
+        (property) IElement.CutOffValue: Double
+        ```
+        --------------------------
+        The cut off value for *ePercentile* elements
+
+        ### Remarks
+        The `CutOffValue` is only applicable to *ePercentile* elements. Attempting to set a value for the `CutOffValue` property for any other element type or *ePercentile* elements that are defined in the metadata will cause an error. The `CutOffValue` must be set between 0 and 100 percent.
+        The `CutOffValue` determines the percentile that the *ePercentile* element calculates, where a P-th percentile is the smallest value of a numeric variable that is greater than P percent of the values in a given set. For example a `CutOffValue` of 25 calculates V, the smallest value such that 25% of respondents have a value less than V.
+        The default `CutOffValue` is 50. This corresponds to the 50th percentile, which is identical to the *eMedian* element type.
+        !'
+        Property CutOffValue() As Double
+
+        '!
+        ```ds
+        (property) IElement.Decimals: Long
+        ```
+        --------------------------
+        The number of digits to be shown after the decimal place.
+
+        ### Remarks
+        The default value depends on the element type. The number of digits must be between 0 to 20 digits. Setting this property to zero cause the cell value to be displayed as an integer.
+        This property can only be set for the following element types (modify the `Decimals` property on the `CellItem` object for all others):
+        + eUnweightedBase
+        + eMean
+        + eStdDev
+        + eStdErr
+        + eSampleVar
+        + eTValue
+        + eTProb
+        + eTotal
+        + eSubTotal
+        + eMinimum
+        + eMaximum
+        + eMedian
+        + eMode
+        + ePercentile
+        + eSum
+        + eTableStatistic
+        !'
+        Property Decimals() As Long
+
+        '!
+        ```ds
+        (property) IElement.Expression: String
+        ```
+        --------------------------
+        A custom expression that determines the value of the element when the table is populated
+
+        ### Remarks
+        The behavior of the `Expression` property depends on the element type:
+        + The `expression` property can not be modified for the following element types; *eCategory*, *eTableStatistic*, *eTotal*, *eSubTotal*, *eText*, *eNetDiffs*, *ePairedPref*, *eEffectiveBase*, *eNet*, and *eCombine*.
+        + For elements of type eNet and eCombine, the `Expression` property is read-only. The expression is dependent on the elements in the `SubElements` collection and controls the cases that are counted when the data is aggregated.
+        + For elements of type eDerived the `Expression` property is read/write. Any valid *mrEvaluate* expression can be used. The expression creates a row or column derived from other rows and columns. The expression can only refer to elements in the same elements collection as the derived elements.
+        + For all other element types not listed above, the property is read/write. Cases for which the expression evaluates to True are considered in the calculation of the element. The expression property doesn't have any effect on elements that are based on MDM elements (i.e. added via the `IElements.Add` method), for example *Base* and *Mean* elements that exist in a Quanvert dataset. This is because those elements already have case data associated with them.
+        !'
+        Property Expression() As String
+
+        '!
+        ```ds
+        (property) IElement.Factor: Variant
+        ```
+        --------------------------
+        The factor value for the element to use when calculating factor based analysis elements.
+
+        ### Remarks
+        Setting a value for this property will override the factor value that any associated MDM may have. Setting the factor property to Null will cause the MDM factor (if present) to be used again. Reading the `Factor` property will return the value of this property, if set, otherwise the `Factor` property of the associated MDM element, if available, otherwise *Null* will be returned.
+        !'
+        Property Factor() As Variant
+
+        '!
+        ```ds
+        (property) IElement.IncludeInBase: Boolean
+        ```
+        --------------------------
+        Allows *eCategory* elements to be excluded from the calculation of the base
+
+        ### Remarks
+        By default the `IncludeInBase` property is *True*. It can only be set to *False* for *eCategory* elements. Setting it to *False* causes the category to be excluded from the calculation of the preceding *eBase*, *eUnweightedBase*, and *eEffectiveBase* elements. It also causes all cell items except for itCount to be suppressed for the row or column.
+        !'
+        Property IncludeInBase() As Boolean
+
+        '!
+        ```ds
+        (property) IElement.IsFixed: Boolean
+        ```
+        --------------------------
+        Fixes the position (index) of the element in the `ElementHeadings` collection when the table is sorted.
+
+        ### Remarks
+        If `IsFixed = False` then the element may be affected by the sorting process and will be moved relative to the surrounding objects. Elements of type *eNet*, *eCombine*, *eExpression*, and *eNumeric* have a default `IsFixed` value of *False*, *eCategory* and *eDerived* default to the `IElement.Fixed` property of the MDM element they're based upon (or *False* if they're not based on an MDM element). The default for all other element types (e.g. *eBase*, *eMean*, *eText* etc) is *True*, i.e. they're unaffected by sorting.
+        !'
+        Property IsFixed() As Boolean
+
+        '!
+        ```ds
+        (property) IElement.IsHidden: Boolean
+        ```
+        --------------------------
+        Determines if the element is shown on the table. The default value is taken from the corresponding MDM element.
+
+        ### Remarks
+        If `IsHidden = True` then the element is not shown on the table and the `ShownOnTable` property is *False*. 'System' element such as *eSumWeightsSquared*, *eSumN*, *eSumX*, *eSumXSquared*, or *eSumUnweightedN* have `IsHidden` set to *True* by default.
+        !'
+        Property IsHidden() As Boolean
+
+        '!
+        ```ds
+        (property) IElement.IsHiddenWhenColumn: Boolean
+        ```
+        --------------------------
+        Hide the element if it appears as a column in the table.
+
+        ### Remarks
+        If the element exists within an axis that is used on the top of the table then the `ShownOnTable` will return *False* if `HiddenWhenRow` is set to *True*. The default value of this property is *False*.
+        !'
+        Property IsHiddenWhenColumn() As Boolean
+
+        '!
+        ```ds
+        (property) IElement.IsHiddenWhenRow: Boolean
+        ```
+        --------------------------
+        Hide the element if it appears as a row in the table.
+
+        ### Remarks
+        If the element exists within an axis that is used on the side of the table then the `ShownOnTable` will return *False* if `HiddenWhenRow` is set to *True*. The default value of this property is *False*.
+        !'
+        Property IsHiddenWhenRow() As Boolean
+
+        '!
+        ```ds
+        (property) IElement.IsUnweighted: Boolean
+        ```
+        --------------------------
+        When set to True all weighting is ignored for this element.
+
+        ### Remarks
+        This property is always *False* for the *eBase* element and *True* for the *eUnweightedBase* element. Trying to set this property for either of these element types has no effect.
+        This property will not have an effect on the values of element types that aren't generated from aggregated data. See the description of the `IElement.Weight` property for more information.
+        Setting `IsUnweighted` to *True* will clear the `IElement.Weight` property. Setting `IsUnweighted` to True for an element in a side axis will override any weight that might be specified for an element in the top axis (and vice versa) and also override any weight that might be specified for the table.
+        !'
+        Property IsUnweighted() As Boolean
+
+        '!
+        ```ds
+        (property) IElement.Label[[Language: String = \"\"]]: String
+        ```
+        --------------------------
+        The label for the element
+
+        ### Remarks
+        In the case of an element based on an MDM object, the label will typically be the label of the MDM object. If the element is not based on an MDM object then a default label will be generated. Both the default labels and the MDM object label can be overridden by specifying a new label for the element.
+        The `Label` property is read/write to enable the default label for non-MDM based elements to be overridden. If the `Language` parameter is not specified then the `IDocument.Language` property is used instead.
+        When the `Label` property is read, the following sequence is used to determine the value for the label:
+        + If the `Language` parameter is missing then it is substituted with the current value of the `Language` property from the `IDocument` object.
+        + An internal look-up is performed based on the language. If a label has been explicitly for that language set then that label is returned.
+        + If no label has been explicitly set, but the element has an associated object in the MDM, then the required label is requested from the MDM. If the specific label required does not exist then the Label property of the MDM element is used (this returns a label based on the alternative rules in the MDM).
+        + If no label has been explicitly set and there is no equivalent label in the MDM then a default label is generated.
+        !'
+        Property Label(Optional Language As String = "") As String
+
+        '!
+        ```ds
+        (property) IElement.Multiplier: String
+        ```
+        --------------------------
+        The name of the variable to use as the multiplier value when aggregating the data
+
+        ### Remarks
+        When aggregating the case data to produce the value for the itCount cell item, the count value is normally incremented by one for each case that meets the required conditions for that cell. If the name of a numeric variable is specified for the `Multiplier` property then the count value is instead incremented by the value for the numeric variable for that case.
+        When aggregating the case data to produce the value for a cell item that has an analysis variable specified, e.g. itSum, the value is incremented by the value of the specified analysis variable. If a `Multiplier` is specified for an element then the value is incremented by the product of the analysis variable value and the multiplier variable value.
+        The `Multiplier` property can only be specified for elements that are aggregated. This means the `Multiplier` property can not be set for the following element types:
+        + eTableStatistic
+        + eTotal
+        + eSubTotal
+        + eText
+        + eNetDiffs
+        + eEffectiveBase
+        + ePairedPref
+        + eDerived
+        + eProfile
+        + eProfileResult
+
+        If a variable has already been specified for the `IElement.AnalysisVariable` property, then that variable takes precedence over the `Multiplier` property.
+        !'
+        Property Multiplier() As String
+
+        '!
+        ```ds
+        (property) IElement.Weight: String
+        ```
+        --------------------------
+        The name of the variable to use as the weight value when aggregating the data
+
+        ### Remarks
+        When aggregating the case data to produce the value for an *itCount* cell item, the count value is either incremented by one or by the value of the *Multiplier* variable (if one has been specified). Weighting works by multiplying the increment that would normally have been used by the value of the weight variable for that case. In the case of a cell item that has an analysis variable specified (e.g. *itSum*) the weight value multiplies with both the analysis variable and the multiplier variable (if specified).
+        If a variable is specified for the `IElement.Weight` property then this overrides the table weight (`ITable.Weight`) for that row or column only. If a `Weight` property is specified for elements on both the side and top of the table then the `Weight` property specified for the element on the top axis takes priority over the side axis element whenever a conflict occurs (i.e. the weight variable for the column has priority).
+        The `IElement.Weight` property is *Null* by default which means the element will be weighted by the `ITable.Weight` value (if set). It's possible to force a particular element in a weighted table to be unweighted by setting the `IElement.IsUnweighted` property to *True*.
+        The `Weight` property can only be specified for elements that are aggregated. This means the Weight property can not be set for the following element types:
+        + eTableStatistic
+        + eTotal
+        + eSubTotal
+        + eText
+        + eNetDiffs
+        + eEffectiveBase
+        + ePairedPref
+        + eDerived
+        + eProfile
+        + eProfileResult
+
+        In addition to this list, the `Weight` property can not be set for elements of type *eUnweightedBase* as these are always unweighted by definition.
+        A value can not be specified for the `IElement.Weight` property if `IElement.IsUnweighted` is set to *True*.
+        Also note that specifying weights on a per-element basis invalidates the *Column Proportions* and *Column Means* statistical tests.
+        !'
+        Property Weight() As String
+
+    End Interface
+
+End Namespace

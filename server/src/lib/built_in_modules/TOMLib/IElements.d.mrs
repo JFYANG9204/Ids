@@ -1,0 +1,149 @@
+
+Namespace TOMLib
+
+    '!
+    ```ds
+    (interface) IElements
+    ```
+    -----------------------------
+    A collection of Element objects.
+    !'
+    Interface IElements Implements Object, IEnumerable
+
+        '!
+        ```ds
+        (property) IElements.Count: Long
+        ```
+        --------------------
+        The number of items in the collection.
+        !'
+        ReadOnly Property Count() As Long
+
+        '!
+        ```ds
+        (property) IElements.Item[Index: Variant]: IElement
+        ```
+        -----------------------------
+        Returns a specified element in the collection.
+        !'
+        ReadOnly Property Item(Index As Variant) As IElement
+
+        '!
+        ```ds
+        (property) IElements.Parent: Variant
+        ```
+        -----------------------------
+        The parent object
+
+        ### Remarks
+        The `Parent` property of the `Elements` object will either return a `Net` or `Combine` Element or an `Axis` object.
+        !'
+        ReadOnly Property Parent() As Variant
+
+        '!
+        ```ds
+        (method) IElements.Add(ElementName: String, [Index: Long = -1]): IElement
+        ```
+        -----------------------------
+        Creates a new `Element` object based on an MDM object and adds it to the collection.
+
+        ### Remarks
+        For a table of type *ttAggregated* the `Add()` method adds an `Element` object based on an MDM `element` into the collection. The `ElementName` must be the name of an element in the MDM variable which the axis is based on. The name of the MDM element is also used as the name of the `Element` object that is created. Therefore, the name of elements added using the `AddNew` method should be chosen so that don't conflict with the name of any existing MDM element that you may wish to add later using this `Add` method. If an analysis element is added called 'mean' (using the `IElements.AddNew` method), this `Add` method will fail if you attempt to add an MDM element called 'mean' because the collection will already contain an element of that name.
+        For a table of type *ttProfile* the `Add()` method adds an `Element` object based on an MDM variable. The new `Element` object will have a type of eProfile.
+
+        ### Example
+        ```ds
+        MyAgeAxis.Elements.Add(\"E65_years\")
+        ```
+        !'
+        Function Add(ElementName As String, Optional Index As Long = -1) As IElement
+        End Function
+
+        '!
+        ```ds
+        (method) IElements.Add(ElementName: String, [Index: Long = -1]): IElement
+        ```
+        -----------------------------
+        Creates a new Element object and adds it to the collection.
+
+        ### Remarks
+        This is used to add new elements to the axis that do not exist in the base MDM field or variable (MDM elements are added using the IElements.Add method). The following ElementType values are valid as the Type parameter:
+        + eBase
+        + eUnweightedBase
+        + eEffectiveBase
+        + eMean
+        + eStdDev
+        + eStdErr
+        + eSampleVar
+        + eTValue
+        + eTProb
+        + eTotal
+        + eSubTotal
+        + eText
+        + eMinimum
+        + eMaximum
+        + eMedian
+        + eMode
+        + ePercentile
+        + eNet
+        + eCombine
+        + eExpression
+        + eNumeric
+        + ePairedPref
+        + eNetDiffs
+        + eDerived
+        + eSum
+
+        ### Example
+        ```ds
+        MyAgeAxis.Elements.AddNew(\"meanage\", eMean)   ' Add a factor based mean value
+        ``
+        !'
+        Function Add(ElementName As String, Optional Index As Long = -1) As IElement
+        End Function
+
+        '!
+        ```ds
+        (method) IElements.AddNewFromMdmVariable(NewElementName: String, MdmVariableName: String, MdmElementName: String, [Index: Long = -1]): IElement
+        ```
+        -----------------------------
+        Creates a new `Element` object based on an MDM variable and element and adds it to the collection.
+
+        ### Remarks
+        Adds a new `Element` object based on an MDM variable and element into the collection. The `NewElementName` is the name to be given to the element created by `AddNewFromMdmVariable`. The `MdmVariableName` must be the name of an existing MDM variable, and the `MdmElementName` must be the name of an element within that variable.
+        If the MDM element is a category element, the newly created TOM element will be an expression element. If the MDM element is of any other type, the `TOM` element will be set to the same type as the one it is based on. If the MDM element has data, an expression of `\"MdmVariableName >= {MdmElementName}\"` is set on the TOM element.
+        Properties on the MDM element, such as decimal places and whether the element is hidden, are copied to the TOM element as it is created. Thereafter, the element behaves like one created with `IElements.AddNew` rather than IElements.Add in that, if a property on the MDM element is changed after the new element is created, the TOM element's property will remain unchanged.
+
+        ### Example
+        ```ds
+        MyAgeAxis.Elements.AddNewFromMdmVariable(\"age65\", \"age\", \"E65_years\")
+        ```
+        !'
+        Function AddNewFromMdmVariable(NewElementName As String, MdmVariableName As String, MdmElementName As String, Optional Index As Long = -1) As IElement
+        End Function
+
+        '!
+        ```ds
+        (method) IElements.Clear(): Void
+        ```
+        -----------------------------
+        Removes all `Element` objects from the collection
+        !'
+        Sub Clear()
+        End Sub
+
+        '!
+        ```ds
+        (method) IElements.Remove(Index: Variant): Void
+        ```
+        -----------------------------
+        Removes an `Element` object from the collection
+        !'
+        Sub Remove(Index As Variant)
+        End Sub
+
+    End Interface
+
+End Namespace
+
+

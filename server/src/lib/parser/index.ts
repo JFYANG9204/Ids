@@ -2,7 +2,7 @@ import { extname } from "path";
 import { Options, ScriptFileType, SourceType } from "../options";
 import { StatementParser } from "./statement";
 import { DeclarationBase, File } from "../types";
-import { Scope, ScopeHandler } from "../util/scope";
+import { Scope, ScopeFlags, ScopeHandler } from "../util/scope";
 import { ErrorMessages } from "./error-messages";
 import { getFileTypeMark } from "../file/util";
 
@@ -40,7 +40,9 @@ export class Parser extends StatementParser {
         if (this.length > 0) {
             this.nextToken();
             try {
+                this.scope.enter(ScopeFlags.program);
                 file.program = this.parseProgram();
+                this.scope.exit();
             // eslint-disable-next-line no-empty
             } catch (error) {
             }

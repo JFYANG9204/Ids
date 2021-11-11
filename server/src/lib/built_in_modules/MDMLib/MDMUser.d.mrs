@@ -1,0 +1,37 @@
+
+Namespace MDMLib
+
+    Class MDMUser
+
+        '!
+        ```ds
+        (method) MDMUser.Die(): Void
+        ```
+        !'
+        Sub Die()
+        End Sub
+
+        '!
+        ```ds
+        (property) MDMUser.Comment: String
+        ```
+        !'
+        Property Comment() As String
+
+        '!
+        ```ds
+        (property) MDMUser.FileVersion: String
+        ```
+        !'
+        ReadOnly Property FileVersion() As String
+
+        '!
+        ```ds
+        (property) MDMUser.Name: String
+        ```
+        !'
+        ReadOnly Property Name() As String
+
+    End Class
+
+End Namespace

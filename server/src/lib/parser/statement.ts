@@ -1142,6 +1142,10 @@ export class StatementParser extends ExpressionParser {
         } else {
             this.expect(tt._interface);
         }
+        this.scope.declareName(
+            node.name.name,
+            BindTypes.classOrInterface,
+            node);
         return this.finishNode(node, "ClassOrInterfaceDeclaration");
     }
 
@@ -1176,6 +1180,7 @@ export class StatementParser extends ExpressionParser {
         }
         this.expect(tt._nameSpace);
         this.scope.exit();
+        this.scope.declareName(node.name.name, BindTypes.namespace, node);
         return this.finishNode(node, "NamespaceDeclaration");
     }
 

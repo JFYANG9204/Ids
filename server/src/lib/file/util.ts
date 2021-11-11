@@ -9,8 +9,10 @@ import {
     NodeBase,
     WithStatement
 } from "../types";
-import { SourceType } from "../options";
+import { createBasicOptions, SourceType } from "../options";
 import { DefinitionBase } from "../util/definition";
+import { Scope } from "../util/scope";
+import { Parser } from "../parser";
 
 export function readFileAndConvertToUtf8(filePath: string): string {
     const file = fs.readFileSync(filePath);
@@ -248,4 +250,21 @@ export function getHoverContentFromNode(node: NodeBase, def: DefinitionBase, dec
     return def.getNote();
 }
 
+export function loadBuiltInModule() {
+    const folder = path.resolve("./server/src/lib/built_in_modules");
+    const module = getAllUsefulFile(folder);
+    return loadDecarationFiles(module);
+}
+
+export function loadDecarationFiles(files: Map<string, string>) {
+    let scope: Scope | undefined;
+    files.forEach((f, p) => {
+        const parser = new Parser(createBasicOptions(p, false), f);
+        const file = parser.parse(scope ?? undefined);
+        if (file.scope) {
+            scope = file.scope;
+        }
+    });
+    return scope;
+}
 

@@ -1,6 +1,7 @@
 import * as path from "path";
 import { createBasicOptions, SourceType } from "../options";
 import { Parser } from "../parser";
+import { Scope } from "../util/scope";
 import {
     createParserFileNode,
     ParserFileNode
@@ -9,7 +10,8 @@ import {
     getAllIncludeInFile,
     getAllUsefulFile,
     getFileReferenceMark,
-    getFileTypeMark
+    getFileTypeMark,
+    loadDecarationFiles
 } from "./util";
 
 
@@ -22,6 +24,8 @@ export class ParserFileDigraph {
     start: ParserFileNode | undefined;
     current: ParserFileNode | undefined;
 
+    global?: Scope;
+
     startPath?: string;
 
     constructor(folder: string) {
@@ -31,12 +35,18 @@ export class ParserFileDigraph {
     init() {
         const fileMap = getAllUsefulFile(this.folder);
         const nodes: Map<string, ParserFileNode> = new Map();
+        const declares: Map<string, string> = new Map();
         fileMap.forEach((value, key) => {
-            const refMark = getFileReferenceMark(value);
-            const typeMark = getFileTypeMark(value);
-            const node = createParserFileNode(key, value, refMark, typeMark);
-            nodes.set(key, node);
+            if (key.endsWith(".d.mrs")) {
+                declares.set(key, value);
+            } else {
+                const refMark = getFileReferenceMark(value);
+                const typeMark = getFileTypeMark(value);
+                const node = createParserFileNode(key, value, refMark, typeMark);
+                nodes.set(key, node);
+            }
         });
+        this.global = loadDecarationFiles(declares);
         this.nodeMap = nodes;
         this.buildGraph();
     }

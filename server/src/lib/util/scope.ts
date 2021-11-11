@@ -137,6 +137,23 @@ export class ScopeHandler {
                     this.insertName(scope, name, variant, "consts");
                 }
             }
+        } else if ((bindingType === BindTypes.namespace) &&
+            node instanceof NamespaceDeclaration) {
+            this.currentScope().namespaces.set(name.toLowerCase(), node);
+            let exist: NamespaceDeclaration | undefined;
+            for (const n of this.store.namespaces) {
+                if (n[0].toLowerCase() === name.toLowerCase()) {
+                    exist = n[1];
+                    break;
+                }
+            }
+            if (exist) {
+                node.body.forEach(member => {
+                    exist?.body.push(member);
+                });
+            } else {
+                this.store.namespaces.set(name.toLowerCase(), node);
+            }
         }
     }
 
