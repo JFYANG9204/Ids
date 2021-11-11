@@ -1,0 +1,474 @@
+
+'!
+```ds
+(object) FileSystemObject
+```
+------------------------
+Provides access to a computer's file system.
+
+### Remarks
+The following code illustrates how the `FileSystemObject` object is used to return a `TextStream` object that can be read from or written to:
+```ds
+Set fs = CreateObject(\"Scripting.FileSystemObject\")
+Set a = fs.CreateTextFile(\"c:\testfile.txt\", True)
+a.WriteLine(\"This is a test.\")
+a.Close
+```
+
+In the example code:
++ The `CreateObject` function returns the `FileSystemObject` (fs).
++ The `CreateTextFile` method creates the file as a `TextStream` object (a).
++ The `WriteLine` method writes a line of text to the created text file.
++ The `Close` method flushes the buffer and closes the file.
+!'
+Class FileSystemObject Implements Object
+
+    '!
+    ```ds
+    (method) BuildPath(Path: String, Name: String): String
+    ```
+    ------------------------
+    Combines a folder path and the name of a folder or file and returns the combination with valid path separators.
+    + `Path`: *String* - Required. Existing path with which _name_ is combined. Path can be absolute or relative and need not specify an existing folder.
+    + `Name`: *String* - Required. Name of a folder or file being appended to the existing _path_.
+
+    ### Syntax
+    _object_.__BuildPath__(_path_, _name_)
+
+    ### Remarks
+    The `BuildPath` method inserts an additional path separator between the existing path and the name, only if necessary.
+    !'
+    Function BuildPath(Path As String, Name As String) As String
+    End Function
+
+    '!
+    ```ds
+    (method) CopyFile(Source: String, Destination: String, [Overwrite: Boolean]): Void
+    ```
+    ------------------------
+    Copies one or more files from one location to another.
+    + `Source`: *String* - Required. Character string file specification, which can include wildcard characters, for one or more files to be copied.
+    + `Destination`: *String* - Required. Character string `destination` where the file or files from source are to be copied. Wildcard characters are not allowed.
+    + `Overwrite`: *Boolean* - Optional. _Boolean_ value that indicates if existing files are to be overwritten. If _True_, files are overwritten; if _False_, they are not. The default is _True_. Note that `CopyFile` will fail if `destination` has the read-only attribute set, regardless of the value of `overwrite`.
+
+    ### Remarks
+    Wildcard characters can only be used in the last path component of the source argument. For example, you can use:
+    ```ds
+    FileSystemObject.CopyFile(\"c:\\mydocuments\\letters\\*.doc\", \"c:\\tempfolder\\\")
+    ```
+    But you can't use:
+    ```ds
+    FileSystemObject.CopyFile(\"c:\\mydocuments\\*\\R1???97.xls\", \"c:\\tempfolder\")
+    ```
+    If _source_ contains wildcard characters, or `destination` ends with a path separator (****), it is assumed that `destination` is an existing folder in which to copy matching files. Otherwise, `destination` is assumed to be the name of a file to create. In either case, three things can happen when an individual file is copied:
+    + If `destination` does not exist, _source_ gets copied. This is the usual case.
+    + If `destination` is an existing file, an error occurs if overwrite is _False_. Otherwise, an attempt is made to copy source over the existing file.
+    + If `destination` is a directory, an error occurs.
+
+    An error also occurs if a source using wildcard characters doesn't match any files. The `CopyFile` method stops on the first error it encounters. No attempt is made to roll back or undo any changes made before an error occurs.
+    Files copied to a new destination path will keep the same file name. To rename the copied file, simply include the new file name in the destination path. For example, this will copy the file to a new location and the file in the new location will have a different name:
+    ```ds
+    FileSystemObject.CopyFile(\"c:\\mydocuments\\letters\\sample.doc\", \"c:\\tempfolder\\sample_new.doc\")
+    ```
+    !'
+    Sub CopyFile(Source As String, Destination As String, Optional Overwrite As Boolean)
+    End Sub
+
+    '!
+    ```ds
+    (method) CopyFolder(Source: String, Destination: String, [Overwrite: Boolean]): Void
+    ```
+    ------------------------
+    Recursively copies a folder from one location to another.
+    + `Source`: *String* - Required. Character string folder specification, which can include wildcard characters, for one or more folders to be copied.
+    + `Destination`: *String* - Required. Character string `destination` where the folder and subfolders from _source_ are to be copied. Wildcard characters are not allowed.
+    + `Overwrite`: *Boolean* - Optional. _Boolean_ value that indicates if existing folders are to be overwritten. If _True_, files are overwritten; if _False_, they are not. The default is _True_.
+
+    ### Remarks
+    Wildcard characters can only be used in the last path component of the source argument. For example, you can use:
+    ```dds
+    FileSystemObject.CopyFolder(\"c:\\mydocuments\\letters\\*\", \"c:\\tempfolder\\\")
+    ```
+    But you can't use:
+    ```ds
+    FileSystemObject.CopyFolder(\"c:\\mydocuments\\*\\*\", \"c:\\tempfolder\\\")
+    ```
+    If `source` contains wildcard characters, or `destination` ends with a path separator (), it is assumed that `destination` is an existing folder in which to copy matching folders and subfolders. Otherwise, `destination` is assumed to be the name of a folder to create. In either case, four things can happen when an individual folder is copied:
+    + If `destination` does not exist, the source folder and all its contents gets copied. This is the usual case.
+    + If `destination` is an existing file, an error occurs.
+    + If `destination` is a directory, an attempt is made to copy the folder and all its contents. If a file contained in source already exists in `destination`, an error occurs if overwrite is False. Otherwise, it will attempt to copy the file over the existing file.
+    + If `destination` is a read-only directory, an error occurs if an attempt is made to copy an existing read-only file into that directory and overwrite is False.
+
+    An error also occurs if a source using wildcard characters doesn't match any folders.
+    The `CopyFolder` method stops on the first error it encounters. No attempt is made to roll back any changes made before an error occurs.
+    !'
+    Sub CopyFolder(Source As String, Destination As String, Optional Overwrite As Boolean)
+    End Sub
+
+    '!
+    ```ds
+    (method) CreateFolder(FolderName: String): Void
+    ```
+    ------------------------
+    + `FolderName`: *String* - Required. String expression that identifies the folder to create.
+
+    ### Remarks
+    An error occurs if the specified folder already exists.
+    !'
+    Sub CreateFolder(FolderName As String)
+    End Sub
+
+    '!
+    ```ds
+    (method) CreateTextFile(FolderName: String, [Overwrite: Boolean], [Unicode: Boolean]): TextStream
+    ```
+    ------------------------
+    Creates a specified file name and returns a `TextStream` object that can be used to read from or write to the file.
+    + `FileName`: *String* - Required. String expression that identifies the file to create.
+    + `Overwrite`: *Boolean* - Optional. Boolean value that indicates if an existing file can be overwritten. The value is _True_ if the file can be overwritten; _False_ if it can't be overwritten. If omitted, existing files can be overwritten.
+    + `Unicode`: *Boolean* - Optional. Boolean value that indicates whether the file is created as a Unicode or ASCII file. The value is _True_ if the file is created as a Unicode file; _False_ if it's created as an ASCII file. If omitted, an ASCII file is assumed.
+
+    ### Remarks
+    The following code illustrates how to use the `CreateTextFile` method to create and open a text file. If the overwrite argument is False, or is not provided, for a filename that already exists, an error occurs.
+    ```ds
+    Sub CreateAfile
+        Set fs = CreateObject(\"Scripting.FileSystemObject\")
+        Set a = fs.CreateTextFile(\"c:\\testfile.txt\", True)
+        a.WriteLine(\"This is a test.\")
+        a.Close
+    End Sub
+    ```
+    !'
+    Function CreateTextFile(FolderName As String, Optional Overwrite As Boolean, Optional Unicode As Boolean) As TextStream
+    End Function
+
+    '!
+    ```ds
+    (method) DeleteFile(FileSpec: String, [Force: Boolean]): Void
+    ```
+    ------------------------
+    Deletes a specified file.
+    + `FileSpec`: *String* - Required. The name of the file to delete. The `filespec` can contain wildcard characters in the last path component.
+    + `Force`: *Boolean* - Optional. _Boolean_ value that is _True_ if files with the read-only attribute set are to be deleted; _False_ (default) if they are not.
+
+    ### Remarks
+    An error occurs if no matching files are found. The `DeleteFile` method stops on the first error it encounters. No attempt is made to roll back or undo any changes that were made before an error occurred.
+    !'
+    Sub DeleteFile(FileSpec As String, Optional Force As Boolean)
+    End Sub
+
+    '!
+    ```ds
+    (method) DeleteFolder(FileSpec: String, [Force: Boolean]): Void
+    ```
+    ------------------------
+    Deletes a specified folder and its contents.
+    + `FileSpec`: *String* - Required. The name of the folder to delete. The `filespec` can contain wildcard characters in the last path component.
+    + `Force`: *Boolean* - Optional. _Boolean_ value that is _True_ if files with the read-only attribute set are to be deleted; _False_ (default) if they are not.
+
+    ### Remarks
+    The `DeleteFolder` method does not distinguish between folders that have contents and those that do not. The specified folder is deleted regardless of whether or not it has contents.
+    An error occurs if no matching folders are found. The `DeleteFolder` method stops on the first error it encounters. No attempt is made to roll back or undo any changes that were made before an error occurred.
+    !'
+    Sub DeleteFolder(FileSpec As String, Optional Force As Boolean)
+    End Sub
+
+    '!
+    ```ds
+    (method) DriveExists(DriveSpec: String): Boolean
+    ```
+    ------------------------
+    Returns _True_ if the specified drive exists; _False_ if it does not.
+    + `DriveSpec`: *String* - Required. A drive letter or a path specification for the root of the drive.
+
+    ### Remarks
+    For drives with removable media, the `DriveExists` method returns True even if there are no media present. Use the `IsReady` property of the Drive object to determine if a drive is ready.
+    !'
+    Function DriveExists(DriveSpec As String) As Boolean
+    End Function
+
+    '!
+    ```ds
+    (method) FileExists(FileSpec: String): Boolean
+    ```
+    ------------------------
+    Returns _True_ if a specified file exists; _False_ if it does not.
+    + `FileSpec`: *String* - Required. The name of the file whose existence is to be determined. A complete path specification (either absolute or relative) must be provided if the file isn't expected to exist in the current folder.
+    !'
+    Function FileExists(FileSpec As String) As Boolean
+    End Function
+
+    '!
+    ```ds
+    (method) FolderExists(FolderSpec: String): Boolean
+    ```
+    ------------------------
+    Returns _True_ if a specified folder exists; _False_ if it does not.
+    + `FileSpec`: *String* - Required. The name of the folder whose existence is to be determined. A complete path specification (either absolute or relative) must be provided if the folder isn't expected to exist in the current folder.
+    !'
+    Function FolderExists(FolderSpec As String) As Boolean
+    End Function
+
+    '!
+    ```ds
+    (method) GetAbsolutePathName(PathSpec: String): String
+    ```
+    ------------------------
+    Returns a complete and unambiguous path from a provided path specification.
+    + `PathSpec`: *String* - Required. Path specification to change to a complete and unambiguous path.
+
+    ### Remarks
+    A path is complete and unambiguous if it provides a complete reference from the root of the specified drive. A complete path can only end with a path separator character (****) if it specifies the root folder of a mapped drive.
+    Assuming the current directory is c:\\mydocuments\\reports, the following table illustrates the behavior of the `GetAbsolutePathName` method.
+
+    | pathspec	               |  Returned path                         |
+    | :--------------         | :-----------------                     |
+    | \"c:\"	               | \"c:\\mydocuments\\reports\"           |
+    | \"c:..\"	               | \"c:\\mydocuments\"                    |
+    | \"c:\\\"	               | \"c:\"                                 |
+    | \"c:.\\may97\"	       | \"c:\\mydocuments\\reports*.*\\may97\" |
+    | \"region1\"	           | \"c:\\mydocuments\\reports\\region1\"  |
+    | \"c:....\\mydocuments\" | \"c:\\mydocuments\"                    |
+
+    !'
+    Function GetAbsolutePathName(PathSpec As String) As String
+    End Function
+
+    '!
+    ```ds
+    (method) GetBaseName(Path: String): String
+    ```
+    ------------------------
+    Returns a string containing the base name of the last component, less any file extension, in a path.
+    + `Path`: *String* - Required. The path specification for the component whose base name is to be returned.
+
+    ### Remarks
+    The `GetBaseName` method returns a zero-length string (\"\") if no component matches the path argument.
+
+    @note - The `GetBaseName` method works only on the provided path string. It does not attempt to resolve the path, nor does it check for the existence of the specified path.
+    !'
+    Function GetBaseName(Path As String) As String
+    End Function
+
+    '!
+    ```ds
+    (method) GetDrive(DriveSpec: String): Drive
+    ```
+    ------------------------
+    Returns a Drive object corresponding to the drive in a specified path.
+    + `DriveSpec`: *String* - Required. The drivespec argument can be a drive letter (c), a drive letter with a colon appended (c:), a drive letter with a colon and path separator appended (c:), or any network share specification (\\computer2\\share1).
+
+    ### Remarks
+    For network shares, a check is made to ensure that the share exists.
+    An error occurs if drivespec does not conform to one of the accepted forms or does not exist.
+    To call the `GetDrive` method on a normal path string, use the following sequence to get a string that is suitable for use as drivespec:
+    ```vb
+    DriveSpec = GetDriveName(GetAbsolutePathName(Path))
+    ```
+    !'
+    Function GetDrive(DriveSpec As String) As Drive
+    End Function
+
+    '!
+    ```ds
+    (method) GetDriveName(Path: String): String
+    ```
+    ------------------------
+    Returns a string containing the name of the drive for a specified path.
+    + `Path`: *String* - Required. The path specification for the component whose drive name is to be returned.
+
+    ### Remarks
+    The GetDriveName method returns a zero-length string (\"\") if the drive can't be determined.
+    @note - The `GetDriveName` method works only on the provided path string. It does not attempt to resolve the path, nor does it check for the existence of the specified path.
+    !'
+    Function GetDriveName(Path As String) As String
+    End Function
+
+    '!
+    ```ds
+    (method) GetExtensionName(Path: String): String
+    ```
+    ------------------------
+    Returns a string containing the extension name for the last component in a path.
+    + `Path`: *String* - Required. The path specification for the component whose extension name is to be returned.
+
+    ### Remarks
+    For network drives, the root directory (****) is considered to be a component.
+    The `GetExtensionName` method returns a zero-length string (\"\") if no component matches the path argument.
+    !'
+    Function GetExtensionName(Path As String) As String
+    End Function
+
+    '!
+    ```ds
+    (method) GetFile(FileSpec: String): File
+    ```
+    ------------------------
+    Returns a File object corresponding to the file in a specified path.
+    + `FileSpec`: *String* - Required. The `filespec` is the path (absolute or relative) to a specific file.
+
+    ### Remarks
+    An error occurs if the specified file does not exist.
+    !'
+    Function GetFile(FileSpec As String) As File
+    End Function
+
+    '!
+    ```ds
+    (method) GetFileName(PathSpec: String): String
+    ```
+    ------------------------
+    Returns the last component of a specified path that is not part of the drive specification.
+    + `PathSpec`: *String* - Required. The path (absolute or relative) to a specific file.
+
+    ### Remarks
+    The `GetFileName` method returns a zero-length string (\"\") if pathspec does not end with the named component.
+    @note - The `GetFileName` method works only on the provided path string. It does not attempt to resolve the path, nor does it check for the existence of the specified path.
+    !'
+    Function GetFileName(PathSpec As String) As String
+    End Function
+
+    '!
+    ```ds
+    (method) GetFolder(FolderSpec: String): Folder
+    ```
+    ------------------------
+    Returns a Folder object corresponding to the folder in a specified path.
+    + `FolderSpec`: *String* - Required. The `folderspec` is the path (absolute or relative) to a specific folder.
+
+    ### Remarks
+    An error occurs if the specified folder does not exist.
+    !'
+    Function GetFolder(FolderSpec As String) As Folder
+    End Function
+
+    '!
+    ```ds
+    (method) GetParentFolderName(Path: String): String
+    ```
+    ------------------------
+    Returns a string containing the name of the parent folder of the last component in a specified path.
+    + `Path`: *String* - Required. The path specification for the component whose parent folder name is to be returned.
+
+    ### Remarks
+    The `GetParentFolderName` method returns a zero-length string (\"\") if there is no parent folder for the component specified in the path argument.
+    @note - The `GetParentFolderName` method works only on the provided path string. It does not attempt to resolve the path, nor does it check for the existence of the specified path.
+    !'
+    Function GetParentFolderName(Path As String) As String
+    End Function
+
+    '!
+    ```ds
+    (method) MoveFile(Source: String, Destination: String): Void
+    ```
+    ------------------------
+    Moves one or more files from one location to another.
+    + `Source`: *String* - Required. The path to the file or files to be moved. The `source` argument string can contain wildcard characters in the last path component only.
+    + `Destination`: *String* - Required. The path where the file or files are to be moved. The `destination` argument can't contain wildcard characters.
+
+    ### Remarks
+    If `source` contains wildcards or destination ends with a path separator (****), it is assumed that destination specifies an existing folder in which to move the matching files. Otherwise, `destination` is assumed to be the name of a `destination` file to create. In either case, three things can happen when an individual file is moved:
+    + If `destination` does not exist, the file gets moved. This is the usual case.
+    + If `destination` is an existing file, an error occurs.
+    + If `destination` is a directory, an error occurs.
+
+    @Important - This method allows moving files between volumes only if supported by the operating system.
+    !'
+    Sub MoveFile(Source As String, Destination As String)
+    End Sub
+
+    '!
+    ```ds
+    (method) MoveFolder(Source: String, Destination: String): Void
+    ```
+    ------------------------
+    Moves one or more folders from one location to another.
+    + `Source`: *String* - Required. The path to the folder or folders to be moved. The `source` argument string can contain wildcard characters in the last path component only.
+    + `Destination`: *String* - Required. The path where the folder or folders are to be moved. The `destination` argument can't contain wildcard characters.
+
+    ### Remarks
+    If `source` contains wildcards or `destination` ends with a path separator (****), it is assumed that `destination` specifies an existing folder in which to move the matching files. Otherwise, `destination` is assumed to be the name of a `destination` folder to create. In either case, three things can happen when an individual folder is moved:
+    + If `destination` does not exist, the folder gets moved. This is the usual case.
+    + If `destination` is an existing file, an error occurs.
+    + If `destination` is a directory, an error occurs.
+
+    @Important - This method allows moving folders between volumes only if supported by the operating system.
+    !'
+    Sub MoveFolder(Source As String, Destination As String)
+    End Sub
+
+    '!
+    ```ds
+    (method) OpenTextFile(FileName: String, [IOMode: Long], [Create: Boolean], [Format: Long]): TextStream
+    ```
+    ------------------------
+    Opens a specified file and returns a `TextStream` object that can be used to read from, write to, or append to the file.
+    + `FileName`: *String* - Required. String expression that identifies the file to open.
+    + `IOMode`: *Long* - Optional. Indicates input/output mode. Can be one of three constants: **ForReading**, **ForWriting**, or **ForAppending**.
+    + `Create`: *Boolean* - Optional. *Boolean* value that indicates whether a new file can be created if the specified filename doesn't exist. The value is *True* if a new file is created; *False* if it isn't created. The default is *False*.
+    + `Format`: *Long* - Optional. One of three `Tristate` values used to indicate the format of the opened file. If omitted, the file is opened as ASCII.
+
+    ### Settings
+    The `iomode` argument can have any of the following settings:
+
+    | Constant      | Value | Description |
+    | :------------ | :---- | :---------- |
+    | ForReading    | 1     | Open a file for reading only. You can't write to this file. |
+    | ForWriting    | 2     | Open a file for writing only. Use this mode to replace an existing file with new data. You can't read from this file. |
+    | ForAppending  | 8     | Open a file and write to the end of the file. You can't read from this file. |
+
+    The `format` argument can have any of the following settings:
+
+    | Constant           | Value  | Description |
+    | :----------------  | :----- | :------------- |
+    | TristateUseDefault | -2     | Opens the file by using the system default. |
+    | TristateTrue       | -1     | Opens the file as Unicode. |
+    | TristateFalse      | 0      | Opens the file as ASCII. |
+
+    ### Remarks
+    The following code illustrates the use of the `OpenTextFile` method to open a file for appending text:
+    ```vb
+    Sub OpenTextFileTest
+        Const ForReading = 1, ForWriting = 2, ForAppending = 8
+        Dim fs, f
+        Set fs = CreateObject(\"Scripting.FileSystemObject\")
+        Set f = fs.OpenTextFile(\"c:\\testfile.txt\", ForAppending, TristateFalse)
+        f.Write \"Hello world!\"
+        f.Close
+    End Sub
+    ```
+    !'
+    Function OpenTextFile(FileName As String, Optional IOMode As Long, Optional Create As Boolean, Optional Format As Long) As TextStream
+    End Function
+
+    '!
+    ```ds
+    (property) Drives: Collection<Drive>
+    ```
+    ------------------------
+    Returns a Drives collection consisting of all `Drive` objects available on the local machine.
+
+    ### Remarks
+    Removable-media drives need not have media inserted for them to appear in the *Drives* collection.
+    You can iterate the members of the *Drives* collection by using a `For Each...Next` construct as illustrated in the following code.
+    ```vb
+    Sub ShowDriveList
+        Dim fs, d, dc, s, n
+        Set fs = CreateObject(\"Scripting.FileSystemObject\")
+        Set dc = fs.Drives
+        For Each d in dc
+            s = s & d.DriveLetter & \" - \"
+            If d.DriveType = 3 Then
+                n = d.ShareName
+            Else
+                n = d.VolumeName
+            End If
+            s = s & n & vbCrLf
+        Next
+        MsgBox s
+    End Sub
+    ```
+    !'
+    Property Drives() As Array
+
+End Class

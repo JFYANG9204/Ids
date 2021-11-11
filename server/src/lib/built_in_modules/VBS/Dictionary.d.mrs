@@ -1,0 +1,109 @@
+
+'!
+```ds
+(object) Dictionary
+```
+------------------------
+Object that stores data key, item pairs.
+
+### Remarks
+A `Dictionary` object is the equivalent of a PERL associative array. Items can be any form of data, and are stored in the array. Each item is associated with a unique key. The key is used to retrieve an individual item and is usually an integer or a string, but can be anything except an array.
+The following code illustrates how to create a Dictionary object:
+``` vb
+Dim d   ' Create a variable.
+Set d = CreateObject(\"Scripting.Dictionary\")
+d.Add \"a\", \"Athens\"   ' Add some keys and items.
+d.Add \"b\", \"Belgrade\"
+d.Add \"c\", \"Cairo\"
+```
+!'
+Class Dictionary Implements Object
+
+    '!
+    ```ds
+    (method) Dictionary.Add(Key: Variant, Item: Variant): Void
+    ```
+    -------------------------------------------
+    Adds a key and item pair to a `Dictionary` object.
+
+    ### Remarks
+    An error occurs if the key already exists.
+    The following example illustrates the use of the Add method.
+    ```vb
+    Dim d   ' Create a variable.
+    Set d = CreateObject(\"Scripting.Dictionary\")
+    d.Add \"a\", \"Athens\"   ' Add some keys and items.
+    d.Add \"b\", \"Belgrade\"
+    d.Add \"c\", \"Cairo\"
+    ```
+    !'
+    Sub Add(Key As Variant, Item As Variant)
+    End Sub
+
+    '!
+    ```ds
+    (method) Dictionary.Exist(Key: Variant): Boolean
+    ```
+    -------------------------------------------
+    Returns `true` if a specified key exists in the Dictionary object, `false` if it does not.
+
+    ### Remarks
+    The following example illustrates the use of the `Exists` method.
+    ```vb
+    Function KeyExists(k)
+        Dim d, msg
+        Set d = CreateObject(\"Scripting.Dictionary\")
+        d.Add \"a\", \"Athens\"
+        d.Add \"b\", \"Belgrade\"
+        d.Add \"c\", \"Cairo\"
+        If d.Exists(k) Then
+            msg = \"Specified key exists.\"
+        Else
+            msg = \"Specified key does not exist.\"
+        End If
+        KeyExists = msg
+    End Function
+    ```
+    !'
+    Function Exist(Key As Variant) As Boolean
+    End Function
+
+    '!
+    ```ds
+    (method) Dictionary.Items(): Array
+    ```
+    -------------------------------------------
+    Returns an array containing all the items in a `Dictionary` object.
+
+    ### Remarks
+    The following code illustrates use of the `Items` method:
+    ```vb
+    Function DicDemo
+    Dim a, d, i, s   ' Create some variables.
+    Set d = CreateObject(\"Scripting.Dictionary\")
+    d.Add \"a\", \"Athens\"   ' Add some keys and items.
+    d.Add \"b\", \"Belgrade\"
+    d.Add \"c\", \"Cairo\"
+    a = d.Items   ' Get the items.
+    For i = 0 To d.Count -1 ' Iterate the array.
+        s = s & a(i) & \"<BR>\" ' Create return string.
+    Next
+    DicDemo = s
+    End Function
+    ```
+    !'
+    Function Items() As Array
+    End Function
+
+    '!
+    ```ds
+    (method) Dictionary.Keys(): Array
+    ```
+    -------------------------------------------
+    Returns an array containing all the keys in a `Dictionary` object.
+    !'
+    Function Keys() As Array
+    End Function
+
+End Class
+

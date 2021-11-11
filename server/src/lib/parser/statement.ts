@@ -581,6 +581,18 @@ export class StatementParser extends ExpressionParser {
         node.assignment = this.parseExpression(true);
         if (node.id instanceof Identifier) {
             const declared = this.checkVarDeclared(node.id.name, node.id);
+            if (declared) {
+                let declareType: DeclarationBase | undefined;
+                this.getExprType(node.assignment, { type: declareType });
+                if (declareType) {
+                    this.scope.update(
+                        node.id.name,
+                        BindTypes.var,
+                        declareType,
+                        node.assignment);
+                    this.addExtra(node.id, "declaration", declareType);
+                }
+            }
         }
         node.push(node.id, node.assignment);
         return this.finishNode(node, "SetStatement");

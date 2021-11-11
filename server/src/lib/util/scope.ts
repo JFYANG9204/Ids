@@ -287,10 +287,6 @@ export class ScopeHandler {
             scope.functions.delete(lowerName);
         } else if (scope.macros.has(lowerName)) {
             scope.macros.delete(lowerName);
-        } else if (scope.classes.has(lowerName)) {
-            scope.classes.delete(lowerName);
-        } else if (scope.namespaces.has(lowerName)) {
-            scope.namespaces.delete(lowerName);
         }
     }
 

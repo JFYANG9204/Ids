@@ -116,7 +116,9 @@ export class TypeUtil extends UtilParser {
                 false,
                 name
             );
+            return false;
         }
+        return true;
     }
 
     checkAssignmentLeft(type: DeclarationBase, node: NodeBase) {
@@ -262,6 +264,7 @@ export class TypeUtil extends UtilParser {
         if (findType) {
             findType.type = find;
         }
+        this.addExtra(expr, "declaration", find);
         type = find?.name.name;
         return type ?? "Variant";
     }
@@ -498,6 +501,11 @@ export class TypeUtil extends UtilParser {
         let funcName;
         if (callee.type === "Identifier") {
             funcName = (callee as Identifier).name;
+            const object = this.getCreateObjectType(callExpr);
+            if (object) {
+                this.addExtra(callExpr.callee, "declaration", object);
+                return object;
+            }
         } else {
             funcName = ((callee as MemberExpression).property as Identifier).name;
         }
@@ -651,6 +659,28 @@ export class TypeUtil extends UtilParser {
             }
         }
         return false;
+    }
+
+    getCreateObjectType(func: CallExpression) {
+        if (func.callee instanceof Identifier &&
+            func.callee.name.toLowerCase() === "createobject") {
+            const text = func.arguments[0].extra["rawValue"].toLowerCase();
+            switch (text) {
+                case "tom.document":
+                    return this.scope.get("IDocument", "TOMLib")?.result;
+                case "scripting.dictionary":
+                    return this.scope.get("Dictionary")?.result;
+                case "scripting.filesystemobject":
+                    return this.scope.get("FileSystemObject")?.result;
+                default:
+                    this.raiseAtNode(
+                        func.arguments[0],
+                        ErrorMessages["InvalidObjectScripting"],
+                        false);
+                    break;
+            }
+        }
+        return undefined;
     }
 
 }

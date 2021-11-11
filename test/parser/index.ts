@@ -20,8 +20,8 @@ const builtin = loadBuiltInModule();
 //if (file) {
 //    mdd = getCurrentParser(file, startPath);
 //}
-//const testpath = resolve("./server/src/lib/built_in_modules/ICategories.d.mrs");
-//const content = readFileAndConvertToUtf8(testpath);
-//const parser = new Parser(createBasicOptions(testpath, true), content);
-//const file = parser.parse();
+const testpath = resolve("./test/parser/fixture/test.mrs");
+const content = readFileAndConvertToUtf8(testpath);
+const parser = new Parser(createBasicOptions(testpath, true), content);
+const file = parser.parse(builtin);
 console.log("end");
