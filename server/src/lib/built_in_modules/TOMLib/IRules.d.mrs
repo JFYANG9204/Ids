@@ -1,0 +1,82 @@
+
+Namespace TOMLib
+
+    '!
+    ```ds
+    (interface) IRules
+    ```
+    -----------------------------
+    The `Rules` object is a collection of `Rule` objects. All of the rules defined by the `Rule` objects are applied to the cell values of a table when they are calculated during the call to `IDocument.Populate`
+    !'
+    Interface IRules Implements IEnumerable, Object
+
+        '!
+        ```ds
+        (property) IRules.Count: Long
+        ```
+        --------------------
+        The number of items in the collection.
+        !'
+        ReadOnly Property Count() As Long
+
+        '!
+        ```ds
+        (property) IRules.Item[Index: Variant]: IRule
+        ```
+        --------------------
+        Get the collection item at the specified location.
+        !'
+        ReadOnly Property Item(Index As Variant) As IRule
+
+        '!
+        ```ds
+        (property) IRules.Parent: Variant
+        ```
+        --------------------
+        The parent object
+        !'
+        ReadOnly Property Parent() As Variant
+
+        '!
+        ```ds
+        (method) IRules.AddNew([Type: RuleType = rlHide], [Target: RuleTarget = rtRow], [CellItemRef: Long = (long)0], [Operator: ComparisonOperator = opEqual], [Value: Double = (double)0.0]): IRule
+        ```
+        --------------------
+        Creates a new Rule and adds it to the collection.
+
+        ### Remarks
+        Addition properties such as IRule.ElementRef and IRule.IgnoreSpecialElements can be set on the Rule object after it has been created by the AddNew() method.
+
+        ### Example
+        ```ds
+        Table.Rules.AddNew(rlHide, rtRow, 0, opLess, 40)
+        ```
+        !'
+        Function AddNew(Optional Type As RuleType = rlHide, Optional Target As RuleTarget = rtRow, Optional CellItemRef As Long = 0, Optional Operator As ComparisonOperator = opEqual, Optional Value As Double = 0.0) As IRule
+        End Function
+
+        '!
+        ```ds
+        (method) IRules.Clear(): Void
+        ```
+        --------------------
+        Removes all `Rule` objects from the collection.
+        !'
+        Sub Clear()
+        End Sub
+
+        '!
+        ```ds
+        (method) IRules.Remove(Index: Variant): Void
+        ```
+        --------------------
+        Removes an item from the collection.
+        ### Parameters
+        - `Index`: *Variant* - An integer index into the collection.
+        !'
+        Sub Remove(Index As Variant)
+        End Sub
+
+    End Interface
+
+End Namespace

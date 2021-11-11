@@ -334,8 +334,8 @@ export class ScopeHandler {
         source: Map<string, NamespaceDeclaration>,
         map: Map<string, NamespaceDeclaration>) {
         source.forEach((value, key) => {
-            let exist;
-            if ((exist = map.get(key))) {
+            let exist = map.get(key);
+            if (exist) {
                 this.mergeSingleNamespace(value, exist);
             } else {
                 map.set(key, value);
@@ -357,7 +357,7 @@ export class ScopeHandler {
         type: DeclarationBase,
         key: string) {
         scope[key].set(name.toLowerCase(), type);
-        if (!this.inFunction) {
+        if (!this.inFunction && !this.inNameSpace) {
             this.store[key].set(name.toLowerCase(), type);
         }
     }

@@ -8834,7 +8834,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
             "```ds",
             "(interface) IExports",
             "```",
- "-------------------------",
+            "-------------------------",
             "A collection of `Export` objects. Each `Export` object represents an export plug-in that can be used to export the tables in the document to a particular output format.",
             "",
             "### Remarks",
@@ -8966,7 +8966,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
             "```ds",
             "(interface) IExport",
             "```",
- "-------------------------",
+            "-------------------------",
             "Each `Export` object represents an export plug-in that can be used to export the tables in the document to a particular output format. The `Export` object serves to make the presence of the export plug-in transparent to the user of the `Table Object Model`.",
         ].join("\n"),
         properties: [

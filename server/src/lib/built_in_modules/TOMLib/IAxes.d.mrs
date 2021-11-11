@@ -1,0 +1,104 @@
+
+
+Namespace TOMLib
+    '!
+    "```ds
+    "(interface) IAxes
+    "```
+    "-----------------------------
+    "A collection of Axis objects. Each Axis object is used to describe the content of the side, the top, or a layer of a table.
+    !'
+    Interface IAxes Implements IEnumerable, Object
+
+    '!
+    ```ds
+    (property) IAxes.Count: Long
+    ```
+    --------------------
+    The number of items in the collection.
+    !'
+    ReadOnly Property Count() As Long
+
+        '!
+        ```ds
+        (property) IAxes.Item[Index: Variant]: IAxis
+        ```
+        --------------------
+        Returns a specified item in the collection.
+        !'
+        ReadOnly Property Item(Index As Variant) As IAxis
+
+        '!
+        ```ds
+        (property) IAxes.Parent: Variant
+        ```
+        --------------------
+        The parent object
+
+        ### Remarks
+        The Parent property of the `Axes` object will return either the parent `Axis`, or `Table`, `TableDefaults`, or `Document` object
+        !'
+        ReadOnly Property Parent() As Variant
+
+        '!
+        ```ds
+        (method) IAxes.Add(Name: Variant, Axis: Variant, [Index: Long = -1]): IAxis
+        ```
+        --------------------
+        Add a copy of an existing Axis object to the Axes collection.
+
+        ### Remarks
+        The `IDocument.Axes` collection holds pre-constructed `Axis` objects that can be re-used on multiple tables. The `Add` method adds one of those `Axis` objects to this collection. A copy is made of the `Axis` object that exists in the `IDocument.Axes` collection. This way the individual `Axis` objects on each table and the original `Axis` in the `IDocument.Axes` collection can be modified independently.
+
+        ### Examples
+        ```ds
+        TableDoc.Axes.AddNew(\"MyAgeAxis\")
+        TableDoc.Axes.MyAgeAxis.Specification = \"age{E1116_years..E4554_years}\"
+        TableDoc.Axes.AddNew(\"MyGenderAxis\")
+        TableDoc.Axes.MyGenderAxis.Specification = \"gender{Male, Female}\"
+
+        Set Table = TableDoc.Tables.AddNew(\"Table1\")
+        Table.Axes.Add(\"Side\", \"MyAgeAxis\")
+        Table.Axes.Add(\"Top\", \"MyGenderAxis\")
+        ```
+        !'
+        Function Add(Name As Variant, Axis As Variant, Optional Index As Long = -1) As IAxis
+        End Function
+
+        '!
+        ```ds
+        (method) IAxes.AddNew(Name: Variant, [MdmObject: String = \"\"], [AxisExpression: String = \"\"], [Index: Long = -1]): IAxis
+        ```
+        --------------------
+        Creates an `Axis` object and adds it to the collection.
+
+        ### Remarks
+        The axis can optionally be based on an MDM object. Only an axis based on an MDM object can contain *eCategory* elements, which must correspond to elements of the MDM object. Axes not based on MDM objects either act as containers for sub-axes (e.g. 'Side' and 'Top') or can only non-category elements (normally *eExpression* elements, or *eProfile* elements in the case of a profile table).
+        !'
+        Function AddNew(Name As Variant, Optional MdmObject As String = "", Optional AxisExpression As String = "", Optional Index As Long = -1) As IAxis
+        End Function
+
+        '!
+        ```ds
+        (method) IAxes.Clear(): Void
+        ```
+        --------------------
+        Removes all `Axis` objects from the collection.
+        !'
+        Sub Clear()
+        End Sub
+
+        '!
+        ```ds
+        (method) IAxes.Remove(Index: Variant): Void
+        ```
+        --------------------
+        Removes an `Axis` object from the collection.
+        !'
+        Sub Remove(Index As Variant)
+        End Sub
+
+
+    End IAxes
+
+End Namespace

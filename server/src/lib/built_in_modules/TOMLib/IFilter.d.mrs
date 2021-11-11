@@ -1,0 +1,85 @@
+
+Namespace TOMLib
+    '!
+    ```ds
+    (interface) IFilter
+    ```
+    -----------------------------
+    The `Filter` object represents a user-defined case data filter. It is used to filter the cases that are to be included when the table is populated.
+    !'
+    Interface IFilter Implements Object
+
+        '!
+        ```ds
+        (property) IFilter.Name: String
+        ```
+        --------------------
+        The `Filter` object represents a user-defined case data filter. It is used to filter the cases that are to be included when the table is populated.
+        !'
+        ReadOnly Property Name() As String
+
+        '!
+        ```ds
+        (property) IFilter.Parent: IFilters
+        ```
+        --------------------
+        The parent object
+
+        ### Remarks
+        The `Parent` property of the `Filter` object always returns a `Filters` collection
+        !'
+        ReadOnly Property Parent() As IFilters
+
+        '!
+        ```ds
+        (property) IFilter.Description: String
+        ```
+        --------------------
+        A description of the filter
+        !'
+        Property Description() As String
+
+        '!
+        ```ds
+        (property) IFilter.Expression: String
+        ```
+        --------------------
+        An *mrEvalulate* expression that is evaluated for each case in the case data. Only cases for which the expression evaluates to *True* are included.
+
+        ### Remarks
+        ```ds
+        Filter.Expression = \"Not age.ContainsAny({e1116_years})\"
+        ```
+        !'
+        Property Expression() As String
+
+        '!
+        ```ds
+        (property) IFilter.IsDimensionsFilter: Boolean
+        ```
+        --------------------
+        *True* if the filter is intended to filter based on a per-user filter defined in `DimensionNet`. This allows the differentiation between the two types of filters for the purposes of generating annotations. `IsDimensionsFilter` is *False* by default.
+        !'
+        Property IsDimensionsFilter() As Boolean
+
+        '!
+        ```ds
+        (property) IFilter.IsInterviewFilter: Boolean
+        ```
+        --------------------
+        *True* if the filter is intended to filter based on the interview status. This allows the differentiation between the two types of filters for the purposes of generating annotations.
+        !'
+        Property IsInterviewFilter() As Boolean
+
+        '!
+        ```ds
+        (property) IFilter.Level: String
+        ```
+        --------------------
+        The level the filter is to be applied at. The expression used must be relative to this level.
+        !'
+        Property Level() As String
+
+    End Interface
+
+End Namespace

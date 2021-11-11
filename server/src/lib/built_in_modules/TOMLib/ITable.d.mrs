@@ -1,0 +1,441 @@
+
+Namespace TOMLib
+
+    '!
+    ```ds
+    (interface) ITable
+    ```
+    -----------------------------
+    The Table object defines the structure of a table in terms of `Axes`, as well as a variety of other settings. The `Axes` objects define the dimensions while CellItems define the contents of the cells.
+
+    ### Remarks
+    Only the 'Side' and 'Top' axes are currently supported. 'Layer' axes may be added in the future.
+    !'
+    Interface ITable Implements Object
+
+        '!
+        ```ds
+        (property) ITable.Annotations: IAnnotations
+        ```
+        --------------------
+        A collection of `Annotation` objects that define additional information to be shown outside the main body of the table (for example, headings and footnotes).
+        !'
+        ReadOnly Property Annotations() As IAnnotations
+
+        '!
+        ```ds
+        (property) ITable.AvailableLevels: Array
+        ```
+        --------------------
+        A list of levels that the table can be aggregated at.
+
+        ### Remarks
+        If the `IDataSet.View` property is set to *dvHDATA* then it is possible to set the level at which data processing occurs. This property is an array of level names that are able to be used as the value for the Level property. The list of available levels depends on the variables that are currently being used on the table.
+        !'
+        ReadOnly Property AvailableLevels() As Array
+
+        '!
+        ```ds
+        (property) ITable.Axes: IAxes
+        ```
+        --------------------
+        A collection of `Axis` objects that define the structure of the table.
+
+        ### Remarks
+        The `axes` collection will typically contain 'Side' and 'Top' axis objects, with additional axis objects describing the layers of the table. Note that layers are not currently supported. The table will initially contain any axes that were specified in the Specification string when the table was created.
+
+        ### Example
+        The side axis of a table can be accessed using any of the following techniques
+        ```ds
+        Set SideAxis = MyTable.Axes.Item[\"side\"]
+        Set SideAxis = MyTable.Axes[\"side\"]
+        Set SideAxis = MyTable[\"side\"]
+        Set SideAxis = MyTable[axSide]
+        ```
+        !'
+        ReadOnly Property Axes() As IAxes
+
+        '!
+        ```ds
+        (property) ITable.Base: Long
+        ```
+        --------------------
+        The numeric 'Base' value for the table.
+
+        ### Remarks
+        If the table base cannot be determined or its value exceeds the maximum of long, which is between -2,147,483,648 and 2,147,483,647, then -1 is returned.
+        !'
+        ReadOnly Property Base() As Long
+
+        '!
+        ```ds
+        (property) ITable.CellItems: ICellItems
+        ```
+        --------------------
+        A collection of `CellItem` objects that define the cell contents for the table.
+
+        ### Remarks
+        In terms of the resulting table, the axis and element objects basically describe what is shown along the top and side of the table, while the cell items control what is shown in each cell in the body of the table. For aggregated tables this is a count and column percentage by default but can be a number of more complex values derived from the counts (e.g. a mean, min, max, or standard deviation). For a profile table the cell item is simply `itProfileResult` which is the response from the case data. Note that the `CellItems` property of a profile table can not be modified to add additional cell items.
+        !'
+        ReadOnly Property CellItems() As ICellItems
+
+        '!
+        ```ds
+        (property) ITable.DatePopulated: Date
+        ```
+        --------------------
+        The date when the table was last populated.
+
+        ### Remarks
+        If the table is not currently populated (e.g. if `IDocument.Populate` has not been called or the table has since been modified) then the date *01/01/100* is returned.
+        !'
+        ReadOnly Property DatePopulated() As Date
+
+        '!
+        ```ds
+        (property) ITable.DefaultLevel: String
+        ```
+        --------------------
+        The default aggregation level for a table containing hierarchical data
+
+        ### Remarks
+        The default aggregation level is the lowest available level that is not a grid/loop slice or below a grid/loop slice. The `ITable.Level` property will be set to `ITable.DefaultLevel` if `ITable.UseDefaultLevel` is set to *True*.
+        !'
+        ReadOnly Property DefaultLevel() As String
+
+        '!
+        ```ds
+        (property) ITable.Filters: IFilters
+        ```
+        --------------------
+        A collection of `Filter` objects that are applied to the case data that the table is based on when the table is populated.
+        !'
+        ReadOnly Property Filters() As IFilters
+
+        '!
+        ```ds
+        (property) ITable.IsEmpty: Boolean
+        ```
+        --------------------
+        Returns *True* if the `Axes` collection is empty for this table, i.e. If the table doesn't have any *Top*, *Side*, or *Layer* axis.
+        !'
+        ReadOnly Property IsEmpty() As Boolean
+
+        '!
+        ```ds
+        (property) ITable.IsEmptySide: Boolean
+        ```
+        --------------------
+        Returns *True* if no 'Side' axis exists in the `Axes` collection of this table.
+        !'
+        ReadOnly Property IsEmptySide() As Boolean
+
+        '!
+        ```ds
+        (property) ITable.IsEmptySide: Boolean
+        ```
+        --------------------
+        Returns *True* if no 'Top' axis exists in the `Axes` collection of this table.
+        !'
+        ReadOnly Property IsEmptySide() As Boolean
+
+        '!
+        ```ds
+        (property) ITable.IsLevelValid: Boolean
+        ```
+        --------------------
+        *True* if the `ITable.Level` property is valid
+
+        ### Remarks
+        If the `ITable.UseDefaultLevel` property is True then the `ITable.IsLevelValid` will be True, unless there are no available levels for the table.
+        It is only possible to set the `ITable.Level` property to an available level for the table, however it is possible to modify the table after setting the level so that the level set is no longer an available level for the table. In this situation the `ITable.IsLevelValid` will return *False*.
+        !'
+        ReadOnly Property IsLevelValid() As Boolean
+
+        '!
+        ```ds
+        (property) ITable.IsPopulated: Boolean
+        ```
+        --------------------
+        Returns *True* if the table has been populated (i.e. `ITable.CellValues` is not 'null').
+
+        ### Remarks
+        Changing the object model in any way such that the cell values no longer match the object model will cause the `ITables.CellValues` property to be set to 'null' and the `IsPopulated` property to become *False*.
+        !'
+        ReadOnly Property IsPopulated() As Boolean
+
+        '!
+        ```ds
+        (property) ITable.IsValid: Boolean
+        ```
+        --------------------
+        *True* if the table is valid.
+
+        ### Remarks
+        `IsValid` is *True* if all the MDM objects required by the table exist in the metadata. It's possible for a table to become invalid when opening an old table document that uses objects that have been deleted from the metadata. Tables where IsValid is False are ignored when populating the table document.
+        + The `IsValid` property takes into account the following:
+        + The MDM objects that the axes of the table are based upon.
+        + The MDM elements that the elements of the table are based upon.
+        + The numeric variables used by elements (For example, *eMean* or *eNumeric* elements).
+        + The numeric variables used by per-table and global cell items.
+        + The MDM arrays and grids used as the filter level for per-table and global filters.
+        + The numeric weighting variable.
+        `IsValid` doesn't currently check the `Expression` property of filters and element. It's therefore possible for an expression to reference an MDM object that has been deleted and for `IsValid` to still return *True*. `Expressions` that refer to an MDM object that doesn't exist will generate an error when the document is populated.
+        The `IsValid` property will not immediately become *False* after an MDM object is deleted. This is because TOM caches copies of MDM objects that it's using. `IsValid` will normally be become *False* when the table document is saved then reopened.
+        !'
+        ReadOnly Property IsValid() As Boolean
+
+        '!
+        ```ds
+        (property) ITable.IsWeighted: Boolean
+        ```
+        --------------------
+        *True* if a weight variable has been specified for the `Weight` property
+        !'
+        ReadOnly Property IsWeighted() As Boolean
+
+        '!
+        ```ds
+        (property) ITable.Name: String
+        ```
+        --------------------
+        The name used to reference the table in the `Tables` collection.
+        !'
+        ReadOnly Property Name() As String
+
+        '!
+        ```ds
+        (property) ITable.Parent: ITables
+        ```
+        --------------------
+        The parent object
+
+        ### Remarks
+        The `Parent` property of the `Table` object always returns the `Tables` collection
+        !'
+        ReadOnly Property Parent() As ITables
+
+        '!
+        ```ds
+        (property) ITable.Properties: IProperties
+        ```
+        --------------------
+        A collection of Property objects that define additional configuration information about the table.
+        !'
+        ReadOnly Property Properties() As IProperties
+
+        '!
+        ```ds
+        (property) ITable.Rules: IRules
+        ```
+        --------------------
+        A collection of `Rule` objects that are applied to the values in the table when it is populated.
+        !'
+        ReadOnly Property Rules() As IRules
+
+
+        '!
+        ```ds
+        (property) ITable.Statistics: IStatistics
+        ```
+        --------------------
+        A collection of `Statistic` objects that define statistical tests to be calculated for the table.
+        !'
+        ReadOnly Property Statistics() As IStatistics
+
+        '!
+        ```ds
+        (property) ITable.Type: TableType
+        ```
+        --------------------
+        The `Type` of table (either *ttAggregated* or *ttProfile*)
+        !'
+        ReadOnly Property Type() As TableType
+
+        '!
+        ```ds
+        (property) ITable.CellValues[[Layer: Variant = 0]]: Object
+        ```
+        --------------------
+        The values of the cells of the table
+
+        ### Remarks
+        The contents (values) of a populated table are stored in an ADO recordset.
+        Changing the object model in any way such that the cell values no longer match the object model will cause the `CellValues` to be cleared. For example:
+            + Adding a new `CellItem` object to the `ITable.CellItems` collection will cause the `CellValues` to no longer match the `CellItems` and so the `CellValues` will be cleared.
+            + Modifying the `Expression` property of any filter applied to the table will potentially change the values in the table and so the `CellValues` will be cleared.
+        @note- In scripting languages, this property can be used only for read access.
+        !'
+        Property CellValues(Optional Layer As Variant = 0) As Object
+
+        '!
+        ```ds
+        (property) ITable.Description: String
+        ```
+        --------------------
+        A description or title for the table, e.g. \"Table of age by gender\".
+
+        ### Remarks
+        This is typically used for the table title annotation when the table is exported.
+        !'
+        Property Description() As String
+
+        '!
+        ```ds
+        (property) ITable.Level: String
+        ```
+        --------------------
+        The level at which to aggregate a table containing hierarchical data.
+
+        ### Remarks
+        If the `IDataSet.View` property is set to *dvHDATA* then it is possible to set the level at which data processing occurs. This property must be set to one of the levels listed in the `AvailableLevels` property. The available levels are determined by the levels of the variables being tabulated, the levels of the filter(s), and the level of the weight variable applied to the table.
+        By default, the `Level` property is set to the level of the lowest level variable on the table that is not a grid/loop slice or below a grid/loop slice and UseDefaultLevel will be True. Setting the `Level` property will fix the level at the specified value and cause `UseDefaultLevel` to become *False*.
+        !'
+        Property Level() As String
+
+        '!
+        ```ds
+        (property) ITable.PopulateError: String
+        ```
+        --------------------
+        The error message when populating the table.
+
+        ### Remarks
+        This property is reset every time the table is populated. An error occurred during population when this property is not empty (the output may not be valid).
+        !'
+        Property PopulateError() As String
+
+        '!
+        ```ds
+        (property) ITable.SortColumn: String
+        ```
+        --------------------
+        Controls sorting of rows by specifying the column to sort on and the order in which to sort.
+
+        ### Remarks
+        The `SortColumn` property returns a `SortSpecification` object which can be used to specify the column to sort on and the order in which to sort the values.
+        Because the default property of the `ISortSpecfication` object is the `ElementRef` of the element to sort on, the sort column can be specified as shown in the following examples (i.e. the `ElementRef` property can be omitted because it is the default).
+
+        ### Examples
+        ```ds
+        Table.SortColumn = \"\"
+        Table.SortColumn = \"Base\"
+        Table.SortColumn = \"Education{Base}\"
+        Table.SortColumn = \"Education{Yes}>Gender{Female}\"
+        ```
+        !'
+        Property SortColumn() As String
+
+        '!
+        ```ds
+        (property) ITable.SortRow: String
+        ```
+        --------------------
+        Controls sorting of columns by specifying the row to sort on and the order in which to sort.
+
+        ### Remarks
+        The `SortRow` property returns a `SortSpecification` object which can be used to specify the row to sort on and the order in which to sort the values.
+        The is not possible to sort the columns of a profile table by specifying a `SortRow`.
+        Because the default property of the `ISortSpecfication` object is the `ElementRef` of the element to sort on, the sort row can be specified as shown in the following examples (i.e. the `ElementRef` property can be omitted because it is the default).
+
+        ### Examples
+        ```ds
+        Table.SortRow = \"\"
+        Table.SortRow = \"Base\"
+        Table.SortRow = \"Age{Base}\"
+        Table.SortRow = \"Age{E1116_years}>Gender{Female}\"
+        ```
+        !'
+        Property SortRow() As String
+
+        '!
+        ```ds
+        (property) ITable.Specification: String
+        ```
+        --------------------
+        The table specification string that defines the structure of the table.
+
+        ### Remarks
+        This is initially the `specification` string that was used when the table was initially created. If the structure (axes and elements) of the table is modified using the methods of the object model (for example, `IAxis.Nest`, `IAxis.Concatenate`, `IAxis.Elements.AddNew`) then the `specification` string will update to reflect the current structure of the table.
+        If this `specification` string is modified then all existing axis objects in the `Axes` collection are removed and then recreated according to the new specification.
+        To keep the `specification` string compact, the elements are not shown if all the elements of a variable are present in the axis (e.g. \"age\"), but if it differs in any way then the full list of elements is shown.
+
+        ### Examples
+        ```ds
+        age{E1116_years, E1721_years, meanage mean(age)} * gender
+        ```
+        !'
+        Property Specification() As String
+
+        '!
+        ```ds
+        (property) ITable.UseDefaultLevel: Boolean
+        ```
+        --------------------
+        Causes the `ITable.Level` property to be set to the default aggregation level
+
+        ### Remarks
+        The `UseDefaultLevel` property is set to True by default and the `ITable.Level` property will return the default aggregation level. If `UseDefaultLevel` is set to False then the Level will become fixed at the current default level. If a specific level is specified for the `ITable.Level` property then `UseDefaultLevel` is automatically set to *False*.
+        !'
+        Property UseDefaultLevel() As Boolean
+
+        '!
+        ```ds
+        (property) ITable.Weight: String
+        ```
+        --------------------
+        Sets the name of the weight variable to be used for the table.
+
+        ### Remarks
+        The table is considered to be weighted only if this property has been set. When a table is initially created the value of this property will be copied from the `IDocument.Default.Weight` property. A weighted table can be unweighted by clearing this property.
+        The `Weight` property is only applicable to tables of type *ttAggregated* and can not be set for a profile table.
+        !'
+        Property Weight() As String
+
+        '!
+        ```ds
+        (method) ITable.Clear(): Void
+        ```
+        --------------------
+        Clears the table
+
+        ### Remarks
+        A table is \"cleared\" by performing the following actions:
+        + Clearing the `Axes`, `CellItems`, `Properties`, `Rules`, `Filters`, `Statistics`, and `Annotations` collections.
+        + Clearing the CellValues
+        + Restoring all properties to their default values as defined by the `IDocument.Default` property (or `IDocument.ProfileDefault` in the case of a profile table).
+        !'
+        Sub Clear()
+        End Sub
+
+        '!
+        ```ds
+        (method) ITable.IsStatisticValid(StatisticName: String): Boolean
+        ```
+        -----------------
+        Returns *True* if the specified statistical test is valid for this table.
+
+        ### Remarks
+        There are a number of reasons why a statistic may become invalid for a particular table. These are described in About Statistical Tests.
+        !'
+        Function IsStatisticValid(StatisticName As String) As Boolean
+        End Function
+
+        '!
+        ```ds
+        (method) RefreshFromMetadata([ForceRefresh: Boolean = 0]): Boolean
+        ```
+        -----------------
+        Updates all axes in the table from the metadata if `UseMetadataDefinition` is *True*
+
+        ### Remarks
+        The `RefreshFromMetadata` method updates axes which have the `UseMetadataDefinition` property set to True based on the current definition in the metadata. This is useful if the metadata has changed since the table was defined.
+        The axes are automatically refresh from the metadata definition when the table is populated.
+        It is assumed the metadata will not be modified while the table document is open. The `Axis` objects track when they have been synchronized with metadata and will not refresh if they are up to date. If the metadata does change while the table document is open the `ForceRefresh` parameter can be used to force the axis to refresh itself.
+        !'
+        Function RefreshFromMetadata(Optional ForceRefresh As Boolean = 0) As Boolean
+        End Function
+
+    End Interface
+
+End Namespace

@@ -1,0 +1,169 @@
+
+Namespace TOMLib
+
+    '!
+    ```ds
+    (interface) ICellItem
+    ```
+    -----------------------------
+    A `CellItem` is a type of value that appears in each cell of the table. Each `CellItem` defines a single value that appears in each of the cells of the table. An example of a cell item is a count or column percentage.
+    !'
+    Interface ICellItem Implements Object
+
+        '!
+        ```ds
+        (property) ICellItem.Parent: ICellItems
+        ```
+        --------------------
+        The parent object
+
+        ### Remarks
+        The Parent property of the `CellItem` object always returns a `CellItems` collection
+        !'
+        ReadOnly Property Parent() As ICellItems
+
+        '!
+        ```ds
+        (property) ICellItem.Type: CellItemType
+        ```
+        --------------------
+        The type of cell item (e.g. *itCount*, *itColPercent*)
+        !'
+        ReadOnly Property Type() As CellItemType
+
+        '!
+        ```ds
+        (property) ICellItem.CutOffValue: Double
+        ```
+        --------------------
+        The cut-off value for percentiles (not relevant for other cell item types).
+
+        ### Remarks
+        The default value is 50, which corresponds to the 50th percentile (also referred to as the median). The `CutOffValue` must be set between 0 and 100 percent and is only applicable to *itPercentile* cell items.
+        The `CutOffValue` determines the percentile that the *itPercentile* cell item calculates, where a P-th percentile is the smallest value of a numeric variable that is greater than *P* percent of the values in a given set. For example a `CutOffValue` of 25 calculates *V*, the smallest value such that 25% of respondents have a value less than *V*.
+        !'
+        Property CutOffValue() As Double
+
+        '!
+        ```ds
+        (property) ICellItem.Decimals: Double
+        ```
+        --------------------
+        The number of digits to show after the decimal point.
+
+        ### Remarks
+        The default value is 0 (i.e. no digits are shown after the decimal point). The number of digits after the decimal place must be between 0 to 20 digits. Setting this property to 0 causes the cell values to be displayed as integers.
+        !'
+        Property Decimals() As Double
+
+        '!
+        ```ds
+        (property) ICellItem.FormatExpression: String
+        ```
+        --------------------
+        FormatExpression
+
+        ### Remarks
+        The `FormatExpression` property must be an *mrEvaluate* expression. The expression must take a single parameter called `Value` and return a text value. If the result of the expression isn't text the result will automatically be converted to text.
+        For a table of type *ttAggregated* the `Value` parameter will always be a numeric value. For a *ttProfile* table the `Value` parameter will be the same data type as the variable being profiled.
+        The most common use of the `FormatExpression` is to use the `Format` function library function to format a value for display, but any function or expression can be used to produce a text value from the `Value` parameter.
+        Note that string literals within the `FormatExpression` property must be enclosed in single quote characters rather than double quote characters like the `IElement.Expression` and `IFilter.Expression` properties use.
+
+        ### Examples
+        ```ds
+        ' Display the value as the name of the category
+        CellItem.FormatExpression = \"Format(Value, 'a')\"
+
+        ' Display the numeric value in scientific format with 5 decimal places, e.g.  2.34567e+003
+        CellItem.FormatExpression = \"Format(Value, 'e5')\"
+
+        ' Display the first 100 characters of a text response
+        CellItem.FormatExpression = \"Left(Value, 100)\"
+        ```
+        !'
+        Property FormatExpression() As String
+
+        '!
+        ```ds
+        (property) ICellItem.Index: Long
+        ```
+        --------------------
+        The index of the item in the parent `CellItems` collection.
+
+        ### Remarks
+        The `Index` property is intended to be used to easily get a `CellItemRef` value that can be used with the `Rule` objects, which require the cell item to operate on to be specified.
+        !'
+        Property Index() As Long
+
+        '!
+        ```ds
+        (property) ICellItem.Prefix: String
+        ```
+        --------------------
+        A string to prefix to all values
+        !'
+        Property Prefix() As String
+
+        '!
+        ```ds
+        (property) ICellItem.Variable: String
+        ```
+        --------------------
+        The variable name for those cell item types that require a numeric variable for their calculation (for example, *itMean*).
+
+        ### Remarks
+        The default value for this property is an empty string (i.e. no variable specified).
+
+        It is not possible to specify a variable for the following cell item types:
+        + itCount
+        + itUnweightedCount
+        + itColPropResults
+        + itCellChiSquare
+        + itColBase
+        + itRowBase
+        + itUnweightedColBase
+        + itUnweightedRowBase
+        + itProfileResult
+        + itColRanks
+        + itRowRanks
+
+        A numeric variable must be specified for the following cell item types:
+        + itSum
+        + itMinimum
+        + itMaximum
+        + itMean
+        + itRange
+        + itMode
+        + itMedian
+        + itPercentile
+        + itStdDev
+        + itStdErr
+        + itVariance
+
+        A numeric variable can be specified for the following cell item types. If a variable is specified the cell item is calculated based on the sum of the variable. If a variable isn't specified the cell item is calculated based on the count.
+        + itColPercent
+        + itRowPercent
+        + itTotalPercent
+        + itCumColPercent
+        + itCumRowPercent
+        + itResiduals
+        + itExpectedValues
+        + itIndices
+
+        It is possible for the variable to be specified as \"-\". This is a special code that means \"look at the `AnalysisVariable` property on the `Element` object to determine the Variable for this cell\". This is useful in the creation of summary tables for numeric variables. The columns of the table are created from multiple *eNumeric* elements, each based on a different numeric variable. Cell items like *itMean*, *itMinimum*, *itMaximum* based on an variable of \"-\" can be requested for the body of the table. The result is that each column of mean, min, and max values is based on a different numeric variable.
+        !'
+        Property Variable() As String
+
+        '!
+        ```ds
+        (property) ICellItem.Suffix: String
+        ```
+        --------------------
+        A string to append to all values
+        !'
+        Property Suffix() As String
+
+    End Interface
+
+
+End Namespace

@@ -1,0 +1,78 @@
+
+Namespace TOMLib
+
+    '!
+    ```ds
+    (interface) IExports
+    ```
+    -------------------------
+    A collection of `Export` objects. Each `Export` object represents an export plug-in that can be used to export the tables in the document to a particular output format.
+
+    ### Remarks
+    The `Exports` collection is automatically populated with `Export` objects when the `Document` object is initially created.
+    !'
+    Interface IExports Implements IEnumerable, Object
+
+        '!
+        ```ds
+        (property) IExports.Count: Long
+        ```
+        -----------------------------
+        The number of `Export` objects in the collection.
+        !'
+        ReadOnly Property Count() As Long
+
+        '!
+        ```ds
+        (property) IExports.Item[Index: Variant]: IExport
+        ```
+        -----------------------------
+        Returns the specified `Export` object in the collection.
+        !'
+        ReadOnly Property Item(Index As Variant) As IExport
+
+        '!
+        ```ds
+        (property) IExports.Parent: IDocument
+        ```
+        -----------------------------
+        The parent object
+        !'
+        ReadOnly Property Parent() As IDocument
+
+        '!
+        ```ds
+        (method) IExports.AddNew(Name: String, ClassId: String, [CodeBase: String = \"\"], [Description: String = \"\"]): IExport
+        ```
+        -----------------------------
+        Creates a new `Export` object and adds it to the collection.
+
+        ### Remarks
+        Normally the `Exports` collection is populated with all installed export plug-ins when the `Document` object is created. The `AddNew` method can be used to dynamically add export plug-ins at run-time that have not been registered.
+        !'
+        Function AddNew(Name As String, ClassId As String, Optional CodeBase As String = "", Optional Description As String = "") As IExport
+        End Function
+
+        '!
+        ```ds
+        (method) IExports.Clear(): Void
+        ```
+        -----------------------------
+        Removes all Export objects from the collection
+        !'
+        Sub Clear()
+        End Sub
+
+        '!
+        ```ds
+        (method) IExports.Remove(Index: Variant): Void
+        ```
+        -----------------------------
+        Removes the specified `Export` object from the collection.
+        !'
+        Sub Remove(Index As Variant)
+        End Sub
+
+    End Interface
+
+End Namespace

@@ -1,0 +1,11 @@
+
+Namespace MDMLib
+
+    Interface IDocument
+
+        Sub AddUser(Name As String, FileVersion As String, Comment As String) As MDMUser
+
+
+    End Interface
+
+End Namespace

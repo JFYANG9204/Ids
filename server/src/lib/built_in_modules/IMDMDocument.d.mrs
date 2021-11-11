@@ -1,9 +1,0 @@
-
-
-Interface IMDMDocument
-
-    Sub AddUser(Name As String, FileVersion As String, Comment As String) As MDMUser
-
-
-End Interface
-

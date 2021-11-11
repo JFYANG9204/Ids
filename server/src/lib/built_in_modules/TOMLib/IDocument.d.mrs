@@ -1,0 +1,587 @@
+
+Namespace TOMLib
+    '!
+    ```ds
+    (interface) IDocument
+    ```
+    -----------------------------
+    The **Table Object Model (TOM)** document is at the root of the object model and is the only object which is publicly creatable. The `Document` object represents a book of tables.
+    !'
+    Interface IDocument Implements Object
+
+        '!
+        ```ds
+        (property) IDocument.Axes[Index: Variant]: IAxes
+        ```
+        --------------------
+        A collection of axis objects that can be reused on multiple tables.
+
+        ### Remarks
+        This is intended to be used as a 'toolbox' of reusable axis objects. Axis objects can be created and stored in this collection and then used on multiple tables. Note that when the axis is used, it is copied to each individual table. Therefore the axis on a particular table can be modified without affecting other tables that also used the same axis.
+        !'
+        ReadOnly Property Axes(Index As Variant) As IAxes
+
+        '!
+        ```ds
+        (property) IDocument.Coding: ICoding
+        ```
+        --------------------
+        The `Coding` object includes methods that can be used to `categorize` and *band text*, *numeric*, and *date* variables in the TOM document.
+        !'
+        ReadOnly Property Coding() As ICoding
+
+        '!
+        ```ds
+        (property) IDocument.CreatedByVersion: String
+        ```
+        --------------------
+        Returns the version number of the `TOM.DLL` that created the `Document`.
+        !'
+        ReadOnly Property CreatedByVersion() As String
+
+        '!
+        ```ds
+        (property) IDocument.DataSet: IDataSet
+        ```
+        --------------------
+        The data set that this table document is based upon. The data set consists of metadata and associated case data.
+        !'
+        ReadOnly Property DataSet() As IDataSet
+
+        '!
+        ```ds
+        (property) IDocument.Default: ITableDefaults
+        ```
+        --------------------
+        The `Default` property has various settings that are automatically copied to a new table
+
+        ### Remarks
+        The `IDocument.Default` property specifies the default settings for new `ttAggregated` tables (added via the `ITables.AddNew()` method).
+        The `IDocument.ProfileDefault` property specifies the default settings for new `ttProfile` tables.
+        !'
+        ReadOnly Property Default() As ITableDefaults
+
+        '!
+        ```ds
+        (property) IDocument.Exports: IExports
+        ```
+        --------------------
+        Collection of `Export` objects. `Exports` are used to publish the resulting tables in a variety of formats.
+        !'
+        ReadOnly Property Exports() As IExports
+
+        '!
+        ```ds
+        (property) IDocument.Filters: IFilters
+        ```
+        --------------------
+        A collection of table filters which may be set up in advance for use on tables.
+
+        ### Remarks
+        This is intended to be used as a 'toolbox' of reusable `filter` objects. `Filter` objects can be created and stored in this collection and then used on multiple tables. Note than when the filter is used, it is copied to each individual table. Therefore the filter on a particular table can be modified without affecting other tables that also used the same filter.
+        !'
+        ReadOnly Property Filters() As IFilters
+
+        '!
+        ```ds
+        (property) IDocument.Global: ITableGlobals
+        ```
+        --------------------
+        The `TableGlobals` are various settings that are applied to all tables in the document. The settings are merged together with the per-table settings.
+        !'
+        ReadOnly Property Global() As ITableGlobals
+
+        '!
+        ```ds
+        (property) IDocument.GroupedTables: ITableListNode
+        ```
+        --------------------
+        Tables arranged into groups
+
+        ### Remarks
+        The `IDocument.Tables` property is a flat collection of tables. The tables in that collection can be given a hierarchical arrangement using the `GroupedTables` property.
+        !'
+        ReadOnly Property GroupedTables() As ITableListNode
+
+        '!
+        ```ds
+        (property) IDocument.IsPopulating: Boolean
+        ```
+        --------------------
+        Returns *True* if the `Document` is currently populating.
+        !'
+        ReadOnly Property IsPopulating() As Boolean
+
+        '!
+        ```ds
+        (property) IDocument.LastUpdatedByVersion: String
+        ```
+        --------------------
+        Returns the version number of the `TOM.DLL` that last updated the `Document`.
+        !'
+        ReadOnly Property LastUpdatedByVersion() As String
+
+        '!
+        ```ds
+        (property) IDocument.LicensedFeatures: Long
+        ```
+        --------------------
+        The features of the document for which a valid license exists.
+
+        ### Remarks
+        The `LicensedFeatures` property returns a binary 'OR' of `LicensableFeature` enumerated values. The `LicensableFeature` values that are set depends on the licenses that have been installed.
+        !'
+        ReadOnly Property LicensedFeatures() As Long
+
+        '!
+        ```ds
+        (property) IDocument.Parent: Variant
+        ```
+        --------------------
+        The parent object
+
+        ### Remarks
+        The `Parent` property of the `Document` object always returns *Null*
+        !'
+        ReadOnly Property Parent() As Variant
+
+        '!
+        ```ds
+        (property) IDocument.PopulateProgress: Long
+        ```
+        --------------------
+        Returns the percentage completion of the population run
+
+        ### Remarks
+        The `PopulateProgress` property can be used to indicate on a progress bar the percentage of completion of the current population run. Note that the `PopulateProgress` doesn't increase linearly with time as the population process consists of multiple stages and it's not possible to accurately calculate in advance how long each stage will take to complete.
+        !'
+        ReadOnly Property PopulateProgress() As Long
+
+        '!
+        ```ds
+        (property) IDocument.PopulateStatus: String
+        ```
+        --------------------
+        Returns a description of the current population status.
+
+        ### Remarks
+        The `PopulateStatus` is updated as the population run progresses.
+        !'
+        ReadOnly Property PopulateStatus() As String
+
+        '!
+        ```ds
+        (property) IDocument.ProfileDefault: ITableDefaults
+        ```
+        --------------------
+        The `ProfileDefault` property has various setting that are automatically copied to a new profile table.
+
+        ### Remarks
+        The `IDocument.DefaultProfile` property specifies the default settings for new *ttProfile* tables (added via the `ITables.AddNewProfile()` method).
+        The `IDocument.Default` property specifies the default settings for new *ttAggregated* tables.
+        !'
+        ReadOnly Property ProfileDefault() As ITableDefaults
+
+        '!
+        ```ds
+        (property) IDocument.Properties: IProperties
+        ```
+        --------------------
+        A collection of user added Property objects relating to the document.
+
+        ### Remarks
+        The `IDocument.Properties` collection can be used to store user added properties relating to the table document. Any properties added will be saved and loaded as part of the table document but will not otherwise have any effect on TOM. The contents of the `IDocument.Properties` collection will be included in the Tables XML returned by `IDocument.GetTablesXml()` but not in the script returned by `IDocument.GenerateScript()`
+
+        ### Example
+        ```ds
+        Dim DocCreator
+
+        Set DocCreator = TableDoc.Properties.CreateProperty()
+        DocCreator.Name = \"DocumentCreator\"
+        DocCreator.Value = \"Sam Smith, Acme Research Limited\"
+        TableDoc.Properties.Add(DocCreator)
+
+        Debug.Echo(\"Document Creator: \" + TableDoc.Properties.Item[\"DocCreator\"])
+        ```
+        !'
+        ReadOnly Property Properties() As IProperties
+
+        '!
+        ```ds
+        (property) IDocument.Statistics: IStatistics
+        ```
+        --------------------
+        A collection of Statistic objects that define statistical tests that are available for applying to tables.
+
+        ### Remarks
+        Chi-Square, column means, column proportions, paired preference, net difference, Tukey and Fisher Exact tests are currently available.
+        !'
+        ReadOnly Property Statistics() As IStatistics
+
+        '!
+        ```ds
+        (property) IDocument.Tables: ITables
+        ```
+        --------------------
+        This collection of tables contained in the document. This is the default property.
+        !'
+        ReadOnly Property Tables() As ITables
+
+        '!
+        ```ds
+        (property) IDocument.TOMVersion: String
+        ```
+        --------------------
+        Returns the version number of the `TOM.DLL`
+        !'
+        ReadOnly Property TOMVersion() As String
+
+        '!
+        ```ds
+        (property) IDocument.Context: String
+        ```
+        --------------------
+        The document context.
+
+        ### Remarks
+        The context set via this property becomes the current context for the data set (or more precisely, the MDM Document) that this table document is based on.
+        !'
+        Property Context() As String
+
+        '!
+        ```ds
+        (property) IDocument.Description: String
+        ```
+        --------------------
+        A user specified string that can be used to describe the contents of this table document.
+        !'
+        Property Description() As String
+
+        '!
+        ```ds
+        (property) IDocument.ImageLocation: String
+        ```
+        --------------------
+        The location of the images referenced by the elements.
+
+        ### Remarks
+        If the `IStyle.Image` property doesn't refer to an absolute HTTP address then the ImageLocation property should be used to specify the location of the images. Any export that makes use of the `IStyle.Image` property will typically prefix relative image locations directly with the value of the `ImageLocation` property. For this reason, make sure the `ImageLocation` ends with a forwardslash or backslash as appropriate.
+        Typical values for this property might be:
+        + An empty string if the images reside in the same location as the exported table document.
+        + A local path, e.g. \"C:\\images\\\"
+        + A URL to an HTTP server, e.g. \"HTTP://www.server.com/images/\"
+        !'
+        Property ImageLocation() As String
+
+        '!
+        ```ds
+        (property) IDocument.KeepLogFiles: Boolean
+        ```
+        --------------------
+        Keep the temporary files created during the call to IDocument.Populate
+
+        ### Remarks
+        If KeepLogFiles is False (the default value) then the temporary files created during the call to IDocument.Populate are deleted. Setting KeepLogFiles to True will stop the log files from being deleted. The temporary files and log files created are stored in the location specified by the IDocument.LogFilePath property.
+        !'
+        Property KeepLogFiles() As Boolean
+
+        '!
+        ```ds
+        (property) IDocument.LabelType: String
+        ```
+        --------------------
+        The document label type.
+
+        ### Remarks
+        The label type set via this property becomes the current label type for the data set (or more precisely, the MDM Document) that this table document is based on.
+        !'
+        Property LabelType() As String
+
+        '!
+        ```ds
+        (property) IDocument.Language: String
+        ```
+        --------------------
+        The document language. The language can be the three-character language code (such as \"ENU\"), the language long name, which is the localized name of the language and the country where it is spoken, such as \"English (United States)\" or the XML-name.
+
+        ### Remarks
+        The language set via this property becomes the current language for the data set (or more precisely, the MDM Document) that this table document is based on.
+        !'
+        Property Language() As String
+
+        '!
+        ```ds
+        (property) IDocument.LogFilePath: String
+        ```
+        --------------------
+        The location used to write temporary files and log files created when a table is populated.
+
+        ### Remarks
+        If a location is not specified for the `LogFilePath` property then the system temporary directory is used. The exact files produced and their content is undefined, but the information they contain is useful for Technical Support purposes. The files are normally discarded automatically unless `IDocument.KeepLogFiles` is set to *True*.
+        !'
+        Property LogFilePath() As String
+
+        '!
+        ```ds
+        (property) IDocument.OpenOption: OpenOptions
+        ```
+        --------------------
+        The options used when opening data sets.
+        !'
+        Property OpenOption() As OpenOptions
+
+        '!
+        ```ds
+        (property) IDocument.OutputLocaleId: Long
+        ```
+        --------------------
+        Sets the locale id used for any error messages descriptions.
+
+        ### Remarks
+        This must be a valid locale id (LCID). Fallback mechanisms are used if the specified `OutputLocaleId` is not supported.
+        !'
+        Property OutputLocaleId() As Long
+
+        '!
+        ```ds
+        (property) IDocument.ProfileSpecialElements: Boolean
+        ```
+        --------------------
+        If set to *True*, special data elements, such as *Net* and *Base* elements, will be included in profile table results.
+
+        ### Remarks
+        The `ProfileSpecialElements` property is set to *False* by default, meaning that special data elements will not be included in profile tables
+        !'
+        Property ProfileSpecialElements() As Boolean
+
+        '!
+        ```ds
+        (property) IDocument.RawStatisticsDataEnabled: Boolean
+        ```
+        --------------------
+        Controls the generation of raw statistical data during execution of the Populate method.
+
+        ### Remarks
+        If `RawStatisticsDataEnabled` is set to *True* then raw statistical data is generated during execution of the `Populate` method and is able from the `RawStatisticsData` property. The default value for `RawStatisticsDataEnabled` is *False*.
+        !'
+        Property RawStatisticsDataEnabled() As Boolean
+
+        '!
+        ```ds
+        (property) IDocument.SaveProfileResults: Boolean
+        ```
+        --------------------
+        If *True* the populated results for profile tables are included in saved `Table Document` files
+
+        ### Remarks
+        The `SaveProfileResults` property is *True* by default. Setting the property to *False* causes all profile tables to be saved as if they were unpopulated.
+        !'
+        Property SaveProfileResults() As Boolean
+
+        '!
+        ```ds
+        (method) IDocument.Clear(): Void
+        ```
+        --------------------
+        Returns the `Document` to its initial state.
+
+        ### Remarks
+        The `Clear` method performs the following actions:
+        + All tables are removed from the document
+        + The `Axes` and `Filters` collections of the document are cleared
+        + The `Statistics` collection of the document is restored to its initial state
+        + The `Reset` method on the `TableDefaults` object is invoked to restore all default settings.
+        + The `Clear` method on the `TableGlobals` object is invoked to remove all global settings.
+        + The `DataSet` property of the `Document` is cleared, removing the reference to the metadata.
+        !'
+        Sub Clear()
+        End Sub
+
+        '!
+        ```ds
+        (method) IDocument.GenerateScript([Tables: Variant], [Type: ScriptType], [Options: Variant]): String
+        ```
+        --------------------
+        Generates a script representation of the table document.
+
+        ### Parameters
+        + ***Tables*** - A list of tables to include in the generated script.
+        + ***Type*** - The type of script to generate. Currently only *stMRS* (mrScriptBasic) script is possible
+        + ***Options*** - Reserved for future use
+
+        ### Return Value
+        A string containing the script
+
+        ### Remarks
+        The script that is created by this method will create a new `Document` object, load the correct dataset, set up default and global settings, define the tables, populate them, and finally configure the exports and export the tables.
+        It is intended that this method will be invoked by a GUI that is using the `Table Object Model`. A user would use the GUI to define, populate, view, and export tables. The user could then select a 'View Script' option which would cause the GUI to invoke this method and return the resulting script to the user. The user could then modify the script in Professional and re-run it to automatically regenerate the tables. The script could also be run as a batch job via *mrScriptCL.exe*.
+        Note that for security reasons the `DataSet.Load` method will not include the full paths to the metadata and case data. If full paths were included then in a client server situation it would allow the user to see the full path to the data on the server. A comment will be included in the generated script if path information has been removed.
+        !'
+        Function GenerateScript(Optional Tables As Variant, Optional Type As ScriptType, Optional Options As Variant) As String
+        End Function
+
+        '!
+        ```ds
+        (method) IDocument.GetObjectFromID(ID: String): Object
+        ```
+        --------------------
+        Get the object corresponding to an object ID
+
+        ### Remarks
+        The ObjectID property on the IPersistObject interface on some of objects can be used to get an ID string for that object. This GetObjectFromID method can be used to retrieve the object corresponding to an object ID.
+        !'
+        Function GetObjectFromID(ID As String) As Object
+        End Function
+
+        '!
+        ```ds
+        (method) IDocument.GetTablesXml([Tables: Variant], [Options: Long = xmlIncludeResults]): String
+        ```
+        --------------------
+        Generates an XML representation of the table document.
+
+        ### Parameters
+        + ***Tables*** - A list of tables to include in the generated script.
+        + ***Options*** - A binary '`OR`' of `XmlOption` enumerated values which control the contents of the returned `Tables` XML
+
+        ### Return Value
+        A string containing the `Tables` XML
+        !'
+        Function GetTablesXml(Optional Tables As Variant, Optional Options As Long = xmlIncludeResults) As String
+        End Function
+
+        '!
+        ```ds
+        (method) IDocument.Open(Source: Variant, [IncludeResults: Boolean = 1]): String
+        ```
+        --------------------
+        Opens a previously saved table document.
+
+        ### Parameters
+        + ***Source*** - Either the name of a previously saved table document file or an `XML DOM` object into which a table document has already been loaded.
+        + ***IncludeResults*** - If the previously saved table document had been populated then it may contain cell values. If `IncludeResults` is *False* then these values will not be loaded with the rest of the document. This will make the call to the `Open` method slightly faster.
+
+        ### Remarks
+        The `Open` method can \"open\" the table document from a file on disk or read it out of a previously loaded `XML DOM` document.
+        !'
+        Function Open(Source As Variant, Optional IncludeResults As Boolean = 1) As String
+        End Function
+
+        '!
+        ```ds
+        (method) IDocument.OpenWithDataSet(Source: Variant, [IncludeResults: Boolean = 1], MetaData: Variant, [MDSC: String = \"\"], [DbLocation: String = \"\"], [CDSC: String = \"\"], [Project: String = \"\"], [Version: String = {..}]): String
+        ```
+        --------------------
+        Opens a previously saved table document with the specified metadata and case data.
+
+        ### Parameters
+        + ***Source*** - Either the name of a previously saved table document file or an `XML DOM` object into which a table document has already been loaded.
+        + ***IncludeResults*** - If the previously saved table document had been populated then it may contain cell values. If `IncludeResults` is *False* then these values will not be loaded with the rest of the document. This will make the call to the `Open` method slightly faster.
+        + ***MetaData*** - The location of the metadata to use. The format of this string depends on the `MDSC`, but is typically a location of an *.MDD* or some other type of file. This can also be an existing MDM document object.
+        + ***MDSC*** - The metadata DSC to use e.g. *mrQvDsc*, or empty if no `MDSC` is required
+        + ***DbLocation*** - The location of the case data to use. The format of this string depends on the `CDSC`
+        + ***CDSC*** - The case data dsc to use e.g. *mrQdiDrsDsc*
+        + ***Project*** - The project name to use if the `CDSC` supports multiple projects. Otherwise this parameter is ignored.
+        + ***Version*** - A version specified for the metadata to use. The default specification string is \"{..}\" (the 'SuperVersion') which means to use all locked versions in the metadata.
+
+        ### Remarks
+        The `IDocument.Open` method automatically reloads the metadata that is specified in the saved table document. The `IDocument.OpenWithDataSet` method is used to override the metadata and case data information that is stored in the saved table document. If this method is used any information about the metadata and case data stored in the saved file is ignored. `IDocument.OpenWithDataSet` is typically used if the location of the metadata has changed since the document was last saved.
+        !'
+        Function OpenWithDataSet(Source As Variant, Optional IncludeResults As Boolean = 1, Optional MetaData As Variant, Optional MDSC As String = "", Optional DbLocation As String = "", Optional CDSC As String = "", Optional Project As String = "", Optional Version As String = "{..}") As String
+        End Function
+
+        '!
+        ```ds
+        (method) IDocument.Populate(Tables: Variant): Boolean
+        ```
+        --------------------
+        Populates the `CellValues` of the required document tables.Return *True* if all tables are populated successfully; return *False* if any of the tables fail during population.
+
+        ### Parameters
+        + ***Tables*** - A list of tables to populate. If this parameter is not specified, then all tables in the document are populated. A restricted set of tables can be specified using any of the following techniques:
+            - An empty string means populate no tables (the method call does nothing)
+            - A value of \"*\" means populate all tables
+            - A string containing the name of a single table populates just that table
+            - A comma separated list of table names will populate all tables in the list
+            - An array of table names will populate all tables specified in the array
+
+        ### Return Value
+        Return *True* if all tables are populated successfully; return *False* if any of the tables fail during population.
+        !'
+        Function Populate(Table As Variant) As Boolean
+        End Function
+
+        '!
+        ```ds
+        (method) IDocument.PopulateBegin(Tables: Variant): Void
+        ```
+        --------------------
+        Begin an asynchronous population run
+
+        ### Return Value
+        The `PopulateBegin()` method is identical to the `Populate()` method except that it is asynchronous. This means that the `PopulateBegin()` method returns immediately and the population will occur in the background.
+        No method or property of the object model should be accessed while population is occurring, other than the `PopulateCancel()` method and the PopulateStatus, PopulateProgress, and IsPopulating properties.
+        If `PopulateBegin()` is used the `OnPopulateError` event should be used to monitor for errors that occur during population. The end of population can be detected by either polling the `IsPopulating` property or waiting for the `OnPopulateComplete` event.
+        !'
+        Sub PopulateBegin(Tables As Variant)
+        End Sub
+
+        '!
+        ```ds
+        (method) IDocument.PopulateCancel(): Void
+        ```
+        --------------------
+        Cancel an existing population started via `Populate()` or `PopulateBegin()`
+        !'
+        Sub PopulateCancel()
+        End Sub
+
+        '!
+        ```ds
+        (method) IDocument.RefreshFromMetadata([ForceRefresh: Boolean = 0]): Void
+        ```
+        --------------------
+        Updates all axes in all tables from the metadata if `UseMetadataDefinition` is *True*
+
+        ### Remarks
+        The `RefreshFromMetadata` method updates axes which have the `UseMetadataDefinition` property set to True based on the current definition in the metadata. This is useful if the metadata has changed since the tables in the document were defined.
+        The axes are automatically refresh from the metadata definition when the table is populated.
+        It is assumed the metadata will not be modified while the table document is open. The `Axis` objects track when they have been synchronized with metadata and will not refresh if they are up to date. If the metadata does change while the table document is open the `ForceRefresh` parameter can be used to force the axis to refresh itself.
+        !'
+        Sub RefreshFromMetadata(Optional ForceRefresh As Boolean = 0)
+        End Sub
+
+        '!
+        ```ds
+        (method) IDocument.Save(Destination: Variant, [IncludeResults: Boolean = 1]): Void
+        ```
+        --------------------
+        Saves the table document to the specified location.
+
+        ### Parameters
+        + ***Destination*** - Either the name of a file to save the table document to, or an empty `XML DOM` object. If a file name is specified, and the file already exists, then it is overwritten without warning.
+        + ***IncludeResults*** - If the parameter is *False*, then the cell values for all tables are not saved. This makes the call to the `Save` method slightly faster and the resulting document smaller.
+
+        ### Remarks
+        The Save method can \"save\" the table document to either a file on disk or to an in-memory `XML DOM`.
+        The cell values for profile tables are not saved if `IDocument.SaveProfileResults` is *False*, even if the `IncludeResults` parameter of the `Save()` method is *True*.
+        !'
+        Sub Save(Destination As Variant, Optional IncludeResults As Boolean = 1)
+        End Sub
+
+        '!
+        ```ds
+        (method) IDocument.SaveWithoutDataSet(Destination: Variant, [IncludeResults: Boolean = 1]): Void
+        ```
+        --------------------
+        Saves the table document without any dataset information.
+
+        ### Remarks
+        The `SaveWithoutDataSet()` method is similar to the `Save()` method except that it doesn't save any information on the dataset (i.e. metadata or case data). The file can only be opened again using the `OpenWithDataSet()` method. Attempting to open a file that doesn't contain dataset information using the `Open()` method will cause an error.
+        !'
+        Sub SaveWithoutDataSet(Destination As Variant, Optional IncludeResults As Boolean = 1)
+        End Sub
+
+    End Interface
+
+End Namespace

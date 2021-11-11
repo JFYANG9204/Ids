@@ -1,0 +1,137 @@
+
+Namespace TOMLib
+
+    '!
+    ```ds
+    (interface) IStatistics
+    ```
+    -----------------------------
+    The `Statistics` object is a collection of `Statistic` objects that define statistical tests to be calculated when a table is populated.
+    !'
+    Interface IStatistics Implements IEnumerable, Object
+
+        '!
+        ```ds
+        (property) IStatistics.Item[Index: Variant]: IStatistic
+        ```
+        --------------------
+        Get the collection item at the specified location.
+        !'
+        Default Property Item(Index As Variant) As IStatistic
+
+        '!
+        ```ds
+        (property) IStatistics.Parent: Variant
+        ```
+        --------------------
+        The parent object
+        !'
+        ReadOnly Property Parent() As Variant
+
+        '!
+        ```ds
+        (property) IStatistics.ColumnIDs: String
+        ```
+        --------------------
+        The selected column heading IDs that the `Column` Proportions, *Column Means*, and *Tukey* statistics are to test.
+
+        ### Remarks
+        Each character in the string is used to allocate the ID for a column, with a space or dot used to indicate that an ID should not be allocated. A character needs to be specified for each of the columns in the table, including BASE columns. Do not include a . or space for hidden columns. e.g. \"....MF.NG\". Note that you cannot include a period '.' or space for hidden columns.
+        If no value is specified, the string is set to the `ColumnID`s property. The `Column` Proportions, *Column Means*, and *Tukey* tests will default to testing the group of columns indicated by `TestColumns`. If no value is specified, the string is set to the `TestColumns` property. The `Column` Proportions, Column Means, and Tukey tests will default to testing the IDs against each other. e.g. \"M/F/N/G\"
+        !'
+        Property ColumnIDs() As String
+
+        '!
+        ```ds
+        (property) IStatistics.ShowMinPVal: Boolean
+        ```
+        --------------------
+        If *True*, a column is appended to the table to contain the minimum p-value found in the row.
+
+        ### Remarks
+        This option is only valid on a table with the ColumnProportions or ColumnMeans statistic, and is not valid when there is any nesting or concatenating in the top axis.
+        !'
+        Property ShowMinPVal() As Boolean
+
+        '!
+        ```ds
+        (property) IStatistics.TestColumns: String
+        ```
+        --------------------
+        The heading ids of the columns the `Column` Proportions, *Column Means* and *Tukey* statistics are to test
+
+        ### Remarks
+        The columns that the `Column` Proportions, *Column Means* and *Tukey tests* are to compare can be specified using the `TestColumns` property. The `TestColumns` specification is a string that lists the groups of columns to test separated by comma. Each column is represented by it's heading id and is tested against every other column in the group.
+        For example, the specification \"A/B/C, D/E/F/G\" will test all possible combinations of the columns *A*, *B*, and *C*, and all possible combinations of the columns *D*, *E*, *F*, *G*. i.e. o A against B o A against C o B against C o B against A o C against A o C against B o D against E o D against F o D against G o E against D o E against F o ... and so on
+        As another example, the specification \"A/B, C/D, E/F\" will only test pairs of columns. i.e.
+        + A against B
+        + B against A
+        + C against D
+        + D against C
+        + E against F
+        + F against E
+
+        If no value is specification string is set for the `TestColumns` property then `Column` Proportions, *Column Means* and *Tukey tests* will default to testing the default groups of columns. By default columns are split into groups delimited by base or sub-total elements.
+        !'
+        Property TestColumns() As String
+
+        '!
+        ```ds
+        (property) IStatistics.UseEffectiveBase: Boolean
+        ```
+        --------------------
+        If *True*, the effective base is used when the tests are calculated, otherwise no base adjustment is made.
+
+        ### Remarks
+        This option affects statistical tests on weighted tables only. The effective base is designed to reduce the likelihood of the statistical tests producing significant results because of the adjustments made by weighting.
+        !'
+        Property UseEffectiveBase() As Boolean
+
+        '!
+        ```ds
+        (property) IStatistics.UseGridOverlapFormula: Boolean
+        ```
+        --------------------
+        Set if the statistics should use grid overlap formula. If this option is set to *false*, the grid overlap formula is not used and normal overlap formula is used if current table is an overlap table (normal overlap or grid table). If this option is set to *true*, the product itself decides which formula to use.
+
+        ### Remarks
+        The grid overlap formula usually needs more memory and more time than the normal overlap formula
+        !'
+        Property UseGridOverlapFormula() As Boolean
+
+        '!
+        ```ds
+        (method) IStatistics.Add(Name: Variant): IStatistic
+        ```
+        --------------------
+        Adds a statistic from the `IDocument.Statistics` collection to the current collection.
+
+        ### Remarks
+        The `IDocument.Statistics` collection is populated with all available statistical tests when the IDocument object is created. This Add method makes a copy of the Statistic object and adds it to this Statistics collection. Adding a statistic test may automatically add extra cell items or elements.
+        !'
+        Function Add(Name As Variant) As IStatistic
+        End Function
+
+        '!
+        ```ds
+        (method) IStatistics.Clear(): Void
+        ```
+        --------------------
+        Removes all `Statistic` objects from the collection.
+        !'
+        Sub Clear()
+        End Sub
+
+        '!
+        ```ds
+        (method) IStatistics.Remove(Index: Variant): Void
+        ```
+        --------------------
+        Removes a `Statistic` object from the collection.
+        !'
+        Sub Remove(Index As Variant)
+        End Sub
+
+    End Interface
+
+End Namespace

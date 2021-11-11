@@ -1,0 +1,119 @@
+
+Namespace TOMLib
+
+    '!
+    ```ds
+    (interface) IRule
+    ```
+    -----------------------------
+    The `IRule` object defines criteria, for example, hiding parts of the table.
+    !'
+    Interface IRule Implements Object
+
+        '!
+        ```ds
+        (property) IRule.IsActive: Boolean
+        ```
+        --------------------
+        Returns *True* if the rule is active, or *False* if the rule is disabled.
+
+        ### Remarks
+        A rule becomes inactive (disabled) if the `CellItemRef` property is invalid. Also, in versions prior to 2.4, the `IsActive` property would return *False* if any statistic was applied to the table.
+        !'
+        ReadOnly Property IsActive() As Boolean
+
+        '!
+        ```ds
+        (property) IRule.Parent: IRules
+        ```
+        --------------------
+        The parent object
+
+        ### Remarks
+        The `Parent` property of the `Rule` object always returns a `Rules` collection
+        !'
+        ReadOnly Property Parent() As IRules
+
+        '!
+        ```ds
+        (property) IRule.CellItemRef: Long
+        ```
+        --------------------
+        The index (into the tables `CellItems` collection) of the `CellItem` on which the rule's condition is based.
+        !'
+        Property CellItemRef() As Long
+
+        '!
+        ```ds
+        (property) IRule.ElementRef: String
+        ```
+        --------------------
+        A reference to the element to the rule is to operate on.
+
+        ### Remarks
+        The reference to the element to base the hide rule on is specified as \"AxisName{ElementName}\" where `AxisName` must be the name of an axis within the 'Side' axis for a `Rule` suppressing columns, and the 'Top' axis for a `Rule` suppressing rows. `ElementName` must be the name of an element within that axis. Nested axes can be referenced by using the '>' symbol.
+        The first or last row/column can be referenced by specifying the keyword \"First\" or \"Last\".
+        If the `ElementRef` property is not specified then the rule operates on all elements.
+        !'
+        Property ElementRef() As String
+
+        '!
+        ```ds
+        (property) IRule.IgnoreSpecialElements: Boolean
+        ```
+        --------------------
+        If *False*, any special element such as mean, subtotal, etc, is hidden if it passes the rule for hiding.
+
+        ### Remarks
+        The default is *True*, meaning that special elements are always displayed even when they pass the rules for hiding.
+        !'
+        Property IgnoreSpecialElements() As Boolean
+
+        '!
+        ```ds
+        (property) IRule.Operator: ComparisonOperator
+        ```
+        --------------------
+        The type of comparison operation to perform.
+        !'
+        Property Operator() As ComparisonOperator
+
+        '!
+        ```ds
+        (property) IRule.Target: RuleTarget
+        ```
+        --------------------
+        The target of the rule.Note that it's not possible to change the `Target` property of a rule if an `ElementRef` property has been set. This is because changing the target will probably make the `ElementRef` invalid.
+        !'
+        Property Target() As RuleTarget
+
+        '!
+        ```ds
+        (property) IRule.Type: RuleType
+        ```
+        --------------------
+        The type of rule.
+        !'
+        Property Type() As RuleType
+
+        '!
+        ```ds
+        (property) IRule.Value: Double
+        ```
+        --------------------
+        The condition the rule is to test for.
+
+        ### Remarks
+        For example, if all rows where values are less than 10 are to be hidden, then the cut-off value of the rule is 10.
+
+        ### Example
+        ```ds
+        Table.Rules.AddNew(rlHide, rtRow, 0, opLess, 10)
+        ```
+        !'
+        Property Value() As Double
+
+
+    End Interface
+
+End Namespace
