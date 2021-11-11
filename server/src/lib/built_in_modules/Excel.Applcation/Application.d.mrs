@@ -2150,6 +2150,84 @@ NameSpace Excel
         !'
         ReadOnly Property Assistance() As IAssistance
 
+
+        '!
+        ```ds
+        (property) Application.Assistant: Assistant
+        ```
+        ------------------------
+        Returns an `Assistant` object for Microsoft Excel.
+
+        ### Syntax
+        ```vb
+        expression.Assistant
+        ```
+        *expression* - A variable that represents an `Application` object.
+
+        ### Remarks
+        Using this property without an object qualifier is equivalent to using `Application.Assistant`.
+
+        ### Example
+        This example will display the help for Excel.
+        ```vb
+        Application.Assistant.Help
+        ```
+        !'
+        Property Assistant() As Assistant
+
+        '!
+        ```ds
+        (property) Application.AutoCorrect: AutoCorrect
+        ```
+        ------------------------
+        Returns an `AutoCorrect` object that represents the Microsoft Excel `AutoCorrect` attributes. Read-only.
+
+        ### Syntax
+        ```vb
+        expression.AutoCorrect
+        ```
+        *expression* - A variable that represents an `Application` object.
+
+        ### Example
+        This example substitutes the word "Temp." for the word "Temperature" in the array of AutoCorrect replacements.
+        ```vb
+        With Application.AutoCorrect
+            .AddReplacement "Temperature", "Temp."
+        End With
+        ```
+        !'
+        ReadOnly Property AutoCorrect() As AutoCorrect
+
+
+        '!
+        ```ds
+        (property) Application.AutoFormatAsYouTypeReplaceHyperlinks: Boolean
+        ```
+        ------------------------
+        *True* (default) if Microsoft Excel automatically formats hyperlinks as you type. *False* if Excel does not automatically format hyperlinks as you type. Read/write *Boolean*.
+
+        ### Syntax
+        ```vb
+        expression.AutoFormatAsYouTypeReplaceHyperlinks
+        ```
+        *expression* - A variable that represents an `Application` object.
+
+        ### Example
+        In this example, Microsoft Excel determines if the ability to format hyperlinks automatically as they are typed is enabled and notifies the user.
+        ```vb
+        Sub CheckHyperlinks()
+            ' Determine if automatic formatting is enabled and notify user.
+            If Application.<strong>AutoFormatAsYouTypeReplaceHyperlinks</strong> = True Then
+                MsgBox "Automatic formatting for typing in hyperlinks is enabled."
+            Else
+                MsgBox "Automatic formatting for typing in hyperlinks is not enabled."
+            End If
+        End Sub
+        ```
+        !'
+        Property AutoFormatAsYouTypeReplaceHyperlinks() As Boolean
+
+
     End Class
 
 End NameSpace
