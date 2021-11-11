@@ -1,0 +1,1856 @@
+
+NameSpace Excel
+
+    '!
+    ```ds
+    (object) Application
+    ```
+    ------------------------
+    Represents the entire Microsoft Excel application.
+
+    ### Remarks
+    The `Application` object contains:
+    + Application-wide settings and options.
+    + Methods that return top-level objects, such as `ActiveCell`, `ActiveSheet`, and so on.
+
+    ### Example
+    Use the `Application` property to return the `Application` object. The following example applies the Windows property to the `Application` object.
+    ```vb
+    Application.Windows("book1.xls").Activate
+    ```
+    The following example creates a Microsoft Excel workbook object in another application and then opens a workbook in Microsoft Excel.
+    ```ds
+    Set xl = CreateObject("Excel.Sheet")
+    xl.Application.Workbooks.Open "newbook.xls"
+    ```
+    Many of the properties and methods that return the most common user-interface objects, such as the active cell (ActiveCell property), can be used without the `Application` object qualifier. For example, instead of writing
+    ```ds
+    ActiveCell.Font.Bold = True
+    ```
+    !'
+    Class Application Implements Object
+
+        '!
+        ```ds
+        (method) Application.ActivateMicrosoftApp(Index: XlMSApplication): Void
+        ```
+        ------------------------
+        Activates a Microsoft application. If the application is already running, this method activates the running application. If the application isn't running, this method starts a new instance of the application.
+
+        ### Syntax
+        ```vb
+        expression.ActivateMicrosoftApp(Index)
+        ```
+        *expression* - A variable that represents an `Application` object.
+
+        ### Parameters
+        + `Index`: *XlMSApplication* - Specifies the Microsoft application to activate.
+
+        ### Example
+        This example starts and activates Word.
+        ```vb
+        Application.ActivateMicrosoftApp xlMicrosoftWord
+        ```
+        !'
+        Sub ActivateMicrosoftApp(Index As XlMSApplication)
+        End Sub
+
+        '!
+        ```ds
+        (method) Application.AddCustomList(ListArray: Variant, [ByRow: Variant]): Void
+        ```
+        ------------------------
+        Adds a custom list for custom autofill and/or custom sort.
+
+        ### Syntax
+        ```vb
+        expression.AddCustomList(ListArray, ByRow)
+        ```
+        *expression* - A variable that represents an `Application` object.
+
+        ### Parameters
+        + `ListArray`: *Variant* - Specifies the source data, as either an array of strings or a `Range` object.
+        + `ByRow`: *Variant* - Only used if `ListArray` is a `Range` object. *True* to create a custom list from each row in the range. *False* to create a custom list from each column in the range. If this argument is omitted and there are more rows than columns (or an equal number of rows and columns) in the range, Microsoft Excel creates a custom list from each column in the range. If this argument is omitted and there are more columns than rows in the range, Microsoft Excel creates a custom list from each row in the range.
+
+        ### Remarks
+        If the list you're trying to add already exists, this method does nothing.
+
+        ### Example
+        This example adds an array of strings as a custom list.
+
+        ```vb
+        Application.AddCustomList Array("cogs", "sprockets", _
+            "widgets", "gizmos")
+        ```
+        !'
+        Sub AddCustomList(ListArray As Variant, Optional ByRow As Variant)
+        End Sub
+
+        '!
+        ```ds
+        (method) Application.Calculate(): Void
+        ```
+        ------------------------
+        Calculates all open workbooks, a specific worksheet in a workbook, or a specified range of cells on a worksheet, as shown in the following table.
+
+        ### Syntax
+        ```vb
+        expression.Calculate
+        ```
+        *expression* - A variable that represents an `Application` object.
+
+        ### Remarks
+
+        | To calculate         | Follow this example                           |
+        | :-----------------   | :------------------                           |
+        | All open workbooks   | `Application.Calculate` (or just `Calculate`) |
+        | A specific worksheet | `Worksheets(1).Calculate`                     |
+        | A specified range    | `Worksheets(1).Rows(2).Calculate`             |
+
+        ### Example
+        This example calculates the formulas in columns A, B, and C in the used range on Sheet1.
+        ```vb
+        Worksheets("Sheet1").UsedRange.Columns("A:C").Calculate
+        ```
+        !'
+        Sub Calculate()
+        End Sub
+
+        '!
+        ```ds
+        (method) Application.CalculateFull(): Void
+        ```
+        ------------------------
+        Forces a full calculation of the data in all open workbooks.
+
+        ### Syntax
+        ```vb
+        expression.CalculateFull
+        ```
+        *expression* - A variable that represents an `Application` object.
+
+        ### Example
+        This example compares the version of Microsoft Excel with the version of Excel that the workbook was last calculated in. If the two version numbers are different, a full calculation of the data in all open workbooks is performed.
+        ```vb
+        If Application.CalculationVersion <> _
+            Workbooks(1).CalculationVersion Then
+            Application.CalculateFull
+        End If
+        ```
+        !'
+        Sub CalculateFull()
+        End Sub
+
+        '!
+        ```ds
+        (method) Application.CalculateFullRebuild(): Void
+        ```
+        ------------------------
+        For all open workbooks, forces a full calculation of the data and rebuilds the dependencies.
+
+        ### Syntax
+        ```vb
+        expression.CalculateFullRebuild
+        ```
+        *expression* - A variable that represents an `Application` object.
+
+        ### Remarks
+        Dependencies are the formulas that depend on other cells. For example, the formula "=A1" depends on cell A1. The `CalculateFullRebuild` method is similar to re-entering all formulas.
+
+        ### Example
+        This example compares the version of Microsoft Excel with the version of Excel in which the workbook was last calculated. If the two version numbers are different, a full calculation of the data in all open workbooks is performed and the dependencies are rebuilt.
+        ```vb
+        Sub UseCalculateFullRebuild()
+        If Application.CalculationVersion &lt;&gt; _
+            Workbooks(1).CalculationVersion Then
+            Application.<strong>CalculateFullRebuild</strong>
+        End If
+        End Sub
+        ```
+        !'
+        Sub CalculateFullRebuild()
+        End Sub
+
+        '!
+        ```ds
+        (method) Application.CentimetersToPoints(Centimeters: Double): Double
+        ```
+        ------------------------
+        Converts a measurement from centimeters to points (one point equals 0.035 centimeters).
+
+        ### Syntax
+        ```vb
+        expression.CentimetersToPoints(Centimeters)
+        ```
+        *expression* - A variable that represents an `Application` object.
+
+        ### Parameters
+        + `Centimeters`: *Double* - Specifies the centimeter value to be converted to points.
+
+        ### Return Value
+        Double
+
+        ### Example
+        This example sets the left margin of Sheet1 to 5 centimeters.
+        ```vb
+        Worksheets("Sheet1").PageSetup.LeftMargin = _
+                Application.CentimetersToPoints(5)
+        ```
+        !'
+        Function CentimetersToPoints(Centimeters As Double) As Double
+        End Function
+
+        '!
+        ```ds
+        (method) Application.CheckAbort([KeepAbort: Boolean]): Void
+        ```
+        ------------------------
+        Stops recalculation in a Microsoft Excel application.
+
+        ### Syntax
+        ```vb
+        expression.CheckAbort(KeepAbort)
+        ```
+        *expression* - A variable that represents an `Application` object.
+
+        ### Parameters
+        + `KeepAbort`: *Double* - Allows recalculation to be performed for a Range.
+
+        ### Example
+        In this example, Excel stops recalculation in the application, except for cell A10. For you to be able to see the results of this example, other calculations should exist in the application that will allow you to see the differences between the cell designated to continue recalculating and other cells.
+        ```vb
+        Sub UseCheckAbort()
+        Dim rngSubtotal As Variant
+        Set rngSubtotal = Application.Range("A10")
+
+        ' Stop recalculation except for designated cell.
+        Application.<strong>CheckAbort</strong> KeepAbort:=rngSubtotal
+        End Sub
+        ```
+        !'
+        Sub CheckAbort(Optional KeepAbort As Boolean)
+        End Sub
+
+        '!
+        ```ds
+        (method) Application.CheckSpelling(Word: String, [CustomDictionary: Variant], [IgnoreUppercase: Variant]): Boolean
+        ```
+        ------------------------
+        Checks the spelling of a single word.
+
+        ### Syntax
+        ```vb
+        expression.CheckSpelling(Word, CustomDictionary, IgnoreUppercase)
+        ```
+        *expression* - A variable that represents an `Application` object.
+
+        ### Parameters
+        + `Word`: *String* - (used only with `Application` object). The word you want to check.
+        + `CustomDictionary`: *Variant* - A string that indicates the file name of the custom dictionary to be examined if the word isn't found in the main dictionary. If this argument is omitted, the currently specified dictionary is used.
+        + `IgnoreUppercase`: *Variant* - *True* to have Microsoft Excel ignore words that are all uppercase. False to have Microsoft Excel check words that are all uppercase. If this argument is omitted, the current setting will be used.
+
+        ### Return Value
+        *True* if the word is found in one of the dictionaries; otherwise *False*.
+
+        ### Remarks
+        To check headers, footers, and objects on a worksheet, use this method on a `Worksheet` object.
+        To check only cells and notes, use this method with the object returned by the `Cells` property
+        !'
+        Function CheckSpelling(Word As String, Optional CustomDictionary As Variant, Optional IgnoreUppercase As Variant) As Boolean
+        End Function
+
+        '!
+        ```ds
+        (method) Application.ConvertFormula(Formula: Variant, FromReferenceStyle: XlReferenceStyle, [ToReferenceStyle: Variant], [ToAbsolute: Variant], [RelativeTo: Variant]): Variant
+        ```
+        ------------------------
+        Converts cell references in a formula between the A1 and R1C1 reference styles, between relative and absolute references, or both. *Variant*.
+
+        ### Syntax
+        ```vb
+        expression.ConvertFormula(Formula, FromReferenceStyle, ToReferenceStyle, ToAbsolute, RelativeTo)
+        ```
+        *expression* - A variable that represents an `Application` object.
+
+        ### Parameters
+        + `Formula`: *Variant* - A string that containis the formula you want to convert. This must be a valid formula, and it must begin with an equal sign.
+        + `FromReferenceStyle`: *XlReferenceStyle* - The reference style of the formula.
+        + `ToReferenceStyle`: *Variant* - A constant of `XlReferenceStyle` specifying the reference style you want returned. If this argument is omitted, the reference style isn't changed; the formula stays in the style specified by *FromReferenceStyle*.
+        + `ToAbsolute`: *Variant* - A constant of `XlReferenceStyle` which specifies the converted reference type. If this argument is omitted, the reference type isn't changed.
+        + `RelativeTo`: *Variant* - A `Range` object that contains one cell. Relative references relate to this cell.
+
+        ### Return Value
+        Variant
+
+        ### Example
+        This example converts a SUM formula that contains R1C1-style references to an equivalent formula that contains A1-style references, and then it displays the result.
+        ```vb
+        inputFormula = "=SUM(R10C2:R15C2)"
+        MsgBox Application.ConvertFormula( _
+            formula:=inputFormula, _
+            fromReferenceStyle:=xlR1C1, _
+            toReferenceStyle:=xlA1)
+        ```
+        !'
+        Function ConvertFormula(Formula As Variant, FromReferenceStyle As XlReferenceStyle, Optional ToReferenceStyle As Variant, Optional ToAbsolute As Variant, Optional RelativeTo As Variant) As Variant
+        End Function
+
+        '!
+        ```ds
+        (method) Application.DDEExecute(Channel: Long, String: String): Void
+        ```
+        ------------------------
+        Runs a command or performs some other action or actions in another application by way of the specified DDE channel.
+
+        ### Syntax
+        ```vb
+        expression.DDEExecute(Channel, String)
+        ```
+        *expression* - A variable that represents an `Application` object.
+
+        ### Parameters
+        + `Channel`: *Long* - The channel number returned by the `DDEInitiate` method.
+        + `String`: *String* - The message defined in the receiving application.
+
+        ### Remarks
+        The `DDEExecute` method is designed to send commands to another application. You can also use it to send keystrokes to another application, although the SendKeys method is the preferred way to send keystrokes. The String argument can specify any single key combined with ALT, CTRL, or SHIFT, or any combination of those keys. Each key is represented by one or more characters, such as "a" for the character a, or "{ENTER}" for the ENTER key.
+        To specify characters that aren't displayed when you press the corresponding key (for example, ENTER or TAB), use the codes listed in the following table. Each code in the table represents one key on the keyboard.
+
+        | Key                        | Code                 |
+        | :------------------------- | :------------------- |
+        | BACKSPACE                  | {BACKSPACE} or {BS}  |
+        | BREAK                      | {BREAK}              |
+        | CAPS LOCK                  | {CAPSLOCK}           |
+        | CLEAR                      | {CLEAR}              |
+        | DELETE or DEL              | {DELETE} or {DEL}    |
+        | DOWN ARROW                 | {DOWN}               |
+        | END                        | {END}                |
+        | ENTER (numeric keypad)     | {ENTER}              |
+        | ENTER                      | ~(tilde)             |
+        | ESC                        | {ESCAPE} or {ESC}    |
+        | HELP                       | {HELP}               |
+        | HOME                       | {HOME}               |
+        | INS                        | {INSERT}             |
+        | LEFT ARROW                 | {LEFT}               |
+        | NUM LOCK                   | {NUMLOCK}            |
+        | PAGE DOWN                  | {PGDN}               |
+        | PAGE UP                    | {PGUP}               |
+        | RETURN                     | {RETURN}             |
+        | RIGHT ARROW                | {RIGHT}              |
+        | SCROLL LOCK                | {SCROLLLOCK}         |
+        | TAB                        | {TAB}                |
+        | UP ARROW                   | {UP}                 |
+        | F1 through F15             | {F1} through {F15}   |
+
+        You can also specify keys combined with SHIFT and/or CTRL and/or ALT. To specify a key combined with one or more of the keys just mentioned, use the following table.
+
+        | To combine a key with   | Precede the key code with |
+        | :---------------------  | :-----------------------  |
+        | SHIFT                   | + (plus sign)             |
+        | CTRL                    | ^ (caret)                 |
+        | ALT                     | % (percent sign)          |
+
+        ### Example
+        This example opens a channel to Word, opens the Word document Formletr.doc, and then sends the FilePrint command to WordBasic.
+        ```vb
+        channelNumber = Application.DDEInitiate( _
+            app:="WinWord", _
+            topic:="C:\\WINWORD\\FORMLETR.DOC")
+        Application.DDEExecute channelNumber, "[FILEPRINT]"
+        Application.DDETerminate channelNumber
+        ```
+        !'
+        Sub DDEExecute(Channel As Long, String As String)
+        End Sub
+
+        '!
+        ```ds
+        (method) Application.DDEInitiate(App: String, Topic: String): Long
+        ```
+        ------------------------
+        Opens a DDE channel to an application.
+
+        ### Syntax
+        ```vb
+        expression.DDEInitiate(App, Topic)
+        ```
+        *expression* - A variable that represents an `Application` object.
+
+        ### Parameters
+        + `App`: *String* - The application name.
+        + `Topic`: *String* - Describes something in the application to which you're opening a channel — usually a document of that application.
+
+        ### Return Value
+        Long
+
+        ### Remarks
+        If successful, the `DDEInitiate` method returns the number of the open channel. All subsequent DDE functions use this number to specify the channel.
+
+        ### Example
+        This example opens a channel to Word, opens the Word document Formletr.doc, and then sends the FilePrint command to WordBasic.
+        ```vb
+        channelNumber = Application.DDEInitiate( _
+            app:="WinWord", _
+            topic:="C:\\WINWORD\\FORMLETR.DOC")
+        Application.DDEExecute channelNumber, "[FILEPRINT]"
+        Application.DDETerminate channelNumber
+        ```
+        !'
+        Function DDEInitiate(App As String, Topic As String) As Long
+        End Function
+
+        '!
+        ```ds
+        (method) Application.DDEPoke(Channel: Long, Item: Variant, Data: Variant): Void
+        ```
+        ------------------------
+        Sends data to an application.
+
+        ### Syntax
+        ```vb
+        expression.DDEPoke(Channel, Item, Data)
+        ```
+        *expression* - A variable that represents an `Application` object.
+
+        ### Parameters
+        + `Channel`: *Long* - The channel number returned by the `DDEInitiate` method.
+        + `Item`: *Variant* - The item to which the data is to be sent.
+        + `Data`: *Variant* - The data to be sent to the application.
+
+        ### Remarks
+        An error occurs if the method call doesn't succeed.
+
+        ### Example
+        This example opens a channel to Word, opens the Word document Sales.doc, and then inserts the contents of cell A1 (on Sheet1) at the beginning of the document.
+        ```vb
+        channelNumber = Application.DDEInitiate( _
+            app:="WinWord", _
+            topic:="C:\\WINWORD\\SALES.DOC")
+        Set rangeToPoke = Worksheets("Sheet1").Range("A1")
+        Application.DDEPoke channelNumber, "\\StartOfDoc", rangeToPoke
+        Application.DDETerminate channelNumber
+        ```
+        !'
+        Sub DDEPoke(Channel As Long, Item As Variant, Data As Variant)
+        End Sub
+
+        '!
+        ```ds
+        (method) Application.DDERequest(Channel: Long, Item: String): Variant
+        ```
+        ------------------------
+        Requests information from the specified application. This method always returns an array.
+
+        ### Syntax
+        ```vb
+        expression.DDERequest(Channel, Item)
+        ```
+        *expression* - A variable that represents an `Application` object.
+
+        ### Parameters
+        + `Channel`: *Long* - The channel number returned by the `DDEInitiate` method.
+        + `Item`: *String* - The item to be requested.
+
+        ### Return Value
+        Variant
+
+        ### Example
+        This example opens a channel to the System topic in Word and then uses the Topics item to return a list of all open documents. The list is returned in column A on Sheet1.
+        ```vb
+        channelNumber = Application.DDEInitiate( _
+            app:="WinWord", _
+            topic:="System")
+        returnList = Application.DDERequest(channelNumber, "Topics")
+        For i = LBound(returnList) To UBound(returnList)
+            Worksheets("Sheet1").Cells(i, 1).Formula = returnList(i)
+        Next i
+        Application.DDETerminate channelNumber
+        ```
+        !'
+        Function DDERequest(Channel As Long, Item As String) As Variant
+        End Function
+
+        '!
+        ```ds
+        (method) Application.DDETerminate(Channel: Long): Void
+        ```
+        ------------------------
+        Closes a channel to another application.
+
+        ### Syntax
+        ```vb
+        expression.DDETerminate(Channel)
+        ```
+        *expression* - A variable that represents an `Application` object.
+
+        ### Parameters
+        + `Channel`: *Long* - The channel number returned by the `DDEInitiate` method.
+
+        ### Example
+        This example opens a channel to Word, opens the Word document `Formletr.doc`, and then sends the `FilePrint` command to WordBasic.
+        ```vb
+        channelNumber = Application.DDEInitiate( _
+            app:="WinWord", _
+            topic:="C:\\WINWORD\\FORMLETR.DOC")
+        Application.DDEExecute channelNumber, "[FILEPRINT]"
+        Application.DDETerminate channelNumber
+        ```
+        !'
+        Sub DDETerminate(Channel As Long)
+        End Sub
+
+        '!
+        ```ds
+        (method) Application.DeleteCustomList(ListNum: Long): Void
+        ```
+        ------------------------
+        Deletes a custom list.
+
+        ### Syntax
+        ```vb
+        expression.DDETerminate(ListNum)
+        ```
+        *expression* - A variable that represents an `Application` object.
+
+        ### Parameters
+        + `ListNum`: *Long* - The custom list number. This number must be greater than or equal to 5 (Microsoft Excel has four built-in custom lists that cannot be deleted).
+
+        ### Remarks
+        This method generates an error if the list number is less than 5 or if there's no matching custom list.
+
+        ### Example
+        This example deletes a custom list.
+        ```vb
+        n = Application.GetCustomListNum(Array("cogs", "sprockets", _
+            "widgets", "gizmos"))
+        Application.DeleteCustomList n
+        ```
+        !'
+        Sub DeleteCustomList(ListNum As Long)
+        End Sub
+
+        '!
+        ```ds
+        (method) Application.DisplayXMLSourcePane([XmlMap: Variant]): Void
+        ```
+        ------------------------
+        Opens the `XML Source` task pane and displays the XML map specified by the `XmlMap` argument.
+
+        ### Syntax
+        ```vb
+        expression.DisplayXMLSourcePane(XmlMap)
+        ```
+        *expression* - A variable that represents an `Application` object.
+
+        ### Parameters
+        + `XmlMap`: *Long* - The XML map to display in the task pane.
+
+        ### Remarks
+        You can use the following code to hide the XML Source task pane.
+
+        ### Example
+        This example deletes a custom list.
+        ```vb
+        Application.CommandBars("XML Source").Visible = False
+        ```
+        !'
+        Sub DisplayXMLSourcePane(Optional XmlMap As Variant)
+        End Sub
+
+        '!
+        ```ds
+        (method) Application.DoubleClick(): Void
+        ```
+        ------------------------
+        Equivalent to double-clicking the active cell.
+
+        ### Syntax
+        ```vb
+        expression.DoubleClick
+        ```
+        *expression* - A variable that represents an `Application` object.
+
+        ### Example
+        This example double-clicks the active cell on Sheet1.
+        ```vb
+        Worksheets("Sheet1").Activate
+        Application.DoubleClick
+        ```
+        !'
+        Sub DoubleClick()
+        End Sub
+
+        '!
+        ```ds
+        (method) Application.Evaluate(Name: Variant): Variant
+        ```
+        ------------------------
+        Converts a Microsoft Excel name to an object or a value.
+
+        ### Syntax
+        ```vb
+        expression.Evaluate(Name)
+        ```
+        *expression* - A variable that represents an `Application` object.
+
+        ### Parameters
+        + `Name`: *Variant* - The name of the object, using the naming convention of Microsoft Excel.
+
+        ### Remarks
+        The following types of names in Microsoft Excel can be used with this method:
+        + A1-style references. You can use any reference to a single cell in A1-style notation. All references are considered to be absolute references.
+        + Ranges. You can use the range, intersect, and union operators (colon, space, and comma, respectively) with references.
+        + Defined names. You can specify any name in the language of the macro.
+        + External references. You can use the ! operator to refer to a cell or to a name defined in another workbook — for example, `Evaluate("[BOOK1.XLS]Sheet1!A1")`.
+        + Chart Objects. You can specify any chart object name, such as "Legend", "Plot Area", or "Series 1", to access the properties and methods of that object. For example, `Charts("Chart1").Evaluate("Legend").Font.Name` returns the name of the font used in the legend.
+
+        @note - Using square brackets (for example, "[A1:C5]") is identical to calling the `Evaluate` method with a string argument. For example, the following expression pairs are equivalent.
+
+        ```vb
+        [a1].Value = 25
+        Evaluate("A1").Value = 25
+
+        trigVariable = [SIN(45)]
+        trigVariable = Evaluate("SIN(45)")
+
+        Set firstCellInSheet = Workbooks("BOOK1.XLS").Sheets(4).[A1]
+        Set firstCellInSheet = _
+            Workbooks("BOOK1.XLS").Sheets(4).Evaluate("A1")
+        ```
+
+        The advantage of using square brackets is that the code is shorter. The advantage of using Evaluate is that the argument is a string, so you can either construct the string in your code or use a Visual Basic variable.
+
+        ### Example
+        This example turns on bold formatting in cell A1 on Sheet1.
+        ```vb
+        Worksheets("Sheet1").Activate
+        boldCell = "A1"
+        Application.Evaluate(boldCell).Font.Bold = True
+        ```
+        !'
+        Function Evaluate(Name As Variant) As Variant
+        End Function
+
+        '!
+        ```ds
+        (method) Application.ExecuteExcel4Macro(String: String): Variant
+        ```
+        ------------------------
+        Runs a Microsoft Excel 4.0 macro function and then returns the result of the function. The return type depends on the function.
+
+        ### Syntax
+        ```vb
+        expression.ExecuteExcel4Macro(String)
+        ```
+        *expression* - A variable that represents an `Application` object.
+
+        ### Parameters
+        + `String`: *String* - A Microsoft Excel 4.0 macro language function without the equal sign. All references must be given as R1C1 strings. If String contains embedded double quotation marks, you must double them. For example, to run the macro function `=MID("sometext",1,4)`, String would have to be `"MID(""sometext"",1,4)"`.
+
+        ### Return Value
+        Variant
+
+        ### Remarks
+        The Microsoft Excel 4.0 macro isn't evaluated in the context of the current workbook or sheet. This means that any references should be external and should specify an explicit workbook name. For example, to run the Microsoft Excel 4.0 macro "My_Macro" in Book1 you must use "Book1!My_Macro()". If you don't specify the workbook name, this method fails.
+
+        ### Example
+        This example runs the `GET.CELL(42)` macro function on cell C3 on Sheet1 and then displays the result in a message box. The `GET.CELL(42)` macro function returns the horizontal distance from the left edge of the active window to the left edge of the active cell. This macro function has no direct Visual Basic equivalent.
+        ```vb
+        Worksheets("Sheet1").Activate
+        Range("C3").Select
+        MsgBox ExecuteExcel4Macro("GET.CELL(42)")
+        ```
+        !'
+        Function ExecuteExcel4Macro(String As String) As Variant
+        End Function
+
+        '!
+        ```ds
+        (method) Application.FindFile(): Boolean
+        ```
+        ------------------------
+        Displays the `Open` dialog box.
+
+        ### Syntax
+        ```vb
+        expression.FindFile
+        ```
+        *expression* - A variable that represents an `Application` object.
+
+        ### Return Value
+        Boolean
+
+        ### Remarks
+        This method displays the `Open` dialog box and allows the user to open a file. If a new file is opened successfully, this method returns *True*. If the user cancels the dialog box, this method returns *False*.
+
+        ### Example
+        This example displays the `Open` dialog box.
+        ```vb
+        Application.FindFile
+        ```
+        !'
+        Function FindFile() As Boolean
+        End Function
+
+        '!
+        ```ds
+        (method) Application.GetCustomListContents(ListNum: Long): Variant
+        ```
+        ------------------------
+        Returns a custom list (an array of strings).
+
+        ### Syntax
+        ```vb
+        expression.GetCustomListContents(ListNum)
+        ```
+        *expression* - A variable that represents an `Application` object.
+
+        ### Parameters
+        + `ListNum`: *Long* - A Microsoft Excel 4.0 macro language function without the equal sign. All references must be given as R1C1 strings. If String contains embedded double quotation marks, you must double them. For example, to run the macro function `=MID("sometext",1,4)`, String would have to be `"MID(""sometext"",1,4)"`.
+
+        ### Return Value
+        Variant
+
+        ### Remarks
+        The Microsoft Excel 4.0 macro isn't evaluated in the context of the current workbook or sheet. This means that any references should be external and should specify an explicit workbook name. For example, to run the Microsoft Excel 4.0 macro "My_Macro" in Book1 you must use "Book1!My_Macro()". If you don't specify the workbook name, this method fails.
+
+        ### Example
+        This example runs the `GET.CELL(42)` macro function on cell C3 on Sheet1 and then displays the result in a message box. The `GET.CELL(42)` macro function returns the horizontal distance from the left edge of the active window to the left edge of the active cell. This macro function has no direct Visual Basic equivalent.
+        ```vb
+        Worksheets("Sheet1").Activate
+        Range("C3").Select
+        MsgBox ExecuteExcel4Macro("GET.CELL(42)")
+        ```
+        !'
+        Function GetCustomListContents(ListNum As Long) As Variant
+        End Function
+
+        '!
+        ```ds
+        (method) Application.GetCustomListNum(ListArray: Variant): Long
+        ```
+        ------------------------
+        Returns the custom list number for an array of strings. You can use this method to match both built-in lists and custom-defined lists.
+
+        ### Syntax
+        ```vb
+        expression.GetCustomListNum(ListArray)
+        ```
+        *expression* - A variable that represents an `Application` object.
+
+        ### Parameters
+        + `ListArray`: *Variant* - An array of strings.
+
+        ### Return Value
+        Long
+
+        ### Remarks
+        This method generates an error if there's no corresponding list.
+
+        ### Example
+        This example deletes a custom list.
+        ```vb
+        n = Application.GetCustomListNum(Array("cogs", "sprockets", _
+            "widgets", "gizmos"))
+        Application.DeleteCustomList n
+        ```
+        !'
+        Function GetCustomListNum(ListArray As Variant) As Long
+        End Function
+
+        '!
+        ```ds
+        (method) Application.GetOpenFilename([FileFilter: Variant], [FilterIndex: Variant], [Title: Variant], [ButtonText: Variant], [MultiSelect: Variant]): Variant
+        ```
+        ------------------------
+        Displays the standard Open dialog box and gets a file name from the user without actually opening any files.
+
+        ### Syntax
+        ```vb
+        expression.GetOpenFilename(FileFilter, FilterIndex, Title, ButtonText, MultiSelect)
+        ```
+        *expression* - A variable that represents an `Application` object.
+
+        ### Parameters
+        + `FileFilter`: *Variant* - A string specifying file filtering criteria.
+        + `FilterIndex`: *Variant* - Specifies the index numbers of the default file filtering criteria, from 1 to the number of filters specified in FileFilter. If this argument is omitted or greater than the number of filters present, the first file filter is used.
+        + `Title`: *Variant* - Specifies the title of the dialog box. If this argument is omitted, the title is "Open.".
+        + `ButtonText`: *Variant* - Macintosh only.
+        + `MultiSelect`: *Variant* - *True* to allow multiple file names to be selected. *False* to allow only one file name to be selected. The default value is *False*.
+
+        ### Return Value
+        Variant
+
+        ### Remarks
+        This string passed in the FileFilter argument consists of pairs of file filter strings followed by the MS-DOS wildcard file filter specification, with each part and each pair separated by commas. Each separate pair is listed in the Files of type drop-down list box. For example, the following string specifies two file filters—text and addin: "Text Files (*.txt),*.txt,Add-In Files (*.xla),*.xla".
+        To use multiple MS-DOS wildcard expressions for a single file filter type, separate the wildcard expressions with semicolons; for example, "Visual Basic Files (*.bas; *.txt),*.bas;*.txt".
+        If FileFilter is omitted, this argument defaults to "All Files (*.*),*.*".
+        This method returns the selected file name or the name entered by the user. The returned name may include a path specification. If MultiSelect is True, the return value is an array of the selected file names (even if only one filename is selected). Returns *False* if the user cancels the dialog box.
+        This method may change the current drive or folder.
+
+        ### Example
+        This example displays the `Open` dialog box, with the file filter set to text files. If the user chooses a file name, the code displays that file name in a message box.
+        ```vb
+        fileToOpen = Application _
+            .GetOpenFilename("Text Files (*.txt), *.txt")
+        If fileToOpen <> False Then
+            MsgBox "Open " & fileToOpen
+        End If
+        ```
+        !'
+        Function GetOpenFilename(Optional FileFilter As Variant, Optional FilterIndex As Variant, Optional Title As Variant, Optional ButtonText As Variant, Optional MultiSelect As Variant) As Variant
+        End Function
+
+        '!
+        ```ds
+        (method) Application.GetPhonetic([Text: Variant]): String
+        ```
+        ------------------------
+        Returns the Japanese phonetic text of the specified text string. This method is available to you only if you have selected or installed Japanese language support for Microsoft Office.
+
+        ### Syntax
+        ```vb
+        expression.GetPhonetic(Text)
+        ```
+        *expression* - A variable that represents an `Application` object.
+
+        ### Parameters
+        + `Text`: *Variant* - Specifies the text to be converted to phonetic text. If you omit this argument, the next possible phonetic text string (if any) of the previously specified `Text` is returned. If there are no more possible phonetic text strings, an empty string is returned.
+
+        ### Return Value
+        String
+
+        ### Example
+        This example displays all of the possible phonetic text strings from the specified string.
+        ```vb
+        strPhoText = Application.GetPhonetic("junkojunko")
+        While strPhoText <> ""
+            MsgBox strPhoText
+            strPhoText = Application.GetPhonetic()
+        Wend
+        ```
+        !'
+        Function GetPhonetic(Optional Text As Variant) As String
+        End Function
+
+        '!
+        ```ds
+        (method) Application.GetSaveAsFilename([InitialFilename: Variant], [FileFilter: Variant], [FilterIndex: Variant], [Title: Variant], [ButtonText: Variant]): Variant
+        ```
+        ------------------------
+        Displays the standard *Save As* dialog box and gets a file name from the user without actually saving any files.
+
+        ### Syntax
+        ```vb
+        expression.GetSaveAsFilename(InitialFilename, FileFilter, FilterIndex, Title, ButtonText)
+        ```
+        *expression* - A variable that represents an `Application` object.
+
+        ### Parameters
+        + `InitialFilename`: *Variant* - Specifies the suggested file name. If this argument is omitted, Microsoft Excel uses the active workbook's name.
+        + `FileFilter`: *Variant* - A string specifying file filtering criteria.
+        + `FilterIndex`: *Variant* - Specifies the index number of the default file filtering criteria, from 1 to the number of filters specified in `FileFilter`. If this argument is omitted or greater than the number of filters present, the first file filter is used.
+        + `Title`: *Variant* - Specifies the title of the dialog box. If this argument is omitted, the default title is used.
+        + `ButtonText`: *Variant* - Macintosh only.
+
+        ### Return Value
+        Variant
+
+        ### Remarks
+        This string passed in the FileFilter argument consists of pairs of file filter strings followed by the MS-DOS wildcard file filter specification, with each part and each pair separated by commas. Each separate pair is listed in the Files of type drop-down list box. For example, the following string specifies two file filters, text and addin: "Text Files (*.txt), *.txt, Add-In Files (*.xla), *.xla".
+        To use multiple MS-DOS wildcard expressions for a single file filter type, separate the wildcard expressions with semicolons; for example, "Visual Basic Files (*.bas; *.txt),*.bas;*.txt".
+        This method returns the selected file name or the name entered by the user. The returned name may include a path specification. Returns *False* if the user cancels the dialog box.
+        This method may change the current drive or folder.
+
+        ### Example
+        This example displays the `Save As` dialog box, with the file filter set to text files. If the user chooses a file name, the example displays that file name in a message box.
+        ```vb
+        fileSaveName = Application.GetSaveAsFilename( _
+            fileFilter:="Text Files (*.txt), *.txt")
+        If fileSaveName <> False Then
+            MsgBox "Save as " & fileSaveName
+        End If
+        ```
+        !'
+        Function GetSaveAsFilename(Optional InitialFilename As Variant, Optional FileFilter As Variant, Optional FilterIndex As Variant, Optional Title As Variant, Optional ButtonText As Variant) As Variant
+        End Function
+
+        '!
+        ```ds
+        (method) Application.Goto([Reference: Variant], [Scroll: Variant]): Void
+        ```
+        ------------------------
+        Selects any range or Visual Basic procedure in any workbook, and activates that workbook if it’s not already active.
+
+        ### Syntax
+        ```vb
+        expression.Goto(Reference, Scroll)
+        ```
+        *expression* - A variable that represents an `Application` object.
+
+        ### Parameters
+        + `Reference`: *Variant* - The destination. Can be a `Range` object, a string that contains a cell reference in R1C1-style notation, or a string that contains a Visual Basic procedure name. If this argument is omitted, the destination is the last range you used the `Goto` method to select.
+        + `Scroll`: *Variant* - *True* to scroll through the window so that the upper-left corner of the range appears in the upper-left corner of the window. *False* to not scroll through the window. The default is *False*.
+
+        ### Remarks
+        This method differs from the `Select` method in the following ways:
+        + If you specify a range on a sheet that’s not on top, Microsoft Excel will switch to that sheet before selecting. (If you use `Select` with a range on a sheet that’s not on top, the range will be selected but the sheet won’t be activated).
+        + This method has a `Scroll` argument that lets you scroll through the destination window.
+        + When you use the `Goto` method, the previous selection (before the `Goto` method runs) is added to the array of previous selections (for more information, see the PreviousSelections property). You can use this feature to quickly jump between as many as four selections.
+        + The `Select` method has a `Replace` argument; the `Goto` method doesn’t.
+
+        ### Example
+        This example selects cell A154 on Sheet1 and then scrolls through the worksheet to display the range.
+        ```vb
+        Application.Goto Reference:=Worksheets("Sheet1").Range("A154"), _
+            scroll:=True
+        ```
+        !'
+        Sub Goto(Optional Reference As Variant, Optional Scroll As Variant)
+        End Sub
+
+        '!
+        ```ds
+        (method) Application.Help([HelpFile: Variant], [HelpContextID: Variant]): Void
+        ```
+        ------------------------
+        Displays a Help topic.
+
+        ### Syntax
+        ```vb
+        expression.Help(HelpFile, HelpContextID)
+        ```
+        *expression* - A variable that represents an `Application` object.
+
+        ### Parameters
+        + `HelpFile`: *Variant* - The name of the online Help file you want to display. If this argument isn't specified, Microsoft Excel Help is used.
+        + `HelpContextID`: *Variant* - Specifies the context ID number for the Help topic. If this argument isn't specified, the Help Topics dialog box is displayed.
+        !'
+        Sub Help(Optional HelpFile As Variant, Optional HelpContextID As Variant)
+        End Sub
+
+        '!
+        ```ds
+        (method) Application.InchesToPoints(Inches: Double): Double
+        ```
+        ------------------------
+        Converts a measurement from inches to points.
+
+        ### Syntax
+        ```vb
+        expression.InchesToPoints(Inches)
+        ```
+        *expression* - A variable that represents an `Application` object.
+
+        ### Parameters
+        + `Inches`: *Double* - Specifies the inch value to be converted to points.
+
+        ### Return Value
+        Double
+
+        ### Example
+        This example sets the left margin of Sheet1 to 2.5 inches.
+        ```vb
+        Worksheets("Sheet1").PageSetup.LeftMargin = _
+                Application.InchesToPoints(2.5)
+        ```
+        !'
+        Function InchesToPoints(Inches As Double) As Double
+        End Function
+
+        '!
+        ```ds
+        (method) Application.InputBox(Prompt: String, [Title: Variant], [Default: Variant], [Left: Variant], [Top: Variant], [HelpFile: Variant], [HelpContextID: Variant], [Type: Variant]): Variant
+        ```
+        ------------------------
+        Displays a dialog box for user input. Returns the information entered in the dialog box.
+
+        ### Syntax
+        ```vb
+        expression.InputBox(Prompt, Title, Default, Left, Top, HelpFile, HelpContextID, Type)
+        ```
+        *expression* - A variable that represents an `Application` object.
+
+        ### Parameters
+        + `Prompt`: *String* - The message to be displayed in the dialog box. This can be a string, a number, a date, or a Boolean value (Microsoft Excel automatically coerces the value to a String before it's displayed).
+        + `Title`: *Variant* - The title for the input box. If this argument is omitted, the default title is "Input."
+        + `Default`: *Variant* - Specifies a value that will appear in the text box when the dialog box is initially displayed. If this argument is omitted, the text box is left empty. This value can be a `Range` object.
+        + `Left`: *Variant* - Specifies an x position for the dialog box in relation to the upper-left corner of the screen, in points.
+        + `Top`: *Variant* - Specifies a y position for the dialog box in relation to the upper-left corner of the screen, in points.
+        + `HelpFile`: *Variant* - The name of the Help file for this input box. If the `HelpFile` and `HelpContextID` arguments are present, a Help button will appear in the dialog box.
+        + `HelpContextID`: *Variant* - The context ID number of the Help topic in `HelpFile`.
+        + `Type`: *Variant* - Specifies the return data type. If this argument is omitted, the dialog box returns text.
+
+        ### Return Value
+        Variant
+
+        ### Remarks
+        The following table lists the values that can be passed in the `Type` argument. Can be one or a sum of the values. For example, for an input box that can accept both text and numbers, set *Type* to 1 + 2.
+
+        | Value   | Meaning                             |
+        | :------ | :--------------------------------   |
+        | 0       | A formula                           |
+        | 1       | A number                            |
+        | 2       | Text (a string)                     |
+        | 4       | A logical value (True or False)     |
+        | 8       | A cell reference, as a Range object |
+        | 16      | An error value, such as #N/A        |
+        | 64      | An array of values                  |
+
+        Use `InputBox` to display a simple dialog box so that you can enter information to be used in a macro. The dialog box has an `OK` button and a Cancel button. If you choose the `OK` button, `InputBox` returns the value entered in the dialog box. If you click the `Cancel` button, `InputBox` returns *False*.
+        If `Type` is 0, `InputBox` returns the formula in the form of text — for example, `"=2*PI()/360"`. If there are any references in the formula, they are returned as A1-style references. (Use ConvertFormula to convert between reference styles.)
+        If `Type` is 8, `InputBox` returns a `Range` object. You must use the Set statement to assign the result to a `Range` object, as shown in the following example.
+        ```vb
+        Set myRange = Application.InputBox(prompt := "Sample", type := 8)
+        ```
+        If you don't use the Set statement, the variable is set to the value in the range, rather than the `Range` object itself.
+        If you use the `InputBox` method to ask the user for a formula, you must use the `FormulaLocal` property to assign the formula to a `Range` object. The input formula will be in the user's language.
+        The `InputBox` method differs from the `InputBox` function in that it allows selective validation of the user's input, and it can be used with Microsoft Excel objects, error values, and formulas. Note that Application.`InputBox` calls the `InputBox` method; `InputBox` with no object qualifier calls the `InputBox` function.
+
+        ### Example
+        This example prompts the user for a number.
+        ```vb
+        myNum = Application.InputBox("Enter a number")
+        ```
+        This example prompts the user to select a cell on Sheet1. The example uses the `Type` argument to ensure that the return value is a valid cell reference (a `Range` object).
+        ```vb
+        Worksheets("Sheet1").Activate
+        Set myCell = Application.InputBox( _
+            prompt:="Select a cell", Type:=8)
+        ```
+        !'
+        Function InputBox(Prompt As String, Optional Title As Variant, Optional Default As Variant, Optional Left As Variant, Optional Top As Variant, Optional HelpFile As Variant, Optional HelpContextID As Variant, Optional Type As Variant) As Variant
+        End Function
+
+        '!
+        ```ds
+        (method) Application.Intersect(Arg1: Range, Arg2: Range, [Arg3: Variant], [Arg4: Variant], [Arg5: Variant], [Arg6: Variant], [Arg7: Variant], [Arg8: Variant], [Arg9: Variant], [Arg10: Variant], [Arg11: Variant], [Arg12: Variant], [Arg13: Variant], [Arg14: Variant], [Arg15: Variant], [Arg16: Variant], [Arg17: Variant], [Arg18: Variant], [Arg19: Variant], [Arg20: Variant], [Arg21: Variant], [Arg22: Variant], [Arg23: Variant], [Arg24: Variant], [Arg25: Variant], [Arg26: Variant], [Arg27: Variant], [Arg28: Variant], [Arg29: Variant], [Arg30: Variant]): Range
+        ```
+        ------------------------
+        Returns a `Range` object that represents the rectangular intersection of two or more ranges.
+
+        ### Syntax
+        ```vb
+        expression.Intersect(Arg1, Arg2, Arg3, Arg4, Arg5, Arg6, Arg7, Arg8, Arg9, Arg10, Arg11, Arg12, Arg13, Arg14, Arg15, Arg16, Arg17, Arg18, Arg19, Arg20, Arg21, Arg22, Arg23, Arg24, Arg25, Arg26, Arg27, Arg28, Arg29, Arg30)
+        ```
+        *expression* - A variable that represents an `Application` object.
+
+        ### Parameters
+        + `Arg1`: *Range* - The intersecting ranges. At least two `Range` objects must be specified.
+        + `Arg2`: *Range* - The intersecting ranges. At least two `Range` objects must be specified.
+        + `Arg3-Arg30`: *Variant* - The intersecting ranges. At least two `Range` objects must be specified.
+
+        ### Return Value
+        Range
+
+        ### Example
+        This example selects the intersection of two named ranges, rg1 and rg2, on Sheet1. If the ranges don't intersect, the example displays a message.
+        ```vb
+        Worksheets("Sheet1").Activate
+        Set isect = Application.Intersect(Range("rg1"), Range("rg2"))
+        If isect Is Nothing Then
+            MsgBox "Ranges do not intersect"
+        Else
+            isect.Select
+        End If
+        ```
+        !'
+        Function Intersect(Arg1 As Range, Arg2 As Range, Optional Arg3 As Variant, Optional Arg4 As Variant, Optional Arg5 As Variant, Optional Arg6 As Variant, Optional Arg7 As Variant, Optional Arg8 As Variant, Optional Arg9 As Variant, Optional Arg10 As Variant, Optional Arg11 As Variant, Optional Arg12 As Variant, Optional Arg13 As Variant, Optional Arg14 As Variant, Optional Arg15 As Variant, Optional Arg16 As Variant, Optional Arg17 As Variant, Optional Arg18 As Variant, Optional Arg19 As Variant, Optional Arg20 As Variant, Optional Arg21 As Variant, Optional Arg22 As Variant, Optional Arg23 As Variant, Optional Arg24 As Variant, Optional Arg25 As Variant, Optional Arg26 As Variant, Optional Arg27 As Variant, Optional Arg28 As Variant, Optional Arg29 As Variant, Optional Arg30 As Variant) As Range
+        End Function
+
+        '!
+        ```ds
+        (method) Application.MacroOptions([Macro: Variant], [Description: Variant], [HasMenu: Variant], [MenuText: Variant], [HasShortcutKey: Variant], [ShortcutKey: Variant], [Category: Variant], [StatusBar: Variant], [HelpContextID: Variant], [HelpFile: Variant]): Void
+        ```
+        ------------------------
+        Corresponds to options in the `Macro` Options dialog box. You can also use this method to display a user defined function (UDF) in a built-in or new category within the `Insert` Function dialog box.
+
+        ### Syntax
+        ```vb
+        expression.MacroOptions(Macro, Description, HasMenu, MenuText, HasShortcutKey, ShortcutKey, Category, StatusBar, HelpContextID, HelpFile)
+        ```
+        *expression* - A variable that represents an `Application` object.
+
+        ### Parameters
+        + `Macro`: *Variant* - The macro name or the name of a user defined function (UDF).
+        + `Description`: *Variant* - The macro description.
+        + `HasMenu`: *Variant* - This argument is ignored.
+        + `MenuText`: *Variant* - This argument is ignored.
+        + `HasShortcutKey`: *Variant* - *True* to assign a shortcut key to the macro (ShortcutKey must also be specified). If this argument is *False*, no shortcut key is assigned to the macro. If the macro already has a shortcut key, setting this argument to *False* removes the shortcut key. The default value is *False*.
+        + `ShortcutKey`: *Variant* - Required if `HasShortcutKey` is *True*; ignored otherwise. The shortcut key.
+        + `Category`: *Variant* - An integer that specifies an existing macro function category (Financial, Date & Time, or User Defined, for example). See the remarks section to determine the integers that are mapped to the built-in categories. You can also specify a string for a custom category. If you provide a string it will be treated as the category name that is displayed in the Insert Function dialog box. If the category name has never been used, a new category is defined with that name. If you use a category name that is that same a built-in name, Excel will map the user defined function to that built-in category.
+        + `StatusBar`: *Variant* - The status bar text for the macro.
+        + `HelpContextID`: *Variant* - An integer that specifies the context ID for the Help topic assigned to the macro.
+        + `HelpFile`: *Variant* - The name of the Help file that contains the `Help` topic defined by `HelpContextId`.
+
+        ### Remarks
+        The following table lists which integers are mapped to the built-in categories that can be used in the `Category` parameter.
+
+        | Integer    | Category                    |
+        | :--------- | :-------------------        |
+        | 1          | Financial                   |
+        | 2          | Date & Time                 |
+        | 3          | Math & Trig                 |
+        | 4          | Statistical                 |
+        | 5          | Lookup & Reference          |
+        | 6          | Database                    |
+        | 7          | Text                        |
+        | 8          | Logical                     |
+        | 9          | Information                 |
+        | 10         | Commands                    |
+        | 11         | Customizing                 |
+        | 12         | Macro Control               |
+        | 13         | DDE/External                |
+        | 14         | User Defined                |
+        | 15         | First custom category       |
+        | 16         | Second custom category      |
+        | 17         | Third custom category       |
+        | 18         | Fourth custom category      |
+        | 19         | Fifth custom category       |
+        | 20         | Sixth custom category       |
+        | 21         | Seventh custom category     |
+        | 22         | Eighth custom category      |
+        | 23         | Ninth custom category       |
+        | 24         | Tenth custom category       |
+        | 25         | Eleventh custom category    |
+        | 26         | Twelfth custom category     |
+        | 27         | Thirteenth custom category  |
+        | 28         | Fourteenth custom category  |
+        | 29         | Fifteenth custom category   |
+        | 30         | Sixteenth custom category   |
+        | 31         | Seventeenth custom category |
+        | 32         | Eighteenth custom category  |
+
+        ### Example
+        This example adds a user-defined macro called "TestMacro" to a custom category named "My Custom Category". After you run this example, you should see "My Custom Category" which contains the "TestMacro" user-defined function in the Or select a category drop-down list in the `Insert` Function dialog box.
+        ```vb
+        Function TestMacro()
+            MsgBox ActiveWorkbook.Name
+        End Function
+
+        Sub AddUDFToCustomCategory()
+        Application.MacroOptions Macro:="TestMacro", Category:="My Custom Category"
+        End Sub
+        ```
+        !'
+        Sub MacroOptions(Optional Macro As Variant, Optional Description As Variant, Optional HasMenu As Variant, Optional MenuText As Variant, Optional HasShortcutKey As Variant, Optional ShortcutKey As Variant, Optional Category As Variant, Optional StatusBar As Variant, Optional HelpContextID As Variant, Optional HelpFile As Variant)
+        End Sub
+
+        '!
+        ```ds
+        (method) Application.MailLogoff(): Void
+        ```
+        ------------------------
+        Closes a MAPI mail session established by Microsoft Excel.
+
+        ### Syntax
+        ```vb
+        expression.MailLogoff
+        ```
+        *expression* - A variable that represents an `Application` object.
+
+        ### Remarks
+        You cannot use this method to close or log off Microsoft Mail.
+
+        ### Example
+        This example closes the established mail session, if there is one.
+        ```vb
+        If Not IsNull(Application.MailSession) Then Application.MailLogoff
+        ```
+        !'
+        Sub MailLogoff()
+        End Sub
+
+        '!
+        ```ds
+        (method) Application.MailLogon([Name: Variant], [Password: Variant], [DownloadNewMail: Variant]): Void
+        ```
+        ------------------------
+        Logs in to MAPI Mail or Microsoft Exchange and establishes a mail session. If Microsoft Mail isn't already running, you must use this method to establish a mail session before mail or document routing functions can be used.
+
+        ### Syntax
+        ```vb
+        expression.MailLogon(Name, Password, DownloadNewMail)
+        ```
+        *expression* - A variable that represents an `Application` object.
+
+        ### Parameters
+        + `Name`: *Variant* - The mail account name or Microsoft Exchange profile name. If this argument is omitted, the default mail account name is used.
+        + `Password`: *Variant* - The mail account password. This argument is ignored in Microsoft Exchange.
+        + `DownloadNewMail`: *Variant* - *True* to download new mail immediately.
+
+        ### Remarks
+        Microsoft Excel logs off any mail sessions it previously established before attempting to establish the new session.
+        To piggyback on the system default mail session, omit both the name and password parameters.
+
+        ### Example
+        This example logs in to the default mail account.
+        ```vb
+        If IsNull(Application.MailSession) Then
+            Application.MailLogon
+        End If
+        ```
+        !'
+        Sub MailLogon(Optional Name As Variant, Optional Password As Variant, Optional DownloadNewMail As Variant)
+        End Sub
+
+        '!
+        ```ds
+        (method) Application.NextLetter(): Workbook
+        ```
+        ------------------------
+        You have requested Help for a Visual Basic keyword used only on the Macintosh. For information about this keyword, consult the language reference Help included with Microsoft Office Macintosh Edition.
+
+        ### Syntax
+        ```vb
+        expression.NextLetter
+        ```
+        *expression* - A variable that represents an `Application` object.
+
+        ### Return Value
+        Workbook
+        !'
+        Function NextLetter() As Workbook
+        End Function
+
+        '!
+        ```ds
+        (method) Application.OnKey(Key: String, [Procedure: Variant]): Void
+        ```
+        ------------------------
+        Runs a specified procedure when a particular key or key combination is pressed.
+
+        ### Syntax
+        ```vb
+        expression.NextLetter
+        ```
+        *expression* - A variable that represents an `Application` object.
+
+        ### Parameters
+        + `Key`: *String* - A string indicating the key to be pressed.
+        + `Procedure`: *Variant* - A string indicating the name of the procedure to be run. If Procedure is "" (empty text), nothing happens when Key is pressed. This form of OnKey changes the normal result of keystrokes in Microsoft Excel. If Procedure is omitted, Key reverts to its normal result in Microsoft Excel, and any special key assignments made with previous `OnKey` methods are cleared.
+
+        ### Remarks
+        The Key argument can specify any single key combined with ALT, CTRL, or SHIFT, or any combination of these keys. Each key is represented by one or more characters, such as "a" for the character a, or "{ENTER}" for the ENTER key.
+        To specify characters that aren't displayed when you press the corresponding key (ENTER or TAB, for example), use the codes listed in the following table. Each code in the table represents one key on the keyboard.
+
+        | Key                     | Code                |
+        | :---------------------- | :------------------ |
+        | BACKSPACE               | {BACKSPACE} or {BS} |
+        | BREAK                   | {BREAK}             |
+        | CAPS LOCK               | {CAPSLOCK}          |
+        | CLEAR                   | {CLEAR}             |
+        | DELETE or DEL           | {DELETE} or {DEL}   |
+        | DOWN ARROW              | {DOWN}              |
+        | END                     | {END}               |
+        | ENTER (numeric keypad)  | {ENTER}             |
+        | ENTER                   | ~ (tilde)           |
+        | ESC                     | {ESCAPE} or {ESC}   |
+        | HELP                    | {HELP}              |
+        | HOME                    | {HOME}              |
+        | INS                     | {INSERT}            |
+        | LEFT ARROW              | {LEFT}              |
+        | NUM LOCK                | {NUMLOCK}           |
+        | PAGE DOWN               | {PGDN}              |
+        | PAGE UP                 | {PGUP}              |
+        | RETURN                  | {RETURN}            |
+        | RIGHT ARROW             | {RIGHT}             |
+        | SCROLL LOCK             | {SCROLLLOCK}        |
+        | TAB                     | {TAB}               |
+        | UP ARROW                | {UP}                |
+        | F1 through F15          | {F1} through {F15}  |
+
+        You can also specify keys combined with SHIFT and/or CTRL and/or ALT. To specify a key combined with another key or keys, use the following table.
+
+        | To combine keys with   | Precede the key code by |
+        | :--------------------- | :---------------------  |
+        | SHIFT                  | + (plus sign)           |
+        | CTRL                   | ^ (caret)               |
+        | ALT                    | % (percent sign)        |
+
+        To assign a procedure to one of the special characters (+, ^, %, and so on), enclose the character in braces. For details, see the example.
+
+        ### Example
+        This example assigns "InsertProc" to the key sequence CTRL+PLUS SIGN and assigns "SpecialPrintProc" to the key sequence SHIFT+CTRL+RIGHT ARROW.
+        ```vb
+        Application.OnKey "^{+}", "InsertProc"
+        Application.OnKey "+^{RIGHT}", "SpecialPrintProc"
+        ```
+        This example returns SHIFT+CTRL+RIGHT ARROW to its normal meaning.
+        ```vb
+        Application.OnKey "+^{RIGHT}"
+        ```
+        This example disables the SHIFT+CTRL+RIGHT ARROW key sequence.
+        ```vb
+        Application.OnKey "+^{RIGHT}", ""
+        ```
+        !'
+        Sub OnKey(Key As String, Optional Procedure As Variant)
+        End Sub
+
+        '!
+        ```ds
+        (method) Application.OnRepeat(Text: String, Procedure: String): Void
+        ```
+        ------------------------
+        Sets the `Repeat` menu item and the name of the procedure that will run if you choose the Repeat command (Edit menu) after running the procedure that sets this property.
+
+        ### Syntax
+        ```vb
+        expression.OnRepeat(Text, Procedure)
+        ```
+        *expression* - A variable that represents an `Application` object.
+
+        ### Parameters
+        + `Text`: *String* - The text that appears with the `Repeat` command (Edit menu).
+        + `Procedure`: *String* - The name of the procedure that will be run when you choose the `Repeat` command (Edit menu).
+
+        ### Remarks
+        If a procedure doesn’t use the `OnRepeat` method, the `Repeat` command repeats procedure that was run most recently.
+        The procedure must use the `OnRepeat` and `OnUndo` methods last, to prevent the repeat and undo procedures from being overwritten by subsequent actions in the procedure.
+
+        ### Example
+        This example sets the repeat and undo procedures.
+        ```vb
+        Application.OnRepeat "Repeat VB Procedure", _
+            "Book1.xls!My_Repeat_Sub"
+        Application.OnUndo "Undo VB Procedure", _
+            "Book1.xls!My_Undo_Sub"
+        ```
+        !'
+        Sub OnRepeat(Text As String, Procedure As String)
+        End Sub
+
+        '!
+        ```ds
+        (method) Application.OnTime(EarliestTime: Variant, Procedure: String, [LatestTime: Variant], [Schedule: Variant]): Void
+        ```
+        ------------------------
+        Schedules a procedure to be run at a specified time in the future (either at a specific time of day or after a specific amount of time has passed).
+
+        ### Syntax
+        ```vb
+        expression.OnTime(EarliestTime, Procedure, LatestTime, Schedule)
+        ```
+        *expression* - A variable that represents an `Application` object.
+
+        ### Parameters
+        + `EarliestTime`: *Variant* - The time when you want this procedure to be run.
+        + `Procedure`: *String* - The name of the procedure to be run.
+        + `LatestTime`: *Variant* - The latest time at which the procedure can be run. For example, if LatestTime is set to `EarliestTime + 30` and Microsoft Excel is not in Ready, Copy, Cut, or Find mode at `EarliestTime` because another procedure is running, Microsoft Excel will wait 30 seconds for the first procedure to complete. If Microsoft Excel is not in Ready mode within 30 seconds, the procedure won’t be run. If this argument is omitted, Microsoft Excel will wait until the procedure can be run.
+        + `Schedule`: *Variant* - *True* to schedule a new OnTime procedure. *False* to clear a previously set procedure. The default value is *True*.
+
+        ### Remarks
+        Use `Now + TimeValue(time)` to schedule something to be run when a specific amount of time (counting from now) has elapsed. Use `TimeValue(time)` to schedule something to be run a specific time.
+
+        ### Example
+        This example runs my_Procedure 15 seconds from now.
+        ```vb
+        Application.OnTime Now + TimeValue("00:00:15"), "my_Procedure"
+        ```
+        This example runs my_Procedure at 5 P.M.
+        ```vb
+        Application.OnTime TimeValue("17:00:00"), "my_Procedure"
+        ```
+        This example cancels the `OnTime` setting from the previous example.
+        ```vb
+        Application.OnTime EarliestTime:=TimeValue("17:00:00"), _
+            Procedure:="my_Procedure", Schedule:=False
+        ```
+        !'
+        Sub OnTime(EarliestTime As Variant, Procedure As String, Optional LatestTime As Variant, Optional Schedule As Variant)
+        End Sub
+
+        '!
+        ```ds
+        (method) Application.OnUndo(Text: String, Procedure: String): Void
+        ```
+        ------------------------
+        Sets the text of the `Undo` and the name of the procedure that’s run if you choose the `Undo` command (`Edit` menu) after running the procedure that sets this property.
+
+        ### Syntax
+        ```vb
+        expression.OnUndo(Text, Procedure)
+        ```
+        *expression* - A variable that represents an `Application` object.
+
+        ### Parameters
+        + `Text`: *String* - The text that appears with the `Undo` command (Edit menu).
+        + `Procedure`: *String* - The name of the procedure that’s run when you choose the `Undo` command (Edit menu).
+
+        ### Remarks
+        If a procedure doesn’t use the `OnUndo` method, the `Undo` command is disabled.
+        The procedure must use the `OnRepeat` and `OnUndo` methods last, to prevent the repeat and undo procedures from being overwritten by subsequent actions in the procedure.
+
+        ### Example
+        This example sets the repeat and undo procedures.
+        ```vb
+        Application.OnRepeat "Repeat VB Procedure", _
+            "Book1.xls!My_Repeat_Sub"
+        Application.OnUndo "Undo VB Procedure", _
+            "Book1.xls!My_Undo_Sub"
+        ```
+        !'
+        Sub OnUndo(Text As String, Procedure As String)
+        End Sub
+
+        '!
+        ```ds
+        (method) Application.Quit(): Void
+        ```
+        ------------------------
+        Quits Microsoft Excel.
+
+        ### Syntax
+        ```vb
+        expression.Quit
+        ```
+        *expression* - A variable that represents an `Application` object.
+
+        ### Remarks
+        If unsaved workbooks are open when you use this method, Microsoft Excel displays a dialog box asking whether you want to save the changes. You can prevent this by saving all workbooks before using the Quit method or by setting the `DisplayAlerts` property to False. When this property is False, Microsoft Excel doesn’t display the dialog box when you quit with unsaved workbooks; it quits without saving them.
+        If you set the `Saved` property for a workbook to *True* without saving the workbook to the disk, Microsoft Excel will quit without asking you to save the workbook.
+
+        ### Example
+        This example saves all open workbooks and then quits Microsoft Excel.
+        ```vb
+        For Each w In Application.Workbooks
+            w.Save
+        Next w
+        Application.Quit
+        ```
+        !'
+        Sub Quit()
+        End Sub
+
+        '!
+        ```ds
+        (method) Application.RecordMacro([BasicCode: Variant], [XlmCode: Variant]): Void
+        ```
+        ------------------------
+        Records code if the macro recorder is on.
+
+        ### Syntax
+        ```vb
+        expression.RecordMacro(BasicCode, XlmCode)
+        ```
+        *expression* - A variable that represents an `Application` object.
+
+        ### Parameters
+        + `BasicCode`: *Variant* - A string that specifies the Visual Basic code that will be recorded if the macro recorder is recording into a Visual Basic module. The string will be recorded on one line. If the string contains a carriage return (ASCII character 10, or Chr$(10) in code), it will be recorded on more than one line.
+        + `XlmCode`: *Variant* - This argument is ignored.
+
+        ### Remarks
+        The `RecordMacro` method cannot record into the active module (the module in which the `RecordMacro` method exists).
+        If `BasicCode` is omitted and the application is recording into Visual Basic, Microsoft Excel will record a suitable `Application.Run` statement.
+        To prevent recording (for example, if the user cancels your dialog box), call this function with two empty strings.
+
+        ### Example
+        This example records Visual Basic code.
+        ```vb
+        Application.RecordMacro BasicCode:="Application.Run ""MySub"" "
+        ```
+        !'
+        Sub RecordMacro(Optional BasicCode As Variant, Optional XlmCode As Variant)
+        End Sub
+
+        '!
+        ```ds
+        (method) Application.RegisterXLL(Filename: String): Boolean
+        ```
+        ------------------------
+        Loads an XLL code resource and automatically registers the functions and commands contained in the resource.
+
+        ### Syntax
+        ```vb
+        expression.RegisterXLL(Filename)
+        ```
+        *expression* - A variable that represents an `Application` object.
+
+        ### Parameters
+        + `Filename`: *String* - Specifies the name of the XLL to be loaded.
+
+        ### Return Value
+        Boolean
+
+        ### Remarks
+        This method returns True if the code resource is successfully loaded; otherwise, the method returns *False*.
+
+        ### Example
+        This example loads an XLL file and registers the functions and commands in the file.
+        ```vb
+        Application.RegisterXLL "XLMAPI.XLL"
+        ```
+        !'
+        Function RegisterXLL(Filename As String) As Boolean
+        End Function
+
+        '!
+        ```ds
+        (method) Application.Repeat(): Void
+        ```
+        ------------------------
+        Repeats the last user-interface action.
+
+        ### Syntax
+        ```vb
+        expression.Repeat
+        ```
+        *expression* - A variable that represents an `Application` object.
+
+        ### Remarks
+        This method repeats only the last action taken by the user before running the macro, and it must be the first line in the macro. It cannot be used to repeat Visual Basic commands.
+
+        ### Example
+        This example repeats the last user-interface command. The example must be the first line in a macro.
+        ```vb
+        Application.Repeat
+        ```
+        !'
+        Sub Repeat()
+        End Sub
+
+        '!
+        ```ds
+        (method) Application.Run([Macro: Variant], [Arg1: Variant], [Arg2: Variant], [Arg3: Variant], [Arg4: Variant], [Arg5: Variant], [Arg6: Variant], [Arg7: Variant], [Arg8: Variant], [Arg9: Variant], [Arg10: Variant], [Arg11: Variant], [Arg12: Variant], [Arg13: Variant], [Arg14: Variant], [Arg15: Variant], [Arg16: Variant], [Arg17: Variant], [Arg18: Variant], [Arg19: Variant], [Arg20: Variant], [Arg21: Variant], [Arg22: Variant], [Arg23: Variant], [Arg24: Variant], [Arg25: Variant], [Arg26: Variant], [Arg27: Variant], [Arg28: Variant], [Arg29: Variant], [Arg30: Variant]): Range
+        ```
+        ------------------------
+        ReRuns a macro or calls a function. This can be used to run a macro written in Visual Basic or the Microsoft Excel macro language, or to run a function in a DLL or XLL.
+
+        ### Syntax
+        ```vb
+        expression.Run(Macro, Arg1, Arg2, Arg3, Arg4, Arg5, Arg6, Arg7, Arg8, Arg9, Arg10, Arg11, Arg12, Arg13, Arg14, Arg15, Arg16, Arg17, Arg18, Arg19, Arg20, Arg21, Arg22, Arg23, Arg24, Arg25, Arg26, Arg27, Arg28, Arg29, Arg30)
+        ```
+        *expression* - A variable that represents an `Application` object.
+
+        ### Parameters
+        + `Macro`: *Variant* - The macro to run. This can be either a string with the macro name, a Range object indicating where the function is, or a register ID for a registered DLL (XLL) function. If a string is used, the string will be evaluated in the context of the active sheet.
+        + `Arg1-Arg30`: *Variant* - An argument that should be passed to the function.
+
+        ### Return Value
+        Variant
+
+        ### Remarks
+        You cannot use named arguments with this method. Arguments must be passed by position.
+        The `Run` method returns whatever the called macro returns. Objects passed as arguments to the macro are converted to values (by applying the `Value` property to the object). This means that you cannot pass objects to macros by using the `Run` method.
+        !'
+        Function Intersect(Optional Macro As Variant, Optional Arg1 As Variant, Optional Arg2 As Variant, Optional Arg3 As Variant, Optional Arg4 As Variant, Optional Arg5 As Variant, Optional Arg6 As Variant, Optional Arg7 As Variant, Optional Arg8 As Variant, Optional Arg9 As Variant, Optional Arg10 As Variant, Optional Arg11 As Variant, Optional Arg12 As Variant, Optional Arg13 As Variant, Optional Arg14 As Variant, Optional Arg15 As Variant, Optional Arg16 As Variant, Optional Arg17 As Variant, Optional Arg18 As Variant, Optional Arg19 As Variant, Optional Arg20 As Variant, Optional Arg21 As Variant, Optional Arg22 As Variant, Optional Arg23 As Variant, Optional Arg24 As Variant, Optional Arg25 As Variant, Optional Arg26 As Variant, Optional Arg27 As Variant, Optional Arg28 As Variant, Optional Arg29 As Variant, Optional Arg30 As Variant) As Variant
+        End Function
+
+        '!
+        ```ds
+        (method) Application.SaveWorkspace([Filename: Variant]): Void
+        ```
+        ------------------------
+        Saves the current workspace.
+
+        ### Syntax
+        ```vb
+        expression.SaveWorkspace(Filename)
+        ```
+        *expression* - A variable that represents an `Application` object.
+
+        ### Parameters
+        + `Filename`: *Variant* - The saved file name.
+
+        ### Example
+        This example saves the current workspace as "saved workspace.xlw".
+        ```vb
+        Application.SaveWorkspace "saved workspace"
+        ```
+        !'
+        Sub SaveWorkspace(Optional Filename As Variant)
+        End Sub
+
+        '!
+        ```ds
+        (method) Application.SendKeys(Keys: Variant, [Wait: Variant]): Void
+        ```
+        ------------------------
+        Saves the current workspace.
+
+        ### Syntax
+        ```vb
+        expression.SendKeys(Keys, Wait)
+        ```
+        *expression* - A variable that represents an `Application` object.
+
+        ### Parameters
+        + `Keys`: *Variant* - The key or key combination you want to send to the application, as text.
+        + `Wait`: *Variant* - *True* to have Microsoft Excel wait for the keys to be processed before returning control to the macro. *False* (or omitted) to continue running the macro without waiting for the keys to be processed.
+
+        ### Remarks
+        This method places keystrokes in a key buffer. In some cases, you must call this method before you call the method that will use the keystrokes. For example, to send a password to a dialog box, you must call the `SendKeys` method before you display the dialog box.
+        The `Keys` argument can specify any single key or any key combined with ALT, CTRL, or SHIFT (or any combination of those keys). Each key is represented by one or more characters, such as "a" for the character a, or "{ENTER}" for the ENTER key.
+        To specify characters that aren't displayed when you press the corresponding key (for example, ENTER or TAB), use the codes listed in the following table. Each code in the table represents one key on the keyboard.
+
+        | Key                     | Code                 |
+        | :---------------------- | :------------------- |
+        | BACKSPACE               | {BACKSPACE} or {BS}  |
+        | BREAK                   | {BREAK}              |
+        | CAPS LOCK               | {CAPSLOCK}           |
+        | CLEAR                   | {CLEAR}              |
+        | DELETE or DEL           | {DELETE} or {DEL}    |
+        | DOWN ARROW              | {DOWN}               |
+        | END                     | {END}                |
+        | ENTER (numeric keypad)  | {ENTER}              |
+        | ENTER                   | ~ (tilde)            |
+        | ESC                     | {ESCAPE} or {ESC}    |
+        | HELP                    | {HELP}               |
+        | HOME                    | {HOME}               |
+        | INS                     | {INSERT}             |
+        | LEFT ARROW              | {LEFT}               |
+        | NUM LOCK                | {NUMLOCK}            |
+        | PAGE DOWN               | {PGDN}               |
+        | PAGE UP                 | {PGUP}               |
+        | RETURN                  | {RETURN}             |
+        | RIGHT ARROW             | {RIGHT}              |
+        | SCROLL LOCK             | {SCROLLLOCK}         |
+        | TAB                     | {TAB}                |
+        | UP ARROW                | {UP}                 |
+        | F1 through F15          | {F1} through {F15}   |
+
+        You can also specify keys combined with SHIFT and/or CTRL and/or ALT. To specify a key combined with another key or keys, use the following table.
+
+        | To combine a key with | Precede the key code with |
+        | :-------------------- | :-----------------------  |
+        | SHIFT                 | + (plus sign)             |
+        | CTRL                  | ^ (caret)                 |
+        | ALT                   | % (percent sign)          |
+
+        ### Example
+        This example uses the `SendKeys` method to quit Microsoft Excel.
+        ```vb
+        Application.SendKeys("%fx")
+        ```
+        !'
+        Sub SendKeys(Keys As Variant, Optional Wait As Variant)
+        End Sub
+
+        '!
+        ```ds
+        (method) Application.SharePointVersion(bstrUrl: String): Long
+        ```
+        ------------------------
+
+        ### Syntax
+        ```vb
+        expression.SharePointVersion(bstrUrl)
+        ```
+        *expression* - A variable that represents an `Application` object.
+
+        ### Parameters
+        + `bstrUrl`: *String*.
+
+        ### Return Value
+        Long
+        !'
+        Function SharePointVersion(bstrUrl As String) As Long
+        End Function
+
+        '!
+        ```ds
+        (method) Application.Undo(): Void
+        ```
+        ------------------------
+
+        ### Syntax
+        ```vb
+        expression.Undo
+        ```
+        *expression* - A variable that represents an `Application` object.
+
+        ### Remarks
+        This method undoes only the last action taken by the user before running the macro, and it must be the first line in the macro. It cannot be used to undo Visual Basic commands.
+
+        ### Example
+        This example cancels the last user-interface action. The example must be the first line in a macro.
+        ```vb
+        Application.Undo
+        ```
+        !'
+        Sub Undo()
+        End Sub
+
+
+        '!
+        ```ds
+        (method) Application.Union(Arg1: Range, Arg2: Range, [Arg3: Variant], [Arg4: Variant], [Arg5: Variant], [Arg6: Variant], [Arg7: Variant], [Arg8: Variant], [Arg9: Variant], [Arg10: Variant], [Arg11: Variant], [Arg12: Variant], [Arg13: Variant], [Arg14: Variant], [Arg15: Variant], [Arg16: Variant], [Arg17: Variant], [Arg18: Variant], [Arg19: Variant], [Arg20: Variant], [Arg21: Variant], [Arg22: Variant], [Arg23: Variant], [Arg24: Variant], [Arg25: Variant], [Arg26: Variant], [Arg27: Variant], [Arg28: Variant], [Arg29: Variant], [Arg30: Variant]): Range
+        ```
+        ------------------------
+        Returns the union of two or more ranges.
+
+        ### Syntax
+        ```vb
+        expression.Union(Arg1, Arg2, Arg3, Arg4, Arg5, Arg6, Arg7, Arg8, Arg9, Arg10, Arg11, Arg12, Arg13, Arg14, Arg15, Arg16, Arg17, Arg18, Arg19, Arg20, Arg21, Arg22, Arg23, Arg24, Arg25, Arg26, Arg27, Arg28, Arg29, Arg30)
+        ```
+        *expression* - A variable that represents an `Application` object.
+
+        ### Parameters
+        + `Arg1`: *Range* - At least two Range objects must be specified.
+        + `Arg2`: *Range* - At least two Range objects must be specified.
+        + `Arg3-Arg30`: *Variant* - At least two Range objects must be specified.
+
+        ### Return Value
+        Range
+
+        ### Example
+        This example fills the union of two named ranges, Range1 and Range2, with the formula `=RAND()`.
+        ```vb
+        Worksheets("Sheet1").Activate
+        Set bigRange = Application.Union(Range("Range1"), Range("Range2"))
+        bigRange.Formula = "=RAND()"        ```
+        !'
+        Function Union(Arg1 As Range, Arg2 As Range, Optional Arg3 As Variant, Optional Arg4 As Variant, Optional Arg5 As Variant, Optional Arg6 As Variant, Optional Arg7 As Variant, Optional Arg8 As Variant, Optional Arg9 As Variant, Optional Arg10 As Variant, Optional Arg11 As Variant, Optional Arg12 As Variant, Optional Arg13 As Variant, Optional Arg14 As Variant, Optional Arg15 As Variant, Optional Arg16 As Variant, Optional Arg17 As Variant, Optional Arg18 As Variant, Optional Arg19 As Variant, Optional Arg20 As Variant, Optional Arg21 As Variant, Optional Arg22 As Variant, Optional Arg23 As Variant, Optional Arg24 As Variant, Optional Arg25 As Variant, Optional Arg26 As Variant, Optional Arg27 As Variant, Optional Arg28 As Variant, Optional Arg29 As Variant, Optional Arg30 As Variant) As Range
+        End Function
+
+
+        '!
+        ```ds
+        (method) Application.Volatile(Volatile: Variant): Void
+        ```
+        ------------------------
+        Marks a user-defined function as volatile. A volatile function must be recalculated whenever calculation occurs in any cells on the worksheet. A nonvolatile function is recalculated only when the input variables change. This method has no effect if it's not inside a user-defined function used to calculate a worksheet cell.
+
+        ### Syntax
+        ```vb
+        expression.Volatile(Volatile)
+        ```
+        *expression* - A variable that represents an `Application` object.
+
+        ### Parameters
+        + `Volatile`: *Variant* - *True* to mark the function as volatile. *False* to mark the function as nonvolatile. The default value is *True*.
+
+        ### Example
+        This example marks the user-defined function "My_Func" as volatile. The function will be recalculated whenever calculation occurs in any cells on the worksheet on which this function appears.
+        ```vb
+        Function My_Func()
+            Application.Volatile
+            '
+            '    Remainder of the function
+            ">
+        End Function
+        ```
+        !'
+        Sub Volatile(Volatile As Variant)
+        End Sub
+
+
+        '!
+        ```ds
+        (method) Application.Wait(Time: Variant): Boolean
+        ```
+        ------------------------
+        Pauses a running macro until a specified time. Returns *True* if the specified time has arrived.
+
+        ### Syntax
+        ```vb
+        expression.Wait(Time)
+        ```
+        *expression* - A variable that represents an `Application` object.
+
+        ### Parameters
+        + `Time`: *Variant* - The time at which you want the macro to resume, in Microsoft Excel date format.
+
+        ### Return Value
+        Boolean
+
+        ### Remarks
+        The `Wait` method suspends all Microsoft Excel activity and may prevent you from performing other operations on your computer while Wait is in effect. However, background processes such as printing and recalculation continue
+
+        ### Example
+        This example pauses a running macro until 6:23 P.M. today.
+        ```vb
+        Application.Wait "18:23:00"
+        ```
+        This example pauses a running macro for approximately 10 seconds.
+        ```vb
+        newHour = Hour(Now())
+        newMinute = Minute(Now())
+        newSecond = Second(Now()) + 10
+        waitTime = TimeSerial(newHour, newMinute, newSecond)
+        Application.Wait waitTime
+        ```
+        This example displays a message indicating whether 10 seconds have passed.
+        ```vb
+        If Application.Wait(Now + TimeValue("0:00:10")) Then
+            MsgBox "Time expired"
+        End If
+        ```
+        !'
+        Function Wait(Time As Variant) As Boolean
+        End Function
+
+        '!
+        ```ds
+        (property) Application.ActiveCell
+        ```
+        ------------------------
+        Returns a `Range` object that represents the active cell in the active window (the window on top) or in the specified window. If the window isn't displaying a worksheet, this property fails. Read-only.
+
+        ### Syntax
+        ```vb
+        expression.ActiveCell
+        ```
+        *expression* - A variable that represents an `Application` object.
+
+        ### Remarks
+        If you don't specify an object qualifier, this property returns the active cell in the active window.
+        Be careful to distinguish between the active cell and the selection. The active cell is a single cell inside the current selection. The selection may contain more than one cell, but only one is the active cell.
+        The following expressions all return the active cell, and are all equivalent.
+
+        ```vb
+        ActiveCell
+        Application.ActiveCell
+        ActiveWindow.ActiveCell
+        Application.ActiveWindow.ActiveCell
+        ```
+
+        ### Example
+        This example uses a message box to display the value in the active cell. Because the `ActiveCell` property fails if the active sheet isn't a worksheet, the example activates Sheet1 before using the `ActiveCell` property.
+
+        ```vb
+        Worksheets("Sheet1").Activate
+        MsgBox ActiveCell.Value
+        ```
+
+        This example changes the font formatting for the active cell.
+
+        ```vb
+        Worksheets("Sheet1").Activate
+        With ActiveCell.Font
+            .Bold = True
+            .Italic = True
+        End With
+        ```
+        !'
+        ReadOnly Property ActiveCell() As Range
+
+        '!
+        ```ds
+        (property) Application.ActiveChart
+        ```
+        ------------------------
+        Returns a `Chart` object that represents the active chart (either an embedded chart or a chart sheet). An embedded chart is considered active when it's either selected or activated. When no chart is active, this property returns Nothing.
+
+        ### Syntax
+        ```vb
+        expression.ActiveChart
+        ```
+        *expression* - A variable that represents an `Application` object.
+
+        ### Remarks
+        If you don't specify an object qualifier, this property returns the active chart in the active workbook.
+
+        ### Example
+        This example turns on the legend for the active chart.
+
+        ```vb
+        ActiveChart.HasLegend = True
+        ```
+        !'
+        ReadOnly Property ActiveChart() As Chart
+
+    End Class
+
+End NameSpace

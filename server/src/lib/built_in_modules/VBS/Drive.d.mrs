@@ -1,0 +1,325 @@
+
+'!
+```ds
+(object) Drive
+```
+------------------------
+Provides access to the properties of a particular disk drive or network share.
+
+### Remarks
+The following code illustrates the use of the Drive object to access drive properties.
+```vb
+Sub ShowFreeSpace(drvPath)
+    Dim fs, d, s
+    Set fs = CreateObject(\"Scripting.FileSystemObject\")
+    Set d = fs.GetDrive(fs.GetDriveName(drvPath))
+    s = \"Drive \" & UCase(drvPath) & \" - \"
+    s = s & d.VolumeName  & vbCrLf
+    s = s & \"Free Space: \" & FormatNumber(d.FreeSpace/1024, 0)
+    s = s & \" Kbytes\"
+    MsgBox s
+End Sub
+```
+!'
+Class Drive Implements Object
+
+    '!
+    ```ds
+    (property) AvailableSpace: Long
+    ```
+    ------------------------
+    Returns the amount of space available to a user on the specified drive or network share.
+
+    ### Remarks
+    The value returned by the `AvailableSpace` property is typically the same as that returned by the `FreeSpace` property. Differences may occur between the two values for computer systems that support quotas.
+    The following code illustrates the use of the `AvailableSpace` property.
+    ```vb
+    Sub ShowAvailableSpace(drvPath)
+        Dim fs, d, s
+        Set fs = CreateObject(\"Scripting.FileSystemObject\")
+        Set d = fs.GetDrive(fs.GetDriveName(drvPath))
+        s = \"Drive \" & UCase(drvPath) & \" - \"
+        s = s & d.VolumeName  & vbCrLf
+        s = s & \"Available Space: \" & FormatNumber(d.AvailableSpace/1024, 0)
+        s = s & \" Kbytes\"
+        MsgBox s
+    End Sub
+    ```
+    !'
+    ReadOnly Property AvailableSpace() As Long
+
+    '!
+    ```ds
+    (property) DriveLetter: String
+    ```
+    ------------------------
+    Returns the drive letter of a physical local drive or a network share. Read-only.
+
+    ### Remarks
+    The `DriveLetter` property returns a zero-length string (\"\") if the specified drive is not associated with a drive letter, for example, a network share that has not been mapped to a drive letter.
+    The following code illustrates the use of the `DriveLetter` property.
+    ```vb
+    Sub ShowDriveLetter(drvPath)
+        Dim fs, d, s
+        Set fs = CreateObject(\"Scripting.FileSystemObject\")
+        Set d = fs.GetDrive(fs.GetDriveName(drvPath))
+        s = \"Drive \" & d.DriveLetter & \": - \"
+        s = s & d.VolumeName  & vbCrLf
+        s = s & \"Free Space: \" & FormatNumber(d.FreeSpace/1024, 0)
+        s = s & \" Kbytes\"
+        MsgBox s
+    End Sub
+    ```
+    !'
+    ReadOnly Property DriveLetter() As String
+
+    '!
+    ```ds
+    (property) DriveType: Long
+    ```
+    ------------------------
+    Returns a value indicating the type of a specified drive.
+
+    ### Remarks
+    The following code illustrates the use of the `DriveType` property.
+    ```vb
+    Sub ShowDriveType(drvpath)
+        Dim fs, d, s, t
+        Set fs = CreateObject(\"Scripting.FileSystemObject\")
+        Set d = fs.GetDrive(drvpath)
+        Select Case d.DriveType
+            Case 0: t = \"Unknown\"
+            Case 1: t = \"Removable\"
+            Case 2: t = \"Fixed\"
+            Case 3: t = \"Network\"
+            Case 4: t = \"CD-ROM\"
+            Case 5: t = \"RAM Disk\"
+        End Select
+        s = \"Drive \" & d.DriveLetter & \": - \" & t
+        MsgBox s
+    End Sub
+    ```
+    !'
+    ReadOnly Property DriveType() As Long
+
+    '!
+    ```ds
+    (property) FileSystem: String
+    ```
+    ------------------------
+    Returns the type of file system in use for the specified drive.
+
+    ### Remarks
+    Available return types include FAT, NTFS, and CDFS.
+    The following code illustrates the use of the `FileSystem` property.
+    ```vb
+    Sub ShowFileSystemType
+        Dim fs,d, s
+        Set fs = CreateObject(\"Scripting.FileSystemObject\")
+        Set d = fs.GetDrive(\"e:\")
+        s = d.FileSystem
+        MsgBox s
+    End Sub
+    ```
+    !'
+    ReadOnly Property FileSystem() As String
+
+    '!
+    ```ds
+    (property) FreeSpace: Long
+    ```
+    ------------------------
+    Returns the amount of free space available to a user on the specified drive or network share. Read-only.
+
+    ### Remarks
+    The value returned by the `FreeSpace` property is typically the same as that returned by the `AvailableSpace` property. Differences may occur between the two for computer systems that support quotas.
+    The following code illustrates the use of the `FreeSpace` property.
+    ```vb
+    Sub ShowFreeSpace(drvPath)
+        Dim fs, d, s
+        Set fs = CreateObject(\"Scripting.FileSystemObject\")
+        Set d = fs.GetDrive(fs.GetDriveName(drvPath))
+        s = \"Drive \" & UCase(drvPath) & \" - \"
+        s = s & d.VolumeName  & vbCrLf
+        s = s & \"Free Space: \" & FormatNumber(d.FreeSpace/1024, 0)
+        s = s & \" Kbytes\"
+        MsgBox s
+    End Sub
+    ```
+    !'
+    ReadOnly Property FreeSpace() As Long
+
+    '!
+    ```ds
+    (property) IsReady: Boolean
+    ```
+    ------------------------
+    Returns *True* if the specified drive is ready; *False* if it is not.
+
+    ### Remarks
+    For removable-media drives and CD-ROM drives, `IsReady` returns True only when the appropriate media is inserted and ready for access.
+    The following code illustrates the use of the `IsReady` property.
+    ```vb
+    Sub ShowDriveInfo(drvpath)
+        Dim fs, d, s, t
+        Set fs = CreateObject(\"Scripting.FileSystemObject\")
+        Set d = fs.GetDrive(drvpath)
+        Select Case d.DriveType
+            Case 0: t = \"Unknown\"
+            Case 1: t = \"Removable\"
+            Case 2: t = \"Fixed\"
+            Case 3: t = \"Network\"
+            Case 4: t = \"CD-ROM\"
+            Case 5: t = \"RAM Disk\"
+        End Select
+        s = \"Drive \" & d.DriveLetter & \": - \" & t
+        If d.IsReady Then
+            s = s & vbCrLf & \"Drive is Ready.\"
+        Else
+            s = s & vbCrLf & \"Drive is not Ready.\"
+        End If
+        MsgBox s
+    End Sub
+    ```
+    !'
+    ReadOnly Property IsReady() As Boolean
+
+    '!
+    ```ds
+    (property) Path: String
+    ```
+    ------------------------
+    Returns the path for a specified file, folder, or drive.
+
+    ### Remarks
+    For drive letters, the root drive is not included. For example, the path for the C drive is `C:`, not `C:\\`.
+    The following code illustrates the use of the `Path` property with a File object.
+    ```vb
+    Sub ShowFileAccessInfo(filespec)
+        Dim fs, d, f, s
+        Set fs = CreateObject(\"Scripting.FileSystemObject\")
+        Set f = fs.GetFile(filespec)
+        s = UCase(f.Path) & vbCrLf
+        s = s & \"Created: \" & f.DateCreated & vbCrLf
+        s = s & \"Last Accessed: \" & f.DateLastAccessed & vbCrLf
+        s = s & \"Last Modified: \" & f.DateLastModified
+        MsgBox s, 0, \"File Access Info\"
+    End Sub
+    ```
+    !'
+    ReadOnly Property Path() As String
+
+    '!
+    ```ds
+    (property) RootFolder: String
+    ```
+    ------------------------
+    Returns a `Folder` object representing the root folder of a specified drive. Read-only.
+
+    ### Remarks
+    All the files and folders contained on the drive can be accessed by using the returned Folder object
+    !'
+    ReadOnly Property RootFolder() As String
+
+    '!
+    ```ds
+    (property) SerialNumber: Double
+    ```
+    ------------------------
+    Returns the decimal serial number used to uniquely identify a disk volume.
+
+    ### Remarks
+    You can use the `SerialNumber` property to ensure that the correct disk is inserted in a drive with removable media.
+    The following code illustrates the use of the `SerialNumber` property.
+    ```vb
+    Sub ShowDriveInfo(drvpath)
+        Dim fs, d, s, t
+        Set fs = CreateObject(\"Scripting.FileSystemObject\")
+        Set d = fs.GetDrive(fs.GetDriveName(fs.GetAbsolutePathName(drvpath)))
+        Select Case d.DriveType
+            Case 0: t = \"Unknown\"
+            Case 1: t = \"Removable\"
+            Case 2: t = \"Fixed\"
+            Case 3: t = \"Network\"
+            Case 4: t = \"CD-ROM\"
+            Case 5: t = \"RAM Disk\"
+        End Select
+        s = \"Drive \" & d.DriveLetter & \": - \" & t
+        s = s & vbCrLf & \"SN: \" & d.SerialNumber
+        MsgBox s
+    End Sub
+    ```
+    !'
+    ReadOnly Property SerialNumber() As Double
+
+    '!
+    ```ds
+    (property) ShareName: String
+    ```
+    ------------------------
+    Returns the network share name for a specified drive.
+
+    ### Remarks
+    If object is not a network drive, the `ShareName` property returns a zero-length string (\"\")
+    The following code illustrates the use of the `ShareName` property.
+    ```vb
+    Sub ShowDriveInfo(drvpath)
+        Dim fs, d, s
+        Set fs = CreateObject(\"Scripting.FileSystemObject\")
+        Set d = fs.GetDrive(fs.GetDriveName(fs.GetAbsolutePathName(drvpath)))
+        s = \"Drive \" & d.DriveLetter & \": - \" & d.ShareName
+        MsgBox s
+    End Sub
+    ```
+    !'
+    ReadOnly Property ShareName() As String
+
+    '!
+    ```ds
+    (property) TotalSize: Long
+    ```
+    ------------------------
+    Returns the total space, in bytes, of a drive or network share.
+
+    ### Remarks
+    The following code illustrates the use of the `TotalSize` property.
+    ```vb
+    Sub ShowSpaceInfo(drvpath)
+        Dim fs, d, s
+        Set fs = CreateObject(\"Scripting.FileSystemObject\")
+        Set d = fs.GetDrive(fs.GetDriveName(fs.GetAbsolutePathName(drvpath)))
+        s = \"Drive \" & d.DriveLetter & \":\"
+        s = s & vbCrLf
+        s = s & \"Total Size: \" & FormatNumber(d.TotalSize/1024, 0) & \" Kbytes\"
+        s = s & vbCrLf
+        s = s & \"Available: \" & FormatNumber(d.AvailableSpace/1024, 0) & \" Kbytes\"
+        MsgBox s
+    End Sub
+    ```
+    !'
+    ReadOnly Property TotalSize() As Long
+
+    '!
+    ```ds
+    (property) VolumeName: String
+    ```
+    ------------------------
+    Sets or returns the volume name of the specified drive. Read/write.
+
+    ### Remarks
+    The following code illustrates the use of the `VolumeName` property.
+    ```vb
+    Sub ShowVolumeInfo(drvpath)
+        Dim fs, d, s
+        Set fs = CreateObject(\"Scripting.FileSystemObject\")
+        Set d = fs.GetDrive(fs.GetDriveName(fs.GetAbsolutePathName(drvpath)))
+        s = \"Drive \" & d.DriveLetter & \": - \" & d.VolumeName
+        MsgBox s
+    End Sub
+    ```
+    !'
+    Property VolumeName() As String
+
+
+End Class
+

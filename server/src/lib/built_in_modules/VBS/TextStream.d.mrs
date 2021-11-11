@@ -1,0 +1,200 @@
+
+'!
+```ds
+(object) TextStream
+```
+------------------------
+Facilitates sequential access to file.
+
+### Remarks
+The property and method arguments can be any of the properties and methods associated with the TextStream object. Note that in actual usage, TextStream is replaced by a variable placeholder representing the `TextStream` object returned from the `FileSystemObject`.
+In the following code, a is the `TextStream` object returned by the `CreateTextFile` method on the `FileSystemObject`; `WriteLine` and `Close` are two methods of the `TextStream` object.
+```vb
+Set fs = CreateObject(\"Scripting.FileSystemObject\")
+Set a = fs.CreateTextFile(\"c:\\testfile.txt\", True)
+a.WriteLine(\"This is a test.\")
+a.Close
+```
+!'
+Class TextStream Implements Object
+
+    '!
+    ```ds
+    (method) Close(): Void
+    ```
+    ------------------------
+    Closes an open TextStream file.
+    !'
+    Sub Close()
+    End Sub
+
+    '!
+    ```ds
+    (method) Read(Charaters: Long): String
+    ```
+    ------------------------
+    Reads a specified number of characters from a `TextStream` file and returns the resulting string.
+    + `Charaters`: *Long* - Required. Number of characters that you want to read from the file.
+    !'
+    Function Read(Characters As Long) As String
+    End Function
+
+    '!
+    ```ds
+    (method) ReadAll(): String
+    ```
+    ------------------------
+    Reads an entire `TextStream` file and returns the resulting string.
+
+    ### Remarks
+    For large files, using the `ReadAll` method wastes memory resources. Other techniques should be used to input a file, such as reading a file line-by-line.
+    !'
+    Function ReadAll() As String
+    End Function
+
+    '!
+    ```ds
+    (method) ReadLine(): String
+    ```
+    ------------------------
+    Reads an entire line (up to, but not including, the newline character) from a `TextStream` file and returns the resulting string.
+    !'
+    Function ReadLine() As String
+    End Function
+
+    '!
+    ```ds
+    (method) Skip(Characters: Long): Void
+    ```
+    ------------------------
+    Reads an entire line (up to, but not including, the newline character) from a `TextStream` file and returns the resulting string.
+    + `Characters`: *Long* - Required. Number of characters to skip when reading a file.
+
+    ### Remarks
+    Skipped characters are discarded.
+    !'
+    Sub Skip(Characters As Long)
+    End Sub
+
+    '!
+    ```ds
+    (method) SkipLine(): Void
+    ```
+    ------------------------
+    Skips the next line when reading a TextStream file.
+
+    ### Remarks
+    Skipping a line means reading and discarding all characters in a line up to and including the next newline character.
+    An error occurs if the file is not open for reading.
+    !'
+    Sub SkipLine()
+    End Sub
+
+    '!
+    ```ds
+    (method) Write(Text: String): Void
+    ```
+    ------------------------
+    Writes a specified string to a `TextStream` file.
+    + `Text`: *String* - Required. The text you want to write to the file.
+
+    ### Remarks
+    Specified strings are written to the file with no intervening spaces or characters between each string. Use the WriteLine method to write a newline character or a string that ends with a newline character.
+    !'
+    Sub Write(Text As String)
+    End Sub
+
+    '!
+    ```ds
+    (method) WriteBlankLines(Lines: Long): Void
+    ```
+    ------------------------
+    Writes a specified number of newline characters to a `TextStream` file.
+    + `Lines`: *Long* - Required. Number of newline characters you want to write to the file.
+    !'
+    Sub WriteBlankLines(Lines As Long)
+    End Sub
+
+    '!
+    ```ds
+    (method) WriteLine([Text: String]): Void
+    ```
+    ------------------------
+    Writes a specified string and newline character to a `TextStream` file.
+    + `Text`: *String* - Optional. The text you want to write to the file. If omitted, a newline character is written to the file.
+    !'
+    Sub WriteLine(Optional Text As String)
+    End Sub
+
+    '!
+    ```ds
+    (property) AtEndOfLine: Boolean
+    ```
+    ------------------------
+    Read-only property that returns True if the file pointer immediately precedes the end-of-line marker in a `TextStream` file; *False* if it does not.
+
+    ### Remarks
+    The `AtEndOfLine` property applies only to `TextStream` files that are open for reading; otherwise, an error occurs.
+    The following code illustrates the use of the `AtEndOfLine` property.
+    ```vb
+    Dim fs, a, retstring
+    Set fs = CreateObject(\"Scripting.FileSystemObject\")
+    Set a = fs.OpenTextFile(\"c:\\testfile.txt\", ForReading, False)
+    Do While a.AtEndOfLine <> True
+        retstring = a.Read(1)
+        ...
+    Loop
+    a.Close
+    ```
+    !'
+    ReadOnly Property AtEndOfLine() As Boolean
+
+    '!
+    ```ds
+    (property) AtEndOfStream: Boolean
+    ```
+    ------------------------
+    Read-only property that returns True if the file pointer is at the end of a `TextStream` file; *False* if it is not.
+
+    ### Remarks
+    The `AtEndOfStream` property applies only to `TextStream` files that are open for reading; otherwise, an error occurs.
+    The following code illustrates the use of the `AtEndOfStream` property.
+    ```vb
+    Dim fs, a, retstring
+    Set fs = CreateObject(\"Scripting.FileSystemObject\")
+    Set a = fs.OpenTextFile(\"c:\\testfile.txt\", ForReading, False)
+    Do While a.AtEndOfStream <> True
+        retstring = a.ReadLine
+        ...
+    Loop
+    a.Close
+    ```
+    !'
+    ReadOnly Property AtEndOfStream() As Boolean
+
+    '!
+    ```ds
+    (property) Column: Long
+    ```
+    ------------------------
+    Read-only property that returns the column number of the current character position in a `TextStream` file.
+
+    ### Remarks
+    After a newline character has been written, but before any other character is written, `Column` is equal to 1.
+    !'
+    ReadOnly Property Column() As Long
+
+    '!
+    ```ds
+    (property) Line: Long
+    ```
+    ------------------------
+    Read-only property that returns the current line number in a `TextStream` file.
+
+    ### Remarks
+    After a file is initially opened and before anything is written, `Line` is equal to 1.
+    !'
+    ReadOnly Property Line() As Long
+
+
+End Class

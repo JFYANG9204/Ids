@@ -253,20 +253,17 @@ export class ScopeHandler {
         }
     }
 
-    get(name: string, namespace?: string): ScopeSearchResult | undefined {
+    get(name: string, namespace?: string | NamespaceDeclaration): ScopeSearchResult | undefined {
         if (namespace) {
-            const field = this.store.namespaces.get(namespace.toLowerCase()) ||
-                          this.currentScope().namespaces.get(namespace.toLowerCase());
-            if (!field) {
-                return undefined;
-            }
-            for (const dec of (field as NamespaceDeclaration).body) {
-                if (dec.name.name.toLowerCase() === name.toLowerCase()) {
-                    return {
-                        type: BindTypes.classOrInterface,
-                        result: dec
-                    };
+            if (typeof namespace === "string") {
+                const field = this.store.namespaces.get(namespace.toLowerCase()) ||
+                this.currentScope().namespaces.get(namespace.toLowerCase());
+                if (!field) {
+                    return undefined;
                 }
+                return this.searchInNamespace(field, name);
+            } else {
+                return this.searchInNamespace(namespace, name);
             }
         }
         return this.getName(this.store, name) ||
@@ -373,6 +370,20 @@ export class ScopeHandler {
         if (!this.inFunction && !this.inNameSpace) {
             this.store[key].set(name.toLowerCase(), type);
         }
+    }
+
+    private searchInNamespace(namespace: NamespaceDeclaration, name: string): ScopeSearchResult | undefined {
+        for (const child of namespace.body) {
+            if (name.toLowerCase() === child.name.name.toLowerCase()) {
+                let type = child.type === "ClassOrInterfaceDeclaration" ?
+                        BindTypes.classOrInterface : BindTypes.function;
+                return {
+                    type: type,
+                    result: child
+                };
+            }
+        }
+        return undefined;
     }
 
 }

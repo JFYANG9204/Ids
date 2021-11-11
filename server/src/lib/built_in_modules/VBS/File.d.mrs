@@ -1,0 +1,426 @@
+
+
+'!
+```ds
+(object) File
+```
+------------------------
+Provides access to all the properties of a file.
+
+### Remarks
+The following code illustrates how to obtain a `File` object and how to view one of its properties.
+```vb
+Sub ShowFileInfo(filespec)
+    Dim fs, f, s
+    Set fs = CreateObject(\"Scripting.FileSystemObject\")
+    Set f = fs.GetFile(filespec)
+    s = f.DateCreated
+    MsgBox s
+End Sub
+```
+!'
+Class File Implements Object
+
+    '!
+    ```ds
+    (method) Copy(Destination: String, [Overwrite: Boolean]): Void
+    ```
+    ------------------------
+    Copies a specified file or folder from one location to another.
+    + `Destination`: *String* - Required. `Destination` where the file or folder is to be copied. Wildcard characters are not allowed.
+    + `Overwrite`: *Boolean* - Optional. *Boolean* value that is *True* (default) if existing files or folders are to be overwritten; *False* if they are not.
+
+    ### Remarks
+    The results of the Copy method on a `File` or `Folder` are identical to operations performed by using `FileSystemObject.CopyFile` or `FileSystemObject.CopyFolder` where the file or folder referred to by object is passed as an argument. You should note, however, that the alternative methods are capable of copying multiple files or folders.
+    !'
+    Sub Copy(Destination As String, Optional Overwrite As Boolean)
+    End Sub
+
+    '!
+    ```ds
+    (method) Delete([Force: Boolean]): Void
+    ```
+    ------------------------
+    Deletes a specified file or folder.
+    + `Force`: *Boolean* - Optional. *Boolean* value that is *True* if files or folders with the read-only attribute set are to be deleted; *False* (default) if they are not.
+
+    ### Remarks
+    An error occurs if the specified file or folder does not exist.
+    The results of the `Delete` method on a `File` or `Folder` are identical to operations performed by using `FileSystemObject.DeleteFile` or `FileSystemObject.DeleteFolder`.
+    The `Delete` method does not distinguish between folders that have contents and those that do not. The specified folder is deleted regardless of whether or not it has contents.
+    !'
+    Sub Delete(Optional Force Boolean)
+    End Sub
+
+    '!
+    ```ds
+    (method) Move(Destination: String): Void
+    ```
+    ------------------------
+    Deletes a specified file or folder.
+    + `Destination`: *String* - Required. `Destination` where the file or folder is to be moved. Wildcard characters are not allowed.
+
+    ### Remarks
+    The results of the `Move` method on a `File` or `Folder` are identical to operations performed by using `FileSystemObject.MoveFile` or `FileSystemObject.MoveFolder`. You should note, however, that the alternative methods are capable of moving multiple files or folders.
+    !'
+    Sub Move(Destination As String)
+    End Sub
+
+    '!
+    ```ds
+    (method) OpenAsTextStream([IOMode: Long], [Format: Long]): TextStream
+    ```
+    ------------------------
+    Opens a specified file and returns a `TextStream` object that can be used to read from, write to, or append to the file.
+    + `IOMode`: *Long* - Optional. Indicates input/output mode. Can be one of three constants: `ForReading`, `ForWriting`, or `ForAppending`.
+    + `Format`: *Long* - Optional. One of three Tristate values used to indicate the format of the opened file. If omitted, the file is opened as ASCII.
+
+    ### Settings
+    The `iomode` argument can have any of the following settings:
+
+    | Constant      | Value | Description |
+    | :------------ | :---- | :---------- |
+    | ForReading    | 1     | Open a file for reading only. You can't write to this file. |
+    | ForWriting    | 2     | Open a file for writing only. Use this mode to replace an existing file with new data. You can't read from this file. |
+    | ForAppending  | 8     | Open a file and write to the end of the file. You can't read from this file. |
+
+    The `format` argument can have any of the following settings:
+
+    | Constant           | Value  | Description |
+    | -----------------  | ------ | -------------- |
+    | TristateUseDefault | -2     | Opens the file by using the system default. |
+    | TristateTrue       | -1     | Opens the file as Unicode. |
+    | TristateFalse      | 0      | Opens the file as ASCII. |
+
+
+    ### Remarks
+    The `OpenAsTextStream` method provides the same functionality as the `OpenTextFile` method of the `FileSystemObject`. In addition, the `OpenAsTextStream` method can be used to write to a file.
+    The following code illustrates the use of the `OpenAsTextStream` method:
+    ```vb
+    Sub TextStreamTest
+        Const ForReading = 1, ForWriting = 2, ForAppending = 8
+        Const TristateUseDefault = -2, TristateTrue = -1, TristateFalse = 0
+        Dim fs, f, ts, s
+        Set fs = CreateObject(\"Scripting.FileSystemObject\")
+        fs.CreateTextFile \"test1.txt\"            'Create a file
+        Set f = fs.GetFile(\"test1.txt\")
+        Set ts = f.OpenAsTextStream(ForWriting, TristateUseDefault)
+        ts.Write \"Hello World\"
+        ts.Close
+        Set ts = f.OpenAsTextStream(ForReading, TristateUseDefault)
+        s = ts.ReadLine
+        MsgBox s
+        ts.Close
+    End Sub
+    ```
+    !'
+    Function OpenAsTextStream(Optional IOMode As Long, Optional Format As Long) As TextStream
+    End Function
+
+    '!
+    ```ds
+    (property) Attributes: Long
+    ```
+    ------------------------
+    Sets or returns the attributes of files or folders. Read/write or read-only, depending on the attribute.
+
+    ### Settings
+    The `newattributes` argument can have any of the following values or any logical combination of the following values.
+
+    | Constant   | Value  | Description |
+    | :-------   | :----- | :----------- |
+    | Normal     | 0      | Normal file. No attributes are set. |
+    | ReadOnly   | 1      | Read-only file. Attribute is read/write. |
+    | Hidden     | 2      | Hidden file. Attribute is read/write. |
+    | System     | 4      | System file. Attribute is read/write. |
+    | Volume     | 8      | Disk drive volume label. Attribute is read-only. |
+    | Directory  | 16     | Folder or directory. Attribute is read-only. |
+    | Archive    | 32     | File has changed since last backup. Attribute is read/write. |
+    | Alias      | 1024   | Link or shortcut. Attribute is read-only. |
+    | Compressed | 2048   | Compressed file. Attribute is read-only. |
+
+    ### Remarks
+    The following code illustrates the use of the `Attributes` property with a file.
+    ```vb
+    Sub SetClearArchiveBit(filespec)
+        Dim fs, f, r
+        Set fs = CreateObject(\"Scripting.FileSystemObject\")
+        Set f = fs.GetFile(fs.GetFileName(filespec))
+        If f.attributes and 32 Then
+            r = MsgBox(\"The Archive bit is set, do you want to clear it?\", vbYesNo, \"Set/Clear Archive Bit\")
+            If r = vbYes Then
+                f.attributes = f.attributes - 32
+                MsgBox \"Archive bit is cleared.\"
+            Else
+                MsgBox \"Archive bit remains set.\"
+            End If
+        Else
+            r = MsgBox(\"The Archive bit is not set. Do you want to set it?\", vbYesNo, \"Set/Clear Archive Bit\")
+            If r = vbYes Then
+                f.attributes = f.attributes + 32
+                MsgBox \"Archive bit is set.\"
+            Else
+                MsgBox \"Archive bit remains clear.\"
+            End If
+        End If
+    End Sub
+    ```
+    !'
+    Property Attributes() As Long
+
+    '!
+    ```ds
+    (property) DateCreated: String
+    ```
+    ------------------------
+    Returns the date and time that the specified file or folder was created. Read-only.
+
+    ### Remarks
+    The following code illustrates the use of the `DateCreated` property with a file.
+    ```vb
+    Sub ShowFileInfo(filespec)
+        Dim fs, f, s
+        Set fs = CreateObject(\"Scripting.FileSystemObject\")
+        Set f = fs.GetFile(filespec)
+        s = \"Created: \" & f.DateCreated
+        MsgBox s
+    End Sub
+    ```
+    !'
+    ReadOnly Property DateCreated() As String
+
+    '!
+    ```ds
+    (property) DateLastAccessed: String
+    ```
+    ------------------------
+    Returns the date and time that the specified file or folder was last accessed. Read-only.
+
+    ### Remarks
+    The following code illustrates the use of the `DateLastAccessed` property with a file.
+    ```vb
+    Sub ShowFileAccessInfo(filespec)
+        Dim fs, f, s
+        Set fs = CreateObject(\"Scripting.FileSystemObject\")
+        Set f = fs.GetFile(filespec)
+        s = UCase(filespec) & vbCrLf
+        s = s & \"Created: \" & f.DateCreated & vbCrLf
+        s = s & \"Last Accessed: \" & f.DateLastAccessed & vbCrLf
+        s = s & \"Last Modified: \" & f.DateLastModified
+        MsgBox s, 0, \"File Access Info\"
+    End Sub
+    ```
+    @important - This method depends on the underlying operating system for its behavior. If the operating system does not support providing time information, none will be returned.
+    !'
+    ReadOnly Property DateLastAccessed() As String
+
+    '!
+    ```ds
+    (property) DateLastModified: String
+    ```
+    ------------------------
+    Returns the date and time that the specified file or folder was last modified. Read-only.
+
+    ### Remarks
+    The following code illustrates the use of the `DateLastModified` property with a file.
+    ```vb
+    Sub ShowFileAccessInfo(filespec)
+        Dim fs, f, s
+        Set fs = CreateObject(\"Scripting.FileSystemObject\")
+        Set f = fs.GetFile(filespec)
+        s = UCase(filespec) & vbCrLf
+        s = s & \"Created: \" & f.DateCreated & vbCrLf
+        s = s & \"Last Accessed: \" & f.DateLastAccessed & vbCrLf
+        s = s & \"Last Modified: \" & f.DateLastModified
+        MsgBox s, 0, \"File Access Info\"
+    End Sub
+    ```
+    !'
+    ReadOnly Property DateLastModified() As String
+
+    '!
+    ```ds
+    (property) Drive: String
+    ```
+    ------------------------
+    Returns the drive letter of the drive on which the specified file or folder resides. Read-only.
+
+    ### Remarks
+    The following code illustrates the use of the `Drive` property.
+    ```vb
+    Sub ShowFileAccessInfo(filespec)
+        Dim fs, f, s
+        Set fs = CreateObject(\"Scripting.FileSystemObject\")
+        Set f = fs.GetFile(filespec)
+        s = f.Name & \" on Drive \" & UCase(f.Drive) & vbCrLf
+        s = s & \"Created: \" & f.DateCreated & vbCrLf
+        s = s & \"Last Accessed: \" & f.DateLastAccessed & vbCrLf
+        s = s & \"Last Modified: \" & f.DateLastModified
+        MsgBox s, 0, \"File Access Info\"
+    End Sub
+    ```
+    !'
+    ReadOnly Property Drive() As String
+
+    '!
+    ```ds
+    (property) Name: String
+    ```
+    ------------------------
+    Sets or returns the name of a specified file or folder. Read/write.
+
+    ### Remarks
+    The following code illustrates the use of the `Name` property.
+    ```vb
+    Sub ShowFileAccessInfo(filespec)
+        Dim fs, f, s
+        Set fs = CreateObject(\"Scripting.FileSystemObject\")
+        Set f = fs.GetFile(filespec)
+        s = f.Name & \" on Drive \" & UCase(f.Drive) & vbCrLf
+        s = s & \"Created: \" & f.DateCreated & vbCrLf
+        s = s & \"Last Accessed: \" & f.DateLastAccessed & vbCrLf
+        s = s & \"Last Modified: \" & f.DateLastModified
+        MsgBox s, 0, \"File Access Info\"
+    End Sub
+    ```
+    !'
+    Property Name() As String
+
+    '!
+    ```ds
+    (property) ParentFolder: Folder
+    ```
+    ------------------------
+    Returns the folder object for the parent of the specified file or folder. Read-only.
+
+    ### Remarks
+    The following code illustrates the use of the `ParentFolder` property with a file.
+    ```vb
+    Sub ShowFileAccessInfo(filespec)
+        Dim fs, f, s
+        Set fs = CreateObject(\"Scripting.FileSystemObject\")
+        Set f = fs.GetFile(filespec)
+        s = UCase(f.Name) & \" in \" & UCase(f.ParentFolder) & vbCrLf
+        s = s & \"Created: \" & f.DateCreated & vbCrLf
+        s = s & \"Last Accessed: \" & f.DateLastAccessed & vbCrLf
+        s = s & \"Last Modified: \" & f.DateLastModified
+        MsgBox s, 0, \"File Access Info\"
+    End Sub
+    ```
+    !'
+    ReadOnly Property ParentFolder() As Folder
+
+    '!
+    ```ds
+    (property) Path: String
+    ```
+    ------------------------
+    Returns the path for a specified file, folder, or drive.
+
+    ### Remarks
+    For drive letters, the root drive is not included. For example, the path for the C drive is `C:`, not `C:\\`.
+    The following code illustrates the use of the `Path` property with a File object.
+    ```vb
+    Sub ShowFileAccessInfo(filespec)
+        Dim fs, d, f, s
+        Set fs = CreateObject(\"Scripting.FileSystemObject\")
+        Set f = fs.GetFile(filespec)
+        s = UCase(f.Path) & vbCrLf
+        s = s & \"Created: \" & f.DateCreated & vbCrLf
+        s = s & \"Last Accessed: \" & f.DateLastAccessed & vbCrLf
+        s = s & \"Last Modified: \" & f.DateLastModified
+        MsgBox s, 0, \"File Access Info\"
+    End Sub
+    ```
+    !'
+    ReadOnly Property Path() As String
+
+    '!
+    ```ds
+    (property) ShortName: String
+    ```
+    ------------------------
+    Returns the short name used by programs that require the earlier 8.3 naming convention.
+
+    ### Remarks
+    The following code illustrates the use of the `ShortName` property with a `File` object.
+    ```vb
+    Sub ShowShortName(filespec)
+        Dim fs, f, s
+        Set fs = CreateObject(\"Scripting.FileSystemObject\")
+        Set f = fs.GetFile(filespec)
+        s = \"The short name for \" & \"\" & UCase(f.Name)
+        s = s & \"\" & vbCrLf
+        s = s & \"is: \" & \"\" & f.ShortName & \"\"
+        MsgBox s, 0, \"Short Name Info\"
+    End Sub
+    ```
+    !'
+    ReadOnly Property ShortName() As String
+
+    '!
+    ```ds
+    (property) ShortPath: String
+    ```
+    ------------------------
+    Returns the short path used by programs that require the earlier 8.3 file naming convention.
+
+    ### Remarks
+    The following code illustrates the use of the `ShortName` property with a `File` object.
+    ```vb
+    Sub ShowShortPath(filespec)
+        Dim fs, f, s
+        Set fs = CreateObject(\"Scripting.FileSystemObject\")
+        Set f = fs.GetFile(filespec)
+        s = \"The short path for \" & \"\" & UCase(f.Name)
+        s = s & \"\" & vbCrLf
+        s = s & \"is: \" & \"\" & f.ShortPath & \"\"
+        MsgBox s, 0, \"Short Path Info\"
+    End Sub
+    ```
+    !'
+    ReadOnly Property ShortPath() As String
+
+    '!
+    ```ds
+    (property) Size: Long
+    ```
+    ------------------------
+    For files, returns the size, in bytes, of the specified file. For folders, returns the size, in bytes, of all files and subfolders contained in the folder.
+
+    ### Remarks
+    The following code illustrates the use of the `Size` property with a `Folder` object.
+    ```vb
+    Sub ShowFolderSize(filespec)
+        Dim fs, f, s
+        Set fs = CreateObject(\"Scripting.FileSystemObject\")
+        Set f = fs.GetFolder(filespec)
+        s = UCase(f.Name) & \" uses \" & f.size & \" bytes.\"
+        MsgBox s, 0, \"Folder Size Info\"
+    End Sub
+    ```
+    !'
+    ReadOnly Property Size() As Long
+
+    '!
+    ```ds
+    (property) Type: String
+    ```
+    ------------------------
+    Returns information about the type of a file or folder. For example, for files ending in .TXT, \"Text Document\" is returned.
+
+    ### Remarks
+    The following code illustrates the use of the `Type` property to return a folder type. In this example, try providing the path of the Recycle Bin or other unique folder to the procedure.
+    ```vb
+    Sub ShowFileSize(filespec)
+        Dim fs, f, s
+        Set fs = CreateObject(\"Scripting.FileSystemObject\")
+        Set f = fs.GetFolder(filespec)
+        s = UCase(f.Name) & \" is a \" & f.Type
+        MsgBox s, 0, \"File Size Info\"
+    End Sub
+    ```
+    !'
+    ReadOnly Property Type() As String
+
+End Class

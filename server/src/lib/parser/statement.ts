@@ -418,6 +418,11 @@ export class StatementParser extends ExpressionParser {
                 let find = this.scope.get(node.valueType)?.result;
                 this.scope.declareName(node.name.name, BindTypes.var, node, find);
                 return this.convertVarToArrayDeclarator(node, node.valueType);
+            } else if (this.eat(tt.braceL)) {
+                this.expect(tt._of);
+                node.generics = this.state.value;
+                this.next();
+                this.expect(tt.braceR);
             }
         }
         return this.finishNode(node, "SingleVarDeclarator");
@@ -1123,6 +1128,12 @@ export class StatementParser extends ExpressionParser {
         this.checkIfDeclareFile(this.state.value);
         this.next();
         node.name = this.parseIdentifier();
+        if (this.eat(tt.braceL)) {
+            this.expect(tt._of);
+            node.generic = this.state.value;
+            this.next();
+            this.expect(tt.braceR);
+        }
         if (this.eat(tt._implements)) {
             for (;;) {
                 node.implements.push(this.state.value);
@@ -1176,13 +1187,13 @@ export class StatementParser extends ExpressionParser {
                 case tt._class:
                 case tt._interface:
                     const classOrInterface = this.parseClassOrInterface();
-                    classOrInterface.namespace = node.name.name;
+                    classOrInterface.namespace = node;
                     node.body.push(classOrInterface);
                     break;
                 case tt._function:
                 case tt._sub:
                     const func = this.parseFunctionDeclaration();
-                    func.namespace = node.name.name;
+                    func.namespace = node;
                     node.body.push(func);
                     break;
 
