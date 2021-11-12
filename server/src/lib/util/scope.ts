@@ -73,7 +73,7 @@ export class ScopeHandler {
     }
 
     get inWith() {
-        return this.currentScope().withHeader.length === 0;
+        return this.currentScope().withHeader.length > 0;
     }
 
     get inClassOrInterface() {
@@ -82,6 +82,10 @@ export class ScopeHandler {
 
     get inNameSpace() {
         return this.currentScope().flags === ScopeFlags.namespace;
+    }
+
+    get inEvent() {
+        return this.currentScope().flags === ScopeFlags.event;
     }
 
     enter(flags: ScopeFlags) {
@@ -111,18 +115,22 @@ export class ScopeHandler {
                 return;
             }
             this.insertName(scope, name, node, "functions");
-        } else if ((bindingType === BindTypes.var) &&
-            (node instanceof SingleVarDeclarator || node instanceof ArrayDeclarator)) {
+        } else if ((bindingType === BindTypes.var) && (
+            node instanceof SingleVarDeclarator ||
+            node instanceof ArrayDeclarator     ||
+            node instanceof ClassOrInterfaceDeclaration)) {
             if (node instanceof SingleVarDeclarator) {
                 const variant = this.get("Variant")?.result;
                 if (variant) {
                     this.insertName(scope, name, variant, "dims");
                 }
-            } else {
+            } else if (node instanceof ArrayDeclarator) {
                 const array = this.get("Array")?.result;
                 if (array) {
                     this.insertName(scope, name, array, "dims");
                 }
+            } else {
+                this.insertName(scope, name, node, "dims");
             }
         } else if ((bindingType === BindTypes.classOrInterface) &&
             node instanceof ClassOrInterfaceDeclaration) {
@@ -340,7 +348,10 @@ export class ScopeHandler {
         type: DeclarationBase,
         key: string) {
         scope[key].set(name.toLowerCase(), type);
-        if (!this.inFunction && !this.inNameSpace) {
+        if (!this.inFunction         &&
+            !this.inNameSpace        &&
+            !this.inClassOrInterface &&
+            !this.inEvent) {
             this.store[key].set(name.toLowerCase(), type);
         }
     }

@@ -27,6 +27,7 @@ import {
     SingleVarDeclarator
 } from "./lib/types";
 import { isIdentifierChar } from "./lib/util/identifier";
+import { builtInModule } from "./util";
 
 
 export function getPathCompletion(uri: string): CompletionItem[] {
@@ -122,6 +123,13 @@ preKeywords.forEach(kw => {
 });
 
 const builtInCompletions: CompletionItem[] = [];
+
+if (builtInModule) {
+    setBuiltInCompletions(builtInModule.dims,      CompletionItemKind.Variable);
+    setBuiltInCompletions(builtInModule.consts,    CompletionItemKind.Variable);
+    setBuiltInCompletions(builtInModule.functions, CompletionItemKind.Function);
+    setBuiltInCompletions(builtInModule.macros,    CompletionItemKind.Variable);
+}
 
 export function setBuiltInCompletions(
     defs: Map<string, DeclarationBase>,

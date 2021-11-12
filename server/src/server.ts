@@ -12,6 +12,7 @@ import {
 } from "vscode-languageserver/node";
 import { ParserFileDigraph } from "./lib/file";
 import {
+    DeclarationBase,
     File,
 } from "./lib/types";
 import {
@@ -107,13 +108,8 @@ connection.onHover(params => {
     }
     const pos = document.offsetAt(params.position);
     const node = positionAt(currentFile.program.body, pos, true, 0);
-    let def: DefinitionBase | undefined = node.extra["definition"];
-    let declared = true;
-    if (def) {
-        if (!(def.defType === "interface" ||
-            def.defType === "object" || def.isBasic)) {
-            declared = false;
-        }
+    let dec: DeclarationBase | undefined = node.extra["declaration"];
+    if (dec) {
     }
     return hover;
 });

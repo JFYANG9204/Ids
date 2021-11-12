@@ -1,7 +1,4 @@
 
-
-BD11.ContainsAny("A1")
-Dim Dic
-Set Dic = CreateObject("Scripting.Dictionary")
-
-
+Dim TableDoc,StartTime,EndTime
+StartTime = Now()
+Set TableDoc = CreateObject("TOM.Document")

@@ -15,7 +15,7 @@ import {
     NodeBase,
     PropertyDeclaration,
 } from "../types";
-import { isConversionFunction } from "../util/match";
+import { isBasicType, isConversionFunction } from "../util/match";
 import { BindTypes } from "../util/scope";
 import { ErrorMessages, WarningMessages } from "./error-messages";
 import { UtilParser } from "./util";
@@ -284,21 +284,21 @@ export class TypeUtil extends UtilParser {
     }
 
     getBinaryExprType(expr: BinaryExpression): DeclarationBase | undefined {
-        let leftReturn: DeclarationBase | undefined;
-        let rightReturn: DeclarationBase | undefined;
-        const left = this.getExprType(expr.left, { type: leftReturn });
-        const right = this.getExprType(expr.right, { type: rightReturn });
-        if (!leftReturn || !rightReturn) {
-            if (!leftReturn) {
+        let leftReturn: { type: DeclarationBase | undefined } = { type: undefined };
+        let rightReturn: { type: DeclarationBase | undefined } = { type: undefined };
+        const left = this.getExprType(expr.left, leftReturn);
+        const right = this.getExprType(expr.right, rightReturn);
+        if (!leftReturn.type || !rightReturn.type) {
+            if (!leftReturn.type) {
                 this.needReturn(expr.left);
             }
-            if (!rightReturn) {
+            if (!rightReturn.type) {
                 this.needReturn(expr.right);
             }
             return this.getVariant();
         }
         if (this.matchType(left, right, expr.right)) {
-            return left.toLowerCase() === "variant" ? rightReturn : leftReturn;
+            return left.toLowerCase() === "variant" ? rightReturn.type : leftReturn.type;
         } else {
             return this.getVariant();
         }
@@ -306,9 +306,9 @@ export class TypeUtil extends UtilParser {
 
     getAssignExprType(expr: AssignmentExpression) {
         let left;
-        let rightType: DeclarationBase | undefined;
-        this.getExprType(expr.right, { type: rightType });
-        if (!rightType) {
+        let rightType: { type: DeclarationBase | undefined } = { type: undefined };
+        this.getExprType(expr.right, rightType);
+        if (!rightType.type) {
             this.needReturn(expr.right);
             return this.getVariant();
         }
@@ -324,22 +324,25 @@ export class TypeUtil extends UtilParser {
                 this.scope.update(
                     expr.left.name,
                     BindTypes.var,
-                    rightType,
+                    rightType.type,
                     expr);
             } else {
                 this.undefined(expr.left, expr.left.name);
                 this.scope.declareUndefined(
                     expr.left.name,
-                    rightType);
+                    rightType.type);
+            }
+            if (left) {
+                this.addExtra(expr.left, "declaration", left);
             }
         } else {
-            let leftType: DeclarationBase | undefined;
-            left = this.getExprType(expr.right, { type: leftType });
-            if (leftType) {
-                this.checkAssignmentLeft(leftType, expr.left);
+            let leftType: { type: DeclarationBase | undefined } = { type: undefined };
+            left = this.getExprType(expr.right, leftType);
+            if (leftType.type) {
+                this.checkAssignmentLeft(leftType.type, expr.left);
             }
         }
-        return rightType;
+        return rightType.type;
     }
 
     getIdentifierType(id: Identifier) {

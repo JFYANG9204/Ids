@@ -107,3 +107,5 @@ export function loadDecarationFiles(files: Map<string, string>) {
     });
     return scope;
 }
+
+export const builtInModule = loadBuiltInModule();

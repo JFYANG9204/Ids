@@ -439,13 +439,13 @@ export class StatementParser extends ExpressionParser {
         this.expect(tt.equal);
         node.init = this.parseExpression(true);
         node.push(node.declarator, node.init);
-        let right: DeclarationBase | undefined;
-        this.getExprType(node.init, { type: right });
+        let right: { type: DeclarationBase | undefined } = { type: undefined };
+        this.getExprType(node.init, right);
         this.scope.declareName(
             node.declarator.name.name,
             BindTypes.const,
             node.declarator,
-            right);
+            right.type);
         return this.finishNode(node, "ConstDeclarator");
     }
 
@@ -523,15 +523,15 @@ export class StatementParser extends ExpressionParser {
                 node.initValue = node.init.extra["raw"];
             }
         }
-        let rightType: DeclarationBase | undefined;
+        let rightType: { type: DeclarationBase | undefined } = { type: undefined };
         if (node.init) {
-            this.getExprType(node.init, { type: rightType });
+            this.getExprType(node.init, rightType);
         }
         this.scope.declareName(
             node.name.name,
             BindTypes.const,
             node,
-            rightType);
+            rightType.type);
         return this.finishNode(node, "MacroDeclaration");
     }
 
@@ -543,7 +543,9 @@ export class StatementParser extends ExpressionParser {
         let hasComma = false;
         while (!this.hasPrecedingLineBreak()) {
             if (this.lookahead().type === tt.bracketL) {
-                declarators.push(this.parseArrayDeclarator());
+                const arr = this.parseArrayDeclarator();
+                this.scope.declareName(arr.name.name, BindTypes.var, arr);
+                declarators.push(arr);
                 hasComma = false;
             } else {
                 const id = this.parseSingleVarDeclarator();
@@ -592,15 +594,15 @@ export class StatementParser extends ExpressionParser {
         if (node.id instanceof Identifier) {
             const declared = this.checkVarDeclared(node.id.name, node.id);
             if (declared) {
-                let declareType: DeclarationBase | undefined;
-                this.getExprType(node.assignment, { type: declareType });
-                if (declareType) {
+                let declareType: { type: DeclarationBase | undefined } = { type: undefined };
+                this.getExprType(node.assignment, declareType);
+                if (declareType.type) {
                     this.scope.update(
                         node.id.name,
                         BindTypes.var,
-                        declareType,
+                        declareType.type,
                         node.assignment);
-                    this.addExtra(node.id, "declaration", declareType);
+                    this.addExtra(node.id, "declaration", declareType.type);
                 }
             }
         }
@@ -786,10 +788,10 @@ export class StatementParser extends ExpressionParser {
         const node = this.startNode(WithStatement);
         this.next();
         node.object = this.parseExpression();
-        let type: DeclarationBase | undefined;
-        this.getExprType(node.object, { type: type });
-        if (type) {
-            this.scope.enterHeader(type);
+        let type: { type: DeclarationBase | undefined } = { type: undefined };
+        this.getExprType(node.object, type);
+        if (type.type) {
+            this.scope.enterHeader(type.type);
         }
         node.body = this.parseBlock(tt._end);
         this.expect(tt._end);
@@ -1007,6 +1009,7 @@ export class StatementParser extends ExpressionParser {
         this.expect(tt._end);
         isFunction ? this.expect(tt._function) : this.expect(tt._sub);
         this.scope.exit();
+        this.scope.declareName(node.name.name, BindTypes.function, node);
         return this.finishNode(node, "FunctionDeclaration");
     }
 
@@ -1133,6 +1136,7 @@ export class StatementParser extends ExpressionParser {
         node.defType = this.match(tt._interface) ? "interface" : "class";
         this.checkIfDeclareFile(this.state.value);
         this.next();
+        this.scope.enter(ScopeFlags.classOrInterface);
         node.name = this.parseIdentifier();
         if (this.eat(tt.braceL)) {
             this.expect(tt._of);
@@ -1173,6 +1177,7 @@ export class StatementParser extends ExpressionParser {
         } else {
             this.expect(tt._interface);
         }
+        this.scope.exit();
         this.scope.declareName(
             node.name.name,
             BindTypes.classOrInterface,

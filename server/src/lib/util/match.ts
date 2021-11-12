@@ -46,3 +46,17 @@ export function isConversionFunction(name: string) {
     return conversionFunctions.has(name.toLowerCase());
 }
 
+const basicType = new Set([
+    "categorical",
+    "boolean",
+    "string",
+    "date",
+    "long",
+    "double"
+]);
+
+export function isBasicType(name: string) {
+    return basicType.has(name.toLowerCase());
+}
+
+
