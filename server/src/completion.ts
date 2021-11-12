@@ -10,6 +10,7 @@ import {
 import {
     CompletionItem,
     CompletionItemKind,
+    Hover,
     MarkupKind
 } from 'vscode-languageserver-types';
 import { distanceTo, positionAt, positionInWith } from "./lib/file/util";
@@ -348,4 +349,11 @@ export function getCompletionFromPosition(
 
 
 export { keywordsCompletions, preKeywordsCompletions, builtInCompletions };
+
+
+export function getHoverFromDeclaration(dec: DeclarationBase): Hover {
+    return {
+        contents: getDeclarationNote(dec)
+    };
+}
 

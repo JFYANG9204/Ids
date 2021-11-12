@@ -18,6 +18,7 @@ import {
 import {
     builtInCompletions,
     getCompletionFromPosition,
+    getHoverFromDeclaration,
     keywordsCompletions,
     preKeywordsCompletions
 } from "./completion";
@@ -110,6 +111,7 @@ connection.onHover(params => {
     const node = positionAt(currentFile.program.body, pos, true, 0);
     let dec: DeclarationBase | undefined = node.extra["declaration"];
     if (dec) {
+        hover = getHoverFromDeclaration(dec);
     }
     return hover;
 });

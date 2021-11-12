@@ -143,7 +143,6 @@ export class TypeUtil extends UtilParser {
                 }
                 break;
             case "MacroDeclaration":
-            case "ClassOrInterfaceDeclaration":
                 if (this.options.raiseTypeError) {
                     this.raiseAtNode(
                         node,
@@ -151,6 +150,7 @@ export class TypeUtil extends UtilParser {
                         false);
                 }
                 break;
+            case "ClassOrInterfaceDeclaration":
 
             default:
                 break;
@@ -326,6 +326,14 @@ export class TypeUtil extends UtilParser {
                     BindTypes.var,
                     rightType.type,
                     expr);
+                if (expr.treeParent &&
+                    expr.treeParent.type !== "SetStatement" &&
+                    !isBasicType(rightType.type.name.name)) {
+                    this.raiseAtNode(
+                        expr,
+                        WarningMessages["AssignmentMaybeObject"],
+                        true);
+                }
             } else {
                 this.undefined(expr.left, expr.left.name);
                 this.scope.declareUndefined(
@@ -333,7 +341,7 @@ export class TypeUtil extends UtilParser {
                     rightType.type);
             }
             if (left) {
-                this.addExtra(expr.left, "declaration", left);
+                this.addExtra(expr.left, "declaration", rightType.type);
             }
         } else {
             let leftType: { type: DeclarationBase | undefined } = { type: undefined };
