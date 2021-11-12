@@ -1,4 +1,3 @@
-import * as vscode from "vscode";
 import * as path from "path";
 import * as fs from "fs";
 import * as jschardet from "jschardet";
@@ -6,12 +5,10 @@ import * as iconv from "iconv-lite";
 import { lineBreak } from "../util/whitespace";
 import {
     File,
-    Identifier,
     NodeBase,
     WithStatement
 } from "../types";
 import { createBasicOptions, SourceType } from "../options";
-import { DefinitionBase } from "../util/definition";
 import { Scope } from "../util/scope";
 import { Parser } from "../parser";
 
@@ -242,35 +239,3 @@ export function getCurrentParser(file: File, path: string): File | undefined {
     }
     return undefined;
 }
-
-export function getHoverContentFromNode(node: NodeBase, def: DefinitionBase, declared: boolean): string {
-    if (node instanceof Identifier &&
-        declared && def.defType !== "macro") {
-        return "```ds\n" + `(variant) ${node.name}: ${def.name}\n` + "```";
-    }
-    return def.getNote();
-}
-
-export function loadBuiltInModule(modulePath?: string) {
-    let folder;
-    if (modulePath) {
-        folder = path.join(modulePath, "./server/src/lib/built_in_modules");
-    } else {
-        folder = path.resolve("./server/src/lib/built_in_modules");
-    }
-    const module = getAllUsefulFile(folder);
-    return loadDecarationFiles(module);
-}
-
-export function loadDecarationFiles(files: Map<string, string>) {
-    let scope: Scope | undefined;
-    files.forEach((f, p) => {
-        const parser = new Parser(createBasicOptions(p, false), f);
-        const file = parser.parse(scope ?? undefined);
-        if (file.scope) {
-            scope = file.scope;
-        }
-    });
-    return scope;
-}
-

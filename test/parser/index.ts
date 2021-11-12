@@ -5,13 +5,12 @@ import {
 import {
     ParserFileDigraph
 } from "../../server/src/lib/file";
-import { getCurrentParser, getFileTypeMark, loadBuiltInModule, positionAt, positionInWith, readFileAndConvertToUtf8 } from "../../server/src/lib/file/util";
+import { getCurrentParser, getFileTypeMark, positionAt, positionInWith, readFileAndConvertToUtf8 } from "../../server/src/lib/file/util";
 import { createBasicOptions } from "../../server/src/lib/options";
 import { Parser } from "../../server/src/lib/parser";
 
 const folderPath = resolve("./test/parser/fixture/dpgm");
 const startPath = resolve("./test/parser/fixture/dpgm/Run.mrs");
-const builtin = loadBuiltInModule();
 //const graph = new ParserFileDigraph(folderPath);
 //graph.init();
 //graph.setStart(startPath);
@@ -23,5 +22,5 @@ const builtin = loadBuiltInModule();
 const testpath = resolve("./test/parser/fixture/test.mrs");
 const content = readFileAndConvertToUtf8(testpath);
 const parser = new Parser(createBasicOptions(testpath, true), content);
-const file = parser.parse(builtin);
+const file = parser.parse();
 console.log("end");

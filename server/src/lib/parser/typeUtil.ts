@@ -13,7 +13,6 @@ import {
     MacroDeclaration,
     MemberExpression,
     NodeBase,
-    PreDefineStatement,
     PropertyDeclaration,
 } from "../types";
 import { isConversionFunction } from "../util/match";

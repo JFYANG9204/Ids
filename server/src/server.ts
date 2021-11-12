@@ -1,15 +1,11 @@
-import * as vscode from "vscode";
 import { fileURLToPath } from "url";
 import { TextDocument } from "vscode-languageserver-textdocument";
 import {
     CompletionItem,
     createConnection,
-    Definition,
     Hover,
     InitializeResult,
-    LocationLink,
     ProposedFeatures,
-    Range,
     TextDocumentPositionParams,
     TextDocuments,
     TextDocumentSyncKind
@@ -21,16 +17,14 @@ import {
 import {
     builtInCompletions,
     getCompletionFromPosition,
-    getCompletionsFromDefinitions,
     keywordsCompletions,
     preKeywordsCompletions
 } from "./completion";
 import {
+    loadBuiltInModule,
     updateAndVaidateDocument,
 } from "./util";
 import {
-    getHoverContentFromNode,
-    loadBuiltInModule,
     positionAt,
 } from "./lib/file/util";
 import { DefinitionBase } from "./lib/util/definition";
@@ -42,7 +36,7 @@ let last: Map<string, File> = new Map();
 let graph: ParserFileDigraph;
 let folderPath: string;
 
-const builtInDeclarations = loadBuiltInModule(vscode.extensions.getExtension("publisher.Yang")?.extensionPath);
+const builtInModule = loadBuiltInModule();
 
 connection.onInitialize((params) => {
     const result: InitializeResult = {
@@ -57,7 +51,7 @@ connection.onInitialize((params) => {
     };
     if (params.workspaceFolders) {
         folderPath = fileURLToPath(params.workspaceFolders[params.workspaceFolders.length - 1].uri);
-        graph = new ParserFileDigraph(folderPath, builtInDeclarations);
+        graph = new ParserFileDigraph(folderPath, builtInModule);
         graph.init();
     }
     return result;
@@ -120,7 +114,6 @@ connection.onHover(params => {
             def.defType === "object" || def.isBasic)) {
             declared = false;
         }
-        hover = { contents: getHoverContentFromNode(node, def, declared) };
     }
     return hover;
 });

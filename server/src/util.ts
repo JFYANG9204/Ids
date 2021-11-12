@@ -1,3 +1,4 @@
+import { join } from "path";
 import { fileURLToPath } from "url";
 import { _Connection } from "vscode-languageserver";
 import {
@@ -5,10 +6,16 @@ import {
 } from "vscode-languageserver-textdocument";
 import { raiseErrors } from "./errors";
 import { ParserFileDigraph } from "./lib/file";
-import { getCurrentParser, getFileTypeMark, readFileAndConvertToUtf8 } from "./lib/file/util";
+import {
+    getAllUsefulFile,
+    getCurrentParser,
+    getFileTypeMark,
+    readFileAndConvertToUtf8
+} from "./lib/file/util";
 import { createBasicOptions } from "./lib/options";
 import { Parser } from "./lib/parser";
 import { File } from "./lib/types";
+import { Scope } from "./lib/util/scope";
 
 
 
@@ -83,3 +90,20 @@ export function createSingleParser(path: string, content?: string, uri?: string)
     return new Parser(createBasicOptions(path, false, uri), text);
 }
 
+export function loadBuiltInModule() {
+    const folder = join(__dirname, "../src/lib/built_in_modules");
+    const module = getAllUsefulFile(folder);
+    return loadDecarationFiles(module);
+}
+
+export function loadDecarationFiles(files: Map<string, string>) {
+    let scope: Scope | undefined;
+    files.forEach((f, p) => {
+        const parser = new Parser(createBasicOptions(p, false), f);
+        const file = parser.parse(scope ?? undefined);
+        if (file.scope) {
+            scope = file.scope;
+        }
+    });
+    return scope;
+}
