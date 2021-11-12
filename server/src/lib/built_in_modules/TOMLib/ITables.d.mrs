@@ -49,8 +49,8 @@ Namespace TOMLib
 
         ### Example
         ```ds
-        Set TheTable = TableDoc.Tables[\"MyTable1\"]
-        TableDoc.Tables.Remove(\"MyTable1\")
+        Set TheTable = TableDoc.Tables["MyTable1"]
+        TableDoc.Tables.Remove("MyTable1")
         TableDoc.Tables.Add(TheTable, 42)
         ```
         !'
@@ -59,26 +59,26 @@ Namespace TOMLib
 
     '!
     ```ds
-    (method) ITables.AddNew(Name: String, [Specification: String = \"\"], [Description: String = \"\"], [Index: Long = -1]): ITable
+    (method) ITables.AddNew(Name: String, [Specification: String = ""], [Description: String = ""], [Index: Long = -1]): ITable
     ```
     --------------------
     Creates a new Table object and adds it to the collection.
 
     ### Remarks
-    The new table created is based on the supplied specification string, which has the form \"[SideAxis] * [TopAxis] * [LayerAxis]\". For more information, see Table Specification Syntax. The AddNew() method is used to added tables of type 'ttAggregated'. When populated the table contains the aggregated counts of the answers that the respondents gave, and also possibly other values derived from those counts (e.g. column percentages based on the counts).
+    The new table created is based on the supplied specification string, which has the form "[SideAxis] * [TopAxis] * [LayerAxis]". For more information, see Table Specification Syntax. The AddNew() method is used to added tables of type 'ttAggregated'. When populated the table contains the aggregated counts of the answers that the respondents gave, and also possibly other values derived from those counts (e.g. column percentages based on the counts).
 
     ### Example
-    1. \"gender\" nested within \"age\" on the side and \"cost\" on the top axis.
+    1. "gender" nested within "age" on the side and "cost" on the top axis.
     ```ds
-    TableDoc.Tables.AddNew(\"Table1\", \"age > gender * cost\")
+    TableDoc.Tables.AddNew("Table1", "age > gender * cost")
     ```
-    2. Using the axis objects called \"brandlist\" and \"demogs\" that exist within the Document.Axes collection
+    2. Using the axis objects called "brandlist" and "demogs" that exist within the Document.Axes collection
     ```ds
-    TableDoc.Tables.AddNew(\"Table2\", \"axis(brandlist) * axis(demogs)\")
+    TableDoc.Tables.AddNew("Table2", "axis(brandlist) * axis(demogs)")
     ```
-    3. No side axis and a top axis based on the \"cost\" variable
+    3. No side axis and a top axis based on the "cost" variable
     ```ds
-    TableDoc.Tables.AddNew(\"Table3\", \" * cost\")
+    TableDoc.Tables.AddNew("Table3", " * cost")
     ```
     !'
     Function AddNew(Name As String, Optional Specification As String = "", Optional Description As String = "", Optional Index As Long = -1) As ITable
@@ -86,7 +86,7 @@ Namespace TOMLib
 
     '!
     ```ds
-    (method) ITables.AddNewGrid(Name: String, Field: String, [Orientation: DisplayOrientation = doDefault], [Description: String = \"\"], [Index: Long = -1]): ITable
+    (method) ITables.AddNewGrid(Name: String, Field: String, [Orientation: DisplayOrientation = doDefault], [Description: String = ""], [Index: Long = -1]): ITable
     ```
     --------------------
     Constructs a new Table object from a grid or an array and adds it into the `Tables` collection.
@@ -96,7 +96,7 @@ Namespace TOMLib
     + ***Name*** - The name used to reference the table in the collection
     + ***Field*** - The name of an MDM grid or array field tabulate.
     + ***Orientation*** - The display orientation of the table. This controls whether the iterations of the grid or array appear on the side or top axis of the table (corresponding to the rows and columns respectively)
-    + ***Description*** - An optional description for the table, e.g. \"Table of interest rating of exhibits\". This is can be used as an annotation on the resulting table.
+    + ***Description*** - An optional description for the table, e.g. "Table of interest rating of exhibits". This is can be used as an annotation on the resulting table.
     + ***Index*** - The position in the collection to insert the table. See the `ITables.AddNew` method for more information on the `Index` parameter. The default is for the table to be appended to the end of the collection.
 
     ### Remarks
@@ -107,9 +107,9 @@ Namespace TOMLib
 
     ### Example
     ```ds
-    AddNewGrid(\"RatingTable\", \"rating\")
+    AddNewGrid("RatingTable", "rating")
     ' will be converted to (assuming the display orientation is doRow)
-    AddNew(\"RatingTable\", \"rating * rating.column\")
+    AddNew("RatingTable", "rating * rating.column")
     ```
     !'
     Function AddNewGrid(Name As String, Field As String, Optional Orientation As DisplayOrientation = doDefault, Optional Description As String = "", Optional Index As Long = -1) As ITable
@@ -117,7 +117,7 @@ Namespace TOMLib
 
     '!
     ```ds
-    (method) ITables.AddNewProfile(Name: String, [Specification: String = \"\"], [Description: String = \"\"], [Index: Long = -1]): ITable
+    (method) ITables.AddNewProfile(Name: String, [Specification: String = ""], [Description: String = ""], [Index: Long = -1]): ITable
     ```
     --------------------
     Creates a new profile `Table` object and adds it to the collection.
@@ -127,7 +127,7 @@ Namespace TOMLib
 
     ### Example
     ```ds
-    TableDoc.Tables.AddNewProfile(\"Table1\", \"profile({device, likesmost, likesleast})\")
+    TableDoc.Tables.AddNewProfile("Table1", "profile({device, likesmost, likesleast})")
     ```
     !'
     Function AddNewProfile(Name: String, Optional Specification As String = "", Optional Description As String = "", Optional Index As Long = -1) As ITable

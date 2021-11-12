@@ -52,7 +52,7 @@ Namespace TOMLib
 
         ### Example
         ```ds
-        Table.Annotations[annLeftHeader].Specification = \"Weight Variable: {Weight}\"
+        Table.Annotations[annLeftHeader].Specification = "Weight Variable: {Weight}"
         ```
         !'
         Property Specification() As String

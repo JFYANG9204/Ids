@@ -42,20 +42,20 @@ Namespace TOMLib
         A reference to the element to sort on
 
         ### Remarks
-        The reference to the element to sort on is specified as \"AxisName{ElementName}\" where `AxisName` must be the name of an axis within the 'Side' axis for a `SortRow` and the 'Top' axis for a `SortColumn`. `ElementName` must be the name of an element within that axis. Nested axes can be referenced by using the '>' symbol.
-        The first or last row/column can be referenced by specifying the keyword \"First\" or \"Last\" as the `ElementRef`.
-        The single row or column that exists in a frequency table can be referenced by specifying the keyword \"Base\".
+        The reference to the element to sort on is specified as "AxisName{ElementName}" where `AxisName` must be the name of an axis within the 'Side' axis for a `SortRow` and the 'Top' axis for a `SortColumn`. `ElementName` must be the name of an element within that axis. Nested axes can be referenced by using the '>' symbol.
+        The first or last row/column can be referenced by specifying the keyword "First" or "Last" as the `ElementRef`.
+        The single row or column that exists in a frequency table can be referenced by specifying the keyword "Base".
         If no value is specified for the `ElementRef` property then the table is not sorted.
         `ElementRef` is the default property for the `SortSpecification` object and so is optional as shown in the following examples.
 
         ### Examples
         ```ds
-        Table.SortRow = \"\"          ' No sorting
-        Table.SortColumn = \"Base\"   ' Sort on the base column in a frequency table
-        Table.SortRow = \"Age{Base}\"
-        Table.SortRow.ElementRef = \"Age{Base}\"      ' Equivalent to above as ElementRef is the default property
-        Table.SortRow = \"Age{E1116_years}>Gender{Female}\"
-        Table.SortColumn = \"Last\"   ' Sort on the last column in a table (that has multiple columns)
+        Table.SortRow = ""          ' No sorting
+        Table.SortColumn = "Base"   ' Sort on the base column in a frequency table
+        Table.SortRow = "Age{Base}"
+        Table.SortRow.ElementRef = "Age{Base}"      ' Equivalent to above as ElementRef is the default property
+        Table.SortRow = "Age{E1116_years}>Gender{Female}"
+        Table.SortColumn = "Last"   ' Sort on the last column in a table (that has multiple columns)
         ```
         !'
         Property ElementRef() As String

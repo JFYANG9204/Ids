@@ -53,7 +53,7 @@ Namespace TOMLib
 
         ### Example
         ```ds
-        MyAgeAxis.Elements.Add(\"E65_years\")
+        MyAgeAxis.Elements.Add("E65_years")
         ```
         !'
         Function Add(ElementName As String, Optional Index As Long = -1) As IElement
@@ -96,7 +96,7 @@ Namespace TOMLib
 
         ### Example
         ```ds
-        MyAgeAxis.Elements.AddNew(\"meanage\", eMean)   ' Add a factor based mean value
+        MyAgeAxis.Elements.AddNew("meanage", eMean)   ' Add a factor based mean value
         ``
         !'
         Function Add(ElementName As String, Optional Index As Long = -1) As IElement
@@ -111,12 +111,12 @@ Namespace TOMLib
 
         ### Remarks
         Adds a new `Element` object based on an MDM variable and element into the collection. The `NewElementName` is the name to be given to the element created by `AddNewFromMdmVariable`. The `MdmVariableName` must be the name of an existing MDM variable, and the `MdmElementName` must be the name of an element within that variable.
-        If the MDM element is a category element, the newly created TOM element will be an expression element. If the MDM element is of any other type, the `TOM` element will be set to the same type as the one it is based on. If the MDM element has data, an expression of `\"MdmVariableName >= {MdmElementName}\"` is set on the TOM element.
+        If the MDM element is a category element, the newly created TOM element will be an expression element. If the MDM element is of any other type, the `TOM` element will be set to the same type as the one it is based on. If the MDM element has data, an expression of `"MdmVariableName >= {MdmElementName}"` is set on the TOM element.
         Properties on the MDM element, such as decimal places and whether the element is hidden, are copied to the TOM element as it is created. Thereafter, the element behaves like one created with `IElements.AddNew` rather than IElements.Add in that, if a property on the MDM element is changed after the new element is created, the TOM element's property will remain unchanged.
 
         ### Example
         ```ds
-        MyAgeAxis.Elements.AddNewFromMdmVariable(\"age65\", \"age\", \"E65_years\")
+        MyAgeAxis.Elements.AddNewFromMdmVariable("age65", "age", "E65_years")
         ```
         !'
         Function AddNewFromMdmVariable(NewElementName As String, MdmVariableName As String, MdmElementName As String, Optional Index As Long = -1) As IElement

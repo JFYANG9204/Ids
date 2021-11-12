@@ -85,7 +85,7 @@ Namespace TOMLib
 
         ### Example
         ```ds
-        TableDoc.Exports[\"mrHtmlExport\"].Export(\"C:\\tables\\agebygender.htm\", \"Table4\")
+        TableDoc.Exports["mrHtmlExport"].Export("C:\tables\agebygender.htm", "Table4")
         ```
         !'
         Function Export(Optional Destination As Variant, Optional Tables As Variant) As Variant

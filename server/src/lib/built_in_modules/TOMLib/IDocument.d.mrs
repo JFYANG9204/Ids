@@ -197,11 +197,11 @@ Namespace TOMLib
         Dim DocCreator
 
         Set DocCreator = TableDoc.Properties.CreateProperty()
-        DocCreator.Name = \"DocumentCreator\"
-        DocCreator.Value = \"Sam Smith, Acme Research Limited\"
+        DocCreator.Name = "DocumentCreator"
+        DocCreator.Value = "Sam Smith, Acme Research Limited"
         TableDoc.Properties.Add(DocCreator)
 
-        Debug.Echo(\"Document Creator: \" + TableDoc.Properties.Item[\"DocCreator\"])
+        Debug.Echo("Document Creator: " + TableDoc.Properties.Item["DocCreator"])
         ```
         !'
         ReadOnly Property Properties() As IProperties
@@ -268,8 +268,8 @@ Namespace TOMLib
         If the `IStyle.Image` property doesn't refer to an absolute HTTP address then the ImageLocation property should be used to specify the location of the images. Any export that makes use of the `IStyle.Image` property will typically prefix relative image locations directly with the value of the `ImageLocation` property. For this reason, make sure the `ImageLocation` ends with a forwardslash or backslash as appropriate.
         Typical values for this property might be:
         + An empty string if the images reside in the same location as the exported table document.
-        + A local path, e.g. \"C:\\images\\\"
-        + A URL to an HTTP server, e.g. \"HTTP://www.server.com/images/\"
+        + A local path, e.g. "C:\images\"
+        + A URL to an HTTP server, e.g. "HTTP://www.server.com/images/"
         !'
         Property ImageLocation() As String
 
@@ -302,7 +302,7 @@ Namespace TOMLib
         (property) IDocument.Language: String
         ```
         --------------------
-        The document language. The language can be the three-character language code (such as \"ENU\"), the language long name, which is the localized name of the language and the country where it is spoken, such as \"English (United States)\" or the XML-name.
+        The document language. The language can be the three-character language code (such as "ENU"), the language long name, which is the localized name of the language and the country where it is spoken, such as "English (United States)" or the XML-name.
 
         ### Remarks
         The language set via this property becomes the current language for the data set (or more precisely, the MDM Document) that this table document is based on.
@@ -462,14 +462,14 @@ Namespace TOMLib
         + ***IncludeResults*** - If the previously saved table document had been populated then it may contain cell values. If `IncludeResults` is *False* then these values will not be loaded with the rest of the document. This will make the call to the `Open` method slightly faster.
 
         ### Remarks
-        The `Open` method can \"open\" the table document from a file on disk or read it out of a previously loaded `XML DOM` document.
+        The `Open` method can "open" the table document from a file on disk or read it out of a previously loaded `XML DOM` document.
         !'
         Function Open(Source As Variant, Optional IncludeResults As Boolean = 1) As String
         End Function
 
         '!
         ```ds
-        (method) IDocument.OpenWithDataSet(Source: Variant, [IncludeResults: Boolean = 1], MetaData: Variant, [MDSC: String = \"\"], [DbLocation: String = \"\"], [CDSC: String = \"\"], [Project: String = \"\"], [Version: String = {..}]): String
+        (method) IDocument.OpenWithDataSet(Source: Variant, [IncludeResults: Boolean = 1], MetaData: Variant, [MDSC: String = ""], [DbLocation: String = ""], [CDSC: String = ""], [Project: String = ""], [Version: String = {..}]): String
         ```
         --------------------
         Opens a previously saved table document with the specified metadata and case data.
@@ -482,7 +482,7 @@ Namespace TOMLib
         + ***DbLocation*** - The location of the case data to use. The format of this string depends on the `CDSC`
         + ***CDSC*** - The case data dsc to use e.g. *mrQdiDrsDsc*
         + ***Project*** - The project name to use if the `CDSC` supports multiple projects. Otherwise this parameter is ignored.
-        + ***Version*** - A version specified for the metadata to use. The default specification string is \"{..}\" (the 'SuperVersion') which means to use all locked versions in the metadata.
+        + ***Version*** - A version specified for the metadata to use. The default specification string is "{..}" (the 'SuperVersion') which means to use all locked versions in the metadata.
 
         ### Remarks
         The `IDocument.Open` method automatically reloads the metadata that is specified in the saved table document. The `IDocument.OpenWithDataSet` method is used to override the metadata and case data information that is stored in the saved table document. If this method is used any information about the metadata and case data stored in the saved file is ignored. `IDocument.OpenWithDataSet` is typically used if the location of the metadata has changed since the document was last saved.
@@ -500,7 +500,7 @@ Namespace TOMLib
         ### Parameters
         + ***Tables*** - A list of tables to populate. If this parameter is not specified, then all tables in the document are populated. A restricted set of tables can be specified using any of the following techniques:
             - An empty string means populate no tables (the method call does nothing)
-            - A value of \"*\" means populate all tables
+            - A value of "*" means populate all tables
             - A string containing the name of a single table populates just that table
             - A comma separated list of table names will populate all tables in the list
             - An array of table names will populate all tables specified in the array
@@ -563,7 +563,7 @@ Namespace TOMLib
         + ***IncludeResults*** - If the parameter is *False*, then the cell values for all tables are not saved. This makes the call to the `Save` method slightly faster and the resulting document smaller.
 
         ### Remarks
-        The Save method can \"save\" the table document to either a file on disk or to an in-memory `XML DOM`.
+        The Save method can "save" the table document to either a file on disk or to an in-memory `XML DOM`.
         The cell values for profile tables are not saved if `IDocument.SaveProfileResults` is *False*, even if the `IncludeResults` parameter of the `Save()` method is *True*.
         !'
         Sub Save(Destination As Variant, Optional IncludeResults As Boolean = 1)

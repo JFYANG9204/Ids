@@ -72,13 +72,13 @@ Namespace TOMLib
         ### Examples
         ```ds
         ' Display the value as the name of the category
-        CellItem.FormatExpression = \"Format(Value, 'a')\"
+        CellItem.FormatExpression = "Format(Value, 'a')"
 
         ' Display the numeric value in scientific format with 5 decimal places, e.g.  2.34567e+003
-        CellItem.FormatExpression = \"Format(Value, 'e5')\"
+        CellItem.FormatExpression = "Format(Value, 'e5')"
 
         ' Display the first 100 characters of a text response
-        CellItem.FormatExpression = \"Left(Value, 100)\"
+        CellItem.FormatExpression = "Left(Value, 100)"
         ```
         !'
         Property FormatExpression() As String
@@ -150,7 +150,7 @@ Namespace TOMLib
         + itExpectedValues
         + itIndices
 
-        It is possible for the variable to be specified as \"-\". This is a special code that means \"look at the `AnalysisVariable` property on the `Element` object to determine the Variable for this cell\". This is useful in the creation of summary tables for numeric variables. The columns of the table are created from multiple *eNumeric* elements, each based on a different numeric variable. Cell items like *itMean*, *itMinimum*, *itMaximum* based on an variable of \"-\" can be requested for the body of the table. The result is that each column of mean, min, and max values is based on a different numeric variable.
+        It is possible for the variable to be specified as "-". This is a special code that means "look at the `AnalysisVariable` property on the `Element` object to determine the Variable for this cell". This is useful in the creation of summary tables for numeric variables. The columns of the table are created from multiple *eNumeric* elements, each based on a different numeric variable. Cell items like *itMean*, *itMinimum*, *itMaximum* based on an variable of "-" can be requested for the body of the table. The result is that each column of mean, min, and max values is based on a different numeric variable.
         !'
         Property Variable() As String
 

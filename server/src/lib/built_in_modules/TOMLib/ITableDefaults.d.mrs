@@ -6,7 +6,7 @@ Namespace TOMLib
     (interface) ITableDefaults
     ```
     -----------------------------
-    The `TableDefaults` object contains properties that define the initial state of a newly created Table object. These default properties are set to \"sensible\" values when the `Document` object is first created. These initial defaults allow simple tables to be created with a minimal amount of code. Separate TableDefaults objects are used for aggregated and profile tables (IDocument.Default and IDocument.ProfileDefault respectively).
+    The `TableDefaults` object contains properties that define the initial state of a newly created Table object. These default properties are set to "sensible" values when the `Document` object is first created. These initial defaults allow simple tables to be created with a minimal amount of code. Separate TableDefaults objects are used for aggregated and profile tables (IDocument.Default and IDocument.ProfileDefault respectively).
     !'
     Interface ITableDefaults Implements Object
 
@@ -19,10 +19,10 @@ Namespace TOMLib
 
         ### Remarks
         The following annotations are initially specified:
-        + **Title** Header = \"{ProjectDescription}\"
-        + **Left** Header = \"{TableDescription}{Filters}\"
-        + **Right** Header = \"{TableNumber}{WeightVariable}{Level}\"
-        + **Left** Footer = \"{CellContents}{Statistics}{Rules}\"
+        + **Title** Header = "{ProjectDescription}"
+        + **Left** Header = "{TableDescription}{Filters}"
+        + **Right** Header = "{TableNumber}{WeightVariable}{Level}"
+        + **Left** Footer = "{CellContents}{Statistics}{Rules}"
 
         The default annotations for profile tables (`IDocument.ProfileDefault.Annotations`) have an empty left footer annotation by default as statistics and rules aren't applicable to profile tables and there is only ever one cell item so the CellContents annotation is redundant.
         !'

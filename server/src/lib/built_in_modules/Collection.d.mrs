@@ -14,14 +14,14 @@ The following example creates a list of strings and then iterates through the st
 ```vb
 ' Create a list of strings.
 Dim salmons As New List(Of String)
-salmons.Add(\"chinook\")
-salmons.Add(\"coho\")
-salmons.Add(\"pink\")
-salmons.Add(\"sockeye\")
+salmons.Add("chinook")
+salmons.Add("coho")
+salmons.Add("pink")
+salmons.Add("sockeye")
 
 ' Iterate through the list.
 For Each salmon As String In salmons
-    Console.Write(salmon & \" \")
+    Console.Write(salmon & " ")
 Next
 'Output: chinook coho pink sockeye
 ```

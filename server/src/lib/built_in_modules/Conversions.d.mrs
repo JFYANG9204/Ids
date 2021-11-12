@@ -51,7 +51,7 @@ Converts a value of any data type to a *Categorical* value.
 ### Remarks
 The result of the conversion depends on the data type of Val, as follows:
 + **Long** - The return value contains a single category whose value is `Val`.
-+ **Text** - The function parses the string as a comma-separated list of either category values or names. Category values must be of the form \"{1,2,0}\", and the return value contains each listed value, in the order given. Category names must be of the form \"{married,single,widowed,other}\", which the function will convert to a list of category values. You can omit the braces if the value to be converted is a single category value or name. Note that Val cannot consist of a category expression.
++ **Text** - The function parses the string as a comma-separated list of either category values or names. Category values must be of the form "{1,2,0}", and the return value contains each listed value, in the order given. Category names must be of the form "{married,single,widowed,other}", which the function will convert to a list of category values. You can omit the braces if the value to be converted is a single category value or name. Note that Val cannot consist of a category expression.
 + **Categorical** - `Val` is returned unchanged.
 + **Double, Date, or Boolean** - An error occurs.
 + **Object** - If the object has a default property, the value of that property is converted. Otherwise an error occurs.
@@ -204,13 +204,13 @@ Converts a value of any data type to a *Text* value.
 
 ### Remarks
 The result of the conversion depends on the data type of `Val`, as follows:
-+ **Boolean** - The return value is \"True\" or \"False\" or their locale equivalents.
++ **Boolean** - The return value is "True" or "False" or their locale equivalents.
 + **Long or Double** - The string contains the number formatted according to the locale.
 + **Date** - The string contains the date formatted according to the locale.
 + **Text** - `Val` is returned unchanged.
-+ **Categorical** - The string is of the form \"{1,2,0}\", where the numbers are the values of the categories in `Val` (formatted using digits only, ignoring the locale).
++ **Categorical** - The string is of the form "{1,2,0}", where the numbers are the values of the categories in `Val` (formatted using digits only, ignoring the locale).
 + **Object** - If the object has a default property, the value of that property is converted. Otherwise an error occurs.
-+ **NULL** - If `Val` is *NULL*, the return value is an empty string (\"\").
++ **NULL** - If `Val` is *NULL*, the return value is an empty string ("").
 
 This function is similar to `CStr` in Visual Basic.
 

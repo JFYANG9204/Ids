@@ -29,7 +29,7 @@ Class String
     Except for the Count style (s, described in the table below), if Val is an array or a categorical value, the result is a comma-separated list of the results of applying the given style code (or codes) to each item or element in turn (in this case, `Val` in the table below refers to each individual item or element, not the whole array). No attempt is made to differentiate the separator character from any occurrences of the same character in the individual formatted values. Note that this gives the same result for a categorical value as for an array of long values. Note also that, if an array contains values of different types, the style code (or codes) may be interpreted differently for different items. If `Width` is specified, it is applied to the whole list, not to individual items.
     Except for special cases described in the table below, the value is converted to the expected type, using the input locale where necessary to interpret strings. For an object, the value of the object’s default property is used (in this case, `Val` below refers to the retrieved value). If any error occurs in retrieving an object’s properties, or in converting a value to the expected type, the result for that value is “”, except where noted below.
     Where formatting is affected by locale settings, the system settings for the locale are used, ignoring any “user overrides” (changes made to regional settings by the user currently logged in to the server).
-    Except for the Count style (s, described below), if `Val` is *NULL*, the result is an empty string (\"\").
+    Except for the Count style (s, described below), if `Val` is *NULL*, the result is an empty string ("").
 
     #### Applying Multiple Styles
     If `Style` consists of more than one formatting code, each code is applied in turn to Val as described in “Applying a Style” above. Because the result of applying the first code will always be a text value, subsequent codes should only be those that are relevant to text values, for example, LowerFirst, Count, or UpperAll (*l*, *s*, or *U*, described below).
@@ -114,23 +114,23 @@ Class String
 
     | Function call                                             | Result             |
     | :---------                                                | :-----------------------  |
-    | Format(CDate(\"2004-12-02 15:49:31\"), \"f\", , 1046)                   | \"quinta-feira, 2 de dezembro de 2004 15:49:31\"                                     |
-    | Format(CDate(\"2004-12-02 15:49:31\"), \"f\", , 1052)                   | \"2004-12-02 3:49:31.MD \"                                                           |
-    | Format(MDM.Fields[\"person.trip.purpose\"], \"a\")                      | \"purpose\"                                                                          |
-    | Format(MDM.Fields[\"person.trip.purpose\"], \"A\")                      | \"person[..].trip[..].purpose\"                                                      |
-    | Format(MDM.Fields[\"person.trip.purpose\"], \"b\")                      | \"Purpose of trip\"                                                                  |
-    | Format(MDM.Variables[\"person[2].tvdays[{Channel_3}].Column\"], \"a\")  | \"Column\"                                                                           |
-    | Format(MDM.Variables[\"person[2].tvdays[{Channel_3}].Column\"], \"A\")  | \"person[2].tvdays[{Channel_3}].Column\"                                             |
-    | Format(MDM.Variables[\"person[2].tvdays[{Channel_3}].Column\"], \"b\")  | \"Number of days watched last week\"                                                 |
-    | Format(MDM.Variables[\"person[2].tvdays[{Channel_3}].Column\"], \"B\")  | \"2,{Channel_3} : Number of days watched last week\"                                 |
-    | Format(MDM.Fields[\"person.newspapers\"], \"v=EffectiveMaxValue\")      | \"12\"                                                                               |
-    | Format(MDM.CategoryMap, \"v=Count\")                                    | \"125\"                                                                              |
-    | Format(MDM.Variables[\"person[6].occupation\"], \"V=hascasedata\")      | \"True\"                                                                             |
-    | Format(MDM, \"V=URL\")                                                  | \"[INSTALL_FOLDER]\\IBM\\SPSS\\DataCollection\\6\\DDL\\Data\\Data Collection File\\household.mdd\"    |
-    | Format(MDM.URL, \"L\")                                                  | \"[INSTALL_FOLDER]\\ibm\\spss\\datacollection\\6\\ddl\\data\\data collection file\\household.mdd\"  |
-    | Format(MDM.URL, \"U\")                                                  | \"[INSTALL_FOLDER]\\IBM\\SPSSDATACOLLECTION\\6\\DDL\\DATA\\DATA COLLECTION FILE\\HOUSEHOLD.MDD\" |
-    | MDM.MDMVersion.Split(\".\").Format(\"d4\")                              | \"0002,0010,0000,1664\" |
-    | Format(MDM.Variables[\"person[2].tvdays[{Channel_3}].Column\"], \"b;l\")| \"number of days watched last week\" |
+    | Format(CDate("2004-12-02 15:49:31"), "f", , 1046)                   | "quinta-feira, 2 de dezembro de 2004 15:49:31"                                     |
+    | Format(CDate("2004-12-02 15:49:31"), "f", , 1052)                   | "2004-12-02 3:49:31.MD "                                                           |
+    | Format(MDM.Fields["person.trip.purpose"], "a")                      | "purpose"                                                                          |
+    | Format(MDM.Fields["person.trip.purpose"], "A")                      | "person[..].trip[..].purpose"                                                      |
+    | Format(MDM.Fields["person.trip.purpose"], "b")                      | "Purpose of trip"                                                                  |
+    | Format(MDM.Variables["person[2].tvdays[{Channel_3}].Column"], "a")  | "Column"                                                                           |
+    | Format(MDM.Variables["person[2].tvdays[{Channel_3}].Column"], "A")  | "person[2].tvdays[{Channel_3}].Column"                                             |
+    | Format(MDM.Variables["person[2].tvdays[{Channel_3}].Column"], "b")  | "Number of days watched last week"                                                 |
+    | Format(MDM.Variables["person[2].tvdays[{Channel_3}].Column"], "B")  | "2,{Channel_3} : Number of days watched last week"                                 |
+    | Format(MDM.Fields["person.newspapers"], "v=EffectiveMaxValue")      | "12"                                                                               |
+    | Format(MDM.CategoryMap, "v=Count")                                    | "125"                                                                              |
+    | Format(MDM.Variables["person[6].occupation"], "V=hascasedata")      | "True"                                                                             |
+    | Format(MDM, "V=URL")                                                  | "[INSTALL_FOLDER]\IBM\SPSS\DataCollection\6\DDL\Data\Data Collection File\household.mdd"    |
+    | Format(MDM.URL, "L")                                                  | "[INSTALL_FOLDER]\ibm\spss\datacollection\6\ddl\data\data collection file\household.mdd"  |
+    | Format(MDM.URL, "U")                                                  | "[INSTALL_FOLDER]\IBM\SPSSDATACOLLECTION\6\DDL\DATA\DATA COLLECTION FILE\HOUSEHOLD.MDD" |
+    | MDM.MDMVersion.Split(".").Format("d4")                              | "0002,0010,0000,1664" |
+    | Format(MDM.Variables["person[2].tvdays[{Channel_3}].Column"], "b;l")| "number of days watched last week" |
 
     #### 2. Using the Format function in an SQL query
     This example shows the use of the `Format` function in an SQL query that can be run against the IBM® SPSS® Data Collection Data File version of the Household sample data set, *household.ddf*. The function is used to display the value of a decimal variable called Satisfaction as a fixed point decimal and as a percentage figure:
@@ -191,29 +191,29 @@ Class String
     The next example shows the `Format` function being used in an interview script that will run in version 3.0 (or later) of IBM® SPSS® Data Collection Interviewer Server. The Format function is used to display the labels and formatted values of the categories selected in the LikeColors question:
     ```ds
     Metadata(en-US, Question, label)
-        LikeColors \"Which colors do you like?\" categorical
+        LikeColors "Which colors do you like?" categorical
         {
-            red \"I like Red\",
-            blue \"I like Blue\",
-            green \"I like Green\",
-            yellow \"I like Yellow\",
-            pink \"I like Pink\",
-            purple \"I like Purple\",
-            orange \"I like Orange\"
+            red "I like Red",
+            blue "I like Blue",
+            green "I like Green",
+            yellow "I like Yellow",
+            pink "I like Pink",
+            purple "I like Purple",
+            orange "I like Orange"
         };
 
-        LikeColorsResponse \"{InsertHere}\" info;
+        LikeColorsResponse "{InsertHere}" info;
     End Metadata
 
     Routing(Web)
         LikeColors.Ask()
 
         Dim labels, values, str
-        labels = LikeColors.Format(\"b\")    ' labels of responses
-        labels = labels.Replace(\",\", mr.CrLf)
-        values = LikeColors.Format(\"d3\")   ' response values with leading zeroes
-        str = \"You chose these:\" + mr.CrLf + labels + mr.CrLf
-        str = str + \"Their numerical values are (\" + values + \").\"
+        labels = LikeColors.Format("b")    ' labels of responses
+        labels = labels.Replace(",", mr.CrLf)
+        values = LikeColors.Format("d3")   ' response values with leading zeroes
+        str = "You chose these:" + mr.CrLf + labels + mr.CrLf
+        str = str + "Their numerical values are (" + values + ")."
 
         LikeColorsResponse.Ask(str)
     End Routing
@@ -232,8 +232,8 @@ Class String
 
     ### Remarks
     The input string is converted to lower case, according to the rules of the input locale.
-    If the current data value is *NULL*, `Val` is \"\" and the return value is \"\".
-    How you specify a text string as an argument depends on whether you are using the function in an SQL query or in mrScriptBasic or mrScriptMetadata. In an SQL query, enclose text strings in single quotation marks (' '). In mrScriptBasic or mrScriptMetadata, enclose text strings in double quotation marks (\" \").
+    If the current data value is *NULL*, `Val` is "" and the return value is "".
+    How you specify a text string as an argument depends on whether you are using the function in an SQL query or in mrScriptBasic or mrScriptMetadata. In an SQL query, enclose text strings in single quotation marks (' '). In mrScriptBasic or mrScriptMetadata, enclose text strings in double quotation marks (" ").
 
     ### Examples
     This example uses the `LCase` function to return a copy of the contents of the address variable converted to lower case:
@@ -254,8 +254,8 @@ Class String
 
     ### Remarks
     `LTrim` removes white space (such as space and tab characters) that appears at the beginning of the input string. `LTrim` uses the rules of the input locale when interpreting white space.
-    If the current data value is *NULL*, `Val` is \"\" and the return value is \"\".
-    How you specify a text string as an argument depends on whether you are using the function in an SQL query or in mrScriptBasic or mrScriptMetadata. In an SQL query, enclose text strings in single quotation marks (' '). In mrScriptBasic or mrScriptMetadata, enclose text strings in double quotation marks (\" \").
+    If the current data value is *NULL*, `Val` is "" and the return value is "".
+    How you specify a text string as an argument depends on whether you are using the function in an SQL query or in mrScriptBasic or mrScriptMetadata. In an SQL query, enclose text strings in single quotation marks (' '). In mrScriptBasic or mrScriptMetadata, enclose text strings in double quotation marks (" ").
 
     ### Examples
     This example uses the `LTrim` function to return a copy of the contents of the address variable with any leading spaces removed:
@@ -276,8 +276,8 @@ Class String
 
     ### Remarks
     `RTrim` removes white space (such as space and tab characters) that appears at the end of the input string. RTrim uses the rules of the input locale when interpreting white space.
-    If the current data value is *NULL*, `Val` is \"\" and the return value is \"\".
-    How you specify a text string as an argument depends on whether you are using the function in an SQL query or in mrScriptBasic or mrScriptMetadata. In an SQL query, enclose text strings in single quotation marks (' '). In mrScriptBasic or mrScriptMetadata, enclose text strings in double quotation marks (\" \").
+    If the current data value is *NULL*, `Val` is "" and the return value is "".
+    How you specify a text string as an argument depends on whether you are using the function in an SQL query or in mrScriptBasic or mrScriptMetadata. In an SQL query, enclose text strings in single quotation marks (' '). In mrScriptBasic or mrScriptMetadata, enclose text strings in double quotation marks (" ").
 
     ### Examples
     This example uses the `RTrim` function to return a copy of the contents of the address variable with any trailing spaces removed:
@@ -290,18 +290,18 @@ Class String
 
     '!
     ```ds
-    (function) Split([Delimiter: String = \" \"], [Count: Long]): Categorical
+    (function) Split([Delimiter: String = " "], [Count: Long]): Categorical
     ```
     -----------------------------------
     Returns an array that contains substrings.
-    + `Delimiter`: *String* - Optional. `Delimiter` between substrings. The default is a single space (\" \").
+    + `Delimiter`: *String* - Optional. `Delimiter` between substrings. The default is a single space (" ").
     + `Count`: *Long* - Optional. The maximum number of substrings to return. If omitted or less than zero, all substrings are returned.
     + `return`: *Categorical* - An *array* containing the substrings from `Val`.
 
     ### Remarks
     This function is useful when you are parsing text strings that contain a number of substrings separated by a character such as a comma (,). For example, the lines of an address are often separated by a comma.
     If `Val` is an empty string, the return value is an empty array. Otherwise, if Delimiter is an empty string or is not found in `Val`, the return value is an array containing one item, a copy of `Val`. If the current data value is *NULL*, `Val` is an empty string and the return value is an empty array.
-    How you specify a text string as an argument depends on whether you are using the function in an SQL query or elsewhere, such as in mrScriptBasic or mrScriptMetadata, or when creating filters in IBM® SPSS® Data Collection Survey Tabulation or quotas in IBM® SPSS® Data Collection Interviewer Server. Enclose text strings in single quotation marks (' ') in SQL queries and enclose text strings in double quotation marks (\" \") everywhere else.
+    How you specify a text string as an argument depends on whether you are using the function in an SQL query or elsewhere, such as in mrScriptBasic or mrScriptMetadata, or when creating filters in IBM® SPSS® Data Collection Survey Tabulation or quotas in IBM® SPSS® Data Collection Interviewer Server. Enclose text strings in single quotation marks (' ') in SQL queries and enclose text strings in double quotation marks (" ") everywhere else.
 
     @Note - The `Split` function returns a categorical value, making it impossible to assign elements of the returned array. It should also be noted that the result from the `Split` function is not a real categorical value, because the elements of a categorical must be of type *Long* (int - VT_I4), not text. The parser treats the value as a categorical, but an error is returned when attempting to pass the value into a function that expects a real categorical (ContainsAny for example).
 
@@ -310,7 +310,7 @@ Class String
     ```ds
     Dim Address, FirstLine, FirstTwoLines, Defaults
 
-    Address = \"363 Park Road, Ashford, Kent\"
+    Address = "363 Park Road, Ashford, Kent"
 
     FirstLine = Address.Split(",", 1)      ' Returns {363 Park Road}
     FirstTwoLines = Address.Split(",", 2)  ' Returns {363 Park Road, Ashford}
@@ -340,7 +340,7 @@ Class String
     ### Examples
     The following mrScriptBasic example shows the use of the `Replace` function to replace all the hyphens in a text variable with spaces.
     ```ds
-    strVal = strVal.Replace(\"-\", \" \")
+    strVal = strVal.Replace("-", " ")
     ```
     !'
     Function Replace(Key As Variant, Replacement As Variant, Optional Start As Long, Optional Count As Long, Optional IgnoreCase As Boolean) As Variant
@@ -356,8 +356,8 @@ Class String
 
     ### Remarks
     `Trim` removes white space (such as space and tab characters) that appears at the beginning and end of the input string. `Trim` uses the rules of the input locale when interpreting white space.
-    If the current data value is *NULL*, `Val` is \"\" and the return value is \"\".
-    How you specify a text string as an argument depends on whether you are using the function in an SQL query or in mrScriptBasic or mrScriptMetadata. In an SQL query, enclose text strings in single quotation marks (' '). In mrScriptBasic or mrScriptMetadata, enclose text strings in double quotation marks (\" \").
+    If the current data value is *NULL*, `Val` is "" and the return value is "".
+    How you specify a text string as an argument depends on whether you are using the function in an SQL query or in mrScriptBasic or mrScriptMetadata. In an SQL query, enclose text strings in single quotation marks (' '). In mrScriptBasic or mrScriptMetadata, enclose text strings in double quotation marks (" ").
 
     ### Examples
     This example uses the `Trim` function to return a copy of the contents of the address variable with any leading and trailing spaces removed:
@@ -378,8 +378,8 @@ Class String
 
     ### Remarks
     The input string is converted to upper case, according to the rules of the input locale.
-    If the current data value is *NULL*, `Val` is \"\" and the return value is \"\".
-    How you specify a text string as an argument depends on whether you are using the function in an SQL query or in mrScriptBasic or mrScriptMetadata. In an SQL query, enclose text strings in single quotation marks (' '). In mrScriptBasic or mrScriptMetadata, enclose text strings in double quotation marks (\" \").
+    If the current data value is *NULL*, `Val` is "" and the return value is "".
+    How you specify a text string as an argument depends on whether you are using the function in an SQL query or in mrScriptBasic or mrScriptMetadata. In an SQL query, enclose text strings in single quotation marks (' '). In mrScriptBasic or mrScriptMetadata, enclose text strings in double quotation marks (" ").
 
     ### Examples
     This example returns an uppercase copy of the contents of the *name* variable:
@@ -410,7 +410,7 @@ Class String
     If `Val` is *Text*, `Key` is converted to text if necessary and is searched for as a substring of `Val`. Unless `IgnoreCase` is *False*, the comparison is case-insensitive.
     If `Val` is *Categorical* or an *Array* (which can contain values of any type), Key can be a *long*, *double*, *text*, *date*, *boolean*, or *categorical* value, or an *array*. When comparing `Key` (or the items in `Key`) with the items in `Val`, the normal conversion and comparison rules for variant types are used if necessary. Unless IgnoreCase is False, the comparison of text items (or items converted to text) is case-insensitive. If either item is *Null*, they are equal only if both are *Null*. If `Key` is a categorical value or an array, it is found only if its items occur as a sequence of consecutive items in `Val` and in the same order.
     If either `Val` or Key is *NULL*, the return value is -1 (not found). If `Val` is not *Text*, *Categorical*, or an *Array*, an error occurs.
-    How you specify a text string as an argument depends on whether you are using the function in an SQL query or in mrScriptBasic or mrScriptMetadata. In an SQL query, enclose text strings in single quotation marks (' '). In mrScriptBasic or mrScriptMetadata, enclose text strings in double quotation marks (\" \").
+    How you specify a text string as an argument depends on whether you are using the function in an SQL query or in mrScriptBasic or mrScriptMetadata. In an SQL query, enclose text strings in single quotation marks (' '). In mrScriptBasic or mrScriptMetadata, enclose text strings in double quotation marks (" ").
 
     ### Examples
 
@@ -421,16 +421,16 @@ Class String
     | Find(Val, Key)            | {3,7,8,1,9,10,5,4}             | 5                    | 6       |
     | Find(Val, Key, 7)         | {3,7,8,1,9,10,5,4}             | 5                    | -1      |
     | Find(Val, Key, , , False) | 24 St John's Road, Barnes      | barnes               | -1      |
-    | Find(Val, Key)            | Split(\"The quick brown fox\") | Split(\"brown fox\") | 2       |
+    | Find(Val, Key)            | Split("The quick brown fox") | Split("brown fox") | 2       |
 
-    **Text variables**. These examples use the name and address variables, which are text variables that store respondents' names and addresses, respectively. These examples show how you would use the Find function in mrScriptBasic or mrScriptMetadata. In SQL queries, you should enclose text strings in single quotation marks (' ') instead of double quotation marks (\" \").
-    The following example selects any respondent whose address contains \"London\" in upper case, lower case, or a mixture of both cases. Find returns -1 when the search string has not been found. In this example the <> operator is used to test that the return value is not -1, which means that \"London\" exists somewhere in the text being searched.
+    **Text variables**. These examples use the name and address variables, which are text variables that store respondents' names and addresses, respectively. These examples show how you would use the Find function in mrScriptBasic or mrScriptMetadata. In SQL queries, you should enclose text strings in single quotation marks (' ') instead of double quotation marks (" ").
+    The following example selects any respondent whose address contains "London" in upper case, lower case, or a mixture of both cases. Find returns -1 when the search string has not been found. In this example the <> operator is used to test that the return value is not -1, which means that "London" exists somewhere in the text being searched.
     ```ds
-    address.Find(\"London\") <> -1
+    address.Find("London") <> -1
     ```
-    Find lets you search for a string in a particular position. This is useful when the position of the search string in the text you are searching is important. For example, the following selects respondents whose names begin with the string \"Brian\":
+    Find lets you search for a string in a particular position. This is useful when the position of the search string in the text you are searching is important. For example, the following selects respondents whose names begin with the string "Brian":
     ```ds
-    Find(name, \"Brian\") = 0
+    Find(name, "Brian") = 0
     ```
 
     **Categorical variables**. These examples use the *remember* multiple response variable.
@@ -466,7 +466,7 @@ Class String
     | :-------------    | :-------------                 | :----- | :---------------- |
     | Left(Val, Length) | 24 St John's Road, Barnes      | 10     | 24 St John        |
     | Left(Val, Length) | {4,2,9}                        | 1      | {4}               |
-    | Left(Val, Length) | Split(\"The quick brown fox\") | 2      | {The,quick}       |
+    | Left(Val, Length) | Split("The quick brown fox") | 2      | {The,quick}       |
 
     The following example returns the first six characters of the *name* text variable:
     ```ds
@@ -499,7 +499,7 @@ Class String
     | :------------ | :---------------               | :----  |
     | Len(Val)      | 24 St John's Road, Barnes      | 25 |
     | Len(Val)      | {4,2,9}                        | 3 |
-    | Len(Val)      | Split(\"The quick brown fox\") | 4 |
+    | Len(Val)      | Split("The quick brown fox") | 4 |
 
     The following example returns the number of characters stored in the *address* text variable:
     ```ds
@@ -536,7 +536,7 @@ Class String
     | Mid(Val, Start, Length) | {4,2,9}                        | 6     | 3      | {}              |
     | Mid(Val, Start, Length) | {4,2,9}                        | 0     | 2      | {4,2}           |
     | Mid(Val, Start, Length) | {4,2,9}                        | 0     |        | {4,2,9}         |
-    | Mid(Val, Start, Length) | Split(\"The quick brown fox\") | 1     | 2      | {quick,brown}   |
+    | Mid(Val, Start, Length) | Split("The quick brown fox") | 1     | 2      | {quick,brown}   |
 
     The following example returns characters 8-17 from the *address* text variable:
     ```ds
@@ -571,7 +571,7 @@ Class String
     | :----------------  | :--------------------          | :----- | :----------- |
     | Right(Val, Length) | 24 St John's Road, Barnes      | 6      | Barnes       |
     | Right(Val, Length) | {4,2,9,15,6,7}                 | 1      | {7}          |
-    | Right(Val, Length) | Split(\"The quick brown fox\") | 3      | {quick,brown,fox} |
+    | Right(Val, Length) | Split("The quick brown fox") | 3      | {quick,brown,fox} |
 
     The following example returns the 10 rightmost characters stored in the *address* text variable:
     ```ds
@@ -599,12 +599,12 @@ Returns an integer value representing the Unicode character code (sometimes call
 ### Remarks
 A Unicode character code is an integer from 0 to 65535.
 This function returns 0 if `Val` is empty. If the current data value is *NULL*, `Val` is an empty string and 0 is returned.
-How you specify a text string as an argument depends on whether you are using the function in an SQL query or in mrScriptBasic or mrScriptMetadata. In an SQL query, enclose text strings in single quotation marks (' '). In mrScriptBasic or mrScriptMetadata, enclose text strings in double quotation marks (\" \").
+How you specify a text string as an argument depends on whether you are using the function in an SQL query or in mrScriptBasic or mrScriptMetadata. In an SQL query, enclose text strings in single quotation marks (' '). In mrScriptBasic or mrScriptMetadata, enclose text strings in double quotation marks (" ").
 
 ### Examples
 This mrScriptBasic example uses the `AscW` function to return the character code for a single character:
 ```ds
-AscW(\"a\")
+AscW("a")
 ```
 The return value is 97.
 The next example shows an SQL query that uses the AscW function to return the character code for the first character of the *name* variable (which stores the respondent's name).
@@ -634,7 +634,7 @@ This example uses the `ChrW` function to return the character for a specified ch
 ```ds
 ChrW(97)
 ```
-The return value is \"a\".
+The return value is "a".
 !'
 Function ChrW(Val As Long) As String
 End Function
@@ -668,7 +668,7 @@ If *C* is an unknown code, the formatting described under None in the table belo
 Except for the Count style (s, described in the table below), if Val is an array or a categorical value, the result is a comma-separated list of the results of applying the given style code (or codes) to each item or element in turn (in this case, `Val` in the table below refers to each individual item or element, not the whole array). No attempt is made to differentiate the separator character from any occurrences of the same character in the individual formatted values. Note that this gives the same result for a categorical value as for an array of long values. Note also that, if an array contains values of different types, the style code (or codes) may be interpreted differently for different items. If `Width` is specified, it is applied to the whole list, not to individual items.
 Except for special cases described in the table below, the value is converted to the expected type, using the input locale where necessary to interpret strings. For an object, the value of the object’s default property is used (in this case, `Val` below refers to the retrieved value). If any error occurs in retrieving an object’s properties, or in converting a value to the expected type, the result for that value is “”, except where noted below.
 Where formatting is affected by locale settings, the system settings for the locale are used, ignoring any “user overrides” (changes made to regional settings by the user currently logged in to the server).
-Except for the Count style (s, described below), if `Val` is *NULL*, the result is an empty string (\"\").
+Except for the Count style (s, described below), if `Val` is *NULL*, the result is an empty string ("").
 
 #### Applying Multiple Styles
 If `Style` consists of more than one formatting code, each code is applied in turn to Val as described in “Applying a Style” above. Because the result of applying the first code will always be a text value, subsequent codes should only be those that are relevant to text values, for example, LowerFirst, Count, or UpperAll (*l*, *s*, or *U*, described below).
@@ -753,23 +753,23 @@ Note: Many of the examples in the table below make use of the Household sample m
 
 | Function call                                             | Result             |
 | :---------                                                | :-----------------------  |
-| Format(CDate(\"2004-12-02 15:49:31\"), \"f\", , 1046)                   | \"quinta-feira, 2 de dezembro de 2004 15:49:31\"                                     |
-| Format(CDate(\"2004-12-02 15:49:31\"), \"f\", , 1052)                   | \"2004-12-02 3:49:31.MD \"                                                           |
-| Format(MDM.Fields[\"person.trip.purpose\"], \"a\")                      | \"purpose\"                                                                          |
-| Format(MDM.Fields[\"person.trip.purpose\"], \"A\")                      | \"person[..].trip[..].purpose\"                                                      |
-| Format(MDM.Fields[\"person.trip.purpose\"], \"b\")                      | \"Purpose of trip\"                                                                  |
-| Format(MDM.Variables[\"person[2].tvdays[{Channel_3}].Column\"], \"a\")  | \"Column\"                                                                           |
-| Format(MDM.Variables[\"person[2].tvdays[{Channel_3}].Column\"], \"A\")  | \"person[2].tvdays[{Channel_3}].Column\"                                             |
-| Format(MDM.Variables[\"person[2].tvdays[{Channel_3}].Column\"], \"b\")  | \"Number of days watched last week\"                                                 |
-| Format(MDM.Variables[\"person[2].tvdays[{Channel_3}].Column\"], \"B\")  | \"2,{Channel_3} : Number of days watched last week\"                                 |
-| Format(MDM.Fields[\"person.newspapers\"], \"v=EffectiveMaxValue\")      | \"12\"                                                                               |
-| Format(MDM.CategoryMap, \"v=Count\")                                    | \"125\"                                                                              |
-| Format(MDM.Variables[\"person[6].occupation\"], \"V=hascasedata\")      | \"True\"                                                                             |
-| Format(MDM, \"V=URL\")                                                  | \"[INSTALL_FOLDER]\\IBM\\SPSS\\DataCollection\\6\\DDL\\Data\\Data Collection File\\household.mdd\"    |
-| Format(MDM.URL, \"L\")                                                  | \"[INSTALL_FOLDER]\\ibm\\spss\\datacollection\\6\\ddl\\data\\data collection file\\household.mdd\"  |
-| Format(MDM.URL, \"U\")                                                  | \"[INSTALL_FOLDER]\\IBM\\SPSSDATACOLLECTION\\6\\DDL\\DATA\\DATA COLLECTION FILE\\HOUSEHOLD.MDD\" |
-| MDM.MDMVersion.Split(\".\").Format(\"d4\")                              | \"0002,0010,0000,1664\" |
-| Format(MDM.Variables[\"person[2].tvdays[{Channel_3}].Column\"], \"b;l\")| \"number of days watched last week\" |
+| Format(CDate("2004-12-02 15:49:31"), "f", , 1046)                   | "quinta-feira, 2 de dezembro de 2004 15:49:31"                                     |
+| Format(CDate("2004-12-02 15:49:31"), "f", , 1052)                   | "2004-12-02 3:49:31.MD "                                                           |
+| Format(MDM.Fields["person.trip.purpose"], "a")                      | "purpose"                                                                          |
+| Format(MDM.Fields["person.trip.purpose"], "A")                      | "person[..].trip[..].purpose"                                                      |
+| Format(MDM.Fields["person.trip.purpose"], "b")                      | "Purpose of trip"                                                                  |
+| Format(MDM.Variables["person[2].tvdays[{Channel_3}].Column"], "a")  | "Column"                                                                           |
+| Format(MDM.Variables["person[2].tvdays[{Channel_3}].Column"], "A")  | "person[2].tvdays[{Channel_3}].Column"                                             |
+| Format(MDM.Variables["person[2].tvdays[{Channel_3}].Column"], "b")  | "Number of days watched last week"                                                 |
+| Format(MDM.Variables["person[2].tvdays[{Channel_3}].Column"], "B")  | "2,{Channel_3} : Number of days watched last week"                                 |
+| Format(MDM.Fields["person.newspapers"], "v=EffectiveMaxValue")      | "12"                                                                               |
+| Format(MDM.CategoryMap, "v=Count")                                    | "125"                                                                              |
+| Format(MDM.Variables["person[6].occupation"], "V=hascasedata")      | "True"                                                                             |
+| Format(MDM, "V=URL")                                                  | "[INSTALL_FOLDER]\IBM\SPSS\DataCollection\6\DDL\Data\Data Collection File\household.mdd"    |
+| Format(MDM.URL, "L")                                                  | "[INSTALL_FOLDER]\ibm\spss\datacollection\6\ddl\data\data collection file\household.mdd"  |
+| Format(MDM.URL, "U")                                                  | "[INSTALL_FOLDER]\IBM\SPSSDATACOLLECTION\6\DDL\DATA\DATA COLLECTION FILE\HOUSEHOLD.MDD" |
+| MDM.MDMVersion.Split(".").Format("d4")                              | "0002,0010,0000,1664" |
+| Format(MDM.Variables["person[2].tvdays[{Channel_3}].Column"], "b;l")| "number of days watched last week" |
 
 #### 2. Using the Format function in an SQL query
 This example shows the use of the `Format` function in an SQL query that can be run against the IBM® SPSS® Data Collection Data File version of the Household sample data set, *household.ddf*. The function is used to display the value of a decimal variable called Satisfaction as a fixed point decimal and as a percentage figure:
@@ -830,29 +830,29 @@ The first column shows the categorical variable without any formatting, the seco
 The next example shows the `Format` function being used in an interview script that will run in version 3.0 (or later) of IBM® SPSS® Data Collection Interviewer Server. The Format function is used to display the labels and formatted values of the categories selected in the LikeColors question:
 ```ds
 Metadata(en-US, Question, label)
-    LikeColors \"Which colors do you like?\" categorical
+    LikeColors "Which colors do you like?" categorical
     {
-        red \"I like Red\",
-        blue \"I like Blue\",
-        green \"I like Green\",
-        yellow \"I like Yellow\",
-        pink \"I like Pink\",
-        purple \"I like Purple\",
-        orange \"I like Orange\"
+        red "I like Red",
+        blue "I like Blue",
+        green "I like Green",
+        yellow "I like Yellow",
+        pink "I like Pink",
+        purple "I like Purple",
+        orange "I like Orange"
     };
 
-    LikeColorsResponse \"{InsertHere}\" info;
+    LikeColorsResponse "{InsertHere}" info;
 End Metadata
 
 Routing(Web)
     LikeColors.Ask()
 
     Dim labels, values, str
-    labels = LikeColors.Format(\"b\")    ' labels of responses
-    labels = labels.Replace(\",\", mr.CrLf)
-    values = LikeColors.Format(\"d3\")   ' response values with leading zeroes
-    str = \"You chose these:\" + mr.CrLf + labels + mr.CrLf
-    str = str + \"Their numerical values are (\" + values + \").\"
+    labels = LikeColors.Format("b")    ' labels of responses
+    labels = labels.Replace(",", mr.CrLf)
+    values = LikeColors.Format("d3")   ' response values with leading zeroes
+    str = "You chose these:" + mr.CrLf + labels + mr.CrLf
+    str = str + "Their numerical values are (" + values + ")."
 
     LikeColorsResponse.Ask(str)
 End Routing
@@ -890,7 +890,7 @@ If *C* is an unknown code, the formatting described under None in the table belo
 Except for the Count style (s, described in the table below), if `Val` is an array or a categorical value, the result is a comma-separated list of the results of applying the given style code (or codes) to each item or element in turn (in this case, “Val” in the table below refers to each individual item or element, not the whole array). No attempt is made to differentiate the separator character from any occurrences of the same character in the individual formatted values. Note that this gives the same result for a categorical value as for an array of long values. Note also that, if an array contains values of different types, the style code (or codes) may be interpreted differently for different items. If Width is specified, it is applied to the whole list, not to individual items.
 Except for special cases described in the table below, the value is converted to the expected type, using the input locale where necessary to interpret strings. For an object, the value of the object’s default property is used (in this case, “Val” below refers to the retrieved value). If any error occurs in retrieving an object’s properties, or in converting a value to the expected type, the result for that value is “”, except where noted below.
 Where formatting is affected by locale settings, the system settings for the locale are used, ignoring any “user overrides” (changes made to regional settings by the user currently logged in to the server).
-Except for the *Count style* (*s*, described below), if Val is NULL, the result is an empty string (\"\").
+Except for the *Count style* (*s*, described below), if Val is NULL, the result is an empty string ("").
 
 #### Applying Multiple Styles
 If `Style` consists of more than one formatting code, each code is applied in turn to Val as described in “Applying a Style” above. Because the result of applying the first code will always be a text value, subsequent codes should only be those that are relevant to text values, for example, *LowerFirst*, *Count*, or *UpperAll* (*l*, *s*, or *U*, described below).
@@ -1007,7 +1007,7 @@ Returns a string representing the hexadecimal value of a number.
 + `return`: *String* - Hexadecimal representation of `Val`.
 
 ### Remarks
-`Val` is treated as an unsigned number, so values of -2147483648 to -1 are represented as \"80000000\" to \"FFFFFFFF\" respectively. If the current data value is *NULL*, `Val` is 0 and the return value is \"0\".
+`Val` is treated as an unsigned number, so values of -2147483648 to -1 are represented as "80000000" to "FFFFFFFF" respectively. If the current data value is *NULL*, `Val` is 0 and the return value is "0".
 This function is similar to the Hex function in Visual Basic.
 
 ### Examples
@@ -1018,7 +1018,7 @@ Dim x, y
 x = 99
 y = Hex(x)
 ```
-The return value is \"63\".
+The return value is "63".
 !'
 Function Hex(Val As Long) As String
 End Function
@@ -1034,8 +1034,8 @@ Returns a string that has been converted to lower case.
 
 ### Remarks
 The input string is converted to lower case, according to the rules of the input locale.
-If the current data value is *NULL*, `Val` is \"\" and the return value is \"\".
-How you specify a text string as an argument depends on whether you are using the function in an SQL query or in mrScriptBasic or mrScriptMetadata. In an SQL query, enclose text strings in single quotation marks (' '). In mrScriptBasic or mrScriptMetadata, enclose text strings in double quotation marks (\" \").
+If the current data value is *NULL*, `Val` is "" and the return value is "".
+How you specify a text string as an argument depends on whether you are using the function in an SQL query or in mrScriptBasic or mrScriptMetadata. In an SQL query, enclose text strings in single quotation marks (' '). In mrScriptBasic or mrScriptMetadata, enclose text strings in double quotation marks (" ").
 
 ### Examples
 This example uses the `LCase` function to return a copy of the contents of the address variable converted to lower case:
@@ -1057,8 +1057,8 @@ Returns a copy of a string with any leading spaces removed.
 
 ### Remarks
 `LTrim` removes white space (such as space and tab characters) that appears at the beginning of the input string. `LTrim` uses the rules of the input locale when interpreting white space.
-If the current data value is *NULL*, `Val` is \"\" and the return value is \"\".
-How you specify a text string as an argument depends on whether you are using the function in an SQL query or in mrScriptBasic or mrScriptMetadata. In an SQL query, enclose text strings in single quotation marks (' '). In mrScriptBasic or mrScriptMetadata, enclose text strings in double quotation marks (\" \").
+If the current data value is *NULL*, `Val` is "" and the return value is "".
+How you specify a text string as an argument depends on whether you are using the function in an SQL query or in mrScriptBasic or mrScriptMetadata. In an SQL query, enclose text strings in single quotation marks (' '). In mrScriptBasic or mrScriptMetadata, enclose text strings in double quotation marks (" ").
 
 ### Examples
 This example uses the `LTrim` function to return a copy of the contents of the address variable with any leading spaces removed:
@@ -1081,7 +1081,7 @@ This function replaces characters in a text string that are not allowed in the n
 ### Remarks
 The following changes are made:
 + Leading and trailing spaces are removed.
-+ *Null*, *blank*, or *empty* names are converted to \"No_name__\".
++ *Null*, *blank*, or *empty* names are converted to "No_name__".
 + Any occurrence of the character # is replaced by #23 (23 is the hexadecimal representation of the Unicode character code for #).
 + Any character that is not allowed anywhere in an MDM name is replaced by # followed by its two-digit hexadecimal character code.
 + If the resulting text starts with any character that is not allowed at the start of an MDM name, then the string _#00 is inserted at the start of the text.
@@ -1089,7 +1089,7 @@ The following changes are made:
 These conversions ensure that
 + The resulting text is a valid MDM name.
 + Different input strings always produce distinct output strings.
-+ It is possible to \"decode\" the resulting text to get the original (although no library function is provided to do this).
++ It is possible to "decode" the resulting text to get the original (although no library function is provided to do this).
 !'
 Function MakeMDMName(Val As String) As String
 End Function
@@ -1109,9 +1109,9 @@ The string arguments can be of any type--each value is coerced to a text value. 
 This example shows using the MakeString function to create a text string:
 ```ds
 Dim A, B
-B = CDate(\"25 January 2002 12:05\")
-A = MakeString(\"On \", B.DatePart(\"d\"), \"/\", B.DatePart(\"m\"))
-' A now contains \"On 25/1\"
+B = CDate("25 January 2002 12:05")
+A = MakeString("On ", B.DatePart("d"), "/", B.DatePart("m"))
+' A now contains "On 25/1"
 ```
 !'
 Function MakeString(Optional ParamArray Vals As Variant) As String
@@ -1127,7 +1127,7 @@ Returns a string representing the octal value of a number.
 + `return`: *String* - Octal representation of `Val`.
 
 ### Remarks
-`Val` is treated as an unsigned number, so values of -2147483648 to -1 are represented as \"20000000000\" to \"37777777777\" respectively. If the current data value is *NULL*, `Val` is 0 and the return value is \"0\".
+`Val` is treated as an unsigned number, so values of -2147483648 to -1 are represented as "20000000000" to "37777777777" respectively. If the current data value is *NULL*, `Val` is 0 and the return value is "0".
 This function is similar to the `Oct` function in Visual Basic.
 
 ### Examples
@@ -1138,7 +1138,7 @@ Dim x, y
 x = 99
 y = Oct(x)
 ```
-The return value is \"143\".
+The return value is "143".
 !'
 Function Oct(Val As Long) As String
 End Function
@@ -1154,8 +1154,8 @@ Returns a copy of a string with any trailing spaces removed.
 
 ### Remarks
 `RTrim` removes white space (such as space and tab characters) that appears at the end of the input string. RTrim uses the rules of the input locale when interpreting white space.
-If the current data value is *NULL*, `Val` is \"\" and the return value is \"\".
-How you specify a text string as an argument depends on whether you are using the function in an SQL query or in mrScriptBasic or mrScriptMetadata. In an SQL query, enclose text strings in single quotation marks (' '). In mrScriptBasic or mrScriptMetadata, enclose text strings in double quotation marks (\" \").
+If the current data value is *NULL*, `Val` is "" and the return value is "".
+How you specify a text string as an argument depends on whether you are using the function in an SQL query or in mrScriptBasic or mrScriptMetadata. In an SQL query, enclose text strings in single quotation marks (' '). In mrScriptBasic or mrScriptMetadata, enclose text strings in double quotation marks (" ").
 
 ### Examples
 This example uses the `RTrim` function to return a copy of the contents of the address variable with any trailing spaces removed:
@@ -1168,19 +1168,19 @@ End Function
 
 '!
 ```ds
-(function) Split(Val: String, [Delimiter: String = \" \"], [Count: Long]): Categorical
+(function) Split(Val: String, [Delimiter: String = " "], [Count: Long]): Categorical
 ```
 -----------------------------------
 Returns an array that contains substrings.
 + `Val`: *String* - *String* value to split.
-+ `Delimiter`: *String* - Optional. `Delimiter` between substrings. The default is a single space (\" \").
++ `Delimiter`: *String* - Optional. `Delimiter` between substrings. The default is a single space (" ").
 + `Count`: *Long* - Optional. The maximum number of substrings to return. If omitted or less than zero, all substrings are returned.
 + `return`: *Categorical* - An *array* containing the substrings from `Val`.
 
 ### Remarks
 This function is useful when you are parsing text strings that contain a number of substrings separated by a character such as a comma (,). For example, the lines of an address are often separated by a comma.
 If `Val` is an empty string, the return value is an empty array. Otherwise, if Delimiter is an empty string or is not found in `Val`, the return value is an array containing one item, a copy of `Val`. If the current data value is *NULL*, `Val` is an empty string and the return value is an empty array.
-How you specify a text string as an argument depends on whether you are using the function in an SQL query or elsewhere, such as in mrScriptBasic or mrScriptMetadata, or when creating filters in IBM® SPSS® Data Collection Survey Tabulation or quotas in IBM® SPSS® Data Collection Interviewer Server. Enclose text strings in single quotation marks (' ') in SQL queries and enclose text strings in double quotation marks (\" \") everywhere else.
+How you specify a text string as an argument depends on whether you are using the function in an SQL query or elsewhere, such as in mrScriptBasic or mrScriptMetadata, or when creating filters in IBM® SPSS® Data Collection Survey Tabulation or quotas in IBM® SPSS® Data Collection Interviewer Server. Enclose text strings in single quotation marks (' ') in SQL queries and enclose text strings in double quotation marks (" ") everywhere else.
 
 @Note - The `Split` function returns a categorical value, making it impossible to assign elements of the returned array. It should also be noted that the result from the `Split` function is not a real categorical value, because the elements of a categorical must be of type *Long* (int - VT_I4), not text. The parser treats the value as a categorical, but an error is returned when attempting to pass the value into a function that expects a real categorical (ContainsAny for example).
 
@@ -1189,7 +1189,7 @@ This mrScriptBasic example uses the `Split` function to return the first line an
 ```ds
 Dim Address, FirstLine, FirstTwoLines, Defaults
 
-Address = \"363 Park Road, Ashford, Kent\"
+Address = "363 Park Road, Ashford, Kent"
 
 FirstLine = Address.Split(",", 1)      ' Returns {363 Park Road}
 FirstTwoLines = Address.Split(",", 2)  ' Returns {363 Park Road, Ashford}
@@ -1220,7 +1220,7 @@ If `Val` is *NULL*, the return value is *NULL*. If `Key` is *NULL*, no replaceme
 ### Examples
 The following mrScriptBasic example shows the use of the `Replace` function to replace all the hyphens in a text variable with spaces.
 ```ds
-strVal = strVal.Replace(\"-\", \" \")
+strVal = strVal.Replace("-", " ")
 ```
 !'
 Function Replace(Val As Variant, Key As Variant, Replacement As Variant, Optional Start As Long, Optional Count As Long, Optional IgnoreCase As Boolean) As Variant
@@ -1237,8 +1237,8 @@ Returns a copy of a string with any leading and trailing spaces removed.
 
 ### Remarks
 `Trim` removes white space (such as space and tab characters) that appears at the beginning and end of the input string. `Trim` uses the rules of the input locale when interpreting white space.
-If the current data value is *NULL*, `Val` is \"\" and the return value is \"\".
-How you specify a text string as an argument depends on whether you are using the function in an SQL query or in mrScriptBasic or mrScriptMetadata. In an SQL query, enclose text strings in single quotation marks (' '). In mrScriptBasic or mrScriptMetadata, enclose text strings in double quotation marks (\" \").
+If the current data value is *NULL*, `Val` is "" and the return value is "".
+How you specify a text string as an argument depends on whether you are using the function in an SQL query or in mrScriptBasic or mrScriptMetadata. In an SQL query, enclose text strings in single quotation marks (' '). In mrScriptBasic or mrScriptMetadata, enclose text strings in double quotation marks (" ").
 
 ### Examples
 This example uses the `Trim` function to return a copy of the contents of the address variable with any leading and trailing spaces removed:
@@ -1260,8 +1260,8 @@ Returns a string that has been converted to upper case.
 
 ### Remarks
 The input string is converted to upper case, according to the rules of the input locale.
-If the current data value is *NULL*, `Val` is \"\" and the return value is \"\".
-How you specify a text string as an argument depends on whether you are using the function in an SQL query or in mrScriptBasic or mrScriptMetadata. In an SQL query, enclose text strings in single quotation marks (' '). In mrScriptBasic or mrScriptMetadata, enclose text strings in double quotation marks (\" \").
+If the current data value is *NULL*, `Val` is "" and the return value is "".
+How you specify a text string as an argument depends on whether you are using the function in an SQL query or in mrScriptBasic or mrScriptMetadata. In an SQL query, enclose text strings in single quotation marks (' '). In mrScriptBasic or mrScriptMetadata, enclose text strings in double quotation marks (" ").
 
 ### Examples
 This example returns an uppercase copy of the contents of the *name* variable:

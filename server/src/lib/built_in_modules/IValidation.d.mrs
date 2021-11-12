@@ -26,7 +26,7 @@ Interface IValidation Implements Object
     ### Example
     ```ds
     ' Allow the thousands separator character for the Spend question
-    Spend.Validation.Options[\"AllowThousandsSeparator\"] = True
+    Spend.Validation.Options["AllowThousandsSeparator"] = True
 
     ' A short-hand way to specify the same option that takes
     ' advantage of dynamic property expansion
@@ -44,7 +44,7 @@ Interface IValidation Implements Object
 
     ### Remarks
     Custom validation can be performed in addition to the standard validation implemented by the `Validation` object. This is done by specifying the name of a function for the `IValidation.Function` property.
-    Any function that takes the form \"FuncName(Question, IOM, Attempt)\" can be used. The parameters are:
+    Any function that takes the form "FuncName(Question, IOM, Attempt)" can be used. The parameters are:
     + ***Question***: The Question object that is being validated.
     + ***IOM***: The Interview object.
     + ***Attempt***: The number of the current custom validation attempt.
@@ -58,7 +58,7 @@ Interface IValidation Implements Object
     ' TimeAllocation is a block of numeric questions.  The interview
     ' will not proceed to the next question until the responses of all
     ' the numeric questions add to 100.
-    TimeAllocation.Validation.Function = \"Validate100Percent\"
+    TimeAllocation.Validation.Function = "Validate100Percent"
     TimeAllocation.Ask()
 
     Function Validate100Percent(Question, IOM, Attempt)
@@ -71,7 +71,7 @@ Interface IValidation Implements Object
     If Total = 100 Then
         Validate100Percent = True
     Else
-        Question.Errors.AddNew(\"IncorrectTotal\", \"Responses don't add up to 100%\")
+        Question.Errors.AddNew("IncorrectTotal", "Responses don't add up to 100%")
         Validate100Percent = False
     End If
     End Function

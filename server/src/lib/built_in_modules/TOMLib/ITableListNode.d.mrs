@@ -29,19 +29,19 @@ Namespace TOMLib
     + Table7 - education * age
 
     ```ds
-    Set TableDoc = CreateObject(\"TOM.Document\")
-    TableDoc.DataSet.Load(\"C:\\Program Files\\IBM\\SPSS\\DataCollection\\6\\DDL\\Data\\XML\\museum.mdd\")
+    Set TableDoc = CreateObject("TOM.Document")
+    TableDoc.DataSet.Load("C:\Program Files\IBM\SPSS\DataCollection\6\DDL\Data\XML\museum.mdd")
 
-    Set Group1 = TableDoc.GroupedTables.AddNewNode(\"Group1\", \"Age tables\")
-    Group1.AddNewTable(\"Table1\", \"age * gender\", \"Age by Gender\")
-    Group1.AddNewTable(\"Table2\", \"age * biology\", \"Age by Biology\")
-    TableDoc.GroupedTables.AddNewTable(\"Table3\", \"education * biology\", \"Education by Biology\")
-    Set Group2 = TableDoc.GroupedTables.AddNewNode(\"Group2\", \"Gender tables\")
-    Group2.AddNewTable(\"Table4\", \"gender * biology\", \"Gender by Biology\")
-    Group2.AddNewTable(\"Table5\", \"gender * before\", \"Gender by Before\")
-    Set Group2b = Group2.AddNewNode(\"Group2b\", \"Sub-group of Gender tables\")
-    Group2b.AddNewTable(\"Table6\", \"gender * entrance\", \"Gender by Entrance\")
-    TableDoc.GroupedTables.AddNewTable(\"Table7\", \"education * age\", \"Education by Age\")
+    Set Group1 = TableDoc.GroupedTables.AddNewNode("Group1", "Age tables")
+    Group1.AddNewTable("Table1", "age * gender", "Age by Gender")
+    Group1.AddNewTable("Table2", "age * biology", "Age by Biology")
+    TableDoc.GroupedTables.AddNewTable("Table3", "education * biology", "Education by Biology")
+    Set Group2 = TableDoc.GroupedTables.AddNewNode("Group2", "Gender tables")
+    Group2.AddNewTable("Table4", "gender * biology", "Gender by Biology")
+    Group2.AddNewTable("Table5", "gender * before", "Gender by Before")
+    Set Group2b = Group2.AddNewNode("Group2b", "Sub-group of Gender tables")
+    Group2b.AddNewTable("Table6", "gender * entrance", "Gender by Entrance")
+    TableDoc.GroupedTables.AddNewTable("Table7", "education * age", "Education by Age")
     ```
     !'
     Interface ITableListNode Implements Object
@@ -135,7 +135,7 @@ Namespace TOMLib
 
         '!
         ```ds
-        (method) ITableListNode.AddNewGrid(Name: String, Field: String, [Orientation: DisplayOrientation = doDefault], [Description: String = \"\"], [Index: Long = -1]): ITable
+        (method) ITableListNode.AddNewGrid(Name: String, Field: String, [Orientation: DisplayOrientation = doDefault], [Description: String = ""], [Index: Long = -1]): ITable
         ```
         -----------------------------
         Adds a new child node that references grid table.
@@ -153,7 +153,7 @@ Namespace TOMLib
 
         '!
         ```ds
-        (method) ITableListNode.AddNewNode(Name: String, [Description: String = \"\"], [Index: Long = -1]): ITableListNode
+        (method) ITableListNode.AddNewNode(Name: String, [Description: String = ""], [Index: Long = -1]): ITableListNode
         ```
         -----------------------------
         Adds a new child node
@@ -171,8 +171,8 @@ Namespace TOMLib
 
         ### Examples
         ```ds
-        Set Group1 = TableDoc.GroupedTables.AddNewNode(\"Group1\", \"A group of related tables\")
-        Group1.AddNewNode(\"Group1b\", \"A sub-group of Group 1\")
+        Set Group1 = TableDoc.GroupedTables.AddNewNode("Group1", "A group of related tables")
+        Group1.AddNewNode("Group1b", "A sub-group of Group 1")
         ```
         !'
         Function AddNewNode(Name As String, Optional Description As String = "", Optional Index As Long = -1) As ITableListNode
@@ -180,7 +180,7 @@ Namespace TOMLib
 
         '!
         ```ds
-        (method) ITableListNode.AddNewTable(Name: String, [Specification: String = \"\"], [Description: String = \"\"], [Index: Long = -1]): ITable
+        (method) ITableListNode.AddNewTable(Name: String, [Specification: String = ""], [Description: String = ""], [Index: Long = -1]): ITable
         ```
         -----------------------------
         Adds a new child node that references table.
@@ -210,8 +210,8 @@ Namespace TOMLib
         ### Examples
         To move *Group1b* which is a child of *Group1* so that it is instead a child of *Group2*:
         ```ds
-        Set Group1b = TableDoc.GroupedTables[\"Group1\"].ChildNode[\"Group1b\"]
-        TableDoc.GroupedTables[\"Group2\"].AddNode(Group1b)
+        Set Group1b = TableDoc.GroupedTables["Group1"].ChildNode["Group1b"]
+        TableDoc.GroupedTables["Group2"].AddNode(Group1b)
         ```
         !'
         Function AddNode(Node As ITableListNode, Optional Index As Long = -1) As ITableListNode
@@ -231,10 +231,10 @@ Namespace TOMLib
         + Set the new node to reference the table by setting the `ITableListNode.Table` property of the new node
 
         ### Examples
-        To add a table called \"Rating\" as a child of the *Group1* node.
+        To add a table called "Rating" as a child of the *Group1* node.
         ```ds
-        Set RatingTable = TableDoc.Table[\"Rating\"]
-        ITableDoc.GroupedTables[\"Group1\"].AddTable(RatingTable)
+        Set RatingTable = TableDoc.Table["Rating"]
+        ITableDoc.GroupedTables["Group1"].AddTable(RatingTable)
         ```
         !'
         Function AddTable(Table As ITable, Optional Index As Long = -1) As ITableListNode

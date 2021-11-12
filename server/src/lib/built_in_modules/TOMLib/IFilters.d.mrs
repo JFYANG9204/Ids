@@ -52,7 +52,7 @@ Namespace TOMLib
 
         '!
         ```ds
-        (method) IFilters.AddNew(Name: String, Expression: String, [Description: String = \"\"], [Level: String = HDATA], [IsInterviewFilter: Boolean = 0]): IFilter
+        (method) IFilters.AddNew(Name: String, Expression: String, [Description: String = ""], [Level: String = HDATA], [IsInterviewFilter: Boolean = 0]): IFilter
         ```
         --------------------
         Adds a new `Filter` object to the collection.
@@ -69,7 +69,7 @@ Namespace TOMLib
 
         ### Examples
         ```ds
-        Table.Filters.AddNew(\"Exclude11_16s\", \"Not age.ContainsAny({e1116_years})\")
+        Table.Filters.AddNew("Exclude11_16s", "Not age.ContainsAny({e1116_years})")
         ```
         !'
         Function AddNew(Name As String, Expression As String, Optional Description As String = "", Optional Level As String = "HDATA", Optional IsInterviewFilter As Boolean = 0) As IFilter

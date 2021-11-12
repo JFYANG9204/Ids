@@ -51,8 +51,8 @@ Namespace TOMLib
         A reference to the element to the rule is to operate on.
 
         ### Remarks
-        The reference to the element to base the hide rule on is specified as \"AxisName{ElementName}\" where `AxisName` must be the name of an axis within the 'Side' axis for a `Rule` suppressing columns, and the 'Top' axis for a `Rule` suppressing rows. `ElementName` must be the name of an element within that axis. Nested axes can be referenced by using the '>' symbol.
-        The first or last row/column can be referenced by specifying the keyword \"First\" or \"Last\".
+        The reference to the element to base the hide rule on is specified as "AxisName{ElementName}" where `AxisName` must be the name of an axis within the 'Side' axis for a `Rule` suppressing columns, and the 'Top' axis for a `Rule` suppressing rows. `ElementName` must be the name of an element within that axis. Nested axes can be referenced by using the '>' symbol.
+        The first or last row/column can be referenced by specifying the keyword "First" or "Last".
         If the `ElementRef` property is not specified then the rule operates on all elements.
         !'
         Property ElementRef() As String

@@ -9,29 +9,29 @@ Get the collection item at the specified location. (This is the default property
 ### Remarks
 ####1. Accessing through a call to the Job object:
 ```ds
-      dmgrJob.GlobalVariables.Item[\"SomeVar\"]
-      dmgrJob.GlobalVariables[\"SomeVar\"]
+      dmgrJob.GlobalVariables.Item["SomeVar"]
+      dmgrJob.GlobalVariables["SomeVar"]
       dmgrJob.GlobalVariables.SomeVar
 ```
 
 To add an object to the collection:
 ```ds
       Dim somevalue
-      somevalue=CreateObject(\"SomeValue\")
-      dmgrJob.GlobalVariables.Add(\"SomeNewVar\",somevalue)
+      somevalue=CreateObject("SomeValue")
+      dmgrJob.GlobalVariables.Add("SomeNewVar",somevalue)
 ```
 
 ### 2: Using the variable that is registered in the mrScriptBasic engine, under the name `Global`:
 ```ds
-      dmgrGlobal.Item[\"SomeVar\"]
-      dmgrGlobal[\"SomeVar\"]
+      dmgrGlobal.Item["SomeVar"]
+      dmgrGlobal["SomeVar"]
       dmgrGlobal.SomeVar
 ```
 To add an object to the collection:
 ```ds
       Dim somevalue
-      somevalue=CreateObject(\"SomeValue\")
-      dmgrGlobal.Add(\"SomeNewVar\",somevalue)
+      somevalue=CreateObject("SomeValue")
+      dmgrGlobal.Add("SomeNewVar",somevalue)
 ```
 
 You can also declare a global SQL variable in the `GlobalSQLVariables` section in a DMS file. For example:

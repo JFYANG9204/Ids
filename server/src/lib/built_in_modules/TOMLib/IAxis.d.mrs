@@ -83,7 +83,7 @@ Namespace TOMLib
 
         '!
         ```ds
-        (property) IAxis.Label[[Language: String = \"\"]]: String
+        (property) IAxis.Label[[Language: String = ""]]: String
         ```
         --------------------
         The label for the axis
@@ -127,7 +127,7 @@ Namespace TOMLib
         ### Remarks
         If when the axis is added to the table it's definition is based solely on the metadata then the `UserMetadataDefinition` property for the axis will be True. If an axis expression is specified then this overrides the metadata definition and `UseMetadataDefinition` will be *False*. Similarly, if the elements of the axis are modified in any way after it's been added then `UseMetadataDefinition` will be *False*.
         The `IAxis.UseMetadataDefinition` property is used in conjunction with the `RefreshFromMetadata` methods (which is available from the `Document`, `Table`, and `Axis` objects).
-        The `UseMetadataDefinition` property and `RefreshFromMetadata` methods are important when the metadata has been modified since the table was defined. For example, consider metadata that contains two variables - month and satisfaction. The month variable initially contains categories of *Jan*, *Feb*, and *Mar*. If a table of \"month * satisfaction\" is saved in an MTD file it will have rows of *Jan*, *Feb*, and *Mar* Consider what happens when a new version of the metadata is produced that also has an *Apr* category. When the previously saved MTD file is reopened it will still contain the previously saved definition of month (*Jan*, *Feb*, *Mar*). When `RefreshFromMetadata` is called this axis is regenerated from the metadata and will have elements of *Jan*, *Feb*, *Mar*, and *Apr*.
+        The `UseMetadataDefinition` property and `RefreshFromMetadata` methods are important when the metadata has been modified since the table was defined. For example, consider metadata that contains two variables - month and satisfaction. The month variable initially contains categories of *Jan*, *Feb*, and *Mar*. If a table of "month * satisfaction" is saved in an MTD file it will have rows of *Jan*, *Feb*, and *Mar* Consider what happens when a new version of the metadata is produced that also has an *Apr* category. When the previously saved MTD file is reopened it will still contain the previously saved definition of month (*Jan*, *Feb*, *Mar*). When `RefreshFromMetadata` is called this axis is regenerated from the metadata and will have elements of *Jan*, *Feb*, *Mar*, and *Apr*.
         Calling `IDocument.Populate` automatically invokes `RefreshFromMetadata`.
         !'
         Property UseMetadataDefinition() As Boolean

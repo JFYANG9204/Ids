@@ -19,7 +19,7 @@ Namespace TOMLib
 
         ### Remarks
         If the statistic has not been applied to a table or if a particular statistic does not have any information it would like to display then the `Annotation` property is an empty string.
-        An example of the use of the `Annotation` property is to provide information about the columns tested and the significance level that was used for a column proportions test. A table consisting of `age * gender + museums` with a SigLevel of 5 will have the annotation \"Columns Tested (5%): A/B, C/D/E/F/G/H/I/J\", where the letters match up with the columns produced by the table builder.
+        An example of the use of the `Annotation` property is to provide information about the columns tested and the significance level that was used for a column proportions test. A table consisting of `age * gender + museums` with a SigLevel of 5 will have the annotation "Columns Tested (5%): A/B, C/D/E/F/G/H/I/J", where the letters match up with the columns produced by the table builder.
         !'
         ReadOnly Property Annotation() As String
 
@@ -66,10 +66,10 @@ Namespace TOMLib
 
         ### Examples
         ```ds
-        ColPropStat.Properties[\"SigLevel\"] = 1
-        ColPropStat.Properties[\"SigLevelLow\"] = 10
-        ColPropStat.Properties[\"MinBase\"] = 50
-        ColPropStat.Properties[\"SmallBase\"] = 150
+        ColPropStat.Properties["SigLevel"] = 1
+        ColPropStat.Properties["SigLevelLow"] = 10
+        ColPropStat.Properties["MinBase"] = 50
+        ColPropStat.Properties["SmallBase"] = 150
         ```
         !'
         ReadOnly Property Properties() As IProperties

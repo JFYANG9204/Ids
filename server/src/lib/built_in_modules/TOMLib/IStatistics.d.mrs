@@ -36,8 +36,8 @@ Namespace TOMLib
         The selected column heading IDs that the `Column` Proportions, *Column Means*, and *Tukey* statistics are to test.
 
         ### Remarks
-        Each character in the string is used to allocate the ID for a column, with a space or dot used to indicate that an ID should not be allocated. A character needs to be specified for each of the columns in the table, including BASE columns. Do not include a . or space for hidden columns. e.g. \"....MF.NG\". Note that you cannot include a period '.' or space for hidden columns.
-        If no value is specified, the string is set to the `ColumnID`s property. The `Column` Proportions, *Column Means*, and *Tukey* tests will default to testing the group of columns indicated by `TestColumns`. If no value is specified, the string is set to the `TestColumns` property. The `Column` Proportions, Column Means, and Tukey tests will default to testing the IDs against each other. e.g. \"M/F/N/G\"
+        Each character in the string is used to allocate the ID for a column, with a space or dot used to indicate that an ID should not be allocated. A character needs to be specified for each of the columns in the table, including BASE columns. Do not include a . or space for hidden columns. e.g. "....MF.NG". Note that you cannot include a period '.' or space for hidden columns.
+        If no value is specified, the string is set to the `ColumnID`s property. The `Column` Proportions, *Column Means*, and *Tukey* tests will default to testing the group of columns indicated by `TestColumns`. If no value is specified, the string is set to the `TestColumns` property. The `Column` Proportions, Column Means, and Tukey tests will default to testing the IDs against each other. e.g. "M/F/N/G"
         !'
         Property ColumnIDs() As String
 
@@ -62,8 +62,8 @@ Namespace TOMLib
 
         ### Remarks
         The columns that the `Column` Proportions, *Column Means* and *Tukey tests* are to compare can be specified using the `TestColumns` property. The `TestColumns` specification is a string that lists the groups of columns to test separated by comma. Each column is represented by it's heading id and is tested against every other column in the group.
-        For example, the specification \"A/B/C, D/E/F/G\" will test all possible combinations of the columns *A*, *B*, and *C*, and all possible combinations of the columns *D*, *E*, *F*, *G*. i.e. o A against B o A against C o B against C o B against A o C against A o C against B o D against E o D against F o D against G o E against D o E against F o ... and so on
-        As another example, the specification \"A/B, C/D, E/F\" will only test pairs of columns. i.e.
+        For example, the specification "A/B/C, D/E/F/G" will test all possible combinations of the columns *A*, *B*, and *C*, and all possible combinations of the columns *D*, *E*, *F*, *G*. i.e. o A against B o A against C o B against C o B against A o C against A o C against B o D against E o D against F o D against G o E against D o E against F o ... and so on
+        As another example, the specification "A/B, C/D, E/F" will only test pairs of columns. i.e.
         + A against B
         + B against A
         + C against D

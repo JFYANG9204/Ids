@@ -332,7 +332,7 @@ Namespace TOMLib
 
         '!
         ```ds
-        (property) IElement.Label[[Language: String = \"\"]]: String
+        (property) IElement.Label[[Language: String = ""]]: String
         ```
         --------------------------
         The label for the element

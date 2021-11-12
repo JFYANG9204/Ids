@@ -24,5 +24,5 @@ const builtIn = loadBuiltInModule();
 const testpath = resolve("./test/parser/fixture/test.mrs");
 const content = readFileAndConvertToUtf8(testpath);
 const parser = new Parser(createBasicOptions(testpath, true), content);
-const file = parser.parse(builtIn);
+const file = parser.parse();
 console.log("end");

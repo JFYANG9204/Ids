@@ -26,29 +26,29 @@ These variables are accessible in the following sections in the DMS file:
 The variables can be accessed by calling the variable directly or through th`Job` object.",
 The `Log` object is accessed as:
 ```ds
-dmgrLog.LogFatal(\"Some Fatal Error\")
+dmgrLog.LogFatal("Some Fatal Error")
 ```
 Or through the Job object:
 ```ds
-dmgrJob.Log.LogFatal(\"Some Fatal Error\")
+dmgrJob.Log.LogFatal("Some Fatal Error")
 ```
 The `Global` variables object is accessed as:
 ```ds
-dmgrGlobal.Item[\"SomeVar\"]
-dmgrGlobal[\"SomeVar\"]
+dmgrGlobal.Item["SomeVar"]
+dmgrGlobal["SomeVar"]
 dmgrGlobal.SomeVar
 Dim somevalue
-somevalue = CreateObject(\"SomeValue\")
-dmgrGlobal.Add(\"SomeNewVar\", somevalue)
+somevalue = CreateObject("SomeValue")
+dmgrGlobal.Add("SomeNewVar", somevalue)
 ```
 Or through the Job object:
 ```ds
-dmgrJob.GlobalVariables.Item[\"SomeVar\"]
-dmgrJob.GlobalVariables[\"SomeVar\"]
+dmgrJob.GlobalVariables.Item["SomeVar"]
+dmgrJob.GlobalVariables["SomeVar"]
 dmgrJob.GlobalVariables.SomeVar
 Dim somevalue
-somevalue = CreateObject(\"SomeValue\")
-dmgrJob.GlobalVariables.Add(\"SomeNewVar\", somevalue)
+somevalue = CreateObject("SomeValue")
+dmgrJob.GlobalVariables.Add("SomeNewVar", somevalue)
 ```
 `Global` SQL Variables are accessed as:
 ```ds
@@ -122,15 +122,15 @@ Interface IDataManagerJob Implements Object
     ### Example
     To return the Job's global variables collection:
     ```ds
-    dmgrJob.GlobalVariables.Item[\"SomeVar\"]
-    dmgrJob.GlobalVariables[\"SomeVar\"]
+    dmgrJob.GlobalVariables.Item["SomeVar"]
+    dmgrJob.GlobalVariables["SomeVar"]
     dmgrJob.GlobalVariables.SomeVar
     ```
     To add an object to the collection:
     ```ds
     Dim somevalue
-    somevalue = CreateObject(\"SomeValue\")
-    dmgrJob.GlobalVariables.Add(\"SomeNewVar\", somevalue)
+    somevalue = CreateObject("SomeValue")
+    dmgrJob.GlobalVariables.Add("SomeNewVar", somevalue)
     ```
     !'
     ReadOnly Property GlobalVariables() As IDataManagerGlobalVariables
@@ -145,15 +145,15 @@ Interface IDataManagerJob Implements Object
     ### Example
     To return the Job's global variables collection:
     ```ds
-    dmgrJob.GlobalVariables.Item[\"SomeVar\"]
-    dmgrJob.GlobalVariables[\"SomeVar\"]
+    dmgrJob.GlobalVariables.Item["SomeVar"]
+    dmgrJob.GlobalVariables["SomeVar"]
     dmgrJob.GlobalVariables.SomeVar
     ```
     To add an object to the collection:
     ```ds
     Dim somevalue
-    somevalue = CreateObject(\"SomeValue\")
-    dmgrJob.GlobalVariables.Add(\"SomeNewVar\", somevalue)
+    somevalue = CreateObject("SomeValue")
+    dmgrJob.GlobalVariables.Add("SomeNewVar", somevalue)
     ```
     !'
     ReadOnly Property InputCaseNumbers(Index As Variant) As Long
@@ -168,8 +168,8 @@ Interface IDataManagerJob Implements Object
     ### Remarks
     The Logging object can be accessed in either of the following ways:
     ```ds
-    dmgrLog.LogFatal(\"Some Fatal Error\")
-    dmgrJob.Log.LogFatal(\"Some Fatal Error\")
+    dmgrLog.LogFatal("Some Fatal Error")
+    dmgrJob.Log.LogFatal("Some Fatal Error")
     ```
     !'
     ReadOnly Property Log() As Object
@@ -212,12 +212,12 @@ Interface IDataManagerJob Implements Object
         Dim TOM
         Set TOM = dmgrJob.TableDocument
         With TOM
-            .Tables.AddNew(\"Table1\", \"age*gender\", _
-                \"Table1 - age by gender\")
-            .Save(\"D:\\Development\\Museum\\TOMDemo.mtd\")
-            .Exports(\"mrHtmlExport\").Export( _
-                \"D:\\Development\\Museum\\TOMDemo.htm\", _
-                \"Table1\")
+            .Tables.AddNew("Table1", "age*gender", _
+                "Table1 - age by gender")
+            .Save("D:\Development\Museum\TOMDemo.mtd")
+            .Exports("mrHtmlExport").Export( _
+                "D:\Development\Museum\TOMDemo.htm", _
+                "Table1")
         End With
     End Event
     ```
@@ -236,24 +236,24 @@ Interface IDataManagerJob Implements Object
     ```ds
     Event(OnAfterJobEnd, TOM stuff)
         Dim TOM
-        Set TOM = dmgrTableDocuments[\"XMLOutput\"]
+        Set TOM = dmgrTableDocuments["XMLOutput"]
         With TOM
             .DataSet.View = 0
-            .Tables.AddNew(\"Table1\", \"age*gender\", _
-                \"Table1 - age by gender\")
+            .Tables.AddNew("Table1", "age*gender", _
+                "Table1 - age by gender")
             .Populate()
-            .Save(\"D:\\Development\\Museum\\TOMDemo.mtd\")
+            .Save("D:\Development\Museum\TOMDemo.mtd")
         End With
     End Event
 
     OutputDataSource(XMLOutput, Output XML data source)
         ConnectionString = Provider=mrOleDB.Provider.2; _
             Data Source=mrXmlDsc; _
-            Location=D:\\TOMDemo.xml; _
-            Initial Catalog=\"\"; _
+            Location=D:\TOMDemo.xml; _
+            Initial Catalog=""; _
             Mode=ReadWrite; _
             MR Init MDM Access=0
-        MetaDataOutputName = D:\\TOMDemo.mdd
+        MetaDataOutputName = D:\TOMDemo.mdd
     End OutputDataSource
     ```
     !'
@@ -278,7 +278,7 @@ Interface IDataManagerJob Implements Object
     Event (OnAfterMetaDataTransformations, dddd)
         ' accesssing the weight engine by output datasource name
         Dim weName
-        Set weName = dmgrJob.TransformedInputMetaData[\"SomeInput\"]
+        Set weName = dmgrJob.TransformedInputMetaData["SomeInput"]
         ' accesssing the weight engine by by ordinal
         Dim weOrdinal
         Set weOrdinal = dmgrJob.TransformedInputMetaData[0]
@@ -306,7 +306,7 @@ Interface IDataManagerJob Implements Object
     Event (OnAfterMetaDataTransformations, dddd)
         ' accesssing the weight engine by output datasource name
         Dim weName
-        Set weName = dmgrJob.TransformedOutputMetaData[\"SomeOutput\"]
+        Set weName = dmgrJob.TransformedOutputMetaData["SomeOutput"]
         ' accesssing the weight engine by by ordinal
         Dim weOrdinal
         Set weOrdinal = dmgrJob.TransformedOutputMetaData[0]
@@ -348,7 +348,7 @@ Interface IDataManagerJob Implements Object
     Event (OnJobStart, job start)
         ' accesssing the weight engine by output datasource name
         Dim weName
-        Set weName = dmgrJob.WeightEngines[\"SomeOutput\"]
+        Set weName = dmgrJob.WeightEngines["SomeOutput"]
         ' accesssing the weight engine by by ordinal
         Dim weOrdinal
         Set weOrdinal = dmgrJob.WeightEngines[0]

@@ -42,7 +42,7 @@ Namespace TOMLib
 
         '!
         ```ds
-        (method) ICellItems.AddNew(Type: CellItemType, [Decimals: Long = 0], [Variable: String = \"\"], [Index: Long = -1]): ICellItem
+        (method) ICellItems.AddNew(Type: CellItemType, [Decimals: Long = 0], [Variable: String = ""], [Index: Long = -1]): ICellItem
         ```
         --------------------
         Creates a new `CellItem` object and adds it to the collection.

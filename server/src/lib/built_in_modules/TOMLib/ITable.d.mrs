@@ -47,9 +47,9 @@ Namespace TOMLib
         ### Example
         The side axis of a table can be accessed using any of the following techniques
         ```ds
-        Set SideAxis = MyTable.Axes.Item[\"side\"]
-        Set SideAxis = MyTable.Axes[\"side\"]
-        Set SideAxis = MyTable[\"side\"]
+        Set SideAxis = MyTable.Axes.Item["side"]
+        Set SideAxis = MyTable.Axes["side"]
+        Set SideAxis = MyTable["side"]
         Set SideAxis = MyTable[axSide]
         ```
         !'
@@ -273,7 +273,7 @@ Namespace TOMLib
         (property) ITable.Description: String
         ```
         --------------------
-        A description or title for the table, e.g. \"Table of age by gender\".
+        A description or title for the table, e.g. "Table of age by gender".
 
         ### Remarks
         This is typically used for the table title annotation when the table is exported.
@@ -318,10 +318,10 @@ Namespace TOMLib
 
         ### Examples
         ```ds
-        Table.SortColumn = \"\"
-        Table.SortColumn = \"Base\"
-        Table.SortColumn = \"Education{Base}\"
-        Table.SortColumn = \"Education{Yes}>Gender{Female}\"
+        Table.SortColumn = ""
+        Table.SortColumn = "Base"
+        Table.SortColumn = "Education{Base}"
+        Table.SortColumn = "Education{Yes}>Gender{Female}"
         ```
         !'
         Property SortColumn() As String
@@ -340,10 +340,10 @@ Namespace TOMLib
 
         ### Examples
         ```ds
-        Table.SortRow = \"\"
-        Table.SortRow = \"Base\"
-        Table.SortRow = \"Age{Base}\"
-        Table.SortRow = \"Age{E1116_years}>Gender{Female}\"
+        Table.SortRow = ""
+        Table.SortRow = "Base"
+        Table.SortRow = "Age{Base}"
+        Table.SortRow = "Age{E1116_years}>Gender{Female}"
         ```
         !'
         Property SortRow() As String
@@ -358,7 +358,7 @@ Namespace TOMLib
         ### Remarks
         This is initially the `specification` string that was used when the table was initially created. If the structure (axes and elements) of the table is modified using the methods of the object model (for example, `IAxis.Nest`, `IAxis.Concatenate`, `IAxis.Elements.AddNew`) then the `specification` string will update to reflect the current structure of the table.
         If this `specification` string is modified then all existing axis objects in the `Axes` collection are removed and then recreated according to the new specification.
-        To keep the `specification` string compact, the elements are not shown if all the elements of a variable are present in the axis (e.g. \"age\"), but if it differs in any way then the full list of elements is shown.
+        To keep the `specification` string compact, the elements are not shown if all the elements of a variable are present in the axis (e.g. "age"), but if it differs in any way then the full list of elements is shown.
 
         ### Examples
         ```ds
@@ -400,7 +400,7 @@ Namespace TOMLib
         Clears the table
 
         ### Remarks
-        A table is \"cleared\" by performing the following actions:
+        A table is "cleared" by performing the following actions:
         + Clearing the `Axes`, `CellItems`, `Properties`, `Rules`, `Filters`, `Statistics`, and `Annotations` collections.
         + Clearing the CellValues
         + Restoring all properties to their default values as defined by the `IDocument.Default` property (or `IDocument.ProfileDefault` in the case of a profile table).

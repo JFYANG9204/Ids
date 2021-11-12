@@ -48,7 +48,7 @@ Namespace TOMLib
 
         ### Remarks
         ```ds
-        Filter.Expression = \"Not age.ContainsAny({e1116_years})\"
+        Filter.Expression = "Not age.ContainsAny({e1116_years})"
         ```
         !'
         Property Expression() As String

@@ -30,7 +30,7 @@ Interface ICategory Implements Object
     The default value of 0 indicates the category has no special `CategoryAttributes`.
     `CategoryAttributes` can be checked using the `IsSet` function. E.g.
     ```ds
-    If Q1.Categories[\"Other\"].Attributes.IsSet(CategoryAttributes.caExclusive) Then
+    If Q1.Categories["Other"].Attributes.IsSet(CategoryAttributes.caExclusive) Then
     ```
     !'
     ReadOnly Property Attributes() As Long
@@ -85,7 +85,7 @@ Interface ICategory Implements Object
     A read-only property that returns the full name of the `category`.
 
     ### Remarks
-    If a category is defined as a sub-category of another `category` object, then the full name will not match the name. For example, if a `categories` were grouped into positive and negative *category* lists, the *category* names might be \"Good\" and \"Bad\", while the full names would be \"Positive.Good\" and \"Negative.Bad\".
+    If a category is defined as a sub-category of another `category` object, then the full name will not match the name. For example, if a `categories` were grouped into positive and negative *category* lists, the *category* names might be "Good" and "Bad", while the full names would be "Positive.Good" and "Negative.Bad".
     @note- Look-up by name into the `categories` collection is based on the full name.
     !'
     ReadOnly Property FullName() As String

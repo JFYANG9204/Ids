@@ -57,7 +57,7 @@ Block1.Ask()
 Block1.Q1.Ask()
 
 ' Ask the Demo sub-question using Item
-Block1[\"Q1\"].Ask()
+Block1["Q1"].Ask()
 ```
 
 To support a consistent interface for all question types, as well as supporting a dynamic interface based on sub-question names, the names of sub-questions cannot match those of question object properties. To demonstrate why, if a sub-question was named 'Style', there needs to be a way to ask just the sub-question:
@@ -88,7 +88,7 @@ The second statement is invalid because the `Style` question property takes prec
 
 ```ds
 ' VALID: Ask the sub-question for the block
-Block1[\"Style\"].Ask()
+Block1["Style"].Ask()
 ```
 
 The list of keywords that should not be used as sub-question names:
@@ -128,10 +128,10 @@ Interface IQuestion Implements Object
     q2.Ask()
     ```
     If the question label has inserts then the `LabelArgs` parameter can be used to specify
-    values for those inserts.  For example, if the question label for Spend was \"How
-    much did you spend? (e.g. {ExampleValue:f})\" then the question could be asked as
+    values for those inserts.  For example, if the question label for Spend was "How
+    much did you spend? (e.g. {ExampleValue:f})" then the question could be asked as
     `Spend.Ask(123.45)` and 123.45 would be inserted into the label and formatted appropriately
-    for the current locale, e.g. \"123.45\" or \"123,45\".
+    for the current locale, e.g. "123.45" or "123,45".
 
     This method is not supported in mrDataManager 1.0
     !'
@@ -140,7 +140,7 @@ Interface IQuestion Implements Object
 
     '!
     ```ds
-    (method) IQuestion.BuildDBFilter([bstrFieldName: String = \"L\"]): String
+    (method) IQuestion.BuildDBFilter([bstrFieldName: String = "L"]): String
     ```
     --------------------
     This method is used to build a database filter according to its response value.
@@ -153,7 +153,7 @@ Interface IQuestion Implements Object
     Make.Ask() 'A DB multiple response question for favorite automobile makers.
     'Model is filtered based on the Make response. For example, if BMW and Audi is
     'selected above, the return value of Make.BuildDBFilter will be (MakeID='BMW') OR (MakeID='Audi').
-    Model.DBFilter = Make.BuildDBFilter(\"MakeID\")
+    Model.DBFilter = Make.BuildDBFilter("MakeID")
     Model.Ask()
     ```
     !'
@@ -168,7 +168,7 @@ Interface IQuestion Implements Object
     Clears the off-path response to the question (if applicable)
 
     ### Remarks
-    Normally when a question becomes off-path the response in the case data is cleared (exactly when that happens depends on the OffPathDataMode property) but the response is kept so that it is presented to the respondent if the question is redisplayed. The `ClearOffPathResponse()` method can be used to clear the response to the question if the response is off-path. The `ClearOffPathResponse()` also clears the responses to any \"other specify\" and sub-questions that the question may have. Compare this to setting `Question.Info.OffPathResponse` to *Null* which will only clear the response of the immediate question object.
+    Normally when a question becomes off-path the response in the case data is cleared (exactly when that happens depends on the OffPathDataMode property) but the response is kept so that it is presented to the respondent if the question is redisplayed. The `ClearOffPathResponse()` method can be used to clear the response to the question if the response is off-path. The `ClearOffPathResponse()` also clears the responses to any "other specify" and sub-questions that the question may have. Compare this to setting `Question.Info.OffPathResponse` to *Null* which will only clear the response of the immediate question object.
     The typical use of the `ClearOffPathResponse()` method is to clear all off-path responses (using `IOM.Questions[..].ClearOffPathResponse()`) when the respondent changes an answer that invalidates all off-path responses.
     For example, imagine an interview that asks which fruit the respondent likes the most, and then asks questions like why they like that fruit and how often they eat it. If the respondent navigates back to the question about which fruit they liked the most, and then changes their answer then the answers to the subsequent questions should be completely discarded as they might have been applicable to apples but the respondent might have now selected oranges as their favorite fruit.
     !'
@@ -329,11 +329,11 @@ Interface IQuestion Implements Object
     (property) IQuestion.OtherCategories: ICategories
     ```
     --------------------
-    A read-only property that returns a collection of \"other specify\" categories.
+    A read-only property that returns a collection of "other specify" categories.
 
     ### Remarks
-    The categories returned by the `OtherCategories` property represent the \"Other Specify\" categorical responses for a question.
-    The `OtherCategories` collection is similar to the `Categories` collection except it is a flattened list and only contains categories that have an associated \"other specify\" question
+    The categories returned by the `OtherCategories` property represent the "Other Specify" categorical responses for a question.
+    The `OtherCategories` collection is similar to the `Categories` collection except it is a flattened list and only contains categories that have an associated "other specify" question
     !'
     ReadOnly Property OtherCategories() As ICategories
 
@@ -502,7 +502,7 @@ Interface IQuestion Implements Object
     Loop1[{ExA}].Ask() ' Equivalent to: Loop1.Item[{ExA}].Ask()
 
     ' Item example: Block sub-question uses reserved name
-    Block1[\"Style\"].Ask()
+    Block1["Style"].Ask()
     ```
     The index parameter on `Item` is optional.  If the index is not specified, then the property sets or gets the `Response` value.
 
@@ -564,10 +564,10 @@ Interface IQuestion Implements Object
 
     ### Remarks
     This is similar to the `Filter` property of `ICategories` and `ICategory`. It determines the sub-questions that are returned by the Item property when using a numeric index and by the `For-Each` enumerator. It also affects the value returned by the `Count` property. All questions are still accessible from the `Item` property using the question name. Unlike the `Filter` property of `ICategories` and `ICategory`, this `Filter` property only affects the immediate sub-questions.
-    For a categorical loop the `QuestionFilter` property can be a categorical value or a range expression, e.g. *{Monday, Tuesday, Wednesday}* or \"Monday..Wednesday\"
-    For a numeric loop the `QuestionFilter` property can be a range expression or a numeric value. A numeric value is interpreted as a range expression expression of \"..n\" where n is the numeric value, e.g. the following are equivalent:
+    For a categorical loop the `QuestionFilter` property can be a categorical value or a range expression, e.g. *{Monday, Tuesday, Wednesday}* or "Monday..Wednesday"
+    For a numeric loop the `QuestionFilter` property can be a range expression or a numeric value. A numeric value is interpreted as a range expression expression of "..n" where n is the numeric value, e.g. the following are equivalent:
     ```ds
-    PersonLoop.QuestionFilter '\"..5\"
+    PersonLoop.QuestionFilter '"..5"
 
     PersonLoop.QuestionFilter `5
     ```
@@ -579,7 +579,7 @@ Interface IQuestion Implements Object
     ```
     For a compound, block, or page question the `QuestionFilter` property is a range expression containing a list of the questions to ask, e.g.
     ```ds
-    Demographics.QuestionFilter ' \"age, gender, education\"
+    Demographics.QuestionFilter ' "age, gender, education"
     ```
     The `QuestionFilter` is not supported in mrDataManager 1.0
     !'

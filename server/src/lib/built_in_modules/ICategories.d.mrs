@@ -44,7 +44,7 @@ Interface ICategories Implements IEnumerable, Object
     Q2.Ask()
 
     ' Ask the categories based on a range
-    Q2.Categories = \"a..c\"
+    Q2.Categories = "a..c"
     Q2.Ask()
     ```
     The `Filter` property can be used to limit the categories in a categorical loop or compound.
@@ -77,12 +77,12 @@ Interface ICategories Implements IEnumerable, Object
     ' NOTE: b.x has no effect because it is already selected by b
     Q1.Categories = {a,b,b.x}
 
-    To clear a filter, assign \"..\" (all categories) or NULL to the Filter property or
+    To clear a filter, assign ".." (all categories) or NULL to the Filter property or
     use the DefinedCategories function.
 
     ' Different ways to reset the filter
     Q2.Categories = Q2.DefinedCategories()
-    Q2.Categories = \"..\"
+    Q2.Categories = ".."
     Q2.Categories.Filter = NULL
     Q2.Categories = NULL
     ```
@@ -96,17 +96,17 @@ Interface ICategories Implements IEnumerable, Object
     ```
     The `Filter` setting only impacts how items are returned by the enumerator and using numeric indexes.  Even if an item it not selected by the filter, it will still be possible to get the item by its name.
     Note that in the example below, when defining the filter in the script, the value can be set as a string (a category expression) or a *categorical* value (a categorical literal {}).
-    When assigning the filter as a string (for example, \"a\"), the category names will be validated against the question's categories, because *category* expressions need to be evaluated to resolve any range expressions.
+    When assigning the filter as a string (for example, "a"), the category names will be validated against the question's categories, because *category* expressions need to be evaluated to resolve any range expressions.
     On the other hand, a *category* value (for example, {a}) is only validated against the *category* map at parse time, but is not checked when setting the filter.  The filter property does not consider this an error because filters can be set based on the answers to a previous question that could contain additional categories that are not included in the current question. The additional categories are ignored.  This distinction is important for database questions. Given that the categories for database questions are not known at parse time, *category* expressions must be used. This does mean that hard coded filters set for database questions will be validated at run time against the categories read from the database.
     ```ds
     'Example for unusual case of setting filter.
-    q1 \"Test question 1\"
+    q1 "Test question 1"
     categorical
     {
-    A \"A\",
-    B \"B\"
+        A "A",
+        B "B"
     };
-    q1.Categories.Filter = \"C\" ==> the error \"The range expression 'C' is not valid\" is produced.
+    q1.Categories.Filter = "C" ==> the error "The range expression 'C' is not valid" is produced.
     q1.Categories.Filter = {C} ==> no error is produced
     ```
     This property is not supported in mrDataManager 1.0
@@ -126,9 +126,9 @@ Interface ICategories Implements IEnumerable, Object
     ### Example
     ```ds
     ' These three lines are equivalent
-    Q1.Categories[0].Label.Style.Color = \"blue\"
-    Q1.Categories[\"Cat1\"].Label.Style.Color = \"blue\"
-    Q1.Categories.Cat1.Label.Style.Color = \"blue\"
+    Q1.Categories[0].Label.Style.Color = "blue"
+    Q1.Categories["Cat1"].Label.Style.Color = "blue"
+    Q1.Categories.Cat1.Label.Style.Color = "blue"
     ```
     !'
     Property Item(Index As Variant) As ICategory

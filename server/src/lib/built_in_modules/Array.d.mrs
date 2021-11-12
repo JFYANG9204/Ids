@@ -17,7 +17,7 @@ Class Array Implements IEnumerable
     If `Val` is *Text*, `Key` is converted to text if necessary and is searched for as a substring of `Val`. Unless `IgnoreCase` is *False*, the comparison is case-insensitive.
     If `Val` is *Categorical* or an *Array* (which can contain values of any type), Key can be a *long*, *double*, *text*, *date*, *boolean*, or *categorical* value, or an *array*. When comparing `Key` (or the items in `Key`) with the items in `Val`, the normal conversion and comparison rules for variant types are used if necessary. Unless IgnoreCase is False, the comparison of text items (or items converted to text) is case-insensitive. If either item is *Null*, they are equal only if both are *Null*. If `Key` is a categorical value or an array, it is found only if its items occur as a sequence of consecutive items in `Val` and in the same order.
     If either `Val` or Key is *NULL*, the return value is -1 (not found). If `Val` is not *Text*, *Categorical*, or an *Array*, an error occurs.
-    How you specify a text string as an argument depends on whether you are using the function in an SQL query or in mrScriptBasic or mrScriptMetadata. In an SQL query, enclose text strings in single quotation marks (' '). In mrScriptBasic or mrScriptMetadata, enclose text strings in double quotation marks (\" \").
+    How you specify a text string as an argument depends on whether you are using the function in an SQL query or in mrScriptBasic or mrScriptMetadata. In an SQL query, enclose text strings in single quotation marks (' '). In mrScriptBasic or mrScriptMetadata, enclose text strings in double quotation marks (" ").
 
     ### Examples
 
@@ -28,16 +28,16 @@ Class Array Implements IEnumerable
     | Find(Val, Key)            | {3,7,8,1,9,10,5,4}             | 5                    | 6       |
     | Find(Val, Key, 7)         | {3,7,8,1,9,10,5,4}             | 5                    | -1      |
     | Find(Val, Key, , , False) | 24 St John's Road, Barnes      | barnes               | -1      |
-    | Find(Val, Key)            | Split(\"The quick brown fox\") | Split(\"brown fox\") | 2       |
+    | Find(Val, Key)            | Split("The quick brown fox") | Split("brown fox") | 2       |
 
-    **Text variables**. These examples use the name and address variables, which are text variables that store respondents' names and addresses, respectively. These examples show how you would use the Find function in mrScriptBasic or mrScriptMetadata. In SQL queries, you should enclose text strings in single quotation marks (' ') instead of double quotation marks (\" \").
-    The following example selects any respondent whose address contains \"London\" in upper case, lower case, or a mixture of both cases. Find returns -1 when the search string has not been found. In this example the <> operator is used to test that the return value is not -1, which means that \"London\" exists somewhere in the text being searched.
+    **Text variables**. These examples use the name and address variables, which are text variables that store respondents' names and addresses, respectively. These examples show how you would use the Find function in mrScriptBasic or mrScriptMetadata. In SQL queries, you should enclose text strings in single quotation marks (' ') instead of double quotation marks (" ").
+    The following example selects any respondent whose address contains "London" in upper case, lower case, or a mixture of both cases. Find returns -1 when the search string has not been found. In this example the <> operator is used to test that the return value is not -1, which means that "London" exists somewhere in the text being searched.
     ```ds
-    address.Find(\"London\") <> -1
+    address.Find("London") <> -1
     ```
-    Find lets you search for a string in a particular position. This is useful when the position of the search string in the text you are searching is important. For example, the following selects respondents whose names begin with the string \"Brian\":
+    Find lets you search for a string in a particular position. This is useful when the position of the search string in the text you are searching is important. For example, the following selects respondents whose names begin with the string "Brian":
     ```ds
-    Find(name, \"Brian\") = 0
+    Find(name, "Brian") = 0
     ```
 
     **Categorical variables**. These examples use the *remember* multiple response variable.
@@ -73,7 +73,7 @@ Class Array Implements IEnumerable
     | :-------------    | :-------------                 | :----- | :---------------- |
     | Left(Val, Length) | 24 St John's Road, Barnes      | 10     | 24 St John        |
     | Left(Val, Length) | {4,2,9}                        | 1      | {4}               |
-    | Left(Val, Length) | Split(\"The quick brown fox\") | 2      | {The,quick}       |
+    | Left(Val, Length) | Split("The quick brown fox") | 2      | {The,quick}       |
 
     The following example returns the first six characters of the *name* text variable:
     ```ds
@@ -106,7 +106,7 @@ Class Array Implements IEnumerable
     | :------------ | :---------------               | :----  |
     | Len(Val)      | 24 St John's Road, Barnes      | 25 |
     | Len(Val)      | {4,2,9}                        | 3 |
-    | Len(Val)      | Split(\"The quick brown fox\") | 4 |
+    | Len(Val)      | Split("The quick brown fox") | 4 |
 
     The following example returns the number of characters stored in the *address* text variable:
     ```ds
@@ -143,7 +143,7 @@ Class Array Implements IEnumerable
     | Mid(Val, Start, Length) | {4,2,9}                        | 6     | 3      | {}              |
     | Mid(Val, Start, Length) | {4,2,9}                        | 0     | 2      | {4,2}           |
     | Mid(Val, Start, Length) | {4,2,9}                        | 0     |        | {4,2,9}         |
-    | Mid(Val, Start, Length) | Split(\"The quick brown fox\") | 1     | 2      | {quick,brown}   |
+    | Mid(Val, Start, Length) | Split("The quick brown fox") | 1     | 2      | {quick,brown}   |
 
     The following example returns characters 8-17 from the *address* text variable:
     ```ds
@@ -178,7 +178,7 @@ Class Array Implements IEnumerable
     | :----------------  | :--------------------          | :----- | :----------- |
     | Right(Val, Length) | 24 St John's Road, Barnes      | 6      | Barnes       |
     | Right(Val, Length) | {4,2,9,15,6,7}                 | 1      | {7}          |
-    | Right(Val, Length) | Split(\"The quick brown fox\") | 3      | {quick,brown,fox} |
+    | Right(Val, Length) | Split("The quick brown fox") | 3      | {quick,brown,fox} |
 
     The following example returns the 10 rightmost characters stored in the *address* text variable:
     ```ds
