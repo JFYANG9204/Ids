@@ -33,3 +33,16 @@ export function isAggregateFunction(name: string) {
     return aggregateFunctionName.has(name.toUpperCase());
 }
 
+const conversionFunctions = new Set([
+    "ccategorical",
+    "ctext",
+    "cdate",
+    "cboolean",
+    "clong",
+    "cdouble"
+]);
+
+export function isConversionFunction(name: string) {
+    return conversionFunctions.has(name.toLowerCase());
+}
+

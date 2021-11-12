@@ -1,3 +1,4 @@
+import * as vscode from "vscode";
 import * as path from "path";
 import * as fs from "fs";
 import * as jschardet from "jschardet";
@@ -250,8 +251,13 @@ export function getHoverContentFromNode(node: NodeBase, def: DefinitionBase, dec
     return def.getNote();
 }
 
-export function loadBuiltInModule() {
-    const folder = path.resolve("./server/src/lib/built_in_modules");
+export function loadBuiltInModule(modulePath?: string) {
+    let folder;
+    if (modulePath) {
+        folder = path.join(modulePath, "./server/src/lib/built_in_modules");
+    } else {
+        folder = path.resolve("./server/src/lib/built_in_modules");
+    }
     const module = getAllUsefulFile(folder);
     return loadDecarationFiles(module);
 }

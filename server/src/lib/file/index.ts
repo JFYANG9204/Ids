@@ -1,7 +1,7 @@
 import * as path from "path";
 import { createBasicOptions, SourceType } from "../options";
 import { Parser } from "../parser";
-import { Scope } from "../util/scope";
+import { mergeScope, Scope } from "../util/scope";
 import {
     createParserFileNode,
     ParserFileNode
@@ -28,8 +28,9 @@ export class ParserFileDigraph {
 
     startPath?: string;
 
-    constructor(folder: string) {
+    constructor(folder: string, global?: Scope) {
         this.folder = folder;
+        this.global = global;
     }
 
     init() {
@@ -46,7 +47,12 @@ export class ParserFileDigraph {
                 nodes.set(key, node);
             }
         });
-        this.global = loadDecarationFiles(declares);
+        const local = loadDecarationFiles(declares);
+        if (this.global && local) {
+            mergeScope(local, this.global);
+        } else {
+            this.global = local;
+        }
         this.nodeMap = nodes;
         this.buildGraph();
     }

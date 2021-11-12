@@ -16,6 +16,7 @@ import {
     PreDefineStatement,
     PropertyDeclaration,
 } from "../types";
+import { isConversionFunction } from "../util/match";
 import { BindTypes } from "../util/scope";
 import { ErrorMessages, WarningMessages } from "./error-messages";
 import { UtilParser } from "./util";
@@ -108,14 +109,14 @@ export class TypeUtil extends UtilParser {
 
     checkVarDeclared(name: string, node: NodeBase) {
         let find = this.scope.get(name)?.result;
-        if (!find &&
-            !this.scope.inFunction) {
-            this.raiseAtNode(
-                node,
-                ErrorMessages["VarIsNotDeclared"],
-                false,
-                name
-            );
+        if (!find) {
+            if (!this.scope.inFunction) {
+                this.raiseAtNode(
+                    node,
+                    ErrorMessages["VarIsNotDeclared"],
+                    false,
+                    name);
+            }
             return false;
         }
         return true;
@@ -505,6 +506,8 @@ export class TypeUtil extends UtilParser {
             if (object) {
                 this.addExtra(callExpr.callee, "declaration", object);
                 return object;
+            } else {
+                this.checkConversion(callExpr);
             }
         } else {
             funcName = ((callee as MemberExpression).property as Identifier).name;
@@ -672,6 +675,8 @@ export class TypeUtil extends UtilParser {
                     return this.scope.get("Dictionary")?.result;
                 case "scripting.filesystemobject":
                     return this.scope.get("FileSystemObject")?.result;
+                case "excel.application":
+                    return this.scope.get("Application", "Excel")?.result;
                 default:
                     this.raiseAtNode(
                         func.arguments[0],
@@ -681,6 +686,26 @@ export class TypeUtil extends UtilParser {
             }
         }
         return undefined;
+    }
+
+    checkConversion(func: CallExpression) {
+        if (!(func.callee instanceof Identifier &&
+            isConversionFunction(func.callee.name))) {
+            return;
+        }
+        if (func.arguments.length !== 1) {
+            return;
+        }
+        const argType = this.getExprType(func.arguments[0]);
+        const funcDeclare = this.scope.get(func.callee.name)?.result;
+        if (!funcDeclare ||
+            !(funcDeclare instanceof FunctionDeclaration) ||
+            !funcDeclare.returnType) {
+            return;
+        }
+        if (argType === funcDeclare.returnType) {
+            this.raiseAtNode(func, WarningMessages["RedundantTypeConvertion"], true);
+        }
     }
 
 }

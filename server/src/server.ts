@@ -1,3 +1,4 @@
+import * as vscode from "vscode";
 import { fileURLToPath } from "url";
 import { TextDocument } from "vscode-languageserver-textdocument";
 import {
@@ -29,9 +30,12 @@ import {
 } from "./util";
 import {
     getHoverContentFromNode,
+    loadBuiltInModule,
     positionAt,
 } from "./lib/file/util";
 import { DefinitionBase } from "./lib/util/definition";
+
+const extensionPath = vscode.extensions.getExtension("publisher.Yang")?.extensionPath;
 
 let connection = createConnection(ProposedFeatures.all);
 let documents = new TextDocuments(TextDocument);
@@ -39,6 +43,8 @@ let current: Map<string, File> = new Map();
 let last: Map<string, File> = new Map();
 let graph: ParserFileDigraph;
 let folderPath: string;
+
+const builtInDeclarations = loadBuiltInModule(extensionPath);
 
 connection.onInitialize((params) => {
     const result: InitializeResult = {
@@ -53,7 +59,7 @@ connection.onInitialize((params) => {
     };
     if (params.workspaceFolders) {
         folderPath = fileURLToPath(params.workspaceFolders[params.workspaceFolders.length - 1].uri);
-        graph = new ParserFileDigraph(folderPath);
+        graph = new ParserFileDigraph(folderPath, builtInDeclarations);
         graph.init();
     }
     return result;

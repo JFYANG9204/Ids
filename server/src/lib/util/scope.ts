@@ -331,39 +331,7 @@ export class ScopeHandler {
         if (!scope) {
             return;
         }
-        this.mergeMap(scope.dims, "dims");
-        this.mergeMap(scope.consts, "consts");
-        this.mergeMap(scope.macros, "macros");
-        this.mergeMap(scope.functions, "functions");
-        this.mergeMap(scope.classes, "classes");
-        this.mergeNamespace(scope.namespaces, this.store.namespaces);
-    }
-
-    private mergeMap<K, V>(source: Map<K, V>, map: string) {
-        source.forEach((value, key) => {
-            this.store[map].set(key, value);
-        });
-    }
-
-    private mergeNamespace(
-        source: Map<string, NamespaceDeclaration>,
-        map: Map<string, NamespaceDeclaration>) {
-        source.forEach((value, key) => {
-            let exist = map.get(key);
-            if (exist) {
-                this.mergeSingleNamespace(value, exist);
-            } else {
-                map.set(key, value);
-            }
-        });
-    }
-
-    private mergeSingleNamespace(
-        source: NamespaceDeclaration,
-        map: NamespaceDeclaration) {
-        source.body.forEach(member => {
-            map.body.push(member);
-        });
+        mergeScope(scope, this.store);
     }
 
     private insertName(
@@ -395,4 +363,39 @@ export class ScopeHandler {
 
 }
 
+export function mergeSingleNamespace(
+    source: NamespaceDeclaration,
+    map: NamespaceDeclaration) {
+    source.body.forEach(member => {
+        map.body.push(member);
+    });
+}
+
+export function mergeNamespace(
+    source: Map<string, NamespaceDeclaration>,
+    map: Map<string, NamespaceDeclaration>) {
+    source.forEach((value, key) => {
+        let exist = map.get(key);
+        if (exist) {
+            mergeSingleNamespace(value, exist);
+        } else {
+            map.set(key, value);
+        }
+    });
+}
+
+export function mergeScope(scope: Scope, target: Scope) {
+    mergeMap(scope.dims,      target.dims);
+    mergeMap(scope.consts,    target.consts);
+    mergeMap(scope.macros,    target.macros);
+    mergeMap(scope.functions, target.functions);
+    mergeMap(scope.classes,   target.classes);
+    mergeNamespace(scope.namespaces, target.namespaces);
+}
+
+function mergeMap<K, V>(source: Map<K, V>, target: Map<K, V>) {
+    source.forEach((value, key) => {
+        target.set(key, value);
+    });
+}
 

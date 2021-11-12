@@ -163,7 +163,7 @@ NameSpace Excel
         Sub UseCalculateFullRebuild()
         If Application.CalculationVersion &lt;&gt; _
             Workbooks(1).CalculationVersion Then
-            Application.<strong>CalculateFullRebuild</strong>
+            Application.CalculateFullRebuild
         End If
         End Sub
         ```
@@ -224,7 +224,7 @@ NameSpace Excel
         Set rngSubtotal = Application.Range("A10")
 
         ' Stop recalculation except for designated cell.
-        Application.<strong>CheckAbort</strong> KeepAbort:=rngSubtotal
+        Application.CheckAbort KeepAbort:=rngSubtotal
         End Sub
         ```
         !'
@@ -2217,7 +2217,7 @@ NameSpace Excel
         ```vb
         Sub CheckHyperlinks()
             ' Determine if automatic formatting is enabled and notify user.
-            If Application.<strong>AutoFormatAsYouTypeReplaceHyperlinks</strong> = True Then
+            If Application.AutoFormatAsYouTypeReplaceHyperlinks = True Then
                 MsgBox "Automatic formatting for typing in hyperlinks is enabled."
             Else
                 MsgBox "Automatic formatting for typing in hyperlinks is not enabled."
@@ -2226,6 +2226,47 @@ NameSpace Excel
         ```
         !'
         Property AutoFormatAsYouTypeReplaceHyperlinks() As Boolean
+
+        '!
+        ```ds
+        (property) Application.AutomationSecurity: MsoAutomationSecurity
+        ```
+        ------------------------
+        Returns or sets an `MsoAutomationSecurity` constant that represents the security mode Microsoft Excel uses when programmatically opening files. Read/write.
+
+        ### Syntax
+        ```vb
+        expression.AutomationSecurity
+        ```
+        *expression* - A variable that represents an `Application` object.
+
+        ### Remarks
+        This property is automatically set to `msoAutomationSecurityLow` when the application is started. Therefore, to avoid breaking solutions that rely on the default setting, you should be careful to reset this property to `msoAutomationSecurityLow` after programmatically opening a file. Also, this property should be set immediately before and after opening a file programmatically to avoid malicious subversion.
+
+        + `MsoAutomationSecurity` can be one of these `MsoAutomationSecurity` constants.
+        + `msoAutomationSecurityByUI`. Uses the security setting specified in the Security dialog box.
+
+        @note: This setting does not disable Microsoft Excel 4.0 macros. If a file that contains Microsoft Excel 4.0 macros is opened programmatically, the user will be prompted to decide whether or not to open the file.
+
+        + `msoAutomationSecurityLow`. Enables all macros. This is the default value when the application is started.
+
+        Setting `ScreenUpdating` to *False* does not affect alerts and will not affect security warnings. The `DisplayAlerts` setting will not apply to security warnings. For example, if the user sets `DisplayAlerts` equal to *False* and `AutomationSecurity` to `msoAutomationSecurityByUI`, while the user is on Medium security level, then there will be security warnings while the macro is running. This allows the macro to trap file open errors, while still showing the security warning if the file open succeeds.
+
+        ### Example
+        This example captures the current automation security setting, changes the setting to disable macros, displays the Open dialog box, and after opening the selected document, sets the automation security back to its original setting.
+        ```vb
+        Sub Security()
+            Dim secAutomation As MsoAutomationSecurity
+            secAutomation = Application.AutomationSecurity
+
+            Application.AutomationSecurity = msoAutomationSecurityForceDisable
+            Application.FileDialog(msoFileDialogOpen).Show
+
+            Application.AutomationSecurity = secAutomation
+        End Sub
+        ```
+        !'
+        Property AutomationSecurity As MsoAutomationSecurity
 
 
     End Class

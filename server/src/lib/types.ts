@@ -694,6 +694,7 @@ export class FunctionDeclaration extends DeclarationBase {
     body: BlockStatement;
     needReturn = false;
     returnType?: string;
+    class?: ClassOrInterfaceDeclaration;
     constructor(parser: ParserBase, pos: number, loc: Position) {
         super(parser, pos, loc);
         this.type = "FunctionDeclaration",
@@ -1675,11 +1676,13 @@ export class PropertyDeclaration extends DeclarationBase {
     params: Array<ArgumentDeclarator> = [];
     get?: PropertyGet;
     set?: PropertySet;
+    class: ClassOrInterfaceDeclaration;
     constructor(parser: ParserBase, pos: number, loc: Position) {
         super(parser, pos, loc);
         this.type = "PropertyDeclaration";
         this.name = new Identifier(parser, pos, loc);
         this.returnType = new SingleVarDeclarator(parser, pos, loc);
+        this.class = new ClassOrInterfaceDeclaration(parser, pos, loc);
     }
 }
 

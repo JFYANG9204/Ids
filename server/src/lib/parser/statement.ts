@@ -1079,6 +1079,7 @@ export class StatementParser extends ExpressionParser {
         object: ClassOrInterfaceDeclaration
     ): PropertyDeclaration {
         const node = this.startNode(PropertyDeclaration);
+        node.class = object;
         if (this.match(tt._default)) {
             node.default = true;
             object.default = node;
@@ -1158,7 +1159,9 @@ export class StatementParser extends ExpressionParser {
                     break;
                 case tt._sub:
                 case tt._function:
-                    node.methods.push(this.parseFunctionDeclaration());
+                    const method = this.parseFunctionDeclaration();
+                    method.class = node;
+                    node.methods.push(method);
                     break;
 
                 default:
