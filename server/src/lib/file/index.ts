@@ -48,10 +48,10 @@ export class ParserFileDigraph {
             }
         });
         const local = loadDecarationFiles(declares);
-        if (this.global && local) {
-            mergeScope(local, this.global);
-        } else {
+        if (!this.global && local) {
             this.global = local;
+        } else if (this.global && local) {
+            mergeScope(local, this.global);
         }
         this.nodeMap = nodes;
         this.buildGraph();
@@ -160,7 +160,7 @@ export class ParserFileDigraph {
             if (this.start.fileTypeMark) {
                 parser.options.sourceType = this.start.fileTypeMark;
             }
-            return parser.parse();
+            return parser.parse(this.global);
         }
     }
 

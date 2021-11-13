@@ -41,6 +41,7 @@ export const ErrorMessages: ErrorTemplates = makeErrorTemplates({
     MissingRightParen:               "缺少')'.",
     MissingParenObject:              "缺少父级对象.",
     MissingProperty:                 "缺少名为'%0'的属性或方法.",
+    MacroHasNoInitValue:             "宏定义未定义对应值，不能用于操作符计算.",
     NumberIdentifier:                "数字后不能紧跟标识符.",
     NumberIsTooLong:                 "数字超过32位数字范围(-2147483648~2147483647)",
     UnknownFunction:                 "未知名为'%0'的函数或方法.",

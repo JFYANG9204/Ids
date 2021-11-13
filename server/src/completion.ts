@@ -23,6 +23,7 @@ import {
     DeclarationBase,
     File,
     FunctionDeclaration,
+    MacroDeclaration,
     PreIncludeStatement,
     PropertyDeclaration,
     SingleVarDeclarator
@@ -223,6 +224,11 @@ function getDefaultNote(dec: DeclarationBase): string {
             const arr = dec as ArrayDeclarator;
             return "(variable) " + getDeclaratorNote(arr);
 
+        case "MacroDeclaration":
+            const macro = dec as MacroDeclaration;
+            return "(macro) " + macro.name.name +
+                macro.initValue ? " = " + macro.initValue : "";
+
         case "ClassOrInterfaceDeclaration":
             const classOrInterface = dec as ClassOrInterfaceDeclaration;
             if (classOrInterface.defType === "interface") {
@@ -261,7 +267,7 @@ function getArgumentNote(args: Array<ArgumentDeclarator>) {
     args.forEach((param, index) => {
         if (index > 0) { note += ", "; }
         if (param.optional) { note += "["; }
-        note += getDeclarationNote(param.declarator);
+        note += getDeclaratorNote(param.declarator);
         if (param.optional) { note += "]"; }
     });
     return note;
@@ -353,7 +359,10 @@ export { keywordsCompletions, preKeywordsCompletions, builtInCompletions };
 
 export function getHoverFromDeclaration(dec: DeclarationBase): Hover {
     return {
-        contents: getDeclarationNote(dec)
+        contents: {
+            kind: MarkupKind.Markdown,
+            value: getDeclarationNote(dec)
+        }
     };
 }
 

@@ -388,6 +388,7 @@ export class StatementParser extends ExpressionParser {
     parseSingleVarDeclarator(): SingleVarDeclarator | ArrayDeclarator {
         const node = this.startNode(SingleVarDeclarator);
         node.name = this.parseIdentifier();
+        // IEnumerable(Of T)
         if (this.match(tt.braceL)) {
             if (node.name.name.toLowerCase() !== "ienumerable") {
                 this.unexpected();

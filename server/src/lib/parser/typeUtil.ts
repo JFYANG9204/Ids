@@ -14,6 +14,7 @@ import {
     MemberExpression,
     NodeBase,
     PropertyDeclaration,
+    SingleVarDeclarator,
 } from "../types";
 import { isBasicType, isConversionFunction } from "../util/match";
 import { BindTypes } from "../util/scope";
@@ -265,8 +266,44 @@ export class TypeUtil extends UtilParser {
             findType.type = find;
         }
         this.addExtra(expr, "declaration", find);
-        type = find?.name.name;
+        type = this.getDecareBaseType(expr, find);
         return type ?? "Variant";
+    }
+
+    getDecareBaseType(node: NodeBase, dec?: DeclarationBase) {
+        if (!dec) {
+            return undefined;
+        }
+        switch (dec.type) {
+            case "MacroDeclaration":
+                const macro = dec as MacroDeclaration;
+                if (!macro.init) {
+                    this.raiseAtNode(
+                        node,
+                        ErrorMessages["MacroHasNoInitValue"],
+                        false);
+                    return "Variant";
+                }
+                if (typeof macro.initValue === "string") {
+                    return "String";
+                } else if (typeof macro.initValue === "number") {
+                    return "Long";
+                } else if (typeof macro.initValue === "boolean") {
+                    return "Boolean";
+                } else {
+                    return "Variant";
+                }
+
+            case "SingleVarDeclarator":
+                const single = dec as SingleVarDeclarator;
+                return single.valueType;
+
+            case "ArrayDeclarator":
+                return "Array";
+
+            default:
+                return dec.name.name;
+        }
     }
 
     getLogicalExprType(expr: LogicalExpression): DeclarationBase | undefined {

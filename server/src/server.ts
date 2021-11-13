@@ -23,13 +23,12 @@ import {
     preKeywordsCompletions
 } from "./completion";
 import {
-    loadBuiltInModule,
+    builtInModule,
     updateAndVaidateDocument,
 } from "./util";
 import {
     positionAt,
 } from "./lib/file/util";
-import { DefinitionBase } from "./lib/util/definition";
 
 let connection = createConnection(ProposedFeatures.all);
 let documents = new TextDocuments(TextDocument);
@@ -37,8 +36,6 @@ let current: Map<string, File> = new Map();
 let last: Map<string, File> = new Map();
 let graph: ParserFileDigraph;
 let folderPath: string;
-
-const builtInModule = loadBuiltInModule();
 
 connection.onInitialize((params) => {
     const result: InitializeResult = {
@@ -84,9 +81,6 @@ connection.onCompletion(
             );
         }
         let completions: CompletionItem[] = builtInCompletions.concat(keywordsCompletions);
-        let currentFile = current.get(path.toLowerCase());
-        if (currentFile && currentFile.scope) {
-        }
         return completions;
     }
 );
