@@ -23,6 +23,7 @@ export class ParserFileDigraph {
     nodeMap: Map<string, ParserFileNode> = new Map();
     start: ParserFileNode | undefined;
     current: ParserFileNode | undefined;
+    parseMap: Map<string, ParserFileNode> = new Map();
 
     global?: Scope;
 
@@ -132,13 +133,23 @@ export class ParserFileDigraph {
     }
 
     setStart(filePath: string) {
+        if (filePath.toLowerCase() === this.startPath?.toLowerCase()) {
+            return;
+        }
         this.clearStart();
+        this.startPath = filePath;
+        if (this.parseMap.get(filePath.toLowerCase())) {
+            this.start = this.parseMap.get(filePath.toLowerCase());
+            return;
+        }
         const head: { head?: ParserFileNode } = { head: this.start };
         this.current = this._dfs(this.vertex, head, true, node => {
             return node.filePath.toLowerCase() === filePath.toLowerCase();
         });
         this.start = head.head ?? this.getData(filePath);
-        this.startPath = filePath;
+        if (this.start) {
+            this.parseMap.set(filePath.toLowerCase(), this.start);
+        }
     }
 
     clearStart() {

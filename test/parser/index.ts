@@ -12,6 +12,8 @@ import { builtInModule, loadBuiltInModule } from "../../server/src/util";
 
 const folderPath = resolve("./test/parser/fixture/dpgm");
 const startPath = resolve("./test/parser/fixture/dpgm/Run.mrs");
+const changePath = resolve("./test/parser/fixture/dpgm/Run_jacc.mrs");
+const changeContent = readFileAndConvertToUtf8(changePath);
 const graph = new ParserFileDigraph(folderPath, builtInModule);
 graph.init();
 graph.setStart(startPath);
@@ -19,6 +21,17 @@ const file = graph.startParse();
 let mdd;
 if (file) {
     mdd = getCurrentParser(file, startPath);
+}
+let res;
+graph.updateData(startPath.toLowerCase(), changeContent);
+graph.setStart(startPath);
+const start = graph.startParse();
+if (start) {
+    if (start.path.toLowerCase() === startPath.toLowerCase()) {
+        res = start;
+    } else {
+        res = getCurrentParser(start, startPath);
+    }
 }
 // const builtIn = loadBuiltInModule();
 // const testpath = resolve("./test/parser/fixture/test.mrs");

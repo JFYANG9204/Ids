@@ -15,7 +15,6 @@
             ],
             "outFiles": [
                 "${workspaceRoot}/client/out/**/*.js",
-                "!**/node_modules/**"
             ],
             "preLaunchTask": {
                 "type": "npm",
@@ -30,7 +29,6 @@
             "restart": true,
             "outFiles": [
                 "${workspaceRoot}/server/out/**/*.js",
-                "!**/node_modules/**"
             ]
         },
         {
@@ -55,7 +53,7 @@
     "compounds": [
         {
             "name": "Client + Server",
-            "configurations": ["Attach to Server", "Launch Client"]
+            "configurations": ["Launch Client", "Attach to Server"]
         }
     ]
 }

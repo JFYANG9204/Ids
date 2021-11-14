@@ -1,6 +1,7 @@
 import { ParserBase } from "../base";
 import { FileReferenceMark } from "./util";
 import { SourceType } from "../options";
+import { File } from "../types";
 
 export type ParserFileNode = {
 
@@ -11,6 +12,7 @@ export type ParserFileNode = {
     fileReferenceMark?: FileReferenceMark;
     fileTypeMark?: SourceType;
     parser?: ParserBase;
+    file?: File;
 
 };
 

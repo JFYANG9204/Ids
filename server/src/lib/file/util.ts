@@ -8,9 +8,7 @@ import {
     NodeBase,
     WithStatement
 } from "../types";
-import { createBasicOptions, SourceType } from "../options";
-import { Scope } from "../util/scope";
-import { Parser } from "../parser";
+import { SourceType } from "../options";
 
 export function readFileAndConvertToUtf8(filePath: string): string {
     const file = fs.readFileSync(filePath);
