@@ -138,8 +138,7 @@ export class ParserFileDigraph {
         }
         this.clearStart();
         this.startPath = filePath;
-        if (this.parseMap.get(filePath.toLowerCase())) {
-            this.start = this.parseMap.get(filePath.toLowerCase());
+        if ((this.start = this.parseMap.get(filePath.toLowerCase()))) {
             return;
         }
         const head: { head?: ParserFileNode } = { head: this.start };
