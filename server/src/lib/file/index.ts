@@ -18,11 +18,13 @@ import {
 export class ParserFileDigraph {
 
     folder: string;
-
+    // 保存当前文件夹下内的入口文件(有引用但没有被引用)
     vertex: ParserFileNode[] = [];
+    // 保存当前文件夹下所有文件的内容和引用关系
     nodeMap: Map<string, ParserFileNode> = new Map();
     start: ParserFileNode | undefined;
     current: ParserFileNode | undefined;
+    // 保存使用过的入口文件，key为对应非入口文件的小写路径
     parseMap: Map<string, ParserFileNode> = new Map();
 
     global?: Scope;
@@ -66,8 +68,8 @@ export class ParserFileDigraph {
                 const fullPath = path.join(path.dirname(key), p).toLowerCase();
                 const existNode = this.nodeMap.get(fullPath);
                 if (existNode) {
-                    existNode.referenced.push(value);
-                    value.include.push(existNode);
+                    existNode.referenced.set(key.toLowerCase(), value);
+                    value.include.set(fullPath.toLowerCase(), existNode);
                 }
             });
             const mark = value.fileReferenceMark;
@@ -75,14 +77,15 @@ export class ParserFileDigraph {
                 const refPath = path.join(path.dirname(value.filePath), mark.path).toLowerCase();
                 const refNode = this.nodeMap.get(refPath);
                 if (refNode) {
-                    refNode.include.push(value);
-                    value.referenced.push(refNode);
+                    refNode.include.set(key.toLowerCase(), value);
+                    value.referenced.set(refPath.toLowerCase(), refNode);
                 }
             }
         });
         this.nodeMap.forEach((value) => {
-            if (value.referenced.length === 0 &&
-                value.include.length > 0) {
+            if (value.referenced.size === 0 &&
+                value.include.size > 0) {
+                value.isVertex = true;
                 this.vertex.push(value);
             }
         });
@@ -90,62 +93,77 @@ export class ParserFileDigraph {
 
     updateData(filePath: string, content: string) {
         const find = this.nodeMap.get(filePath.toLowerCase());
-        if (find) {
-            const refMark = getFileReferenceMark(content);
-            const typeMark = getFileTypeMark(content);
-            find.content = content;
-            find.fileTypeMark = typeMark !== undefined ? typeMark : SourceType.script;
-            if (refMark !== undefined) {
-                const refPath = path.join(path.dirname(filePath), refMark.path).toLowerCase();
-                const exist = this.nodeMap.get(refPath);
-                if (exist && !exist.include.includes(find)) {
-                    exist.include.push(find);
-                    find.referenced.push(exist);
-                }
-                if (find.fileReferenceMark) {
-                    const oldPath = path.join(path.dirname(filePath), find.fileReferenceMark.path).toLowerCase();
-                    if (oldPath !== refPath) {
-                        find.referenced.forEach((val, ndx) => {
-                            if (val.filePath.toLowerCase() === oldPath) {
-                                val.include.forEach((inc, index) => {
-                                    if (inc.filePath.toLowerCase() === find.filePath.toLowerCase()) {
-                                        val.include.splice(index, 1);
-                                    }
-                                });
-                                find.referenced.splice(ndx, 1);
-                            }
-                        });
-                    }
-                }
-                find.fileReferenceMark = refMark;
-            }
-        }
-    }
 
-    search(filePath: string) {
-        return this._dfs(this.vertex, undefined, false, node => {
-            return node.filePath.toLowerCase() === filePath.toLowerCase();
-        });
+        if (!find) {
+            return;
+        }
+
+        const refMark = getFileReferenceMark(content);
+        const typeMark = getFileTypeMark(content);
+        find.content = content;
+        find.fileTypeMark = typeMark !== undefined ? typeMark : SourceType.script;
+
+        if (refMark === undefined) {
+            return;
+        }
+
+        // 添加新的引用标记
+        const refPath = path.join(path.dirname(filePath), refMark.path).toLowerCase();
+        const exist = this.nodeMap.get(refPath);
+        if (exist && !exist.include.has(filePath.toLowerCase())) {
+            exist.include.set(filePath.toLowerCase(), find);
+            find.referenced.set(refPath, exist);
+        }
+
+        if (!find.fileReferenceMark) {
+            find.fileReferenceMark = refMark;
+            return;
+        }
+
+        const oldPath = path.join(path.dirname(filePath), find.fileReferenceMark.path).toLowerCase();
+
+        if (oldPath === refPath) {
+            return;
+        }
+
+        // 删除旧的引用标记
+        let oldRef;
+        if ((oldRef = find.referenced.get(oldPath))) {
+            oldRef.include.delete(filePath.toLowerCase());
+        }
+        find.referenced.delete(oldPath);
+
+        find.fileReferenceMark = refMark;
     }
 
     getData(filePath: string) {
         return this.nodeMap.get(filePath.toLowerCase());
     }
 
+    /**
+     * 设定文件夹内文件对应的入口文件，如果有多个，设定为第一个
+     * @param filePath 文件路径
+     * @returns
+     */
     setStart(filePath: string) {
         if (filePath.toLowerCase() === this.startPath?.toLowerCase()) {
             return;
         }
         this.clearStart();
         this.startPath = filePath;
+
+        // 如果是使用过的入口文件，不继续查找
         if ((this.start = this.parseMap.get(filePath.toLowerCase()))) {
             return;
         }
-        const head: { head?: ParserFileNode } = { head: this.start };
-        this.current = this._dfs(this.vertex, head, true, node => {
-            return node.filePath.toLowerCase() === filePath.toLowerCase();
-        });
-        this.start = head.head ?? this.getData(filePath);
+
+        // 查找对应入口文件
+        this.current = this.getData(filePath);
+        if (!this.current) {
+            return;
+        }
+
+        this.start = this.getVertexNode(this.current);
         if (this.start) {
             this.parseMap.set(filePath.toLowerCase(), this.start);
         }
@@ -163,9 +181,7 @@ export class ParserFileDigraph {
                 this.start.content
             );
             parser.searchParserNode = (filePath: string) => {
-                return this._dfs(this.vertex, undefined, false, node => {
-                    return node.filePath.toLowerCase() === filePath.toLowerCase();
-                });
+                return this.nodeMap.get(filePath.toLowerCase());
             };
             if (this.start.fileTypeMark) {
                 parser.options.sourceType = this.start.fileTypeMark;
@@ -174,21 +190,17 @@ export class ParserFileDigraph {
         }
     }
 
-    _dfs(stack: ParserFileNode[],
-        headNode: { head?: ParserFileNode } | undefined, ishead: boolean,
-        callback: (node: ParserFileNode) => boolean): ParserFileNode | undefined {
-        for (let i = 0; i < stack.length; i++) {
-            const item = stack[i];
-            if (ishead && headNode) {
-                headNode.head = item;
-            }
-            if (callback(item)) {
-                return item;
-            }
-            const inc = this._dfs(item.include, headNode, false, callback);
-            if (inc) {
-                return inc;
-            }
+    /**
+     * 对于任一节点，向上搜索，直到第一个入口文件，未找到返回undefined
+     * @param node
+     * @returns
+     */
+    getVertexNode(node: ParserFileNode): ParserFileNode | undefined {
+        if (node.isVertex) {
+            return node;
+        }
+        for (const n of node.referenced.values()) {
+            return this.getVertexNode(n);
         }
         return undefined;
     }

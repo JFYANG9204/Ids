@@ -7,12 +7,13 @@ export type ParserFileNode = {
 
     filePath: string;
     content: string;
-    include: ParserFileNode[];
-    referenced: ParserFileNode[];
+    include: Map<string, ParserFileNode>;
+    referenced: Map<string, ParserFileNode>;
     fileReferenceMark?: FileReferenceMark;
     fileTypeMark?: SourceType;
     parser?: ParserBase;
     file?: File;
+    isVertex?: true;
 
 };
 
@@ -24,8 +25,8 @@ export function createParserFileNode(
     return {
         filePath: path,
         content: content,
-        include: [],
-        referenced: [],
+        include: new Map(),
+        referenced: new Map(),
         fileReferenceMark: refMark,
         fileTypeMark: fileTypeMark,
     };
