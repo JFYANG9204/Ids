@@ -23,12 +23,12 @@ import {
     preKeywordsCompletions
 } from "./completion";
 import {
-    builtInModule,
     updateAndVaidateDocument,
 } from "./util";
 import {
     positionAt,
 } from "./lib/file/util";
+import { builtInModule } from "./lib/util/declaration";
 
 let connection = createConnection(ProposedFeatures.all);
 let documents = new TextDocuments(TextDocument);

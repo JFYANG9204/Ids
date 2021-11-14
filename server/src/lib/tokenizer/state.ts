@@ -7,9 +7,9 @@ import {
     Comment,
     CommentWhitespace,
     LineMark,
-    File
+    File,
+    DeclarationBase
 } from "../types";
-import { DefinitionBase } from "../util/definition";
 import { Position } from "../util/location";
 import { Scope, ScopeFlags } from "../util/scope";
 import { TokenType, types } from "./type";
@@ -26,7 +26,7 @@ export class State {
         this.curLine = options.startLine;
         this.startLoc = this.endLoc = this.curPostion();
         this.markDownCommentType = options.commentType;
-        this.globalDefinition = options.globalDefinition;
+        this.globalType = options.globalType;
         this.globalVarName = options.globalVarName;
         this.raiseTypeError = options.raiseTypeError;
     }
@@ -37,7 +37,7 @@ export class State {
     /**
      * 全局类型定义，用于With语句块内的文件内容
      */
-    globalDefinition?: DefinitionBase;
+    globalType?: DeclarationBase;
     /**
      * 全局定义的变量名
      */

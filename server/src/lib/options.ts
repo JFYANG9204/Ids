@@ -1,4 +1,4 @@
-import { DefinitionBase } from "./util/definition";
+import { DeclarationBase } from "./types";
 
 export enum SourceType {
     metadata,
@@ -27,8 +27,8 @@ export type Options = {
     tokens: boolean,
     errorRecovery: boolean,
     commentType: MarkDownCommentType,
-    globalDefinition?: DefinitionBase,
     globalVarName?: string,
+    globalType?: DeclarationBase
 };
 
 

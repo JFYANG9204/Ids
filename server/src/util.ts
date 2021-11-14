@@ -1,4 +1,3 @@
-import { join } from "path";
 import { fileURLToPath } from "url";
 import { _Connection } from "vscode-languageserver";
 import {
@@ -7,7 +6,6 @@ import {
 import { raiseErrors } from "./errors";
 import { ParserFileDigraph } from "./lib/file";
 import {
-    getAllUsefulFile,
     getCurrentParser,
     getFileTypeMark,
     readFileAndConvertToUtf8
@@ -15,7 +13,6 @@ import {
 import { createBasicOptions } from "./lib/options";
 import { Parser } from "./lib/parser";
 import { File } from "./lib/types";
-import { Scope } from "./lib/util/scope";
 
 
 
@@ -70,18 +67,6 @@ export function raiseErrorsFromFile(connection: _Connection, doc: TextDocument, 
     });
 }
 
-export function updateResultFromFile(file: File, data: Map<string, File>) {
-    data.set(file.path.toLowerCase(), file);
-    for (const inc of file.includes.values()) {
-        data.set(inc.path.toLowerCase(), inc);
-        updateResultFromFile(inc, data);
-    }
-}
-
-export function updateMapFromMap(source: Map<string, File>, target: Map<string, File>) {
-    source.forEach((file, path) => target.set(path, file));
-}
-
 export function createSingleParser(path: string, content?: string, uri?: string) {
     let text = content;
     if (!text) {
@@ -89,23 +74,3 @@ export function createSingleParser(path: string, content?: string, uri?: string)
     }
     return new Parser(createBasicOptions(path, false, uri), text);
 }
-
-export function loadBuiltInModule() {
-    const folder = join(__dirname, "../src/lib/built_in_modules");
-    const module = getAllUsefulFile(folder);
-    return loadDecarationFiles(module);
-}
-
-export function loadDecarationFiles(files: Map<string, string>) {
-    let scope: Scope | undefined;
-    files.forEach((f, p) => {
-        const parser = new Parser(createBasicOptions(p, false), f);
-        const file = parser.parse(scope ?? undefined);
-        if (file.scope) {
-            scope = file.scope;
-        }
-    });
-    return scope;
-}
-
-export const builtInModule = loadBuiltInModule();

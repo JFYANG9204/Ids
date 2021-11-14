@@ -8,7 +8,7 @@ import {
 import { getCurrentParser, getFileTypeMark, positionAt, positionInWith, readFileAndConvertToUtf8 } from "../../server/src/lib/file/util";
 import { createBasicOptions } from "../../server/src/lib/options";
 import { Parser } from "../../server/src/lib/parser";
-import { builtInModule, loadBuiltInModule } from "../../server/src/util";
+import { builtInModule } from "../../server/src/lib/util/declaration";
 
 const folderPath = resolve("./test/parser/fixture/dpgm");
 const startPath = resolve("./test/parser/fixture/dpgm/Run.mrs");

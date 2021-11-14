@@ -29,7 +29,7 @@ import {
     SingleVarDeclarator
 } from "./lib/types";
 import { isIdentifierChar } from "./lib/util/identifier";
-import { builtInModule } from "./util";
+import { builtInModule } from "./lib/util/declaration";
 
 
 export function getPathCompletion(uri: string): CompletionItem[] {
