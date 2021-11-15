@@ -2266,7 +2266,7 @@ NameSpace Excel
         End Sub
         ```
         !'
-        Property AutomationSecurity As MsoAutomationSecurity
+        Property AutomationSecurity() As MsoAutomationSecurity
 
 
     End Class

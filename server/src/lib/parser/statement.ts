@@ -104,6 +104,7 @@ import {
     PropertyDeclaration,
     PropertyGet,
     PropertySet,
+    ResumeNextStatement,
     SectionStatement,
     SelectCaseRange,
     SelectCaseStatement,
@@ -349,6 +350,8 @@ export class StatementParser extends ExpressionParser {
                 return this.parseGoto();
             case tt._on:
                 return this.parseOnError();
+            case tt._resume:
+                return this.parseResumeNext();
             //
             case tt._section:
                 return this.parseSectionStatement();
@@ -388,12 +391,10 @@ export class StatementParser extends ExpressionParser {
     parseSingleVarDeclarator(): SingleVarDeclarator | ArrayDeclarator {
         const node = this.startNode(SingleVarDeclarator);
         node.name = this.parseIdentifier();
+        node.push(node.name);
         // IEnumerable(Of T)
         if (this.match(tt.braceL)) {
-            if (node.name.name.toLowerCase() !== "ienumerable") {
-                this.unexpected();
-            }
-            this.checkIfDeclareFile("IEnumerable");
+            this.checkIfDeclareFile("泛型定义");
             this.eat(tt.braceL);
             this.expect(tt._of);
             node.name = this.parseIdentifier();
@@ -957,6 +958,13 @@ export class StatementParser extends ExpressionParser {
         return this.finishNode(node, "GotoStatement");
     }
 
+    parseResumeNext(): ResumeNextStatement {
+        const node = this.startNode(ResumeNextStatement);
+        this.next();
+        this.expect(tt._next);
+        return this.finishNode(node, "ResumeNextStatement");
+    }
+
     //
     // On Error Goto location
     // On Error Resume Next
@@ -1009,6 +1017,8 @@ export class StatementParser extends ExpressionParser {
         node.body = this.parseBlock(tt._end);
         this.expect(tt._end);
         isFunction ? this.expect(tt._function) : this.expect(tt._sub);
+        node.push(node.body);
+        node.pushArr(node.params);
         this.scope.exit();
         this.scope.declareName(node.name.name, BindTypes.function, node);
         return this.finishNode(node, "FunctionDeclaration");
@@ -1027,8 +1037,10 @@ export class StatementParser extends ExpressionParser {
         } else {
             node.declarator = this.parseSingleVarDeclarator();
         }
+        node.push(node.declarator);
         if (this.eat(tt.equal)) {
             node.defaultValue = this.parseExpression();
+            node.push(node.defaultValue);
         }
         return this.finishNode(node, "ArgumentDeclarator");
     }
@@ -1096,11 +1108,14 @@ export class StatementParser extends ExpressionParser {
         this.checkIfDeclareFile();
         this.expect(tt._property);
         node.name = this.parseIdentifier(true);
+        node.push(node.name);
         this.resetPreviousNodeTrailingComments(node.name);
         this.expect(tt.braceL);
         node.params = this.parseFunctionDeclarationParam();
+        node.pushArr(node.params);
         this.expect(tt._as);
         node.returnType = this.parseSingleVarDeclarator();
+        node.push(node.returnType);
         const ahead = this.lookahead();
         if (ahead.type === tt.equal) {
             this.next();

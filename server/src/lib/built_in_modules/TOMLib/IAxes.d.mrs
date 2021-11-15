@@ -99,6 +99,6 @@ Namespace TOMLib
         End Sub
 
 
-    End IAxes
+    End Interface
 
 End Namespace

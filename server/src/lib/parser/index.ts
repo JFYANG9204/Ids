@@ -35,17 +35,18 @@ export class Parser extends StatementParser {
         if (preDef) {
             this.scope.joinScope(preDef);
         }
-        if (header) {
-            this.scope.enterHeader(header);
-        }
         if (this.length > 0) {
             this.nextToken();
             try {
                 this.scope.enter(ScopeFlags.program);
+                if (header) {
+                    this.scope.enterHeader(header);
+                }
                 file.program = this.parseProgram();
                 this.scope.exit();
             // eslint-disable-next-line no-empty
             } catch (error) {
+                const err = error;
             }
         }
         this.checkLineMarkError();

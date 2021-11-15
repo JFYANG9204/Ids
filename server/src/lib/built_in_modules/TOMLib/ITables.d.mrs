@@ -130,7 +130,7 @@ Namespace TOMLib
     TableDoc.Tables.AddNewProfile("Table1", "profile({device, likesmost, likesleast})")
     ```
     !'
-    Function AddNewProfile(Name: String, Optional Specification As String = "", Optional Description As String = "", Optional Index As Long = -1) As ITable
+    Function AddNewProfile(Name As String, Optional Specification As String = "", Optional Description As String = "", Optional Index As Long = -1) As ITable
     End Function
 
     '!

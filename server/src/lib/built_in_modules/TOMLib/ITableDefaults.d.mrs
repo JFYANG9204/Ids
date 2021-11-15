@@ -90,7 +90,7 @@ Namespace TOMLib
         -----------------------------
         A collection of `Rule` objects. These are copied to the `Rules` collection of the `Table` object when a new table is created. This collection is initially empty.
         !'
-        ReadOnly Properties Rules() As IRules
+        ReadOnly Property Rules() As IRules
 
         '!
         ```ds

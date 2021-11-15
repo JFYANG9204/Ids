@@ -817,6 +817,13 @@ export class CallExpression extends Expression {
     }
 }
 
+export class ResumeNextStatement extends Statement {
+    constructor(parser: ParserBase, pos: number, loc: Position) {
+        super(parser, pos, loc);
+        this.type = "ResumeNextStatement";
+    }
+}
+
 // metadata
 
 export enum MetadataFieldType {

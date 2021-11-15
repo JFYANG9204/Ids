@@ -319,13 +319,13 @@ function checkIfDotStart(char: number) {
 export function getCompletionFromPosition(
     file: File, pos: number, triggerChar: string, lastChar: number) {
     const completions: CompletionItem[] = [];
-    let node = positionAt(file.program.body, pos, false, 0);
+    let pre = positionAt(file.program.body, pos, false, 0);
     // #include
-    if (node.type === "PreIncludeStatement") {
-        if (distanceTo((node as PreIncludeStatement).inc, pos) === 0 &&
-            (node as PreIncludeStatement).path &&
+    if (pre.type === "PreIncludeStatement") {
+        if (distanceTo((pre as PreIncludeStatement).inc, pos) === 0 &&
+            (pre as PreIncludeStatement).path &&
             (triggerChar === "\\" || triggerChar === "/")) {
-            let incPath = (node as PreIncludeStatement).path;
+            let incPath = (pre as PreIncludeStatement).path;
             try {
                 return getPathCompletion(incPath);
             } catch (error) {
