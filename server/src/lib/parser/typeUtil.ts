@@ -237,6 +237,9 @@ export class TypeUtil extends UtilParser {
             case "BooleanLiteral":
                 find = this.scope.get("Boolean")?.result;
                 break;
+            case "CategoricalLiteral":
+                find = this.scope.get("Categorical")?.result;
+                break;
             case "NullLiteral":
                 find = this.scope.get("Null")?.result;
                 break;
