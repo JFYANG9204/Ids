@@ -177,7 +177,7 @@ export class ParserFileDigraph {
     startParse() {
         if (this.start) {
             const parser = new Parser(
-                createBasicOptions(this.start.filePath, true),
+                createBasicOptions(this.start.filePath, true, undefined, this.global),
                 this.start.content
             );
             parser.searchParserNode = (filePath: string) => {
@@ -186,7 +186,7 @@ export class ParserFileDigraph {
             if (this.start.fileTypeMark) {
                 parser.options.sourceType = this.start.fileTypeMark;
             }
-            return parser.parse(this.global);
+            return parser.parse();
         }
     }
 
@@ -199,10 +199,34 @@ export class ParserFileDigraph {
         if (node.isVertex) {
             return node;
         }
+        if (node.referenced.size === 0) {
+            return undefined;
+        }
+        let sub;
         for (const n of node.referenced.values()) {
-            return this.getVertexNode(n);
+            if ((sub = this.getVertexNode(n))) {
+                return sub;
+            }
         }
         return undefined;
     }
 
 }
+
+
+export {
+    getAllIncludeInFile,
+    getAllUsefulFile,
+    getFileTypeMark,
+    getFileReferenceMark,
+    ParserFileNode,
+};
+
+export {
+    distanceTo,
+    positionAt,
+    positionIn,
+    positionInWith,
+    readFileAndConvertToUtf8,
+    getCurrentParser
+} from "./util";

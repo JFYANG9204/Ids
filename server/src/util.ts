@@ -4,15 +4,16 @@ import {
     TextDocument
 } from "vscode-languageserver-textdocument";
 import { raiseErrors } from "./errors";
-import { ParserFileDigraph } from "./lib/file";
 import {
     getCurrentParser,
     getFileTypeMark,
+    ParserFileDigraph,
     readFileAndConvertToUtf8
-} from "./lib/file/util";
+} from "./lib/file";
 import { createBasicOptions } from "./lib/options";
 import { Parser } from "./lib/parser";
 import { File } from "./lib/types";
+import { builtInModule } from "./lib/util/declaration";
 
 
 
@@ -72,5 +73,5 @@ export function createSingleParser(path: string, content?: string, uri?: string)
     if (!text) {
         text = readFileAndConvertToUtf8(path);
     }
-    return new Parser(createBasicOptions(path, false, uri), text);
+    return new Parser(createBasicOptions(path, false, uri, builtInModule), text);
 }

@@ -1,4 +1,5 @@
 import { DeclarationBase } from "./types";
+import { Scope } from "./util/scope";
 
 export enum SourceType {
     metadata,
@@ -29,6 +30,7 @@ export type Options = {
     commentType: MarkDownCommentType,
     globalVarName?: string,
     globalType?: DeclarationBase
+    globalDeclarations?: Scope
 };
 
 
@@ -53,7 +55,11 @@ export const defaultOptions: Options = {
     commentType: MarkDownCommentType.inner,
 };
 
-export function createBasicOptions(path: string, raiseTypeError: boolean, uri?: string): Options {
+export function createBasicOptions(
+    path: string,
+    raiseTypeError: boolean,
+    uri?: string,
+    global?: Scope): Options {
     return {
         uri: uri ?? "",
         sourceType: SourceType.script,
@@ -64,7 +70,8 @@ export function createBasicOptions(path: string, raiseTypeError: boolean, uri?: 
         tokens: false,
         errorRecovery: true,
         treatUnkownAsQuesion: true,
-        commentType: MarkDownCommentType.inner
+        commentType: MarkDownCommentType.inner,
+        globalDeclarations: global
     };
 }
 

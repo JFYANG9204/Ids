@@ -13,11 +13,14 @@ import {
     Hover,
     MarkupKind
 } from 'vscode-languageserver-types';
-import { distanceTo, positionAt, positionInWith } from "./lib/file/util";
+import {
+    distanceTo,
+    positionAt,
+    positionInWith
+} from "./lib/file";
 import {
     ArgumentDeclarator,
     ArrayDeclarator,
-    CallExpression,
     ClassOrInterfaceDeclaration,
     Comment,
     DeclarationBase,

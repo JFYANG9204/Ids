@@ -53,18 +53,27 @@ export class Scope {
     constructor(flags: ScopeFlags) {
         this.flags = flags;
     }
+
+    get size() {
+        return this.dims.size + this.consts.size +
+               this.macros.size + this.functions.size +
+               this.classes.size + this.namespaces.size;
+    }
 }
 
 export class ScopeHandler {
 
+    global: Scope;
     store: Scope;
     stack: Array<Scope> = [];
     raise: RaiseFunction;
 
     constructor(
         raise: RaiseFunction,
+        global?: Scope,
         store?: Scope) {
         this.raise = raise;
+        this.global = global ?? new Scope(ScopeFlags.program);
         this.store = store ?? new Scope(ScopeFlags.program);
     }
 
@@ -184,7 +193,9 @@ export class ScopeHandler {
         name: string,
         node: NodeBase
     ) {
-        if (this.isRedeclared(scope, name)) {
+        if (this.isRedeclared(scope, name) ||
+            this.isRedeclared(this.global, name) ||
+            this.isRedeclared(this.store, name)) {
             this.raise(node, ErrorMessages["VarRedeclaration"], false, name);
         }
     }
@@ -280,7 +291,8 @@ export class ScopeHandler {
             }
         }
         return this.getName(this.store, name) ||
-               this.getName(this.currentScope(), name);
+               this.getName(this.currentScope(), name) ||
+               this.getName(this.global, name);
     }
 
     getUndefined(name: string) {
@@ -337,6 +349,10 @@ export class ScopeHandler {
 
     joinScope(scope?: Scope) {
         if (!scope) {
+            return;
+        }
+        if (this.store.size === 0) {
+            this.store = scope;
             return;
         }
         mergeScope(scope, this.store);

@@ -14,6 +14,7 @@ export class Parser extends StatementParser {
         this.fileName = this.options.sourceFileName ?? "";
         this.scope = new ScopeHandler(
             (node, template, ...params) => this.raiseAtLocation(node.start, node.end, template, false, ...params),
+            this.options.globalDeclarations,
             this.state.localDefinitions);
         if (extname(this.fileName).toLowerCase() === ".dms") {
             this.options.scriptFileType = ScriptFileType.dms;
