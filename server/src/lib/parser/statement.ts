@@ -400,6 +400,10 @@ export class StatementParser extends ExpressionParser {
             node.name = this.parseIdentifier();
             this.expect(tt.braceR);
             node.enumerable = true;
+            this.scope.declareName(
+                node.name.name,
+                BindTypes.var,
+                node);
             return this.finishNode(node, "SingleVarDeclarator");
         }
         if (this.eat(tt._as)) {
@@ -430,6 +434,7 @@ export class StatementParser extends ExpressionParser {
                 node.generics = this.state.value;
                 this.next();
                 this.expect(tt.braceR);
+                this.scope.declareName(node.name.name, BindTypes.var, node);
             }
         }
         return this.finishNode(node, "SingleVarDeclarator");
@@ -594,17 +599,25 @@ export class StatementParser extends ExpressionParser {
         this.expect(tt.equal);
         node.assignment = this.parseExpression(true);
         if (node.id instanceof Identifier) {
-            const declared = this.checkVarDeclared(node.id.name, node.id);
-            if (declared) {
-                let declareType: { type: DeclarationBase | undefined } = { type: undefined };
-                this.getExprType(node.assignment, declareType);
-                if (declareType.type) {
-                    this.scope.update(
-                        node.id.name,
-                        BindTypes.var,
-                        declareType.type,
-                        node.assignment);
-                    this.addExtra(node.id, "declaration", declareType.type);
+            const declared = this.scope.get(node.id.name);
+            if (declared?.result) {
+                if (declared.type === BindTypes.const) {
+                    this.raiseAtNode(
+                        node.id,
+                        ErrorMessages["ConstVarCannotBeAssigned"],
+                        false);
+                } else {
+                    let declareType: {
+                        type: DeclarationBase | undefined } = { type: undefined };
+                    this.getExprType(node.assignment, declareType);
+                    if (declareType.type) {
+                        this.scope.update(
+                            node.id.name,
+                            BindTypes.var,
+                            declareType.type,
+                            node.assignment);
+                        this.addExtra(node.id, "declaration", declared.result);
+                    }
                 }
             }
         }
@@ -1399,6 +1412,7 @@ export class StatementParser extends ExpressionParser {
         const node = this.startNode(PreIfStatement);
         this.next();
         node.test = this.parseExpression(undefined, true);
+        this.checkExprError(node.test);
         node.consequent = this.parseBlock([ tt.pre_endif, tt.pre_elif, tt.pre_else ]);
         if (this.match(tt.pre_elif)) {
             node.alternate = this.parsePreIfStatement();

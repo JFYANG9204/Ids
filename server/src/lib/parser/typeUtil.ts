@@ -1,5 +1,6 @@
 import {
     ArgumentDeclarator,
+    ArrayDeclarator,
     AssignmentExpression,
     BinaryExpression,
     CallExpression,
@@ -364,12 +365,17 @@ export class TypeUtil extends UtilParser {
                     rightType.type,
                     expr);
                 if (expr.treeParent &&
-                    expr.treeParent.type !== "SetStatement" &&
-                    !isBasicType(rightType.type.name.name)) {
-                    this.raiseAtNode(
-                        expr,
-                        WarningMessages["AssignmentMaybeObject"],
-                        true);
+                    expr.treeParent.type !== "SetStatement") {
+                    let finalType = rightType.type;
+                    if (finalType instanceof ClassOrInterfaceDeclaration) {
+                        finalType = this.getFinalType(finalType);
+                    }
+                    if (!isBasicType(finalType.name.name)) {
+                        this.raiseAtNode(
+                            expr,
+                            WarningMessages["AssignmentMaybeObject"],
+                            true);
+                    }
                 }
             } else {
                 this.undefined(expr.left, expr.left.name);
@@ -378,7 +384,7 @@ export class TypeUtil extends UtilParser {
                     rightType.type);
             }
             if (left) {
-                this.addExtra(expr.left, "declaration", rightType.type);
+                this.addExtra(expr.left, "declaration", left);
             }
         } else {
             let leftType: { type: DeclarationBase | undefined } = { type: undefined };
@@ -413,7 +419,18 @@ export class TypeUtil extends UtilParser {
         const obj = member.object;
         switch (obj.type) {
             case "Identifier":
-                return this.getIdentifierType(obj as Identifier);
+                const type = this.getIdentifierType(obj as Identifier);
+                if (type?.type === "SingleVarDeclarator") {
+                    const single = type as SingleVarDeclarator;
+                    if (single.bindingType) {
+                        return single.bindingType;
+                    } else {
+                        return this.scope.get(single.valueType)?.result;
+                    }
+                } else if (type?.type === "ArrayDeclarator") {
+                    return this.scope.get("Array")?.result;
+                }
+                return type;
             case "MemberExpression":
                 return this.getMemberType(obj as MemberExpression);
             case "CallExpression":
@@ -446,14 +463,17 @@ export class TypeUtil extends UtilParser {
         let prop = member.property;
         // Object.Member
         if (prop.type === "Identifier") {
+            let parent: DeclarationBase | undefined = obj;
             let child: DeclarationBase | undefined;
             if (obj.type === "PropertyDeclaration") {
                 const objReturn = (obj as PropertyDeclaration).returnType.name.name;
-                child = this.scope.get(objReturn, obj.namespace)?.result;
-            } else {
+                parent = this.scope.get(objReturn,
+                    (obj as PropertyDeclaration).class.namespace?.name.name)?.result;
+            }
+            if (parent && parent.type === "ClassOrInterfaceDeclaration") {
                 child = this.getPropertyOrMethod(
                     (prop as Identifier).name,
-                    (obj as ClassOrInterfaceDeclaration));
+                    (parent as ClassOrInterfaceDeclaration));
             }
             if (!child) {
                 this.raiseAtNode(
@@ -551,7 +571,7 @@ export class TypeUtil extends UtilParser {
             funcName = (callee as Identifier).name;
             const object = this.getCreateObjectType(callExpr);
             if (object) {
-                this.addExtra(callExpr.callee, "declaration", object);
+                this.addExtra(callExpr.callee, "declaration", objType);
                 return object;
             } else {
                 this.checkConversion(callExpr);
@@ -755,5 +775,19 @@ export class TypeUtil extends UtilParser {
         }
     }
 
+    createSingleDeclaratorFromDeclaration(
+        base: SingleVarDeclarator,
+        valueType: string): SingleVarDeclarator {
+        const node = new SingleVarDeclarator(this, base.start, base.loc.start);
+        node.loc = base.loc;
+        node.end = base.end;
+        node.type = base.type;
+        node.name = base.name;
+        node.namespace = base.namespace;
+        node.enumerable = base.enumerable;
+        node.valueType = valueType;
+        node.generics = base.generics;
+        return node;
+    }
 }
 

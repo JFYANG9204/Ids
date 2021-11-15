@@ -627,6 +627,7 @@ export class SingleVarDeclarator extends DeclarationBase {
     name: Identifier;
     valueType: string = "Variant";
     generics?: string;
+    bindingType?: DeclarationBase;
     constructor(parser: ParserBase, pos: number, loc: Position) {
         super(parser, pos, loc);
         this.name = new Identifier(parser, pos, loc);
@@ -640,6 +641,7 @@ export class ArrayDeclarator extends DeclarationBase {
     generics?: string;
     dimensions: number;
     boundaries?: number[];
+    bindingType?: DeclarationBase;
     constructor(parser: ParserBase, pos: number, loc: Position) {
         super(parser, pos, loc);
         this.name = new Identifier(parser, pos, loc);

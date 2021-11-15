@@ -1,0 +1,231 @@
+
+Namespace TOMLib
+
+    '!
+    ```ds
+    (interface) IDataSet
+    ```
+    -----------------------------
+    The `DataSet` object represents the data that the table is to be based upon. The `Load()` method of the `DataSet` object needs to be called soon after creating a `Document` object in order to set the data set to be used for the tables.
+
+    ### Remarks
+    The data set is split into metadata and case data. The metadata to use is specified in the call to the `Load` method and can not be changed without calling the Load method again, which will clear the Document. The case data is only required when the tables are populated and can therefore be changed at any time.
+    !'
+    Interface IDataSet Implements Object
+
+        '!
+        ```ds
+        (property) IDataSet.CanChangeView: Boolean
+        ```
+        -----------------------------
+        *True* if the View property can be changed.
+
+        ### Remarks
+        It is not possible to change the `View` property if any object in the table document could potentially reference a variable or field in the metadata. Modifying the `View` property when `CanChangeView` is False will generate an error.
+        !'
+        ReadOnly Property CanChangeView() As Boolean
+
+        '!
+        ```ds
+        (property) IDataSet.HasHdata: Boolean
+        ```
+        -----------------------------
+        *True* if the current data set supports *HDATA*.
+
+        ### Remarks
+        A data set must support either *VDATA* or *HDATA*, or possibly both. Since v3.5 a *HDATA* view is automatically created for *CDSCs* that only support *VDATA*. This means the `HasHdata` property will always be True.
+        Please read the Data Model documentation in the Data Collection Developer Library for more information on the difference between *VDATA* and *HDATA*.
+        !'
+        ReadOnly Property HasHdata() As Boolean
+
+        '!
+        ```ds
+        (property) IDataSet.HasVdata: Boolean
+        ```
+        -----------------------------
+        *True* if the current data set supports *VDATA*.
+
+        ### Remarks
+        A data set must support either *VDATA* or *HDATA*, or possibly both. Since v4.5 a *VDATA* view is automatically created for *CDSCs* that only support *HDATA*. This means the `HasVdata` property will always be *True*.
+        Please read the Data Model documentation in the Data Collection Developer Library for more information on the difference between *VDATA* and *HDATA*.
+        !'
+        ReadOnly Property HasVdata() As Boolean
+
+        '!
+        ```ds
+        (property) IDataSet.MdmChangeTracker: IChangeTracker
+        ```
+        -----------------------------
+        A `ChangeTracker` object which can be used to track changes to the `MdmDocument`
+
+        ### Remarks
+        The `MdmChangeTracker` property returns the `ChangeTracker` object that `TOM` uses to track changes to the metadata document. As fields in the `MdmDocument` are modified and removed, and new fields are added then appropriate methods on the `MdmChangeTracker` object should be called. These track the changes to the metadata, which are also saved when the table document is saved. When the table document is opened again the previously saved changes are re-applied to the `MdmDocument`.
+        !'
+        ReadOnly Property MdmChangeTracker() As IChangeTracker
+
+        '!
+        ```ds
+        (property) IDataSet.MdmDocument: IDocument
+        ```
+        -----------------------------
+        The metadata document loaded.
+
+        ### Remarks
+        The MDM Document is documented in the Data Model section of the Data Collection Developer Library.
+        !'
+        ReadOnly Property MdmDocument() As IDocument
+
+        '!
+        ```ds
+        (property) IDataSet.MdscName: String
+        ```
+        -----------------------------
+        The name of the *DSC* used to load the metadata.
+        !'
+        ReadOnly Property MdscName() As String
+
+        '!
+        ```ds
+        (property) IDataSet.MetaDataLocation: String
+        ```
+        -----------------------------
+        The location of the metadata.
+        !'
+        ReadOnly Property MetaDataLocation() As String
+
+        '!
+        ```ds
+        (property) IDataSet.Parent: IDocument
+        ```
+        -----------------------------
+        The parent object
+
+        ### Remarks
+        The `Parent` property of the `DataSet` object always returns a `Document` object
+        !'
+        ReadOnly Property Parent() As IDocument
+
+        '!
+        ```ds
+        (property) IDataSet.Variables: IVariableListItem
+        ```
+        -----------------------------
+        The `Variables` for the open data set.
+
+        ### Remarks
+        The `Variables` property can be used to manage the variables for the data set. `Variables` can be added, removed, renamed, and grouped using the `Variables` property.
+        !'
+        ReadOnly Property Variables() As IVariableListItem
+
+        '!
+        ```ds
+        (property) IDataSet.Version: String
+        ```
+        -----------------------------
+        The version specification of the metadata loaded.
+        !'
+        ReadOnly Property Version() As String
+
+        '!
+        ```ds
+        (property) IDataSet.CdscName: String
+        ```
+        -----------------------------
+        The name of the *DSC* to be used to access the case data.
+        !'
+        Property CdscName() As String
+
+        '!
+        ```ds
+        (property) IDataSet.DbLocation: String
+        ```
+        -----------------------------
+        The location of the case data for the table. The content of this string depends on the specific case data *DSC* that is used.
+        !'
+        Property DbLocation() As String
+
+        '!
+        ```ds
+        (property) IDataSet.Description: String
+        ```
+        -----------------------------
+        A user specified description of the contents of this data set. This can be used as an annotation on the table.
+        !'
+        Property Description() As String
+
+        '!
+        ```ds
+        (property) IDataSet.Filter: String
+        ```
+        -----------------------------
+        The global filter for *CDSCs* that natively support case data filtering.
+
+        ### Remarks
+        Some CDSCs, for example *mrRdbDsc2*, support the ability to natively filter the case data. If the *CDSC* supports native case data filtering the `Filter` property can effectively be used to specify a global filter to be applied to all case data.
+        Depending on the particular *CDSC* this filter can be highly efficient. Note however that if the *CDSC* currently selected doesn't implement case data filtering then attempting to set a value for the `Filter` property will cause an error.
+        When using the *dvHDATA* view of the data the filter is always applied at the top (*HDATA*) level.
+        The `Filter` property only currently applies to *ttAggregated* tables. *ttProfile* tables are unaffected, although this may change in the future.
+        !'
+        Property Filter() As String
+
+        '!
+        ```ds
+        (property) IDataSet.Project: String
+        ```
+        -----------------------------
+        The specific project to use in the case of a *DSC* that supports multiple projects per database.
+        !'
+        Property Project() As String
+
+        '!
+        ```ds
+        (property) IDataSet.View: DataSetView
+        ```
+        -----------------------------
+        The view of the data set that is currently being used.
+
+        ### Remarks
+        If the data set only supports *VDATA* then this property can only be set to *dvVDATA*. If the data set only supports *HDATA* then this property can only be set to *dvHDATA*. If the data set support both *VDATA* and *HDATA* then this property can be used to select the view of the data to use. The view selected determines how field and variable names can be used in the table and axis specifications. If the data set supports both *HDATA* and *VDATA* then `View` is set to *dvHDATA* by default.
+        !'
+        Property View() As DataSetView
+
+        '!
+        ```ds
+        (method) IDataSet.Load(MetaData: Variant, [MDSC: String = ""], [DbLocation: String = ""], [CDSC: String = ""], [Project: String = ""], [Version: String = {..}]): Void
+        ```
+        -----------------------------
+        Loads the metadata and case data to be used.
+
+        ### Remarks
+        The metadata and case data to base the `Document` on can be specified in a number of ways:
+        + A metadata document (MDD file) can be specified (default `DataSource` is used)
+        + A metadata *DSC* and metadata location can be specified (default `DataSource` is used)
+        + A *CDSC* and database location can be specified to override the default `DataSource` in the metadata
+        + A specify version or superversion of the metadata can be specified.
+
+        ### Example
+        + Only metadata specified. This can be a path to a .mdd file or an instantiated in-memory mdm document. e.g. `Load("c:\projects\museum.mdd")`. or `Load(thisMddDoc)`
+        + Metadata location and metadata *DSC*. The metadata *DSC* specified (e.g. mrSavDsc) is used to read the data. e.g. `Load("c:\projects\savfile.sav", "mrSavDsc")`
+        + Metadata and case-data location. If the `DbLocation` is specified (but without a CDSC), then the default CDSC is used but with the specified case data. e.g. `Load("c:\skidemo\skidemo.mdd", , "c:\skidemo_new")`
+        + Metadata, Metadata DSC, and case-data.  The default CDSC specified in the metadata can be overridden with the specified case data CDSC and location. e.g. `Load("c:\museum\museum.qdi", "mrQdiDrsDSC", "c:\museum\museum.drs", "mrQdiDrsDSC")`
+        + Specific metadata version. The version or versions of the metadata to use can be specified using the Version parameter.  See the 'Version Expressions' topic in the Data Collection Developer Library for more information. e.g. `Load("c:\projects\museums.mdd", , , , , "{1..4:3, 7, 5, 11}")`
+        !'
+        Sub Load(MetaData As Variant, Optional MDSC As String = "", Optional DbLocation As String = "", Optional CDSC As String = "", Optional Project As String = "", Optional Version As String = "{..}")
+        End Sub
+
+        '!
+        ```ds
+        (method) IDataSet.ValidateCaseData(): Void
+        ```
+        -----------------------------
+        Attempts to connect to the case data and returns an error if the case data can't be accessed
+
+        ### Remarks
+        The `CdscName`, `DbLocation`, and `Project` properties specify the case data to use when populating the tables. The actual connection to the case data isn't established until the `IDocument.Populate()` method is called. The `ValidateCaseData()` method can be used at any time to check that a connection to the case data can be established, without actually populating the tables. If the case data exists and can be accessed the `ValidateCaseData` method will return without error, otherwise it will return an error message describing why the case data can't be accessed.
+        !'
+        Sub ValidateCaseData()
+        End Sub
+
+    End Interface
+
+End Namespace

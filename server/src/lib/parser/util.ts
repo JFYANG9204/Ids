@@ -12,7 +12,6 @@ import { ErrorTemplate } from "./errors";
 export class UtilParser extends Tokenizer {
 
     addExtra(node: NodeBase, key: string, val: any) {
-        if (!node) return;
         node.extra[key] = val;
     }
 

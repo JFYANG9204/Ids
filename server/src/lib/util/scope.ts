@@ -110,8 +110,10 @@ export class ScopeHandler {
         bindingType: BindTypes,
         node: NodeBase,
         type?: DeclarationBase) {
+
         const scope = this.currentScope();
         this.checkRedeclarationInScope(scope, name, node);
+
         if ((bindingType === BindTypes.function) &&
             node instanceof FunctionDeclaration) {
             if (this.inFunction || this.inWith) {
@@ -124,27 +126,29 @@ export class ScopeHandler {
                 return;
             }
             this.insertName(scope, name, node, "functions");
-        } else if ((bindingType === BindTypes.var) && (
+            return;
+        }
+
+        if ((bindingType === BindTypes.var) && (
             node instanceof SingleVarDeclarator ||
             node instanceof ArrayDeclarator     ||
             node instanceof ClassOrInterfaceDeclaration)) {
             if (node instanceof SingleVarDeclarator) {
-                const variant = this.get("Variant")?.result;
-                if (variant) {
-                    this.insertName(scope, name, variant, "dims");
-                }
+                node.bindingType = this.get("Variant")?.result;
             } else if (node instanceof ArrayDeclarator) {
-                const array = this.get("Array")?.result;
-                if (array) {
-                    this.insertName(scope, name, array, "dims");
-                }
-            } else {
-                this.insertName(scope, name, node, "dims");
+                node.bindingType = this.get("Array")?.result;
             }
-        } else if ((bindingType === BindTypes.classOrInterface) &&
+            this.insertName(scope, name, node, "dims");
+            return;
+        }
+
+        if ((bindingType === BindTypes.classOrInterface) &&
             node instanceof ClassOrInterfaceDeclaration) {
             this.insertName(scope, name, node, "classes");
-        } else if ((bindingType === BindTypes.const)) {
+            return;
+        }
+
+        if ((bindingType === BindTypes.const)) {
             if (node instanceof MacroDeclaration) {
                 this.insertName(scope, name, node, "macros");
             } else if (node instanceof SingleVarDeclarator) {
@@ -157,7 +161,10 @@ export class ScopeHandler {
             } else if (node instanceof EnumDeclaration) {
                 this.insertName(scope, name, node, "consts");
             }
-        } else if ((bindingType === BindTypes.namespace) &&
+            return;
+        }
+
+        if ((bindingType === BindTypes.namespace) &&
             node instanceof NamespaceDeclaration) {
             this.currentScope().namespaces.set(name.toLowerCase(), node);
             let exist: NamespaceDeclaration | undefined;
@@ -226,13 +233,17 @@ export class ScopeHandler {
         return this.currentScope().withHeader[this.currentScope().withHeader.length - 1];
     }
 
-    enterHeader(type: DeclarationBase) {
-        this.currentScope().withHeader.push(type);
+    enterHeader(type?: DeclarationBase) {
+        if (type) {
+            this.currentScope().withHeader.push(type);
+        }
         this.currentScope().currentHeader = type;
     }
 
     exitHeader() {
-        this.currentScope().withHeader.pop();
+        if (this.currentScope().currentHeader) {
+            this.currentScope().withHeader.pop();
+        }
         if (this.currentScope().withHeader.length > 0) {
             this.currentScope().currentHeader =
                 this.currentScope().withHeader[this.currentScope().withHeader.length - 1];
@@ -280,7 +291,8 @@ export class ScopeHandler {
         ScopeSearchResult | undefined {
         if (namespace) {
             if (typeof namespace === "string") {
-                const field = this.store.namespaces.get(namespace.toLowerCase()) ||
+                const field = this.global.namespaces.get(namespace.toLowerCase()) ||
+                this.store.namespaces.get(namespace.toLowerCase()) ||
                 this.currentScope().namespaces.get(namespace.toLowerCase());
                 if (!field) {
                     return undefined;
@@ -322,8 +334,11 @@ export class ScopeHandler {
         newBindingType: BindTypes,
         newType: DeclarationBase,
         assignExpr: Expression) {
+
         let exist = this.get(name);
-        if (!exist) {
+
+        // 检查是否已经声明
+        if (!exist?.result) {
             this.raise(
                 assignExpr,
                 ErrorMessages["VarIsNotDeclared"],
@@ -331,6 +346,8 @@ export class ScopeHandler {
                 name);
             return;
         }
+
+        // 检查是否为Const类型
         if (exist.type === BindTypes.const) {
             this.raise(
                 assignExpr,
@@ -339,6 +356,22 @@ export class ScopeHandler {
             );
             return;
         }
+
+        // 检查是否为本地定义，如果为本地定义，则更新Decarator内的ValueType属性和bindingType属性
+        if (exist.type === BindTypes.var) {
+            if (exist.result instanceof SingleVarDeclarator) {
+                exist.result.valueType = newType.name.name;
+                exist.result.bindingType = newType;
+            } else if (exist.result instanceof ArrayDeclarator) {
+                if (!exist.result.generics) {
+                    exist.result.generics = newType.name.name;
+                } else {
+                    exist.result.generics = "Variant";
+                }
+            }
+            return;
+        }
+
         this.delete(name);
         this.declareName(name, newBindingType, newType);
     }

@@ -8704,7 +8704,7 @@ export const builtInInterfaces = new Set<BuiltInDefinition>([
                     "```ds",
                     "(property) IDataSet.Filter: String",
                     "```",
-            "-----------------------------",
+                    "-----------------------------",
                     "The global filter for *CDSCs* that natively support case data filtering.",
                     "",
                     "### Remarks",

@@ -95,5 +95,5 @@ export const ErrorMessages: ErrorTemplates = makeErrorTemplates({
 
 export const WarningMessages: ErrorTemplates = makeErrorTemplates({
     RedundantTypeConvertion:             "多余的类型转换.",
-    AssignmentMaybeObject:               "赋值结果为对象，应使用'Set'语句.",
+    AssignmentMaybeObject:               "赋值结果为对象，且不具备类型为基础类型的默认属性，应使用'Set'语句.",
 }, "DATACOLLECTION_SCRIPT_PARSER_SYNTAX_WARNING");

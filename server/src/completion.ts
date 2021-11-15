@@ -178,9 +178,9 @@ function getCompletionTypeFromDeclare(dec: DeclarationBase): CompletionItemKind 
 }
 
 function getDeclarationNote(dec: DeclarationBase): string {
-    if (dec.leadingComments) {
+    if (dec.leadingComments.length > 0) {
         return mergeComments(dec.leadingComments);
-    } else if (dec.innerComments) {
+    } else if (dec.innerComments.length > 0) {
         return mergeComments(dec.innerComments);
     } else {
         return getDefaultNote(dec);
@@ -192,10 +192,15 @@ function mergeComments(comments: Array<Comment>) {
     comments.forEach(comment => {
         text += comment.value;
     });
-    return text;
+    return formatStatement(text);
 }
 
-function getDefaultNote(dec: DeclarationBase): string {
+function formatStatement(comment: string): string {
+    const regexp = /\n\s*/gm;
+    return comment.replace(regexp, "\n");
+}
+
+function getDefaultNote(dec: DeclarationBase, declared?: boolean): string {
     const name = dec.name.name;
     let text = "";
     let args = "";
@@ -209,7 +214,7 @@ function getDefaultNote(dec: DeclarationBase): string {
             }
             args = getArgumentNote((dec as FunctionDeclaration).params);
             value = (dec as FunctionDeclaration).returnType ?? "Void";
-            return text + name + "(" + args + "): " + value;
+            return "```ds\n" + text + name + "(" + args + "): " + value + "\n```";
 
         case "PropertyDeclaration":
             const prop = dec as PropertyDeclaration;
@@ -218,20 +223,20 @@ function getDefaultNote(dec: DeclarationBase): string {
                 text += "(" + getArgumentNote(prop.params) + ")";
             }
             text += ": " + getDeclaratorNote(prop.returnType);
-            return text;
+            return "```ds\n" + text + "\n```";
 
         case "SingleVarDeclarator":
             const dim = dec as SingleVarDeclarator;
-            return "(variable) " + getDeclaratorNote(dim);
+            return "```ds\n" + `(variable) ${getDeclaratorNote(dim)}\n` + "```";
 
         case "ArrayDeclarator":
             const arr = dec as ArrayDeclarator;
-            return "(variable) " + getDeclaratorNote(arr);
+            return "```ds\n" + `(variable) ${getDeclaratorNote(arr)}\n` + "```";
 
         case "MacroDeclaration":
             const macro = dec as MacroDeclaration;
-            return "(macro) " + macro.name.name +
-                macro.initValue ? " = " + macro.initValue : "";
+            return "```ds\n(macro) " + macro.name.name +
+                (macro.initValue ? " = " + macro.initValue : "") + "\n```";
 
         case "ClassOrInterfaceDeclaration":
             const classOrInterface = dec as ClassOrInterfaceDeclaration;
@@ -240,7 +245,7 @@ function getDefaultNote(dec: DeclarationBase): string {
             } else {
                 text += "(class) ";
             }
-            return text + classOrInterface.name.name;
+            return "```ds\n" + text + classOrInterface.name.name + "\n```";
 
         default:
             return "";
@@ -249,7 +254,7 @@ function getDefaultNote(dec: DeclarationBase): string {
 
 function getDeclaratorNote(dec: SingleVarDeclarator | ArrayDeclarator) {
     if (dec instanceof SingleVarDeclarator) {
-        return dec.name.name + ": " + dec.valueType + dec.generics ? "<" + dec.generics + ">" : "";
+        return dec.name.name + ": " + dec.valueType + (dec.generics ? "<" + dec.generics + ">" : "");
     } else {
         let boundries = "";
         if (dec.dimensions === 1) {
@@ -262,7 +267,7 @@ function getDeclaratorNote(dec: SingleVarDeclarator | ArrayDeclarator) {
                 boundries += "[]";
             }
         }
-        return dec.name.name + boundries + ": Array" + dec.generics ? "<" + dec.generics + ">" : "";
+        return dec.name.name + boundries + ": Array" + (dec.generics ? "<" + dec.generics + ">" : "");
     }
 }
 
