@@ -1333,7 +1333,10 @@ export class StatementParser extends ExpressionParser {
                 }
                 if (content) {
                     node.parser = new Parser(
-                        createBasicOptions(node.path, this.options.raiseTypeError),
+                        createBasicOptions(node.path,
+                            this.options.raiseTypeError,
+                            this.options.uri,
+                            this.options.globalDeclarations),
                         content);
                 }
             }
@@ -1352,7 +1355,10 @@ export class StatementParser extends ExpressionParser {
                 });
                 if (incNode) {
                     node.parser = new Parser(
-                        createBasicOptions(node.path, this.options.raiseTypeError),
+                        createBasicOptions(node.path,
+                            this.options.raiseTypeError,
+                            this.options.uri,
+                            this.options.globalDeclarations),
                         incNode.content);
                     node.path = incNode.filePath;
                 }
