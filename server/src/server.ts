@@ -18,6 +18,7 @@ import {
 import {
     builtInCompletions,
     getCompletionFromPosition,
+    getCompletionsFromScope,
     getHoverFromDeclaration,
     keywordsCompletions,
     preKeywordsCompletions
@@ -80,7 +81,11 @@ connection.onCompletion(
                 text.charCodeAt(pos - 2)
             );
         }
-        let completions: CompletionItem[] = builtInCompletions.concat(keywordsCompletions);
+        let completions: CompletionItem[] = builtInCompletions.concat(
+            keywordsCompletions);
+        if (lastFile?.scope) {
+            completions = completions.concat(getCompletionsFromScope(lastFile.scope));
+        }
         return completions;
     }
 );

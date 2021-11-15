@@ -33,6 +33,7 @@ import {
 } from "./lib/types";
 import { isIdentifierChar } from "./lib/util/identifier";
 import { builtInModule } from "./lib/util/declaration";
+import { Scope } from "./lib/util/scope";
 
 
 export function getPathCompletion(uri: string): CompletionItem[] {
@@ -136,7 +137,7 @@ if (builtInModule) {
     setBuiltInCompletions(builtInModule.macros,    CompletionItemKind.Variable);
 }
 
-export function setBuiltInCompletions(
+function setBuiltInCompletions(
     defs: Map<string, DeclarationBase>,
     kind: CompletionItemKind) {
     defs.forEach(def => {
@@ -305,8 +306,21 @@ function getMemberCompletions(dec: DeclarationBase): CompletionItem[] {
     return completions;
 }
 
-export function getCompletionsFromDefinitions(decs: Map<string, DeclarationBase>): CompletionItem[] {
+function getCompletionsFromDeclarations(decs: Map<string, DeclarationBase>): CompletionItem[] {
     const completions: CompletionItem[] = [];
+    decs.forEach((value) => {
+        completions.push(getCompletionFromDeclarationBase(value));
+    });
+    return completions;
+}
+
+export function getCompletionsFromScope(scope: Scope) {
+    let completions: CompletionItem[] = [];
+    completions = completions.concat(
+        getCompletionsFromDeclarations(scope.dims),
+        getCompletionsFromDeclarations(scope.consts),
+        getCompletionsFromDeclarations(scope.macros),
+        getCompletionsFromDeclarations(scope.functions));
     return completions;
 }
 
@@ -318,7 +332,7 @@ function checkIfDotStart(char: number) {
 
 export function getCompletionFromPosition(
     file: File, pos: number, triggerChar: string, lastChar: number) {
-    const completions: CompletionItem[] = [];
+    let completions: CompletionItem[] = [];
     let pre = positionAt(file.program.body, pos, false, 0);
     // #include
     if (pre.type === "PreIncludeStatement") {
