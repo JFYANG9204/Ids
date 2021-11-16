@@ -139,7 +139,10 @@ export class ScopeHandler {
             node instanceof ArrayDeclarator     ||
             node instanceof ClassOrInterfaceDeclaration)) {
             if (node instanceof SingleVarDeclarator) {
-                node.bindingType = this.get("Variant")?.result;
+                node.bindingType = this.get(
+                    typeof node.binding === "string" ?
+                    node.binding : node.binding.name.name
+                )?.result;
             } else if (node instanceof ArrayDeclarator) {
                 node.bindingType = this.get("Array")?.result;
             }
