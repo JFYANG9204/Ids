@@ -49,8 +49,8 @@ export class TypeUtil extends UtilParser {
                 node,
                 ErrorMessages["UnmatchedVarType"],
                 false,
-                checkString,
-                baseString);
+                check,
+                base);
         }
         return checkResult;
     }
@@ -328,8 +328,8 @@ export class TypeUtil extends UtilParser {
     getBinaryExprType(expr: BinaryExpression): DeclarationBase | undefined {
         let leftReturn: { type: DeclarationBase | undefined } = { type: undefined };
         let rightReturn: { type: DeclarationBase | undefined } = { type: undefined };
-        const left = this.getExprType(expr.left, leftReturn);
-        const right = this.getExprType(expr.right, rightReturn);
+        let left = this.getExprType(expr.left, leftReturn);
+        let right = this.getExprType(expr.right, rightReturn);
         if (!leftReturn.type || !rightReturn.type) {
             if (!leftReturn.type) {
                 this.needReturn(expr.left);
@@ -339,6 +339,27 @@ export class TypeUtil extends UtilParser {
             }
             return this.getVariant();
         }
+        //
+        let final;
+        if (leftReturn.type instanceof ClassOrInterfaceDeclaration ||
+            leftReturn.type instanceof PropertyDeclaration) {
+            final = this.getFinalType(leftReturn.type);
+            if (final instanceof PropertyDeclaration) {
+                left = final.returnType.name.name;
+            } else {
+                left = final.name.name;
+            }
+        }
+        if (rightReturn.type instanceof ClassOrInterfaceDeclaration ||
+            rightReturn.type instanceof PropertyDeclaration) {
+            final = this.getFinalType(rightReturn.type);
+            if (final instanceof PropertyDeclaration) {
+                right = final.returnType.name.name;
+            } else {
+                right = final.name.name;
+            }
+        }
+        //
         if (this.matchType(left, right, expr.right)) {
             return left.toLowerCase() === "variant" ? rightReturn.type : leftReturn.type;
         } else {
@@ -384,7 +405,7 @@ export class TypeUtil extends UtilParser {
             } else {
                 this.undefined(expr.left, expr.left.name);
                 this.scope.declareUndefined(
-                    expr.left.name,
+                    expr.left,
                     rightType.type);
             }
             if (left) {
@@ -415,7 +436,7 @@ export class TypeUtil extends UtilParser {
             if (this.options.treatUnkownAsQuesion &&
                 !isFunction) {
                 let question = this.scope.get("IQuestion")?.result;
-                this.scope.declareUndefined(id.name);
+                this.scope.declareUndefined(id);
                 this.addExtra(id, "declaration", question);
                 return question;
             } else {
@@ -432,11 +453,7 @@ export class TypeUtil extends UtilParser {
                 const type = this.getIdentifierType(obj as Identifier);
                 if (type?.type === "SingleVarDeclarator") {
                     const single = type as SingleVarDeclarator;
-                    if (single.bindingType) {
-                        return single.bindingType;
-                    } else {
-                        return this.scope.get(single.valueType)?.result;
-                    }
+                    return this.scope.get(single.valueType)?.result;
                 } else if (type?.type === "ArrayDeclarator") {
                     return this.scope.get("Array")?.result;
                 }
@@ -707,14 +724,14 @@ export class TypeUtil extends UtilParser {
         } else {
             const name = (final as ClassOrInterfaceDeclaration).default?.returnType.name.name;
             if (name) {
-                const find = this.scope.get(name)?.result;
+                let find = this.scope.get(name)?.result;
                 if (element && find) {
-                    this.addExtra(element, "declaration", find);
                     if (this.scope.get(element.name)) {
                         this.scope.update(element.name, BindTypes.var, find, element);
                     } else {
-                        this.scope.declareUndefined(element.name, find);
+                        find = this.scope.declareUndefined(element, find);
                     }
+                    this.addExtra(element, "declaration", find);
                 }
                 return find;
             } else {
@@ -727,31 +744,44 @@ export class TypeUtil extends UtilParser {
     }
 
     getFinalType(
-        node: ClassOrInterfaceDeclaration,
+        node: ClassOrInterfaceDeclaration | PropertyDeclaration,
         untilCollection?: boolean,
         otherType?: (node: DeclarationBase) => boolean): DeclarationBase {
-        if (!node.default || (
-            untilCollection && this.isCollection(node)) || (
-            otherType && otherType(node))) {
+
+        let dec;
+        if (node instanceof PropertyDeclaration) {
+            dec = this.scope.get(node.returnType.name.name)?.result;
+        } else {
+            dec = node;
+        }
+
+        if (!dec) {
             return node;
         }
-        let type;
-        let final: DeclarationBase | undefined;
-        if (node.default && (
-            type = node.default.returnType
-        )) {
-            if (typeof type === "string") {
-                final = this.scope.get(type)?.result;
+
+        if (isBasicType(dec.name.name)) {
+            return dec;
+        }
+
+        if (dec instanceof ClassOrInterfaceDeclaration &&
+            untilCollection && this.isCollection(dec)) {
+            if (dec.default) {
+                return dec.default;
             } else {
-                final = this.scope.get(type.name.name)?.result;
+                return dec;
             }
         }
-        if (!final ||
-            !(final instanceof ClassOrInterfaceDeclaration)) {
-            return node;
-        } else {
-            return this.getFinalType(final, untilCollection);
+
+        if (otherType && otherType(dec)) {
+            return dec;
         }
+
+        if (dec instanceof ClassOrInterfaceDeclaration &&
+            dec.default) {
+            return this.getFinalType(dec.default, untilCollection, otherType);
+        }
+
+        return node;
     }
 
     isCollection(node: ClassOrInterfaceDeclaration) {

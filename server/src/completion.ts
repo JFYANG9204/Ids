@@ -200,11 +200,18 @@ function formatStatement(comment: string): string {
     return comment.replace(regexp, "\n");
 }
 
-function getDefaultNote(dec: DeclarationBase, declared?: boolean): string {
+function getDefaultNote(dec: DeclarationBase): string {
     const name = dec.name.name;
     let text = "";
     let args = "";
     let value = "";
+
+    if (!dec.declare) {
+        const t = dec as SingleVarDeclarator;
+        return "```ds\n(undefined variable) " + t.name.name +
+            (t.valueType ? (": " + t.valueType) : "") + "\n```";
+    }
+
     switch (dec.type) {
         case "FunctionDeclaration":
             if ((dec as FunctionDeclaration).class) {

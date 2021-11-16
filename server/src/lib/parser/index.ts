@@ -13,6 +13,7 @@ export class Parser extends StatementParser {
         super(options, input);
         this.fileName = this.options.sourceFileName ?? "";
         this.scope = new ScopeHandler(
+            this,
             (node, template, ...params) => this.raiseAtLocation(node.start, node.end, template, false, ...params),
             this.options.globalDeclarations,
             this.state.localDefinitions);

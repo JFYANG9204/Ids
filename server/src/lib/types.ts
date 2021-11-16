@@ -89,6 +89,7 @@ export class DeclarationBase extends NodeBase {
     namespace?: NamespaceDeclaration;
     constructor(parser: ParserBase, pos: number, loc: Position) {
         super(parser, pos, loc);
+        this.declare = true;
         this.name = new Identifier(parser, pos, loc);
     }
 }

@@ -1,3 +1,4 @@
+import { ParserBase } from "../base";
 import { ErrorMessages } from "../parser/error-messages";
 import { ErrorTemplate, ParsingError } from "../parser/errors";
 import {
@@ -7,6 +8,7 @@ import {
     EnumDeclaration,
     Expression,
     FunctionDeclaration,
+    Identifier,
     MacroDeclaration,
     NamespaceDeclaration,
     NodeBase,
@@ -63,15 +65,18 @@ export class Scope {
 
 export class ScopeHandler {
 
+    parser: ParserBase;
     global: Scope;
     store: Scope;
     stack: Array<Scope> = [];
     raise: RaiseFunction;
 
     constructor(
+        parser: ParserBase,
         raise: RaiseFunction,
         global?: Scope,
         store?: Scope) {
+        this.parser = parser;
         this.raise = raise;
         this.global = global ?? new Scope(ScopeFlags.program);
         this.store = store ?? new Scope(ScopeFlags.program);
@@ -184,15 +189,19 @@ export class ScopeHandler {
         }
     }
 
-    declareUndefined(name: string, type?: DeclarationBase) {
+    declareUndefined(name: Identifier, type?: DeclarationBase) {
+        let declare = new SingleVarDeclarator(this.parser, this.parser.state.pos, this.parser.state.curPostion());
+        declare.name = name;
         if (!type) {
-            const question = this.get("IQuestion")?.result;
-            if (question) {
-                this.currentScope().undefined.set(name.toLowerCase(), question);
-            }
+            declare.bindingType = this.get("IQuestion")?.result;
+            declare.valueType = "IQuestion";
         } else {
-            this.currentScope().undefined.set(name.toLowerCase(), type);
+            declare.bindingType = type;
+            declare.valueType = type.name.name;
         }
+        declare.declare = undefined;
+        this.currentScope().undefined.set(name.name.toLowerCase(), declare);
+        return declare;
     }
 
     checkRedeclarationInScope(
