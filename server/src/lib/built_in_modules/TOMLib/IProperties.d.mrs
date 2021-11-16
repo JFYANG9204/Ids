@@ -26,7 +26,7 @@ Namespace TOMLib
         --------------------
         Get the collection item at the specified location.
         !'
-        Default ReadOnly Property Item(Index As Variant) As IProperty
+        Default Property Item(Index As Variant) As IProperty
 
         '!
         ```ds

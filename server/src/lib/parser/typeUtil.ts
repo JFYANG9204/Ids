@@ -1,5 +1,6 @@
 import {
     ArgumentDeclarator,
+    ArrayDeclarator,
     AssignmentExpression,
     BinaryExpression,
     BindingDeclarator,
@@ -13,6 +14,7 @@ import {
     LogicalExpression,
     MacroDeclaration,
     MemberExpression,
+    NamespaceDeclaration,
     NodeBase,
     PropertyDeclaration,
     SingleVarDeclarator,
@@ -37,6 +39,24 @@ export class TypeUtil extends UtilParser {
 
     getPropertyBindingType(prop: PropertyDeclaration) {
         return this.getBindingTypeName(prop.binding);
+    }
+
+    getMaybeBindingType(dec: DeclarationBase,
+        namespace?: string | NamespaceDeclaration) {
+        if (dec instanceof SingleVarDeclarator ||
+            dec instanceof ArrayDeclarator) {
+            return this.scope.get(
+                this.getBindingTypeName(dec.binding),
+                namespace)?.result;
+        }
+        return dec;
+    }
+
+    getDeclareNamespace(dec: DeclarationBase) {
+        if (dec instanceof PropertyDeclaration) {
+            return dec.class.namespace;
+        }
+        return dec.namespace;
     }
 
     matchType(base: string, check: string, node: NodeBase) {
@@ -430,7 +450,7 @@ export class TypeUtil extends UtilParser {
             }
         } else {
             let leftType: { type: DeclarationBase | undefined } = { type: undefined };
-            left = this.getExprType(expr.right, leftType);
+            left = this.getExprType(expr.left, leftType);
             if (leftType.type) {
                 this.checkAssignmentLeft(leftType.type, expr.left);
             }
@@ -547,7 +567,7 @@ export class TypeUtil extends UtilParser {
             if (memberDec.params.length === 0) {
                 let search = this.scope.get(
                     this.getPropertyBindingType(memberDec),
-                    obj.namespace)?.result;
+                    memberDec.class.namespace)?.result;
                 if (!search ||
                     search.type !== "ClassOrInterfaceDeclaration") {
                     this.raiseIndexError(member.property, exprType);

@@ -561,7 +561,10 @@ export class StatementParser extends ExpressionParser {
         }
         node.declarations = declarators;
         node.pushArr(declarators);
-        return this.finishNodeAt(node, "VariableDeclaration", this.state.lastTokenEnd, this.state.lastTokenEndLoc);
+        return this.finishNodeAt(node,
+            "VariableDeclaration",
+            this.state.lastTokenEnd,
+            this.state.lastTokenEndLoc);
     }
 
     parseExpressionStatement(): ExpressionStatement {
@@ -569,7 +572,10 @@ export class StatementParser extends ExpressionParser {
         node.expression = this.parseExpression(true);
         node.push(node.expression);
         this.checkExprError(node.expression);
-        return this.finishNodeAt(node, "ExpressionStatement", this.state.lastTokenEnd, this.state.lastTokenEndLoc);
+        return this.finishNodeAt(node,
+            "ExpressionStatement",
+            this.state.lastTokenEnd,
+            this.state.lastTokenEndLoc);
     }
 
     parseSetStatement(): SetStatement {
@@ -596,7 +602,12 @@ export class StatementParser extends ExpressionParser {
                             BindTypes.var,
                             declareType.type,
                             node.assignment);
-                        this.addExtra(node.id, "declaration", declared.result);
+                        if (declared.result) {
+                            this.addExtra(node.id,
+                                "declaration",
+                                this.getMaybeBindingType(declared.result,
+                                    this.getDeclareNamespace(declared.result)));
+                        }
                     }
                 }
             }
@@ -613,7 +624,10 @@ export class StatementParser extends ExpressionParser {
         }
         node.body = body;
         node.pushArr(node.body);
-        return this.finishNodeAt(node, "BlockStatement", this.state.lastTokenEnd, this.state.lastTokenEndLoc);
+        return this.finishNodeAt(node,
+            "BlockStatement",
+            this.state.lastTokenEnd,
+            this.state.lastTokenEndLoc);
     }
 
     parseIfStatement(): IfStatement {
@@ -790,7 +804,11 @@ export class StatementParser extends ExpressionParser {
         let type: { type: DeclarationBase | undefined } = { type: undefined };
         this.getExprType(node.object, type);
         if (type.type) {
-            this.scope.enterHeader(type.type);
+            this.scope.enterHeader(
+                this.getMaybeBindingType(type.type,
+                    type.type instanceof SingleVarDeclarator ?
+                    type.type.bindingType?.namespace :
+                    type.type.namespace));
         }
         node.body = this.parseBlock(tt._end);
         this.expect(tt._end);

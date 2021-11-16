@@ -302,17 +302,16 @@ export class ScopeHandler {
         namespace?: string | NamespaceDeclaration):
         ScopeSearchResult | undefined {
         if (namespace) {
-            if (typeof namespace === "string") {
-                const field = this.global.namespaces.get(namespace.toLowerCase()) ||
-                this.store.namespaces.get(namespace.toLowerCase()) ||
-                this.currentScope().namespaces.get(namespace.toLowerCase());
-                if (!field) {
-                    return undefined;
-                }
-                return this.searchInNamespace(field, name);
-            } else {
-                return this.searchInNamespace(namespace, name);
+            let field;
+            let filedName = (typeof namespace === "string" ? namespace :
+                namespace.name.name).toLowerCase();
+            field = this.global.namespaces.get(filedName) ||
+            this.store.namespaces.get(filedName) ||
+            this.currentScope().namespaces.get(filedName);
+            if (!field) {
+                return undefined;
             }
+            return this.searchInNamespace(field, name);
         }
         return this.getName(this.store, name) ||
                this.getName(this.currentScope(), name) ||
