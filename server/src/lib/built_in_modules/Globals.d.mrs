@@ -1,5 +1,5 @@
 
-Dim dmgrjob As IDataManagerGlobalVariable
+Dim dmgrjob As IDataManagerJob
 Dim dmgrGlobal As IDataManagerGlobalVariables
 Dim dmgrLog As IDataManagerLogging
 Dim dmgrQuestions As IQuestions

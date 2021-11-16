@@ -204,11 +204,12 @@ export class TypeUtil extends UtilParser {
         }
     }
 
-    undefined(node: NodeBase, name: string) {
+    undefined(node: NodeBase, name: string, isFunction?: boolean) {
         if (this.options.raiseTypeError &&
             !this.scope.inFunction) {
             this.raiseAtNode(
                 node,
+                isFunction ? ErrorMessages["UnknownFunction"] :
                 ErrorMessages["VarIsNotDeclared"],
                 false,
                 name);
@@ -406,13 +407,19 @@ export class TypeUtil extends UtilParser {
             this.addExtra(id, "declaration", find);
             return find;
         } else {
-            if (this.options.treatUnkownAsQuesion) {
+            let isFunction = false;
+            if (id.treeParent instanceof CallExpression &&
+                id.treeParent.callee === id) {
+                isFunction = true;
+            }
+            if (this.options.treatUnkownAsQuesion &&
+                !isFunction) {
                 let question = this.scope.get("IQuestion")?.result;
                 this.scope.declareUndefined(id.name);
                 this.addExtra(id, "declaration", question);
                 return question;
             } else {
-                this.undefined(id, id.name);
+                this.undefined(id, id.name, isFunction);
             }
         }
         return this.scope.getUndefined(name);
@@ -508,6 +515,12 @@ export class TypeUtil extends UtilParser {
                     search as ClassOrInterfaceDeclaration,
                     true);
             }
+        } else if (obj.type === "ClassOrInterfaceDeclaration" &&
+            obj.name.name === "IQuestion") {
+                memberDec = this.scope.get("IQuestion")?.result;
+                if (!memberDec) {
+                    return this.getVariant();
+                }
         } else {
             memberDec = this.getFinalType(
                 obj as ClassOrInterfaceDeclaration, true);
@@ -640,35 +653,50 @@ export class TypeUtil extends UtilParser {
         }
     }
 
-    checkIfCollection(node: Expression, element?: NodeBase) {
-        let type: DeclarationBase | undefined;
-        this.getExprType(node, { type: type });
-        if (!type) {
+    checkIfCollection(node: Expression, element?: Identifier) {
+
+        // 判定Expression返回类型
+        let resultType: { type: DeclarationBase | undefined } = { type: undefined };
+        this.getExprType(node, resultType);
+        if (!resultType.type) {
             this.needCollection(node);
             return false;
         }
-        let final: DeclarationBase | undefined = type;
-        if (type.type === "PropertyDeclaration") {
-            const prop = type as PropertyDeclaration;
+
+        // 判断final是否是属性声明，如果是属性则返回属性的返回类型
+        let final: DeclarationBase | undefined = resultType.type;
+        if (resultType.type.type === "PropertyDeclaration") {
+            const prop = resultType.type as PropertyDeclaration;
             final = this.scope.get(prop.returnType.name.name)?.result;
             if (!final) {
                 this.needCollection(node);
                 return false;
             }
         }
-        if (type.type !== "ClassOrInterfaceDeclaration") {
+
+        // SingleVarDeclarator 和 Array 两个本地声明类型，单独检查，返回绑定类型
+        if (resultType.type.type === "ArrayDeclarator") {
+            final = this.scope.get("Array")?.result;
+        } else if (resultType.type.type === "SingleVarDeclarator") {
+            final = (resultType.type as SingleVarDeclarator).bindingType;
+        }
+
+        // 如果没有final类型，或者final不是类或接口，则不是集合，报错并返回false
+        if (!final || final.type !== "ClassOrInterfaceDeclaration") {
             this.needCollection(node);
             return false;
         }
-        final = type as ClassOrInterfaceDeclaration;
+
+        // 当前结果视为接口或类
+        final = final as ClassOrInterfaceDeclaration;
         if (!this.isCollection(final as ClassOrInterfaceDeclaration)) {
             final = this.getFinalType(
                 final as ClassOrInterfaceDeclaration,
                 true);
-        }
-        if (!this.isCollection(final as ClassOrInterfaceDeclaration)) {
-            this.needCollection(node);
-            return false;
+            if (!this.isCollection(final as ClassOrInterfaceDeclaration)) {
+                this.needCollection(node);
+                return false;
+            }
         }
         const variant = this.getVariant();
         if (!(final as ClassOrInterfaceDeclaration).default) {
@@ -677,11 +705,16 @@ export class TypeUtil extends UtilParser {
             }
             return variant;
         } else {
-            const name = (final as ClassOrInterfaceDeclaration).default?.name.name;
+            const name = (final as ClassOrInterfaceDeclaration).default?.returnType.name.name;
             if (name) {
                 const find = this.scope.get(name)?.result;
-                if (element) {
+                if (element && find) {
                     this.addExtra(element, "declaration", find);
+                    if (this.scope.get(element.name)) {
+                        this.scope.update(element.name, BindTypes.var, find, element);
+                    } else {
+                        this.scope.declareUndefined(element.name, find);
+                    }
                 }
                 return find;
             } else {

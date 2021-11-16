@@ -404,6 +404,7 @@ export class StatementParser extends ExpressionParser {
                 node.name.name,
                 BindTypes.var,
                 node);
+            node.bindingType = this.scope.get("IEnumerable")?.result;
             return this.finishNode(node, "SingleVarDeclarator");
         }
         if (this.eat(tt._as)) {
@@ -428,6 +429,7 @@ export class StatementParser extends ExpressionParser {
                 }
                 let find = this.scope.get(node.valueType)?.result;
                 this.scope.declareName(node.name.name, BindTypes.var, node, find);
+                node.bindingType = find;
                 return this.convertVarToArrayDeclarator(node, node.valueType);
             } else if (this.eat(tt.braceL)) {
                 this.expect(tt._of);
@@ -437,6 +439,7 @@ export class StatementParser extends ExpressionParser {
                 this.scope.declareName(node.name.name, BindTypes.var, node);
             }
         }
+        node.bindingType = this.scope.get("Variant")?.result;
         return this.finishNode(node, "SingleVarDeclarator");
     }
 
@@ -518,6 +521,7 @@ export class StatementParser extends ExpressionParser {
             node.name.name,
             BindTypes.var,
             node);
+        node.bindingType = this.scope.get("Array")?.result;
         return this.finishNode(node, "ArrayDeclarator");
     }
 
@@ -640,6 +644,7 @@ export class StatementParser extends ExpressionParser {
         const node = this.startNode(IfStatement);
         this.next();
         node.test = this.parseExpression();
+        this.checkExprError(node.test);
         this.expect(tt._then);
         if (this.hasPrecedingLineBreak()) {
             node.consequent = this.parseBlock([ tt._end, tt._else, tt._elseif ]);
@@ -663,10 +668,12 @@ export class StatementParser extends ExpressionParser {
                 node.consequent = this.parseExit();
             } else {
                 node.consequent = this.parseExpression(true);
+                this.checkExprError(node.consequent);
             }
             if (this.match(tt._else) && !this.hasPrecedingLineBreak()) {
                 this.next();
                 node.alternate = this.parseExpression();
+                this.checkExprError(node.consequent);
                 node.push(node.alternate);
             }
         }
@@ -729,10 +736,11 @@ export class StatementParser extends ExpressionParser {
         this.expect(tt._each);
         const variable = this.parseIdentifier();
         this.checkVarDeclared(variable.name, variable);
+        node.variable = variable;
         this.expect(tt._in);
         const collection = this.parseExpression();
         node.collection = collection;
-        this.checkIfCollection(collection, node.variable);
+        this.checkIfCollection(collection, variable);
         node.body = this.parseBlock(tt._next);
         this.expect(tt._next);
         node.push(variable, collection, node.body);

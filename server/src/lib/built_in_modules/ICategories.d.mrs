@@ -131,7 +131,7 @@ Interface ICategories Implements IEnumerable, Object
     Q1.Categories.Cat1.Label.Style.Color = "blue"
     ```
     !'
-    Property Item(Index As Variant) As ICategory
+    Default Property Item(Index As Variant) As ICategory
 
     '!
     ```ds

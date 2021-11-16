@@ -1700,7 +1700,7 @@ export class ClassOrInterfaceDeclaration extends DeclarationBase {
     defType: "interface" | "class" = "interface";
     properties: Array<PropertyDeclaration> = [];
     methods: Array<FunctionDeclaration> = [];
-    default?: PropertyDeclaration | FunctionDeclaration;
+    default?: PropertyDeclaration;
     implements: string[] = [];
     generic?: string;
     constructor(parser: ParserBase, pos: number, loc: Position) {
