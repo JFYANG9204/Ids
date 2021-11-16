@@ -194,10 +194,10 @@ export class ScopeHandler {
         declare.name = name;
         if (!type) {
             declare.bindingType = this.get("IQuestion")?.result;
-            declare.valueType = "IQuestion";
+            declare.binding = "IQuestion";
         } else {
             declare.bindingType = type;
-            declare.valueType = type.name.name;
+            declare.binding = type.name.name;
         }
         declare.declare = undefined;
         this.currentScope().undefined.set(name.name.toLowerCase(), declare);
@@ -369,7 +369,7 @@ export class ScopeHandler {
         // 检查是否为本地定义，如果为本地定义，则更新Decarator内的ValueType属性和bindingType属性
         if (exist.type === BindTypes.var) {
             if (exist.result instanceof SingleVarDeclarator) {
-                exist.result.valueType = newType.name.name;
+                exist.result.binding = newType.name.name;
                 exist.result.bindingType = newType;
             } else if (exist.result instanceof ArrayDeclarator) {
                 if (!exist.result.generics) {

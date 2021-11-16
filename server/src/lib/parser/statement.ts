@@ -7,6 +7,7 @@ import { TokenType, types as tt } from "../tokenizer/type";
 import {
     ArgumentDeclarator,
     ArrayDeclarator,
+    BindingDeclarator,
     BlockStatement,
     BooleanLiteral,
     ClassOrInterfaceDeclaration,
@@ -134,7 +135,7 @@ export class StatementParser extends ExpressionParser {
         const node = this.startNodeAtNode(varDec, ArrayDeclarator);
         node.name = varDec.name;
         node.dimensions = 1;
-        node.valueType = type;
+        node.binding = type;
         return node;
     }
 
@@ -388,58 +389,41 @@ export class StatementParser extends ExpressionParser {
         }
     }
 
-    parseSingleVarDeclarator(): SingleVarDeclarator | ArrayDeclarator {
-        const node = this.startNode(SingleVarDeclarator);
+    parseBindingDeclarator(): BindingDeclarator | string {
+        const node = this.startNode(BindingDeclarator);
+        this.checkIfDeclareFile();
+        if (this.lookahead().type === tt.dot) {
+            node.namespace = this.parseIdentifier().name;
+            this.eat(tt.dot);
+        }
         node.name = this.parseIdentifier();
-        node.push(node.name);
-        // IEnumerable(Of T)
         if (this.match(tt.braceL)) {
             this.checkIfDeclareFile("泛型定义");
             this.eat(tt.braceL);
             this.expect(tt._of);
-            node.name = this.parseIdentifier();
+            node.generics = this.parseIdentifier().name;
             this.expect(tt.braceR);
             node.enumerable = true;
-            this.scope.declareName(
-                node.name.name,
-                BindTypes.var,
-                node);
-            node.bindingType = this.scope.get("IEnumerable")?.result;
-            return this.finishNode(node, "SingleVarDeclarator");
         }
+        this.finishNode(node, "BindingDeclarator");
+        if (node.namespace || node.enumerable) {
+            return node;
+        } else {
+            return node.name.name;
+        }
+    }
+
+    parseSingleVarDeclarator(): SingleVarDeclarator | ArrayDeclarator {
+        const node = this.startNode(SingleVarDeclarator);
+        node.name = this.parseIdentifier();
+        node.push(node.name);
         if (this.eat(tt._as)) {
-            node.valueType = this.state.value;
-            if (this.options.sourceType !== SourceType.declare) {
-                this.raiseAtLocation(
-                    this.state.lastTokenStart,
-                    this.state.pos,
-                    ErrorMessages["TypeReferenceCanOnlyBeUsedInDeclareFile"],
-                    false
-                );
-            }
-            this.next();
-            if (this.eat(tt.bracketL)) {
-                this.expect(tt.bracketR);
-                this.finishNode(node, "SingleVarDeclarator");
-                if (this.match(tt.bracketL)) {
-                    while(this.matchOne([tt.bracketL, tt.bracketR])) {
-                        this.unexpected(undefined,  undefined, undefined, false);
-                        this.next();
-                    }
-                }
-                let find = this.scope.get(node.valueType)?.result;
-                this.scope.declareName(node.name.name, BindTypes.var, node, find);
-                node.bindingType = find;
-                return this.convertVarToArrayDeclarator(node, node.valueType);
-            } else if (this.eat(tt.braceL)) {
-                this.expect(tt._of);
-                node.generics = this.state.value;
-                this.next();
-                this.expect(tt.braceR);
-                this.scope.declareName(node.name.name, BindTypes.var, node);
-            }
+            node.binding = this.parseBindingDeclarator();
+            node.bindingType =
+                this.scope.get(this.getBindingTypeName(node.binding))?.result;
+        } else {
+            node.bindingType = this.scope.get("Variant")?.result;
         }
-        node.bindingType = this.scope.get("Variant")?.result;
         return this.finishNode(node, "SingleVarDeclarator");
     }
 
@@ -504,15 +488,7 @@ export class StatementParser extends ExpressionParser {
             this.next();
         }
         if (this.eat(tt._as)) {
-            node.valueType = this.state.value;
-            if (this.options.sourceType !== SourceType.declare) {
-                this.raiseAtLocation(
-                    this.state.lastTokenStart,
-                    this.state.pos,
-                    ErrorMessages["TypeReferenceCanOnlyBeUsedInDeclareFile"],
-                    false
-                );
-            }
+            node.binding = this.parseBindingDeclarator();
             this.next();
         }
         node.boundaries = boundaries;
@@ -1135,8 +1111,10 @@ export class StatementParser extends ExpressionParser {
         node.params = this.parseFunctionDeclarationParam();
         node.pushArr(node.params);
         this.expect(tt._as);
-        node.returnType = this.parseSingleVarDeclarator();
-        node.push(node.returnType);
+        node.binding = this.parseBindingDeclarator();
+        if (typeof node.binding !== "string") {
+            node.push(node.binding);
+        }
         const ahead = this.lookahead();
         if (ahead.type === tt.equal) {
             this.next();

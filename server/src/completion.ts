@@ -21,6 +21,7 @@ import {
 import {
     ArgumentDeclarator,
     ArrayDeclarator,
+    BindingDeclarator,
     ClassOrInterfaceDeclaration,
     Comment,
     DeclarationBase,
@@ -200,6 +201,13 @@ function formatStatement(comment: string): string {
     return comment.replace(regexp, "\n");
 }
 
+function getBindingName(dec: BindingDeclarator | string) {
+    if (typeof dec === "string") {
+        return dec;
+    }
+    return dec.name.name + (dec.generics ? ("<" + dec.generics + ">") : "");
+}
+
 function getDefaultNote(dec: DeclarationBase): string {
     const name = dec.name.name;
     let text = "";
@@ -209,7 +217,7 @@ function getDefaultNote(dec: DeclarationBase): string {
     if (!dec.declare) {
         const t = dec as SingleVarDeclarator;
         return "```ds\n(undefined variable) " + t.name.name +
-            (t.valueType ? (": " + t.valueType) : "") + "\n```";
+            (t.binding ? (": " + getBindingName(t.binding)) : "") + "\n```";
     }
 
     switch (dec.type) {
@@ -229,7 +237,7 @@ function getDefaultNote(dec: DeclarationBase): string {
             if (prop.params.length > 0) {
                 text += "(" + getArgumentNote(prop.params) + ")";
             }
-            text += ": " + getDeclaratorNote(prop.returnType);
+            text += ": " + getBindingName(prop.binding);
             return "```ds\n" + text + "\n```";
 
         case "SingleVarDeclarator":
@@ -259,9 +267,11 @@ function getDefaultNote(dec: DeclarationBase): string {
     }
 }
 
-function getDeclaratorNote(dec: SingleVarDeclarator | ArrayDeclarator) {
+function getDeclaratorNote(dec: SingleVarDeclarator | ArrayDeclarator | BindingDeclarator) {
     if (dec instanceof SingleVarDeclarator) {
-        return dec.name.name + ": " + dec.valueType + (dec.generics ? "<" + dec.generics + ">" : "");
+        return dec.name.name + ": " + (dec.binding ? getBindingName(dec.binding) : "Variant");
+    } else if (dec instanceof BindingDeclarator) {
+        return getBindingName(dec);
     } else {
         let boundries = "";
         if (dec.dimensions === 1) {

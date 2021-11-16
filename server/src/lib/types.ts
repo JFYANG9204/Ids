@@ -86,7 +86,7 @@ export class DeclarationBase extends NodeBase {
     declare?: true;
     enumerable: boolean = false;
     name: Identifier;
-    namespace?: NamespaceDeclaration;
+    namespace?: NamespaceDeclaration | string;
     constructor(parser: ParserBase, pos: number, loc: Position) {
         super(parser, pos, loc);
         this.declare = true;
@@ -624,10 +624,19 @@ export type ForLike = ForStatement | ForEachStatement;
 
 // declaration
 
+export class BindingDeclarator extends DeclarationBase {
+    name: Identifier;
+    generics?: string;
+    constructor(parser: ParserBase, pos: number, loc: Position) {
+        super(parser, pos, loc);
+        this.name = new Identifier(parser, pos, loc);
+        this.type = "BindingDeclarator";
+    }
+}
+
 export class SingleVarDeclarator extends DeclarationBase {
     name: Identifier;
-    valueType: string = "Variant";
-    generics?: string;
+    binding: BindingDeclarator | string = "Variant";
     bindingType?: DeclarationBase;
     constructor(parser: ParserBase, pos: number, loc: Position) {
         super(parser, pos, loc);
@@ -638,7 +647,7 @@ export class SingleVarDeclarator extends DeclarationBase {
 
 export class ArrayDeclarator extends DeclarationBase {
     name: Identifier;
-    valueType: string = "Array";
+    binding: BindingDeclarator | string = "Array";
     generics?: string;
     dimensions: number;
     boundaries?: number[];
@@ -1680,7 +1689,7 @@ export class PropertySet extends NodeBase {
 export class PropertyDeclaration extends DeclarationBase {
     readonly?: boolean;
     default?: boolean;
-    returnType: SingleVarDeclarator;
+    binding: BindingDeclarator | string = "Variant";
     init?: any;
     name: Identifier;
     params: Array<ArgumentDeclarator> = [];
@@ -1691,7 +1700,6 @@ export class PropertyDeclaration extends DeclarationBase {
         super(parser, pos, loc);
         this.type = "PropertyDeclaration";
         this.name = new Identifier(parser, pos, loc);
-        this.returnType = new SingleVarDeclarator(parser, pos, loc);
         this.class = new ClassOrInterfaceDeclaration(parser, pos, loc);
     }
 }

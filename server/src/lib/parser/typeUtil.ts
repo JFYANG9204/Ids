@@ -1,8 +1,8 @@
 import {
     ArgumentDeclarator,
-    ArrayDeclarator,
     AssignmentExpression,
     BinaryExpression,
+    BindingDeclarator,
     CallExpression,
     ClassOrInterfaceDeclaration,
     DeclarationBase,
@@ -28,6 +28,15 @@ export class TypeUtil extends UtilParser {
 
     getVariant() {
         return this.scope.get("Variant")?.result;
+    }
+
+    getBindingTypeName(binding: BindingDeclarator | string) {
+        return typeof binding === "string" ? binding :
+            binding.name.name;
+    }
+
+    getPropertyBindingType(prop: PropertyDeclaration) {
+        return this.getBindingTypeName(prop.binding);
     }
 
     matchType(base: string, check: string, node: NodeBase) {
@@ -271,11 +280,11 @@ export class TypeUtil extends UtilParser {
             findType.type = find;
         }
         this.addExtra(expr, "declaration", find);
-        type = this.getDecareBaseType(expr, find);
+        type = this.getDeclareBaseType(expr, find);
         return type ?? "Variant";
     }
 
-    getDecareBaseType(node: NodeBase, dec?: DeclarationBase) {
+    getDeclareBaseType(node: NodeBase, dec?: DeclarationBase) {
         if (!dec) {
             return undefined;
         }
@@ -301,10 +310,18 @@ export class TypeUtil extends UtilParser {
 
             case "SingleVarDeclarator":
                 const single = dec as SingleVarDeclarator;
-                return single.valueType;
+                if (single.binding) {
+                    return typeof single.binding === "string" ?
+                        single.binding : single.binding.name.name;
+                } else {
+                    return "Variant";
+                }
 
             case "ArrayDeclarator":
                 return "Array";
+
+            case "PropertyDeclaration":
+                return this.getPropertyBindingType(dec as PropertyDeclaration);
 
             default:
                 return dec.name.name;
@@ -345,7 +362,7 @@ export class TypeUtil extends UtilParser {
             leftReturn.type instanceof PropertyDeclaration) {
             final = this.getFinalType(leftReturn.type);
             if (final instanceof PropertyDeclaration) {
-                left = final.returnType.name.name;
+                left = this.getPropertyBindingType(final);
             } else {
                 left = final.name.name;
             }
@@ -354,7 +371,7 @@ export class TypeUtil extends UtilParser {
             rightReturn.type instanceof PropertyDeclaration) {
             final = this.getFinalType(rightReturn.type);
             if (final instanceof PropertyDeclaration) {
-                right = final.returnType.name.name;
+                right = this.getPropertyBindingType(final);
             } else {
                 right = final.name.name;
             }
@@ -433,6 +450,11 @@ export class TypeUtil extends UtilParser {
                 id.treeParent.callee === id) {
                 isFunction = true;
             }
+            let undef = this.scope.getUndefined(name);
+            if (undef) {
+                this.undefined(id, id.name, isFunction);
+                return undef;
+            }
             if (this.options.treatUnkownAsQuesion &&
                 !isFunction) {
                 let question = this.scope.get("IQuestion")?.result;
@@ -443,7 +465,7 @@ export class TypeUtil extends UtilParser {
                 this.undefined(id, id.name, isFunction);
             }
         }
-        return this.scope.getUndefined(name);
+        return find;
     }
 
     getMemberObjectType(member: MemberExpression): DeclarationBase | undefined {
@@ -453,7 +475,8 @@ export class TypeUtil extends UtilParser {
                 const type = this.getIdentifierType(obj as Identifier);
                 if (type?.type === "SingleVarDeclarator") {
                     const single = type as SingleVarDeclarator;
-                    return this.scope.get(single.valueType)?.result;
+                    return single.bindingType ??
+                        this.scope.get(this.getBindingTypeName(single.binding))?.result;
                 } else if (type?.type === "ArrayDeclarator") {
                     return this.scope.get("Array")?.result;
                 }
@@ -493,9 +516,11 @@ export class TypeUtil extends UtilParser {
             let parent: DeclarationBase | undefined = obj;
             let child: DeclarationBase | undefined;
             if (obj.type === "PropertyDeclaration") {
-                const objReturn = (obj as PropertyDeclaration).returnType.name.name;
+                const objReturn = this.getPropertyBindingType(obj as PropertyDeclaration);
+                const objProp = obj as PropertyDeclaration;
                 parent = this.scope.get(objReturn,
-                    (obj as PropertyDeclaration).class.namespace?.name.name)?.result;
+                    typeof objProp.class.namespace === "string" ? objProp.namespace :
+                    objProp.class.namespace?.name.name)?.result;
             }
             if (parent && parent.type === "ClassOrInterfaceDeclaration") {
                 child = this.getPropertyOrMethod(
@@ -521,7 +546,7 @@ export class TypeUtil extends UtilParser {
             memberDec = obj as PropertyDeclaration;
             if (memberDec.params.length === 0) {
                 let search = this.scope.get(
-                    memberDec.returnType.name.name,
+                    this.getPropertyBindingType(memberDec),
                     obj.namespace)?.result;
                 if (!search ||
                     search.type !== "ClassOrInterfaceDeclaration") {
@@ -551,7 +576,7 @@ export class TypeUtil extends UtilParser {
             memberDec.params.length === 0) {
             this.raiseIndexError(member.property, "");
         } else if (memberDec instanceof PropertyDeclaration) {
-            needParam = memberDec.params[0].declarator.name.name;
+            needParam = this.getBindingTypeName(memberDec.params[0].declarator.binding);
         } else {
             if (this.isCollection(memberDec as ClassOrInterfaceDeclaration)) {
                 if (memberDec.name.name === "Array") {
@@ -655,9 +680,11 @@ export class TypeUtil extends UtilParser {
                 if (arg.paramArray) {
                     cur = arg;
                 }
-                this.matchType(arg.declarator.valueType, paramType, param);
+                this.matchType(this.getBindingTypeName(arg.declarator.binding),
+                    paramType, param);
             } else if (cur) {
-                this.matchType(cur.declarator.valueType, paramType, param);
+                this.matchType(this.getBindingTypeName(cur.declarator.binding),
+                    paramType, param);
             }
             index++;
         }
@@ -684,7 +711,8 @@ export class TypeUtil extends UtilParser {
         let final: DeclarationBase | undefined = resultType.type;
         if (resultType.type.type === "PropertyDeclaration") {
             const prop = resultType.type as PropertyDeclaration;
-            final = this.scope.get(prop.returnType.name.name)?.result;
+            final = this.scope.get(
+                this.getPropertyBindingType(prop))?.result;
             if (!final) {
                 this.needCollection(node);
                 return false;
@@ -722,7 +750,10 @@ export class TypeUtil extends UtilParser {
             }
             return variant;
         } else {
-            const name = (final as ClassOrInterfaceDeclaration).default?.returnType.name.name;
+            const def = final as ClassOrInterfaceDeclaration;
+            const name: string | undefined =
+                def.default ?
+                this.getPropertyBindingType(def.default) : undefined;
             if (name) {
                 let find = this.scope.get(name)?.result;
                 if (element && find) {
@@ -750,7 +781,8 @@ export class TypeUtil extends UtilParser {
 
         let dec;
         if (node instanceof PropertyDeclaration) {
-            dec = this.scope.get(node.returnType.name.name)?.result;
+            dec = this.scope.get(
+                this.getPropertyBindingType(node))?.result;
         } else {
             dec = node;
         }
@@ -851,8 +883,6 @@ export class TypeUtil extends UtilParser {
         node.name = base.name;
         node.namespace = base.namespace;
         node.enumerable = base.enumerable;
-        node.valueType = valueType;
-        node.generics = base.generics;
         return node;
     }
 }
