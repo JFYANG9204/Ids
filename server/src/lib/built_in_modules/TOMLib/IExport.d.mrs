@@ -2,82 +2,55 @@
 Namespace TOMLib
 
     '!
-    ```ds
-    (interface) IExport
-    ```
-    -------------------------
+
     Each `Export` object represents an export plug-in that can be used to export the tables in the document to a particular output format. The `Export` object serves to make the presence of the export plug-in transparent to the user of the `Table Object Model`.
     !'
     Interface IExport Implements Object
 
         '!
-        ```ds
-        (property) IExport.ClassId: String
-        ```
-        -----------------------------
+
         The `ClassId` string of the class that implements the export plug-in.
         !'
         ReadOnly Property ClassId() As String
 
         '!
-        ```ds
-        (property) IExport.CodeBase: String
-        ```
-        -----------------------------
+
         The location of the binary code for the plug-in. This will typically be the location of a signed CAB file for download from a web server. This is to enable the export plug-in to be downloaded and run on the client in a client/server situation.
         !'
         ReadOnly Property CodeBase() As String
 
         '!
-        ```ds
-        (property) IExport.Description: String
-        ```
-        -----------------------------
+
         A description of the export plug-in
         !'
         ReadOnly Property Description() As String
 
         '!
-        ```ds
-        (property) IExport.IsServerOnly: Boolean
-        ```
-        -----------------------------
+
         If there is no `CodeBase` specified then `IsServerOnly` is *True*, because there is no code that can be downloaded and run on the client.
         !'
         ReadOnly Property IsServerOnly() As Boolean
 
         '!
-        ```ds
-        (property) IExport.Name: String
-        ```
-        -----------------------------
+
         The name of the `Export` object and the corresponding export plug-in
         !'
         ReadOnly Property Name() As String
 
         '!
-        ```ds
-        (property) IExport.Parent: IExports
-        ```
-        -----------------------------
+
         The `Parent` property of the `Export` object always returns an `Exports` collection
         !'
         ReadOnly Property Parent() As IExports
 
         '!
-        ```ds
-        (property) IExport.Properties: IProperties
-        ```
-        -----------------------------
+
         The exact `Property` objects in the collection are dependent on the particular export plug-in. For more information, see `Exporting` Tables.
         !'
         ReadOnly Property Properties() As IProperties
 
         '!
-        ```ds
-        (method) IExport.Export([Destination: Variant], [Tables: Variant]): Variant
-        ```
-        -----------------------------
+
         Invokes the export plug-in in order to export the specified tables.
 
         ### Remarks

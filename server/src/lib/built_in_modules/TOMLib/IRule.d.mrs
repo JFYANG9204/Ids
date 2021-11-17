@@ -2,19 +2,13 @@
 Namespace TOMLib
 
     '!
-    ```ds
-    (interface) IRule
-    ```
-    -----------------------------
+
     The `IRule` object defines criteria, for example, hiding parts of the table.
     !'
     Interface IRule Implements Object
 
         '!
-        ```ds
-        (property) IRule.IsActive: Boolean
-        ```
-        --------------------
+
         Returns *True* if the rule is active, or *False* if the rule is disabled.
 
         ### Remarks
@@ -23,10 +17,7 @@ Namespace TOMLib
         ReadOnly Property IsActive() As Boolean
 
         '!
-        ```ds
-        (property) IRule.Parent: IRules
-        ```
-        --------------------
+
         The parent object
 
         ### Remarks
@@ -35,19 +26,13 @@ Namespace TOMLib
         ReadOnly Property Parent() As IRules
 
         '!
-        ```ds
-        (property) IRule.CellItemRef: Long
-        ```
-        --------------------
+
         The index (into the tables `CellItems` collection) of the `CellItem` on which the rule's condition is based.
         !'
         Property CellItemRef() As Long
 
         '!
-        ```ds
-        (property) IRule.ElementRef: String
-        ```
-        --------------------
+
         A reference to the element to the rule is to operate on.
 
         ### Remarks
@@ -58,10 +43,7 @@ Namespace TOMLib
         Property ElementRef() As String
 
         '!
-        ```ds
-        (property) IRule.IgnoreSpecialElements: Boolean
-        ```
-        --------------------
+
         If *False*, any special element such as mean, subtotal, etc, is hidden if it passes the rule for hiding.
 
         ### Remarks
@@ -70,37 +52,25 @@ Namespace TOMLib
         Property IgnoreSpecialElements() As Boolean
 
         '!
-        ```ds
-        (property) IRule.Operator: ComparisonOperator
-        ```
-        --------------------
+
         The type of comparison operation to perform.
         !'
         Property Operator() As ComparisonOperator
 
         '!
-        ```ds
-        (property) IRule.Target: RuleTarget
-        ```
-        --------------------
+
         The target of the rule.Note that it's not possible to change the `Target` property of a rule if an `ElementRef` property has been set. This is because changing the target will probably make the `ElementRef` invalid.
         !'
         Property Target() As RuleTarget
 
         '!
-        ```ds
-        (property) IRule.Type: RuleType
-        ```
-        --------------------
+
         The type of rule.
         !'
         Property Type() As RuleType
 
         '!
-        ```ds
-        (property) IRule.Value: Double
-        ```
-        --------------------
+
         The condition the rule is to test for.
 
         ### Remarks

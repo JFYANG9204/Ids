@@ -2,19 +2,13 @@
 Namespace TOMLib
 
     '!
-    ```ds
-    (interface) IElement
-    ```
-    -----------------------------
+
     An `Element` is the smallest discrete unit in an axis. An element in a side axis corresponds to a row in the resulting two-dimensional table and an element in the top axis corresponds to a column. For an aggregated table an `Element` object typically corresponds to an MDM element (normally a category), but additional analysis elements that are not part of the MDM variable can also be created. For a profile table an `Element` object in the top axis corresponds to a variable to profile.
     !'
     Interface IElement Implements Object
 
         '!
-        ```ds
-        (property) IElement.HasCellValues: Boolean
-        ```
-        -----------------------------
+
         `HasCellValues` is *True* if there is a row or field in the `CellValues` ADO recordset corresponding to this Element object.
 
         ### Remarks
@@ -25,10 +19,7 @@ Namespace TOMLib
         ReadOnly Property HasCellValues() As Boolean
 
         '!
-        ```ds
-        (property) IElement.Name: String
-        ```
-        -----------------------------
+
         The name used to reference the `Element` object.
 
         ### Remarks
@@ -37,10 +28,7 @@ Namespace TOMLib
         ReadOnly Property Name() As String
 
         '!
-        ```ds
-        (property) IElement.Parent: IElements
-        ```
-        -----------------------------
+
         The parent object
 
         ### Remarks
@@ -49,10 +37,7 @@ Namespace TOMLib
         ReadOnly Property Parent() As IElements
 
         '!
-        ```ds
-        (property) IElement.ShownOnTable: Boolean
-        ```
-        -----------------------------
+
         `ShownOnTable` is *True* if this element object is to be displayed on the table.
 
         ### Remarks
@@ -64,28 +49,19 @@ Namespace TOMLib
         ReadOnly Property ShownOnTable() As Boolean
 
         '!
-        ```ds
-        (property) IElement.Specification: String
-        ```
-        --------------------------
+
         The specification of the element as it appears in the axis expression.
         !'
         ReadOnly Property Specification() As String
 
         '!
-        ```ds
-        (property) IElement.Style: IStyle
-        ```
-        --------------------------
+
         Controls the formatting of the element when displayed and exported.
         !'
         ReadOnly Property Style() As IStyle
 
         '!
-        ```ds
-        (property) IElement.SubElements: IElements
-        ```
-        --------------------------
+
         A collection of `Elements` objects that make up a net or combine element
 
         ### Remarks
@@ -94,19 +70,13 @@ Namespace TOMLib
         ReadOnly Property SubElements() As IElements
 
         '!
-        ```ds
-        (property) IElement.Type: ElementType
-        ```
-        --------------------------
+
         The type of element
         !'
         ReadOnly Property Type() As ElementType
 
         '!
-        ```ds
-        (property) IElement.AnalysisVariable: String
-        ```
-        --------------------------
+
         The name of the analysis variable used by an analysis element
 
         ### Remarks
@@ -130,10 +100,7 @@ Namespace TOMLib
         Property AnalysisVariable() As String
 
         '!
-        ```ds
-        (property) IElement.CalculationScope: CalculationScopeType
-        ```
-        --------------------------
+
         Determines the elements used in the calculation of some summary statistic elements
 
         ### Remarks
@@ -152,10 +119,7 @@ Namespace TOMLib
         Property CalculationScope() As CalculationScopeType
 
         '!
-        ```ds
-        (property) IElement.ColumnText: String
-        ```
-        --------------------------
+
         The text to insert in the cell for each column.
 
         ### Remarks
@@ -164,10 +128,7 @@ Namespace TOMLib
         Property ColumnText() As String
 
         '!
-        ```ds
-        (property) IElement.CountsOnly: Boolean
-        ```
-        --------------------------
+
         When set to *True*, this specifies that only the counts should be displayed for the row or column, regardless of what `CellItems` are specified for the table.
 
         ### Remarks
@@ -186,10 +147,7 @@ Namespace TOMLib
         Property CountsOnly() As Boolean
 
         '!
-        ```ds
-        (property) IElement.CutOffValue: Double
-        ```
-        --------------------------
+
         The cut off value for *ePercentile* elements
 
         ### Remarks
@@ -200,10 +158,7 @@ Namespace TOMLib
         Property CutOffValue() As Double
 
         '!
-        ```ds
-        (property) IElement.Decimals: Long
-        ```
-        --------------------------
+
         The number of digits to be shown after the decimal place.
 
         ### Remarks
@@ -229,10 +184,7 @@ Namespace TOMLib
         Property Decimals() As Long
 
         '!
-        ```ds
-        (property) IElement.Expression: String
-        ```
-        --------------------------
+
         A custom expression that determines the value of the element when the table is populated
 
         ### Remarks
@@ -245,10 +197,7 @@ Namespace TOMLib
         Property Expression() As String
 
         '!
-        ```ds
-        (property) IElement.Factor: Variant
-        ```
-        --------------------------
+
         The factor value for the element to use when calculating factor based analysis elements.
 
         ### Remarks
@@ -257,10 +206,7 @@ Namespace TOMLib
         Property Factor() As Variant
 
         '!
-        ```ds
-        (property) IElement.IncludeInBase: Boolean
-        ```
-        --------------------------
+
         Allows *eCategory* elements to be excluded from the calculation of the base
 
         ### Remarks
@@ -269,10 +215,7 @@ Namespace TOMLib
         Property IncludeInBase() As Boolean
 
         '!
-        ```ds
-        (property) IElement.IsFixed: Boolean
-        ```
-        --------------------------
+
         Fixes the position (index) of the element in the `ElementHeadings` collection when the table is sorted.
 
         ### Remarks
@@ -281,10 +224,7 @@ Namespace TOMLib
         Property IsFixed() As Boolean
 
         '!
-        ```ds
-        (property) IElement.IsHidden: Boolean
-        ```
-        --------------------------
+
         Determines if the element is shown on the table. The default value is taken from the corresponding MDM element.
 
         ### Remarks
@@ -293,10 +233,7 @@ Namespace TOMLib
         Property IsHidden() As Boolean
 
         '!
-        ```ds
-        (property) IElement.IsHiddenWhenColumn: Boolean
-        ```
-        --------------------------
+
         Hide the element if it appears as a column in the table.
 
         ### Remarks
@@ -305,10 +242,7 @@ Namespace TOMLib
         Property IsHiddenWhenColumn() As Boolean
 
         '!
-        ```ds
-        (property) IElement.IsHiddenWhenRow: Boolean
-        ```
-        --------------------------
+
         Hide the element if it appears as a row in the table.
 
         ### Remarks
@@ -317,10 +251,7 @@ Namespace TOMLib
         Property IsHiddenWhenRow() As Boolean
 
         '!
-        ```ds
-        (property) IElement.IsUnweighted: Boolean
-        ```
-        --------------------------
+
         When set to True all weighting is ignored for this element.
 
         ### Remarks
@@ -331,10 +262,7 @@ Namespace TOMLib
         Property IsUnweighted() As Boolean
 
         '!
-        ```ds
-        (property) IElement.Label[[Language: String = ""]]: String
-        ```
-        --------------------------
+
         The label for the element
 
         ### Remarks
@@ -349,10 +277,7 @@ Namespace TOMLib
         Property Label(Optional Language As String = "") As String
 
         '!
-        ```ds
-        (property) IElement.Multiplier: String
-        ```
-        --------------------------
+
         The name of the variable to use as the multiplier value when aggregating the data
 
         ### Remarks
@@ -375,10 +300,7 @@ Namespace TOMLib
         Property Multiplier() As String
 
         '!
-        ```ds
-        (property) IElement.Weight: String
-        ```
-        --------------------------
+
         The name of the variable to use as the weight value when aggregating the data
 
         ### Remarks

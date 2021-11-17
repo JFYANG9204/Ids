@@ -1,8 +1,5 @@
 '!
-```ds
-(interface) IQuestion
-```
------------------------------
+
 The `Question` object is used to represent a question in the interview.
 
 ### Remarks
@@ -98,10 +95,7 @@ The list of keywords that should not be used as sub-question names:
 Interface IQuestion Implements Object
 
     '!
-    ```ds
-    (method) IQuestion.Ask(LabelArgs: Array): Void
-    ```
-    --------------------
+
     Asks a question in an interview.
 
     ### Remarks
@@ -139,10 +133,7 @@ Interface IQuestion Implements Object
     End Sub
 
     '!
-    ```ds
-    (method) IQuestion.BuildDBFilter([bstrFieldName: String = "L"]): String
-    ```
-    --------------------
+
     This method is used to build a database filter according to its response value.
 
     ### Remarks
@@ -161,10 +152,7 @@ Interface IQuestion Implements Object
     End Function
 
     '!
-    ```ds
-    (method) IQuestion.ClearOffPathResponse(): Void
-    ```
-    --------------------
+
     Clears the off-path response to the question (if applicable)
 
     ### Remarks
@@ -176,10 +164,7 @@ Interface IQuestion Implements Object
     End Sub
 
     '!
-    ```ds
-    (method) IQuestion.Delete(vtIndex: Variant): Void
-    ```
-    --------------------
+
     This method is used to delete the given iteration of the question.
 
     ### Remarks
@@ -189,10 +174,7 @@ Interface IQuestion Implements Object
     End Sub
 
     '!
-    ```ds
-    (method) IQuestion.Exists(vtIndex: Variant): Boolean
-    ```
-    --------------------
+
     This method is used to check given iteration exists or not.
 
     ### Remarks
@@ -202,10 +184,7 @@ Interface IQuestion Implements Object
     End Function
 
     '!
-    ```ds
-    (method) IQuestion.Preserve(): Void
-    ```
-    --------------------
+
     Preserves the response of a question such that the question can never be re-asked or reviewed.
 
     ### Remarks
@@ -216,10 +195,7 @@ Interface IQuestion Implements Object
     End Sub
 
     '!
-    ```ds
-    (method) IQuestion.Show(LableArgs: Array): Void
-    ```
-    --------------------
+
     Shows a question with its associated value or values.
 
     ### Remarks
@@ -230,10 +206,7 @@ Interface IQuestion Implements Object
     End Sub
 
     '!
-    ```ds
-    (property) IQuestion.Banners: ILabels
-    ```
-    --------------------
+
     A read-only property that returns a collection of Label objects.
 
     ### Remarks
@@ -243,10 +216,7 @@ Interface IQuestion Implements Object
     ReadOnly Property Banners() As ILabels
 
     '!
-    ```ds
-    (property) IQuestion.Categories: ICategories
-    ```
-    --------------------
+
     A read-only property that returns a collection of category objects.
 
     ### Remarks
@@ -256,10 +226,7 @@ Interface IQuestion Implements Object
     ReadOnly Property Categories() As ICategories
 
     '!
-    ```ds
-    (property) IQuestion.Codes: ICategories
-    ```
-    --------------------
+
     A read only property that returns a collection of category objects.
 
     ### Remarks
@@ -268,19 +235,13 @@ Interface IQuestion Implements Object
     ReadOnly Property Codes() As ICategories
 
     '!
-    ```ds
-    (property) IQuestion.Count: Long
-    ```
-    --------------------
+
     The number of items in the collection.
     !'
     ReadOnly Property Count() As Long
 
     '!
-    ```ds
-    (property) IQuestion.Errors: ILabels
-    ```
-    --------------------
+
     This property returns a collection of label objects for the question error texts.
 
     ### Remarks
@@ -292,10 +253,7 @@ Interface IQuestion Implements Object
     ReadOnly Property Errors() As ILabels
 
     '!
-    ```ds
-    (property) IQuestion.Info: IQuestionInfo
-    ```
-    --------------------
+
     This read-only property indicates whether the question is a `Database` question.
 
     ### Remarks
@@ -304,19 +262,13 @@ Interface IQuestion Implements Object
     ReadOnly Property Info() As IQuestionInfo
 
     '!
-    ```ds
-    (property) IQuestion.IsDBQuestion: Boolean
-    ```
-    --------------------
+
     This read-only property indicates whether the question is a Database question.
     !'
     ReadOnly Property IsDBQuestion() As Boolean
 
     '!
-    ```ds
-    (property) IQuestion.Label: ILabel
-    ```
-    --------------------
+
     This read-only property returns the label for the question.
 
     ### Remarks
@@ -325,10 +277,7 @@ Interface IQuestion Implements Object
     ReadOnly Property Label() As ILabel
 
     '!
-    ```ds
-    (property) IQuestion.OtherCategories: ICategories
-    ```
-    --------------------
+
     A read-only property that returns a collection of "other specify" categories.
 
     ### Remarks
@@ -338,10 +287,7 @@ Interface IQuestion Implements Object
     ReadOnly Property OtherCategories() As ICategories
 
     '!
-    ```ds
-    (property) IQuestion.ParentQuestion: IQuestion
-    ```
-    --------------------
+
     A read-only property that returns the parent question if one exists.
 
     ### Remarks
@@ -350,10 +296,7 @@ Interface IQuestion Implements Object
     ReadOnly Property ParentQuestion() As IQuestion
 
     '!
-    ```ds
-    (property) IQuestion.Properties: IProperties
-    ```
-    --------------------
+
     A read-only property that returns the properties for the question.
 
     ### Remarks
@@ -362,10 +305,7 @@ Interface IQuestion Implements Object
     ReadOnly Property Properties() As IProperties
 
     '!
-    ```ds
-    (property) IQuestion.QuestionDataType: DataTypeContants
-    ```
-    --------------------
+
     A read-only property that returns the question data type.
 
     ### Remarks
@@ -374,10 +314,7 @@ Interface IQuestion Implements Object
     ReadOnly Property QuestionDataType() As DataTypeContants
 
     '!
-    ```ds
-    (property) IQuestion.QuestionFullName: String
-    ```
-    --------------------
+
     A read-only property that returns the full name of the question.
 
     ### Remarks
@@ -386,19 +323,13 @@ Interface IQuestion Implements Object
     ReadOnly Property QuestionFullName() As String
 
     '!
-    ```ds
-    (property) IQuestion.QuestionName: String
-    ```
-    --------------------
+
     A read-only property that returns the name of the question or sub-question.
     !'
     ReadOnly Property QuestionName() As String
 
     '!
-    ```ds
-    (property) IQuestion.QuestionType: QuestionTypes
-    ```
-    --------------------
+
     A read-only property that returns the question type.
 
     ### Remarks
@@ -407,10 +338,7 @@ Interface IQuestion Implements Object
     ReadOnly Property QuestionType() As QuestionTypes
 
     '!
-    ```ds
-    (property) IQuestion.Response: IResponse
-    ```
-    --------------------
+
     The read-only Response property returns the response object for the question.
 
     ### Remarks
@@ -429,10 +357,7 @@ Interface IQuestion Implements Object
     Default ReadOnly Property Response() As IResponse
 
     '!
-    ```ds
-    (property) IQuestion.Style: IStyle
-    ```
-    --------------------
+
     This property returns a `Style` object for the question.
 
     ### Remarks
@@ -442,10 +367,7 @@ Interface IQuestion Implements Object
     ReadOnly Property Style() As IStyle
 
     '!
-    ```ds
-    (property) IQuestion.Validation: IValidation
-    ```
-    --------------------
+
     This read-only property that defines the validation for the question.
 
     ### Remarks
@@ -454,10 +376,7 @@ Interface IQuestion Implements Object
     ReadOnly Property Validation() As IValidation
 
     '!
-    ```ds
-    (property) IQuestion.BannerTemplacte: String
-    ```
-    --------------------
+
     This property is used to get or set the name of a `Banner` template for the question.
 
     ### Remarks
@@ -467,19 +386,13 @@ Interface IQuestion Implements Object
     Property BannerTemplacte() As String
 
     '!
-    ```ds
-    (property) IQuestion.DBFilter: String
-    ```
-    --------------------
+
     This property is used to get and set the `Database` filter for the question.
     !'
     Property DBFilter() As String
 
     '!
-    ```ds
-    (property) IQuestion.ErrorTemplate: String
-    ```
-    --------------------
+
     This property is used to get or set the name of a `Error` template for the question.
 
     ### Remarks
@@ -489,10 +402,7 @@ Interface IQuestion Implements Object
     Property ErrorTemplate() As String
 
     '!
-    ```ds
-    (property) IQuestion.Item: Variant
-    ```
-    --------------------
+
     The `Item` property is used to return a sub-question. (Default Property)
 
     ### Remarks
@@ -517,10 +427,7 @@ Interface IQuestion Implements Object
     Property Item(Index As Variant) As Variant
 
     '!
-    ```ds
-    (property) IQuestion.LayoutTemplate: String
-    ```
-    --------------------
+
     This read/write property is used to get or set the layout template for the question.
 
     ### Remarks
@@ -530,10 +437,7 @@ Interface IQuestion Implements Object
     Property LayoutTemplate() As String
 
     '!
-    ```ds
-    (property) IQuestion.MustAnswer: Boolean
-    ```
-    --------------------
+
     This read/write property is used to enable or disable automatic no answer questions.
 
     ### Remarks
@@ -543,10 +447,7 @@ Interface IQuestion Implements Object
     Property MustAnswer() As Boolean
 
     '!
-    ```ds
-    (property) IQuestion.NarBarTemplate: String
-    ```
-    --------------------
+
     This property is used to get or set the name of a `NavBar` template for the question.
 
     ### Remarks
@@ -556,10 +457,7 @@ Interface IQuestion Implements Object
     Property NarBarTemplate() As String
 
     '!
-    ```ds
-    (property) IQuestion.QuestionFilter: Variant
-    ```
-    --------------------
+
     The sub-questions of this question that are to be asked.
 
     ### Remarks
@@ -586,10 +484,7 @@ Interface IQuestion Implements Object
     Property QuestionFilter() As Variant
 
     '!
-    ```ds
-    (property) IQuestion.QuestionOrder: OrderConstants
-    ```
-    --------------------
+
     The order of the sub-questions of this question.
 
     ### Remarks
@@ -599,10 +494,7 @@ Interface IQuestion Implements Object
     Property QuestionOrder() As OrderConstants
 
     '!
-    ```ds
-    (property) IQuestion.QuestionTemplate: String
-    ```
-    --------------------
+
     This property is used to get or set the name of a question template for the question.
 
     ### Remarks

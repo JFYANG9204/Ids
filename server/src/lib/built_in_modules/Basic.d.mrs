@@ -2,10 +2,7 @@
 Class Long
 
     '!
-    ```ds
-    (function) IsSet(Mask: Long): Boolean
-    ```
-    -----------------------------------
+
     Returns *True* if an integer value matches a specified mask.
     + `Mask`: *Long* - Pattern of bits to check.
     + `return`: *Boolean* - Whether all the bits set in `Mask` are set in `Val`.

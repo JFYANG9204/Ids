@@ -11,7 +11,9 @@ import {
     CompletionItem,
     CompletionItemKind,
     Hover,
-    MarkupKind
+    MarkupContent,
+    MarkupKind,
+    SignatureHelp
 } from 'vscode-languageserver-types';
 import {
     distanceTo,
@@ -22,6 +24,7 @@ import {
     ArgumentDeclarator,
     ArrayDeclarator,
     BindingDeclarator,
+    CallExpression,
     ClassOrInterfaceDeclaration,
     Comment,
     DeclarationBase,
@@ -36,7 +39,7 @@ import {
 } from "./lib/types";
 import { isIdentifierChar } from "./lib/util/identifier";
 import { builtInModule } from "./lib/util/declaration";
-import { BindTypes, Scope } from "./lib/util/scope";
+import { Scope } from "./lib/util/scope";
 
 
 export function getPathCompletion(uri: string): CompletionItem[] {
@@ -516,3 +519,49 @@ export function getHoverFromDeclaration(dec: DeclarationBase): Hover {
     };
 }
 
+
+export function getSignatureHelp(func: FunctionDeclaration, curCount: number, otherNote?: string) {
+    let note = func.name.name + "(";
+    for (let i = 0; i < func.params.length; ++i) {
+        const param = func.params[i];
+        let argContent = (param.paramArray ? "..." : "") + getDeclaratorNote(param.declarator);
+        if (param.optional) {
+            argContent = "[" + argContent + "]";
+        }
+        if (curCount === i) {
+            argContent = "**" + argContent + "**";
+        }
+        if (i === 0) {
+            note += argContent;
+        } else {
+            note += ", " + argContent;
+        }
+    }
+    note += "): " + (func.binding ?
+        (typeof func.binding === "string" ? func.binding : func.binding.name.name) :
+        "Void");
+    return note + (otherNote ?? "");
+}
+
+export function getSignatureHelpFromFunction(func: CallExpression) {
+    const dec: FunctionDeclaration | undefined = func.callee.extra["declaration"];
+    if (!dec) {
+        return null;
+    }
+    let label = getSignatureHelp(dec, func.arguments.length);
+    let documents: MarkupContent = {
+        kind: MarkupKind.Markdown,
+        value: getDeclarationNote(dec)
+    };
+    const help: SignatureHelp = {
+        signatures: [
+            {
+                label: label,
+                documentation: documents
+            }
+        ],
+        activeParameter: null,
+        activeSignature: null
+    };
+    return help;
+}

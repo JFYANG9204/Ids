@@ -1,9 +1,6 @@
 
 '!
-```ds
-(interface) IDataManagerJob
-```
------------------------------
+
 This interface enables script writers to access the Job object from thmrScripBasic section of the DMS file. The Job object is registered in the mrScriptBasic engine as Job.",
 
 ### Remarks
@@ -84,39 +81,27 @@ The Weighting component is accesible in the following sections:
 Interface IDataManagerJob Implements Object
 
     '!
-    ```ds
-    (method) DropCurrentCase()
-    ```
-    --------------------
+
     By calling this method, the current respondent's data will not be written to the output data source.
     !'
     Sub DropCurrentCase()
     End Sub
 
     '!
-    ```ds
-    (method) IDataManagerJob.EnvironmentInit(Value: String): string
-    ```
-    --------------------
+
     Sets the internal environment value.
     !'
     Function EnvironmentInit(Value As String) As String
     End Function
 
     '!
-    ```ds
-    (property) IDataManagerJob.CurrentInputDataSource
-    ```
-    --------------------
+
     Returns the first input datasource which is currently in use in the transformatio.
     !'
     ReadOnly Property CurrentInputDataSource() As Long
 
     '!
-    ```ds
-    (property) IDataManagerJob.GlobalVariables: IDataManagerGlobalVariables
-    ```
-    --------------------
+
     This property returns the Job's global variables collection.
 
     ### Example
@@ -136,10 +121,7 @@ Interface IDataManagerJob Implements Object
     ReadOnly Property GlobalVariables() As IDataManagerGlobalVariables
 
     '!
-    ```ds
-    (property) IDataManagerJob.GlobalVariables: IDataManagerGlobalVariables
-    ```
-    --------------------
+
     This property returns the Job's global variables collection.
 
     ### Example
@@ -159,10 +141,7 @@ Interface IDataManagerJob Implements Object
     ReadOnly Property InputCaseNumbers(Index As Variant) As Long
 
     '!
-    ```ds
-    (property) IDataManagerJob.Log: Object
-    ```
-    --------------------
+
     Return the Logging component.
 
     ### Remarks
@@ -175,19 +154,13 @@ Interface IDataManagerJob Implements Object
     ReadOnly Property Log() As Object
 
     '!
-    ```ds
-    (property) IDataManagerJob.OutputCaseNumber: Long
-    ```
-    --------------------
+
     Returns the current output case number.
     !'
     ReadOnly Property OutputCaseNumber() As Long
 
     '!
-    ```ds
-    (property) IDataManagerJob.Questions: IQuestions
-    ```
-    --------------------
+
     This property returns the Job's **Questions** collection.
 
     ### Example
@@ -199,10 +172,7 @@ Interface IDataManagerJob Implements Object
     ReadOnly Property Questions() As IQuestions
 
     '!
-    ```ds
-    (property) IDataManagerJob.TableDocument: IDocument
-    ```
-    --------------------
+
     Default Table document i.e. the Table document assigned to the first output datasource.
 
     ### Example
@@ -225,10 +195,7 @@ Interface IDataManagerJob Implements Object
     ReadOnly Property TableDocument() As IDocument
 
     '!
-    ```ds
-    (property) IDataManagerJob.TableDocuments[Index: Variant]: IDocument
-    ```
-    --------------------
+
     Table documents collection, containing one Table document per output datasource
 
     ### Example
@@ -260,10 +227,7 @@ Interface IDataManagerJob Implements Object
     ReadOnly Property TableDocuments(Index As Variant) As IDocument
 
     '!
-    ```ds
-    (property) IDataManagerJob.TransformedInputMetaData[Index: Variant]: IDataManagerMetaDataSources
-    ```
-    --------------------
+
     Returns a collection of input metadata filenames, one for each input data source.
 
     ### Example
@@ -288,10 +252,7 @@ Interface IDataManagerJob Implements Object
     ReadOnly Property TransformedInputMetaData(Index As Variant) As IDataManagerMetaDataSources
 
     '!
-    ```ds
-    (property) IDataManagerJob.TransformedOutputMetaData[Index: Variant]: IDataManagerMetaDataSources
-    ```
-    --------------------
+
     Returns a collection of output metadata filenames, one for each input data source.
 
     ### Example
@@ -316,10 +277,7 @@ Interface IDataManagerJob Implements Object
     ReadOnly Property TransformedOutputMetaData(Index As Variant) As IDataManagerMetaDataSources
 
     '!
-    ```ds
-    (property) IDataManagerJob.WeightEngine: IWeightEngine
-    ```
-    --------------------
+
     This property returns the interface pointer to the weight engine interface for the first output data source.
 
     ### Example
@@ -331,10 +289,7 @@ Interface IDataManagerJob Implements Object
     ReadOnly Property WeightEngine() As IWeightEngine
 
     '!
-    ```ds
-    (property) IDataManagerJob.WeightEngines[Index: Variant]: IDataManagerWeightEngines
-    ```
-    --------------------
+
     Returns a collection of weight engines, one for each output data source.
 
     ### Example
@@ -358,10 +313,7 @@ Interface IDataManagerJob Implements Object
     ReadOnly Property WeightEngines(Index As Variant) As IDataManagerWeightEngines
 
     '!
-    ```ds
-    (property) IDataManagerJob.TempDirectory: String
-    ```
-    --------------------
+
     Get / Set the temporary directory to use during the transformation
     !'
     Property TempDirectory() As String

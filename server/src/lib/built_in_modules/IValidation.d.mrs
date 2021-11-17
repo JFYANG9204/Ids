@@ -1,9 +1,6 @@
 
 '!
-```ds
-(interface) IValidation
-```
------------------------------
+
 The Validation object is used to manage the question validation.
 With the properties of a Validation object, you can:
 + Get or set the minimum and maximum allowed values.
@@ -12,10 +9,7 @@ With the properties of a Validation object, you can:
 Interface IValidation Implements Object
 
     '!
-    ```ds
-    (property) IValidation.Options: IValidationOptions
-    ```
-    -----------------------------
+
     Additional validation options that differ between question types.
 
     ### Remarks
@@ -36,10 +30,7 @@ Interface IValidation Implements Object
     ReadOnly Property Options() As IValidationOptions
 
     '!
-    ```ds
-    (property) IValidation.Function: String
-    ```
-    -----------------------------
+
     The custom validation function to use.
 
     ### Remarks
@@ -80,10 +71,7 @@ Interface IValidation Implements Object
     Property Function() As String
 
     '!
-    ```ds
-    (property) IValidation.MaxValue: Variant
-    ```
-    -----------------------------
+
     This read/write property returns the maximum possible value.
 
     ### Remarks
@@ -98,10 +86,7 @@ Interface IValidation Implements Object
     Property MaxValue() As Variant
 
     '!
-    ```ds
-    (property) IValidation.MinValue: Variant
-    ```
-    -----------------------------
+
     This read/write property returns the minimum possible value.
 
     ### Remarks
@@ -117,10 +102,7 @@ Interface IValidation Implements Object
     Property MinValue() As Variant
 
     '!
-    ```ds
-    (property) IValidation.Precision: Long
-    ```
-    -----------------------------
+
     The total number of digits that can be specified for a numeric value
 
     ### Remarks
@@ -129,10 +111,7 @@ Interface IValidation Implements Object
     Property Precision() As Long
 
     '!
-    ```ds
-    (property) IValidation.Scale: Long
-    ```
-    -----------------------------
+
     The number of digits after the decimal point for a double value
 
     ### Remarks
@@ -141,10 +120,7 @@ Interface IValidation Implements Object
     Property Scale() As Long
 
     '!
-    ```ds
-    (property) IValidation.ValidateExpression: String
-    ```
-    -----------------------------
+
     This read/write property returns the validation expression. (Default Property)
 
     ### Remarks

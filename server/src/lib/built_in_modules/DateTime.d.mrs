@@ -1,9 +1,6 @@
 
 '!
-```ds
-(function) DateAdd(Val: Date, Interval: String, Count: Long): Date
-```
------------------------------------
+
 Returns a date to which a specified time interval (year, quarter, month, day, week, hour, minute, or second) has been added.
 + `Val`: *Date* - The date and/or time to which you want to add the interval(s).
 + `Interval`: *String* - The type of interval to be added, as specified in the table below.
@@ -39,10 +36,7 @@ Function DateAdd(Val As Date, Interval As String, Count As Long) As Date
 End Function
 
 '!
-```ds
-(function) DateDiff(Val1: Date, Val2: Date, Interval: String): Long
-```
------------------------------------
+
 Returns the time interval between two dates.
 + `Val1`: *Date* - First date value.
 + `Val2`: *Date* - Second date value.
@@ -91,10 +85,7 @@ Function DateDiff(Val1 As Date, Val2 As Date, Interval As String) As Long
 End Function
 
 '!
-```ds
-(function) DateNow([Val: Variant], [IgnoreDaylightSaving: Boolean = False]): Date
-```
------------------------------------
+
 Returns the current local date in a particular time zone.
 + `Val`: *Variant* - Optional. *Long* or *String* value specifying local time zone to use.
 + `IgnoreDaylightSaving`: *Boolean* - Optional. Whether to ignore adjustments for daylight-saving time. Default is *False*.
@@ -113,10 +104,7 @@ Function DateNow(Optional Val As Variant, Optional IgnoreDaylightSaving As Boole
 End Function
 
 '!
-```ds
-(function) DateOnly(Val: Date): Date
-```
------------------------------------
+
 Returns the date from a date and time value.
 + `Val`: *Date* - *Date* value.
 + `reture`: *Date* - The date from `Val` (year, month and day).
@@ -128,10 +116,7 @@ Function DateOnly(Val As Date) As Date
 End Function
 
 '!
-```ds
-(function) DatePart(Val: Date, Interval: String): Long
-```
------------------------------------
+
 Returns a specified part of a given date.
 + `Val`: *Date* - The date of which you want to return a part.
 + `Interval`: *String* - Defines the part of the date that is to be returned, as specified in the table below.
@@ -167,10 +152,7 @@ Function DatePart(Val As Date, Interval As String) As Long
 End Function
 
 '!
-```ds
-(function) Day(Val: Date): Long
-```
------------------------------------
+
 Returns a whole number between 1 and 31, inclusive, representing the day of the month.
 + `Val`: *Date* - The date for which you want to return the day.
 + `return`: *Long* - The day of the month (1 to 31).
@@ -192,10 +174,7 @@ Function Day(Val As Date) As Long
 End Function
 
 '!
-```ds
-(function) GetTimeZone([Val: Variant]): Long
-```
------------------------------------
+
 Returns the index value of a time zone defined in the registry on the server.
 + `Val`: *Variant* - Optional. *Long* or *Text* value specifying time zone to use.
 + `return`: *Long* - Index of the local time zone.
@@ -213,10 +192,7 @@ Function GetTimeZone(Optional Val As Variant) As Long
 End Function
 
 '!
-```ds
-(function) GetTimeZoneDaylightSaving([Val: Variant], [Time: Date]): Boolean
-```
------------------------------------
+
 Returns True if daylight saving is currently in effect at the specified time (or now) in the specified time zone (or the program's time zone).
 + `Val`: *Variant* - Optional. *Long* or *String* value specifying time zone to use.
 + `Time`: *Date* - Optional. Local date and time to use.
@@ -238,10 +214,7 @@ Function GetTimeZoneDaylightSaving(Optional Val As Variant, Optional Time As Dat
 End Function
 
 '!
-```ds
-(function) GetTimeZoneName([Val: Variant]): String
-```
------------------------------------
+
 Returns the name of the local time zone.
 + `Val`: *Variant* - Optional. *Long* or *String* value specifying time zone to use.
 + `return`: *String* - Name of the local time zone.
@@ -259,10 +232,7 @@ Function GetTimeZoneName(Optional Val As Variant) As String
 End Function
 
 '!
-```ds
-(function) GetTimeZoneOffset([Val: Variant], [Time: Date], [IgnoreDaylightSaving: Boolean = False]): Long
-```
------------------------------------
+
 Returns the number of minutes to add to or subtract from UTC time to get the local time.
 + `Val`: *Variant* - Optional. *Long* or *String* value specifying time zone to use.
 + `Time`: *Date* - Optional. Local date and time to use.
@@ -278,10 +248,7 @@ Function GetTimeZoneOffset(Optional Val As Variant, Optional Time As Date, Optio
 End Function
 
 '!
-```ds
-(function) Hour(Val: Date): Long
-```
------------------------------------
+
 Returns a whole number between 0 and 23, inclusive, representing the hour of the day.
 + `Val`: *Date* - The date for which you want to return the hour of the day.
 + `return`: *Long* - The hour of the day (0 to 23).
@@ -303,10 +270,7 @@ Function Hour(Val As Date) As Long
 End Function
 
 '!
-```ds
-(function) LocalToUTCTime(Val: Date, [Zone: Variant], [IgnoreDaylightSaving: Boolean = False]): Date
-```
------------------------------------
+
 Returns the UTC time that corresponds to a given local time.
 + `Val`: *Date* - Local date/time value.
 + `Zone`: *Variant* - Optional. *Long* or *String* value specifying local time zone to use.
@@ -321,10 +285,7 @@ Function LocalToUTCTime(Val As Date, Optional Zone As Variant, Optional IgnoreDa
 End Function
 
 '!
-```ds
-(function) Minute(Val: Date): Long
-```
------------------------------------
+
 Returns a whole number between 0 and 59, inclusive, representing the minute of the hour.
 + `Val`: *Date* - The date for which you want to return the minute.
 + `return`: *Long* - The minute of the hour (0 to 59).
@@ -342,10 +303,7 @@ Function Minute(Val As Date) As Long
 End Function
 
 '!
-```ds
-(function) Month(Val: Date): Long
-```
------------------------------------
+
 Returns a whole number between 1 and 12, inclusive, representing the month of the year.
 + `Val`: *Date* - The date for which you want to return the month.
 + `return`: *Long* - The month of the year (1 to 12).
@@ -363,10 +321,7 @@ Function Month(Val As Date) As Long
 End Function
 
 '!
-```ds
-(function) MonthName(Val: Long , [Abbreviate: Boolean = False], [Locale: Long]): String
-```
------------------------------------
+
 Returns a string indicating the specified month.
 + `Val`: *Long* - An integer between 1 and 13 representing the month, or a date.
 + `Abbreviate`: *Boolean* - Optional. Whether a short form of the month name isto be used. The default is *False*.
@@ -400,10 +355,7 @@ Function MonthName(Val As Long, Optional Abbreviate As Boolean = False, Optional
 End Function
 
 '!
-```ds
-(function) Now([Val: Variant], [IgnoreDaylightSaving: Boolean = False]): Date
-```
------------------------------------
+
 Returns the current local date and time in a particular time zone.
 + `Val`: *Variant* - Optional. *Long* or *String* value specifying local time zone to use.
 + `IgnoreDaylightSaving`: *Boolean* - Optional. Whether to ignore adjustments for daylight-saving time. Default is *False*.
@@ -422,10 +374,7 @@ Function Now(Optional Val As Variant, Optional IgnoreDaylightSaving As Boolean =
 End Function
 
 '!
-```ds
-(function) Second(Val: Date): Long
-```
------------------------------------
+
 Returns a whole number between 0 and 59, inclusive, representing the second of the minute.
 + `Val`: *Date* - The date for which you want to return the second.
 + `return`: *Long* - The second of the minute (0 to 59).
@@ -443,10 +392,7 @@ Function Second(Val As Date) As Long
 End Function
 
 '!
-```ds
-SetTimeZone(Val: Variant): Long
-```
------------------------------------
+
 Sets the time zone associated with a program.
 + `Val`: *Variant* - *Long* or *String* value specifying time zone to use.
 + `return`: *Long* - Index of the new time zone.
@@ -458,10 +404,7 @@ Function SetTimeZone(Val As Variant) As Long
 End Function
 
 '!
-```ds
-(function) TimeNow([Val: Variant], [IgnoreDaylightSaving: Boolean = False]): Date
-```
------------------------------------
+
 Returns the current local time in a particular time zone.
 + `Val`: *Variant* - Optional. *Long* or *String* value specifying local time zone to use.
 + `IgnoreDaylightSaving`: *Boolean* - Optional. Whether to ignore adjustments for daylight-saving time. Default is *False*.
@@ -480,10 +423,7 @@ Function TimeNow(Optional Val As Variant, Optional IgnoreDaylightSaving As Boole
 End Function
 
 '!
-```ds
-(function) TimeOnly(Val: Date): Date
-```
------------------------------------
+
 The return value is the same as `Val`, but with the date set to *30 December 1899*.
 + `Val`: *Date* - *Date* value.
 + `return`: *Date* - The time from `Val` (hours, minutes, and seconds).
@@ -495,10 +435,7 @@ Function TimeOnly(Val As Date) As Date
 End Function
 
 '!
-```ds
-(function) UTCToLocalTime(Val: Date, [Zone: Variant], [IgnoreDaylightSaving: Boolean = False]): Date
-```
------------------------------------
+
 Returns the local time that corresponds to a given UTC time.
 + `Val`: *Date* - UTC date/time value.
 + `Zone`: *Variant* - Optional. *Long* or *String* value specifying the local time zone to use.
@@ -512,10 +449,7 @@ Function UTCToLocalTime(Val As Date, Optional Zone As Variant, Optional IgnoreDa
 End Function
 
 '!
-```ds
-(function) WeekdayName(Val: Variant, [Abbreviate: Boolean = False], [Locale: Long]): String
-```
------------------------------------
+
 Returns a string indicating the specified day of the week.
 + `Val`: *Variant* - A integer between 1 and 7 representing the day of the week, or a date. The input locale defines which days are considered the first and last days of the week.
 + `Abbreviate`: *Boolean* - Optional. Whether a short form of the day name is to be used. The default is *False*.
@@ -562,10 +496,7 @@ Function WeekdayName(Val As Variant, Optional Abbreviate As Boolean = False, Opt
 End Function
 
 '!
-```ds
-(function) Year(Val: Date): Long
-```
------------------------------------
+
 Returns a whole number representing the year.
 + `Val`: *Date* - The date for which you want to return the year.
 + `return`: *Long* - The Year.

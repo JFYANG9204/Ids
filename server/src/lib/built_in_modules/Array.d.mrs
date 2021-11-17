@@ -2,10 +2,7 @@
 Class Array Implements IEnumerable
 
     '!
-    ```ds
-    (function) Find(Key: Variant, [Skip: Long = 0], [Reverse: Boolean = False], [IgnoreCase: Boolean = True]): Long
-    ```
-    -----------------------------------
+
     Searches a string, a category list, or an array, for a specified substring, subcategory list, or subarray, and if it is found, returns its start position.
     + `Key`: *Variant* - Value to search for in `Val`.
     + `Skip`: *Long* - Optional. The number of positions to skip in `Val` before starting the search. If `Reverse` is *True*, `Skip` is the number of positions to skip from the end of `Val`. If `Reverse` is omitted or *False*, Skip is the number of positions to skip from the start of `Val`. Treated as 0 if omitted or is < 0.
@@ -54,10 +51,7 @@ Class Array Implements IEnumerable
     End Function
 
     '!
-    ```ds
-    (function) Left(Length: Long): Variant
-    ```
-    -----------------------------------
+
     Returns a string containing the first characters from a string, a category list containing the first categories from a category list, or an array containing the first elements from an array.
     + `Val`: *String* | *Categorical* | *Array* - *Text* value, *categorical* value, or *Array* to operate on.
     + `Length`: *Long* - Number of characters, categories, or elements to return. If `Length` is greater than the number of items available, all of the items are returned.
@@ -88,10 +82,7 @@ Class Array Implements IEnumerable
     End Function
 
     '!
-    ```ds
-    (function) Len(): Long
-    ```
-    -----------------------------------
+
     Returns a *Long* containing the number of characters in a string, the number of categories in a category list, or the number of elements in an array.
     + `Val`: *String* | *Categorical* | *Array* - *Text* value, *Categorical* value, or *Array* to operate on.
     + `return`: *Long* - Numbers of characters, categories, or elements in `Val`.
@@ -121,10 +112,7 @@ Class Array Implements IEnumerable
     End Function
 
     '!
-    ```ds
-    (function) Mid(Start: Long, [Length: Long]): Variant
-    ```
-    -----------------------------------
+
     + `Val`: *String* | *Categorical* | *Array* - *Text* value, *categorical* value, or *array* to operate on.
     + `Start`: *Long* - Position in `Val` of the first character, category, or element wanted (counting from 0). If `Start` is greater than the number of items in `Val`, no items are returned. If `Start` is less than 0, items are returned from the start of `Val`.
     + `Length`: *Long* - Optional. Number of characters, categories, or elements to return. If `Length` is omitted, or if there are fewer than *Lengthcharacters* (including the `Start` character), all characters from `Start` to the end of the string are returned. If `Start` + `Length` is < 1, no items are returned.
@@ -159,10 +147,7 @@ Class Array Implements IEnumerable
     End Function
 
     '!
-    ```ds
-    (function) Right(Length: Long): Variant
-    ```
-    -----------------------------------
+
     Returns a string containing the last characters from a string, a category list containing the last categories from a category list, or an array containing the last elements from an array.
     + `Val`: *String* | *Categorical* | *Array* - *Text* value, *categorical* value, or *array* to operate on.
     + `Length`: *Long* - Number of characters, categories, or elements to return. If `Length` is greater than the number of items available, all of the items are returned.

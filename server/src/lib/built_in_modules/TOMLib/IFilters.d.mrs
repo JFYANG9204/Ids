@@ -2,46 +2,31 @@
 Namespace TOMLib
 
     '!
-    ```ds
-    (interface) IFilters
-    ```
-    -----------------------------
+
     A collection of `Filter` objects. During population of the table, all filters in the collection are combined (ANDed together).
     !'
     Interface IFilters Implements IEnumerable, Object
 
         '!
-        ```ds
-        (property) IFilters.Count: Long
-        ```
-        --------------------
+
         The number of items in the collection.
         !'
         ReadOnly Property Count() As Long
 
         '!
-        ```ds
-        (property) IFilters.Item[Index: Variant]: Variant
-        ```
-        --------------------
+
         Get the collection item at the specified location.
         !'
         Property Item(Index As Variant) As Variant
 
         '!
-        ```ds
-        (property) IFilters.Parent: Variant
-        ```
-        --------------------
+
         The parent object
         !'
         ReadOnly Property Parent() As Variant
 
         '!
-        ```ds
-        (method) IFilters.Add(Index: Variant): IFilter
-        ```
-        --------------------
+
         Adds a copy of a filter object in the `IDocument.Filters` collection to the current collection.
 
         ### Remarks
@@ -51,10 +36,7 @@ Namespace TOMLib
         End Function
 
         '!
-        ```ds
-        (method) IFilters.AddNew(Name: String, Expression: String, [Description: String = ""], [Level: String = HDATA], [IsInterviewFilter: Boolean = 0]): IFilter
-        ```
-        --------------------
+
         Adds a new `Filter` object to the collection.
 
         ### Parameters
@@ -76,20 +58,14 @@ Namespace TOMLib
         End Function
 
         '!
-        ```ds
-        (method) IFilters.Clear(): Void
-        ```
-        --------------------
+
         Removes all `Filter` objects from the collection.
         !'
         Sub Clear()
         End Sub
 
         '!
-        ```ds
-        (method) IFilters.Remove(Index: Variant): Void
-        ```
-        --------------------
+
         Removes a `Filter` object from the collection.
         !'
         Sub Remove(Index As Variant)

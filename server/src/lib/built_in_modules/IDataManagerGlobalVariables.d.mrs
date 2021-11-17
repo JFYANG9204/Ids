@@ -1,74 +1,50 @@
 
 '!
-```ds
-(interface) IDataManagerGlobalVariables
-```
------------------------------
+
 A collection of GlobalVariable objects.
 !'
 Interface IDataManagerGlobalVariables Implements IEnumerable, Object
 
     '!
-    ```ds
-    (method) IDataManagerGlobalVariables.Add(Name: String [, Value: Variant]): Void
-    ```
-    --------------------
+
     Add an item to the collection.
     !'
     Sub Add(Name As String, Optional Value As Variant)
     End Sub
 
     '!
-    ```ds
-    (method) IDataManagerGlobalVariables.Append(Item: IDataManagerGlobalVariable): Void
-    ```
-    --------------------
+
     Append a global variable object to the collection.
     !'
     Sub Append(Item As IDataManagerGlobalVariable)
     End Sub
 
     '!
-    ```ds
-    (method) IDataManagerGlobalVariables.Remove(Index: Variant): Void
-    ```
-    --------------------
+
     Remove an item from the collection.
     !'
     Sub Remove(Index As Variant)
     End Sub
 
     '!
-    ```ds
-    (property) IDataManagerGlobalVariables.Count: Long
-    ```
-    --------------------
+
     The number of items in the collection.
     !'
     ReadOnly Property Count() As Long
 
     '!
-    ```ds
-    (property) IDataManagerGlobalVariables.Item[Index: Variant]: Variant
-    ```
-    --------------------
+
     Get the collection item at the specified location. (This is the default property).
     !'
     Default ReadOnly Property Item(Index As Variant) As Variant
 
     '!
-    ```ds
-    (property) IDataManagerGlobalVariables.RespNum: Long
-    ```
-    --------------------
+
     !'
     Property RespNum() As Long
 
     '!
-    ```ds
-    (property) IDataManagerGlobalVariables.LogHelpVar: Variant
-    ```
-    --------------------
+
     !'
     Property LogHelpVar() As Variant
 

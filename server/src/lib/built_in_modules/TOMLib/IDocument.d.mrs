@@ -1,19 +1,13 @@
 
 Namespace TOMLib
     '!
-    ```ds
-    (interface) IDocument
-    ```
-    -----------------------------
+
     The **Table Object Model (TOM)** document is at the root of the object model and is the only object which is publicly creatable. The `Document` object represents a book of tables.
     !'
     Interface IDocument Implements Object
 
         '!
-        ```ds
-        (property) IDocument.Axes[Index: Variant]: IAxes
-        ```
-        --------------------
+
         A collection of axis objects that can be reused on multiple tables.
 
         ### Remarks
@@ -22,37 +16,25 @@ Namespace TOMLib
         ReadOnly Property Axes(Index As Variant) As IAxes
 
         '!
-        ```ds
-        (property) IDocument.Coding: ICoding
-        ```
-        --------------------
+
         The `Coding` object includes methods that can be used to `categorize` and *band text*, *numeric*, and *date* variables in the TOM document.
         !'
         ReadOnly Property Coding() As ICoding
 
         '!
-        ```ds
-        (property) IDocument.CreatedByVersion: String
-        ```
-        --------------------
+
         Returns the version number of the `TOM.DLL` that created the `Document`.
         !'
         ReadOnly Property CreatedByVersion() As String
 
         '!
-        ```ds
-        (property) IDocument.DataSet: IDataSet
-        ```
-        --------------------
+
         The data set that this table document is based upon. The data set consists of metadata and associated case data.
         !'
         ReadOnly Property DataSet() As IDataSet
 
         '!
-        ```ds
-        (property) IDocument.Default: ITableDefaults
-        ```
-        --------------------
+
         The `Default` property has various settings that are automatically copied to a new table
 
         ### Remarks
@@ -62,19 +44,13 @@ Namespace TOMLib
         ReadOnly Property Default() As ITableDefaults
 
         '!
-        ```ds
-        (property) IDocument.Exports: IExports
-        ```
-        --------------------
+
         Collection of `Export` objects. `Exports` are used to publish the resulting tables in a variety of formats.
         !'
         ReadOnly Property Exports() As IExports
 
         '!
-        ```ds
-        (property) IDocument.Filters: IFilters
-        ```
-        --------------------
+
         A collection of table filters which may be set up in advance for use on tables.
 
         ### Remarks
@@ -83,19 +59,13 @@ Namespace TOMLib
         ReadOnly Property Filters() As IFilters
 
         '!
-        ```ds
-        (property) IDocument.Global: ITableGlobals
-        ```
-        --------------------
+
         The `TableGlobals` are various settings that are applied to all tables in the document. The settings are merged together with the per-table settings.
         !'
         ReadOnly Property Global() As ITableGlobals
 
         '!
-        ```ds
-        (property) IDocument.GroupedTables: ITableListNode
-        ```
-        --------------------
+
         Tables arranged into groups
 
         ### Remarks
@@ -104,28 +74,19 @@ Namespace TOMLib
         ReadOnly Property GroupedTables() As ITableListNode
 
         '!
-        ```ds
-        (property) IDocument.IsPopulating: Boolean
-        ```
-        --------------------
+
         Returns *True* if the `Document` is currently populating.
         !'
         ReadOnly Property IsPopulating() As Boolean
 
         '!
-        ```ds
-        (property) IDocument.LastUpdatedByVersion: String
-        ```
-        --------------------
+
         Returns the version number of the `TOM.DLL` that last updated the `Document`.
         !'
         ReadOnly Property LastUpdatedByVersion() As String
 
         '!
-        ```ds
-        (property) IDocument.LicensedFeatures: Long
-        ```
-        --------------------
+
         The features of the document for which a valid license exists.
 
         ### Remarks
@@ -134,10 +95,7 @@ Namespace TOMLib
         ReadOnly Property LicensedFeatures() As Long
 
         '!
-        ```ds
-        (property) IDocument.Parent: Variant
-        ```
-        --------------------
+
         The parent object
 
         ### Remarks
@@ -146,10 +104,7 @@ Namespace TOMLib
         ReadOnly Property Parent() As Variant
 
         '!
-        ```ds
-        (property) IDocument.PopulateProgress: Long
-        ```
-        --------------------
+
         Returns the percentage completion of the population run
 
         ### Remarks
@@ -158,10 +113,7 @@ Namespace TOMLib
         ReadOnly Property PopulateProgress() As Long
 
         '!
-        ```ds
-        (property) IDocument.PopulateStatus: String
-        ```
-        --------------------
+
         Returns a description of the current population status.
 
         ### Remarks
@@ -170,10 +122,7 @@ Namespace TOMLib
         ReadOnly Property PopulateStatus() As String
 
         '!
-        ```ds
-        (property) IDocument.ProfileDefault: ITableDefaults
-        ```
-        --------------------
+
         The `ProfileDefault` property has various setting that are automatically copied to a new profile table.
 
         ### Remarks
@@ -183,10 +132,7 @@ Namespace TOMLib
         ReadOnly Property ProfileDefault() As ITableDefaults
 
         '!
-        ```ds
-        (property) IDocument.Properties: IProperties
-        ```
-        --------------------
+
         A collection of user added Property objects relating to the document.
 
         ### Remarks
@@ -207,10 +153,7 @@ Namespace TOMLib
         ReadOnly Property Properties() As IProperties
 
         '!
-        ```ds
-        (property) IDocument.Statistics: IStatistics
-        ```
-        --------------------
+
         A collection of Statistic objects that define statistical tests that are available for applying to tables.
 
         ### Remarks
@@ -219,28 +162,19 @@ Namespace TOMLib
         ReadOnly Property Statistics() As IStatistics
 
         '!
-        ```ds
-        (property) IDocument.Tables: ITables
-        ```
-        --------------------
+
         This collection of tables contained in the document. This is the default property.
         !'
         ReadOnly Property Tables() As ITables
 
         '!
-        ```ds
-        (property) IDocument.TOMVersion: String
-        ```
-        --------------------
+
         Returns the version number of the `TOM.DLL`
         !'
         ReadOnly Property TOMVersion() As String
 
         '!
-        ```ds
-        (property) IDocument.Context: String
-        ```
-        --------------------
+
         The document context.
 
         ### Remarks
@@ -249,19 +183,13 @@ Namespace TOMLib
         Property Context() As String
 
         '!
-        ```ds
-        (property) IDocument.Description: String
-        ```
-        --------------------
+
         A user specified string that can be used to describe the contents of this table document.
         !'
         Property Description() As String
 
         '!
-        ```ds
-        (property) IDocument.ImageLocation: String
-        ```
-        --------------------
+
         The location of the images referenced by the elements.
 
         ### Remarks
@@ -274,10 +202,7 @@ Namespace TOMLib
         Property ImageLocation() As String
 
         '!
-        ```ds
-        (property) IDocument.KeepLogFiles: Boolean
-        ```
-        --------------------
+
         Keep the temporary files created during the call to IDocument.Populate
 
         ### Remarks
@@ -286,10 +211,7 @@ Namespace TOMLib
         Property KeepLogFiles() As Boolean
 
         '!
-        ```ds
-        (property) IDocument.LabelType: String
-        ```
-        --------------------
+
         The document label type.
 
         ### Remarks
@@ -298,10 +220,7 @@ Namespace TOMLib
         Property LabelType() As String
 
         '!
-        ```ds
-        (property) IDocument.Language: String
-        ```
-        --------------------
+
         The document language. The language can be the three-character language code (such as "ENU"), the language long name, which is the localized name of the language and the country where it is spoken, such as "English (United States)" or the XML-name.
 
         ### Remarks
@@ -310,10 +229,7 @@ Namespace TOMLib
         Property Language() As String
 
         '!
-        ```ds
-        (property) IDocument.LogFilePath: String
-        ```
-        --------------------
+
         The location used to write temporary files and log files created when a table is populated.
 
         ### Remarks
@@ -322,19 +238,13 @@ Namespace TOMLib
         Property LogFilePath() As String
 
         '!
-        ```ds
-        (property) IDocument.OpenOption: OpenOptions
-        ```
-        --------------------
+
         The options used when opening data sets.
         !'
         Property OpenOption() As OpenOptions
 
         '!
-        ```ds
-        (property) IDocument.OutputLocaleId: Long
-        ```
-        --------------------
+
         Sets the locale id used for any error messages descriptions.
 
         ### Remarks
@@ -343,10 +253,7 @@ Namespace TOMLib
         Property OutputLocaleId() As Long
 
         '!
-        ```ds
-        (property) IDocument.ProfileSpecialElements: Boolean
-        ```
-        --------------------
+
         If set to *True*, special data elements, such as *Net* and *Base* elements, will be included in profile table results.
 
         ### Remarks
@@ -355,10 +262,7 @@ Namespace TOMLib
         Property ProfileSpecialElements() As Boolean
 
         '!
-        ```ds
-        (property) IDocument.RawStatisticsDataEnabled: Boolean
-        ```
-        --------------------
+
         Controls the generation of raw statistical data during execution of the Populate method.
 
         ### Remarks
@@ -367,10 +271,7 @@ Namespace TOMLib
         Property RawStatisticsDataEnabled() As Boolean
 
         '!
-        ```ds
-        (property) IDocument.SaveProfileResults: Boolean
-        ```
-        --------------------
+
         If *True* the populated results for profile tables are included in saved `Table Document` files
 
         ### Remarks
@@ -379,10 +280,7 @@ Namespace TOMLib
         Property SaveProfileResults() As Boolean
 
         '!
-        ```ds
-        (method) IDocument.Clear(): Void
-        ```
-        --------------------
+
         Returns the `Document` to its initial state.
 
         ### Remarks
@@ -398,10 +296,7 @@ Namespace TOMLib
         End Sub
 
         '!
-        ```ds
-        (method) IDocument.GenerateScript([Tables: Variant], [Type: ScriptType], [Options: Variant]): String
-        ```
-        --------------------
+
         Generates a script representation of the table document.
 
         ### Parameters
@@ -421,10 +316,7 @@ Namespace TOMLib
         End Function
 
         '!
-        ```ds
-        (method) IDocument.GetObjectFromID(ID: String): Object
-        ```
-        --------------------
+
         Get the object corresponding to an object ID
 
         ### Remarks
@@ -434,10 +326,7 @@ Namespace TOMLib
         End Function
 
         '!
-        ```ds
-        (method) IDocument.GetTablesXml([Tables: Variant], [Options: Long = xmlIncludeResults]): String
-        ```
-        --------------------
+
         Generates an XML representation of the table document.
 
         ### Parameters
@@ -451,10 +340,7 @@ Namespace TOMLib
         End Function
 
         '!
-        ```ds
-        (method) IDocument.Open(Source: Variant, [IncludeResults: Boolean = 1]): String
-        ```
-        --------------------
+
         Opens a previously saved table document.
 
         ### Parameters
@@ -468,10 +354,7 @@ Namespace TOMLib
         End Function
 
         '!
-        ```ds
-        (method) IDocument.OpenWithDataSet(Source: Variant, [IncludeResults: Boolean = 1], MetaData: Variant, [MDSC: String = ""], [DbLocation: String = ""], [CDSC: String = ""], [Project: String = ""], [Version: String = {..}]): String
-        ```
-        --------------------
+
         Opens a previously saved table document with the specified metadata and case data.
 
         ### Parameters
@@ -491,10 +374,7 @@ Namespace TOMLib
         End Function
 
         '!
-        ```ds
-        (method) IDocument.Populate(Tables: Variant): Boolean
-        ```
-        --------------------
+
         Populates the `CellValues` of the required document tables.Return *True* if all tables are populated successfully; return *False* if any of the tables fail during population.
 
         ### Parameters
@@ -512,10 +392,7 @@ Namespace TOMLib
         End Function
 
         '!
-        ```ds
-        (method) IDocument.PopulateBegin(Tables: Variant): Void
-        ```
-        --------------------
+
         Begin an asynchronous population run
 
         ### Return Value
@@ -527,20 +404,14 @@ Namespace TOMLib
         End Sub
 
         '!
-        ```ds
-        (method) IDocument.PopulateCancel(): Void
-        ```
-        --------------------
+
         Cancel an existing population started via `Populate()` or `PopulateBegin()`
         !'
         Sub PopulateCancel()
         End Sub
 
         '!
-        ```ds
-        (method) IDocument.RefreshFromMetadata([ForceRefresh: Boolean = 0]): Void
-        ```
-        --------------------
+
         Updates all axes in all tables from the metadata if `UseMetadataDefinition` is *True*
 
         ### Remarks
@@ -552,10 +423,7 @@ Namespace TOMLib
         End Sub
 
         '!
-        ```ds
-        (method) IDocument.Save(Destination: Variant, [IncludeResults: Boolean = 1]): Void
-        ```
-        --------------------
+
         Saves the table document to the specified location.
 
         ### Parameters
@@ -570,10 +438,7 @@ Namespace TOMLib
         End Sub
 
         '!
-        ```ds
-        (method) IDocument.SaveWithoutDataSet(Destination: Variant, [IncludeResults: Boolean = 1]): Void
-        ```
-        --------------------
+
         Saves the table document without any dataset information.
 
         ### Remarks

@@ -2,10 +2,7 @@
 Namespace TOMLib
 
     '!
-    ```ds
-    (interface) IDataSet
-    ```
-    -----------------------------
+
     The `DataSet` object represents the data that the table is to be based upon. The `Load()` method of the `DataSet` object needs to be called soon after creating a `Document` object in order to set the data set to be used for the tables.
 
     ### Remarks
@@ -14,10 +11,7 @@ Namespace TOMLib
     Interface IDataSet Implements Object
 
         '!
-        ```ds
-        (property) IDataSet.CanChangeView: Boolean
-        ```
-        -----------------------------
+
         *True* if the View property can be changed.
 
         ### Remarks
@@ -26,10 +20,7 @@ Namespace TOMLib
         ReadOnly Property CanChangeView() As Boolean
 
         '!
-        ```ds
-        (property) IDataSet.HasHdata: Boolean
-        ```
-        -----------------------------
+
         *True* if the current data set supports *HDATA*.
 
         ### Remarks
@@ -39,10 +30,7 @@ Namespace TOMLib
         ReadOnly Property HasHdata() As Boolean
 
         '!
-        ```ds
-        (property) IDataSet.HasVdata: Boolean
-        ```
-        -----------------------------
+
         *True* if the current data set supports *VDATA*.
 
         ### Remarks
@@ -52,10 +40,7 @@ Namespace TOMLib
         ReadOnly Property HasVdata() As Boolean
 
         '!
-        ```ds
-        (property) IDataSet.MdmChangeTracker: IChangeTracker
-        ```
-        -----------------------------
+
         A `ChangeTracker` object which can be used to track changes to the `MdmDocument`
 
         ### Remarks
@@ -64,10 +49,7 @@ Namespace TOMLib
         ReadOnly Property MdmChangeTracker() As IChangeTracker
 
         '!
-        ```ds
-        (property) IDataSet.MdmDocument: IDocument
-        ```
-        -----------------------------
+
         The metadata document loaded.
 
         ### Remarks
@@ -76,28 +58,19 @@ Namespace TOMLib
         ReadOnly Property MdmDocument() As IDocument
 
         '!
-        ```ds
-        (property) IDataSet.MdscName: String
-        ```
-        -----------------------------
+
         The name of the *DSC* used to load the metadata.
         !'
         ReadOnly Property MdscName() As String
 
         '!
-        ```ds
-        (property) IDataSet.MetaDataLocation: String
-        ```
-        -----------------------------
+
         The location of the metadata.
         !'
         ReadOnly Property MetaDataLocation() As String
 
         '!
-        ```ds
-        (property) IDataSet.Parent: IDocument
-        ```
-        -----------------------------
+
         The parent object
 
         ### Remarks
@@ -106,10 +79,7 @@ Namespace TOMLib
         ReadOnly Property Parent() As IDocument
 
         '!
-        ```ds
-        (property) IDataSet.Variables: IVariableListItem
-        ```
-        -----------------------------
+
         The `Variables` for the open data set.
 
         ### Remarks
@@ -118,46 +88,31 @@ Namespace TOMLib
         ReadOnly Property Variables() As IVariableListItem
 
         '!
-        ```ds
-        (property) IDataSet.Version: String
-        ```
-        -----------------------------
+
         The version specification of the metadata loaded.
         !'
         ReadOnly Property Version() As String
 
         '!
-        ```ds
-        (property) IDataSet.CdscName: String
-        ```
-        -----------------------------
+
         The name of the *DSC* to be used to access the case data.
         !'
         Property CdscName() As String
 
         '!
-        ```ds
-        (property) IDataSet.DbLocation: String
-        ```
-        -----------------------------
+
         The location of the case data for the table. The content of this string depends on the specific case data *DSC* that is used.
         !'
         Property DbLocation() As String
 
         '!
-        ```ds
-        (property) IDataSet.Description: String
-        ```
-        -----------------------------
+
         A user specified description of the contents of this data set. This can be used as an annotation on the table.
         !'
         Property Description() As String
 
         '!
-        ```ds
-        (property) IDataSet.Filter: String
-        ```
-        -----------------------------
+
         The global filter for *CDSCs* that natively support case data filtering.
 
         ### Remarks
@@ -169,19 +124,13 @@ Namespace TOMLib
         Property Filter() As String
 
         '!
-        ```ds
-        (property) IDataSet.Project: String
-        ```
-        -----------------------------
+
         The specific project to use in the case of a *DSC* that supports multiple projects per database.
         !'
         Property Project() As String
 
         '!
-        ```ds
-        (property) IDataSet.View: DataSetView
-        ```
-        -----------------------------
+
         The view of the data set that is currently being used.
 
         ### Remarks
@@ -190,10 +139,7 @@ Namespace TOMLib
         Property View() As DataSetView
 
         '!
-        ```ds
-        (method) IDataSet.Load(MetaData: Variant, [MDSC: String = ""], [DbLocation: String = ""], [CDSC: String = ""], [Project: String = ""], [Version: String = {..}]): Void
-        ```
-        -----------------------------
+
         Loads the metadata and case data to be used.
 
         ### Remarks
@@ -214,10 +160,7 @@ Namespace TOMLib
         End Sub
 
         '!
-        ```ds
-        (method) IDataSet.ValidateCaseData(): Void
-        ```
-        -----------------------------
+
         Attempts to connect to the case data and returns an error if the case data can't be accessed
 
         ### Remarks

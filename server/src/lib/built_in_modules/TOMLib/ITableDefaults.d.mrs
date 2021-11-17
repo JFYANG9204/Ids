@@ -2,19 +2,13 @@
 Namespace TOMLib
 
     '!
-    ```ds
-    (interface) ITableDefaults
-    ```
-    -----------------------------
+
     The `TableDefaults` object contains properties that define the initial state of a newly created Table object. These default properties are set to "sensible" values when the `Document` object is first created. These initial defaults allow simple tables to be created with a minimal amount of code. Separate TableDefaults objects are used for aggregated and profile tables (IDocument.Default and IDocument.ProfileDefault respectively).
     !'
     Interface ITableDefaults Implements Object
 
         '!
-        ```ds
-        (property) ITableDefaults.Annotations: IAnnotations
-        ```
-        -----------------------------
+
         A collection of `Annotation` objects. These are copied to the `Annotations` collection of the Table object when a new table is created.
 
         ### Remarks
@@ -29,19 +23,13 @@ Namespace TOMLib
         ReadOnly Property Annotations() As IAnnotations
 
         '!
-        ```ds
-        (property) ITableDefaults.Axes: IAxes
-        ```
-        -----------------------------
+
         A collection of `Axis` objects. These are copied to the `Axes` collection of the `Table` object when a new table is created. This collection is initially empty.
         !'
         ReadOnly Property Axes() As IAxes
 
         '!
-        ```ds
-        (property) ITableDefaults.CellItems: ICellItems
-        ```
-        -----------------------------
+
         A collection of `CellItem` objects. These are copied to the `CellItems` collection of the Table object when a new table is created.
 
         ### Remarks
@@ -54,19 +42,13 @@ Namespace TOMLib
         ReadOnly Property CellItems() As ICellItems
 
         '!
-        ```ds
-        (property) ITableDefaults.Filters: IFilters
-        ```
-        -----------------------------
+
         A collection of `Filter` objects. These are copied to the `Filters` collection of the `Table` object when a new table is created. This collection is initially empty.
         !'
         ReadOnly Property Filters() As IFilters
 
         '!
-        ```ds
-        (property) ITableDefaults.Parent: IDocument
-        ```
-        -----------------------------
+
         The parent object
 
         ### Remarks
@@ -75,28 +57,19 @@ Namespace TOMLib
         ReadOnly Property Parent() As IDocument
 
         '!
-        ```ds
-        (property) ITableDefaults.Properties: IProperties
-        ```
-        -----------------------------
+
         A collection of `Property` objects. These are copied to the `Properties` collection of the `Table` object when a new table is created. See `ITable.Properties` for more information.
         !'
         ReadOnly Property Properties() As IProperties
 
         '!
-        ```ds
-        (property) ITableDefaults.Rules: IRules
-        ```
-        -----------------------------
+
         A collection of `Rule` objects. These are copied to the `Rules` collection of the `Table` object when a new table is created. This collection is initially empty.
         !'
         ReadOnly Property Rules() As IRules
 
         '!
-        ```ds
-        (property) ITableDefaults.Statistics: IStatistics
-        ```
-        -----------------------------
+
         A collection of `Statistic` objects. These are copied to the `Statistics` collection of the `Table` object when a new table is created. This collection is initially empty.
 
         ### Remarks
@@ -105,10 +78,7 @@ Namespace TOMLib
         ReadOnly Property Statistics() As IStatistics
 
         '!
-        ```ds
-        (property) ITableDefaults.SortColumn: String
-        ```
-        -----------------------------
+
         The default `SortColumn` settings for new tables.
 
         ### Remarks
@@ -117,10 +87,7 @@ Namespace TOMLib
         Property SortColumn() As String
 
         '!
-        ```ds
-        (property) ITableDefaults.SortRow: String
-        ```
-        -----------------------------
+
         The default `SortRow` settings for new tables.
 
         ### Remarks
@@ -130,10 +97,7 @@ Namespace TOMLib
         Property SortRow() As String
 
         '!
-        ```ds
-        (property) ITableDefaults.Weight: String
-        ```
-        -----------------------------
+
         The default value of the `Weight` property for new tables.
 
         ### Remarks
@@ -142,20 +106,14 @@ Namespace TOMLib
         Property Weight() As String
 
         '!
-        ```ds
-        (method) ITableDefaults.Clear(): Void
-        ```
-        -----------------------------
+
         Clears all the properties of the TableDefaults object
         !'
         Sub Clear()
         End Sub
 
         '!
-        ```ds
-        (method) ITableDefaults.Reset(): Void
-        ```
-        -----------------------------
+
         Resets all the properties of the TableDefaults object to what they were when the Document object was initially created.
         !'
         Sub Reset()

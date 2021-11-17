@@ -11,28 +11,19 @@ Namespace TOMLib
     Interface IAxes Implements IEnumerable, Object
 
     '!
-    ```ds
-    (property) IAxes.Count: Long
-    ```
-    --------------------
+
     The number of items in the collection.
     !'
     ReadOnly Property Count() As Long
 
         '!
-        ```ds
-        (property) IAxes.Item[Index: Variant]: IAxis
-        ```
-        --------------------
+
         Returns a specified item in the collection.
         !'
         ReadOnly Property Item(Index As Variant) As IAxis
 
         '!
-        ```ds
-        (property) IAxes.Parent: Variant
-        ```
-        --------------------
+
         The parent object
 
         ### Remarks
@@ -41,10 +32,7 @@ Namespace TOMLib
         ReadOnly Property Parent() As Variant
 
         '!
-        ```ds
-        (method) IAxes.Add(Name: Variant, Axis: Variant, [Index: Long = -1]): IAxis
-        ```
-        --------------------
+
         Add a copy of an existing Axis object to the Axes collection.
 
         ### Remarks
@@ -66,10 +54,7 @@ Namespace TOMLib
         End Function
 
         '!
-        ```ds
-        (method) IAxes.AddNew(Name: Variant, [MdmObject: String = ""], [AxisExpression: String = ""], [Index: Long = -1]): IAxis
-        ```
-        --------------------
+
         Creates an `Axis` object and adds it to the collection.
 
         ### Remarks
@@ -79,20 +64,14 @@ Namespace TOMLib
         End Function
 
         '!
-        ```ds
-        (method) IAxes.Clear(): Void
-        ```
-        --------------------
+
         Removes all `Axis` objects from the collection.
         !'
         Sub Clear()
         End Sub
 
         '!
-        ```ds
-        (method) IAxes.Remove(Index: Variant): Void
-        ```
-        --------------------
+
         Removes an `Axis` object from the collection.
         !'
         Sub Remove(Index As Variant)

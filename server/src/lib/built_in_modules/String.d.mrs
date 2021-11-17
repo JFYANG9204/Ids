@@ -2,10 +2,7 @@
 Class String
 
     '!
-    ```ds
-    (function) Format([Style: String], [Width: Long], [Locale: Long]): String
-    ```
-    -----------------------------------
+
     Returns a string that is the result of formatting a value according to one or more specified styles.
     + `Style`: *String* - Optional. One or more formatting codes. Multiple codes must be separated by semicolons.
     + `Width`: *Long* - Optional. The minimum width of the formatted string.
@@ -223,10 +220,7 @@ Class String
     End Function
 
     '!
-    ```ds
-    (function) LCase(): String
-    ```
-    -----------------------------------
+
     Returns a string that has been converted to lower case.
     + `return`: *String* - Lowercase copy of `Val`.
 
@@ -245,10 +239,7 @@ Class String
     End Function
 
     '!
-    ```ds
-    (function) LTrim(): String
-    ```
-    -----------------------------------
+
     Returns a copy of a string with any leading spaces removed.
     + `return`: *String* - Copy of `Val` with leading spaces removed.
 
@@ -267,10 +258,7 @@ Class String
     End Function
 
     '!
-    ```ds
-    (function) RTrim(): String
-    ```
-    -----------------------------------
+
     Returns a copy of a string with any trailing spaces removed.
     + `return`: *String* - Copy of `Val` with trailing spaces removed.
 
@@ -289,10 +277,7 @@ Class String
     End Function
 
     '!
-    ```ds
-    (function) Split([Delimiter: String = " "], [Count: Long]): Categorical
-    ```
-    -----------------------------------
+
     Returns an array that contains substrings.
     + `Delimiter`: *String* - Optional. `Delimiter` between substrings. The default is a single space (" ").
     + `Count`: *Long* - Optional. The maximum number of substrings to return. If omitted or less than zero, all substrings are returned.
@@ -321,10 +306,7 @@ Class String
     End Function
 
     '!
-    ```ds
-    (function) Replace(Key: Variant, Replacement: Variant, [Start: Long], [Count: Long], [IgnoreCase: Boolean]): Variant
-    ```
-    -----------------------------------
+
     Replaces part of a text or categorical value with another value of the same type.
     + `Key`: *Variant* - Variant value to look for in `Val`, of the same type as `Val`.
     + `Replacement`: *Variant* - Variant value with which to replace `Key`, of the same type as `Val`.
@@ -347,10 +329,7 @@ Class String
     End Function
 
     '!
-    ```ds
-    (function) Trim(): String
-    ```
-    -----------------------------------
+
     Returns a copy of a string with any leading and trailing spaces removed.
     + `return`: *String* - Copy of `Val` with leading and trailing spaces removed.
 
@@ -369,10 +348,7 @@ Class String
     End Function
 
     '!
-    ```ds
-    (function) UCase(): String
-    ```
-    -----------------------------------
+
     Returns a string that has been converted to upper case.
     + `return`: *String* - Uppercase copy of `Val`.
 
@@ -395,10 +371,7 @@ Class String
     End Function
 
     '!
-    ```ds
-    (function) Find(Key: Variant, [Skip: Long = 0], [Reverse: Boolean = False], [IgnoreCase: Boolean = True]): Long
-    ```
-    -----------------------------------
+
     Searches a string, a category list, or an array, for a specified substring, subcategory list, or subarray, and if it is found, returns its start position.
     + `Key`: *Variant* - Value to search for in `Val`.
     + `Skip`: *Long* - Optional. The number of positions to skip in `Val` before starting the search. If `Reverse` is *True*, `Skip` is the number of positions to skip from the end of `Val`. If `Reverse` is omitted or *False*, Skip is the number of positions to skip from the start of `Val`. Treated as 0 if omitted or is < 0.
@@ -447,10 +420,7 @@ Class String
     End Function
 
     '!
-    ```ds
-    (function) Left(Length: Long): Variant
-    ```
-    -----------------------------------
+
     Returns a string containing the first characters from a string, a category list containing the first categories from a category list, or an array containing the first elements from an array.
     + `Val`: *String* | *Categorical* | *Array* - *Text* value, *categorical* value, or *Array* to operate on.
     + `Length`: *Long* - Number of characters, categories, or elements to return. If `Length` is greater than the number of items available, all of the items are returned.
@@ -481,10 +451,7 @@ Class String
     End Function
 
     '!
-    ```ds
-    (function) Len(): Long
-    ```
-    -----------------------------------
+
     Returns a *Long* containing the number of characters in a string, the number of categories in a category list, or the number of elements in an array.
     + `Val`: *String* | *Categorical* | *Array* - *Text* value, *Categorical* value, or *Array* to operate on.
     + `return`: *Long* - Numbers of characters, categories, or elements in `Val`.
@@ -514,10 +481,7 @@ Class String
     End Function
 
     '!
-    ```ds
-    (function) Mid(Start: Long, [Length: Long]): Variant
-    ```
-    -----------------------------------
+
     + `Val`: *String* | *Categorical* | *Array* - *Text* value, *categorical* value, or *array* to operate on.
     + `Start`: *Long* - Position in `Val` of the first character, category, or element wanted (counting from 0). If `Start` is greater than the number of items in `Val`, no items are returned. If `Start` is less than 0, items are returned from the start of `Val`.
     + `Length`: *Long* - Optional. Number of characters, categories, or elements to return. If `Length` is omitted, or if there are fewer than *Lengthcharacters* (including the `Start` character), all characters from `Start` to the end of the string are returned. If `Start` + `Length` is < 1, no items are returned.
@@ -552,10 +516,7 @@ Class String
     End Function
 
     '!
-    ```ds
-    (function) Right(Length: Long): Variant
-    ```
-    -----------------------------------
+
     Returns a string containing the last characters from a string, a category list containing the last categories from a category list, or an array containing the last elements from an array.
     + `Val`: *String* | *Categorical* | *Array* - *Text* value, *categorical* value, or *array* to operate on.
     + `Length`: *Long* - Number of characters, categories, or elements to return. If `Length` is greater than the number of items available, all of the items are returned.
@@ -588,10 +549,7 @@ Class String
 End Class
 
 '!
-```ds
-(function) AscW(Val: String): Long
-```
------------------------------------
+
 Returns an integer value representing the Unicode character code (sometimes called the code point) for a character
 + `Val`: *String* - *Text* value.
 + `return`: *Long* - Unicode character code for first character of `Val`.
@@ -616,10 +574,7 @@ Function AscW(Val As String) As Long
 End Function
 
 '!
-```ds
-(function) ChrW(Val: Long): String
-```
------------------------------------
+
 Returns the character that corresponds to a Unicode character code (sometimes called the code point).
 + `Val`: *Long* - Unicode character code for a character.
 + `return`: *String* - Character corresponding to `Val`.
@@ -640,10 +595,7 @@ Function ChrW(Val As Long) As String
 End Function
 
 '!
-```ds
-(function) Format(Val: Variant, [Style: String], [Width: Long], [Locale: Long]): String
-```
------------------------------------
+
 Returns a string that is the result of formatting a value according to one or more specified styles.
 + `Val`: *Variant* - The value to be formatted.
 + `Style`: *String* - Optional. One or more formatting codes. Multiple codes must be separated by semicolons.
@@ -862,10 +814,7 @@ Function Format(Val As Variant, Optional Style As String, Optional Width As Long
 End Function
 
 '!
-```ds
-(function) FormatValue(ValFormat: Variant, Val: Variant, [Style: String], [Width: Long], [Locale: Long]): String
-```
------------------------------------
+
 Returns a string that is the result of formatting a value according to one or more specified styles. The `FormatValue` function is identical to the `Format` function, except that the metadata to be used for formatting is provided by one variable, while the value to be formatted may come from elsewhere.
 + `ValFormat`: *Variant* - A variable that provides the metadata to be used for formatting.
 + `Val`: *Variant* - The value to be formatted.
@@ -998,10 +947,7 @@ Function FormatValue(ValFormat As Variant, Val As Variant, Optional Style As Str
 End Function
 
 '!
-```ds
-(function) Hex(Val: Long): String
-```
------------------------------------
+
 Returns a string representing the hexadecimal value of a number.
 + `Val`: *Long* - Numeric value.
 + `return`: *String* - Hexadecimal representation of `Val`.
@@ -1024,10 +970,7 @@ Function Hex(Val As Long) As String
 End Function
 
 '!
-```ds
-(function) LCase(Val: String): String
-```
------------------------------------
+
 Returns a string that has been converted to lower case.
 + `Val`: *String* - *String* value to be converted to lower case.
 + `return`: *String* - Lowercase copy of `Val`.
@@ -1047,10 +990,7 @@ Function LCase(Val As String) As String
 End Function
 
 '!
-```ds
-(function) LTrim(Val: String): String
-```
------------------------------------
+
 Returns a copy of a string with any leading spaces removed.
 + `Val`: *String* - *String* value from which you want to remove leading spaces.
 + `return`: *String* - Copy of `Val` with leading spaces removed.
@@ -1070,10 +1010,7 @@ Function LTrim(Val As String) As String
 End Function
 
 '!
-```ds
-(function) MakeMDMName(Val: String): String
-```
------------------------------------
+
 This function replaces characters in a text string that are not allowed in the name of an MDM object, to produce a valid name.
 + `Val`: *String* - *String* value to encode.
 + `return`: *String* - Copy of `Val` with changes to make it a valid name for an MDM object.
@@ -1095,10 +1032,7 @@ Function MakeMDMName(Val As String) As String
 End Function
 
 '!
-```ds
-(function) MakeString([Vals: Variant ...]): String
-```
------------------------------------
+
 + `Vals`: *Variant* - A comma-delimited list of values to be concatenated together as a string.
 + `return`: *String* - String that is the concatenation of the values specified in `Vals`.
 
@@ -1118,10 +1052,7 @@ Function MakeString(Optional ParamArray Vals As Variant) As String
 End Function
 
 '!
-```ds
-(function) Oct(Val: Long): String
-```
------------------------------------
+
 Returns a string representing the octal value of a number.
 + `Val`: *Long* - Numeric value.
 + `return`: *String* - Octal representation of `Val`.
@@ -1144,10 +1075,7 @@ Function Oct(Val As Long) As String
 End Function
 
 '!
-```ds
-(function) RTrim(Val: String): String
-```
------------------------------------
+
 Returns a copy of a string with any trailing spaces removed.
 + `Val`: *String* - *String* value from which you want to remove trailing spaces.
 + `return`: *String* - Copy of `Val` with trailing spaces removed.
@@ -1167,10 +1095,7 @@ Function RTrim(Val As String) As String
 End Function
 
 '!
-```ds
-(function) Split(Val: String, [Delimiter: String = " "], [Count: Long]): Categorical
-```
------------------------------------
+
 Returns an array that contains substrings.
 + `Val`: *String* - *String* value to split.
 + `Delimiter`: *String* - Optional. `Delimiter` between substrings. The default is a single space (" ").
@@ -1200,10 +1125,7 @@ Function Split(Val As String, Optional Delimiter As String = " ", Optional Count
 End Function
 
 '!
-```ds
-(function) Replace(Val: Variant, Key: Variant, Replacement: Variant, [Start: Long], [Count: Long], [IgnoreCase: Boolean]): Variant
-```
------------------------------------
+
 Replaces part of a text or categorical value with another value of the same type.
 + `Val`: *Variant* - Variant value of type *Text* or *Categorical*.
 + `Key`: *Variant* - Variant value to look for in `Val`, of the same type as `Val`.
@@ -1227,10 +1149,7 @@ Function Replace(Val As Variant, Key As Variant, Replacement As Variant, Optiona
 End Function
 
 '!
-```ds
-(function) Trim(Val: String): String
-```
------------------------------------
+
 Returns a copy of a string with any leading and trailing spaces removed.
 + `Val`: *String* - Text value from which you want to remove leading and trailing spaces.
 + `return`: *String* - Copy of `Val` with leading and trailing spaces removed.
@@ -1250,10 +1169,7 @@ Function Trim(Val As String) As String
 End Function
 
 '!
-```ds
-(function) UCase(Val: String): String
-```
------------------------------------
+
 Returns a string that has been converted to upper case.
 + `Val`: *String* - *String* value to be converted to upper case.
 + `return`: *String* - Uppercase copy of `Val`.

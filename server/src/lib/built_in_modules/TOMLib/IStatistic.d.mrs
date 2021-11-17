@@ -2,19 +2,13 @@
 Namespace TOMLib
 
     '!
-    ```ds
-    (interface) IStatistic
-    ```
-    -----------------------------
+
     A `Statistic` object represents a statistical test that is to be calculated when a table is populated. Adding a statistical test to a table may automatically add extra cell items or elements to the table.
     !'
     Interface IStatistic Implements Object
 
         '!
-        ```ds
-        (property) IStatistic.Annotation: String
-        ```
-        --------------------
+
         Additional textual information provided about the test.
 
         ### Remarks
@@ -24,10 +18,7 @@ Namespace TOMLib
         ReadOnly Property Annotation() As String
 
         '!
-        ```ds
-        (property) IStatistic.Name: String
-        ```
-        --------------------
+
         The name of the statistical test
 
         ### Remarks
@@ -43,10 +34,7 @@ Namespace TOMLib
         ReadOnly Property Name() As String
 
         '!
-        ```ds
-        (property) IStatistic.Parent: IStatistics
-        ```
-        --------------------
+
         The parent object
 
         ### Remarks
@@ -55,10 +43,7 @@ Namespace TOMLib
         ReadOnly Property Parent() As IStatistics
 
         '!
-        ```ds
-        (property) IStatistic.Properties: IProperties
-        ```
-        --------------------
+
         A collection of `Property` objects that supply additional parameters that are needed to perform the statistical test.
 
         ### Remarks

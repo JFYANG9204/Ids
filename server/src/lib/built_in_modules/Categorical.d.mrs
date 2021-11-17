@@ -2,10 +2,7 @@
 Class Categorical Implements IEnumerable
 
     '!
-    ```ds
-    (function) AnswerCount(): Long
-    ```
-    ------------------------------------------
+
     Returns the number of categories selected in a category list.
     + `return`: *Long* - Number of categories in Val.
     ### Example
@@ -18,10 +15,7 @@ Class Categorical Implements IEnumerable
     End Function
 
     '!
-    ```ds
-    (function) ContainsAll(Answers: Variant, [Exactly: Boolean]): Boolean
-    ```
-    -----------------------------------
+
     Identifies whether a category list contains all of the categories in a given list.
     + `Answers`: *Variant* - Variant value of type *Categorical* or *Text*, specifying a set of categories to look for in `Val`. If `Answers` is empty, the function returns *True*, unless `Exactly` is *True* and `Val` is not empty.
     + `Exactly`: *Boolean* - Optional. If *True*, the function returns *True* only if `Val` contains all of the categories in `Answers` and no others. If `Exactly` is omitted or *False*, the function returns *True* if all of the categories in `Answers` are in `Val`, even if `Val` contains other categories.
@@ -48,10 +42,7 @@ Class Categorical Implements IEnumerable
     End Function
 
     '!
-    ```ds
-    (function) ContainsAny(Answers: Variant, [Exactly: Boolean]): Boolean
-    ```
-    -----------------------------------
+
     Identifies whether a category list contains one or more categories in a given list.
     + `Answers`: *Variant* - *Variant* value of type *Categorical* or *Text*, specifying a set of categories to look for in `Val`. If `Answers` is empty, the function returns *False*.
     + `Exactly`: *Boolean* - Optional. If *True*, the function returns *False* if `Val` contains any categories that are not in `Answers`. If `Exactly` is omitted or *False*, the function returns *True* if any of the categories in `Answers` are in `Val`, even if `Val` contains other categories.
@@ -81,10 +72,7 @@ Class Categorical Implements IEnumerable
     End Function
 
     '!
-    ```ds
-    (function) ContainsSome(Answers: Variant, [Min: Long], [Max: Long], [Exactly: Boolean]): Boolean
-    ```
-    -----------------------------------
+
     Identifies whether a category list contains some of the categories in a given list.
     + `Answers`: *Variant* - *Variant* value of type *Categorical* or *Text*, specifying a set of categories to look for in `Val`. If `Answers` is empty, the function returns *True* (unless `Exactly` is *True* and `Val` is not empty).
     + `Min`: *Long* - Optional. The minimum number of categories in `Answers` that must be in `Val` for the function to return *True*. If omitted, the minimum is one.
@@ -113,10 +101,7 @@ Class Categorical Implements IEnumerable
     End Function
 
     '!
-    ```ds
-    (function) DefinedCategories([Answers: Variant]): Categorical
-    ```
-    -----------------------------------
+
     Returns a set of categories of a categorical variable.
     + `Answers`: *Variant* - Optional. *Variant* value of type *Categorical* or *Text*, specifying a set of categories. If omitted, all categoriesfrom the `VariableInstance` are returned.
     + `return`: *Categorical* - Set of category numbers as defined in the VariableInstance.
@@ -155,10 +140,7 @@ Class Categorical Implements IEnumerable
     End Function
 
     '!
-    ```ds
-    (function) DefinedElements([Types: Long]): Categorical
-    ```
-    -----------------------------------
+
     Returns a set of elements of a categorical variable.
     The possible values for Types are shown in the following table.
     + `Types`: *Long* - Optional. Flags specifying which types of `Element` objects to include. The default is (Category + Base).
@@ -205,10 +187,7 @@ Class Categorical Implements IEnumerable
     End Function
 
     '!
-    ```ds
-    (function) DefinedFactors([Answers: Variant]): Categorical
-    ```
-    -----------------------------------
+
     Returns a set of factor numbers as defined on the categories in a variable.
     + `Answers`: *Categorical* - Optional. *Variant* value of type *Categorical* or *Text*, specifying a set of categories to look for. If omitted, all categoriesfrom the object are used.
     + `return`: *Categorical* - Set of factor numbers as defined in on the categories, matching the order of the categories in *Answers*.
@@ -224,10 +203,7 @@ Class Categorical Implements IEnumerable
     End Function
 
     '!
-    ```ds
-    (function) Difference(Answers: Variant): Categorical
-    ```
-    -----------------------------------
+
     Returns the difference of two category lists--that is, it returns the categories that are in the first category list but not in the second. The categories are returned in the order in which they appear in the first category list.
     + `Answers`: *String* | *Categorical* - *Variant* value of type *Categorical* or *Text*, specifying a set of categories.
     + `return`: *Categorical* - Set of categories that are in `Val` but not in `Answers`, in the order in which they appear in `Val`.
@@ -255,10 +231,7 @@ Class Categorical Implements IEnumerable
     End Function
 
     '!
-    ```ds
-    (function) Factor(): Variant
-    ```
-    -----------------------------------
+
     Returns the factor defined for an element of a categorical variable.
     + `return`: *Variant* - Factor number as defined on the element.
 
@@ -270,10 +243,7 @@ Class Categorical Implements IEnumerable
     End Function
 
     '!
-    ```ds
-    (function) GetAnswer(Index: Long): Categorical
-    ```
-    -----------------------------------
+
     Returns a specified category in a category list.
     + `Index`: *Long* - Position of category to retrieve from `Val`, starting from 0.
     + `return`: *Categorical* - The category at the requested position in Val, if found, or an empty *Categorical* value if it is not found
@@ -297,10 +267,7 @@ Class Categorical Implements IEnumerable
     End Function
 
     '!
-    ```ds
-    (function) HasAnswer(Answer: Long): Boolean
-    ```
-    -----------------------------------
+
     Identifies whether a specified category is in a category list.
     + `Answer`: *Long* - Category to look for in `Val`.
     + `return`: *Boolean* - *True* if `Val` contains the category, *False* otherwise.
@@ -325,10 +292,7 @@ Class Categorical Implements IEnumerable
     End Function
 
     '!
-    ```ds
-    (function) Intersection([Vals: Variant ...]): Categorical
-    ```
-    -----------------------------------
+
     Returns the intersection of two or more category lists--that is, it returns the categories that appear in all of the category lists. The categories are returned in the order in which they appear in the first category list.
     + `Vals`: *String* | *Categorical* - One or more variant values of type *Categorical* or *Text*. Each value specifies a set of categories.
     + `return`: *Categorical* - Set of categories that are in all of `Val` and `Vals`, in the order in which they occur in `Val`.
@@ -358,10 +322,7 @@ Class Categorical Implements IEnumerable
     End Function
 
     '!
-    ```ds
-    (function) Union([Vals: Variant ...]): Categorical
-    ```
-    -----------------------------------
+
     Returns the union of two or more category lists--that is, it returns all of the categories that are in any one or more of the category lists.
     + `Vals`: *Categorical* | *String* - One or more variant values of type *Categorical* or *Text*. Each value specifies a set of categories.
     + `return`: *Categorical* - All of the categories in `Val` , followed by any other categories that are in `Vals`.
@@ -391,10 +352,7 @@ Class Categorical Implements IEnumerable
     End Function
 
     '!
-    ```ds
-    (function) XUnion(Answers: Variant): Categorical
-    ```
-    -----------------------------------
+
     Returns the exclusive union of two category lists--that is, it returns all of the categories that are in either one of the category lists, but not in both.
     + `Answers`: *Categorical* | *String* - *Variant* value of type *Categorical* or *Text*, specifying a set of categories.
     + `return`: *Categorical* - Set of categories that are in either `Val` or `Answers` but not in both.
@@ -419,10 +377,7 @@ Class Categorical Implements IEnumerable
     End Function
 
     '!
-    ```ds
-    (function) Find(Key: Variant, [Skip: Long = 0], [Reverse: Boolean = False], [IgnoreCase: Boolean = True]): Long
-    ```
-    -----------------------------------
+
     Searches a string, a category list, or an array, for a specified substring, subcategory list, or subarray, and if it is found, returns its start position.
     + `Key`: *Variant* - Value to search for in `Val`.
     + `Skip`: *Long* - Optional. The number of positions to skip in `Val` before starting the search. If `Reverse` is *True*, `Skip` is the number of positions to skip from the end of `Val`. If `Reverse` is omitted or *False*, Skip is the number of positions to skip from the start of `Val`. Treated as 0 if omitted or is < 0.
@@ -471,10 +426,7 @@ Class Categorical Implements IEnumerable
     End Function
 
     '!
-    ```ds
-    (function) Left(Length: Long): Variant
-    ```
-    -----------------------------------
+
     Returns a string containing the first characters from a string, a category list containing the first categories from a category list, or an array containing the first elements from an array.
     + `Val`: *String* | *Categorical* | *Array* - *Text* value, *categorical* value, or *Array* to operate on.
     + `Length`: *Long* - Number of characters, categories, or elements to return. If `Length` is greater than the number of items available, all of the items are returned.
@@ -505,10 +457,7 @@ Class Categorical Implements IEnumerable
     End Function
 
     '!
-    ```ds
-    (function) Len(): Long
-    ```
-    -----------------------------------
+
     Returns a *Long* containing the number of characters in a string, the number of categories in a category list, or the number of elements in an array.
     + `Val`: *String* | *Categorical* | *Array* - *Text* value, *Categorical* value, or *Array* to operate on.
     + `return`: *Long* - Numbers of characters, categories, or elements in `Val`.
@@ -538,10 +487,7 @@ Class Categorical Implements IEnumerable
     End Function
 
     '!
-    ```ds
-    (function) Mid(Start: Long, [Length: Long]): Variant
-    ```
-    -----------------------------------
+
     + `Val`: *String* | *Categorical* | *Array* - *Text* value, *categorical* value, or *array* to operate on.
     + `Start`: *Long* - Position in `Val` of the first character, category, or element wanted (counting from 0). If `Start` is greater than the number of items in `Val`, no items are returned. If `Start` is less than 0, items are returned from the start of `Val`.
     + `Length`: *Long* - Optional. Number of characters, categories, or elements to return. If `Length` is omitted, or if there are fewer than *Lengthcharacters* (including the `Start` character), all characters from `Start` to the end of the string are returned. If `Start` + `Length` is < 1, no items are returned.
@@ -576,10 +522,7 @@ Class Categorical Implements IEnumerable
     End Function
 
     '!
-    ```ds
-    (function) Right(Length: Long): Variant
-    ```
-    -----------------------------------
+
     Returns a string containing the last characters from a string, a category list containing the last categories from a category list, or an array containing the last elements from an array.
     + `Val`: *String* | *Categorical* | *Array* - *Text* value, *categorical* value, or *array* to operate on.
     + `Length`: *Long* - Number of characters, categories, or elements to return. If `Length` is greater than the number of items available, all of the items are returned.
@@ -610,10 +553,7 @@ Class Categorical Implements IEnumerable
     End Function
 
     '!
-    ```ds
-    (function) IsEmpty(): Boolean
-    ```
-    -----------------------------------
+
     Returns *True* if the value is empty. An empty string is one that contains no characters or just contains white spaces. An empty category list is one that contains no categories. A *NULL* value is deemed to be empty. Unless *NULL*, other data types are always deemed to be not empty.
     + `return`: *Boolean* - *True* if `Val` is empty, otherwise *False*.
 
@@ -641,10 +581,7 @@ Class Categorical Implements IEnumerable
     End Function
 
     '!
-    ```ds
-    (function) IsDBNull(): Boolean
-    ```
-    -----------------------------------
+
     Returns true if a value is a *NULL* data value that can be used by ADO.
     + `return`: *Boolean* - *True* if `Val` is a *NULL* data value that can be used by ADO, *False* otherwise.
 
@@ -663,10 +600,7 @@ Class Categorical Implements IEnumerable
     End Function
 
     '!
-    ```ds
-    (function) IsOneOf([Vals: Variant ...]): Boolean
-    ```
-    -----------------------------------
+
     Returns *true* if a value is equal to at least one of the other listed values.
     + `Vals`: *Variant* - Variable number of other values.
     + `return`: *Boolean* - *True* if `Val1` is equal to one or more of `Vals`, otherwise *False*.

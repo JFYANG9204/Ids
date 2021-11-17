@@ -2,10 +2,7 @@
 Namespace TOMLib
 
     '!
-    ```ds
-    (interface) IProperties
-    ```
-    -----------------------------
+
     The `Property` object represents a project property.
 
     ### Remarks
@@ -16,37 +13,25 @@ Namespace TOMLib
     Interface IProperty Implements Object
 
         '!
-        ```ds
-        (property) IProperty.Copy: IProperty
-        ```
-        --------------------
+
         Returns a copy of the current property object.
         !'
         ReadOnly Property Copy() As IProperty
 
         '!
-        ```ds
-        (property) IProperty.Name: String
-        ```
-        --------------------
+
         The name of the property.
         !'
         Property Name() As String
 
         '!
-        ```ds
-        (property) IProperty.Value: Variant
-        ```
-        --------------------
+
         The property value. (Default Property)
         !'
         Default Property Value() As Variant
 
         '!
-        ```ds
-        (method) IProperty.CopyTo(Property: IProperty): Void
-        ```
-        --------------------
+
         Copies the property name and value to the supplied property object.
         !'
         Sub CopyTo(Property As IProperty)

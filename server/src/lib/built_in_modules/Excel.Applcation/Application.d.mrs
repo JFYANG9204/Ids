@@ -2,10 +2,7 @@
 NameSpace Excel
 
     '!
-    ```ds
-    (object) Application
-    ```
-    ------------------------
+
     Represents the entire Microsoft Excel application.
 
     ### Remarks
@@ -31,10 +28,7 @@ NameSpace Excel
     Class Application Implements Object
 
         '!
-        ```ds
-        (method) Application.ActivateMicrosoftApp(Index: XlMSApplication): Void
-        ```
-        ------------------------
+
         Activates a Microsoft application. If the application is already running, this method activates the running application. If the application isn't running, this method starts a new instance of the application.
 
         ### Syntax
@@ -56,10 +50,7 @@ NameSpace Excel
         End Sub
 
         '!
-        ```ds
-        (method) Application.AddCustomList(ListArray: Variant, [ByRow: Variant]): Void
-        ```
-        ------------------------
+
         Adds a custom list for custom autofill and/or custom sort.
 
         ### Syntax
@@ -87,10 +78,7 @@ NameSpace Excel
         End Sub
 
         '!
-        ```ds
-        (method) Application.Calculate(): Void
-        ```
-        ------------------------
+
         Calculates all open workbooks, a specific worksheet in a workbook, or a specified range of cells on a worksheet, as shown in the following table.
 
         ### Syntax
@@ -117,10 +105,7 @@ NameSpace Excel
         End Sub
 
         '!
-        ```ds
-        (method) Application.CalculateFull(): Void
-        ```
-        ------------------------
+
         Forces a full calculation of the data in all open workbooks.
 
         ### Syntax
@@ -142,10 +127,7 @@ NameSpace Excel
         End Sub
 
         '!
-        ```ds
-        (method) Application.CalculateFullRebuild(): Void
-        ```
-        ------------------------
+
         For all open workbooks, forces a full calculation of the data and rebuilds the dependencies.
 
         ### Syntax
@@ -172,10 +154,7 @@ NameSpace Excel
         End Sub
 
         '!
-        ```ds
-        (method) Application.CentimetersToPoints(Centimeters: Double): Double
-        ```
-        ------------------------
+
         Converts a measurement from centimeters to points (one point equals 0.035 centimeters).
 
         ### Syntax
@@ -201,10 +180,7 @@ NameSpace Excel
         End Function
 
         '!
-        ```ds
-        (method) Application.CheckAbort([KeepAbort: Boolean]): Void
-        ```
-        ------------------------
+
         Stops recalculation in a Microsoft Excel application.
 
         ### Syntax
@@ -232,10 +208,7 @@ NameSpace Excel
         End Sub
 
         '!
-        ```ds
-        (method) Application.CheckSpelling(Word: String, [CustomDictionary: Variant], [IgnoreUppercase: Variant]): Boolean
-        ```
-        ------------------------
+
         Checks the spelling of a single word.
 
         ### Syntax
@@ -260,10 +233,7 @@ NameSpace Excel
         End Function
 
         '!
-        ```ds
-        (method) Application.ConvertFormula(Formula: Variant, FromReferenceStyle: XlReferenceStyle, [ToReferenceStyle: Variant], [ToAbsolute: Variant], [RelativeTo: Variant]): Variant
-        ```
-        ------------------------
+
         Converts cell references in a formula between the A1 and R1C1 reference styles, between relative and absolute references, or both. *Variant*.
 
         ### Syntax
@@ -296,10 +266,7 @@ NameSpace Excel
         End Function
 
         '!
-        ```ds
-        (method) Application.DDEExecute(Channel: Long, String: String): Void
-        ```
-        ------------------------
+
         Runs a command or performs some other action or actions in another application by way of the specified DDE channel.
 
         ### Syntax
@@ -364,10 +331,7 @@ NameSpace Excel
         End Sub
 
         '!
-        ```ds
-        (method) Application.DDEInitiate(App: String, Topic: String): Long
-        ```
-        ------------------------
+
         Opens a DDE channel to an application.
 
         ### Syntax
@@ -400,10 +364,7 @@ NameSpace Excel
         End Function
 
         '!
-        ```ds
-        (method) Application.DDEPoke(Channel: Long, Item: Variant, Data: Variant): Void
-        ```
-        ------------------------
+
         Sends data to an application.
 
         ### Syntax
@@ -435,10 +396,7 @@ NameSpace Excel
         End Sub
 
         '!
-        ```ds
-        (method) Application.DDERequest(Channel: Long, Item: String): Variant
-        ```
-        ------------------------
+
         Requests information from the specified application. This method always returns an array.
 
         ### Syntax
@@ -471,10 +429,7 @@ NameSpace Excel
         End Function
 
         '!
-        ```ds
-        (method) Application.DDETerminate(Channel: Long): Void
-        ```
-        ------------------------
+
         Closes a channel to another application.
 
         ### Syntax
@@ -500,10 +455,7 @@ NameSpace Excel
         End Sub
 
         '!
-        ```ds
-        (method) Application.DeleteCustomList(ListNum: Long): Void
-        ```
-        ------------------------
+
         Deletes a custom list.
 
         ### Syntax
@@ -530,10 +482,7 @@ NameSpace Excel
         End Sub
 
         '!
-        ```ds
-        (method) Application.DisplayXMLSourcePane([XmlMap: Variant]): Void
-        ```
-        ------------------------
+
         Opens the `XML Source` task pane and displays the XML map specified by the `XmlMap` argument.
 
         ### Syntax
@@ -558,10 +507,7 @@ NameSpace Excel
         End Sub
 
         '!
-        ```ds
-        (method) Application.DoubleClick(): Void
-        ```
-        ------------------------
+
         Equivalent to double-clicking the active cell.
 
         ### Syntax
@@ -581,10 +527,7 @@ NameSpace Excel
         End Sub
 
         '!
-        ```ds
-        (method) Application.Evaluate(Name: Variant): Variant
-        ```
-        ------------------------
+
         Converts a Microsoft Excel name to an object or a value.
 
         ### Syntax
@@ -632,10 +575,7 @@ NameSpace Excel
         End Function
 
         '!
-        ```ds
-        (method) Application.ExecuteExcel4Macro(String: String): Variant
-        ```
-        ------------------------
+
         Runs a Microsoft Excel 4.0 macro function and then returns the result of the function. The return type depends on the function.
 
         ### Syntax
@@ -665,10 +605,7 @@ NameSpace Excel
         End Function
 
         '!
-        ```ds
-        (method) Application.FindFile(): Boolean
-        ```
-        ------------------------
+
         Displays the `Open` dialog box.
 
         ### Syntax
@@ -693,10 +630,7 @@ NameSpace Excel
         End Function
 
         '!
-        ```ds
-        (method) Application.GetCustomListContents(ListNum: Long): Variant
-        ```
-        ------------------------
+
         Returns a custom list (an array of strings).
 
         ### Syntax
@@ -726,10 +660,7 @@ NameSpace Excel
         End Function
 
         '!
-        ```ds
-        (method) Application.GetCustomListNum(ListArray: Variant): Long
-        ```
-        ------------------------
+
         Returns the custom list number for an array of strings. You can use this method to match both built-in lists and custom-defined lists.
 
         ### Syntax
@@ -759,10 +690,7 @@ NameSpace Excel
         End Function
 
         '!
-        ```ds
-        (method) Application.GetOpenFilename([FileFilter: Variant], [FilterIndex: Variant], [Title: Variant], [ButtonText: Variant], [MultiSelect: Variant]): Variant
-        ```
-        ------------------------
+
         Displays the standard Open dialog box and gets a file name from the user without actually opening any files.
 
         ### Syntax
@@ -802,10 +730,7 @@ NameSpace Excel
         End Function
 
         '!
-        ```ds
-        (method) Application.GetPhonetic([Text: Variant]): String
-        ```
-        ------------------------
+
         Returns the Japanese phonetic text of the specified text string. This method is available to you only if you have selected or installed Japanese language support for Microsoft Office.
 
         ### Syntax
@@ -834,10 +759,7 @@ NameSpace Excel
         End Function
 
         '!
-        ```ds
-        (method) Application.GetSaveAsFilename([InitialFilename: Variant], [FileFilter: Variant], [FilterIndex: Variant], [Title: Variant], [ButtonText: Variant]): Variant
-        ```
-        ------------------------
+
         Displays the standard *Save As* dialog box and gets a file name from the user without actually saving any files.
 
         ### Syntax
@@ -876,10 +798,7 @@ NameSpace Excel
         End Function
 
         '!
-        ```ds
-        (method) Application.Goto([Reference: Variant], [Scroll: Variant]): Void
-        ```
-        ------------------------
+
         Selects any range or Visual Basic procedure in any workbook, and activates that workbook if it’s not already active.
 
         ### Syntax
@@ -910,10 +829,7 @@ NameSpace Excel
         End Sub
 
         '!
-        ```ds
-        (method) Application.Help([HelpFile: Variant], [HelpContextID: Variant]): Void
-        ```
-        ------------------------
+
         Displays a Help topic.
 
         ### Syntax
@@ -930,10 +846,7 @@ NameSpace Excel
         End Sub
 
         '!
-        ```ds
-        (method) Application.InchesToPoints(Inches: Double): Double
-        ```
-        ------------------------
+
         Converts a measurement from inches to points.
 
         ### Syntax
@@ -959,10 +872,7 @@ NameSpace Excel
         End Function
 
         '!
-        ```ds
-        (method) Application.InputBox(Prompt: String, [Title: Variant], [Default: Variant], [Left: Variant], [Top: Variant], [HelpFile: Variant], [HelpContextID: Variant], [Type: Variant]): Variant
-        ```
-        ------------------------
+
         Displays a dialog box for user input. Returns the information entered in the dialog box.
 
         ### Syntax
@@ -1023,10 +933,7 @@ NameSpace Excel
         End Function
 
         '!
-        ```ds
-        (method) Application.Intersect(Arg1: Range, Arg2: Range, [Arg3: Variant], [Arg4: Variant], [Arg5: Variant], [Arg6: Variant], [Arg7: Variant], [Arg8: Variant], [Arg9: Variant], [Arg10: Variant], [Arg11: Variant], [Arg12: Variant], [Arg13: Variant], [Arg14: Variant], [Arg15: Variant], [Arg16: Variant], [Arg17: Variant], [Arg18: Variant], [Arg19: Variant], [Arg20: Variant], [Arg21: Variant], [Arg22: Variant], [Arg23: Variant], [Arg24: Variant], [Arg25: Variant], [Arg26: Variant], [Arg27: Variant], [Arg28: Variant], [Arg29: Variant], [Arg30: Variant]): Range
-        ```
-        ------------------------
+
         Returns a `Range` object that represents the rectangular intersection of two or more ranges.
 
         ### Syntax
@@ -1059,10 +966,7 @@ NameSpace Excel
         End Function
 
         '!
-        ```ds
-        (method) Application.MacroOptions([Macro: Variant], [Description: Variant], [HasMenu: Variant], [MenuText: Variant], [HasShortcutKey: Variant], [ShortcutKey: Variant], [Category: Variant], [StatusBar: Variant], [HelpContextID: Variant], [HelpFile: Variant]): Void
-        ```
-        ------------------------
+
         Corresponds to options in the `Macro` Options dialog box. You can also use this method to display a user defined function (UDF) in a built-in or new category within the `Insert` Function dialog box.
 
         ### Syntax
@@ -1137,10 +1041,7 @@ NameSpace Excel
         End Sub
 
         '!
-        ```ds
-        (method) Application.MailLogoff(): Void
-        ```
-        ------------------------
+
         Closes a MAPI mail session established by Microsoft Excel.
 
         ### Syntax
@@ -1162,10 +1063,7 @@ NameSpace Excel
         End Sub
 
         '!
-        ```ds
-        (method) Application.MailLogon([Name: Variant], [Password: Variant], [DownloadNewMail: Variant]): Void
-        ```
-        ------------------------
+
         Logs in to MAPI Mail or Microsoft Exchange and establishes a mail session. If Microsoft Mail isn't already running, you must use this method to establish a mail session before mail or document routing functions can be used.
 
         ### Syntax
@@ -1195,10 +1093,7 @@ NameSpace Excel
         End Sub
 
         '!
-        ```ds
-        (method) Application.NextLetter(): Workbook
-        ```
-        ------------------------
+
         You have requested Help for a Visual Basic keyword used only on the Macintosh. For information about this keyword, consult the language reference Help included with Microsoft Office Macintosh Edition.
 
         ### Syntax
@@ -1214,10 +1109,7 @@ NameSpace Excel
         End Function
 
         '!
-        ```ds
-        (method) Application.OnKey(Key: String, [Procedure: Variant]): Void
-        ```
-        ------------------------
+
         Runs a specified procedure when a particular key or key combination is pressed.
 
         ### Syntax
@@ -1289,10 +1181,7 @@ NameSpace Excel
         End Sub
 
         '!
-        ```ds
-        (method) Application.OnRepeat(Text: String, Procedure: String): Void
-        ```
-        ------------------------
+
         Sets the `Repeat` menu item and the name of the procedure that will run if you choose the Repeat command (Edit menu) after running the procedure that sets this property.
 
         ### Syntax
@@ -1322,10 +1211,7 @@ NameSpace Excel
         End Sub
 
         '!
-        ```ds
-        (method) Application.OnTime(EarliestTime: Variant, Procedure: String, [LatestTime: Variant], [Schedule: Variant]): Void
-        ```
-        ------------------------
+
         Schedules a procedure to be run at a specified time in the future (either at a specific time of day or after a specific amount of time has passed).
 
         ### Syntax
@@ -1362,10 +1248,7 @@ NameSpace Excel
         End Sub
 
         '!
-        ```ds
-        (method) Application.OnUndo(Text: String, Procedure: String): Void
-        ```
-        ------------------------
+
         Sets the text of the `Undo` and the name of the procedure that’s run if you choose the `Undo` command (`Edit` menu) after running the procedure that sets this property.
 
         ### Syntax
@@ -1395,10 +1278,7 @@ NameSpace Excel
         End Sub
 
         '!
-        ```ds
-        (method) Application.Quit(): Void
-        ```
-        ------------------------
+
         Quits Microsoft Excel.
 
         ### Syntax
@@ -1424,10 +1304,7 @@ NameSpace Excel
         End Sub
 
         '!
-        ```ds
-        (method) Application.RecordMacro([BasicCode: Variant], [XlmCode: Variant]): Void
-        ```
-        ------------------------
+
         Records code if the macro recorder is on.
 
         ### Syntax
@@ -1455,10 +1332,7 @@ NameSpace Excel
         End Sub
 
         '!
-        ```ds
-        (method) Application.RegisterXLL(Filename: String): Boolean
-        ```
-        ------------------------
+
         Loads an XLL code resource and automatically registers the functions and commands contained in the resource.
 
         ### Syntax
@@ -1486,10 +1360,7 @@ NameSpace Excel
         End Function
 
         '!
-        ```ds
-        (method) Application.Repeat(): Void
-        ```
-        ------------------------
+
         Repeats the last user-interface action.
 
         ### Syntax
@@ -1511,10 +1382,7 @@ NameSpace Excel
         End Sub
 
         '!
-        ```ds
-        (method) Application.Run([Macro: Variant], [Arg1: Variant], [Arg2: Variant], [Arg3: Variant], [Arg4: Variant], [Arg5: Variant], [Arg6: Variant], [Arg7: Variant], [Arg8: Variant], [Arg9: Variant], [Arg10: Variant], [Arg11: Variant], [Arg12: Variant], [Arg13: Variant], [Arg14: Variant], [Arg15: Variant], [Arg16: Variant], [Arg17: Variant], [Arg18: Variant], [Arg19: Variant], [Arg20: Variant], [Arg21: Variant], [Arg22: Variant], [Arg23: Variant], [Arg24: Variant], [Arg25: Variant], [Arg26: Variant], [Arg27: Variant], [Arg28: Variant], [Arg29: Variant], [Arg30: Variant]): Range
-        ```
-        ------------------------
+
         ReRuns a macro or calls a function. This can be used to run a macro written in Visual Basic or the Microsoft Excel macro language, or to run a function in a DLL or XLL.
 
         ### Syntax
@@ -1538,10 +1406,7 @@ NameSpace Excel
         End Function
 
         '!
-        ```ds
-        (method) Application.SaveWorkspace([Filename: Variant]): Void
-        ```
-        ------------------------
+
         Saves the current workspace.
 
         ### Syntax
@@ -1563,10 +1428,7 @@ NameSpace Excel
         End Sub
 
         '!
-        ```ds
-        (method) Application.SendKeys(Keys: Variant, [Wait: Variant]): Void
-        ```
-        ------------------------
+
         Saves the current workspace.
 
         ### Syntax
@@ -1628,10 +1490,7 @@ NameSpace Excel
         End Sub
 
         '!
-        ```ds
-        (method) Application.SharePointVersion(bstrUrl: String): Long
-        ```
-        ------------------------
+
 
         ### Syntax
         ```vb
@@ -1649,10 +1508,7 @@ NameSpace Excel
         End Function
 
         '!
-        ```ds
-        (method) Application.Undo(): Void
-        ```
-        ------------------------
+
 
         ### Syntax
         ```vb
@@ -1674,10 +1530,7 @@ NameSpace Excel
 
 
         '!
-        ```ds
-        (method) Application.Union(Arg1: Range, Arg2: Range, [Arg3: Variant], [Arg4: Variant], [Arg5: Variant], [Arg6: Variant], [Arg7: Variant], [Arg8: Variant], [Arg9: Variant], [Arg10: Variant], [Arg11: Variant], [Arg12: Variant], [Arg13: Variant], [Arg14: Variant], [Arg15: Variant], [Arg16: Variant], [Arg17: Variant], [Arg18: Variant], [Arg19: Variant], [Arg20: Variant], [Arg21: Variant], [Arg22: Variant], [Arg23: Variant], [Arg24: Variant], [Arg25: Variant], [Arg26: Variant], [Arg27: Variant], [Arg28: Variant], [Arg29: Variant], [Arg30: Variant]): Range
-        ```
-        ------------------------
+
         Returns the union of two or more ranges.
 
         ### Syntax
@@ -1706,10 +1559,7 @@ NameSpace Excel
 
 
         '!
-        ```ds
-        (method) Application.Volatile(Volatile: Variant): Void
-        ```
-        ------------------------
+
         Marks a user-defined function as volatile. A volatile function must be recalculated whenever calculation occurs in any cells on the worksheet. A nonvolatile function is recalculated only when the input variables change. This method has no effect if it's not inside a user-defined function used to calculate a worksheet cell.
 
         ### Syntax
@@ -1737,10 +1587,7 @@ NameSpace Excel
 
 
         '!
-        ```ds
-        (method) Application.Wait(Time: Variant): Boolean
-        ```
-        ------------------------
+
         Pauses a running macro until a specified time. Returns *True* if the specified time has arrived.
 
         ### Syntax
@@ -1782,10 +1629,7 @@ NameSpace Excel
         End Function
 
         '!
-        ```ds
-        (property) Application.ActiveCell
-        ```
-        ------------------------
+
         Returns a `Range` object that represents the active cell in the active window (the window on top) or in the specified window. If the window isn't displaying a worksheet, this property fails. Read-only.
 
         ### Syntax
@@ -1827,10 +1671,7 @@ NameSpace Excel
         ReadOnly Property ActiveCell() As Range
 
         '!
-        ```ds
-        (property) Application.ActiveChart: Chart
-        ```
-        ------------------------
+
         Returns a `Chart` object that represents the active chart (either an embedded chart or a chart sheet). An embedded chart is considered active when it's either selected or activated. When no chart is active, this property returns Nothing.
 
         ### Syntax
@@ -1852,10 +1693,7 @@ NameSpace Excel
         ReadOnly Property ActiveChart() As Chart
 
         '!
-        ```ds
-        (property) Application.ActiveEncryptionSession: Long
-        ```
-        ------------------------
+
         Read-only.
 
         ### Syntax
@@ -1870,10 +1708,7 @@ NameSpace Excel
         ReadOnly Property ActiveEncryptionSession() As Long
 
         '!
-        ```ds
-        (property) Application.ActivePrinter: String
-        ```
-        ------------------------
+
         Returns or sets the name of the active printer. Read/write `String`.
 
         ### Syntax
@@ -1892,10 +1727,7 @@ NameSpace Excel
         Property ActivePrinter() As String
 
         '!
-        ```ds
-        (property) Application.ActiveSheet: Worksheet
-        ```
-        ------------------------
+
         Returns an object that represents the active sheet (the sheet on top) in the active workbook or in the specified window or workbook. Returns `Nothing` if no sheet is active.
 
         ### Syntax
@@ -1917,10 +1749,7 @@ NameSpace Excel
         ReadOnly Property ActiveSheet() As Worksheet
 
         '!
-        ```ds
-        (property) Application.ActiveWindow: Window
-        ```
-        ------------------------
+
         Returns a `Window` object that represents the active window (the window on top). Read-only. Returns `Nothing` if there are no windows open.
 
         ### Syntax
@@ -1938,10 +1767,7 @@ NameSpace Excel
         ReadOnly Property ActiveWindow() As Window
 
         '!
-        ```ds
-        (property) Application.ActiveWorkbook: Workbook
-        ```
-        ------------------------
+
         Returns a `Workbook` object that represents the workbook in the active window (the window on top). Read-only. Returns `Nothing` if there are no windows open or if either the Info window or the Clipboard window is the active window. Returns `Nothing` if there are no windows open.
 
         ### Syntax
@@ -1959,10 +1785,7 @@ NameSpace Excel
         ReadOnly Property ActiveWorkbook() As Workbook
 
         '!
-        ```ds
-        (property) Application.AddIns: Workbook
-        ```
-        ------------------------
+
         Returns an `AddIns` collection that represents all the add-ins listed in the Add-Ins dialog box (Tools menu). Read-only.
 
         ### Syntax
@@ -1987,10 +1810,7 @@ NameSpace Excel
         ReadOnly Property AddIns() As AddIns
 
         '!
-        ```ds
-        (property) Application.AlertBeforeOverwriting: Boolean
-        ```
-        ------------------------
+
         *True* if Microsoft Excel displays a message before overwriting nonblank cells during a drag-and-drop editing operation. Read/write *Boolean*.
 
         ### Syntax
@@ -2008,10 +1828,6 @@ NameSpace Excel
         Property AlertBeforeOverwriting() As Boolean
 
         '!
-        ```ds
-        (property) Application.AltStartupPath: String
-        ```
-        ------------------------
         Returns or sets the name of the alternate startup folder. Read/write *String*.
 
         ### Syntax
@@ -2029,10 +1845,6 @@ NameSpace Excel
         Property AltStartupPath() As String
 
         '!
-        ```ds
-        (property) Application.AlwaysUseClearType: String
-        ```
-        ------------------------
         Returns or sets a *Boolean* that represents whether to use ClearType to display fonts in the menu, Ribbon, and dialog box text. Read/write *Boolean*.
 
         ### Syntax
@@ -2047,10 +1859,6 @@ NameSpace Excel
         Property AlwaysUseClearType() As String
 
         '!
-        ```ds
-        (property) Application.AnswerWizard: AnswerWizard
-        ```
-        ------------------------
         Returns the `AnswerWizard` object for Microsoft Excel. Read-only.
 
         ### Syntax
@@ -2068,10 +1876,6 @@ NameSpace Excel
         ReadOnly Property AnswerWizard() As AnswerWizard
 
         '!
-        ```ds
-        (property) Application.Application: Application
-        ```
-        ------------------------
         When used without an object qualifier, this property returns an `Application` object that represents the Microsoft Excel application. When used with an object qualifier, this property returns an Application object that represents the creator of the specified object (you can use this property with an OLE Automation object to return the application of that object). Read-only.
 
         ### Syntax
@@ -2095,10 +1899,6 @@ NameSpace Excel
 
 
         '!
-        ```ds
-        (property) Application.ArbitraryXMLSupportAvailable: Boolean
-        ```
-        ------------------------
         Returns a *Boolean* value that indicates whether the XML features in Microsoft Excel are available. Read-only.
 
         ### Syntax
@@ -2111,10 +1911,6 @@ NameSpace Excel
 
 
         '!
-        ```ds
-        (property) Application.AskToUpdateLinks: Boolean
-        ```
-        ------------------------
         *True* if Microsoft Excel asks the user to update links when opening files with links. *False* if links are automatically updated with no dialog box. Read/write *Boolean*.
 
         ### Syntax
@@ -2133,10 +1929,6 @@ NameSpace Excel
 
 
         '!
-        ```ds
-        (property) Application.Assistance: IAssistance
-        ```
-        ------------------------
         Returns an `IAssistance` object for Excel 2007 that represents the Microsoft Office Help Viewer. Read-only.
 
         ### Syntax
@@ -2152,10 +1944,6 @@ NameSpace Excel
 
 
         '!
-        ```ds
-        (property) Application.Assistant: Assistant
-        ```
-        ------------------------
         Returns an `Assistant` object for Microsoft Excel.
 
         ### Syntax
@@ -2176,10 +1964,6 @@ NameSpace Excel
         Property Assistant() As Assistant
 
         '!
-        ```ds
-        (property) Application.AutoCorrect: AutoCorrect
-        ```
-        ------------------------
         Returns an `AutoCorrect` object that represents the Microsoft Excel `AutoCorrect` attributes. Read-only.
 
         ### Syntax
@@ -2200,10 +1984,6 @@ NameSpace Excel
 
 
         '!
-        ```ds
-        (property) Application.AutoFormatAsYouTypeReplaceHyperlinks: Boolean
-        ```
-        ------------------------
         *True* (default) if Microsoft Excel automatically formats hyperlinks as you type. *False* if Excel does not automatically format hyperlinks as you type. Read/write *Boolean*.
 
         ### Syntax
@@ -2228,10 +2008,6 @@ NameSpace Excel
         Property AutoFormatAsYouTypeReplaceHyperlinks() As Boolean
 
         '!
-        ```ds
-        (property) Application.AutomationSecurity: MsoAutomationSecurity
-        ```
-        ------------------------
         Returns or sets an `MsoAutomationSecurity` constant that represents the security mode Microsoft Excel uses when programmatically opening files. Read/write.
 
         ### Syntax

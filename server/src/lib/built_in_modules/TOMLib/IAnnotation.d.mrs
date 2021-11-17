@@ -2,19 +2,13 @@
 Namespace TOMLib
 
     '!
-    ```ds
-    (interface) IAnnotation
-    ```
-    -----------------------------
+
     The `Annotation` object is used to represent the heading, footnote, or table title text. The text can contain macros that are automatically replaced with the correct information about the table. The annotations are generally used to define the information that appears around the table when it is exported.
     !'
     Interface IAnnotation Implements Object
 
         '!
-        ```ds
-        (property) IAnnotation.Parent: IAnnotations
-        ```
-        --------------------
+
         The parent object
 
         ### Remarks
@@ -23,28 +17,19 @@ Namespace TOMLib
         ReadOnly Property Parent() As IAnnotations
 
         '!
-        ```ds
-        (property) IAnnotation.Text: String
-        ```
-        --------------------
+
         The text of the annotation. This is the same as the `IAnnotation.Specification` property but with the macros expanded.
         !'
         ReadOnly Property Text() As String
 
         '!
-        ```ds
-        (property) IAnnotation.Position: AnnotationPosition
-        ```
-        --------------------
+
         The position on the table of this `Annotation`.
         !'
         Property Position() As AnnotationPosition
 
         '!
-        ```ds
-        (property) IAnnotation.Specification: String
-        ```
-        --------------------
+
         A specification of the annotation. This can contain macros which are automatically replaced with the correct table information.
 
         ### Remarks

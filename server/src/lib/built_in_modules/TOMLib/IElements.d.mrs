@@ -2,37 +2,25 @@
 Namespace TOMLib
 
     '!
-    ```ds
-    (interface) IElements
-    ```
-    -----------------------------
+
     A collection of Element objects.
     !'
     Interface IElements Implements Object, IEnumerable
 
         '!
-        ```ds
-        (property) IElements.Count: Long
-        ```
-        --------------------
+
         The number of items in the collection.
         !'
         ReadOnly Property Count() As Long
 
         '!
-        ```ds
-        (property) IElements.Item[Index: Variant]: IElement
-        ```
-        -----------------------------
+
         Returns a specified element in the collection.
         !'
         ReadOnly Property Item(Index As Variant) As IElement
 
         '!
-        ```ds
-        (property) IElements.Parent: Variant
-        ```
-        -----------------------------
+
         The parent object
 
         ### Remarks
@@ -41,10 +29,7 @@ Namespace TOMLib
         ReadOnly Property Parent() As Variant
 
         '!
-        ```ds
-        (method) IElements.Add(ElementName: String, [Index: Long = -1]): IElement
-        ```
-        -----------------------------
+
         Creates a new `Element` object based on an MDM object and adds it to the collection.
 
         ### Remarks
@@ -60,10 +45,7 @@ Namespace TOMLib
         End Function
 
         '!
-        ```ds
-        (method) IElements.Add(ElementName: String, [Index: Long = -1]): IElement
-        ```
-        -----------------------------
+
         Creates a new Element object and adds it to the collection.
 
         ### Remarks
@@ -103,10 +85,7 @@ Namespace TOMLib
         End Function
 
         '!
-        ```ds
-        (method) IElements.AddNewFromMdmVariable(NewElementName: String, MdmVariableName: String, MdmElementName: String, [Index: Long = -1]): IElement
-        ```
-        -----------------------------
+
         Creates a new `Element` object based on an MDM variable and element and adds it to the collection.
 
         ### Remarks
@@ -123,20 +102,14 @@ Namespace TOMLib
         End Function
 
         '!
-        ```ds
-        (method) IElements.Clear(): Void
-        ```
-        -----------------------------
+
         Removes all `Element` objects from the collection
         !'
         Sub Clear()
         End Sub
 
         '!
-        ```ds
-        (method) IElements.Remove(Index: Variant): Void
-        ```
-        -----------------------------
+
         Removes an `Element` object from the collection
         !'
         Sub Remove(Index As Variant)

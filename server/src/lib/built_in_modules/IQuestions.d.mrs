@@ -1,26 +1,17 @@
 '!
-```ds
-(interface) IQuestions
-```
------------------------------
+
 A collection object that contains the questions for the current interview.
 !'
 Interface IQuestions Implements IEnumerable, Object
 
     '!
-    ```ds
-    (property) IQuestions.Count: Long
-    ```
-    --------------------
+
     The number of items in the collection.
     !'
     ReadOnly Property Count() As Long
 
     '!
-    ```ds
-    (property) IQuestions.Item[Index: Variant]: IQuestion
-    ```
-    --------------------
+
     Get the collection item at the specified location. (Default Property)
     !'
     Default Property Item(Index As Variant) As IQuestion

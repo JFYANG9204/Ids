@@ -2,46 +2,31 @@
 Namespace TOMLib
 
     '!
-    ```ds
-    (interface) ITables
-    ```
-    -----------------------------
+
     A collection of Table objects.
     !'
     Interface ITables  Implements IEnumerable, Object
 
         '!
-        ```ds
-        (property) ITables.Count: Long
-        ```
-        --------------------
+
         The number of items in the collection.
         !'
         ReadOnly Property Count() As Long
 
         '!
-        ```ds
-        (property) ITables.Item[Index: Variant]: Variant
-        ```
-        --------------------
+
         Returns the specified `Table` in the collection. This is the default property.
         !'
         ReadOnly Property Item(Index As Variant) As Variant
 
         '!
-        ```ds
-        (property) ITables.Parent: IDocument
-        ```
-        --------------------
+
         The parent object
         !'
         ReadOnly Property Parent() As IDocument
 
         '!
-        ```ds
-        (method) ITables.Add(Table: ITable, [Index: Long = -1]): ITable
-        ```
-        --------------------
+
         Adds an existing Table object into the `Tables` collection.
 
         ### Remarks
@@ -58,10 +43,7 @@ Namespace TOMLib
         End Function
 
     '!
-    ```ds
-    (method) ITables.AddNew(Name: String, [Specification: String = ""], [Description: String = ""], [Index: Long = -1]): ITable
-    ```
-    --------------------
+
     Creates a new Table object and adds it to the collection.
 
     ### Remarks
@@ -85,10 +67,7 @@ Namespace TOMLib
     End Function
 
     '!
-    ```ds
-    (method) ITables.AddNewGrid(Name: String, Field: String, [Orientation: DisplayOrientation = doDefault], [Description: String = ""], [Index: Long = -1]): ITable
-    ```
-    --------------------
+
     Constructs a new Table object from a grid or an array and adds it into the `Tables` collection.
 
     ### Parameters
@@ -116,10 +95,7 @@ Namespace TOMLib
     End Function
 
     '!
-    ```ds
-    (method) ITables.AddNewProfile(Name: String, [Specification: String = ""], [Description: String = ""], [Index: Long = -1]): ITable
-    ```
-    --------------------
+
     Creates a new profile `Table` object and adds it to the collection.
 
     ### Remarks
@@ -134,20 +110,14 @@ Namespace TOMLib
     End Function
 
     '!
-    ```ds
-    (method) ITables.Clear(): Void
-    ```
-    --------------------
+
     Removes all Table objects from the collection.
     !'
     Sub Clear()
     End Sub
 
     '!
-    ```ds
-    (method) ITables.Remove(Index: Variant): Void
-    ```
-    --------------------
+
     Removes a Table from the Tables collection.
     !'
     Sub Remove(Index As Variant)

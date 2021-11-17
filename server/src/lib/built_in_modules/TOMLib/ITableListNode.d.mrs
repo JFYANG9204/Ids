@@ -2,10 +2,7 @@
 Namespace TOMLib
 
     '!
-    ```ds
-    (interface) ITableListNode
-    ```
-    -----------------------------
+
     The `IDocument.GroupedTables` property represents tables arranged into hierarchical groupings. This can be thought of as groups of tables that can in turn contain other groups, like folders that contain files or other folders.
 
     ### Remarks
@@ -47,64 +44,43 @@ Namespace TOMLib
     Interface ITableListNode Implements Object
 
         '!
-        ```ds
-        (property) ITableListNode.ChildNode[Index: Variant]: ITableListNode
-        ```
-        -----------------------------
+
         Returns the specified child node.
         !'
         ReadOnly Property ChildNode(Index As Variant) As ITableListNode
 
         '!
-        ```ds
-        (property) ITableListNode.Count: Long
-        ```
-        -----------------------------
+
         The number of child nodes the current node has.
         !'
         ReadOnly Property Count() As Long
 
         '!
-        ```ds
-        (property) ITableListNode.HasChildNodes: Boolean
-        ```
-        -----------------------------
+
         *True* if this node has at least one child node
         !'
         ReadOnly Property HasChildNodes() As Boolean
 
         '!
-        ```ds
-        (property) ITableListNode.HasTable: Boolean
-        ```
-        -----------------------------
+
         *True* if this node references a table.
         !'
         ReadOnly Property HasTable() As Boolean
 
         '!
-        ```ds
-        (property) ITableListNode.Item[Index: Variant]: ITableListNode
-        ```
-        -----------------------------
+
         Returns the specified child node. This is the default property.
         !'
         ReadOnly Property Item(Index As Variant) As ITableListNode
 
         '!
-        ```ds
-        (property) ITableListNode.Name: String
-        ```
-        -----------------------------
+
         The name of the node.
         !'
         ReadOnly Property Name() As String
 
         '!
-        ```ds
-        (property) ITableListNode.Parent: Variant
-        ```
-        -----------------------------
+
         The parent object
 
         ### Remarks
@@ -113,19 +89,13 @@ Namespace TOMLib
         ReadOnly Property Parent() As Variant
 
         '!
-        ```ds
-        (property) ITableListNode.Description: String
-        ```
-        -----------------------------
+
         A description of the node.
         !'
         Property Description() As String
 
         '!
-        ```ds
-        (property) ITableListNode.Table: ITable
-        ```
-        -----------------------------
+
         The table object associated with the node.
 
         ### Remarks
@@ -134,10 +104,7 @@ Namespace TOMLib
         Property Table() As ITable
 
         '!
-        ```ds
-        (method) ITableListNode.AddNewGrid(Name: String, Field: String, [Orientation: DisplayOrientation = doDefault], [Description: String = ""], [Index: Long = -1]): ITable
-        ```
-        -----------------------------
+
         Adds a new child node that references grid table.
 
         ### Remarks
@@ -152,10 +119,7 @@ Namespace TOMLib
         End Function
 
         '!
-        ```ds
-        (method) ITableListNode.AddNewNode(Name: String, [Description: String = ""], [Index: Long = -1]): ITableListNode
-        ```
-        -----------------------------
+
         Adds a new child node
 
         ### Parameters
@@ -179,10 +143,7 @@ Namespace TOMLib
         End Function
 
         '!
-        ```ds
-        (method) ITableListNode.AddNewTable(Name: String, [Specification: String = ""], [Description: String = ""], [Index: Long = -1]): ITable
-        ```
-        -----------------------------
+
         Adds a new child node that references table.
 
         ### Remarks
@@ -198,10 +159,7 @@ Namespace TOMLib
         End Function
 
         '!
-        ```ds
-        (method) ITableListNode.AddNode(Node: ITableListNode, [Index: Long = -1]): ITableListNode
-        ```
-        -----------------------------
+
         Add an existing node as a child of the current node.
 
         ### Remarks
@@ -218,10 +176,7 @@ Namespace TOMLib
         End Function
 
         '!
-        ```ds
-        (method) ITableListNode.AddTable(Table: ITable, [Index: Long = -1]): ITableListNode
-        ```
-        -----------------------------
+
         Add an existing table as new node that is a child of the current node.
 
         ### Remarks
@@ -241,20 +196,14 @@ Namespace TOMLib
         End Function
 
         '!
-        ```ds
-        (method) ITableListNode.Clear(): Void
-        ```
-        -----------------------------
+
         Removes all child nodes
         !'
         Sub Clear()
         End Sub
 
         '!
-        ```ds
-        (method) ITableListNode.Remove(Index: Variant): Void
-        ```
-        -----------------------------
+
         Removes a child node
         !'
         Sub Remove(Index As Variant)

@@ -2,37 +2,25 @@
 Namespace TOMLib
 
     '!
-    ```ds
-    (interface) IStatistics
-    ```
-    -----------------------------
+
     The `Statistics` object is a collection of `Statistic` objects that define statistical tests to be calculated when a table is populated.
     !'
     Interface IStatistics Implements IEnumerable, Object
 
         '!
-        ```ds
-        (property) IStatistics.Item[Index: Variant]: IStatistic
-        ```
-        --------------------
+
         Get the collection item at the specified location.
         !'
         Default Property Item(Index As Variant) As IStatistic
 
         '!
-        ```ds
-        (property) IStatistics.Parent: Variant
-        ```
-        --------------------
+
         The parent object
         !'
         ReadOnly Property Parent() As Variant
 
         '!
-        ```ds
-        (property) IStatistics.ColumnIDs: String
-        ```
-        --------------------
+
         The selected column heading IDs that the `Column` Proportions, *Column Means*, and *Tukey* statistics are to test.
 
         ### Remarks
@@ -42,10 +30,7 @@ Namespace TOMLib
         Property ColumnIDs() As String
 
         '!
-        ```ds
-        (property) IStatistics.ShowMinPVal: Boolean
-        ```
-        --------------------
+
         If *True*, a column is appended to the table to contain the minimum p-value found in the row.
 
         ### Remarks
@@ -54,10 +39,7 @@ Namespace TOMLib
         Property ShowMinPVal() As Boolean
 
         '!
-        ```ds
-        (property) IStatistics.TestColumns: String
-        ```
-        --------------------
+
         The heading ids of the columns the `Column` Proportions, *Column Means* and *Tukey* statistics are to test
 
         ### Remarks
@@ -76,10 +58,7 @@ Namespace TOMLib
         Property TestColumns() As String
 
         '!
-        ```ds
-        (property) IStatistics.UseEffectiveBase: Boolean
-        ```
-        --------------------
+
         If *True*, the effective base is used when the tests are calculated, otherwise no base adjustment is made.
 
         ### Remarks
@@ -88,10 +67,7 @@ Namespace TOMLib
         Property UseEffectiveBase() As Boolean
 
         '!
-        ```ds
-        (property) IStatistics.UseGridOverlapFormula: Boolean
-        ```
-        --------------------
+
         Set if the statistics should use grid overlap formula. If this option is set to *false*, the grid overlap formula is not used and normal overlap formula is used if current table is an overlap table (normal overlap or grid table). If this option is set to *true*, the product itself decides which formula to use.
 
         ### Remarks
@@ -100,10 +76,7 @@ Namespace TOMLib
         Property UseGridOverlapFormula() As Boolean
 
         '!
-        ```ds
-        (method) IStatistics.Add(Name: Variant): IStatistic
-        ```
-        --------------------
+
         Adds a statistic from the `IDocument.Statistics` collection to the current collection.
 
         ### Remarks
@@ -113,20 +86,14 @@ Namespace TOMLib
         End Function
 
         '!
-        ```ds
-        (method) IStatistics.Clear(): Void
-        ```
-        --------------------
+
         Removes all `Statistic` objects from the collection.
         !'
         Sub Clear()
         End Sub
 
         '!
-        ```ds
-        (method) IStatistics.Remove(Index: Variant): Void
-        ```
-        --------------------
+
         Removes a `Statistic` object from the collection.
         !'
         Sub Remove(Index As Variant)

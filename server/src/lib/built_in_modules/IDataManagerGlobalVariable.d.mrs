@@ -1,9 +1,6 @@
 
 '!
-```ds
-(interface) IDataManagerGlobalVariable
-```
------------------------------
+
 Get the collection item at the specified location. (This is the default property.)
 
 ### Remarks
@@ -53,28 +50,19 @@ Only the syntax `Job.GlobalVariables.SomeVar = SomeValue` can be used to SET the
 Interface IDataManagerGlobalVariable Implements Object
 
     '!
-    ```ds
-    (property) IDataManagerGlobalVariable.Name: String
-    ```
-    --------------------
+
     The name of the global variable
     !'
     ReadOnly Property Name() As String
 
     '!
-    ```ds
-    (property) IDataManagerGlobalVariable.Value: Variant
-    ```
-    --------------------
+
     Gets or sets the value of the `ValueObj`. (This is the default property.)
     !'
     Default Property Value() As Variant
 
     '!
-    ```ds
-    (property) IDataManagerGlobalVariable.ValueObj: IValue
-    ```
-    --------------------
+
     Gets or sets an instance of the `Value` object.
     !'
     Property ValueObj() As IValue

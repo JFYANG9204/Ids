@@ -12,14 +12,17 @@ import {
 } from "vscode-languageserver/node";
 import { ParserFileDigraph } from "./lib/file";
 import {
+    CallExpression,
     DeclarationBase,
     File,
+    FunctionDeclaration,
 } from "./lib/types";
 import {
     builtInCompletions,
     getCompletionFromPosition,
     getCompletionsFromScope,
     getHoverFromDeclaration,
+    getSignatureHelpFromFunction,
     keywordsCompletions,
     preKeywordsCompletions
 } from "./completion";
@@ -47,6 +50,9 @@ connection.onInitialize((params) => {
                 triggerCharacters: [ "#", ".", "\\", "/" ]
             },
             hoverProvider: true,
+            signatureHelpProvider: {
+                triggerCharacters: [ "(", "," ]
+            }
         }
     };
     if (params.workspaceFolders) {
@@ -115,6 +121,23 @@ connection.onHover(params => {
     return hover;
 });
 
+connection.onSignatureHelp(params => {
+    const doc = documents.get(params.textDocument.uri);
+    if (!doc) {
+        return null;
+    }
+    const pos = doc.offsetAt(params.position);
+    let curFile = current.get(fileURLToPath(params.textDocument.uri).toLowerCase());
+    if (!curFile) {
+        return null;
+    }
+    const node = positionAt(curFile.program.body, pos, false, 0);
+    if (node.type === "CallExpression") {
+        const func = node as CallExpression;
+        return getSignatureHelpFromFunction(func);
+    }
+    return null;
+});
 
 documents.onDidChangeContent(change => {
     updateAndVaidateDocument(change.document, connection, current, last, graph);

@@ -2,19 +2,13 @@
 Namespace TOMLib
 
     '!
-    ```ds
-    (interface) ICellItem
-    ```
-    -----------------------------
+
     A `CellItem` is a type of value that appears in each cell of the table. Each `CellItem` defines a single value that appears in each of the cells of the table. An example of a cell item is a count or column percentage.
     !'
     Interface ICellItem Implements Object
 
         '!
-        ```ds
-        (property) ICellItem.Parent: ICellItems
-        ```
-        --------------------
+
         The parent object
 
         ### Remarks
@@ -23,19 +17,13 @@ Namespace TOMLib
         ReadOnly Property Parent() As ICellItems
 
         '!
-        ```ds
-        (property) ICellItem.Type: CellItemType
-        ```
-        --------------------
+
         The type of cell item (e.g. *itCount*, *itColPercent*)
         !'
         ReadOnly Property Type() As CellItemType
 
         '!
-        ```ds
-        (property) ICellItem.CutOffValue: Double
-        ```
-        --------------------
+
         The cut-off value for percentiles (not relevant for other cell item types).
 
         ### Remarks
@@ -45,10 +33,7 @@ Namespace TOMLib
         Property CutOffValue() As Double
 
         '!
-        ```ds
-        (property) ICellItem.Decimals: Double
-        ```
-        --------------------
+
         The number of digits to show after the decimal point.
 
         ### Remarks
@@ -57,10 +42,7 @@ Namespace TOMLib
         Property Decimals() As Double
 
         '!
-        ```ds
-        (property) ICellItem.FormatExpression: String
-        ```
-        --------------------
+
         FormatExpression
 
         ### Remarks
@@ -84,10 +66,7 @@ Namespace TOMLib
         Property FormatExpression() As String
 
         '!
-        ```ds
-        (property) ICellItem.Index: Long
-        ```
-        --------------------
+
         The index of the item in the parent `CellItems` collection.
 
         ### Remarks
@@ -96,19 +75,13 @@ Namespace TOMLib
         Property Index() As Long
 
         '!
-        ```ds
-        (property) ICellItem.Prefix: String
-        ```
-        --------------------
+
         A string to prefix to all values
         !'
         Property Prefix() As String
 
         '!
-        ```ds
-        (property) ICellItem.Variable: String
-        ```
-        --------------------
+
         The variable name for those cell item types that require a numeric variable for their calculation (for example, *itMean*).
 
         ### Remarks
@@ -155,10 +128,7 @@ Namespace TOMLib
         Property Variable() As String
 
         '!
-        ```ds
-        (property) ICellItem.Suffix: String
-        ```
-        --------------------
+
         A string to append to all values
         !'
         Property Suffix() As String

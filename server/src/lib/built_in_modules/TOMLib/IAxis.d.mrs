@@ -1,55 +1,37 @@
 
 Namespace TOMLib
     '!
-    ```ds
-    (interface) IAxis
-    ```
-    -----------------------------
+
     The `Axis` object defines the composition of a table axis. An `Axis` consists of elements and nested axes.
     !'
     Interface IAxis Implements Object
 
         '!
-        ```ds
-        (property) IAxis.AxisHeadings: IAxisHeadings
-        ```
-        --------------------
+
         The headings to display on the table corresponding to `SubAxes` of this axis.
         !'
         ReadOnly Property AxisHeadings() As IAxisHeadings
 
         '!
-        ```ds
-        (property) IAxis.ElementHeadings: IElementHeadings
-        ```
-        --------------------
+
         The headings to display on the table corresponding to the `Elements` of this axis.
         !'
         ReadOnly Property ElementHeadings() As IElementHeadings
 
         '!
-        ```ds
-        (property) IAxis.Elements: IElements
-        ```
-        --------------------
+
         The collection of `Element` objects that make up the axis.
         !'
         ReadOnly Property Elements() As IElements
 
         '!
-        ```ds
-        (property) IAxis.Name: String
-        ```
-        --------------------
+
         The axis is always named the same as the MDM field or variable that it is based upon, except in the case of a root axis which will normally be called 'Side' or 'Top'
         !'
         ReadOnly Property Name() As String
 
         '!
-        ```ds
-        (property) IAxis.Parent: IAxis
-        ```
-        --------------------
+
         The parent axis of this axis
 
         ### Remarks
@@ -58,10 +40,7 @@ Namespace TOMLib
         ReadOnly Property Parent() As IAxis
 
         '!
-        ```ds
-        (property) IAxis.ParentObject: IAxes
-        ```
-        --------------------
+
         The parent object
 
         ### Remarks
@@ -70,10 +49,7 @@ Namespace TOMLib
         ReadOnly Property ParentObject() As IAxes
 
         '!
-        ```ds
-        (property) IAxis.SubAxes: IAxes
-        ```
-        --------------------
+
         The collection of `Axis` objects that are nested within this axis.
 
         ### Remarks
@@ -82,10 +58,7 @@ Namespace TOMLib
         ReadOnly Property SubAxes() As IAxes
 
         '!
-        ```ds
-        (property) IAxis.Label[[Language: String = ""]]: String
-        ```
-        --------------------
+
         The label for the axis
 
         ### Remarks
@@ -94,10 +67,7 @@ Namespace TOMLib
         Property Label(Optional Language As String = "") As String
 
         '!
-        ```ds
-        (property) IAxis.MaxResponses: Long
-        ```
-        --------------------
+
         The maximum response number of the `Axis`. The default value is -1, which means it is identical to the source variable's `EffectiveMaxValue`.
 
         ### Remarks
@@ -106,10 +76,7 @@ Namespace TOMLib
         Property MaxResponses() As Long
 
         '!
-        ```ds
-        (property) IAxis.Specification: String
-        ```
-        --------------------
+
         The current specification for the axis
 
         ### Remarks
@@ -118,10 +85,7 @@ Namespace TOMLib
         Property Specification() As String
 
         '!
-        ```ds
-        (property) IAxis.UseMetadataDefinition: Boolean
-        ```
-        --------------------
+
         Use the definition of the metadata variable that the axis is based upon.
 
         ### Remarks
@@ -133,10 +97,7 @@ Namespace TOMLib
         Property UseMetadataDefinition() As Boolean
 
         '!
-        ```ds
-        (method) IAxis.Concatenate(Name: Variant): IAxis
-        ```
-        --------------------
+
         Concatenates a variable with this axis
 
         ### Remarks
@@ -146,10 +107,7 @@ Namespace TOMLib
         End Function
 
         '!
-        ```ds
-        (method) IAxis.Nest(Name: Variant): IAxis
-        ```
-        --------------------
+
         Nests a variable inside of this axis
 
         ### Remarks
@@ -159,10 +117,7 @@ Namespace TOMLib
         End Function
 
         '!
-        ```ds
-        (method) IAxis.RefreshFromMetadata([ForceRefresh: Boolean = 0]): IAxis
-        ```
-        --------------------
+
         Updates the axis from the metadata if `UseMetadataDefinition` is *True*
 
         ### Remarks

@@ -2,10 +2,7 @@
 Namespace TOMLib
 
     '!
-    ```ds
-    (interface) ITable
-    ```
-    -----------------------------
+
     The Table object defines the structure of a table in terms of `Axes`, as well as a variety of other settings. The `Axes` objects define the dimensions while CellItems define the contents of the cells.
 
     ### Remarks
@@ -14,19 +11,13 @@ Namespace TOMLib
     Interface ITable Implements Object
 
         '!
-        ```ds
-        (property) ITable.Annotations: IAnnotations
-        ```
-        --------------------
+
         A collection of `Annotation` objects that define additional information to be shown outside the main body of the table (for example, headings and footnotes).
         !'
         ReadOnly Property Annotations() As IAnnotations
 
         '!
-        ```ds
-        (property) ITable.AvailableLevels: Array
-        ```
-        --------------------
+
         A list of levels that the table can be aggregated at.
 
         ### Remarks
@@ -35,10 +26,7 @@ Namespace TOMLib
         ReadOnly Property AvailableLevels() As Array
 
         '!
-        ```ds
-        (property) ITable.Axes: IAxes
-        ```
-        --------------------
+
         A collection of `Axis` objects that define the structure of the table.
 
         ### Remarks
@@ -56,10 +44,7 @@ Namespace TOMLib
         ReadOnly Property Axes() As IAxes
 
         '!
-        ```ds
-        (property) ITable.Base: Long
-        ```
-        --------------------
+
         The numeric 'Base' value for the table.
 
         ### Remarks
@@ -68,10 +53,7 @@ Namespace TOMLib
         ReadOnly Property Base() As Long
 
         '!
-        ```ds
-        (property) ITable.CellItems: ICellItems
-        ```
-        --------------------
+
         A collection of `CellItem` objects that define the cell contents for the table.
 
         ### Remarks
@@ -80,10 +62,7 @@ Namespace TOMLib
         ReadOnly Property CellItems() As ICellItems
 
         '!
-        ```ds
-        (property) ITable.DatePopulated: Date
-        ```
-        --------------------
+
         The date when the table was last populated.
 
         ### Remarks
@@ -92,10 +71,7 @@ Namespace TOMLib
         ReadOnly Property DatePopulated() As Date
 
         '!
-        ```ds
-        (property) ITable.DefaultLevel: String
-        ```
-        --------------------
+
         The default aggregation level for a table containing hierarchical data
 
         ### Remarks
@@ -104,46 +80,31 @@ Namespace TOMLib
         ReadOnly Property DefaultLevel() As String
 
         '!
-        ```ds
-        (property) ITable.Filters: IFilters
-        ```
-        --------------------
+
         A collection of `Filter` objects that are applied to the case data that the table is based on when the table is populated.
         !'
         ReadOnly Property Filters() As IFilters
 
         '!
-        ```ds
-        (property) ITable.IsEmpty: Boolean
-        ```
-        --------------------
+
         Returns *True* if the `Axes` collection is empty for this table, i.e. If the table doesn't have any *Top*, *Side*, or *Layer* axis.
         !'
         ReadOnly Property IsEmpty() As Boolean
 
         '!
-        ```ds
-        (property) ITable.IsEmptySide: Boolean
-        ```
-        --------------------
+
         Returns *True* if no 'Side' axis exists in the `Axes` collection of this table.
         !'
         ReadOnly Property IsEmptySide() As Boolean
 
         '!
-        ```ds
-        (property) ITable.IsEmptySide: Boolean
-        ```
-        --------------------
+
         Returns *True* if no 'Top' axis exists in the `Axes` collection of this table.
         !'
         ReadOnly Property IsEmptySide() As Boolean
 
         '!
-        ```ds
-        (property) ITable.IsLevelValid: Boolean
-        ```
-        --------------------
+
         *True* if the `ITable.Level` property is valid
 
         ### Remarks
@@ -153,10 +114,7 @@ Namespace TOMLib
         ReadOnly Property IsLevelValid() As Boolean
 
         '!
-        ```ds
-        (property) ITable.IsPopulated: Boolean
-        ```
-        --------------------
+
         Returns *True* if the table has been populated (i.e. `ITable.CellValues` is not 'null').
 
         ### Remarks
@@ -165,10 +123,7 @@ Namespace TOMLib
         ReadOnly Property IsPopulated() As Boolean
 
         '!
-        ```ds
-        (property) ITable.IsValid: Boolean
-        ```
-        --------------------
+
         *True* if the table is valid.
 
         ### Remarks
@@ -186,28 +141,19 @@ Namespace TOMLib
         ReadOnly Property IsValid() As Boolean
 
         '!
-        ```ds
-        (property) ITable.IsWeighted: Boolean
-        ```
-        --------------------
+
         *True* if a weight variable has been specified for the `Weight` property
         !'
         ReadOnly Property IsWeighted() As Boolean
 
         '!
-        ```ds
-        (property) ITable.Name: String
-        ```
-        --------------------
+
         The name used to reference the table in the `Tables` collection.
         !'
         ReadOnly Property Name() As String
 
         '!
-        ```ds
-        (property) ITable.Parent: ITables
-        ```
-        --------------------
+
         The parent object
 
         ### Remarks
@@ -216,47 +162,32 @@ Namespace TOMLib
         ReadOnly Property Parent() As ITables
 
         '!
-        ```ds
-        (property) ITable.Properties: IProperties
-        ```
-        --------------------
+
         A collection of Property objects that define additional configuration information about the table.
         !'
         ReadOnly Property Properties() As IProperties
 
         '!
-        ```ds
-        (property) ITable.Rules: IRules
-        ```
-        --------------------
+
         A collection of `Rule` objects that are applied to the values in the table when it is populated.
         !'
         ReadOnly Property Rules() As IRules
 
 
         '!
-        ```ds
-        (property) ITable.Statistics: IStatistics
-        ```
-        --------------------
+
         A collection of `Statistic` objects that define statistical tests to be calculated for the table.
         !'
         ReadOnly Property Statistics() As IStatistics
 
         '!
-        ```ds
-        (property) ITable.Type: TableType
-        ```
-        --------------------
+
         The `Type` of table (either *ttAggregated* or *ttProfile*)
         !'
         ReadOnly Property Type() As TableType
 
         '!
-        ```ds
-        (property) ITable.CellValues[[Layer: Variant = 0]]: Object
-        ```
-        --------------------
+
         The values of the cells of the table
 
         ### Remarks
@@ -269,10 +200,7 @@ Namespace TOMLib
         Property CellValues(Optional Layer As Variant = 0) As Object
 
         '!
-        ```ds
-        (property) ITable.Description: String
-        ```
-        --------------------
+
         A description or title for the table, e.g. "Table of age by gender".
 
         ### Remarks
@@ -281,10 +209,7 @@ Namespace TOMLib
         Property Description() As String
 
         '!
-        ```ds
-        (property) ITable.Level: String
-        ```
-        --------------------
+
         The level at which to aggregate a table containing hierarchical data.
 
         ### Remarks
@@ -294,10 +219,7 @@ Namespace TOMLib
         Property Level() As String
 
         '!
-        ```ds
-        (property) ITable.PopulateError: String
-        ```
-        --------------------
+
         The error message when populating the table.
 
         ### Remarks
@@ -306,10 +228,7 @@ Namespace TOMLib
         Property PopulateError() As String
 
         '!
-        ```ds
-        (property) ITable.SortColumn: String
-        ```
-        --------------------
+
         Controls sorting of rows by specifying the column to sort on and the order in which to sort.
 
         ### Remarks
@@ -327,10 +246,7 @@ Namespace TOMLib
         Property SortColumn() As String
 
         '!
-        ```ds
-        (property) ITable.SortRow: String
-        ```
-        --------------------
+
         Controls sorting of columns by specifying the row to sort on and the order in which to sort.
 
         ### Remarks
@@ -349,10 +265,7 @@ Namespace TOMLib
         Property SortRow() As String
 
         '!
-        ```ds
-        (property) ITable.Specification: String
-        ```
-        --------------------
+
         The table specification string that defines the structure of the table.
 
         ### Remarks
@@ -368,10 +281,7 @@ Namespace TOMLib
         Property Specification() As String
 
         '!
-        ```ds
-        (property) ITable.UseDefaultLevel: Boolean
-        ```
-        --------------------
+
         Causes the `ITable.Level` property to be set to the default aggregation level
 
         ### Remarks
@@ -380,10 +290,7 @@ Namespace TOMLib
         Property UseDefaultLevel() As Boolean
 
         '!
-        ```ds
-        (property) ITable.Weight: String
-        ```
-        --------------------
+
         Sets the name of the weight variable to be used for the table.
 
         ### Remarks
@@ -393,10 +300,7 @@ Namespace TOMLib
         Property Weight() As String
 
         '!
-        ```ds
-        (method) ITable.Clear(): Void
-        ```
-        --------------------
+
         Clears the table
 
         ### Remarks
@@ -409,10 +313,7 @@ Namespace TOMLib
         End Sub
 
         '!
-        ```ds
-        (method) ITable.IsStatisticValid(StatisticName: String): Boolean
-        ```
-        -----------------
+
         Returns *True* if the specified statistical test is valid for this table.
 
         ### Remarks
@@ -422,10 +323,7 @@ Namespace TOMLib
         End Function
 
         '!
-        ```ds
-        (method) RefreshFromMetadata([ForceRefresh: Boolean = 0]): Boolean
-        ```
-        -----------------
+
         Updates all axes in the table from the metadata if `UseMetadataDefinition` is *True*
 
         ### Remarks

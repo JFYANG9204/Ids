@@ -2,10 +2,7 @@
 Interface IEnumerable
 
     '!
-    ```ds
-    (function) FindItem(Key: Varaint): Varaint
-    ```
-    -----------------------------------
+
     This function returns a specified item from a list, or *NULL* if the item isn't found.
     + `List`: *Variant* - *Array*, *collection* or *Categorical* value to operate on.
     + `Key`: *Variant* - Index, name, or value of the item to be found.
@@ -59,10 +56,7 @@ Interface IEnumerable
     End Function
 
     '!
-    ```ds
-    (function) Ran([Count: Long], [Seed: Long = 0]): Varaint
-    ```
-    -----------------------------------
+
     This function returns a randomized copy of a list. The optional `Count` parameter defines how many items from the input list are included in the returned randomized list.
     + `List`: *Variant* - *Array*, *collection*, or *Categorical* value to operate on.
     + `Count`: *Long* - Optional. Number of items to return. If omitted, negative, or greater than the number of input items, all items are returned.
@@ -124,10 +118,7 @@ Interface IEnumerable
     End Function
 
     '!
-    ```ds
-    (function) Rev(List: Variant, [Count: Long], [Policy: Long], [Seed: Long]): Array
-    ```
-    -----------------------------------
+
     This function returns an array containing copies of items from the input list, either in the normal order or in reverse order. The optional `Count` parameter defines how many items from the input list are included in the returned list.
     + `List`: *Variant* - *Array*, *collection*, or *Categorical* value to operate on.
     + `Count`: *Long* - Optional. Number of items to return. If omitted, negative, or greater than the number of input items, all items are returned.
@@ -176,10 +167,7 @@ Interface IEnumerable
     End Function
 
     '!
-    ```ds
-    (function) Rot(List: Variant, [Count: Long], [Policy: Long = 2], [Seed: Long = 0]): Array
-    ```
-    -----------------------------------
+
     This function returns an array containing copies of items from the input list, in a rotated order. The optional `Count` parameter defines how many items from the input list are included in the returned list.
     + `List`: *Variant* - *Array*, *collection*, or *Categorical* value to operate on.
     + `Count`: *Long* - Optional. Number of items to return. If omitted, negative, or greater than the number of input items, all items are returned.
@@ -314,10 +302,7 @@ Interface IEnumerable
     End Function
 
     '!
-    ```ds
-    (function) SelectRange([Range: Variant], [Count: Long]): Categorical
-    ```
-    -----------------------------------
+
     This function returns an array containing copies of selected items from the input list, in the same order as in the list.
     + `List`: *Variant* - *Array*, *collection* or *Categorical* value to operate on.
     + `Range`: *Variant* - *Text*, *Long* or *Categorical* value for selecting list items.
@@ -358,10 +343,7 @@ Interface IEnumerable
     End Function
 
     '!
-    ```ds
-    (function) SortAsc([Count: Long], [IgnoreLocale: Boolean]): Array
-    ```
-    -----------------------------------
+
     This function returns an array containing copies of items from the input list, sorted in ascending order. The optional `Count` parameter defines how many items from the input list are included in the returned list.
     + `List`: *Variant* - *Array*, *collection*, or *Categorical* value to operate on.
     + `Count`: *Long* - Optional. Number of items to return. If omitted, negative, or greater than the number of input items, all items are returned.
@@ -419,10 +401,7 @@ Interface IEnumerable
     End Function
 
     '!
-    ```ds
-    (function) SortDesc([Count: Long], [IgnoreLocale: Boolean]): Array
-    ```
-    -----------------------------------
+
     This function returns an array containing copies of items from the input list, sorted in descending order. The optional `Count` parameter defines how many items from the input list are included in the returned list.
     + `List`: *Variant* - *Array*, *collection*, or *Categorical* value to operate on.
     + `Count`: *Long* - Optional. Number of items to return. If omitted, negative, or greater than the number of input items, all items are returned.

@@ -1,9 +1,6 @@
 
 '!
-```ds
-(function) Band(Val: Double, Min: Double, Size: Double, [Count: Long]): Categorical
-```
------------------------------------
+
 Calculates categories (called bands) for a numeric variable and returns the appropriate category for a specified value in the numeric variable.
 + `Val`: *Long* | *Double* - *Variant* value of type *Long* or *Double*.
 + `Min`: *Double* - *Double* value specifying the (inclusive) lower boundary of the first band.
@@ -39,10 +36,7 @@ Function Band(Val As Double, Min As Double, Size As Double, Optional Count As Lo
 End Function
 
 '!
-```ds
-(function) BitAnd(Val1: Long, [Vals: Variant ...]): Long
-```
------------------------------------
+
 Performs a bitwise `AND` on two or more numeric values and returns the result.
 + `Val1`: *Long* - First data value.
 + `Vals`: *Variant* - Variable number of other values.
@@ -69,10 +63,7 @@ Function BitAnd(Val1 As Long, Optional ParamArray Vals As Variant) As Long
 End Function
 
 '!
-```ds
-(function) BitNot(Val: Long): Long
-```
------------------------------------
+
 Performs a bitwise `NOT` on a numeric value and returns the result.
 + `Val`: *Long* - *Data* value.
 + `return`: *Long* - Ones-complement of `Val`.
@@ -96,10 +87,7 @@ Function BitNot(Val As Long) As Long
 End Function
 
 '!
-```ds
-(function) BitOr(Val1: Long, [Vals: Variant ...]): Long
-```
------------------------------------
+
 Performs a bitwise `OR` on two or more numeric values and returns the result.
 + `Val1`: *Long* - First data value.
 + `Vals`: *Variant* - Variable number of other values.
@@ -144,10 +132,7 @@ Function BitOr(Val1 As Long, Optional ParamArray Vals As Variant) As Long
 End Function
 
 '!
-```ds
-(function) BitXor(Val1: Long, [Vals: Variant ...]): Long
-```
------------------------------------
+
 Performs a bitwise `XOR` (exclusive `OR`) on two or more numeric values and returns the result.
 + `Val1`: *Long* - First data value.
 + `Vals`: *None* - Variable number of other values.
@@ -169,10 +154,7 @@ Function BitXor(Val1 As Long, Optional ParamArray Vals As Variant) As Long
 End Function
 
 '!
-```ds
-(function) Categorize(Val: Variant, CategorizedVariable: String): Categorical
-```
------------------------------------
+
 Converts the value of a *Numeric*, *Text*, or *Date* value to a *Categorical* value according to the definition of the specified categorical variable.
 
 @Note - The categories must be created before the `Categorize` function can be used. The function does not create categories.
@@ -212,10 +194,7 @@ Function Categorize(Val As Variant, CategorizedVariable As String) As Categorica
 End Function
 
 '!
-```ds
-(function) CategorizeLoopVariable(Val: Variant, CategorizedVariable: String): Categorical
-```
------------------------------------
+
 Converts the value of a *Numeric*, *Text*, or *Date* value to a *Categorical* value according to the definition of the specified categorical loop variable.
 + `Val`: *None* - *Variant* value of type *Long*, *Double*, *Text*, or *Date*
 + `CategorizedVariable`: *String* - The name of the *categorical* loop variable, which will be used to ensure the generated category name exists and to check if *Other* and *NA* should be used.
@@ -278,10 +257,7 @@ Function CategorizeLoopVariable(Val As Variant, CategorizedVariable As String) A
 End Function
 
 '!
-```ds
-(function) DBNull(): Variant
-```
------------------------------------
+
 Returns a *NULL* data value for use with ADO.
 + `return`: *Variant* - *Variant* of type *VT_NULL*, containing a *NULL* data value.
 
@@ -300,10 +276,7 @@ Function DBNull() As Variant
 End Function
 
 '!
-```ds
-(function) CreateObject(Class: String): Object
-```
------------------------------------
+
 Creates and returns a reference to an Automation object.
 + `Class`: *String* - The COM class name of the object to be created.
 + `return`: *Object* - The created object.
@@ -345,10 +318,7 @@ Function CreateObject(Class As String) As Object
 End Function
 
 '!
-```ds
-(function) Decode(Expression: Variant, Search: Variant, Result: Variant, [Search1: Variant, Result1: Variant]...[,defaultValue]): Void
-```
------------------------------------
+
 Provides the same functionality as an *IF-THEN-ELSE* statement (used for `OnNextCase` events).
 + `Expression`: *Variant* - The value to compare.
 + `Search`: *Variant* - The value that is compared against `Expression`.
@@ -393,10 +363,7 @@ Sub Decode(Expression As Variant, Search As Variant, Result As Variant, Optional
 End Sub
 
 '!
-```ds
-(function) EngineVersion([Val: Long = 0], [Number: Boolean = False]): Varaint
-```
------------------------------------
+
 Returns part or all of the engine's version number.
 + `Val`: *Long* - Optional. Which parts of the version number to return, according to the list of options below. Treated as 0 if omitted or not a valid option.
 + `Number`: *Boolean* - Optional. If *True*, a number is returned. If Number is omitted or *False*, a string is returned.
@@ -428,10 +395,7 @@ Function EngineVersion(Optional Val As Long = 0, Optional Number As Boolean = Fa
 End Function
 
 '!
-```ds
-(function) EqualBand(Val: Long | Double, Count: Long, Min: Double, Max: Double): Categorical
-```
------------------------------------
+
 Calculates a specified number of equal categories (called bands) for a numeric variable and returns the appropriate category for a specified value in the numeric variable.
 + `Val`: *Long* | *Double* - Variant value of type *Long* or *Double*.
 + `Count`: *Long* - The number of bands to define between `Min` and `Max`. If `Count` < 1, an empty *categorical* value is returned.
@@ -464,10 +428,7 @@ Function EqualBand(Val As Double, Count As Long, Min As Double, Max As Double) A
 End Function
 
 '!
-```ds
-(function) Eval(Expr: String): Variant
-```
------------------------------------
+
 Evaluates an expression and returns the result.
 + `Expr`: *String* - Expression to evaluate.
 + `return`: *Variant* - The result of evaluating the expression.
@@ -522,10 +483,7 @@ Function Eval(Expr As String) As Variant
 End Function
 
 '!
-```ds
-(function) EvaluateDerivedIteration(LevelID: String): Variant
-```
------------------------------------
+
 Used by the derived grid feature to look up the value for the variable at the parent level with the same name as the supplied `LevelID` variable. The function takes the name of the `LevelID` and returns the value of that variable down-levelled into the grid level.
 + `LevelID`: *String* - The variable that identifies the current iteration in the grid. This is typically the `LevelID` variable.
 + `return`: *Variant* - The value of variable at the parent level that has the same name as the current iteration.
@@ -561,10 +519,7 @@ Function EvaluateDerivedIteration(LevelID As String) As Variant
 End Function
 
 '!
-```ds
-(function) Execute(Script: String): Long
-```
------------------------------------
+
 Executes one or more specified statements.
 + `Script`: *String* - Statements to execute.
 + `return`: *Long* - Always zero.
@@ -585,10 +540,7 @@ Function Execute(Script As String) As Long
 End Function
 
 '!
-```ds
-(function) GetInterface(Object: Object, InterfaceID: String): Object
-```
------------------------------------
+
 Returns an alternate interface for an object.
 + `Object`: *Object* - The object to query for the alternate interface.
 + `InterfaceID`: *String* - The identifier of the interface as a string. This is a string representation of the `Interface ID` in the form {xxxxxx-...-xxxx}
@@ -631,10 +583,7 @@ Function GetInterface(Object As Object, InterfaceID As String) As Object
 End Function
 
 '!
-```ds
-(function) IIf(Val: Boolean, TruePart: Varaint, FalsePart: Variant): Variant
-```
------------------------------------
+
 Returns the value passed as the `TruePart` parameter if the expression evaluates to *True*, otherwise returns the value passed as the `FalsePart` parameter.
 + `Val`: *Boolean* - *Boolean* value.
 + `TruePart`: *Variant* - Value of any type, to be returned if `Val` is *True*.
@@ -687,10 +636,7 @@ Function IIf(Val As Boolean, TruePart As Varaint, FalsePart As Variant) As Varia
 End Function
 
 '!
-```ds
-(function) InputBox(Prompt: String, [Default: String], [Title: String]): String
-```
------------------------------------
+
 Displays a dialog containing a specified message, a text box for input, an OK button, and a Cancel button.
 + `Prompt`: *String* - Message to display in the dialog box.
 + `Default`: *String* - Optional. Initial contents of the dialog box.
@@ -706,10 +652,7 @@ Function InputBox(Prompt As String, Optional Default As String, Optional Title A
 End Function
 
 '!
-```ds
-(function) IsDBNull(Val: Variant): Boolean
-```
------------------------------------
+
 Returns true if a value is a *NULL* data value that can be used by ADO.
 + `Val`: *Variant* - The value to test.
 + `return`: *Boolean* - *True* if `Val` is a *NULL* data value that can be used by ADO, *False* otherwise.
@@ -729,10 +672,7 @@ Function IsDBNull(Val As Variant) As Boolean
 End Function
 
 '!
-```ds
-(function) IsElementInVersions(Val: Variant, Elem: Variant, Versions: String): Boolean
-```
------------------------------------
+
 Tests whether an element or list exists in all specified versions of a variable.
 + `Val`: *String* - Variant value, used only to specify which MDM object to use.
 + `Elem`: *String* | *Categorical* - *String* or *Categorical* value specifying an element or Elements list in `Val`.
@@ -747,10 +687,7 @@ Function IsElementInVersions(Val As Variant, Elem As Variant, Versions As String
 End Function
 
 '!
-```ds
-(function) IsEmpty(Val: Variant): Boolean
-```
------------------------------------
+
 Returns *True* if the value is empty. An empty string is one that contains no characters or just contains white spaces. An empty category list is one that contains no categories. A *NULL* value is deemed to be empty. Unless *NULL*, other data types are always deemed to be not empty.
 + `Val`: *Variant* - Variant value to be tested.
 + `return`: *Boolean* - *True* if `Val` is empty, otherwise *False*.
@@ -779,10 +716,7 @@ Function IsEmpty(Val As Variant) As Boolean
 End Function
 
 '!
-```ds
-(function) IsEqualObject(Val1: Object, Val2: Object): Boolean
-```
------------------------------------
+
 Returns *True* if two values refer to the same object.
 + `Val1`: *Object* - The first value to test.
 + `Val2`: *Object* - The second value to test.
@@ -802,10 +736,7 @@ Function IsEqualObject(Val1 As Object, Val2 As Object) As Boolean
 End Function
 
 '!
-```ds
-(function) IsNullObject(Val: Variant): Boolean
-```
------------------------------------
+
 Returns *true* if an variable is *NULL*, without testing the default property of the object being referenced.
 + `Val`: *Variant* - The value to test.
 + `return`: *Boolean* - *True* if `Val` is *NULL*, *False* otherwise.
@@ -839,10 +770,7 @@ Function IsNullObject(Val As Variant) As Boolean
 End Function
 
 '!
-```ds
-(function) IsOneOf(Val1: Variant, [Vals: Variant ...]): Boolean
-```
------------------------------------
+
 Returns *true* if a value is equal to at least one of the other listed values.
 + `Val1`: *Variant* - The value to test.
 + `Vals`: *Variant* - Variable number of other values.
@@ -879,10 +807,7 @@ Function IsOneOf(Val1 As Variant, Optional ParamArray Vals As Variant) As Boolea
 End Function
 
 '!
-```ds
-(function) IsSet(Val: Long, Mask: Long): Boolean
-```
------------------------------------
+
 Returns *True* if an integer value matches a specified mask.
 + `Val`: *Long* - Data value to test.
 + `Mask`: *Long* - Pattern of bits to check.
@@ -906,10 +831,7 @@ Function IsSet(Val As Long, Mask As Long) As Boolean
 End Function
 
 '!
-```ds
-(function) RGB(Red: Long, Green: Long, Blue: Long): Long
-```
------------------------------------
+
 + `Red`: *Long* - Red value.
 + `Green`: *Long* - Green value.
 + `Blue`: *Long* - Blue value.
@@ -930,10 +852,7 @@ Function RGB(Red As Long, Green As Long, Blue As Long) As Long
 End Function
 
 '!
-```ds
-(function) SampleCategorize(Val: Variant, CategorizedVariable: String): Variant
-```
------------------------------------
+
 A simple version of the `Categorize` function that is used with the Sample Reporting MDSC (Phone Reports).
 + `Val`: *Variant* - Variant value of type *Long*, *Double*, *Text*, or *Date*
 + `CategorizedVariable`: *String* - The name of the *categorical* variable, which will be used to ensure the generated category name exists.
@@ -971,10 +890,7 @@ Function SampleCategorize(Val As Variant, CategorizedVariable As String) As Vari
 End Function
 
 '!
-```ds
-(function) ShellExecute(File: String, [HWnd: Long], [Verb: String], [Parameters: String], [Directory: String], [ShowCmd: Long]): Long
-```
------------------------------------
+
 Performs an operation on a specified file.
 + `File`: *String* - File or object on which to execute the specified verb.
 + `HWnd`: *Long* - Optional. Handle to a parent window. This window receives any message boxes that the invoked application produces, such as error reporting. If omitted, message boxes will not be tied to a window.
@@ -1020,10 +936,7 @@ Function ShellExecute(File As String, Optional HWnd As Long, Optional Verb As St
 End Function
 
 '!
-```ds
-(function) Sleep(Val: Long)
-```
------------------------------------
+
 Suspends the thread in which it is called.
 + `Val`: *Long* - Number of milliseconds to suspend the thread for.
 
@@ -1041,10 +954,7 @@ Sub Sleep(Val As Long)
 End Sub
 
 '!
-```ds
-(function) Validate(Val: Variant, [Min: Double], [Max: Double], [Expr: String], [Describe: Boolean]): Boolean
-```
------------------------------------
+
 Validates a specified value based on specified minimum and maximum values and optionally a validating expression.
 + `Val`: *Variant* - The value to test.
 + `Min`: *Double* - Optional. The minimum value allowed. The default is -1.79769313486232e308.
@@ -1180,10 +1090,7 @@ Function Validate(Val As Variant, Optional Min As Double, Optional Max As Double
 End Function
 
 '!
-```ds
-(function) VarType(Val: Long): Long
-```
------------------------------------
+
 Returns a numeric value indicating the type of a variable.
 + `Val`: *Long* - The data value.
 + `return`: *Long* - The type of `Val`.
@@ -1225,10 +1132,7 @@ Function VarType(Val As Long) As Long
 End Function
 
 '!
-```ds
-(function) VarTypeName(Val: Long): String
-```
------------------------------------
+
 Returns a string indicating the type of a variable.
 + `Val`: *Long* - The data value.
 + `return`: *Text* - The type of `Val`.

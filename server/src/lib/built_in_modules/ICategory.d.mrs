@@ -1,9 +1,6 @@
 
 '!
-```ds
-(interface) ICategory
-```
------------------------------
+
 The `Category` object is used to represent a possible *category* response for a question.
 
 ### Remarks
@@ -20,10 +17,7 @@ With the properties and methods of a `Category` object, you can:
 Interface ICategory Implements Object
 
     '!
-    ```ds
-    (property) ICategory.Attributes: Long
-    ```
-    --------------------
+
     A read-only property that returns the CategoryAttributes. CategoryAttributes specify a category as exclusive, fixed, other etc.
 
     ### Remarks
@@ -36,10 +30,7 @@ Interface ICategory Implements Object
     ReadOnly Property Attributes() As Long
 
     '!
-    ```ds
-    (property) ICategory.Categories: ICategories
-    ```
-    --------------------
+
     A read-only property that returns a collection of category objects.
 
     ### Remarks
@@ -48,19 +39,13 @@ Interface ICategory Implements Object
     ReadOnly Property Categories() As ICategories
 
     '!
-    ```ds
-    (property) ICategory.CategoryType: CategoryTypes
-    ```
-    --------------------
+
     A read-only property that returns the `CategoryType`. `CategoryTypes` specify a category as a single category or a category list.
     !'
     ReadOnly Property CategoryType() As CategoryTypes
 
     '!
-    ```ds
-    (property) ICategory.Count: Long
-    ```
-    --------------------
+
     This is a read only property that returns the number of sub-categories.
 
     ### Remarks
@@ -69,19 +54,13 @@ Interface ICategory Implements Object
     ReadOnly Property Count() As Long
 
     '!
-    ```ds
-    (property) ICategory.Factor: Variant
-    ```
-    --------------------
+
     A read-only property that returns a factor value that can be used for tabulating the category.
     !'
     ReadOnly Property Factor() As Variant
 
     '!
-    ```ds
-    (property) ICategory.FullName: String
-    ```
-    --------------------
+
     A read-only property that returns the full name of the `category`.
 
     ### Remarks
@@ -91,28 +70,19 @@ Interface ICategory Implements Object
     ReadOnly Property FullName() As String
 
     '!
-    ```ds
-    (property) ICategory.Index: Long
-    ```
-    --------------------
+
     A read-only property that returns the 0-based index for the position of the *category* in its parent *category* list.
     !'
     ReadOnly Property Index() As Long
 
     '!
-    ```ds
-    (property) ICategory.KeyCode: String
-    ```
-    --------------------
+
     This property returns the key code for the `category`.
     !'
     ReadOnly Property KeyCode() As String
 
     '!
-    ```ds
-    (property) ICategory.Label: ILabel
-    ```
-    --------------------
+
     This read-only property returns the label for the category.
 
     ### Remarks
@@ -121,19 +91,13 @@ Interface ICategory Implements Object
     ReadOnly Property Label() As ILabel
 
     '!
-    ```ds
-    (property) ICategory.Name: String
-    ```
-    --------------------
+
     A read-only property that returns the name of the category.
     !'
     ReadOnly Property Name() As String
 
     '!
-    ```ds
-    (property) ICategory.OtherQuestion: IQuestion
-    ```
-    --------------------
+
     This property returns the *Other Specify* question.
 
     ### Remarks
@@ -142,10 +106,7 @@ Interface ICategory Implements Object
     ReadOnly Property OtherQuestion() As IQuestion
 
     '!
-    ```ds
-    (property) ICategory.Parent: ICategory
-    ```
-    --------------------
+
     A read-only property that returns the parent `category` if one exists.
 
     ### Remarks
@@ -154,10 +115,7 @@ Interface ICategory Implements Object
     ReadOnly Property Parent() As ICategory
 
     '!
-    ```ds
-    (property) ICategory.Properties: IProperties
-    ```
-    --------------------
+
     A read-only property that returns the properties for the `category`.
 
     ### Remarks
@@ -166,10 +124,7 @@ Interface ICategory Implements Object
     ReadOnly Property Properties() As IProperties
 
     '!
-    ```ds
-    (property) ICategory.Style: IStyle
-    ```
-    --------------------
+
     This read/write property returns a `Style` object for the category.
 
     ### Remarks
@@ -179,19 +134,13 @@ Interface ICategory Implements Object
     Property Style() As IStyle
 
     '!
-    ```ds
-    (property) ICategory.Value: Variant
-    ```
-    --------------------
+
     A read-only property that returns the *categorical* value of the `category`. (Default Property)
     !'
     ReadOnly Property Value() As Variant
 
     '!
-    ```ds
-    (property) ICategory.Filter: Variant
-    ```
-    --------------------
+
     This property is used to get or set the categories filter.
 
     ### Remarks
@@ -201,10 +150,7 @@ Interface ICategory Implements Object
     Property Filter() As Variant
 
     '!
-    ```ds
-    (property) ICategory.Item[Index: Variant]: Variant
-    ```
-    --------------------
+
     The `Item` property is used to return a sub-category. (Default Property)
 
     ### Remarks
@@ -213,10 +159,7 @@ Interface ICategory Implements Object
     Property Item(Index As Variant) As Variant
 
     '!
-    ```ds
-    (property) ICategory.Order: OrderConstants
-    ```
-    --------------------
+
     The order of the categories in the collection
 
     ### Remarks

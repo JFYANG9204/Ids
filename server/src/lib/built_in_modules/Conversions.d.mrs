@@ -1,9 +1,6 @@
 
 '!
-```ds
-(function) CBoolean(Val: Variant): Boolean
-```
------------------------------------
+
 Converts a value of any data type to a *Boolean* value.
 + `Val`: *Variant* - *Variant* value to be converted.
 + `return`: *Boolean* - *Boolean* value derived from `Val`.
@@ -40,10 +37,7 @@ Function CBoolean(Val As Variant) As Boolean
 End Function
 
 '!
-```ds
-(function) CCategorical(Val: Variant): Categorical
-```
------------------------------------
+
 Converts a value of any data type to a *Categorical* value.
 + `Val`: *Variant* - *Variant* value to be converted.
 + `return`: *Categorical* - *Categorical* value derived from `Val`.
@@ -76,10 +70,7 @@ Function CCategorical(Val As Variant) As Categorical
 End Function
 
 '!
-```ds
-(function) CDate(Val: Variant): Date
-```
------------------------------------
+
 Converts a value of any data type to a *Date* value.
 + `Val`: *Variant* - *Variant* value to be converted.
 + `return`: *Date* - *Date* value derived from `Val`.
@@ -113,10 +104,7 @@ Function CDate(Val As Variant) As Date
 End Function
 
 '!
-```ds
-(function) CDouble(Val: Variant): Double
-```
------------------------------------
+
 Converts a value of any data type to a *Double* value.
 + `Val`: *Variant* - *Variant* value to be converted.
 + `return`: *Double* - *Double* value derived from `Val`.
@@ -150,10 +138,7 @@ Function CDouble(Val As Variant) As Double
 End Function
 
 '!
-```ds
-(function) CLong(Val: Variant): Long
-```
------------------------------------
+
 Converts a value of any data type to a *Long* value.
 + `Val`: *Variant* - *Variant* value to be converted.
 + `return`: *Long* - *Long* value derived from `Val`.
@@ -194,10 +179,7 @@ Function CLong(Val As Variant) As Long
 End Function
 
 '!
-```ds
-(function) CText(Val: Variant): String
-```
------------------------------------
+
 Converts a value of any data type to a *Text* value.
 + `Val`: *Variant* - *Variant* value to be converted.
 + `return`: *Text* - *Text* value derived from `Val`.

@@ -1,9 +1,6 @@
 
 '!
-```ds
-(object) Collection
-```
-------------------------
+
 For many applications, you want to create and manage groups of related objects. There are two ways to group objects: by creating arrays of objects, and by creating collections of objects.
 Collections provide a more flexible way to work with groups of objects. Unlike arrays, the group of objects you work with can grow and shrink dynamically as the needs of the application change. For some collections, you can assign a key to any object that you put into the collection so that you can quickly retrieve the object by using the key.
 
@@ -30,20 +27,14 @@ Next
 Class Collection(Of T) Implements IEnumerable, Object
 
     '!
-    ```ds
-    (method) Add(Item: T): Void
-    ```
-    ------------------------
+
     Adds an element to a `Collection` object..
     !'
     Sub Add(Item As T)
     End Sub
 
     '!
-    ```ds
-    (property) Count: Long
-    ```
-    ------------------------
+
     Returns an Integer containing the number of elements in a collection. Read-only.
 
     ### Remarks
@@ -52,10 +43,7 @@ Class Collection(Of T) Implements IEnumerable, Object
     ReadOnly Property Count() As Long
 
     '!
-    ```ds
-    (property) Item[Key: Variant]: T
-    ```
-    ------------------------
+
     Returns an Integer containing the number of elements in a collection. Read-only.
 
     ### Remarks

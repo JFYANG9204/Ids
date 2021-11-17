@@ -2,19 +2,13 @@
 Namespace TOMLib
 
     '!
-    ```ds
-    (interface) ISortSpecification
-    ```
-    -----------------------------
+
     The `ISortSpecification` object defines the row or column to sort and the sort order (ascending/descending).
     !'
     Interface ISortSpecification Implements Object
 
         '!
-        ```ds
-        (property) ISortSpecification.IsActive: Boolean
-        ```
-        --------------------
+
         *True* if the sort specification is active
 
         ### Remarks
@@ -23,10 +17,7 @@ Namespace TOMLib
         ReadOnly Property IsActive() As Boolean
 
         '!
-        ```ds
-        (property) ISortSpecification.Parent: Variant
-        ```
-        --------------------
+
         The parent object
 
         ### Remarks
@@ -35,10 +26,7 @@ Namespace TOMLib
         ReadOnly Property Parent() As Variant
 
         '!
-        ```ds
-        (property) ISortSpecification.ElementRef: String
-        ```
-        --------------------
+
         A reference to the element to sort on
 
         ### Remarks
@@ -61,10 +49,7 @@ Namespace TOMLib
         Property ElementRef() As String
 
         '!
-        ```ds
-        (property) ISortSpecification.Order: OrderConstants
-        ```
-        --------------------
+
         The order (ascending/descending) in which to sort the values.
 
         ### Remarks
@@ -78,10 +63,7 @@ Namespace TOMLib
         Property Order() As OrderConstants
 
         '!
-        ```ds
-        (method) ISortSpecification.Clear(): Void
-        ```
-        --------------------
+
         Clears the sort specification
 
         ### Remarks
