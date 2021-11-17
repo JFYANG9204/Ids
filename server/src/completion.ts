@@ -25,16 +25,18 @@ import {
     ClassOrInterfaceDeclaration,
     Comment,
     DeclarationBase,
+    EnumDeclaration,
     File,
     FunctionDeclaration,
     MacroDeclaration,
+    NamespaceDeclaration,
     PreIncludeStatement,
     PropertyDeclaration,
     SingleVarDeclarator
 } from "./lib/types";
 import { isIdentifierChar } from "./lib/util/identifier";
 import { builtInModule } from "./lib/util/declaration";
-import { Scope } from "./lib/util/scope";
+import { BindTypes, Scope } from "./lib/util/scope";
 
 
 export function getPathCompletion(uri: string): CompletionItem[] {
@@ -205,7 +207,10 @@ function getBindingName(dec: BindingDeclarator | string) {
     if (typeof dec === "string") {
         return dec;
     }
-    return dec.name.name + (dec.generics ? ("<" + dec.generics + ">") : "");
+    return (dec.namespace ? ((
+        typeof dec.namespace === "string" ?
+        dec.namespace :
+        dec.namespace.name.name) + ".") : "") + dec.name.name + (dec.generics ? ("<" + dec.generics + ">") : "");
 }
 
 function getDefaultNote(dec: DeclarationBase): string {
@@ -228,7 +233,8 @@ function getDefaultNote(dec: DeclarationBase): string {
                 text += "(function) ";
             }
             args = getArgumentNote((dec as FunctionDeclaration).params);
-            value = (dec as FunctionDeclaration).returnType ?? "Void";
+            let bind = (dec as FunctionDeclaration).binding;
+            value = (bind ? getBindingName(bind) : undefined) ?? "Void";
             return "```ds\n" + text + name + "(" + args + "): " + value + "\n```";
 
         case "PropertyDeclaration":
@@ -275,7 +281,8 @@ function getDeclaratorNote(dec: SingleVarDeclarator | ArrayDeclarator | BindingD
     } else {
         let boundries = "";
         if (dec.dimensions === 1) {
-            return dec.name.name + "[]: Array";
+            return dec.name.name + "[]: Array<" + (typeof dec.binding === "string" ?
+                dec.binding : dec.binding.name.name) + ">";
         }
         for (let i = 0; i < dec.dimensions; i++) {
             if (dec.boundaries && (i < dec.boundaries.length)) {
@@ -284,7 +291,8 @@ function getDeclaratorNote(dec: SingleVarDeclarator | ArrayDeclarator | BindingD
                 boundries += "[]";
             }
         }
-        return dec.name.name + boundries + ": Array" + (dec.generics ? "<" + dec.generics + ">" : "");
+        return dec.name.name + boundries + ": Array<" + (typeof dec.binding === "string" ?
+            dec.binding : dec.binding.name.name) + ">";
     }
 }
 
@@ -299,6 +307,41 @@ function getArgumentNote(args: Array<ArgumentDeclarator>) {
     return note;
 }
 
+function getDeclarationFromScope(scope: Scope,
+    name: string, namespace?: string | NamespaceDeclaration) {
+    let declaredNamespace;
+    const lowerName = name.toLowerCase();
+    if (namespace && (
+        declaredNamespace = scope.namespaces.get(
+            typeof namespace === "string" ? namespace.toLowerCase() :
+            namespace.name.name.toLowerCase()))) {
+        for (const child of declaredNamespace.body) {
+            if (child.name.name.toLowerCase() === lowerName) {
+                return child;
+            }
+        }
+    }
+    return scope.classes.get(lowerName) ||
+        scope.consts.get(lowerName)     ||
+        scope.dims.get(lowerName)       ||
+        scope.macros.get(lowerName)     ||
+        scope.functions.get(lowerName)  ||
+        scope.namespaces.get(lowerName);
+}
+
+function getDeclarationFromFileOrBuiltIn(
+    file: File,
+    name: string,
+    namespace?: string | NamespaceDeclaration) {
+    let find: DeclarationBase | undefined;
+    if (builtInModule) {
+        find = getDeclarationFromScope(builtInModule, name, namespace);
+    }
+    if (!find && file.scope) {
+        find = getDeclarationFromScope(file.scope, name, namespace);
+    }
+    return find;
+}
 
 function getCompletionFromDeclarationBase(
     dec: DeclarationBase, name?: string): CompletionItem {
@@ -313,18 +356,86 @@ function getCompletionFromDeclarationBase(
     };
 }
 
-function getMemberCompletions(dec: DeclarationBase): CompletionItem[] {
+function getMemberCompletions(dec: DeclarationBase, file: File): CompletionItem[] {
     let completions: CompletionItem[] = [];
-    if (dec.type !== "ClassOrInterfaceDeclaration") {
+    let bindingType: ClassOrInterfaceDeclaration | EnumDeclaration | undefined;
+
+    if (dec.type !== "ClassOrInterfaceDeclaration" &&
+        dec.type !== "EnumDeclaration") {
+        if (dec.type === "SingleVarDeclarator") {
+            const single = dec as SingleVarDeclarator;
+            if (!single.bindingType || !(
+                single.bindingType instanceof ClassOrInterfaceDeclaration ||
+                single.bindingType instanceof EnumDeclaration)) {
+                return [];
+            } else {
+                bindingType = single.bindingType;
+            }
+        } else if (dec.type === "PropertyDeclaration") {
+            const prop = dec as PropertyDeclaration;
+            let bindingName = typeof prop.binding === "string" ?
+                prop.binding : prop.binding.name.name;
+            let find = getDeclarationFromFileOrBuiltIn(
+                file, bindingName,
+                (typeof prop.binding !== "string" ?
+                prop.binding.namespace : undefined) ?? prop.class.namespace);
+            if (!find || !(
+                find instanceof ClassOrInterfaceDeclaration ||
+                find instanceof EnumDeclaration)) {
+                return [];
+            }
+            bindingType = find;
+        } else if (dec.type === "FunctionDeclaration") {
+            const func = dec as FunctionDeclaration;
+            if (!func.binding) {
+                return [];
+            }
+            let find = getDeclarationFromFileOrBuiltIn(file,
+                typeof func.binding === "string" ?
+                func.binding : func.binding.name.name,
+                (typeof func.binding !== "string" ?
+                func.binding.namespace : undefined) ?? func.class?.namespace);
+            if (!find || !(
+                find instanceof ClassOrInterfaceDeclaration ||
+                find instanceof EnumDeclaration)) {
+                return [];
+            }
+            bindingType = find;
+        } else if (dec.type === "ArrayDeclarator") {
+            if (!builtInModule) {
+                return [];
+            }
+            let arr = getDeclarationFromScope(builtInModule, "Array");
+            if (!arr) {
+                return [];
+            }
+            bindingType = arr as ClassOrInterfaceDeclaration;
+        } else {
+            return [];
+        }
+    } else {
+        bindingType = dec.type === "ClassOrInterfaceDeclaration" ?
+            dec as ClassOrInterfaceDeclaration :
+            dec as EnumDeclaration;
+    }
+
+    if (!bindingType) {
         return [];
     }
-    const classOrInterface = dec as ClassOrInterfaceDeclaration;
-    classOrInterface.properties.forEach(prop => {
-        completions.push(getCompletionFromDeclarationBase(prop));
-    });
-    classOrInterface.methods.forEach(method => {
-        completions.push(getCompletionFromDeclarationBase(method));
-    });
+
+    // Member
+    if (bindingType instanceof ClassOrInterfaceDeclaration) {
+        bindingType.properties.forEach(prop => {
+            completions.push(getCompletionFromDeclarationBase(prop));
+        });
+        bindingType.methods.forEach(method => {
+            completions.push(getCompletionFromDeclarationBase(method));
+        });
+    } else {
+        bindingType.enumItems.forEach(enumItem => {
+            completions.push(getCompletionFromDeclarationBase(enumItem));
+        });
+    }
     return completions;
 }
 
@@ -377,7 +488,7 @@ export function getCompletionFromPosition(
             if (maybeWith) {
                 const dec: DeclarationBase = maybeWith.extra["declaration"];
                 if (dec) {
-                    return getMemberCompletions(dec);
+                    return getMemberCompletions(dec, file);
                 }
             }
             return [];
@@ -386,7 +497,7 @@ export function getCompletionFromPosition(
         let ahead = positionAt(file.program.body, pos, false, 0);
         let def: DeclarationBase = ahead.extra["declaration"];
         if (def) {
-            return getMemberCompletions(def);
+            return getMemberCompletions(def, file);
         }
     }
     return completions;

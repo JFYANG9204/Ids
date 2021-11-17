@@ -41,11 +41,11 @@ export class TypeUtil extends UtilParser {
         return this.getBindingTypeName(prop.binding);
     }
 
-    getMaybeBindingType(dec: DeclarationBase,
+    getMaybeBindingType(dec?: DeclarationBase,
         namespace?: string | NamespaceDeclaration) {
         if (dec instanceof SingleVarDeclarator ||
             dec instanceof ArrayDeclarator) {
-            return this.scope.get(
+            return dec.bindingType ?? this.scope.get(
                 this.getBindingTypeName(dec.binding),
                 namespace)?.result;
         } else if (dec instanceof PropertyDeclaration) {
@@ -190,7 +190,6 @@ export class TypeUtil extends UtilParser {
                         false);
                 }
                 break;
-            case "ClassOrInterfaceDeclaration":
 
             default:
                 break;
@@ -201,7 +200,7 @@ export class TypeUtil extends UtilParser {
         switch (type.type) {
             case "FunctionDeclaration":
                 const func = type as FunctionDeclaration;
-                if (!func.returnType) {
+                if (!func.binding) {
                     this.needReturn(node);
                 }
                 break;
@@ -423,7 +422,7 @@ export class TypeUtil extends UtilParser {
     getAssignExprType(expr: AssignmentExpression) {
         let left;
         let rightType: { type: DeclarationBase | undefined } = { type: undefined };
-        this.getExprType(expr.right, rightType);
+        let right = this.getExprType(expr.right, rightType);
         if (!rightType.type) {
             this.needReturn(expr.right);
             return this.getVariant();
@@ -470,6 +469,11 @@ export class TypeUtil extends UtilParser {
             if (leftType.type) {
                 this.checkAssignmentLeft(leftType.type, expr.left);
             }
+            if (expr.left instanceof MemberExpression &&
+                expr.left.object.type === "Identifier" &&
+                expr.left.property.type !== "Identifier") {
+                this.scope.updateGeneric((expr.left.object as Identifier).name, right);
+            }
         }
         return rightType.type;
     }
@@ -513,8 +517,6 @@ export class TypeUtil extends UtilParser {
                     const single = type as SingleVarDeclarator;
                     return single.bindingType ??
                         this.scope.get(this.getBindingTypeName(single.binding))?.result;
-                } else if (type?.type === "ArrayDeclarator") {
-                    return this.scope.get("Array")?.result;
                 }
                 return type;
             case "MemberExpression":
@@ -535,7 +537,8 @@ export class TypeUtil extends UtilParser {
             return this.getVariant();
         }
         if ((obj.type !== "ClassOrInterfaceDeclaration") &&
-            (obj.type !== "PropertyDeclaration")) {
+            (obj.type !== "PropertyDeclaration")         &&
+            (obj.type !== "ArrayDeclarator")) {
             if (!this.scope.inFunction &&
                 this.options.raiseTypeError) {
                 this.raiseAtNode(
@@ -557,6 +560,8 @@ export class TypeUtil extends UtilParser {
                 parent = this.scope.get(objReturn,
                     typeof objProp.class.namespace === "string" ? objProp.namespace :
                     objProp.class.namespace?.name.name)?.result;
+            } else if (obj.type === "ArrayDeclarator") {
+                parent = this.scope.get("Array")?.result;
             }
             if (parent && parent.type === "ClassOrInterfaceDeclaration") {
                 child = this.getPropertyOrMethod(
@@ -599,6 +604,11 @@ export class TypeUtil extends UtilParser {
                 if (!memberDec) {
                     return this.getVariant();
                 }
+        } else if (obj.type === "ArrayDeclarator") {
+            memberDec = this.scope.get("Array")?.result;
+            if (!memberDec) {
+                return this.getVariant();
+            }
         } else {
             memberDec = this.getFinalType(
                 obj as ClassOrInterfaceDeclaration, true);
@@ -627,12 +637,17 @@ export class TypeUtil extends UtilParser {
         if (needParam) {
             this.matchType(needParam, exprType, member.property);
         }
+        if (memberDec.name.name === "Array") {
+            const arr = obj as ArrayDeclarator;
+            return arr.bindingType ?? this.scope.get(this.getBindingTypeName(arr.binding))?.result;
+        }
         return memberDec;
     }
 
     getMemberType(member: MemberExpression): DeclarationBase | undefined {
         const obj = this.getMemberObjectType(member);
         const type = this.getMemberPropertyType(member, obj);
+        this.addExtra(member, "declaration", this.getMaybeBindingType(type));
         this.addExtra(member.property, "declaration", type);
         return type;
     }
@@ -697,8 +712,17 @@ export class TypeUtil extends UtilParser {
         this.checkFunctionParams(callExpr, objType as FunctionDeclaration);
 
         const func = objType as FunctionDeclaration;
-        if (func.returnType) {
-            return this.scope.get(func.returnType)?.result;
+        if (func.binding) {
+            let returnType = this.scope.get(
+                typeof func.binding === "string" ?
+                func.binding :
+                func.binding.name.name,
+                (typeof func.binding === "string" ?
+                undefined :
+                func.binding.namespace) ??
+                func.class?.namespace)?.result;
+            this.addExtra(func, "declaration", returnType);
+            return returnType;
         } else {
             return undefined;
         }
@@ -905,10 +929,10 @@ export class TypeUtil extends UtilParser {
         const funcDeclare = this.scope.get(func.callee.name)?.result;
         if (!funcDeclare ||
             !(funcDeclare instanceof FunctionDeclaration) ||
-            !funcDeclare.returnType) {
+            !funcDeclare.binding) {
             return;
         }
-        if (argType === funcDeclare.returnType) {
+        if (argType === funcDeclare.binding) {
             this.raiseAtNode(func, WarningMessages["RedundantTypeConvertion"], true);
         }
     }

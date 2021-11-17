@@ -647,8 +647,7 @@ export class SingleVarDeclarator extends DeclarationBase {
 
 export class ArrayDeclarator extends DeclarationBase {
     name: Identifier;
-    binding: BindingDeclarator | string = "Array";
-    generics?: string;
+    binding: BindingDeclarator | string = "Variant";
     dimensions: number;
     boundaries?: number[];
     bindingType?: DeclarationBase;
@@ -705,7 +704,7 @@ export class FunctionDeclaration extends DeclarationBase {
     params: Array<ArgumentDeclarator> = [];
     body: BlockStatement;
     needReturn = false;
-    returnType?: string;
+    binding?: string | BindingDeclarator;
     class?: ClassOrInterfaceDeclaration;
     constructor(parser: ParserBase, pos: number, loc: Position) {
         super(parser, pos, loc);

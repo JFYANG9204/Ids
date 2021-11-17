@@ -143,8 +143,6 @@ export class ScopeHandler {
                     typeof node.binding === "string" ?
                     node.binding : node.binding.name.name
                 )?.result;
-            } else if (node instanceof ArrayDeclarator) {
-                node.bindingType = this.get("Array")?.result;
             }
             this.insertName(scope, name, node, "dims");
             return;
@@ -374,10 +372,10 @@ export class ScopeHandler {
                 exist.result.binding = newType.name.name;
                 exist.result.bindingType = newType;
             } else if (exist.result instanceof ArrayDeclarator) {
-                if (!exist.result.generics) {
-                    exist.result.generics = newType.name.name;
+                if (!exist.result.binding) {
+                    exist.result.binding = newType.name.name;
                 } else {
-                    exist.result.generics = "Variant";
+                    exist.result.binding = "Variant";
                 }
             }
             return;
@@ -385,6 +383,23 @@ export class ScopeHandler {
 
         this.delete(name);
         this.declareName(name, newBindingType, newType);
+    }
+
+    updateGeneric(name: string, genericType: string) {
+        let find = this.get(name)?.result;
+        if (!find || find.type !== "ArrayDeclarator") {
+            return;
+        }
+        let arr = find as ArrayDeclarator;
+        let bind = typeof arr.binding === "string" ? arr.binding : arr.binding.name.name;
+        if (arr.bindingType &&
+            bind.toLowerCase() !== genericType.toLowerCase()) {
+            arr.binding = "Variant";
+            arr.bindingType = this.get("Variant")?.result;
+        } else {
+            arr.binding = genericType;
+            arr.bindingType = this.get(genericType)?.result;
+        }
     }
 
     updateUndefine(name: string, newType: DeclarationBase) {

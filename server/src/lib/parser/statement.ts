@@ -490,6 +490,8 @@ export class StatementParser extends ExpressionParser {
         if (this.eat(tt._as)) {
             node.binding = this.parseBindingDeclarator();
             this.next();
+        } else {
+            node.binding = "Variant";
         }
         node.boundaries = boundaries;
         node.dimensions = dimensions;
@@ -497,7 +499,6 @@ export class StatementParser extends ExpressionParser {
             node.name.name,
             BindTypes.var,
             node);
-        node.bindingType = this.scope.get("Array")?.result;
         return this.finishNode(node, "ArrayDeclarator");
     }
 
@@ -531,7 +532,6 @@ export class StatementParser extends ExpressionParser {
         while (!this.hasPrecedingLineBreak()) {
             if (this.lookahead().type === tt.bracketL) {
                 const arr = this.parseArrayDeclarator();
-                this.scope.declareName(arr.name.name, BindTypes.var, arr);
                 declarators.push(arr);
                 hasComma = false;
             } else {
@@ -808,6 +808,7 @@ export class StatementParser extends ExpressionParser {
                     type.type instanceof SingleVarDeclarator ?
                     type.type.bindingType?.namespace :
                     type.type.namespace));
+            this.addExtra(node, "declaration", type.type);
         }
         node.body = this.parseBlock(tt._end);
         this.expect(tt._end);
@@ -1025,14 +1026,14 @@ export class StatementParser extends ExpressionParser {
         if (this.match(tt._as)) {
             this.checkIfDeclareFile();
             this.next();
-            node.returnType = this.state.value;
+            node.binding = this.state.value;
             this.next();
         }
         node.body = this.parseBlock(tt._end);
         this.expect(tt._end);
         isFunction ? this.expect(tt._function) : this.expect(tt._sub);
         if (isFunction) {
-            node.returnType = "Variant";
+            node.binding = "Variant";
         }
         node.push(node.body);
         node.pushArr(node.params);
