@@ -14,7 +14,7 @@ export class Parser extends StatementParser {
         this.fileName = this.options.sourceFileName ?? "";
         this.scope = new ScopeHandler(
             this,
-            (node, template, ...params) => this.raiseAtLocation(node.start, node.end, template, false, ...params),
+            (node, template, warning,...params) => this.raiseAtLocation(node.start, node.end, template, warning, ...params),
             this.options.globalDeclarations,
             this.state.localDefinitions);
         if (extname(this.fileName).toLowerCase() === ".dms") {

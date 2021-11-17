@@ -600,13 +600,12 @@ export class StatementParser extends ExpressionParser {
                         this.scope.update(
                             node.id.name,
                             BindTypes.var,
-                            declareType.type,
+                            this.getMaybeBindingType(declareType.type) ?? declareType.type,
                             node.assignment);
                         if (declared.result) {
                             this.addExtra(node.id,
                                 "declaration",
-                                this.getMaybeBindingType(declared.result,
-                                    this.getDeclareNamespace(declared.result)));
+                                this.scope.get(node.id.name)?.result);
                         }
                     }
                 }
@@ -1032,6 +1031,9 @@ export class StatementParser extends ExpressionParser {
         node.body = this.parseBlock(tt._end);
         this.expect(tt._end);
         isFunction ? this.expect(tt._function) : this.expect(tt._sub);
+        if (isFunction) {
+            node.returnType = "Variant";
+        }
         node.push(node.body);
         node.pushArr(node.params);
         this.scope.exit();
@@ -1073,7 +1075,6 @@ export class StatementParser extends ExpressionParser {
             } else {
                 let arg = this.parseArgumentDeclarator();
                 params.push(arg);
-                this.scope.declareName(arg.declarator.name.name, BindTypes.var, arg);
                 comma = false;
             }
         }
@@ -1321,7 +1322,10 @@ export class StatementParser extends ExpressionParser {
             if (this.searchParserNode &&
                 (search = this.searchParserNode(node.path))) {
                 node.parser = new Parser(
-                    createBasicOptions(node.path, this.options.raiseTypeError),
+                    createBasicOptions(node.path,
+                        this.options.raiseTypeError,
+                        this.options.uri,
+                        this.options.globalDeclarations),
                     search.content);
             } else {
                 let content = "";

@@ -126,7 +126,7 @@ export class ScopeHandler {
                     node.name,
                     ErrorMessages["DontAllowDeclareFunction"],
                     false,
-                    this.inWith ? "With" : "Function或Sub"
+                    (this.inWith ? "With" : "Function或Sub")
                 );
                 return;
             }

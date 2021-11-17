@@ -1,0 +1,104 @@
+
+Namespace TOMLib
+
+    '!
+    ```ds
+    (interface) ITableGlobals
+    ```
+    -----------------------------
+    The `TableGlobals` object contains settings that are applied to all tables in the table document.
+
+    ### Remarks
+    These settings are merged in with the properties of each individual table when the tables are populated. In general, the global settings appear before any of the per-table settings.
+    !'
+    Interface ITableGlobals
+
+        '!
+        ```ds
+        (property) ITableGlobals.Annotations: IAnnotations
+        ```
+        -----------------------------
+        A collection of `Annotation` objects that are applied to all tables in the collection.
+
+        ### Remarks
+        If the corresponding annotation object on an individual table already has a specification set then it is concatenated onto the global annotation such that the global annotation is first and there is a tag between the two annotations. This `Annotations` collection is initially empty.
+
+        ### Examples
+        ```ds
+        Table.Annotations[1].Specification = "Weight Variable: {Weight}"
+        TableDoc.Global.Annotations[1].Specification = "Description: {ProjectDescription}"
+        ```
+        Will result in the annotation:
+        "Weight Variable: {Weight} [Line break] Description: {ProjectDescription}"
+        !'
+        ReadOnly Property Annotations() As IAnnotations
+
+        '!
+        ```ds
+        (property) ITableGlobals.CellItems: ICellItems
+        ```
+        -----------------------------
+        A collection of `CellItem` objects that are applied to all tables in the collection.
+
+        ### Remarks
+        The cell items in this collection appear before cell items on the individual tables. If an individual table already has a cell item with the same type, variable, and cutoff value then the global cell item is not applied to that table. This collection is initially empty.
+        !'
+        ReadOnly Property CellItems() As ICellItems
+
+        '!
+        ```ds
+        (property) ITableGlobals.Filters: IFilters
+        ```
+        -----------------------------
+        A collection of `Filter` objects that are applied to all the tables in the collection.
+
+        ### Remarks
+        The filters in this collection are combined (ANDed) with the filters for the individual tables. This collection is initially empty.
+        !'
+        ReadOnly Property Filters() As IFilters
+
+        '!
+        ```ds
+        (property) ITableGlobals.Parent: IDocument
+        ```
+        -----------------------------
+        The parent object
+
+        ### Remarks
+        The `Parent` property of the `TableDefaults` object always returns a `Document` object
+        !'
+        ReadOnly Property Parent() As IDocument
+
+        '!
+        ```ds
+        (property) ITableGlobals.Statistics: IStatistics
+        ```
+        -----------------------------
+        A collection of `Statistic` objects that are applied to all tables in the collection.
+
+        ### Remarks
+        The statistics in this collection are merged with the statistics for the individual tables. If an individual table already has a statistic of the same name as one that exists in this collection then the statistic on the table is used instead of the global statistic (the configuration of the local table statistic may be slightly different from the global one). This collection is initially empty. Please also be advised that since this is a read-only property. Users cannot modify its properties by accessing `ITableGlobals.Statistics`.
+        !'
+        ReadOnly Property Statistics() As IStatistics
+
+        '!
+        ```ds
+        (method) ITableGlobals.Clear(): Void
+        ```
+        -----------------------------
+        Clears all the properties of the `TableGlobals` object.
+
+        ### Remarks
+        The `Clear` method performs the following actions:
+        + Clears the `CellItems` collection
+        + Clears the `Filters` collection
+        + Clears the `Statistics` collection
+        + Clears the `Annotations` collection
+        !'
+        Sub Clear()
+        End Sub
+
+    End Interface
+
+End Namespace
+

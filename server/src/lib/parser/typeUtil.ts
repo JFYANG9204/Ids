@@ -48,13 +48,20 @@ export class TypeUtil extends UtilParser {
             return this.scope.get(
                 this.getBindingTypeName(dec.binding),
                 namespace)?.result;
+        } else if (dec instanceof PropertyDeclaration) {
+            return this.scope.get(
+                this.getPropertyBindingType(dec),
+                this.getDeclareNamespace(dec))?.result;
         }
         return dec;
     }
 
-    getDeclareNamespace(dec: DeclarationBase) {
+    getDeclareNamespace(dec: DeclarationBase): string | NamespaceDeclaration | undefined {
         if (dec instanceof PropertyDeclaration) {
             return dec.class.namespace;
+        } else if (dec instanceof SingleVarDeclarator) {
+            return typeof dec.binding !== "string" ? this.getDeclareNamespace(dec.binding) :
+                dec.binding;
         }
         return dec.namespace;
     }
@@ -375,6 +382,10 @@ export class TypeUtil extends UtilParser {
                 this.needReturn(expr.right);
             }
             return this.getVariant();
+        }
+        //
+        if (expr.operator === "=") {
+            return this.scope.get("Boolean")?.result;
         }
         //
         let final;
