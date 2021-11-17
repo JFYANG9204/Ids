@@ -497,8 +497,7 @@ export function getCompletionFromPosition(
             return [];
         }
         //
-        let ahead = positionAt(file.program.body, pos, false, 0);
-        let def: DeclarationBase = ahead.extra["declaration"];
+        let def: DeclarationBase = pre.extra["declaration"];
         if (def) {
             return getMemberCompletions(def, file);
         }
@@ -544,8 +543,8 @@ export function getSignatureHelp(func: FunctionDeclaration, curCount: number, ot
 }
 
 export function getSignatureHelpFromFunction(func: CallExpression) {
-    const dec: FunctionDeclaration | undefined = func.callee.extra["declaration"];
-    if (!dec) {
+    const dec: DeclarationBase | undefined = func.callee.extra["declaration"];
+    if (!dec || !(dec instanceof FunctionDeclaration)) {
         return null;
     }
     let label = getSignatureHelp(dec, func.arguments.length);
