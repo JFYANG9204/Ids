@@ -59,6 +59,8 @@ export class TypeUtil extends UtilParser {
     getDeclareNamespace(dec: DeclarationBase): string | NamespaceDeclaration | undefined {
         if (dec instanceof PropertyDeclaration) {
             return dec.class.namespace;
+        } else if (dec instanceof FunctionDeclaration && dec.class) {
+            return dec.class.namespace;
         } else if (dec instanceof SingleVarDeclarator) {
             return typeof dec.binding !== "string" ? this.getDeclareNamespace(dec.binding) :
                 dec.binding;
@@ -349,6 +351,9 @@ export class TypeUtil extends UtilParser {
 
             case "PropertyDeclaration":
                 return this.getPropertyBindingType(dec as PropertyDeclaration);
+
+            case "EnumDeclaration":
+                return "Enum";
 
             default:
                 return dec.name.name;
@@ -711,8 +716,12 @@ export class TypeUtil extends UtilParser {
                 if (arg.paramArray) {
                     cur = arg;
                 }
-                this.matchType(this.getBindingTypeName(arg.declarator.binding),
-                    paramType, param);
+                let typeName = this.getBindingTypeName(arg.declarator.binding);
+                if (this.scope.get(typeName,
+                    this.getDeclareNamespace(func))?.result?.type === "EnumDeclaration") {
+                    typeName = "Enum";
+                }
+                this.matchType(typeName, paramType, param);
             } else if (cur) {
                 this.matchType(this.getBindingTypeName(cur.declarator.binding),
                     paramType, param);

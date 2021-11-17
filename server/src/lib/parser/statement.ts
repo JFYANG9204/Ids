@@ -1272,6 +1272,10 @@ export class StatementParser extends ExpressionParser {
                     node.body.push(func);
                     break;
 
+                case tt._enum:
+                    node.body.push(this.parseEnumDeclaration());
+                    break;
+
                 default:
                     this.unexpected();
             }

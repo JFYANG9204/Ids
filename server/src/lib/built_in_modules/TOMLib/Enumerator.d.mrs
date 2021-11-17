@@ -1,0 +1,201 @@
+
+Namespace TOMLib
+
+    Enum AnnotationPosition
+        annTitleHeader  = &H0000
+        annLeftHeader   = &H0001
+        annCenterHeader = &H0002
+        annRightHeader  = &H0003
+        annTitleFooter  = &H0004
+        annLeftFooter   = &H0005
+        annCenterFooter = &H0006
+        annRightFooter  = &H0007
+    End Enum
+
+    Enum AxisType
+        axSide  = &HFFFF
+        axTop   = &HFFFE
+        axLayer = &HFFFD
+    End Enum
+
+    Enum CalculationScopeType
+        csAllElements       = &H0000
+        csPrecedingElements = &H0001
+    End Enum
+
+    Enum CellItemType
+        itCount             = &H0000
+        itColPercent        = &H0001
+        itRowPercent        = &H0002
+        itTotalPercent      = &H0003
+        itMean              = &H0004
+        itSum               = &H0005
+        itMinimum           = &H0006
+        itMaximum           = &H0007
+        itUnweightedCount   = &H0008
+        itCumColPercent     = &H0009
+        itCumRowPercent     = &H000A
+        itRange             = &H000B
+        itMode              = &H000C
+        itMedian            = &H000D
+        itPercentile        = &H000E
+        itStdDev            = &H000F
+        itStdErr            = &H0010
+        itVariance          = &H0011
+        itResiduals         = &H0012
+        itAdjustedResiduals = &H0013
+        itExpectedValues    = &H0014
+        itValidN            = &H0015
+        itIndices           = &H0016
+        itColPropResults    = &H0017
+        itColBase           = &H0018
+        itRowBase           = &H0019
+        itUnweightedColBase = &H001A
+        itUnweightedRowBase = &H001B
+        itProfileResult     = &H001C
+        itCellChiSquare     = &H001D
+        itColRanks          = &H001E
+        itRowRanks          = &H001F
+    End Enum
+
+    Enum ComparisonOperator
+        opLess         = &H0000
+        opLessEqual    = &H0001
+        opEqual        = &H0002
+        opGreaterEqual = &H0003
+        opGreater      = &H0004
+    End Enum
+
+    Enum DataSetView
+        dvVDATA = &H0000
+        dvHDATA = &H0001
+    End Enum
+
+    Enum DisplayOrientation
+        doDefault = &H0000
+        doRow     = &H0001
+        doColumn  = &H0002
+    End Enum
+
+    Enum ElementType
+        eCategory          = &H0000
+        eBase              = &H0001
+        eTableStatistic    = &H0002
+        eEffectiveBase     = &H0003
+        eSumWeightsSquared = &H0004
+        eSumN              = &H0005
+        eSumX              = &H0006
+        eSumXSquared       = &H0007
+        eSumUnweightedN    = &H0008
+        eMean              = &H0009
+        eStdDev            = &H000A
+        eStdErr            = &H000B
+        eSampleVar         = &H000C
+        eTotal             = &H000D
+        eSubTotal          = &H000E
+        eText              = &H000F
+        eNetDiffs          = &H0010
+        ePairedPref        = &H0011
+        eMinimum           = &H0012
+        eMaximum           = &H0013
+        eOtherDerived      = &H0014
+        eNet               = &H0015
+        eCombine           = &H0016
+        eExpression        = &H0017
+        eUnweightedBase    = &H0018
+        eNumeric           = &H0019
+        eDerived           = &H001A
+        eSum               = &H001B
+        eMedian            = &H001C
+        ePercentile        = &H001D
+        eMode              = &H001E
+        eProfile           = &H001F
+        eProfileResult     = &H0020
+        eTValue            = &H0021
+        eTProb             = &H0022
+    End Enum
+
+    Enum Errors
+        errNoMetadataSpecified
+        errLoadingMetadata
+        errAccessingCaseData
+        errNoValidLicense
+    End Enum
+
+    Enum ImagePositions
+        ipLeft      = &H0000
+        ipRight     = &H0001
+        ipTop       = &H0002
+        ipBottom    = &H0003
+        ipImageOnly = &H0004
+    End Enum
+
+    Enum ImagePositions
+        ipLeft      = &H0000
+        ipRight     = &H0001
+        ipTop       = &H0002
+        ipBottom    = &H0003
+        ipImageOnly = &H0004
+    End Enum
+
+    Enum MinBaseOptionsConstants
+        sbSymbolInFirstCellItemOnly = &H0001
+        sbUseWeightedBase           = &H0002
+        sbSuppressSpecialElements   = &H0004
+        sbIgnoreTotals              = &H0008
+        sbColumnsOnly               = &H0010
+        sbRowsOnly                  = &H0020
+        sbRetainCounts              = &H0040
+    End Enum
+
+    Enum OpenOptions
+        ooDefault        = &H0000
+        ooAddNewElements = &H0001
+    End Enum
+
+    Enum OrderConstants
+        oAscending  = &H0000
+        oDescending = &H0001
+    End Enum
+
+    Enum RoundOptions
+        roRoundToEven = &H0000
+        roRoundUp     = &H0001
+    End Enum
+
+    Enum RuleTarget
+        rtRow      = &H0000
+        rtColumn   = &H0001
+        rtCell     = &H0002
+        rtRowStats = &H0003
+        rtColStats = &H0004
+    End Enum
+
+    Enum RuleType
+        rlHide = &H0000
+    End Enum
+
+    Enum ScriptGenerateOption
+        sgDefault             = &H0000
+        sgIncludeVarialbeEdit = &H0001
+    End Enum
+
+    Enum ScriptType
+        stMRS = &H0000
+    End Enum
+
+    Enum TableType
+        ttAggregated = &H0000
+        ttProfile    = &H0001
+    End Enum
+
+    Enum XmlOption
+        xmlOptionsNone                    = &H0000
+        xmlIncludeResults                 = &H0001
+        xmlIncludeCustomLabels            = &H0002
+        xmlExcludeSpecificationAttributes = &H0004
+        xmlTableDocFormat                 = &H0008
+    End Enum
+
+End Namespace
+
