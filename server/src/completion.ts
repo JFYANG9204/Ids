@@ -183,14 +183,14 @@ function getCompletionTypeFromDeclare(dec: DeclarationBase): CompletionItemKind 
     }
 }
 
-function getDeclarationNote(dec: DeclarationBase): string {
-    if (dec.leadingComments.length > 0) {
-        return mergeComments(dec.leadingComments);
-    } else if (dec.innerComments.length > 0) {
-        return mergeComments(dec.innerComments);
-    } else {
-        return getDefaultNote(dec);
+function getDeclarationNote(dec: DeclarationBase, addHeader: boolean = true): string {
+    let header = "\n" + getDefaultNote(dec) + "\n";
+    if (dec.innerComments.length > 0) {
+        return (addHeader ? header : "") + mergeComments(dec.innerComments);
+    } else if (dec.leadingComments.length > 0) {
+        return (addHeader ? header : "") + mergeComments(dec.leadingComments);
     }
+    return header;
 }
 
 function mergeComments(comments: Array<Comment>) {
@@ -242,7 +242,7 @@ function getDefaultNote(dec: DeclarationBase): string {
 
         case "PropertyDeclaration":
             const prop = dec as PropertyDeclaration;
-            text = `(property) ${prop.class.name}.${name}`;
+            text = `(property) ${prop.class.name.name}.${name}`;
             if (prop.params.length > 0) {
                 text += "(" + getArgumentNote(prop.params) + ")";
             }
@@ -551,7 +551,7 @@ export function getSignatureHelpFromFunction(func: CallExpression) {
     let label = getSignatureHelp(dec, func.arguments.length);
     let documents: MarkupContent = {
         kind: MarkupKind.Markdown,
-        value: getDeclarationNote(dec)
+        value: getDeclarationNote(dec, false)
     };
     const help: SignatureHelp = {
         signatures: [

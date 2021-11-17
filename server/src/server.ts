@@ -15,7 +15,6 @@ import {
     CallExpression,
     DeclarationBase,
     File,
-    FunctionDeclaration,
 } from "./lib/types";
 import {
     builtInCompletions,
