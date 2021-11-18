@@ -114,7 +114,7 @@ Interface IEnumerable
     ```
     For example, *N* might be 777.
     !'
-    Function Ran(Optional Count As Long, Optional Seed As Long = 0) As Varaint
+    Function Ran(Optional Count As Long, Optional Seed As Long = 0) As Variant
     End Function
 
     '!

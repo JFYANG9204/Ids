@@ -391,7 +391,7 @@ Dim MyVariable
 MyVariable = EngineVersion(5)    ' Returns 1.4 (for example)
 ```
 !'
-Function EngineVersion(Optional Val As Long = 0, Optional Number As Boolean = False) As Varaint
+Function EngineVersion(Optional Val As Long = 0, Optional Number As Boolean = False) As Variant
 End Function
 
 '!
@@ -632,7 +632,7 @@ result = IIf(_temp3, _temp1 , _temp2)
 ```
 This issue makes the `IIf()` call less useful than the conditional operator.
 !'
-Function IIf(Val As Boolean, TruePart As Varaint, FalsePart As Variant) As Variant
+Function IIf(Val As Boolean, TruePart As Variant, FalsePart As Variant) As Variant
 End Function
 
 '!

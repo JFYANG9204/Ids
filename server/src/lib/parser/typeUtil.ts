@@ -923,10 +923,12 @@ export class TypeUtil extends UtilParser {
                 case "excel.application":
                     return this.scope.get("Application", "Excel")?.result;
                 default:
-                    this.raiseAtNode(
-                        func.arguments[0],
-                        ErrorMessages["InvalidObjectScripting"],
-                        false);
+                    if (this.options.raiseTypeError && !this.scope.inFunction) {
+                        this.raiseAtNode(
+                            func.arguments[0],
+                            ErrorMessages["InvalidObjectScripting"],
+                            false);
+                    }
                     break;
             }
         }
