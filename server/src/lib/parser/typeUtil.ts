@@ -1,3 +1,4 @@
+import { BinopType } from "../tokenizer/type";
 import {
     ArgumentDeclarator,
     ArrayDeclarator,
@@ -27,6 +28,7 @@ import { UtilParser } from "./util";
 export class TypeUtil extends UtilParser {
 
     needCheckLineMark: Identifier[] = [];
+    needCheckCallExpr: CallExpression[] = [];
 
     getVariant() {
         return this.scope.get("Variant")?.result;
@@ -77,7 +79,8 @@ export class TypeUtil extends UtilParser {
             checkString === "iquestion" ||
             baseString  === "iquestion" || (
             baseString  === "enum"   && checkString === "long") || (
-            baseString  === "double" && checkString === "long")) {
+            baseString  === "double" && checkString === "long") || (
+            baseString  === "date"   && checkString === "long")) {
             checkResult = true;
         } else {
             checkResult = checkString === baseString;
@@ -124,7 +127,7 @@ export class TypeUtil extends UtilParser {
                 line.id.name
             );
         } else {
-            this.state.lineMarks.push(line);
+            this.state.lineMarks.set(line.id.name.toLowerCase(), line);
         }
     }
 
@@ -137,13 +140,31 @@ export class TypeUtil extends UtilParser {
     }
 
     checkAheadLineMark(id: Identifier) {
-        this.needCheckLineMark.forEach(
-            (line, index) => {
-                if (line.name.toLowerCase() === id.name.toLowerCase()) {
-                    this.needCheckLineMark.splice(index, 1);
-                }
+        if (this.needCheckLineMark.length === 0) {
+            return;
+        }
+        for (let i = this.needCheckLineMark.length - 1;
+            i >= 0; i--) {
+            if (id.name.toLowerCase() ===
+                this.needCheckLineMark[i].name.toLowerCase()) {
+                this.needCheckLineMark.splice(i, 1);
             }
-        );
+        }
+    }
+
+    checkAheadCallExpr(funcDeclaration: FunctionDeclaration) {
+        if (this.needCheckCallExpr.length === 0) {
+            return;
+        }
+        const funcName = funcDeclaration.name.name.toLowerCase();
+        for (let i = this.needCheckCallExpr.length - 1;
+            i >= 0; i--) {
+            const expr = this.needCheckCallExpr[i];
+            if ((expr.callee as Identifier).name.toLowerCase() === funcName) {
+                this.checkExprError(expr);
+                this.needCheckCallExpr.splice(i, 1);
+            }
+        }
     }
 
     checkVarDeclared(name: string, node: NodeBase) {
@@ -388,7 +409,9 @@ export class TypeUtil extends UtilParser {
             return this.getVariant();
         }
         //
-        if (expr.operator === "=") {
+        if (expr.operator.binop === BinopType.logical     ||
+            expr.operator.binop === BinopType.realational ||
+            expr.operator.label === "=") {
             return this.scope.get("Boolean")?.result;
         }
         //
@@ -595,6 +618,7 @@ export class TypeUtil extends UtilParser {
         // Object.Member[Index]
         let memberDec;
         let needParam;
+        let isCategorical = false;
         let exprType = this.getExprType(member.property);
         if (obj.type === "PropertyDeclaration") {
             memberDec = obj as PropertyDeclaration;
@@ -613,10 +637,14 @@ export class TypeUtil extends UtilParser {
             }
         } else if (obj.type === "ClassOrInterfaceDeclaration" &&
             obj.name.name === "IQuestion") {
-                memberDec = this.scope.get("IQuestion")?.result;
-                if (!memberDec) {
-                    return this.getVariant();
-                }
+            memberDec = this.scope.get("IQuestion")?.result;
+            if (!memberDec) {
+                return this.getVariant();
+            }
+        } else if (obj.type === "ClassOrInterfaceDeclaration" &&
+            obj.name.name === "Categorical") {
+            memberDec = obj;
+            isCategorical = true;
         } else if (obj.type === "ArrayDeclarator") {
             memberDec = this.scope.get("Array")?.result;
             if (!memberDec) {
@@ -654,6 +682,9 @@ export class TypeUtil extends UtilParser {
             const arr = obj as ArrayDeclarator;
             return arr.bindingType ?? this.scope.get(this.getBindingTypeName(arr.binding))?.result;
         }
+        if (isCategorical) {
+            return this.getVariant();
+        }
         return memberDec;
     }
 
@@ -682,8 +713,10 @@ export class TypeUtil extends UtilParser {
     getCallExprType(callExpr: CallExpression) {
         const callee = callExpr.callee;
         let objType: DeclarationBase | undefined;
+        let isFunction = false;
         if (callee.type === "Identifier") {
             objType = this.getIdentifierType(callee as Identifier);
+            isFunction = true;
         } else {
             objType = this.getMemberType(callee as MemberExpression);
         }
@@ -703,7 +736,9 @@ export class TypeUtil extends UtilParser {
         }
 
         if (!objType) {
-            if (!this.scope.inFunction && this.options.raiseTypeError) {
+            if (isFunction) {
+                this.needCheckCallExpr.push(callExpr);
+            } else if (!this.scope.inFunction && this.options.raiseTypeError) {
                 this.raiseAtNode(
                     callee.type === "Identifier" ?
                     callee : (callee as MemberExpression).property,
@@ -746,11 +781,12 @@ export class TypeUtil extends UtilParser {
     checkFunctionParams(callExpr: CallExpression, func: FunctionDeclaration) {
         let cur: ArgumentDeclarator | undefined;
         let index = 0;
+        let nece = "";
         const params = callExpr.arguments;
         const args = func.params;
         for (const param of params) {
             const paramType = this.getExprType(param);
-            if (index < params.length) {
+            if (index < args.length) {
                 const arg = args[index];
                 if (arg.paramArray) {
                     cur = arg;
@@ -767,6 +803,18 @@ export class TypeUtil extends UtilParser {
             }
             index++;
         }
+        if (index < args.length - 1) {
+            for (let i = index + 1; i < args.length; ++i) {
+                const arg = args[i];
+                if (!arg.optional) {
+                    if (nece === "") {
+                        nece = arg.declarator.name.name;
+                    } else {
+                        nece += arg.declarator.name.name;
+                    }
+                }
+            }
+        }
         if (args.length < params.length && !cur &&
             !this.scope.inFunction && this.options.raiseTypeError) {
             this.raiseAtNode(callExpr,
@@ -774,6 +822,14 @@ export class TypeUtil extends UtilParser {
                 false,
                 params.length.toString(),
                 args.length.toString());
+        }
+        if (nece !== "" &&
+            !this.scope.inFunction &&
+            this.options.raiseTypeError) {
+            this.raiseAtNode(callExpr,
+                ErrorMessages["ArgumentIsNotOptional"],
+                false,
+                nece);
         }
     }
 

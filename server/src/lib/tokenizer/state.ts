@@ -66,7 +66,7 @@ export class State {
     markDownCommentType: MarkDownCommentType;
 
     // 行标记集合
-    lineMarks: Array<LineMark> = [];
+    lineMarks: Map<string, LineMark> = new Map();
 
     // 当前Token的类型
     type: TokenType = types.eof;
@@ -110,13 +110,7 @@ export class State {
     }
 
     getLineMark(name: string) {
-        for (let i = 0; i < this.lineMarks.length; i++) {
-            const line = this.lineMarks[i];
-            if (line.id.name.toLowerCase() === name.toLowerCase()) {
-                return line;
-            }
-        }
-        return false;
+        return this.lineMarks.get(name.toLowerCase()) ?? false;
     }
 
     copy(): State {

@@ -2,7 +2,7 @@ import { ParserBase } from "./base";
 import { SourceType } from "./options";
 import { Parser } from "./parser";
 import { ParsingError } from "./parser/errors";
-import { Token } from "./tokenizer/type";
+import { Token, TokenType, types } from "./tokenizer/type";
 import { Position, SourceLocation } from "./util/location";
 import { Scope } from "./util/scope";
 
@@ -731,7 +731,7 @@ export class UnaryExpression extends Expression {
 // Binary
 
 export class BinaryBase extends Expression {
-    operator = "=";
+    operator: TokenType = types.equal;
     left: Expression;
     right: Expression;
     constructor(parser: ParserBase, pos: number, loc: Position) {
@@ -742,48 +742,31 @@ export class BinaryBase extends Expression {
     }
 }
 
-export type BinaryOperator =
-    | "+"
-    | "-"
-    | "*"
-    | "/"
-    | "="
-    | "mod"
-    | "in"
-    | "like"
-    | ">="
-    | "<="
-    | "<>"
-    | ">"
-    | "<";
-
 export class BinaryExpression extends BinaryBase {
-    operator: string;
+    operator: TokenType;
     constructor(parser: ParserBase, pos: number, loc: Position) {
         super(parser, pos, loc);
         this.type = "BinaryExpression";
-        this.operator = "=";
+        this.operator = types.equal;
     }
 }
 
 export class AssignmentExpression extends BinaryBase {
-    operator: string;
+    operator: TokenType;
     left: Expression | Identifier;
     constructor(parser: ParserBase, pos: number, loc: Position) {
         super(parser, pos, loc);
         this.type = "AssignmentExpression";
-        this.operator = "=";
+        this.operator = types.equal;
         this.left = new Expression(parser, 0, emptyLoc);
     }
 }
-
-export type LogicalOperator = "and" | "or" | "xor";
 
 export class LogicalExpression extends BinaryBase {
     constructor(parser: ParserBase, pos: number, loc: Position) {
         super(parser, pos, loc);
         this.type = "LogicalExpression";
-        this.operator = "and";
+        this.operator = types._and;
     }
 }
 

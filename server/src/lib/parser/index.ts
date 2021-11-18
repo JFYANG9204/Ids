@@ -47,6 +47,7 @@ export class Parser extends StatementParser {
                 this.scope.exit();
             // eslint-disable-next-line no-empty
             } catch (error) {
+                //const err = error;
             }
         }
         this.checkLineMarkError();

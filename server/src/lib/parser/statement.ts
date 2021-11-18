@@ -343,7 +343,9 @@ export class StatementParser extends ExpressionParser {
                 return this.parseDeclaration();
             case tt._sub:
             case tt._function:
-                return this.parseFunctionDeclaration();
+                const func = this.parseFunctionDeclaration();
+                this.checkAheadCallExpr(func);
+                return func;
             // Jump Statement
             case tt._exit:
                 return this.parseExit();
@@ -696,12 +698,15 @@ export class StatementParser extends ExpressionParser {
         this.checkVarDeclared((node.variable as Identifier).name, node);
         this.expect(tt.equal);
         const lbound = this.parseForBoundary();
+        this.checkExprError(lbound);
         this.expect(tt._to);
         const ubound = this.parseForBoundary();
+        this.checkExprError(ubound);
         node.range = { lbound, ubound };
         node.push(lbound, ubound);
         if (this.eat(tt._step)) {
             const stepExpr = this.parseExpression();
+            this.checkExprError(stepExpr);
             node.push(stepExpr);
             if (stepExpr instanceof NumericLiteral) {
                 node.range.step = Number(stepExpr.extra["raw"]);
@@ -1024,16 +1029,14 @@ export class StatementParser extends ExpressionParser {
         node.name = this.parseIdentifier();
         this.expect(tt.braceL);
         node.params = this.parseFunctionDeclarationParam();
-        if (this.match(tt._as)) {
+        if (this.eat(tt._as)) {
             this.checkIfDeclareFile();
-            this.next();
-            node.binding = this.state.value;
-            this.next();
+            node.binding = this.parseBindingDeclarator();
         }
         node.body = this.parseBlock(tt._end);
         this.expect(tt._end);
         isFunction ? this.expect(tt._function) : this.expect(tt._sub);
-        if (isFunction) {
+        if (isFunction && !node.binding) {
             node.binding = "Variant";
         }
         node.push(node.body);

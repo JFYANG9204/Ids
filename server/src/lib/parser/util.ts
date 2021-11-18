@@ -64,14 +64,8 @@ export class UtilParser extends Tokenizer {
     }
 
     existLineMark(line: LineMark): boolean {
-        if (this.state.lineMarks.length === 0) {
-            return false;
-        }
-        for (let i = 0; i < this.state.lineMarks.length; ++i) {
-            const ele = this.state.lineMarks[i];
-            if (ele.id.name.toLowerCase() === line.id.name.toLowerCase()) {
-                return true;
-            }
+        if (this.state.lineMarks.get(line.id.name.toLowerCase())) {
+            return true;
         }
         return false;
     }

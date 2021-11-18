@@ -179,7 +179,7 @@ export class ExpressionParser extends NodeUtils {
         this.skipExprLineFeed();
         if (this.state.type.binop === BinopType.assign && allowAssign) {
             const node = this.startNodeAt(startPos, startLoc, AssignmentExpression);
-            node.operator = "=";
+            node.operator = this.state.type;
             this.next();
             node.left = left;
             this.skipExprLineFeed();
@@ -277,7 +277,7 @@ export class ExpressionParser extends NodeUtils {
                 node = this.startNodeAt(leftStartPos, leftStartLoc, BinaryExpression);
             }
             node.left = left;
-            node.operator = this.state.value;
+            node.operator = this.state.type;
             this.next();
             node.right = this.parseExprOpRightExpr(prec);
             node.push(node.left, node.right);

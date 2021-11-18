@@ -53,7 +53,8 @@ const basicType = new Set([
     "date",
     "long",
     "double",
-    "variant"
+    "variant",
+    "null"
 ]);
 
 export function isBasicType(name: string) {

@@ -1,9 +1,720 @@
+'*****FILE VERSION=1, DATE LAST MODIFIED=2012/08/29, KO
+
+'!
+*****************************************************************************************************************
+    fnParseExcelExistenceSpec   as Boolean
+
+    Validate the contents of an Excel existence spec
+
+    @param1:    Existence spec as Excel Worksheet Object
+
+    @returns:   boolean as follows:
+                True = Spec passes all validation
+                False = Spec fails validation (details of failure is written to the logging object)
+
+*****************************************************************************************************************
+!'
+
+Function fnParseExcelExistenceSpec(oSheet)
+
+On Error goto Err_fnParseExcelExistenceSpec
+
+fnParseExcelExistenceSpec = False
+
+'Initiate error logging
+Dim strError
+strError = "Reason for error unknown"
 
 
-Dim a
+'Start at Row 1, Column 1
+Dim oCell
+Set oCell = oSheet.Cells[1][1]
 
-a = "1"
-a = a + "2"
+'Check First Row is for Category
+If LCase(oCell.Value)<>"category" Then
+    strError = "Cell A1 should have a value of 'Category'"
+    goto Err_fnParseExcelExistenceSpec
+ElseIf LCase(oCell.Offset[0][1].Value)="" Then
+    strError = "Cell A2 is blank, please enter your category name (if unsure use 'MAIN')"
+    goto Err_fnParseExcelExistenceSpec
+End If
+
+'Move to second row and check, add versions to an array
+Dim arrVersions
+Set oCell = oCell.Offset[1][0]
+If LCase(oCell.Value)<>"versions" Then
+    strError = "Cell B1 should have a value of 'Versions'"
+    goto Err_fnParseExcelExistenceSpec
+ElseIf LCase(oCell.Offset[0][1].Value)="" Then
+    strError = "Cell B2 is blank, please enter your versions, format = comma separated list of dates in YYYYMMDD format"
+    goto Err_fnParseExcelExistenceSpec
+Else
+    arrVersions=Split(oCell.Offset[0][1].Value,",")
+End If
+
+'Check versions are valid dates
+Dim i, dateTemp[], yearcheck[], monthcheck[], daycheck[]
+For i = 0 To UBound(arrVersions)
+    dateTemp[i] = CLong(arrVersions[i])
+
+
+    'check that the year is hopefully entered properly.  Check that is greater than 1970
+    yearcheck[i]=Left(Trim(dateTemp[i]),4)
+    If Left(Trim(dateTemp[i]),4) < 1970 Then
+        strError = MakeString("Year value of ",yearcheck[i]," in Cell B2 is likely incorrect.  Year value is less than 1970.  If this is correct than in ExistenceSpecValidationFunctions.mrs file need to update check done on yearcheck variable.")
+        goto Err_fnParseExcelExistenceSpec
+    End If
+
+    'check that the month part entered is between 1 to 12
+    monthcheck[i]=Mid(Trim(dateTemp[i]),4,2)
+    If not (monthcheck[i] >= 1 and monthcheck[i] <= 12) Then
+        strError = MakeString("Month value of ",monthcheck[i]," in Cell B2 is not within the range of 01-12.")
+        goto Err_fnParseExcelExistenceSpec
+    End If
+
+    'check that the day part entered is between 1 to 31
+    daycheck[i]=Right(Trim(dateTemp[i]),2)
+    If not (daycheck[i] >= 1 and daycheck[i] <= 31) Then
+        strError = MakeString("Day value of ",daycheck[i]," in Cell B2 is not within the range of 01-31.")
+        goto Err_fnParseExcelExistenceSpec
+    End If
+
+Next
+
+'Check each version is later than the previous one
+If UBound(dateTemp) > 0 Then
+    For i = 0 To UBound(dateTemp)-1
+        If dateTemp[i] > dateTemp[i+1] Then
+            strError = "Version list in Cell B2 must be in date order with the earliest date first"
+            goto Err_fnParseExcelExistenceSpec
+        End If
+    Next
+End If
+
+
+'Begin Main Loop at Row 3
+Set oCell = oCell.Offset[1][0]
+
+Do
+
+    If oCell.Value<>"" AND oCell.Offset[0][1].Value<>"" Then
+        If fnCheckExistenceValue(oCell.Offset[0][1],arrVersions) = False Then
+            strError = MakeString("Invalid existence value of ",oCell.Offset[0][1].Value," at Row ",oCell.Offset[0][1].Row," Column ",oCell.Offset[0][1].Column)
+            goto Err_fnParseExcelExistenceSpec
+        End If
+    ElseIf oCell.Offset[0][1].Value<>"" AND oCell.Offset[0][2].Value<>"" Then
+        If fnCheckExistenceValue(oCell.Offset[0][2],arrVersions) = False Then
+            strError = MakeString("Invalid existence value of ",oCell.Offset[0][2].Value," at Row ",oCell.Offset[0][2].Row," Column ",oCell.Offset[0][2].Column)
+            goto Err_fnParseExcelExistenceSpec
+        End If
+    End If
+
+    Set oCell = oCell.Offset[1][0]
+Loop Until oCell.Value="" AND oCell.Offset[0][1].Value=""
+
+fnParseExcelExistenceSpec = True
+
+Exit Function
+
+Err_fnParseExcelExistenceSpec:
+
+Set oSheet = Null
+Debug.Log(MakeString("ERROR IN EXISTENCE SPEC AT ROW ",oCell.Row," : ",strError))
+fnParseExcelExistenceSpec = False
+
+End Function
+'*****************************************************************************************************************
 
 
 
+'!
+*****************************************************************************************************************
+    fnCheckExistenceValue   as Boolean
+
+    Validates existence property is in valid format (On:YYYYMMDD,Off:YYYYMMDD,On:YYYYMMDD,Off:YYYYMMDD,...)
+
+    @param1:    Excel Cell Object
+    @param2:    Versions as array
+
+    @returns:   boolean as follows:
+                True = Cell value is a valid existence format
+                False = Cell value is not a valid existence format
+
+*****************************************************************************************************************
+!'
+Function fnCheckExistenceValue(oCell,Versions)
+
+On Error goto Err_CheckExistenceValue
+
+Dim strValue
+strValue = Trim(oCell.Value)
+
+'Check for define list reference
+If LCase(Left(strValue,4))="use " Then
+    fnCheckExistenceValue = True
+    Exit Function
+End If
+
+'Split value by property
+Dim arrValue
+arrValue = Split(strValue,",")
+
+Dim oRegex
+oRegex = CreateObject("VBScript.RegExp")
+
+Dim i, j, strOnOff, dateTemp[], arrOnOff[],strError,yearcheck[],monthcheck[],daycheck[]
+For i = 0 To UBound(arrValue)
+
+    strOnOff = Split(arrValue[i],":")
+
+    'Check existence is of format [on][off]:[yyyymmdd]
+    If UBound(strOnOff)<>1 Then goto Err_CheckExistenceValue
+
+    'Check existence starts with 'on' or 'off'
+    If LCase(Trim(strOnOff[0]))<>"on" And LCase(Trim(strOnOff[0]))<>"off" Then goto Err_CheckExistenceValue
+    arrOnOff[i]=Trim(strOnOff[0])
+
+    'Is the date format valid
+    dateTemp[i] = CLong(strOnOff[1])
+
+    'Is date a valid version
+    Dim blnFoundVersion
+    blnFoundVersion = False
+    For j = 0 To UBound(Versions)
+        If CLong(Trim(Versions[j])) = CLong(Trim(strOnOff[1])) Then
+            blnFoundVersion = True
+            Exit For
+        End If
+    Next
+    If blnFoundVersion = False Then
+        Debug.Log(MakeString("ERROR IN EXISTENCE SPEC: ",strOnOff[1]," cannot be found in versions list in Row 2"))
+        goto Err_CheckExistenceValue
+    End If
+
+Next
+
+'Check each date is later than the previous one
+If UBound(dateTemp) > 0 Then
+    For i = 0 To UBound(dateTemp)-1
+        If dateTemp[i] > dateTemp[i+1] Then goto Err_CheckExistenceValue
+    Next
+End If
+
+'Check the ons & off alternate
+If UBound(arrOnOff) > 0 Then
+    For i = 0 To UBound(arrOnOff)-1
+        If arrOnOff[i]=arrOnOff[i+1] Then goto Err_CheckExistenceValue
+    Next
+End If
+
+fnCheckExistenceValue = True
+
+Exit Function
+
+Err_CheckExistenceValue:
+
+fnCheckExistenceValue = False
+Exit Function
+
+End Function
+'*****************************************************************************************************************
+
+
+'!
+*****************************************************************************************************************
+    fnReturnGridSlice   as MDM Object
+
+    Returns grid slice as mdm object
+
+    @param1:    Metadata object
+    @param2:    Excel cell object
+
+    @returns:   Grid slice as MDM Object
+                Null if grid slice does not exist in mdd
+                Null if grid slice more than 3 levels deep
+
+*****************************************************************************************************************
+!'
+Function fnReturnGridSlice(MDM,Cell)
+
+Dim arrFieldName[], i
+
+Do While Find(Cell,"[..]")<>-1
+    arrFieldName[i] = Left(Cell,Find(Cell,"[..]"))
+    Cell = Replace(Cell,arrFieldName[i]+"[..].","",,1)
+    i = i + 1
+Loop
+arrFieldName[i] = Cell
+
+
+Select Case UBound(arrFieldName)
+    Case 0
+         Set fnReturnGridSlice = Null
+    Case 1
+        If MDM.Fields.Exist[MakeString(arrFieldName[0],"[..].",arrFieldName[1])] Then
+            Set fnReturnGridSlice = MDM.Fields[arrFieldName[0]].Fields[arrFieldName[1]]
+        Else
+            Set fnReturnGridSlice = Null
+        End If
+    Case 2
+        If MDM.Fields.Exist[MakeString(arrFieldName[0],"[..].",arrFieldName[1],"[..].",arrFieldName[2])] Then
+            Set fnReturnGridSlice = MDM.Fields[arrFieldName[0]].Fields[arrFieldName[1]].Fields[arrFieldName[2]]
+        Else
+            Set fnReturnGridSlice = Null
+        End If
+    Case 3
+        If MDM.Fields.Exist[MakeString(arrFieldName[0],"[..].",arrFieldName[1],"[..].",arrFieldName[2],"[..].",arrFieldName[3])] Then
+            Set fnReturnGridSlice = MDM.Fields[arrFieldName[0]].Fields[arrFieldName[1]].Fields[arrFieldName[2]].Fields[arrFieldName[3]]
+        Else
+            Set fnReturnGridSlice = Null
+        End If
+    Case >3
+        Debug.Log("WARNING: Currently no support for nested grids greater than 3 levels deep, such as: " + Cell)
+        Set fnReturnGridSlice = Null
+End Select
+
+End Function
+'*****************************************************************************************************************
+
+
+'!
+*****************************************************************************************************************
+    sbWriteElementExcel
+
+    Writes details of new elements to existence spec
+
+    @param1:    Question response as MDM Field Element Object
+    @param2:    Excel Cell Object
+    @param3:    Define List as MDM Type Object
+    @param4:    Excel ccolor constant
+
+*****************************************************************************************************************
+!'
+Sub sbWriteElementExcel(Element,Cell,List,Color)
+
+Dim SubElement
+If Element.isReference Then
+    For Each SubElement in Element
+        sbWriteElementExcel(SubElement,Cell,SubElement.Parent,Color)
+        Set Cell = Cell.Offset["1"]["0"]
+    Next
+End If
+
+If List is Null then
+    If Not Element.IsReference Then
+        Cell.Value = Element.FullName
+        If Color is not Null Then Cell.Interior.ColorIndex=Color
+    End If
+Else
+    If Not Element.IsReference Then
+        Cell.Value = Element.FullName
+        Cell.Offset["0"]["1"].Value = "Use " + List.Name
+        If Color is not Null Then
+            Cell.Interior.ColorIndex=Color
+            Cell.Offset["0"]["1"].Interior.ColorIndex=Color
+        End If
+    End If
+End If
+
+End Sub
+'*****************************************************************************************************************
+
+
+'!
+*****************************************************************************************************************
+    sbListFields
+
+    Adds field name to a dictionary, will include all subfields stored at lower levels
+
+    @param1:    MDM Field Element Object
+    @param2:    Dictionary Object
+
+*****************************************************************************************************************
+!'
+Sub sbListFields(Field,oDict)
+
+Dim SubField, HelperField
+Select Case Field.ObjectTypeValue
+
+    Case 0 'Variable
+        oDict.Add(Field.FullName,Field.FullName)
+
+        If Field.HelperFields.Count>0 Then
+            For Each HelperField in Field.HelperFields
+                oDict.Add(HelperField.FullName,HelperField.FullName)
+            Next
+        End If
+
+    Case 1, 2, 3, 12 'Array\Grid\Class\Compound
+
+        oDict.Add(Field.FullName,Field.FullName)
+        For Each SubField In Field.Fields
+            sbListFields(SubField,oDict)
+        Next
+
+End Select
+End Sub
+'*****************************************************************************************************************
+
+
+
+
+function fnCreateExistenceAxisSpec(mddDoc, Variable, Marker, Context, BaseDisplay, ExistenceLabel, DateDisplay)
+
+'This function will return the axis expression of the Variable passed to represent all changes to the categories within the
+'variable.
+
+'mddDoc        Metadata document
+
+'Variable      The categorical that will be tabbed with variable bases
+
+'Marker        The marker to attach to labels of categories with variable bases.
+                       'If null they will be auto generated
+                       'if marker is not null, whatever is passed will be attached to all categories
+
+'Context       Name of metadata context to check for existence information
+
+
+'BaseDisplay   Determines if categories with history will have bases displayed
+                       'True = all the bases of categories with history will be displayed as well as the next category to get back to total base
+                       'False = all the bases will be hidden, but included so percentages are correct
+
+'ExistenceLabel Determines where existence information for each element is dislayed
+                       '0 = display existence info on the base element
+                       '1 = display existence info in footnotes with marker on element
+                       '2 = display existence info in footnotes without marker on element
+
+'DateDisplay    Determines how dates will be displayed in outputs
+                       '0 = yyyymmdd  (20110422)
+                       '1 = yearweek (201116)
+                       '2 = mm/dd/yy (4/22/11)
+                       '3 = dd/mm/yy (22/4/11)
+
+
+dim oVariable           ' The MDM variable to create the axis spec for
+dim oCategory           ' A category element in the MDM variable
+dim sTempExp            ' A segment of the specification (the element base and element)
+dim sSpecification      ' The specification that is being built up (the list of elements)
+dim arrNotationMarkers[] ' array to store unique markers for foot notes
+dim ElementMarker               ' marker text
+dim MarkerCounter               ' counter to know which index to use from arrNotationMarkers[]
+dim i, j, k                     ' counters within loops
+
+'************ setting up unique annotation markers - to be uses as for footnotes ******************************
+if Marker is null then
+        'didn't pass in annotation marker - generate them
+
+        arrNotationMarkers[1]="*"
+        arrNotationMarkers[2]="#"
+        arrNotationMarkers[3]="@"
+        arrNotationMarkers[4]="+"
+        arrNotationMarkers[5]="^"
+        arrNotationMarkers[6]="~"
+        arrNotationMarkers[7]="`"
+        arrNotationMarkers[8]="&"
+        arrNotationMarkers[9]=">"
+        arrNotationMarkers[10]="<"
+
+        'arrNotationMarkers [ 11 - 110 ] will be set in loop below
+
+        for i = 1 to 10
+                for j = 1 to 10
+                        k = (i * 10) + j 'i should be multiplied by the number of unique markers in array above
+                        arrNotationMarkers[k] = ctext(arrNotationMarkers[i]) + arrNotationMarkers[j] 'remember to always skip the first one since it will be blank
+                        'debug.Log(ctext(k) + " = " + ctext(arrNotationMarkers[k]))
+                next
+        next
+
+
+
+end if
+MarkerCounter = 1
+'*****************************************************************************************************
+dim Depth
+dim arrHistory
+dim change
+dim arrChange
+dim blnHistory
+dim sUpLev
+dim sHide
+dim sTempLabel
+dim sTempVariableLabel
+dim sTempVariableLabel1
+dim sVariableFootNote
+dim sFootNote
+dim sTempFootNote
+dim sDate
+dim dDate
+dim sDateLabel
+dim blnExistence
+dim arrFields
+dim oField
+
+if BaseDisplay = False then
+        sHide = " [ishidden=true]"
+
+else
+        sHide = ""
+end if
+
+blnExistence = False
+Set oVariable = mddDoc.Fields[Variable]
+
+
+
+
+    select case oVariable.LevelDepth
+        case 1
+                Depth = 0
+                sUpLev = ""
+        case 2
+                Depth = 1
+                sUpLev = "^."
+        case 3
+                Depth = 2
+                sUpLev = "^.^."
+        case 4
+                Depth = 3
+                sUpLev = "^.^.^."
+        case 5
+                Depth = 4
+                sUpLev = "^.^.^.^."
+                case else
+                        debug.Log("need to add more depth options - " + oVariable.FullName)
+        end select
+
+'******************************************************
+
+
+
+        sFootnote = ""
+        'loop through all the fields that make up this variable
+        set arrFields = split(ovariable.fullname,"[..].")
+        set oField = mddDoc
+
+        for i = 0 to ubound(arrFields)
+                set oField = oField.fields[arrFields[i]]
+
+                if oField.properties.item["HasHistory"][Context]=True then
+                        sSpecification = "base()"
+                        sTempVariableLabel = ""
+                        sTempVariableLabel1 = ""
+                        sVariableFootNote = ""
+
+
+                        set arrHistory = split(oField.properties.item["History"][Context],",")
+                        for each change in arrHistory
+                                        sDateLabel = fnGetDateLabel(change,DateDisplay)
+                                        set arrChange = split(change,":")
+                                        if ucase(arrChange[0]) = "OFF" then
+                                        sTempVariableLabel = sTempVariableLabel + " removed " + sDateLabel + ", "
+                                else
+                                        sTempVariableLabel = sTempVariableLabel + " added " + sDateLabel + ", "
+                                end if
+                        next
+
+                if sTempVariableLabel <> "" then
+                        sTempVariableLabel = oField.name + " - Variable '" + oField.name + "'" + left(sTempVariableLabel,len(sTempVariableLabel) - 2) + ";"
+                        oVariable.Properties.Item["VariableExistenceLabel"][CONTEXT] = Ctext(oVariable.Properties.Item["VariableExistenceLabel"][CONTEXT]) + " " + sTempVariableLabel
+                        blnExistence = True
+                end if
+                ''***********
+                sTempVariableLabel = ""
+
+                For Each oCategory In oField.Categories
+                        ElementMarker = ""
+                                sTempExp = ""
+                                sTempLabel = ""
+                                sTempVariableLabel1 = ""
+                                sTempFootNote = ""
+
+                        'if oCategory.properties.item["History"][Context] is not null then
+                        if oCategory.properties.item["History"][Context] is not null  or oCategory.properties.item[oField.name + "History"][Context] is not null then
+                                        if oField.fullname = oVariable.fullname then
+                                                'only do this when at the last field of the variable
+                                                if Marker <>"" then
+                                                        for j = 1 to MarkerCounter
+                                                        ElementMarker = ElementMarker + Marker
+                                        next
+                                        else
+                                                ElementMarker = arrNotationMarkers[MarkerCounter]
+                                        end if
+
+                                                blnExistence = True
+                                                MarkerCounter = MarkerCounter + 1
+                                                blnHistory = True 'set this to true to be used as check for next category
+                                                if ExistenceLabel = 1 then
+                                                        sFootNote = sFootNote + ElementMarker
+                                                end if
+                                        end if
+
+                                        if oCategory.properties.item[oField.name + "History"][Context] is not null then
+                                                'use question specific property if it exists, otherwise use the generic history property
+                                                set arrHistory = split(oCategory.properties.item[oField.name + "History"][Context],",")
+                                        else
+                                                set arrHistory = split(oCategory.properties.item["History"][Context],",")
+                                        end if
+
+                                        for each change in arrHistory
+                                                sDateLabel = fnGetDateLabel(change,DateDisplay)
+                                                set arrChange = split(trim(change),":")
+
+                                                if ucase(arrChange[0]) = "OFF" then
+                                                        'sTempExp = sTempExp + iif(sTempExp <> ""," and ","") + sUpLev + "yyyymmdd<" + ctext(arrChange[1])
+                                                        sTempExp = sTempExp + iif(sTempExp <> ""," and ","") + sUpLev + "yyyymmdd<" + ctext(arrChange[1])
+                                                        if ExistenceLabel = 0 then
+                                                                sTempLabel = sTempLabel + iif(sTempLabel <> "",", Removed ","Removed ") + sDateLabel
+                                                        end if
+                                                        if oField.fullname = oVariable.fullname then
+                                                                sTempFootNote = sTempFootNote + "removed " + sDateLabel + ", "
+                                                        end if
+                                                        if oField.fullname <> oVariable.fullname then
+                                                                sTempVariableLabel1 = sTempVariableLabel1 + "removed " + sDateLabel + ", "
+                                                        end if
+                                                elseif ucase(arrChange[0])="ON" then
+                                                        'sTempExp = sTempExp + iif(sTempExp <> ""," or ","") + sUpLev + "yyyymmdd>=" + ctext(arrChange[1])
+                                                        sTempExp = sTempExp + iif(sTempExp <> ""," or ","") + sUpLev + "yyyymmdd>=" + ctext(arrChange[1])
+                                                        if ExistenceLabel = 0 then
+                                                                sTempLabel = sTempLabel + iif(sTempLabel <> "",", Added ","Added ") + sDateLabel
+                                                        end if
+                                                        if oField.fullname = oVariable.fullname then
+                                                                sTempFootNote = sTempFootNote + "added " + sDateLabel + ", "
+                                                        end if
+                                                        if oField.fullname <> oVariable.fullname then
+                                                                sTempVariableLabel1 = sTempVariableLabel1 + "added " + sDateLabel + ", "
+                                                        end if
+                                                end if
+                                        next
+
+                                        'sTempVariableLabel = ocategory.label + " - Iteration '" + oCategory.label + "' " + left(sTempVariableLabel1,len(sTempVariableLabel1)-2) + ";"
+                                        sTempVariableLabel = ocategory.name + " - Iteration '" + oCategory.label + "' " + left(sTempVariableLabel1,len(sTempVariableLabel1)-2) + ";"
+
+                                        'debug.Log(sTempVariableLabel)
+                                        if ExistenceLabel = 2 then
+                                                if oField.fullname = oVariable.fullname then
+                                                        sTempFootNote = oCategory.label + " " + sTempFootNote
+                                                end if
+'                                               if oField.fullname <> oVariable.fullname then
+'                                                       sTempVariableLabel = oCategory.name + " - " + oCategory.label + " " + sTempVariableLabel
+'                                               end if
+                                        end if
+                                        sTempFootNote =ucase(left(sTempFootNote,1)) + mid(sTempFootNote,1)
+                                        sTempFootNote = left(sTempFootNote,len(sTempFootNote)-2) + "<br />"
+                                        sFootNote = sFootNote + sTempFootNote
+
+                                        if oField.fullname <> oVariable.fullname then
+                                                'sTempVariableLabel =ucase(left(sTempVariableLabel,1)) + mid(sTempVariableLabel,1)
+                                                'sTempVariableLabel = left(sTempVariableLabel,len(sTempVariableLabel)-2) + "<br />"
+                                                'sTempVariableLabel = ocategory.label + " - Iteration '" + oCategory.label + "' " + left(sTempVariableLabel,len(sTempVariableLabel)-2) + ";"
+                                                sVariableFootNote = sVariableFootNote + sTempVariableLabel
+                                                debug.Log(sVariableFootNote)
+                                        end if
+
+                                        sSpecification = sSpecification + ", base_" + oCategory.name + " 'Base" + iif(sTempLabel <> "",":  ","") + sTempLabel + "' base('" + sTempExp + "')" + sHide + ", " + oCategory.name + iif(ExistenceLabel = 1," '" + oCategory.label + ElementMarker + "'","")
+                                else
+                                        if blnHistory = True then
+                                                'category before this had variable base so need to set back to full base
+                                                sSpecification = sSpecification + ", " + ocategory.name + "_base 'Base' base() " + sHide + ", " + oCategory.name
+                                        else
+                                                sSpecification = sSpecification + ", " + oCategory.name
+                                        end if
+                                        blnHistory = False
+                                end if
+
+                        next
+                if ExistenceLabel <> 0 then
+                        'info goes in the footnotes
+                        if oField.fullname = oVariable.fullname then
+                                        oVariable.Properties.Item["CategoryExistenceLabel"][CONTEXT] = Ctext(oVariable.Properties.Item["CategoryExistenceLabel"][CONTEXT]) + sFootNote
+                                end if
+                        end if
+                        'if oField.fullname <> oVariable.fullname then
+                        oVariable.Properties.Item["VariableExistenceLabel"][CONTEXT] = Ctext(oVariable.Properties.Item["VariableExistenceLabel"][CONTEXT]) + sVariableFootNote
+                        'end if
+
+
+                else
+
+                        sSpecification = ""
+
+                end if
+
+        next
+
+        if blnExistence = False then
+                'there were no categories with history properties - no need to create output
+                sSpecification = ""
+        end if
+
+        fnCreateExistenceAxisSpec = "{" + sSpecification + "}"
+        'debug.Log(oVariable.fullname + " = " + fnCreateExistenceAxisSpec)
+        'debug.Log(oVariable.Properties.Item["VariableExistenceLabel"][CONTEXT])
+End function
+
+
+
+function fnStripIterations(VarName)
+
+'this function returns the names of all fields included in a variable fullname
+
+'VarName        text string that will be parsed
+
+        'q1[{pepsi}].imagery[{tastesgreat}].slice returns 'q1.imagery.slice'
+
+'*************************************************************************************************************************
+'*************************************************************************************************************************
+'*************************************************************************************************************************
+
+
+    Dim objRegExp       ' Regular Expression Object
+
+    ' Create built In Regular Expression object
+    set objRegExp = CreateObject("VBScript.RegExp")
+    objRegExp.Global = True
+    ' Set the pattern To look For  tags
+    objRegExp.Pattern = "\[[^\]]*\]"
+
+    ' Return the original String stripped of iteration information
+    fnStripIterations = objRegExp.Replace(varname, "")
+
+    Set objRegExp = null
+
+End function
+
+function fnGetWeek(CalendarDate)
+
+        Dim N, Thu, SoY, YNo, WNo
+        Dim weekno
+        N = 2
+        Thu = Int((Cdouble(CalendarDate) + 3 + N) / 7) * 7 - N '' Nearest Thu
+        YNo = DatePart(Thu,"yyyy")
+        SoY = CDate("01/01/"+CText(YNo))'' Date, YYYY-01-01
+        WNo = Int((Thu - CDouble(SoY)) / 7) + 1
+        fnGetWeek = CText(YNo) + right("0" + CText(WNo),2)
+
+End function
+
+function fnGetDateLabel(change, DateDisplay)
+        dim arrChange
+        dim dDate
+        dim sDate
+        dim sDateLabel
+
+        dDate = ""
+        sDateLabel = ""
+        set arrChange = split(change,":")
+        sDate = trim(arrChange[1])
+        dDate = cdate(left(sDate,4) + "-" + mid(sDate,4,2) + "-" + mid(sDate,6))
+        if DateDisplay = 0 then
+                'no change needed
+                sDateLabel = arrChange[1]
+        elseif DateDisplay = 1 then
+                sDateLabel = fnGetWeek(dDate)
+        elseif DateDisplay = 2 then
+                sDateLabel = ctext(datepart(dDate,"m")) + "/" + ctext(datepart(dDate,"d")) + "/" + right(ctext(datepart(dDate,"yyyy")),2)
+        elseif DateDisplay = 3 then
+                sDateLabel = ctext(datepart(dDate,"d")) + "/" + ctext(datepart(dDate,"m")) + "/" + right(ctext(datepart(dDate,"yyyy")),2)
+        end if
+
+        fnGetDateLabel = sDateLabel
+end function
