@@ -136,11 +136,11 @@ preKeywords.forEach(kw => {
 
 const builtInCompletions: CompletionItem[] = [];
 
-if (builtInModule) {
-    setBuiltInCompletions(builtInModule.dims,      CompletionItemKind.Variable);
-    setBuiltInCompletions(builtInModule.consts,    CompletionItemKind.Variable);
-    setBuiltInCompletions(builtInModule.functions, CompletionItemKind.Function);
-    setBuiltInCompletions(builtInModule.macros,    CompletionItemKind.Variable);
+if (builtInModule.scope) {
+    setBuiltInCompletions(builtInModule.scope.dims,      CompletionItemKind.Variable);
+    setBuiltInCompletions(builtInModule.scope.consts,    CompletionItemKind.Variable);
+    setBuiltInCompletions(builtInModule.scope.functions, CompletionItemKind.Function);
+    setBuiltInCompletions(builtInModule.scope.macros,    CompletionItemKind.Variable);
 }
 
 function setBuiltInCompletions(
@@ -179,6 +179,7 @@ function getCompletionTypeFromDeclare(dec: DeclarationBase): CompletionItemKind 
         case "EnumDeclaration":              return CompletionItemKind.Enum;
         case "SingleVarDeclarator":          return CompletionItemKind.Variable;
         case "ArrayDeclarator":              return CompletionItemKind.Variable;
+        case "ArgumentDeclarator":           return CompletionItemKind.Variable;
         default:                             return CompletionItemKind.Text;
     }
 }
@@ -251,10 +252,17 @@ function getDefaultNote(dec: DeclarationBase): string {
 
         case "SingleVarDeclarator":
             const dim = dec as SingleVarDeclarator;
+
+            if (dec.treeParent?.type === "ArgumentDeclarator") {
+                return "```ds\n" + `(parameter) ${getDeclaratorNote(dim)}\n` + "```";
+            }
             return "```ds\n" + `(variable) ${getDeclaratorNote(dim)}\n` + "```";
 
         case "ArrayDeclarator":
             const arr = dec as ArrayDeclarator;
+            if (dec.treeParent?.type === "ArgumentDeclarator") {
+                return "```ds\n" + `(parameter) ${getDeclaratorNote(arr)}\n` + "```";
+            }
             return "```ds\n" + `(variable) ${getDeclaratorNote(arr)}\n` + "```";
 
         case "MacroDeclaration":
@@ -337,8 +345,8 @@ function getDeclarationFromFileOrBuiltIn(
     name: string,
     namespace?: string | NamespaceDeclaration) {
     let find: DeclarationBase | undefined;
-    if (builtInModule) {
-        find = getDeclarationFromScope(builtInModule, name, namespace);
+    if (builtInModule.scope) {
+        find = getDeclarationFromScope(builtInModule.scope, name, namespace);
     }
     if (!find && file.scope) {
         find = getDeclarationFromScope(file.scope, name, namespace);
@@ -405,10 +413,10 @@ function getMemberCompletions(dec: DeclarationBase, file: File): CompletionItem[
             }
             bindingType = find;
         } else if (dec.type === "ArrayDeclarator") {
-            if (!builtInModule) {
+            if (!builtInModule.scope) {
                 return [];
             }
-            let arr = getDeclarationFromScope(builtInModule, "Array");
+            let arr = getDeclarationFromScope(builtInModule.scope, "Array");
             if (!arr) {
                 return [];
             }

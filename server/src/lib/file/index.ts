@@ -1,7 +1,7 @@
 import * as path from "path";
 import { createBasicOptions, SourceType } from "../options";
 import { Parser } from "../parser";
-import { loadDecarationFiles } from "../util/declaration";
+import { DeclarationLoadResult, loadDecarationFiles } from "../util/declaration";
 import { mergeScope, Scope } from "../util/scope";
 import {
     createParserFileNode,
@@ -12,6 +12,7 @@ import {
     getAllUsefulFile,
     getFileReferenceMark,
     getFileTypeMark,
+    mergeMap,
 } from "./util";
 
 
@@ -31,16 +32,26 @@ export class ParserFileDigraph {
 
     startPath?: string;
 
-    constructor(folder: string, global?: Scope) {
+    constructor(folder: string, global?: DeclarationLoadResult) {
         this.folder = folder;
-        this.global = global;
+        this.global = global?.scope;
+        if (global) {
+            global.contents.forEach((v, k) => {
+                let fileNode = createParserFileNode(k, v);
+                fileNode.file = global.files.get(k);
+                this.nodeMap.set(k, fileNode);
+            });
+        }
     }
 
     init() {
         const fileMap = getAllUsefulFile(this.folder);
         const nodes: Map<string, ParserFileNode> = new Map();
         const declares: Map<string, string> = new Map();
+
+        // 读取文件夹内所有文件的内容
         fileMap.forEach((value, key) => {
+            // 区分是否为声明文件(.d.mrs)
             if (key.endsWith(".d.mrs")) {
                 declares.set(key, value);
             } else {
@@ -50,23 +61,27 @@ export class ParserFileDigraph {
                 nodes.set(key, node);
             }
         });
-        const local = loadDecarationFiles(declares);
+
+        // 读取本地声明文件内容
+        const load = loadDecarationFiles(declares);
+
+        const local = load.scope;
         if (!this.global && local) {
             this.global = local;
         } else if (this.global && local) {
             mergeScope(local, this.global);
         }
-        this.nodeMap = nodes;
-        this.buildGraph();
+        mergeMap(this.nodeMap, nodes);
+        this.buildGraph(nodes);
     }
 
-    buildGraph() {
+    buildGraph(nodes: Map<string, ParserFileNode>) {
         this.vertex = [];
-        this.nodeMap.forEach((value, key) => {
+        nodes.forEach((value, key) => {
             const refs = getAllIncludeInFile(value.content);
             refs.forEach(p => {
                 const fullPath = path.join(path.dirname(key), p).toLowerCase();
-                const existNode = this.nodeMap.get(fullPath);
+                const existNode = nodes.get(fullPath);
                 if (existNode) {
                     existNode.referenced.set(key.toLowerCase(), value);
                     value.include.set(fullPath.toLowerCase(), existNode);
@@ -75,14 +90,14 @@ export class ParserFileDigraph {
             const mark = value.fileReferenceMark;
             if (mark) {
                 const refPath = path.join(path.dirname(value.filePath), mark.path).toLowerCase();
-                const refNode = this.nodeMap.get(refPath);
+                const refNode = nodes.get(refPath);
                 if (refNode) {
                     refNode.include.set(key.toLowerCase(), value);
                     value.referenced.set(refPath.toLowerCase(), refNode);
                 }
             }
         });
-        this.nodeMap.forEach((value) => {
+        nodes.forEach((value) => {
             if (value.referenced.size === 0 &&
                 value.include.size > 0) {
                 value.isVertex = true;

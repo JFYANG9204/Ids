@@ -51,7 +51,7 @@ export function getAllUsefulFile(folder: string): Map<string, string> {
  * @param base
  * @param target
  */
-function mergeMap<T1, T2>(base: Map<T1, T2>, target: Map<T1, T2>) {
+export function mergeMap<T1, T2>(base: Map<T1, T2>, target: Map<T1, T2>) {
     target.forEach((value, key) => {
         if (!base.has(key)) {
             base.set(key, value);

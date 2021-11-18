@@ -1,6 +1,7 @@
 import { fileURLToPath } from "url";
-import { _Connection } from "vscode-languageserver";
+import { TextDocuments, _Connection } from "vscode-languageserver";
 import {
+    Position,
     TextDocument
 } from "vscode-languageserver-textdocument";
 import { raiseErrors } from "./errors";
@@ -8,6 +9,7 @@ import {
     getCurrentParser,
     getFileTypeMark,
     ParserFileDigraph,
+    positionAt,
     readFileAndConvertToUtf8
 } from "./lib/file";
 import { createBasicOptions } from "./lib/options";
@@ -73,5 +75,24 @@ export function createSingleParser(path: string, content?: string, uri?: string)
     if (!text) {
         text = readFileAndConvertToUtf8(path);
     }
-    return new Parser(createBasicOptions(path, false, uri, builtInModule), text);
+    return new Parser(createBasicOptions(path, false, uri, builtInModule.scope), text);
 }
+
+export function getNodeFromDocPos(
+    docmuents: TextDocuments<TextDocument>,
+    uri: string,
+    pos: Position,
+    fileMap: Map<string, File>,
+    untilId: boolean = false) {
+    const doc = docmuents.get(uri);
+    if (!doc) {
+        return null;
+    }
+    const position = doc.offsetAt(pos);
+    let curFile = fileMap.get(fileURLToPath(uri).toLowerCase());
+    if (!curFile) {
+        return null;
+    }
+    return positionAt(curFile.program.body, position, untilId, 0);
+}
+

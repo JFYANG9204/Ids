@@ -413,7 +413,18 @@ export class TypeUtil extends UtilParser {
         }
         //
         if (this.matchType(left, right, expr.right)) {
-            return left.toLowerCase() === "variant" ? rightReturn.type : leftReturn.type;
+            let namespace: NamespaceDeclaration | string | undefined;
+            if (rightReturn.type instanceof SingleVarDeclarator) {
+                if (typeof rightReturn.type.binding === "string") {
+                    namespace = rightReturn.type.binding;
+                } else {
+                    namespace = rightReturn.type.binding.namespace;
+                }
+            }
+            return left.toLowerCase() === "variant" ?
+                rightReturn.type :
+                this.getMaybeBindingType(
+                    leftReturn.type, namespace);
         } else {
             return this.getVariant();
         }
@@ -569,12 +580,14 @@ export class TypeUtil extends UtilParser {
                     (parent as ClassOrInterfaceDeclaration));
             }
             if (!child) {
-                this.raiseAtNode(
-                    prop,
-                    ErrorMessages["MissingProperty"],
-                    false,
-                    (prop as Identifier).name
-                );
+                if (!this.scope.inFunction && this.options.raiseTypeError) {
+                    this.raiseAtNode(
+                        prop,
+                        ErrorMessages["MissingProperty"],
+                        false,
+                        (prop as Identifier).name
+                    );
+                }
                 return this.getVariant();
             }
             return child;
@@ -690,7 +703,7 @@ export class TypeUtil extends UtilParser {
         }
 
         if (!objType) {
-            if (this.options.raiseTypeError) {
+            if (!this.scope.inFunction && this.options.raiseTypeError) {
                 this.raiseAtNode(
                     callee.type === "Identifier" ?
                     callee : (callee as MemberExpression).property,
@@ -700,12 +713,14 @@ export class TypeUtil extends UtilParser {
             }
             return this.getVariant();
         } else if (objType.type !== "FunctionDeclaration") {
-            this.raiseAtNode(
-                callee.type === "Identifier" ?
-                callee : (callee as MemberExpression).property,
-                ErrorMessages["IdentifierIsNotFunction"],
-                false,
-                funcName);
+            if (!this.scope.inFunction && this.options.raiseTypeError) {
+                this.raiseAtNode(
+                    callee.type === "Identifier" ?
+                    callee : (callee as MemberExpression).property,
+                    ErrorMessages["IdentifierIsNotFunction"],
+                    false,
+                    funcName);
+            }
             return this.getVariant();
         }
 
@@ -752,7 +767,8 @@ export class TypeUtil extends UtilParser {
             }
             index++;
         }
-        if (args.length < params.length && !cur) {
+        if (args.length < params.length && !cur &&
+            !this.scope.inFunction && this.options.raiseTypeError) {
             this.raiseAtNode(callExpr,
                 ErrorMessages["IncorrectFunctionArgumentNumber"],
                 false,
@@ -932,22 +948,11 @@ export class TypeUtil extends UtilParser {
             !funcDeclare.binding) {
             return;
         }
-        if (argType === funcDeclare.binding) {
+        if (argType === funcDeclare.binding && !this.options.raiseTypeError &&
+            !this.scope.inFunction) {
             this.raiseAtNode(func, WarningMessages["RedundantTypeConvertion"], true);
         }
     }
 
-    createSingleDeclaratorFromDeclaration(
-        base: SingleVarDeclarator,
-        valueType: string): SingleVarDeclarator {
-        const node = new SingleVarDeclarator(this, base.start, base.loc.start);
-        node.loc = base.loc;
-        node.end = base.end;
-        node.type = base.type;
-        node.name = base.name;
-        node.namespace = base.namespace;
-        node.enumerable = base.enumerable;
-        return node;
-    }
 }
 

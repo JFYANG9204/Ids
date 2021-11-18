@@ -20,6 +20,7 @@ export type RaiseFunction = (node: NodeBase, template: ErrorTemplate, warning: b
 export enum ScopeFlags {
     program,
     function,
+    enumerator,
     classOrInterface,
     namespace,
     event
@@ -92,6 +93,10 @@ export class ScopeHandler {
 
     get inClassOrInterface() {
         return this.currentScope().flags === ScopeFlags.classOrInterface;
+    }
+
+    get inEnumerator() {
+        return this.currentScope().flags === ScopeFlags.enumerator;
     }
 
     get inNameSpace() {
@@ -210,6 +215,12 @@ export class ScopeHandler {
         name: string,
         node: NodeBase
     ) {
+        if (this.inClassOrInterface || this.inEnumerator) {
+            if (this.isRedeclared(scope, name)) {
+                this.raise(node, ErrorMessages["VarRedeclaration"], false, name);
+            }
+            return;
+        }
         if (this.isRedeclared(scope, name) ||
             this.isRedeclared(this.global, name) ||
             this.isRedeclared(this.store, name)) {
@@ -223,8 +234,7 @@ export class ScopeHandler {
                scope.consts.has(checkName)    ||
                scope.dims.has(checkName)      ||
                scope.functions.has(checkName) ||
-               scope.macros.has(checkName)    ||
-               scope.namespaces.has(checkName);
+               scope.macros.has(checkName);
     }
 
     isConst(name: string) {
@@ -257,6 +267,8 @@ export class ScopeHandler {
         if (this.currentScope().withHeader.length > 0) {
             this.currentScope().currentHeader =
                 this.currentScope().withHeader[this.currentScope().withHeader.length - 1];
+        } else {
+            this.currentScope().currentHeader = undefined;
         }
     }
 

@@ -405,6 +405,7 @@ export class StatementParser extends ExpressionParser {
             this.expect(tt.braceR);
             node.enumerable = true;
         }
+        node.push(node.name);
         this.finishNode(node, "BindingDeclarator");
         if (node.namespace || node.enumerable) {
             return node;
@@ -1039,6 +1040,7 @@ export class StatementParser extends ExpressionParser {
         node.pushArr(node.params);
         this.scope.exit();
         this.scope.declareName(node.name.name, BindTypes.function, node);
+        this.addExtra(node.name, "declaration", node);
         return this.finishNode(node, "FunctionDeclaration");
     }
 
@@ -1135,11 +1137,10 @@ export class StatementParser extends ExpressionParser {
         if (typeof node.binding !== "string") {
             node.push(node.binding);
         }
-        const ahead = this.lookahead();
-        if (ahead.type === tt.equal) {
+        if (this.match(tt.equal)) {
             this.next();
             node.init = this.parseExpression();
-        } else if (ahead.type === tt._get || ahead.type === tt._set) {
+        } else if (this.matchOne([ tt._get, tt._set ])) {
             while (!this.eat(tt._end)) {
                 if (this.match(tt._get)) {
                     if (node.get) {
@@ -1163,7 +1164,10 @@ export class StatementParser extends ExpressionParser {
             }
             this.expect(tt._property);
         }
-        return this.finishNode(node, "PropertyDeclaration");
+        return this.finishNodeAt(node,
+            "PropertyDeclaration",
+            this.state.lastTokenEnd,
+            this.state.lastTokenEndLoc);
     }
 
     parseClassOrInterface(): ClassOrInterfaceDeclaration {
@@ -1239,9 +1243,13 @@ export class StatementParser extends ExpressionParser {
         const node = this.startNode(EnumDeclaration);
         this.next();
         node.name = this.parseIdentifier();
+        this.scope.enter(ScopeFlags.enumerator);
         while (!this.eat(tt._end)) {
-            node.enumItems.push(this.parseEnumItemDeclarator());
+            const item = this.parseEnumItemDeclarator();
+            this.scope.declareName(item.name.name, BindTypes.const, item);
+            node.enumItems.push(item);
         }
+        this.scope.exit();
         node.pushArr(node.enumItems);
         this.expect(tt._enum);
         this.scope.declareName(node.name.name, BindTypes.const, node);
@@ -1314,6 +1322,7 @@ export class StatementParser extends ExpressionParser {
         this.next();
         const includeFilePath = this.parseExpression();
         this.finishNode(node, "PreIncludeStatement");
+        let search;
         if (includeFilePath instanceof StringLiteral) {
             node.inc = includeFilePath;
             try {
@@ -1323,7 +1332,6 @@ export class StatementParser extends ExpressionParser {
             } catch (error) {
                 return node;
             }
-            let search;
             if (this.searchParserNode &&
                 (search = this.searchParserNode(node.path))) {
                 node.parser = new Parser(
@@ -1384,6 +1392,9 @@ export class StatementParser extends ExpressionParser {
             node.parser.fileName = node.parser.options.sourceFileName = node.path;
             let headerDef = this.scope.currentScope().currentHeader;
             node.file = node.parser.parse(this.scope.store, headerDef);
+            if (search) {
+                search.file = node.file;
+            }
             this.state.includes.set(node.path.toLowerCase(), node.file);
             this.scope.joinScope(node.file.scope);
             if (node.file.errors.length > 0) {

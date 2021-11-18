@@ -1,5 +1,5 @@
-import { fileURLToPath } from "url";
-import { TextDocument } from "vscode-languageserver-textdocument";
+import { fileURLToPath, pathToFileURL } from "url";
+import { Position, TextDocument } from "vscode-languageserver-textdocument";
 import {
     CompletionItem,
     createConnection,
@@ -15,6 +15,7 @@ import {
     CallExpression,
     DeclarationBase,
     File,
+    PreIncludeStatement,
 } from "./lib/types";
 import {
     builtInCompletions,
@@ -26,11 +27,10 @@ import {
     preKeywordsCompletions
 } from "./completion";
 import {
+    getNodeFromDocPos,
+    raiseErrorsFromFile,
     updateAndVaidateDocument,
 } from "./util";
-import {
-    positionAt,
-} from "./lib/file/util";
 import { builtInModule } from "./lib/util/declaration";
 
 let connection = createConnection(ProposedFeatures.all);
@@ -51,7 +51,8 @@ connection.onInitialize((params) => {
             hoverProvider: true,
             signatureHelpProvider: {
                 triggerCharacters: [ "(", "," ]
-            }
+            },
+            definitionProvider: true,
         }
     };
     if (params.workspaceFolders) {
@@ -103,16 +104,14 @@ connection.onCompletionResolve(
 
 connection.onHover(params => {
     let hover: Hover | undefined = undefined;
-    const document = documents.get(params.textDocument.uri);
-    if (!document) {
+    const node = getNodeFromDocPos(documents,
+        params.textDocument.uri,
+        params.position,
+        current,
+        true);
+    if (node === null) {
         return hover;
     }
-    let currentFile = current.get(fileURLToPath(params.textDocument.uri).toLowerCase());
-    if (!currentFile) {
-        return hover;
-    }
-    const pos = document.offsetAt(params.position);
-    const node = positionAt(currentFile.program.body, pos, true, 0);
     let dec: DeclarationBase | undefined = node.extra["declaration"];
     if (dec) {
         hover = getHoverFromDeclaration(dec);
@@ -121,16 +120,13 @@ connection.onHover(params => {
 });
 
 connection.onSignatureHelp(params => {
-    const doc = documents.get(params.textDocument.uri);
-    if (!doc) {
+    const node = getNodeFromDocPos(documents,
+        params.textDocument.uri,
+        params.position,
+        current);
+    if (!node) {
         return null;
     }
-    const pos = doc.offsetAt(params.position);
-    let curFile = current.get(fileURLToPath(params.textDocument.uri).toLowerCase());
-    if (!curFile) {
-        return null;
-    }
-    const node = positionAt(curFile.program.body, pos, false, 0);
     if (node.type === "CallExpression") {
         const func = node as CallExpression;
         return getSignatureHelpFromFunction(func);
@@ -138,11 +134,44 @@ connection.onSignatureHelp(params => {
     return null;
 });
 
+connection.onDefinition(params => {
+    const node = getNodeFromDocPos(documents,
+        params.textDocument.uri,
+        params.position,
+        current,
+        true);
+    if (!node) {
+        return null;
+    }
+    let uri;
+    if (node.type === "PreIncludeStatement") {
+        const pre = node as PreIncludeStatement;
+        uri = pathToFileURL(pre.path).toString();
+        let start: Position = { line: 0, character: 0 };
+        let end : Position = { line: 0, character: 0 };
+        return { uri, range: { start, end } };
+    }
+    const dec: DeclarationBase | undefined = node.extra["declaration"];
+    if (!dec || !dec.loc.fileName) {
+        return null;
+    }
+    uri = pathToFileURL(dec.loc.fileName).toString();
+    let start: Position = { line: dec.name.loc.start.line - 1, character: dec.name.start };
+    let end: Position = { line: dec.name.loc.end.line - 1, character: dec.name.end };
+    return { uri, range: { start, end } };
+});
+
 documents.onDidChangeContent(change => {
     updateAndVaidateDocument(change.document, connection, current, last, graph);
 });
 
 documents.onDidOpen(listener => {
+    let path = fileURLToPath(listener.document.uri).toLowerCase();
+    let exist;
+    if (graph && (exist = graph.getData(path))) {
+        raiseErrorsFromFile(connection, listener.document, exist.file);
+        return;
+    }
     updateAndVaidateDocument(listener.document, connection, current, last, graph);
 });
 
