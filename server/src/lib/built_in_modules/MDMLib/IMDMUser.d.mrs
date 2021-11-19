@@ -1,0 +1,17 @@
+
+Namespace MDMLib
+
+    Interface MDMUser Implements Object
+
+        Sub Die()
+        End Sub
+
+        Property Comment() As String
+
+        ReadOnly Property FileVersion() As String
+
+        ReadOnly Property Name() As String
+
+    End Interface
+
+End Namespace

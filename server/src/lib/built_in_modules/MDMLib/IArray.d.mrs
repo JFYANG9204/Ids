@@ -1,0 +1,110 @@
+
+Namespace MDMLib
+
+    Interface IArray Implements Object
+
+        Property AxisExpression() As String
+
+        Property Categories() As ICategories
+
+        Property Class() As IClass
+
+        Property CurrentIndexPath() As String
+
+        ReadOnly Property DataSourceProperties() As IProperties
+
+        Property DefaultAnswer() As Variant
+
+        Property DeriveElements() As Boolean
+
+        Property Document() As IDocument
+
+        Property Elements() As IElements
+
+        Property Expression() As IArray
+
+        ReadOnly Property Fields() As ITypes
+
+        ReadOnly Property FullLabel() As ILabel
+
+        ReadOnly Property FullName() As String
+
+        ReadOnly Property HasDefaultAnswer() As Boolean
+
+        ReadOnly Property HasInitialAnswer() As Boolean
+
+        ReadOnly Property HelperFields() As ITypes
+
+        ReadOnly Property Indices() As IElementInstances
+
+        Property InitialAnswer() As Variant
+
+        Property IsGrid() As Boolean
+
+        ReadOnly Property IsReference() As Boolean
+
+        ReadOnly Property IsSystem() As Boolean
+
+        ReadOnly Property IsValid() As Boolean
+
+        ReadOnly Property Items() As ITypes
+
+        Property IteratorType() As IteratorTypeConstants
+
+        Property Label() As String
+
+        ReadOnly Property Labels(Index As Variant) As ILabel
+
+        ReadOnly Property LabelStyle(Index As Variant) As IStyle
+
+        ReadOnly Property Level() As ILevel
+
+        ReadOnly Property LevelDepth() As Long
+
+        Property LowerBound() As Variant
+
+        Property Name() As String
+
+        ReadOnly Property Notes() As INotes
+
+        ReadOnly Property ObjectTypeValue() As ObjectTypesConstants
+
+        Property Orientation() As OrientationConstants
+
+        ReadOnly Property OtherCategories() As ICategories
+
+        ReadOnly Property Parent() As IMDMObject
+
+        ReadOnly Property Properties() As IProperties
+
+        ReadOnly Property Ranges() As IRanges
+
+        ReadOnly Property Reference() As IArray
+
+        Property ReferenceName() As String
+
+        ReadOnly Property RelativeName() As String
+
+        Property Script(Index As Variant) As Variant
+
+        ReadOnly Property Size() As Long
+
+        ReadOnly Property Style(Index As Variant) As IStyle
+
+        ReadOnly Property Templates(Index As Variant) As ITemplates
+
+        Property Type() As ArrayTypeConstants
+
+        Property UpperBound() As Variant
+
+        ReadOnly Property UUID() As String
+
+        ReadOnly Property Variables() As IVariables
+
+        Property Versioned() As Boolean
+
+        ReadOnly Property VersionsInfo() As IVersionsInfo
+
+    End Interface
+
+End Namespace

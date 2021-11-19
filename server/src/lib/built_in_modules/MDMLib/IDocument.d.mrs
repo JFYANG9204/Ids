@@ -1,9 +1,9 @@
 
 Namespace MDMLib
 
-    Interface IDocument
+    Interface IDocument Implements Object
 
-        Sub AddUser(Name As String, FileVersion As String, Comment As String) As MDMUser
+        Sub AddUser(Name As String, FileVersion As String, Comment As String) As IMDMUser
         End Sub
 
         Sub Clear()
@@ -12,7 +12,92 @@ Namespace MDMLib
         Sub Close()
         End Sub
 
+        Function CreateArray(Name As String, Optional Label As String = "") As IArray
+        End Function
 
+        Function CreateClass(Name As String, Optional Label As String = "") As IClass
+        End Function
+
+        Function CreateCompound(Name As String, Optional Label As String = "") As ICompound
+        End Function
+
+        Function CreateDBQuestion(Name As String, DBType As DBQuestionsTypesConstants, Optional Label As String = "") As IMDMField
+        End Function
+
+        Function CreateElement(Name As String, Optional Label As String = "") As IElement
+        End Function
+
+        Function CreateElements(Name As String, Optional Label As String = "") As IElements
+        End Function
+
+        Function CreateFolder(Name As String) As IRouting
+        End Function
+
+        Function CreateGrid(Name As String, Optional Label As String = "") As IGrid
+        End Function
+
+        Function CreateObject(Optional Name As String = "", Optional Label As String = "", Optional Type As ObjectTypesConstants = 0)
+        End Function
+
+        Function CreatePage(Name As String) As IRouting
+        End Function
+
+        Function CreateProperties(Name As String) As IProperties
+        End Function
+
+        Function CreateVariable(Name As String, Optional Lable As String = "") As IVariable
+        End Function
+
+        Sub FillRouting()
+        End Sub
+
+        Function FindReferences(Object As IMDMObject) As Variant
+        End Function
+
+        Function IsValidName(Name As String) As Boolean
+        End Function
+
+        Sub Join(Document As Variant, Optional Version As Variant, Optional Type As Variant, Optional Options As Variant)
+        End Sub
+
+        Function MakeName(Text As String) As String
+        End Function
+
+        Sub Open(Source As Variant, Optional VersionName As String = "", Optional Mode As openConstants = 2)
+        End Sub
+
+        Sub OpenClone(Source As Variant, Optional VersionName As String = "", Optional Mode As openConstants = 2, Optional Options = Null)
+        End Sub
+
+        Sub Save(Optional Destination As Variant)
+        End Sub
+
+        Sub ValidateScript(Source As Variant, ScriptType As ObjectTypesConstants)
+        End Sub
+
+        ReadOnly Property AliasMap() As IAliasMap
+
+        Property BulkImport() As Boolean
+
+        ReadOnly Property CategoryMap() As ICategoryMap
+
+        ReadOnly Property Contexts() As IContexts
+
+        ReadOnly Property CreatedByVersion() As String
+
+        Property CurrentVersion() As String
+
+        ReadOnly Property DataSourceProperties() As IProperties
+
+        ReadOnly Property DataSources() As IDataSources
+
+        Property DBQuestionDataProvider() As IDBQuestionDataProvider
+
+        Property Document() As IDocument
+
+        Property EnableDBQuestionFilterValidation() As Boolean
+
+        Property EnableMetadataVersionVariable() As Boolean
 
     End Interface
 
