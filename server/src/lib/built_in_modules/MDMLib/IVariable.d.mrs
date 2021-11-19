@@ -1,0 +1,10 @@
+
+Namespace MDMLib
+
+    Interface IVariable Implements Object
+
+
+
+    End Interface
+
+End Namespace

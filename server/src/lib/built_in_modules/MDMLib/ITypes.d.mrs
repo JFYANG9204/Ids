@@ -1,0 +1,35 @@
+
+Namespace MDMLib
+
+    Interface ITypes Implements IEnumerable, Object
+
+        Sub Add(Object As IMDMObject, Optional Index As Long = -1)
+        End Sub
+
+        Sub Remove(Index As Variant)
+        End Sub
+
+        Sub AddScript(Script As Variant, Optional Index As Long = -1)
+        End Sub
+
+        Sub AddScriptEx(Script As Variant, Options As Variant, Optional Index As Long = -1)
+        End Sub
+
+        Function MakeName(Text As String) As String
+        End Function
+
+        Function ReplaceChild(newChild As IMDMObject, oldChild As IMDMObject) As IMDMObject
+        End Function
+
+        Default ReadOnly Property Item(Index As Variant) As IField
+        ReadOnly Property Count() As Long
+        ReadOnly Property Exist(Name As String, Options As Variant) As Boolean
+        ReadOnly Property Expanded() As ITypes
+        ReadOnly Property ItemTypeValue() As ObjectTypesConstants
+        ReadOnly Property ObjectTypeValue() As ObjectTypesConstants
+        ReadOnly Property Parent() As IMDMObject
+        ReadOnly Property IndexOf(Item As Variant) As Long
+
+    End Interface
+
+End Namespace

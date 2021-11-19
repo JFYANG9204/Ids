@@ -342,7 +342,9 @@ function getDefaultNote(dec: DeclarationBase): string {
 
 function getDeclaratorNote(dec: SingleVarDeclarator | ArrayDeclarator | BindingDeclarator) {
     if (dec instanceof SingleVarDeclarator) {
-        return dec.name.name + ": " + (dec.binding ? getBindingName(dec.binding) : "Variant");
+        return dec.name.name + ": " +
+            (dec.bindingType ? getBindingName(dec.bindingType) :
+            (dec.binding ? getBindingName(dec.binding) : "Variant"));
     } else if (dec instanceof BindingDeclarator) {
         return getBindingName(dec);
     } else {

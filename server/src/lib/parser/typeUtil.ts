@@ -64,6 +64,10 @@ export class TypeUtil extends UtilParser {
 
     getDeclareNamespace(dec: DeclarationBase): string | NamespaceDeclaration | undefined {
         if (dec instanceof PropertyDeclaration) {
+            if (dec.binding instanceof BindingDeclarator &&
+                dec.binding.namespace) {
+                return dec.binding.namespace;
+            }
             return dec.class.namespace;
         } else if (dec instanceof FunctionDeclaration && dec.class) {
             return dec.class.namespace;
@@ -704,22 +708,9 @@ export class TypeUtil extends UtilParser {
     }
 
     getPropertyOrMethod(name: string, node: ClassOrInterfaceDeclaration) {
-        for (const prop of node.properties) {
-            if (prop.name.name.toLowerCase() === name.toLowerCase()) {
-                return prop;
-            }
-        }
-        for (const method of node.methods) {
-            if (method.name.name.toLowerCase() === name.toLowerCase()) {
-                return method;
-            }
-        }
-        for (const constant of node.constants) {
-            if (constant.declarator.name.name.toLowerCase() === name.toLowerCase()) {
-                return constant;
-            }
-        }
-        return undefined;
+        const lowerName = name.toLowerCase();
+        return node.properties.get(lowerName) ||
+            node.methods.get(lowerName) || node.constants.get(lowerName);
     }
 
     getCallExprType(callExpr: CallExpression) {
@@ -986,6 +977,8 @@ export class TypeUtil extends UtilParser {
             switch (text) {
                 case "tom.document":
                     return this.scope.get("IDocument", "TOMLib")?.result;
+                case "mdm.document":
+                    return this.scope.get("IDocument", "MDMLib")?.result;
                 case "scripting.dictionary":
                     return this.scope.get("Dictionary")?.result;
                 case "scripting.filesystemobject":

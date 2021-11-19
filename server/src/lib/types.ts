@@ -1690,9 +1690,9 @@ export class PropertyDeclaration extends DeclarationBase {
 export class ClassOrInterfaceDeclaration extends DeclarationBase {
     name: Identifier;
     defType: "interface" | "class" = "interface";
-    properties: Array<PropertyDeclaration> = [];
-    methods: Array<FunctionDeclaration> = [];
-    constants: Array<ConstDeclarator> = [];
+    properties: Map<string, PropertyDeclaration> = new Map();
+    methods: Map<string, FunctionDeclaration> = new Map();
+    constants: Map<string, ConstDeclarator> = new Map();
     default?: PropertyDeclaration;
     implements: string[] = [];
     generic?: string;

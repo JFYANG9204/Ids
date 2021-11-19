@@ -1,56 +1,80 @@
 
 Namespace MDMLib
 
-    Interface IArray Implements Object
+    Interface IMDMField Implements IMDMLabeledObject, Object
+
+        Function RenameField(newName As String) As String
+        End Function
 
         Property AxisExpression() As String
-        Property Categories() As ICategories
+        ReadOnly Property Categories() As ICategories
         Property Class() As IClass
+        ReadOnly Property Codes() As IVariable2
         Property CurrentIndexPath() As String
         ReadOnly Property DataSourceProperties() As IProperties
+        Property DataType() As DataTypeConstants
+        ReadOnly Property DBElements() As IDBElements
+        ReadOnly Property DBQuestionType() As DBQuestionsTypesConstants
         Property DefaultAnswer() As Variant
         Property DeriveElements() As Boolean
         Property Document() As IDocument
-        Property Elements() As IElements
-        Property Expression() As IArray
+        ReadOnly Property EffectiveMaxValue() As Variant
+        ReadOnly Property EffectiveMinValue() As Variant
+        ReadOnly Property Elements() As IElements
+        Property Expression() As String
+        ReadOnly Property Expressions() As IExpressions
         ReadOnly Property Fields() As ITypes
         ReadOnly Property FullLabel() As ILabel
         ReadOnly Property FullName() As String
+        ReadOnly Property HasCaseData() As Boolean
         ReadOnly Property HasDefaultAnswer() As Boolean
         ReadOnly Property HasInitialAnswer() As Boolean
         ReadOnly Property HelperFields() As ITypes
         ReadOnly Property Indices() As IElementInstances
         Property InitialAnswer() As Variant
-        Property IsGrid() As Boolean
+        ReadOnly Property IsDBQuestion() As Boolean
+        ReadOnly Property IsDerived() As Boolean
+        ReadOnly Property IsGrid() As Boolean
         ReadOnly Property IsReference() As Boolean
         ReadOnly Property IsSystem() As Boolean
-        ReadOnly Property IsValid() As Boolean
+        ReadOnly Property IsSystemVariable() As Boolean
         ReadOnly Property Items() As ITypes
         Property IteratorType() As IteratorTypeConstants
         Property Label() As String
-        ReadOnly Property Labels(Index As Variant) As ILabel
-        ReadOnly Property LabelStyle(Index As Variant) As IStyle
+        ReadOnly Property Labels(LabelTypes As Variant = "LABEL") As ILabel
+        ReadOnly Property LabelStyle(LCL As Variant) As IStyle
         ReadOnly Property Level() As ILevel
         ReadOnly Property LevelDepth() As Long
+        ReadOnly Property Location() As String
         Property LowerBound() As Variant
+        Property MaxValue() As Variant
+        Property MinValue() As Variant
         Property Name() As String
         ReadOnly Property Notes() As INotes
         ReadOnly Property ObjectTypeValue() As ObjectTypesConstants
         Property Orientation() As OrientationConstants
         ReadOnly Property OtherCategories() As ICategories
         ReadOnly Property Parent() As IMDMObject
+        Property Precision() As Long
         ReadOnly Property Properties() As IProperties
+        Property RangeExpression() As String
         ReadOnly Property Ranges() As IRanges
-        ReadOnly Property Reference() As IArray
+        Property Reference() As IMDMObject
         Property ReferenceName() As String
         ReadOnly Property RelativeName() As String
-        Property Script(Index As Variant) As Variant
+        Property Scale() As Long
+        WriteOnly Property ScaleVB() As Long
+        Property Script(Options As Variant) As Variant
         ReadOnly Property Size() As Long
-        ReadOnly Property Style(Index As Variant) As IStyle
-        ReadOnly Property Templates(Index As Variant) As ITemplates
+        Property SourceType() As SourceTypeConstants
+        ReadOnly Property Style(LCL As Variant) As IStyle
+        ReadOnly Property Templates(LCL As Variant) As ITemplates
         Property Type() As ArrayTypeConstants
         Property UpperBound() As Variant
+        Property UsageType() As VariableUsageConstants
+        Property UsageTypeName() As String
         ReadOnly Property UUID() As String
+        Property Validation() As String
         ReadOnly Property Variables() As IVariables
         Property Versioned() As Boolean
         ReadOnly Property VersionsInfo() As IVersionsInfo

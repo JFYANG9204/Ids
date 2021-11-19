@@ -1,0 +1,28 @@
+
+Namespace MDMLib
+
+    Interface IField Implements IMDMLabeledObject, Object
+
+        ReadOnly Property Labels(Optional LabelType As Object = "LABEL") As ILabel
+        Property Name() As String
+        ReadOnly Property Parent() As IMDMObject
+        Property Document() As IDocument
+        ReadOnly Property Properties() As IProperties
+        ReadOnly Property ObjectTypeValue() As ObjectTypesConstants
+        ReadOnly Property IsReference() As Boolean
+        ReadOnly Property UUID() As String
+        ReadOnly Property IsSystem() As Boolean
+        Property Label() As String
+        Property Reference() As IField
+        ReadOnly Property Elements() As IElements
+        ReadOnly Property Categories() As ICategories
+        Property DataType() As DataTypeConstants
+        Property MinValue() As Variant
+        Property MaxValue() As Variant
+        ReadOnly Property EffectiveMinValue() As Variant
+        ReadOnly Property EffectiveMaxValue() As Variant
+        ReadOnly Property IsSystemVariable() As Boolean
+
+    End Interface
+
+End Namespace

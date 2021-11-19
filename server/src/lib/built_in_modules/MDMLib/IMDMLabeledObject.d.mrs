@@ -4,8 +4,7 @@ Namespace MDMLib
     Interface IMDMLabeledObject Implements IMDMObject
 
         Property Label() As String
-        Function get_Labels(LabelTypes As Variant = "LABEL") As ILabel
-        End Function
+        ReadOnly Property Labels(LabelTypes As Variant = "LABEL") As ILabel
 
     End Interface
 

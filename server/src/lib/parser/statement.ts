@@ -1208,20 +1208,24 @@ export class StatementParser extends ExpressionParser {
             switch(this.state.type) {
                 case tt._default:
                 case tt._readonly:
+                case tt._writeonly:
                 case tt._property:
-                    node.properties.push(this.parsePropertyDeclaration(node));
+                    const prop = this.parsePropertyDeclaration(node);
+                    node.properties.set(prop.name.name.toLowerCase(), prop);
+                    node.push(prop);
                     break;
                 case tt._sub:
                 case tt._function:
                     const method = this.parseFunctionDeclaration();
                     method.class = node;
-                    node.methods.push(method);
+                    node.methods.set(method.name.name.toLowerCase(), method);
+                    node.push(method);
                     break;
 
                 case tt._const:
                     const constants = this.parseConstDeclaration();
                     constants.declarators.forEach(constant => {
-                        node.constants.push(constant);
+                        node.constants.set(constant.name.name.toLowerCase(), constant);
                         node.push(constant);
                     });
                     break;
@@ -1238,7 +1242,7 @@ export class StatementParser extends ExpressionParser {
         this.scope.exit();
         this.scope.declareName(
             node.name.name,
-            node.constants.length === 0 ?
+            node.constants.size === 0 ?
             BindTypes.classOrInterface :
             BindTypes.const,
             node);

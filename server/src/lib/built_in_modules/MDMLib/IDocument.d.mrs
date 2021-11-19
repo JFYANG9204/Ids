@@ -1,7 +1,7 @@
 
 Namespace MDMLib
 
-    Interface IDocument Implements Object
+    Interface IDocument Implements Object, IMDMLabeledObject
 
         Sub AddUser(Name As String, FileVersion As String, Comment As String) As IMDMUser
         End Sub

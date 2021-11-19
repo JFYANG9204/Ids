@@ -55,7 +55,7 @@ Namespace TOMLib
         ### Remarks
         The MDM Document is documented in the Data Model section of the Data Collection Developer Library.
         !'
-        ReadOnly Property MdmDocument() As IDocument
+        ReadOnly Property MdmDocument() As MDMLib.IDocument
 
         '!
 
