@@ -98,7 +98,7 @@ export class TypeUtil extends UtilParser {
 
     declareLocalVar(
         name: string,
-        node: NodeBase) {
+        node: DeclarationBase) {
         this.scope.declareName(
             name,
             BindTypes.var,
@@ -820,8 +820,9 @@ export class TypeUtil extends UtilParser {
             this.raiseAtNode(callExpr,
                 ErrorMessages["IncorrectFunctionArgumentNumber"],
                 false,
-                params.length.toString(),
-                args.length.toString());
+                func.name.name,
+                args.length.toString(),
+                params.length.toString());
         }
         if (nece !== "" &&
             !this.scope.inFunction &&
@@ -848,7 +849,8 @@ export class TypeUtil extends UtilParser {
         if (resultType.type.type === "PropertyDeclaration") {
             const prop = resultType.type as PropertyDeclaration;
             final = this.scope.get(
-                this.getPropertyBindingType(prop))?.result;
+                this.getPropertyBindingType(prop),
+                this.getDeclareNamespace(prop))?.result;
             if (!final) {
                 this.needCollection(node);
                 return false;
@@ -891,7 +893,7 @@ export class TypeUtil extends UtilParser {
                 def.default ?
                 this.getPropertyBindingType(def.default) : undefined;
             if (name) {
-                let find = this.scope.get(name)?.result;
+                let find = this.scope.get(name, def.namespace)?.result;
                 if (element && find) {
                     if (this.scope.get(element.name)) {
                         this.scope.update(element.name, BindTypes.var, find, element);

@@ -42,86 +42,86 @@ Namespace TOMLib
         Function Add(Table As ITable, Optional Index As Long = -1) As ITable
         End Function
 
-    '!
+        '!
 
-    Creates a new Table object and adds it to the collection.
+        Creates a new Table object and adds it to the collection.
 
-    ### Remarks
-    The new table created is based on the supplied specification string, which has the form "[SideAxis] * [TopAxis] * [LayerAxis]". For more information, see Table Specification Syntax. The AddNew() method is used to added tables of type 'ttAggregated'. When populated the table contains the aggregated counts of the answers that the respondents gave, and also possibly other values derived from those counts (e.g. column percentages based on the counts).
+        ### Remarks
+        The new table created is based on the supplied specification string, which has the form "[SideAxis] * [TopAxis] * [LayerAxis]". For more information, see Table Specification Syntax. The AddNew() method is used to added tables of type 'ttAggregated'. When populated the table contains the aggregated counts of the answers that the respondents gave, and also possibly other values derived from those counts (e.g. column percentages based on the counts).
 
-    ### Example
-    1. "gender" nested within "age" on the side and "cost" on the top axis.
-    ```ds
-    TableDoc.Tables.AddNew("Table1", "age > gender * cost")
-    ```
-    2. Using the axis objects called "brandlist" and "demogs" that exist within the Document.Axes collection
-    ```ds
-    TableDoc.Tables.AddNew("Table2", "axis(brandlist) * axis(demogs)")
-    ```
-    3. No side axis and a top axis based on the "cost" variable
-    ```ds
-    TableDoc.Tables.AddNew("Table3", " * cost")
-    ```
-    !'
-    Function AddNew(Name As String, Optional Specification As String = "", Optional Description As String = "", Optional Index As Long = -1) As ITable
-    End Function
+        ### Example
+        1. "gender" nested within "age" on the side and "cost" on the top axis.
+        ```ds
+        TableDoc.Tables.AddNew("Table1", "age > gender * cost")
+        ```
+        2. Using the axis objects called "brandlist" and "demogs" that exist within the Document.Axes collection
+        ```ds
+        TableDoc.Tables.AddNew("Table2", "axis(brandlist) * axis(demogs)")
+        ```
+        3. No side axis and a top axis based on the "cost" variable
+        ```ds
+        TableDoc.Tables.AddNew("Table3", " * cost")
+        ```
+        !'
+        Function AddNew(Name As String, Optional Specification As String = "", Optional Description As String = "", Optional Index As Long = -1) As ITable
+        End Function
 
-    '!
+        '!
 
-    Constructs a new Table object from a grid or an array and adds it into the `Tables` collection.
+        Constructs a new Table object from a grid or an array and adds it into the `Tables` collection.
 
-    ### Parameters
+        ### Parameters
 
-    + ***Name*** - The name used to reference the table in the collection
-    + ***Field*** - The name of an MDM grid or array field tabulate.
-    + ***Orientation*** - The display orientation of the table. This controls whether the iterations of the grid or array appear on the side or top axis of the table (corresponding to the rows and columns respectively)
-    + ***Description*** - An optional description for the table, e.g. "Table of interest rating of exhibits". This is can be used as an annotation on the resulting table.
-    + ***Index*** - The position in the collection to insert the table. See the `ITables.AddNew` method for more information on the `Index` parameter. The default is for the table to be appended to the end of the collection.
+        + ***Name*** - The name used to reference the table in the collection
+        + ***Field*** - The name of an MDM grid or array field tabulate.
+        + ***Orientation*** - The display orientation of the table. This controls whether the iterations of the grid or array appear on the side or top axis of the table (corresponding to the rows and columns respectively)
+        + ***Description*** - An optional description for the table, e.g. "Table of interest rating of exhibits". This is can be used as an annotation on the resulting table.
+        + ***Index*** - The position in the collection to insert the table. See the `ITables.AddNew` method for more information on the `Index` parameter. The default is for the table to be appended to the end of the collection.
 
-    ### Remarks
-    The `AddNewGrid` method is a specialized form of the `AddNew` method for creating a table directly from a grid or an array field.
-    The `Field` and `Orientation` parameters are used to create an equivalent table specification string. This corresponds to the field tabulated against all child variables of that field.
-    The aggregation level (the Level property) of the newly added table is set to the same level as the field.
-    The `AddNewGrid` method is only valid if the `IDataSet.View` property is set to *dvHDATA*.
+        ### Remarks
+        The `AddNewGrid` method is a specialized form of the `AddNew` method for creating a table directly from a grid or an array field.
+        The `Field` and `Orientation` parameters are used to create an equivalent table specification string. This corresponds to the field tabulated against all child variables of that field.
+        The aggregation level (the Level property) of the newly added table is set to the same level as the field.
+        The `AddNewGrid` method is only valid if the `IDataSet.View` property is set to *dvHDATA*.
 
-    ### Example
-    ```ds
-    AddNewGrid("RatingTable", "rating")
-    ' will be converted to (assuming the display orientation is doRow)
-    AddNew("RatingTable", "rating * rating.column")
-    ```
-    !'
-    Function AddNewGrid(Name As String, Field As String, Optional Orientation As DisplayOrientation = doDefault, Optional Description As String = "", Optional Index As Long = -1) As ITable
-    End Function
+        ### Example
+        ```ds
+        AddNewGrid("RatingTable", "rating")
+        ' will be converted to (assuming the display orientation is doRow)
+        AddNew("RatingTable", "rating * rating.column")
+        ```
+        !'
+        Function AddNewGrid(Name As String, Field As String, Optional Orientation As DisplayOrientation = doDefault, Optional Description As String = "", Optional Index As Long = -1) As ITable
+        End Function
 
-    '!
+        '!
 
-    Creates a new profile `Table` object and adds it to the collection.
+        Creates a new profile `Table` object and adds it to the collection.
 
-    ### Remarks
-    The new table created is based on the supplied specification string. For more information, see Working with `Profile Tables`. Tables added using the `AddNewProfile()` method have a type of *ttProfile*. Each row in the table corresponds to a response in the case data. The top axis of the table is used to define the variables in the metadata that should be profiles. Profile tables are most useful for viewing the open ended responses given for text questions but any variable type can be included in a profile table.
+        ### Remarks
+        The new table created is based on the supplied specification string. For more information, see Working with `Profile Tables`. Tables added using the `AddNewProfile()` method have a type of *ttProfile*. Each row in the table corresponds to a response in the case data. The top axis of the table is used to define the variables in the metadata that should be profiles. Profile tables are most useful for viewing the open ended responses given for text questions but any variable type can be included in a profile table.
 
-    ### Example
-    ```ds
-    TableDoc.Tables.AddNewProfile("Table1", "profile({device, likesmost, likesleast})")
-    ```
-    !'
-    Function AddNewProfile(Name As String, Optional Specification As String = "", Optional Description As String = "", Optional Index As Long = -1) As ITable
-    End Function
+        ### Example
+        ```ds
+        TableDoc.Tables.AddNewProfile("Table1", "profile({device, likesmost, likesleast})")
+        ```
+        !'
+        Function AddNewProfile(Name As String, Optional Specification As String = "", Optional Description As String = "", Optional Index As Long = -1) As ITable
+        End Function
 
-    '!
+        '!
 
-    Removes all Table objects from the collection.
-    !'
-    Sub Clear()
-    End Sub
+        Removes all Table objects from the collection.
+        !'
+        Sub Clear()
+        End Sub
 
-    '!
+        '!
 
-    Removes a Table from the Tables collection.
-    !'
-    Sub Remove(Index As Variant)
-    End Sub
+        Removes a Table from the Tables collection.
+        !'
+        Sub Remove(Index As Variant)
+        End Sub
 
     End Interface
 

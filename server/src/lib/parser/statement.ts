@@ -811,9 +811,7 @@ export class StatementParser extends ExpressionParser {
         if (type.type) {
             this.scope.enterHeader(
                 this.getMaybeBindingType(type.type,
-                    type.type instanceof SingleVarDeclarator ?
-                    type.type.bindingType?.namespace :
-                    type.type.namespace));
+                    this.getDeclareNamespace(type.type)));
             this.addExtra(node, "declaration", type.type);
         }
         node.body = this.parseBlock(tt._end);

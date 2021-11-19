@@ -101,7 +101,7 @@ Namespace TOMLib
 
         Returns *True* if no 'Top' axis exists in the `Axes` collection of this table.
         !'
-        ReadOnly Property IsEmptySide() As Boolean
+        ReadOnly Property IsEmptyTop() As Boolean
 
         '!
 

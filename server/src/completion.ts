@@ -217,6 +217,36 @@ function getBindingName(dec: BindingDeclarator | string) {
         dec.namespace.name.name) + ".") : "") + dec.name.name + (dec.generics ? ("<" + dec.generics + ">") : "");
 }
 
+function getNamespaceText(ns: string | NamespaceDeclaration | undefined) {
+    if (typeof ns === "string") {
+        return ns + ".";
+    } else if (ns) {
+        return ns.name.name + ".";
+    }
+    return "";
+}
+
+function getDeclarationNamespace(dec: DeclarationBase) {
+
+    let ns: string | NamespaceDeclaration | undefined;
+
+    if (dec.type === "PropertyDeclaration") {
+        ns = (dec as PropertyDeclaration).class.namespace;
+    }
+
+    if (dec.type === "FunctionDeclaration") {
+        let func = dec as FunctionDeclaration;
+        ns = func.class ? func.class.namespace : func.namespace;
+    }
+
+    if (dec.type === "EnumDeclaration") {
+        let enumerator = dec as EnumDeclaration;
+        ns = enumerator.namespace;
+    }
+
+    return getNamespaceText(ns);
+}
+
 function getDefaultNote(dec: DeclarationBase): string {
     const name = dec.name.name;
     let text = "";
@@ -229,12 +259,13 @@ function getDefaultNote(dec: DeclarationBase): string {
             (t.binding ? (": " + getBindingName(t.binding)) : "") + "\n```";
     }
 
+    let namespace = getDeclarationNamespace(dec);
     switch (dec.type) {
         case "FunctionDeclaration":
             if ((dec as FunctionDeclaration).class) {
-                text += "(method) " + (dec as FunctionDeclaration).class?.name.name + ".";
+                text += "(method) " + namespace + (dec as FunctionDeclaration).class?.name.name + ".";
             } else {
-                text += "(function) ";
+                text += "(function) " + namespace;
             }
             args = getArgumentNote((dec as FunctionDeclaration).params);
             let bind = (dec as FunctionDeclaration).binding;
@@ -243,7 +274,7 @@ function getDefaultNote(dec: DeclarationBase): string {
 
         case "PropertyDeclaration":
             const prop = dec as PropertyDeclaration;
-            text = `(property) ${prop.class.name.name}.${name}`;
+            text = `(property) ${namespace}${prop.class.name.name}.${name}`;
             if (prop.params.length > 0) {
                 text += "(" + getArgumentNote(prop.params) + ")";
             }
@@ -273,9 +304,9 @@ function getDefaultNote(dec: DeclarationBase): string {
         case "ClassOrInterfaceDeclaration":
             const classOrInterface = dec as ClassOrInterfaceDeclaration;
             if (classOrInterface.defType === "interface") {
-                text += "(interface) ";
+                text += "(interface) " + namespace;
             } else {
-                text += "(class) ";
+                text += "(class) " + namespace;
             }
             return "```ds\n" + text + classOrInterface.name.name + "\n```";
 

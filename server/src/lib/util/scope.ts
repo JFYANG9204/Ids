@@ -118,7 +118,7 @@ export class ScopeHandler {
     declareName(
         name: string,
         bindingType: BindTypes,
-        node: NodeBase,
+        node: DeclarationBase,
         type?: DeclarationBase) {
 
         const scope = this.currentScope();
@@ -213,18 +213,18 @@ export class ScopeHandler {
     checkRedeclarationInScope(
         scope: Scope,
         name: string,
-        node: NodeBase
+        node: DeclarationBase
     ) {
         if (this.inClassOrInterface || this.inEnumerator) {
             if (this.isRedeclared(scope, name)) {
-                this.raise(node, ErrorMessages["VarRedeclaration"], false, name);
+                this.raise(node.name, ErrorMessages["VarRedeclaration"], false, name);
             }
             return;
         }
         if (this.isRedeclared(scope, name) ||
             this.isRedeclared(this.global, name) ||
             this.isRedeclared(this.store, name)) {
-            this.raise(node, ErrorMessages["VarRedeclaration"], false, name);
+            this.raise(node.name, ErrorMessages["VarRedeclaration"], false, name);
         }
     }
 
