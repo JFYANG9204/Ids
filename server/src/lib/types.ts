@@ -1670,6 +1670,7 @@ export class PropertySet extends NodeBase {
 
 export class PropertyDeclaration extends DeclarationBase {
     readonly?: boolean;
+    writeonly?: boolean;
     default?: boolean;
     binding: BindingDeclarator | string = "Variant";
     init?: any;

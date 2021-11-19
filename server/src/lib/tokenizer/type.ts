@@ -171,6 +171,7 @@ export const types = {
     _until                       :     createKeyword("until"),
     _while                       :     createKeyword("while", { isLoop }),
     _with                        :     createKeyword("with"),
+    _writeonly                   :     createKeyword("writeonly"),
     _xor                         :     createKeyword("xor", { binop: BinopType.logical, precedence: 1 }),
     //
     //newLine                      :     new TokenType("newline"),

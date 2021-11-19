@@ -1131,6 +1131,9 @@ export class StatementParser extends ExpressionParser {
         if (this.match(tt._readonly)) {
             this.next();
             node.readonly = true;
+        } else if (this.match(tt._writeonly)) {
+            this.next();
+            node.writeonly = true;
         }
         this.checkIfDeclareFile();
         this.expect(tt._property);

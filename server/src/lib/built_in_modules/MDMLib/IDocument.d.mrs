@@ -76,28 +76,66 @@ Namespace MDMLib
         End Sub
 
         ReadOnly Property AliasMap() As IAliasMap
-
         Property BulkImport() As Boolean
-
         ReadOnly Property CategoryMap() As ICategoryMap
-
         ReadOnly Property Contexts() As IContexts
-
         ReadOnly Property CreatedByVersion() As String
-
         Property CurrentVersion() As String
-
         ReadOnly Property DataSourceProperties() As IProperties
-
         ReadOnly Property DataSources() As IDataSources
-
         Property DBQuestionDataProvider() As IDBQuestionDataProvider
-
         Property Document() As IDocument
-
         Property EnableDBQuestionFilterValidation() As Boolean
-
         Property EnableMetadataVersionVariable() As Boolean
+        ReadOnly Property ExObjectType(Index As IMDMObject) As ExObjectTypeConstants
+        ReadOnly Property Fields() As ITypes
+        ReadOnly Property FindObject(Name As String) As IMDMObject
+        ReadOnly Property FullLabel() As ILabel
+        ReadOnly Property HasUnExpandedArrays() As Boolean
+        Property IncludeSystemVariables() As Boolean
+        ReadOnly Property IsDocumentValid() As Boolean
+        ReadOnly Property IsReference() As Boolean
+        ReadOnly Property IsSystem() As Boolean
+        ReadOnly Property IsValidVersion(Name As String) As Boolean
+        ReadOnly Property Items() As ITypes
+        ReadOnly Property JoinConflicts() As IJoinConflicts
+        Property Label() As String
+        Property Labels(Index As Variant) As ILabel
+        ReadOnly Property LabelTypes() As IContexts
+        ReadOnly Property Languages() As ILanguages
+        ReadOnly Property LastUpdatedByVersion() As Boolean
+        ReadOnly Property LCL(Optional LabelType As Variant, Optional Context As Variant, Optional Language As Variant) As Variant
+        ReadOnly Property LevelDepth() As Long
+        ReadOnly Property Levels() As ILevel
+        WriteOnly Property LogAction(UserName As String, FileVersion As String) As String
+        ReadOnly Property MakeInstanceName(FullName As String, Indexes As String) As String
+        ReadOnly Property MakeReferenceName(Owner As IMDMObject, Child As IMDMObject, Optional As Variant) As String
+        Property MDMBehaviour() As Variant
+        ReadOnly Property MDMVersion() As String
+        Property Name() As String
+        ReadOnly Property ObjectContainer(pObj As IMDMObject) As IMDMObject
+        ReadOnly Property ObjectTypeValue() As ObjectTypesConstants
+        Property OpenMode() As openConstants
+        ReadOnly Property Pages() As ITypes
+        ReadOnly Property Parent() As IMDMObject
+        Property ProjectDirectory() As String
+        ReadOnly Property Properties() As IProperties
+        ReadOnly Property Routing() As IRouting
+        ReadOnly Property RoutingContexts() As IContexts
+        ReadOnly Property RoutingItems(RoutingContext As Variant) As IRoutingItems
+        ReadOnly Property SaveLogs() As ISaveLogs
+        Property Script(Options As Variant) As Variant
+        ReadOnly Property ScriptTypes() As IContexts
+        ReadOnly Property SelectedVersions() As ISelectedVersions
+        ReadOnly Property Templates(LCL As Variant) As ITemplates
+        ReadOnly Property Types() As ITypes
+        Property Url() As String
+        Property UseExpandedRoutingItemIndex() As Boolean
+        ReadOnly Property VariableInstance() As IVariableInstance
+        ReadOnly Property Variables() As IVariables
+        ReadOnly Property Versions() As IVersions
+        ReadOnly Property VersionSets() As IVersionSets
+        Property Xml() As String
 
     End Interface
 
