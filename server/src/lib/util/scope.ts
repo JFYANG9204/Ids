@@ -224,6 +224,13 @@ export class ScopeHandler {
             }
             return;
         }
+        if (this.inFunction) {
+            if (this.isRedeclared(scope, name) ||
+                this.isRedeclared(this.global, name)) {
+                this.raise(node.name, ErrorMessages["VarRedeclaration"], false, name);
+            }
+            return;
+        }
         if (this.isRedeclared(scope, name) ||
             this.isRedeclared(this.global, name) ||
             this.isRedeclared(this.store, name)) {

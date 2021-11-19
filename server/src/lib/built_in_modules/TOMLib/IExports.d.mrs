@@ -57,6 +57,7 @@ Namespace TOMLib
         Property mrPowerpointExport() As IExport
         Property mrWordExport() As IExport
         Property mrTextExport() As IExport
+        Property mrETabsExport() As IExport
 
     End Interface
 

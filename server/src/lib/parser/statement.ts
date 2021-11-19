@@ -523,7 +523,7 @@ export class StatementParser extends ExpressionParser {
         }
         let rightType: { type: DeclarationBase | undefined } = { type: undefined };
         if (node.init) {
-            this.getExprType(node.init, rightType);
+            this.getExprType(node.init, rightType, false);
         }
         this.scope.declareName(
             node.name.name,
