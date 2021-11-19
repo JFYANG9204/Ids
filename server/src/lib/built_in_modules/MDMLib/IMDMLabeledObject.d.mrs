@@ -4,7 +4,7 @@ Namespace MDMLib
     Interface IMDMLabeledObject Implements IMDMObject
 
         Property Label() As String
-        ReadOnly Property Labels(LabelTypes As Variant = "LABEL") As ILabel
+        ReadOnly Property Labels(Optional LabelTypes As Variant = "LABEL") As ILabel
 
     End Interface
 

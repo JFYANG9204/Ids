@@ -41,7 +41,7 @@ Namespace MDMLib
         ReadOnly Property Items() As ITypes
         Property IteratorType() As IteratorTypeConstants
         Property Label() As String
-        ReadOnly Property Labels(LabelTypes As Variant = "LABEL") As ILabel
+        ReadOnly Property Labels(Optional LabelTypes As Variant = "LABEL") As ILabel
         ReadOnly Property LabelStyle(LCL As Variant) As IStyle
         ReadOnly Property Level() As ILevel
         ReadOnly Property LevelDepth() As Long

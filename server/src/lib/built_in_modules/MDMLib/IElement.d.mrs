@@ -1,0 +1,31 @@
+
+Namespace MDMLib
+
+    Interface IElement Implements IMDMLabeledObject
+
+        Property Document() As IDocument
+        Property Factor() As Variant
+        Property Flag() As CategoryFlagConstants
+        ReadOnly Property IsMultiplierLocal() As Boolean
+        ReadOnly Property IsOtherLocal() As Boolean
+        ReadOnly Property IsReference() As Boolean
+        ReadOnly Property IsSystem() As Boolean
+        Property Label() As String
+        ReadOnly Property Labels(Optional LabelTypes As Variant = "LABEL") As ILabel
+        Property MultiplierReference() As IVariable
+        WriteOnly Property MultiplierVariable() As IVariable
+        Property Name() As String
+        ReadOnly Property ObjectTypeValue() As ObjectTypesConstants
+        Property OtherReference() As IVariable
+        WriteOnly Property OtherVariable() As IVariable
+        ReadOnly Property Parent() As IMDMObject
+        ReadOnly Property Properties() As IProperties
+        Property Reference() As IElement
+        Property Type() As ElementTypeConstants
+        ReadOnly Property UUID() As String
+        Property Versioned() As Boolean
+
+    End Interface
+
+End Namespace
+

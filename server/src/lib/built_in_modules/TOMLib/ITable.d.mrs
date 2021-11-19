@@ -334,6 +334,9 @@ Namespace TOMLib
         Function RefreshFromMetadata(Optional ForceRefresh As Boolean = 0) As Boolean
         End Function
 
+        Property Top() As IAxis
+        Property Side() As IAxis
+
     End Interface
 
 End Namespace

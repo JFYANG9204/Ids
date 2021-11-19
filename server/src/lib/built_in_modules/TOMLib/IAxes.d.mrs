@@ -2,25 +2,20 @@
 
 Namespace TOMLib
     '!
-    "```ds
-    "(interface) IAxes
-    "```
-    "-----------------------------
-    "A collection of Axis objects. Each Axis object is used to describe the content of the side, the top, or a layer of a table.
+    A collection of Axis objects. Each Axis object is used to describe the content of the side, the top, or a layer of a table.
     !'
     Interface IAxes Implements IEnumerable, Object
 
-    '!
-
-    The number of items in the collection.
-    !'
-    ReadOnly Property Count() As Long
+        '!
+        The number of items in the collection.
+        !'
+        ReadOnly Property Count() As Long
 
         '!
 
         Returns a specified item in the collection.
         !'
-        ReadOnly Property Item(Index As Variant) As IAxis
+        Default ReadOnly Property Item(Index As Variant) As IAxis
 
         '!
 

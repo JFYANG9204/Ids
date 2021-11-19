@@ -1,0 +1,59 @@
+
+Namespace MDMLib
+
+    Interface IElements Implements IMDMLabeledObject, IEnumerable
+
+        Sub Add(Item As IMDMLabeledObject, Optional Index As Long = -1)
+        End Sub
+
+        Function AddNewElement(Name As String, Type As ElementTypeConstants) As IElement
+        End Function
+
+        Function MakeName(Text As String) As String
+        End Function
+
+        Sub Remove(Index As Variant)
+        End Sub
+
+        ReadOnly Property Count() As Long
+        ReadOnly Property DataSourceProperties() As IProperties
+        ReadOnly Property DBFilter() As String
+        Property Document() As IDocument
+        ReadOnly Property Elements() As IElementList
+        ReadOnly Property Exist(Name As String, Options As Variant) As Boolean
+        ReadOnly Property Expanded() As IElementList
+        Property Fixed() As Boolean
+        ReadOnly Property FullName() As String
+        Property Inline() As Boolean
+        ReadOnly Property IsDBElements() As Boolean
+        ReadOnly Property IsDerived() As Boolean
+        ReadOnly Property IsReference() As Boolean
+        ReadOnly Property IsSystem() As Boolean
+        Property Label() As String
+        ReadOnly Property Labels(Optional LabelTypes As Variant = "LABEL") As ILabel
+        ReadOnly Property LabelStyle(LCL As Variant) As IStyle
+        Property Name() As String
+        Property Namespace() As Boolean
+        ReadOnly Property Notes() As INotes
+        ReadOnly Property ObjectTypeValue() As ObjectTypesConstants
+        Property Order() As OrderConstants
+        ReadOnly Property OwnerField() As IMDMField
+        ReadOnly Property Parent() As IMDMObject
+        ReadOnly Property Presentation() As IElements
+        ReadOnly Property Properties() As IProperties
+        Property Reference() As IElements
+        Property ReferenceName() As String
+        Property Script(Options As Variant) As Variant
+        Property Style(LCL As Variant) As IStyle
+        Default Property Item(Index As Variant) As IElement
+        Property Type() As ElementTypeConstants
+        Property TypeName() As String
+        ReadOnly Property UUID() As String
+        ReadOnly Property Value() As Long
+        Property Versioned() As Boolean
+        ReadOnly Property VersionsInfo() As IVersionsInfo
+
+    End Interface
+
+End Namespace
+

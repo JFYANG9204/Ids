@@ -59,6 +59,14 @@ Namespace TOMLib
         !'
         ReadOnly Property Properties() As IProperties
 
+        Property SigLevel() As Variant
+        Property SigLevelLow() As Variant
+        Property MinBase() As Variant
+        Property SmallBase() As Variant
+        Property ShowLSD() As Variant
+        Property UseQFormula() As Variant
+        Property UseContinuityCorrection() As Variant
+
     End Interface
 
 End Namespace

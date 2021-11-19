@@ -52,6 +52,12 @@ Namespace TOMLib
         Sub Remove(Index As Variant)
         End Sub
 
+        Property mrHtmlExport() As IExport
+        Property mrExcelExport() As IExport
+        Property mrPowerpointExport() As IExport
+        Property mrWordExport() As IExport
+        Property mrTextExport() As IExport
+
     End Interface
 
 End Namespace

@@ -447,6 +447,9 @@ Namespace TOMLib
         Sub SaveWithoutDataSet(Destination As Variant, Optional IncludeResults As Boolean = 1)
         End Sub
 
+        Sub sbAddVisualRfS()
+        End Sub
+
     End Interface
 
 End Namespace
