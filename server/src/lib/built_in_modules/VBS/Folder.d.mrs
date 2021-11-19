@@ -1,9 +1,5 @@
 
 '!
-```ds
-(object) Folder
-```
-------------------------
 Provides access to all the properties of a folder.
 
 ### Remarks
@@ -21,10 +17,6 @@ End Sub
 Class Folder Implements Object
 
     '!
-    ```ds
-    (method) AddFolders(FolderName: String): Void
-    ```
-    ------------------------
     Adds a new `Folder` to a `Folders` collection.
     + `FolderName`: *String* - Required. The name of the new `Folder` being added.
     !'
@@ -32,10 +24,6 @@ Class Folder Implements Object
     End Sub
 
     '!
-    ```ds
-    (method) Copy(Destination: String, [Overwrite: Boolean]): Void
-    ```
-    ------------------------
     Copies a specified file or folder from one location to another.
     + `Destination`: *String* - Required. `Destination` where the file or folder is to be copied. Wildcard characters are not allowed.
     + `Overwrite`: *Boolean* - Optional. *Boolean* value that is *True* (default) if existing files or folders are to be overwritten; *False* if they are not.
@@ -47,10 +35,6 @@ Class Folder Implements Object
     End Sub
 
     '!
-    ```ds
-    (method) CreateTextFile(FolderName: String, [Overwrite: Boolean], [Unicode: Boolean]): TextStream
-    ```
-    ------------------------
     Creates a specified file name and returns a `TextStream` object that can be used to read from or write to the file.
     + `FileName`: *String* - Required. String expression that identifies the file to create.
     + `Overwrite`: *Boolean* - Optional. Boolean value that indicates if an existing file can be overwritten. The value is _True_ if the file can be overwritten; _False_ if it can't be overwritten. If omitted, existing files can be overwritten.
@@ -71,10 +55,6 @@ Class Folder Implements Object
     End Function
 
     '!
-    ```ds
-    (method) Delete([Force: Boolean]): Void
-    ```
-    ------------------------
     Deletes a specified file or folder.
     + `Force`: *Boolean* - Optional. *Boolean* value that is *True* if files or folders with the read-only attribute set are to be deleted; *False* (default) if they are not.
 
@@ -87,10 +67,6 @@ Class Folder Implements Object
     End Sub
 
     '!
-    ```ds
-    (method) Move(Destination: String): Void
-    ```
-    ------------------------
     Deletes a specified file or folder.
     + `Destination`: *String* - Required. `Destination` where the file or folder is to be moved. Wildcard characters are not allowed.
 
@@ -101,10 +77,6 @@ Class Folder Implements Object
     End Sub
 
     '!
-    ```ds
-    (property) Files: Collection<File>
-    ```
-    ------------------------
     Collection of all `File` objects within a folder.
 
     ### Remarks
@@ -126,10 +98,6 @@ Class Folder Implements Object
     Property Files() As Collection(Of File)
 
     '!
-    ```ds
-    (property) Folders: Collection<Folder>
-    ```
-    ------------------------
     Collection of all `Folder` objects contained within a `Folder` object.
 
     ### Remarks
@@ -151,10 +119,6 @@ Class Folder Implements Object
     Property Folders() As Collection(Of Folder)
 
     '!
-    ```ds
-    (property) SubFolders: Collection<Folder>
-    ```
-    ------------------------
     Returns a `Folders` collection consisting of all folders contained in a specified folder, including those with Hidden and System file attributes set.
 
     ### Remarks
@@ -176,10 +140,6 @@ Class Folder Implements Object
     Property SubFolders() As Collection(Of Folder)
 
     '!
-    ```ds
-    (property) Attributes[[newattributes: Long]]: Long
-    ```
-    ------------------------
     Sets or returns the attributes of files or folders. Read/write or read-only, depending on the attribute.
 
     ### Settings
@@ -227,10 +187,6 @@ Class Folder Implements Object
     Property Attributes(Optional newattributes As Long) As Long
 
     '!
-    ```ds
-    (property) DateCreated: String
-    ```
-    ------------------------
     Returns the date and time that the specified file or folder was created. Read-only.
 
     ### Remarks
@@ -248,10 +204,6 @@ Class Folder Implements Object
     ReadOnly Property DateCreated() As String
 
     '!
-    ```ds
-    (property) DateLastAccessed: String
-    ```
-    ------------------------
     Returns the date and time that the specified file or folder was last accessed. Read-only.
 
     ### Remarks
@@ -273,10 +225,6 @@ Class Folder Implements Object
     ReadOnly Property DateLastAccessed() As String
 
     '!
-    ```ds
-    (property) DateLastModified: String
-    ```
-    ------------------------
     Returns the date and time that the specified file or folder was last modified. Read-only.
 
     ### Remarks
@@ -297,10 +245,6 @@ Class Folder Implements Object
     ReadOnly Property DateLastModified() As String
 
     '!
-    ```ds
-    (property) Drive: String
-    ```
-    ------------------------
     Returns the drive letter of the drive on which the specified file or folder resides. Read-only.
 
     ### Remarks
@@ -321,10 +265,6 @@ Class Folder Implements Object
     ReadOnly Property Drive() As String
 
     '!
-    ```ds
-    (property) Name: String
-    ```
-    ------------------------
     Sets or returns the name of a specified file or folder. Read/write.
 
     ### Remarks
@@ -345,10 +285,6 @@ Class Folder Implements Object
     Property Name() As String
 
     '!
-    ```ds
-    (property) ParentFolder: Folder
-    ```
-    ------------------------
     Returns the folder object for the parent of the specified file or folder. Read-only.
 
     ### Remarks
@@ -369,10 +305,6 @@ Class Folder Implements Object
     ReadOnly Property ParentFolder() As Folder
 
     '!
-    ```ds
-    (property) Path: String
-    ```
-    ------------------------
     Returns the path for a specified file, folder, or drive.
 
     ### Remarks
@@ -394,10 +326,6 @@ Class Folder Implements Object
     Property Path() As String
 
     '!
-    ```ds
-    (property) ShortName: String
-    ```
-    ------------------------
     Returns the short name used by programs that require the earlier 8.3 naming convention.
 
     ### Remarks
@@ -417,10 +345,6 @@ Class Folder Implements Object
     ReadOnly Property ShortName() As String
 
     '!
-    ```ds
-    (property) ShortPath: String
-    ```
-    ------------------------
     Returns the short path used by programs that require the earlier 8.3 file naming convention.
 
     ### Remarks
@@ -440,10 +364,6 @@ Class Folder Implements Object
     ReadOnly Property ShortPath() As String
 
     '!
-    ```ds
-    (property) Size: Long
-    ```
-    ------------------------
     For files, returns the size, in bytes, of the specified file. For folders, returns the size, in bytes, of all files and subfolders contained in the folder.
 
     ### Remarks
@@ -461,10 +381,6 @@ Class Folder Implements Object
     ReadOnly Property Size() As Long
 
     '!
-    ```ds
-    (property) Type: String
-    ```
-    ------------------------
     Returns information about the type of a file or folder. For example, for files ending in .TXT, \"Text Document\" is returned.
 
     ### Remarks
@@ -482,10 +398,6 @@ Class Folder Implements Object
     ReadOnly Property Type() As String
 
     '!
-    ```ds
-    (property) IsRootFolder: Boolean
-    ```
-    ------------------------
     Returns *True* if the specified folder is the root folder; *False* if it is not.
 
     ### Remarks

@@ -1,9 +1,5 @@
 
 '!
-```ds
-(object) Drive
-```
-------------------------
 Provides access to the properties of a particular disk drive or network share.
 
 ### Remarks
@@ -24,10 +20,6 @@ End Sub
 Class Drive Implements Object
 
     '!
-    ```ds
-    (property) AvailableSpace: Long
-    ```
-    ------------------------
     Returns the amount of space available to a user on the specified drive or network share.
 
     ### Remarks
@@ -49,10 +41,6 @@ Class Drive Implements Object
     ReadOnly Property AvailableSpace() As Long
 
     '!
-    ```ds
-    (property) DriveLetter: String
-    ```
-    ------------------------
     Returns the drive letter of a physical local drive or a network share. Read-only.
 
     ### Remarks
@@ -74,10 +62,6 @@ Class Drive Implements Object
     ReadOnly Property DriveLetter() As String
 
     '!
-    ```ds
-    (property) DriveType: Long
-    ```
-    ------------------------
     Returns a value indicating the type of a specified drive.
 
     ### Remarks
@@ -103,10 +87,6 @@ Class Drive Implements Object
     ReadOnly Property DriveType() As Long
 
     '!
-    ```ds
-    (property) FileSystem: String
-    ```
-    ------------------------
     Returns the type of file system in use for the specified drive.
 
     ### Remarks
@@ -125,10 +105,6 @@ Class Drive Implements Object
     ReadOnly Property FileSystem() As String
 
     '!
-    ```ds
-    (property) FreeSpace: Long
-    ```
-    ------------------------
     Returns the amount of free space available to a user on the specified drive or network share. Read-only.
 
     ### Remarks
@@ -150,10 +126,6 @@ Class Drive Implements Object
     ReadOnly Property FreeSpace() As Long
 
     '!
-    ```ds
-    (property) IsReady: Boolean
-    ```
-    ------------------------
     Returns *True* if the specified drive is ready; *False* if it is not.
 
     ### Remarks
@@ -185,10 +157,6 @@ Class Drive Implements Object
     ReadOnly Property IsReady() As Boolean
 
     '!
-    ```ds
-    (property) Path: String
-    ```
-    ------------------------
     Returns the path for a specified file, folder, or drive.
 
     ### Remarks
@@ -210,10 +178,6 @@ Class Drive Implements Object
     ReadOnly Property Path() As String
 
     '!
-    ```ds
-    (property) RootFolder: String
-    ```
-    ------------------------
     Returns a `Folder` object representing the root folder of a specified drive. Read-only.
 
     ### Remarks
@@ -222,10 +186,6 @@ Class Drive Implements Object
     ReadOnly Property RootFolder() As String
 
     '!
-    ```ds
-    (property) SerialNumber: Double
-    ```
-    ------------------------
     Returns the decimal serial number used to uniquely identify a disk volume.
 
     ### Remarks
@@ -253,10 +213,6 @@ Class Drive Implements Object
     ReadOnly Property SerialNumber() As Double
 
     '!
-    ```ds
-    (property) ShareName: String
-    ```
-    ------------------------
     Returns the network share name for a specified drive.
 
     ### Remarks
@@ -275,10 +231,6 @@ Class Drive Implements Object
     ReadOnly Property ShareName() As String
 
     '!
-    ```ds
-    (property) TotalSize: Long
-    ```
-    ------------------------
     Returns the total space, in bytes, of a drive or network share.
 
     ### Remarks
@@ -300,10 +252,6 @@ Class Drive Implements Object
     ReadOnly Property TotalSize() As Long
 
     '!
-    ```ds
-    (property) VolumeName: String
-    ```
-    ------------------------
     Sets or returns the volume name of the specified drive. Read/write.
 
     ### Remarks

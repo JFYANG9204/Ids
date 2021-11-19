@@ -1,9 +1,5 @@
 
 '!
-```ds
-(object) TextStream
-```
-------------------------
 Facilitates sequential access to file.
 
 ### Remarks
@@ -19,20 +15,12 @@ a.Close
 Class TextStream Implements Object
 
     '!
-    ```ds
-    (method) Close(): Void
-    ```
-    ------------------------
     Closes an open TextStream file.
     !'
     Sub Close()
     End Sub
 
     '!
-    ```ds
-    (method) Read(Charaters: Long): String
-    ```
-    ------------------------
     Reads a specified number of characters from a `TextStream` file and returns the resulting string.
     + `Charaters`: *Long* - Required. Number of characters that you want to read from the file.
     !'
@@ -40,10 +28,6 @@ Class TextStream Implements Object
     End Function
 
     '!
-    ```ds
-    (method) ReadAll(): String
-    ```
-    ------------------------
     Reads an entire `TextStream` file and returns the resulting string.
 
     ### Remarks
@@ -53,20 +37,12 @@ Class TextStream Implements Object
     End Function
 
     '!
-    ```ds
-    (method) ReadLine(): String
-    ```
-    ------------------------
     Reads an entire line (up to, but not including, the newline character) from a `TextStream` file and returns the resulting string.
     !'
     Function ReadLine() As String
     End Function
 
     '!
-    ```ds
-    (method) Skip(Characters: Long): Void
-    ```
-    ------------------------
     Reads an entire line (up to, but not including, the newline character) from a `TextStream` file and returns the resulting string.
     + `Characters`: *Long* - Required. Number of characters to skip when reading a file.
 
@@ -77,10 +53,6 @@ Class TextStream Implements Object
     End Sub
 
     '!
-    ```ds
-    (method) SkipLine(): Void
-    ```
-    ------------------------
     Skips the next line when reading a TextStream file.
 
     ### Remarks
@@ -91,10 +63,6 @@ Class TextStream Implements Object
     End Sub
 
     '!
-    ```ds
-    (method) Write(Text: String): Void
-    ```
-    ------------------------
     Writes a specified string to a `TextStream` file.
     + `Text`: *String* - Required. The text you want to write to the file.
 
@@ -105,10 +73,6 @@ Class TextStream Implements Object
     End Sub
 
     '!
-    ```ds
-    (method) WriteBlankLines(Lines: Long): Void
-    ```
-    ------------------------
     Writes a specified number of newline characters to a `TextStream` file.
     + `Lines`: *Long* - Required. Number of newline characters you want to write to the file.
     !'
@@ -116,10 +80,6 @@ Class TextStream Implements Object
     End Sub
 
     '!
-    ```ds
-    (method) WriteLine([Text: String]): Void
-    ```
-    ------------------------
     Writes a specified string and newline character to a `TextStream` file.
     + `Text`: *String* - Optional. The text you want to write to the file. If omitted, a newline character is written to the file.
     !'
@@ -127,10 +87,6 @@ Class TextStream Implements Object
     End Sub
 
     '!
-    ```ds
-    (property) AtEndOfLine: Boolean
-    ```
-    ------------------------
     Read-only property that returns True if the file pointer immediately precedes the end-of-line marker in a `TextStream` file; *False* if it does not.
 
     ### Remarks
@@ -150,10 +106,6 @@ Class TextStream Implements Object
     ReadOnly Property AtEndOfLine() As Boolean
 
     '!
-    ```ds
-    (property) AtEndOfStream: Boolean
-    ```
-    ------------------------
     Read-only property that returns True if the file pointer is at the end of a `TextStream` file; *False* if it is not.
 
     ### Remarks
@@ -173,10 +125,6 @@ Class TextStream Implements Object
     ReadOnly Property AtEndOfStream() As Boolean
 
     '!
-    ```ds
-    (property) Column: Long
-    ```
-    ------------------------
     Read-only property that returns the column number of the current character position in a `TextStream` file.
 
     ### Remarks
@@ -185,10 +133,6 @@ Class TextStream Implements Object
     ReadOnly Property Column() As Long
 
     '!
-    ```ds
-    (property) Line: Long
-    ```
-    ------------------------
     Read-only property that returns the current line number in a `TextStream` file.
 
     ### Remarks

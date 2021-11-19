@@ -1,9 +1,5 @@
 
 '!
-```ds
-(object) Dictionary
-```
-------------------------
 Object that stores data key, item pairs.
 
 ### Remarks
@@ -20,10 +16,6 @@ d.Add \"c\", \"Cairo\"
 Class Dictionary Implements Object
 
     '!
-    ```ds
-    (method) Dictionary.Add(Key: Variant, Item: Variant): Void
-    ```
-    -------------------------------------------
     Adds a key and item pair to a `Dictionary` object.
 
     ### Remarks
@@ -41,10 +33,6 @@ Class Dictionary Implements Object
     End Sub
 
     '!
-    ```ds
-    (method) Dictionary.Exist(Key: Variant): Boolean
-    ```
-    -------------------------------------------
     Returns `true` if a specified key exists in the Dictionary object, `false` if it does not.
 
     ### Remarks
@@ -69,10 +57,6 @@ Class Dictionary Implements Object
     End Function
 
     '!
-    ```ds
-    (method) Dictionary.Items(): Array
-    ```
-    -------------------------------------------
     Returns an array containing all the items in a `Dictionary` object.
 
     ### Remarks
@@ -96,10 +80,6 @@ Class Dictionary Implements Object
     End Function
 
     '!
-    ```ds
-    (method) Dictionary.Keys(): Array
-    ```
-    -------------------------------------------
     Returns an array containing all the keys in a `Dictionary` object.
     !'
     Function Keys() As Array
