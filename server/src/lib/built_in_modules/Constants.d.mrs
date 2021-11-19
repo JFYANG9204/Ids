@@ -1,0 +1,60 @@
+
+'!
+### Script Constants
+A number of constants are built into mrScriptBasic. Constants provide a convenient way to use specific values without actually having to remember the value itself. Using constants also makes your code more maintainable should the value of any constant ever change. Because these constants are already defined in mrScriptBasic, you don't need to explicitly declare them in your code. Simply use them in place of the values they represent.
+The constants build into mrScriptBasic fall into the following groups:
++ **Color**. Defines basic colors that can be used in scripting.
++ **Date and Time**. Defines date and time constants used by date and time functions.
++ **Date and Time Format**. Defines constants used to format dates and times.
++ **String**. Defines a variety of non-printable characters used in string manipulation.
++ **Type**. Defines the various Variant subtypes.
+!'
+Class Mr
+
+    Const Cr       = "\r"
+    Const CrLf     = "\r\n"
+    Const FormFeed = "\f"
+    Const Lf       = "\n"
+    Const NewLine  = "\n"
+    Const Tab      = "\t"
+
+    Const Black    = "Black"
+    Const Red      = "Red"
+    Const Green    = "Green"
+    Const Yellow   = "Yellow"
+    Const Blue     = "Blue"
+    Const Magenta  = "Magenta"
+    Const Cyan     = "Cyan"
+    Const White    = "White"
+
+    Const Sunday    = 1
+    Const Monday    = 2
+    Const Tuesday   = 3
+    Const Wednesday = 4
+    Const Thursday  = 5
+    Const Friday    = 6
+    Const Saturday  = 7
+
+    Const UseSystem = 0
+
+    Const FirstJan1      = 1
+    Const FirstFourDays  = 2
+    Const FirstFullWeek  = 3
+
+    Const GeneralDate    = 0
+    Const LongDate       = 1
+    Const ShortDate      = 2
+    Const LongTime       = 3
+    Const ShortTime      = 4
+
+    Const None          = 0
+    Const Double        = 6
+    Const Long          = 1
+    Const Text          = 2
+    Const Categorical   = 3
+    Const Date          = 5
+    Const Object        = 4
+    Const Boolean       = 7
+
+End Class
+

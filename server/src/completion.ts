@@ -27,15 +27,18 @@ import {
     CallExpression,
     ClassOrInterfaceDeclaration,
     Comment,
+    ConstDeclarator,
     DeclarationBase,
     EnumDeclaration,
     File,
     FunctionDeclaration,
     MacroDeclaration,
     NamespaceDeclaration,
+    NumericLiteral,
     PreIncludeStatement,
     PropertyDeclaration,
-    SingleVarDeclarator
+    SingleVarDeclarator,
+    StringLiteral
 } from "./lib/types";
 import { isIdentifierChar } from "./lib/util/identifier";
 import { builtInModule } from "./lib/util/declaration";
@@ -138,7 +141,7 @@ const builtInCompletions: CompletionItem[] = [];
 
 if (builtInModule.scope) {
     setBuiltInCompletions(builtInModule.scope.dims,      CompletionItemKind.Variable);
-    setBuiltInCompletions(builtInModule.scope.consts,    CompletionItemKind.Variable);
+    setBuiltInCompletions(builtInModule.scope.consts,    CompletionItemKind.Constant);
     setBuiltInCompletions(builtInModule.scope.functions, CompletionItemKind.Function);
     setBuiltInCompletions(builtInModule.scope.macros,    CompletionItemKind.Variable);
 }
@@ -180,6 +183,7 @@ function getCompletionTypeFromDeclare(dec: DeclarationBase): CompletionItemKind 
         case "SingleVarDeclarator":          return CompletionItemKind.Variable;
         case "ArrayDeclarator":              return CompletionItemKind.Variable;
         case "ArgumentDeclarator":           return CompletionItemKind.Variable;
+        case "ConstDeclaration":             return CompletionItemKind.Constant;
         default:                             return CompletionItemKind.Text;
     }
 }
@@ -310,6 +314,27 @@ function getDefaultNote(dec: DeclarationBase): string {
             }
             return "```ds\n" + text + classOrInterface.name.name + "\n```";
 
+        case "ConstDeclarator":
+            const constant = dec as ConstDeclarator;
+            text += "(constant) ";
+            if (constant.treeParent?.type === "ClassOrInterfaceDeclaration") {
+                const parent = constant.treeParent as ClassOrInterfaceDeclaration;
+                text += parent.name.name + ".";
+            }
+            text += constant.declarator.name.name;
+            switch (constant.init.type) {
+                case "StringLiteral":
+                case "NumericLiteral":
+                case "BooleanLiteral":
+                case "DecimalLiteral":
+                case "NullLiteral":
+                    text += " = " + constant.init.extra["raw"];
+                    break;
+                default:
+                    break;
+            }
+            return "```ds\n" + text + "\n```";
+
         default:
             return "";
     }
@@ -385,11 +410,18 @@ function getDeclarationFromFileOrBuiltIn(
     return find;
 }
 
+function getDeclaratorName(declarator: DeclarationBase) {
+    if (declarator.type === "ConstDeclarator") {
+        return (declarator as ConstDeclarator).declarator.name.name;
+    }
+    return declarator.name.name;
+}
+
 function getCompletionFromDeclarationBase(
     dec: DeclarationBase, name?: string): CompletionItem {
     let type = getCompletionTypeFromDeclare(dec);
     return {
-        label: name ?? dec.name.name,
+        label: name ?? getDeclaratorName(dec),
         kind: type,
         documentation: {
             kind: MarkupKind.Markdown,
@@ -472,6 +504,9 @@ function getMemberCompletions(dec: DeclarationBase, file: File): CompletionItem[
         });
         bindingType.methods.forEach(method => {
             completions.push(getCompletionFromDeclarationBase(method));
+        });
+        bindingType.constants.forEach(constant => {
+            completions.push(getCompletionFromDeclarationBase(constant));
         });
     } else {
         bindingType.enumItems.forEach(enumItem => {

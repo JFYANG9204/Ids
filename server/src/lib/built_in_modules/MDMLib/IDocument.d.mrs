@@ -6,6 +6,14 @@ Namespace MDMLib
         Sub AddUser(Name As String, FileVersion As String, Comment As String) As MDMUser
         End Sub
 
+        Sub Clear()
+        End Sub
+
+        Sub Close()
+        End Sub
+
+
+
     End Interface
 
 End Namespace

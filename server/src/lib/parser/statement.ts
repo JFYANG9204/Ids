@@ -287,6 +287,12 @@ export class StatementParser extends ExpressionParser {
     parseStatementContent(): Statement {
         let next;
         switch (this.state.type) {
+            case tt.string:
+            case tt.number:
+            case tt.decimal:
+            case tt._null:
+            case tt._true:
+            case tt._false:
             case tt.identifier:
                 next = this.lookahead();
                 if (next.type === tt.colon) {
@@ -438,6 +444,7 @@ export class StatementParser extends ExpressionParser {
         node.push(node.declarator, node.init);
         let right: { type: DeclarationBase | undefined } = { type: undefined };
         this.getExprType(node.init, right);
+        node.declarator.binding = right.type ?? "Variant";
         this.scope.declareName(
             node.declarator.name.name,
             BindTypes.const,
@@ -1208,6 +1215,14 @@ export class StatementParser extends ExpressionParser {
                     node.methods.push(method);
                     break;
 
+                case tt._const:
+                    const constants = this.parseConstDeclaration();
+                    constants.declarators.forEach(constant => {
+                        node.constants.push(constant);
+                        node.push(constant);
+                    });
+                    break;
+
                 default:
                     throw this.unexpected();
             }
@@ -1220,7 +1235,9 @@ export class StatementParser extends ExpressionParser {
         this.scope.exit();
         this.scope.declareName(
             node.name.name,
-            BindTypes.classOrInterface,
+            node.constants.length === 0 ?
+            BindTypes.classOrInterface :
+            BindTypes.const,
             node);
         return this.finishNode(node, "ClassOrInterfaceDeclaration");
     }

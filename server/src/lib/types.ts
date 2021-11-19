@@ -668,7 +668,7 @@ export class VariableDeclaration extends NodeBase {
     }
 }
 
-export class ConstDeclarator extends NodeBase {
+export class ConstDeclarator extends DeclarationBase {
     declarator: SingleVarDeclarator;
     init: Expression;
     constructor(parser: ParserBase, pos: number, loc: Position) {
@@ -1691,6 +1691,7 @@ export class ClassOrInterfaceDeclaration extends DeclarationBase {
     defType: "interface" | "class" = "interface";
     properties: Array<PropertyDeclaration> = [];
     methods: Array<FunctionDeclaration> = [];
+    constants: Array<ConstDeclarator> = [];
     default?: PropertyDeclaration;
     implements: string[] = [];
     generic?: string;

@@ -171,6 +171,9 @@ export class ScopeHandler {
                 }
             } else if (node instanceof EnumDeclaration) {
                 this.insertName(scope, name, node, "consts");
+            } else if (node instanceof ClassOrInterfaceDeclaration &&
+                    node.constants.length > 0) {
+                this.insertName(scope, name, node, "consts");
             }
             return;
         }

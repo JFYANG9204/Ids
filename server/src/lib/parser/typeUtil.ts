@@ -7,6 +7,7 @@ import {
     BindingDeclarator,
     CallExpression,
     ClassOrInterfaceDeclaration,
+    ConstDeclarator,
     DeclarationBase,
     Expression,
     FunctionDeclaration,
@@ -50,6 +51,9 @@ export class TypeUtil extends UtilParser {
             return dec.bindingType ?? this.scope.get(
                 this.getBindingTypeName(dec.binding),
                 namespace)?.result;
+        } else if (dec instanceof ConstDeclarator) {
+            return dec.declarator.binding instanceof DeclarationBase ?
+                dec.declarator.binding : this.scope.get(dec.declarator.binding)?.result;
         } else if (dec instanceof PropertyDeclaration) {
             return this.scope.get(
                 this.getPropertyBindingType(dec),
@@ -333,7 +337,7 @@ export class TypeUtil extends UtilParser {
         return type ?? "Variant";
     }
 
-    getDeclareBaseType(node: NodeBase, dec?: DeclarationBase) {
+    getDeclareBaseType(node: NodeBase, dec?: DeclarationBase): string | undefined {
         if (!dec) {
             return undefined;
         }
@@ -365,6 +369,9 @@ export class TypeUtil extends UtilParser {
                 } else {
                     return "Variant";
                 }
+
+            case "ConstDeclarator":
+                return this.getDeclareBaseType((dec as ConstDeclarator).declarator);
 
             case "ArrayDeclarator":
                 return "Array";
@@ -705,6 +712,11 @@ export class TypeUtil extends UtilParser {
         for (const method of node.methods) {
             if (method.name.name.toLowerCase() === name.toLowerCase()) {
                 return method;
+            }
+        }
+        for (const constant of node.constants) {
+            if (constant.declarator.name.name.toLowerCase() === name.toLowerCase()) {
+                return constant;
             }
         }
         return undefined;
