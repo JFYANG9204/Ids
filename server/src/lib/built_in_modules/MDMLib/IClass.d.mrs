@@ -1,0 +1,43 @@
+
+Namespace MDMLib
+
+    Interface IClass Implements Object, IMDMLabeledObject
+
+        Property Name() As String
+        ReadOnly Property Parent() As IMDMObject
+        Property Document() As IDocument
+        ReadOnly Property Properties() As IProperties
+        ReadOnly Property ObjectTypeValue() As ObjectTypesConstants
+        ReadOnly Property IsReference() As Boolean
+        ReadOnly Property UUID() As String
+        ReadOnly Property IsSystem() As Boolean
+        ReadOnly Property Labels() As ILabels
+        Property Label() As String
+        Property Reference() As IClass
+        ReadOnly Property Fields() As ITypes
+        ReadOnly Property Types() As ITypes
+        ReadOnly Property HelperFields() As ITypes
+        ReadOnly Property Routing() As IRouting
+        Property Versioned() As Boolean
+        Property Namespace() As Boolean
+        ReadOnly Property FullName() As String
+        ReadOnly Property DataSourceProperties() As IProperties
+        Property Script() As Variant
+        Property CurrentIndexPath() As String
+        ReadOnly Property Indices() As IElementInstances
+        Property ReferenceName() As String
+        ReadOnly Property RelativeName() As String
+        ReadOnly Property LevelDepth() As Long
+        ReadOnly Property FullLabel() As ILabel
+        ReadOnly Property Level() As ILevel
+        ReadOnly Property Items() As ITypes
+        ReadOnly Property VersionsInfo() As IVersionsInfo
+        ReadOnly Property IPages() As ITypes
+        ReadOnly Property Style() As IStyle
+        ReadOnly Property Templates() As ITemplates
+        ReadOnly Property LabelStyle() As IStyle
+        ReadOnly Property Notes() As INotes
+
+    End Interface
+
+End Namespace

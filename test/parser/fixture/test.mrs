@@ -3,6 +3,12 @@ Dim TableDoc,StartTime,EndTime
 Set TableDoc = CreateObject("TOM.Document")
 Dim MDM
 Set MDM = TableDoc.DataSet.MdmDocument
+MDM.Save("data\_FINAL.mdd")
+dim cat
 
-StartTime = "Time" + mr.CrLf
+for each cat in mdm.fields["BD11"].categories
+
+next
+
+
 

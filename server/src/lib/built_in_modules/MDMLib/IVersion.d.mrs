@@ -1,0 +1,37 @@
+
+Namespace MDMLib
+
+    Interface IVersion Implements Object, IMDMObject
+
+        Property Name() As String
+        ReadOnly Property Parent() As IMDMObject
+        Property Document() As IDocument
+        ReadOnly Property Properties() As IProperties
+        ReadOnly Property ObjectTypeValue() As ObjectTypesConstants
+        ReadOnly Property IsReference() As Boolean
+        ReadOnly Property UUID() As String
+        ReadOnly Property IsSystem() As Boolean
+        Property CreatedBy() As String
+        ReadOnly Property SubVersions() As IVersions
+        ReadOnly Property FullName() As String
+        Property Description() As String
+        ReadOnly Property IsLocked() As Boolean
+        Property Label() As String
+        ReadOnly Property DateCreated() As Date
+        ReadOnly Property DateLocked() As Date
+        ReadOnly Property IsSynchronized() As Boolean
+        Property SynchronizedDescription() As String
+
+        Function AddNew() As IVersion
+        End Function
+
+        Sub Lock()
+        End Sub
+
+        Sub Synchronize()
+        End Sub
+
+    End Interface
+
+End Namespace
+

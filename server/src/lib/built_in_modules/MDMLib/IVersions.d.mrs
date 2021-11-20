@@ -1,0 +1,25 @@
+
+Namespace MDMLib
+
+    Interface IVersions Implements Object, IEnumerable
+
+        Default ReadOnly Property Item(Index As Variant) As IVersion
+
+        Property Name() As String
+        ReadOnly Property Parent() As IMDMObject
+        Property Document() As IDocument
+        ReadOnly Property Properties() As IProperties
+        ReadOnly Property ObjectTypeValue() As ObjectTypesConstants
+        ReadOnly Property IsReference() As Boolean
+        ReadOnly Property UUID() As String
+        ReadOnly Property IsSystem() As Boolean
+        ReadOnly Property Count() As Long
+        ReadOnly Property FindVersion() As IVersion
+        ReadOnly Property Latest() As IVersion
+
+        Function AddNew() As IVersion
+        End Function
+
+    End Interface
+
+End Namespace

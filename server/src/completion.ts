@@ -216,7 +216,8 @@ function getBindingName(dec: BindingDeclarator | string) {
     return (dec.namespace ? ((
         typeof dec.namespace === "string" ?
         dec.namespace :
-        dec.namespace.name.name) + ".") : "") + dec.name.name + (dec.generics ? ("<" + dec.generics + ">") : "");
+        dec.namespace.name.name) + ".") : "") +
+        dec.name.name + (dec.generics ? ("<" + dec.generics + ">") : "");
 }
 
 function getNamespaceText(ns: string | NamespaceDeclaration | undefined) {
@@ -339,27 +340,29 @@ function getDefaultNote(dec: DeclarationBase): string {
 }
 
 function getDeclaratorNote(dec: SingleVarDeclarator | ArrayDeclarator | BindingDeclarator) {
-    if (dec instanceof SingleVarDeclarator) {
-        return dec.name.name + ": " +
-            (dec.bindingType ? getBindingName(dec.bindingType) :
-            (dec.binding ? getBindingName(dec.binding) : "Variant"));
-    } else if (dec instanceof BindingDeclarator) {
-        return getBindingName(dec);
+    if (dec.type === "SingleVarDeclarator") {
+        const single = dec as SingleVarDeclarator;
+        return single.name.name + ": " +
+            (single.bindingType ? getBindingName(single.bindingType) :
+            (single.binding ? getBindingName(single.binding) : "Variant"));
+    } else if (dec.type === "BindingDeclarator") {
+        return getBindingName(dec as BindingDeclarator);
     } else {
+        const arr = dec as ArrayDeclarator;
         let boundries = "";
-        if (dec.dimensions === 1) {
-            return dec.name.name + "[]: Array<" + (typeof dec.binding === "string" ?
-                dec.binding : dec.binding.name.name) + ">";
+        if (arr.dimensions === 1) {
+            return arr.name.name + "[]: Array<" + (typeof arr.binding === "string" ?
+            arr.binding : arr.binding.name.name) + ">";
         }
-        for (let i = 0; i < dec.dimensions; i++) {
-            if (dec.boundaries && (i < dec.boundaries.length)) {
-                boundries += `[${dec.boundaries[i]}]`;
+        for (let i = 0; i < arr.dimensions; i++) {
+            if (arr.boundaries && (i < arr.boundaries.length)) {
+                boundries += `[${arr.boundaries[i]}]`;
             } else {
                 boundries += "[]";
             }
         }
-        return dec.name.name + boundries + ": Array<" + (typeof dec.binding === "string" ?
-            dec.binding : dec.binding.name.name) + ">";
+        return arr.name.name + boundries + ": Array<" + (typeof arr.binding === "string" ?
+            arr.binding : arr.binding.name.name) + ">";
     }
 }
 

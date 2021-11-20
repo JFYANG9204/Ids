@@ -1,0 +1,16 @@
+
+Namespace MDMLib
+
+    Enum ImagePositions
+
+        ipLeft
+        ipRight
+        ipTop
+        ipBottom
+        ipImageOnly
+        ipNone
+
+    End Enum
+
+End Namespace
+
