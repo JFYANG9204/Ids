@@ -1,0 +1,14 @@
+
+Namespace MDMLib
+
+    Interface IAudioStyle Implements Object
+
+        Property Name() As String
+        Property PlayControlPosition() As AudioControlPositions
+        Property RecordControlPosition() As AudioControlPositions
+        Property Record() As RecordModes
+        ReadOnly Property IsEmpty() As Boolean
+
+    End Interface
+
+End Namespace

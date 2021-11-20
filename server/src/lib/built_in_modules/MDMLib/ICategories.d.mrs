@@ -1,0 +1,17 @@
+
+
+Namespace MDMLib
+    '!
+    A collection object that contains `Category` objects.
+    !'
+    Interface ICategories Implements IEnumerable, Object
+
+        Default ReadOnly Property Item(Index As Variant) As IElement
+        ReadOnly Property Count() As Long
+        ReadOnly Property Value() As Long
+        ReadOnly Property FullName() As String
+        Property Filter() As CategoryFilterConstants
+
+    End Interface
+
+End Namespace

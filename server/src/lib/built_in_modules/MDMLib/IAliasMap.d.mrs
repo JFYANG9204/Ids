@@ -1,0 +1,15 @@
+
+
+Namespace MDMLib
+
+    Interface IAliasMap Implements Object
+
+        ReadOnly Property Generator() As Variant
+        ReadOnly Property VariableInstance() As IVariableInstance
+        ReadOnly Property AliasIndex() As Long
+        ReadOnly Property SubAliases() As Variant
+
+    End Interface
+
+End Namespace
+

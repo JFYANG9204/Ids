@@ -1,0 +1,20 @@
+
+Namespace MDMLib
+
+    Interface ICategoryMap Implements Object
+
+        ReadOnly Property ValueToName() As String
+        ReadOnly Property NameToValue() As Long
+        ReadOnly Property Count() As Long
+        ReadOnly Property ItemName() As String
+        ReadOnly Property ItemValue() As Long
+
+        Sub Add(Name As String, Value As Long)
+        End Sub
+
+        Sub AutoAssignValues()
+        End Sub
+
+    End Interface
+
+End Namespace

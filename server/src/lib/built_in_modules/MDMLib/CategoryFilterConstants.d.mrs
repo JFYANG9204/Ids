@@ -1,0 +1,14 @@
+
+Namespace MDMLib
+
+    Enum CategoryFilterConstants
+
+        cfAll
+        cfCategory
+        cfExpression
+        cfOther
+        cfElement
+
+    End Enum
+
+End Namespace

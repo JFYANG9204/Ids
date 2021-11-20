@@ -1,0 +1,39 @@
+
+Namespace MDMLib
+
+    Interface ICellStyle As Object
+
+        Property Width() As String
+        Property Height() As String
+        Property BorderColor() As String
+        Property BorderTopColor() As String
+        Property BorderRightColor() As String
+        Property BorderBottomColor() As String
+        Property BorderLeftColor() As String
+        Property BorderStyle() As BorderStyles
+        Property BorderTopStyle() As BorderStyles
+        Property BorderRightStyle() As BorderStyles
+        Property BorderBottomStyle() As BorderStyles
+        Property BorderLeftStyle() As BorderStyles
+        Property BorderWidth() As Long
+        Property BorderTopWidth() As Long
+        Property BorderRightWidth() As Long
+        Property BorderBottomWidth() As Long
+        Property BorderLeftWidth() As Long
+        Property Padding() As Long
+        Property PaddingTop() As Long
+        Property PaddingRight() As Long
+        Property PaddingBottom() As Long
+        Property PaddingLeft() As Long
+        Property Wrap() As Boolean
+        Property ColSpan() As Long
+        Property RowSpan() As Long
+        Property BgColor() As String
+        Property RepeatHeader() As Long
+        ReadOnly Property IsEmpty() As Boolean
+        Property RepeatSideHeader() As Long
+
+    End Interface
+
+End Namespace
+

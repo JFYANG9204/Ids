@@ -1,0 +1,11 @@
+
+Namespace MDMLib
+
+    Interface ICategoryStyles Implements Object, IEnumerable
+
+        Default ReadOnly Property Item(Index As Variant) As ICategoryStyle
+        ReadOnly Property Count() As Long
+
+    End Interface
+
+End Namespace

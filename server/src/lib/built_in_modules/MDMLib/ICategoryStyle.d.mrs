@@ -1,0 +1,12 @@
+
+Namespace MDMLib
+
+    Interface ICategoryStyle Implements Object
+
+        ReadOnly Property Style() As IStyle
+        ReadOnly Property Label() As IStyle
+        ReadOnly Property Name() As String
+
+    End Interface
+
+End Namespace
