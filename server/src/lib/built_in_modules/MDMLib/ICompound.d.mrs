@@ -1,7 +1,7 @@
 
 Namespace MDMLib
 
-    Interface IClass Implements Object, IMDMLabeledObject
+    Interface ICompound Implements IMDMLabeledObject
 
         Property Name() As String
         ReadOnly Property Parent() As IMDMObject
@@ -13,7 +13,7 @@ Namespace MDMLib
         ReadOnly Property IsSystem() As Boolean
         ReadOnly Property Labels() As ILabels
         Property Label() As String
-        Property Reference() As IClass
+        Property Reference() As ICompound
         ReadOnly Property Fields() As ITypes
         ReadOnly Property Types() As ITypes
         ReadOnly Property HelperFields() As ITypes
@@ -37,6 +37,7 @@ Namespace MDMLib
         ReadOnly Property Templates() As ITemplates
         ReadOnly Property LabelStyle() As IStyle
         ReadOnly Property Notes() As INotes
+        ReadOnly Property IsValid() As Boolean
 
     End Interface
 

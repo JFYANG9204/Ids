@@ -1,0 +1,12 @@
+
+Namespace MDMLib
+
+    Interface ICloneLanguage
+
+        ReadOnly Property Name() As String
+        Property CloneName() As String
+        Property Exclude() As Boolean
+
+    End Interface
+
+End Namespace

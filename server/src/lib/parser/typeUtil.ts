@@ -85,10 +85,55 @@ export class TypeUtil extends UtilParser {
         return dec.namespace;
     }
 
-    matchType(base: string, check: string, node: NodeBase, isAssign: boolean = false) {
+    /**
+     * 判断是否是将派生类赋值给基类
+     * @param base 被赋值参数或者左值类型
+     * @param check 赋值类型
+     * @param namespace 命名空间名
+     */
+    matchIfBaseClass(
+        base: string,
+        check: string,
+        namespace?: string | NamespaceDeclaration) : boolean {
+
+        if (base.toLowerCase() === check.toLowerCase()) {
+            return true;
+        }
+
+        let derived = this.scope.get(check, namespace)?.result;
+        if (!derived ||
+            !(derived instanceof ClassOrInterfaceDeclaration)) {
+            return false;
+        }
+
+        if (derived.implements.length === 0 &&
+            base.toLowerCase() !== check.toLowerCase()) {
+            return false;
+        }
+
+        for (const d of derived.implements) {
+            if (d.toLowerCase() === check.toLowerCase()) {
+                return true;
+            }
+            if (this.matchIfBaseClass(base, d, namespace)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    matchType(
+        base: string,
+        check: string,
+        node: NodeBase,
+        isAssign: boolean = false,
+        namespace?: string | NamespaceDeclaration) {
+
         let checkString = check.toLowerCase();
         let baseString = base.toLowerCase();
         let checkResult: boolean;
+
         if (checkString === "variant"   ||
             baseString  === "variant"   ||
             checkString === "iquestion" ||
@@ -99,6 +144,8 @@ export class TypeUtil extends UtilParser {
             !isAssign && baseString === "long" && checkString === "double"
             )) {
             checkResult = true;
+        } else if (this.matchIfBaseClass(base, check, namespace)) {
+            return true;
         } else {
             checkResult = checkString === baseString;
         }
@@ -454,17 +501,21 @@ export class TypeUtil extends UtilParser {
                 left = final.name.name;
             }
         }
+        //
+        let nsName: string | NamespaceDeclaration | undefined;
         if (rightReturn.type instanceof ClassOrInterfaceDeclaration ||
             rightReturn.type instanceof PropertyDeclaration) {
             final = this.getFinalType(rightReturn.type);
             if (final instanceof PropertyDeclaration) {
                 right = this.getPropertyBindingType(final);
+                nsName = final.class.namespace;
             } else {
                 right = final.name.name;
+                nsName = final.namespace;
             }
         }
         //
-        if (this.matchType(left, right, expr.right)) {
+        if (this.matchType(left, right, expr.right, false, nsName)) {
             let namespace: NamespaceDeclaration | string | undefined;
             if (rightReturn.type instanceof SingleVarDeclarator) {
                 if (typeof rightReturn.type.binding === "string") {
@@ -827,10 +878,12 @@ export class TypeUtil extends UtilParser {
         let nece = "";
         const params = callExpr.arguments;
         const args = func.params;
+        let ns;
         for (const param of params) {
             const paramType = this.getExprType(param);
             if (index < args.length) {
                 const arg = args[index];
+                ns = arg.declarator.namespace ?? func.class?.namespace;
                 if (arg.paramArray) {
                     cur = arg;
                 }
@@ -839,10 +892,12 @@ export class TypeUtil extends UtilParser {
                     this.getDeclareNamespace(func))?.result?.type === "EnumDeclaration") {
                     typeName = "Enum";
                 }
-                this.matchType(typeName, paramType, param, true);
+                this.matchType(typeName,
+                    paramType, param, true, ns);
             } else if (cur) {
+                ns = cur.declarator.namespace ?? func.class?.namespace;
                 this.matchType(this.getBindingTypeName(cur.declarator.binding),
-                    paramType, param, true);
+                    paramType, param, true, ns);
             }
             index++;
         }

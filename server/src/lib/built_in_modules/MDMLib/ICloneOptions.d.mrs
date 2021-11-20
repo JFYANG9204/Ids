@@ -1,0 +1,16 @@
+
+Namespace MDMLib
+
+    Interface ICloneOptions Implements Object
+
+        ReadOnly Property Languages() As ICloneLanguages
+        Property ExpandReferences() As Boolean
+        Property ExpandDerived() As Boolean
+
+        Sub Reset()
+        End Sub
+
+    End Interface
+
+End Namespace
+

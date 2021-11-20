@@ -1,0 +1,12 @@
+
+
+Namespace MDMLib
+
+    Interface ICloneLanguages Implements IEnumerable, Object
+
+        ReadOnly Property Count() As Long
+        Default Property Item(Index As Variant) As ICloneLanguage
+
+    End Interface
+
+End Namespace

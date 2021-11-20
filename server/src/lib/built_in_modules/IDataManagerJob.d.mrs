@@ -192,7 +192,7 @@ Interface IDataManagerJob Implements Object
     End Event
     ```
     !'
-    ReadOnly Property TableDocument() As IDocument
+    ReadOnly Property TableDocument() As TOMLib.IDocument
 
     '!
 
@@ -224,7 +224,7 @@ Interface IDataManagerJob Implements Object
     End OutputDataSource
     ```
     !'
-    ReadOnly Property TableDocuments(Index As Variant) As IDocument
+    ReadOnly Property TableDocuments(Index As Variant) As TOMLib.IDocument
 
     '!
 
