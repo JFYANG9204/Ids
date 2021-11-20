@@ -431,6 +431,7 @@ export class StatementParser extends ExpressionParser {
             node.bindingType =
                 this.scope.get(this.getBindingTypeName(node.binding))?.result;
         } else {
+            node.binding = "Variant";
             node.bindingType = this.scope.get("Variant")?.result;
         }
         return this.finishNode(node, "SingleVarDeclarator");
@@ -443,8 +444,7 @@ export class StatementParser extends ExpressionParser {
         node.init = this.parseExpression(true);
         node.push(node.declarator, node.init);
         let right: { type: DeclarationBase | undefined } = { type: undefined };
-        this.getExprType(node.init, right);
-        node.declarator.binding = right.type ?? "Variant";
+        node.declarator.binding = this.getExprType(node.init, right);
         this.scope.declareName(
             node.declarator.name.name,
             BindTypes.const,
@@ -1225,7 +1225,7 @@ export class StatementParser extends ExpressionParser {
                 case tt._const:
                     const constants = this.parseConstDeclaration();
                     constants.declarators.forEach(constant => {
-                        node.constants.set(constant.name.name.toLowerCase(), constant);
+                        node.constants.set(constant.declarator.name.name.toLowerCase(), constant);
                         node.push(constant);
                     });
                     break;

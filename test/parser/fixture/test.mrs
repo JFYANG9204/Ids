@@ -3,3 +3,6 @@ Dim TableDoc,StartTime,EndTime
 Set TableDoc = CreateObject("TOM.Document")
 Dim MDM
 Set MDM = TableDoc.DataSet.MdmDocument
+
+StartTime = "Time" + mr.CrLf
+

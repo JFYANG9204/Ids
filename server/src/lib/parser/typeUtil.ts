@@ -298,27 +298,33 @@ export class TypeUtil extends UtilParser {
     getExprType(expr: Expression,
         findType?: { type: DeclarationBase | undefined },
         raiseError: boolean = true) {
-        let type;
+        let type: string | undefined;
         let find: DeclarationBase | undefined;
         switch (expr.type) {
 
             case "StringLiteral":
                 find = this.scope.get("String")?.result;
+                type = "String";
                 break;
             case "NumericLiteral":
                 find = this.scope.get("Long")?.result;
+                type = "Long";
                 break;
             case "DecimalLiteral":
                 find = this.scope.get("Double")?.result;
+                type = "Double";
                 break;
             case "BooleanLiteral":
                 find = this.scope.get("Boolean")?.result;
+                type = "Boolean";
                 break;
             case "CategoricalLiteral":
                 find = this.scope.get("Categorical")?.result;
+                type = "Categorical";
                 break;
             case "NullLiteral":
                 find = this.scope.get("Null")?.result;
+                type = "Null";
                 break;
 
             case "Identifier":
@@ -347,7 +353,9 @@ export class TypeUtil extends UtilParser {
             findType.type = find;
         }
         this.addExtra(expr, "declaration", find);
-        type = this.getDeclareBaseType(expr, find);
+        if (!type) {
+            type = this.getDeclareBaseType(expr, find);
+        }
         return type ?? "Variant";
     }
 
