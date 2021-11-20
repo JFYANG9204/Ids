@@ -1,0 +1,22 @@
+
+Namespace MDMLib
+
+    Interface IDBQuestionOptions Implements Object
+
+        Property ConnectionString() As String
+        Property Table() As String
+        Readonly Property Columns() As IDBColumnMapItems
+        Property MinAnswers() As Variant
+        Property MaxAnswers() As Variant
+        Property SQLFilter() As String
+        Property CacheTimeout() As Long
+        Property Order() As OrderConstants
+        Property IteratorIDType() As DataTypeConstants
+        Property CacheConnection() As Boolean
+
+        Sub setPropertiesParent(pParent As IMDMObject)
+        End Sub
+
+    End Interface
+
+End Namespace

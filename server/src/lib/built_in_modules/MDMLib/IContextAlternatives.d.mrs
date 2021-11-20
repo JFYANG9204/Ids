@@ -1,0 +1,18 @@
+
+
+Namespace MDMLib
+
+    Interface IContextAlternatives Implements Object, IEnumerable
+
+        Default ReadOnly Property Item(Index As Variant) As String
+        ReadOnly Property Count() As Long
+
+        Sub Add(Name As String, Optional Index As Long = -1)
+        End Sub
+
+        Sub Remove(Index As Variant)
+        End Sub
+
+    End Interface
+
+End Namespace

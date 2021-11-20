@@ -1065,6 +1065,9 @@ export class StatementParser extends ExpressionParser {
             node.declarator = this.parseArrayDeclarator();
         } else {
             node.declarator = this.parseSingleVarDeclarator();
+            this.scope.declareName(node.declarator.name.name,
+                BindTypes.var,
+                node.declarator);
         }
         node.push(node.declarator);
         if (this.eat(tt.equal)) {

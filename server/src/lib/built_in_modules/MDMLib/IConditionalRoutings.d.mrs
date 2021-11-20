@@ -1,0 +1,19 @@
+
+Namespace MDMLib
+
+    Interface IConditionalRoutings Implements Object, IEnumerable
+
+        ReadOnly Property IndexOf() As Long
+        ReadOnly Property Count() As Long
+        Property Owner() As IMDMObject
+        Default ReadOnly Property Item(Index As Variant) As IConditionalRouting
+
+        Sub Add(ConditionalBranch As IConditionalRouting, Optional Index As Long = -1)
+        End Sub
+
+        Sub Remove(Index As Long)
+        End Sub
+
+    End Interface
+
+End Namespace

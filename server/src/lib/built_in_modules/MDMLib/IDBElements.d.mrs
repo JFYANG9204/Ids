@@ -1,0 +1,23 @@
+
+Namespace MDMLib
+
+    Interface IDBElements Implements Object, IMDMObject, IEnumerable
+
+        Default Readonly Property Item(strFilter As String) As IElements
+
+        Property Name() As String
+        Readonly Property Parent() As IMDMObject
+        Property Document() As IDocument
+        Readonly Property Properties() As IProperties
+        Readonly Property ObjectTypeValue() As ObjectTypesConstants
+        Readonly Property IsReference() As Boolean
+        Readonly Property UUID() As String
+        Readonly Property IsSystem() As Boolean
+        Readonly Property DBQuestionOptions() As IDBQuestionOptions
+
+        Function UpdateFromDB(strFilter As String) As IElements
+        End Function
+
+    End Interface
+
+End Namespace

@@ -1,0 +1,27 @@
+
+Namespace MDMLib
+
+    Interface IContexts Implements Object, IEnumerable
+
+        Default Property Item(Index As Variant) As IContext
+        ReadOnly Property Count() As Long
+        Property Current() As String
+        Property Base() As String
+        ReadOnly Property Properties() As IProperties
+        ReadOnly Property ObjectTypeValue() As ObjectTypesConstants
+
+        Sub Add(Context As String)
+        End Sub
+
+        Sub Remove(Context As String)
+        End Sub
+
+        Sub AddEx(Context As String, unversioned As Boolean)
+        End Sub
+
+        Function MakeName(Text As String) As String
+        End Function
+
+    End Interface
+
+End Namespace

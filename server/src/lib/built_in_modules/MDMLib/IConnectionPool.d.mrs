@@ -1,0 +1,11 @@
+
+Namespace MDMLib
+
+    Interface IConnectionPool Implements Object
+
+        Function GetConnection(strConnString As String) As Variant
+        End Function
+
+    End Interface
+
+End Namespace

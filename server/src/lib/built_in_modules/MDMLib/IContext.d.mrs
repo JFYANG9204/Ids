@@ -1,0 +1,14 @@
+
+Namespace MDMLib
+
+    Interface IContext Implements Object
+
+        Property Name() As String
+        ReadOnly Property Alternatives() As IContextAlternatives
+        ReadOnly Property Properties() As IProperties
+        Property Description() As String
+        Property Usage() As ContextUsageConstants
+
+    End Interface
+
+End Namespace

@@ -1,14 +1,10 @@
-Dim TableDoc,StartTime,EndTime
 
-Set TableDoc = CreateObject("TOM.Document")
-Dim MDM
-Set MDM = TableDoc.DataSet.MdmDocument
-MDM.Save("data\_FINAL.mdd")
-dim cat
+function string_join(sourceString, split, joinString)
 
-for each cat in mdm.fields["BD11"].categories
+    dim cat, result
+    for each cat in split(sourceString, split)
+        result = result + joinString + cat + split
+    next
+    string_join = left(result, len(result) - len(split))
 
-next
-
-
-
+end function

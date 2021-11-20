@@ -600,9 +600,13 @@ export class TypeUtil extends UtilParser {
         return rightType.type;
     }
 
-    getIdentifierType(id: Identifier, raiseError = true) {
+    getIdentifierType(
+        id: Identifier,
+        raiseError = true,
+        isFunction: boolean = false) {
+
         const name = id.name;
-        let find = this.scope.get(name)?.result;
+        let find = this.scope.get(name, undefined, isFunction)?.result;
         if (find) {
             this.addExtra(id, "declaration", this.maybeCopyType(find));
             return find;
@@ -807,7 +811,10 @@ export class TypeUtil extends UtilParser {
         let objType: DeclarationBase | undefined;
         let isFunction = false;
         if (callee.type === "Identifier") {
-            objType = this.getIdentifierType(callee as Identifier, raiseError);
+            objType = this.getIdentifierType(
+                callee as Identifier,
+                raiseError,
+                true);
             isFunction = true;
         } else {
             objType = this.getMemberType(callee as MemberExpression, raiseError);

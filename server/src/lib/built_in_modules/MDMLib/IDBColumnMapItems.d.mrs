@@ -1,0 +1,21 @@
+
+
+Namespace MDMLib
+
+    Interface IDBColumnMapItems Implements Object
+
+        Property ID() As String
+        Property Label() As String
+        Property KeyCode() As String
+        Property File() As String
+        Property AnalysisValue() As String
+        Property Fixed() As String
+        Property Exclusive() As String
+
+        Sub setPropertiesParent(pParent As IMDMObject)
+        End Sub
+
+    End Interface
+
+End Namespace
+

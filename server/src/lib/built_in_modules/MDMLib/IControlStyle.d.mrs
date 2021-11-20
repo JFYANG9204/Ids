@@ -1,0 +1,14 @@
+
+Namespace MDMLib
+
+    Interface IControlStyle Implements Object
+
+        Property Type() As ControlTypes
+        Property ReadOnly() As Boolean
+        Property Accelerator() As String
+        ReadOnly Property IsEmpty() As Boolean
+
+    End Interface
+
+End Namespace
+

@@ -1,0 +1,27 @@
+
+Namespace MDMLib
+
+    Interface IConditionalRouting Implements IMDMObject
+
+        Property Name() As String
+        ReadOnly Property Parent() As IMDMObject
+        Property Document() As IDocument
+        ReadOnly Property Properties() As IProperties
+        ReadOnly Property ObjectTypeValue() As ObjectTypesConstants
+        ReadOnly Property IsReference() As Boolean
+        ReadOnly Property UUID() As String
+        ReadOnly Property IsSystem() As Boolean
+        ReadOnly Property Routing() As IRouting
+        ReadOnly Property Description() As ILabel
+        Property Expression() As String
+        Property Owner() As IMDMObject
+
+        Sub Load(pElement As Variant, verName As String, bMerge As Boolean, data_version As Long, Optional bIsMergeNew As Boolean = False)
+        End Sub
+
+        Sub Save(pElement As Variant)
+        End Sub
+
+    End Interface
+
+End Namespace

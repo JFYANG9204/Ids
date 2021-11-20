@@ -1,0 +1,13 @@
+
+
+Namespace MDMLib
+
+    Interface IDBQuestionDataProvider Implements Object
+
+        Function Query(bstrConnection As String, bstrSQLStatement As String) As Variant
+        End Function
+
+    End Interface
+
+End Namespace
+

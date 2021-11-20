@@ -1,0 +1,28 @@
+
+Namespace MDMLib
+
+    Interface IDataSources Implements Object, IEnumerable
+
+        Default Property Item(Index As Variant) As IDataSource
+
+        Property ViewEditableValues() As Boolean
+        Property Current() As IDataSource
+        ReadOnly Property Count() As Long
+        Property Default() As IDataSource
+
+        Function Find(CDSCName As String, Optional DBLocation As String = "") As IDataSource
+        End Function
+
+        Sub Add(DataSource As IDataSource, Optional Index As Long = -1)
+        End Sub
+
+        Function AddNew(Name As String, CDSCName As String, DBLocation As String, Optional Index As Long = -1) As IDataSource
+        End Function
+
+        Sub Remove(Index As Variant)
+        End Sub
+
+    End Interface
+
+End Namespace
+

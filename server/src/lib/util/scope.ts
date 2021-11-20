@@ -230,8 +230,7 @@ export class ScopeHandler {
             return;
         }
         if (this.inFunction) {
-            if (this.isRedeclared(scope, name) ||
-                this.isRedeclared(this.global, name)) {
+            if (this.isRedeclared(scope, name)) {
                 this.raise(node.name, ErrorMessages["VarRedeclaration"], false, name);
             }
             return;
@@ -313,8 +312,20 @@ export class ScopeHandler {
         }
     }
 
-    getName(scope: Scope, name: string): ScopeSearchResult | undefined {
+    getName(
+        scope: Scope,
+        name: string,
+        isFunction?: boolean): ScopeSearchResult | undefined {
+
         const lowerName = name.toLowerCase();
+
+        if (isFunction) {
+            return {
+                type: BindTypes.function,
+                result: scope.functions.get(lowerName)
+            };
+        }
+
         let result;
         if ((result = scope.dims.get(lowerName))) {
             return {
@@ -350,8 +361,10 @@ export class ScopeHandler {
     }
 
     get(name: string,
-        namespace?: string | NamespaceDeclaration):
+        namespace?: string | NamespaceDeclaration,
+        isFunction?: boolean):
         ScopeSearchResult | undefined {
+
         if (namespace) {
             let field;
             let filedName = (typeof namespace === "string" ? namespace :
@@ -364,6 +377,18 @@ export class ScopeHandler {
             }
             return this.searchInNamespace(field, name);
         }
+
+        if (isFunction) {
+            let lowerName = name.toLowerCase();
+            let find = this.store.functions.get(lowerName) ||
+                this.global.functions.get(lowerName) ||
+                this.currentScope().functions.get(lowerName);
+            return {
+                type: BindTypes.function,
+                result: find
+            };
+        }
+
         return this.getName(this.store, name) ||
                this.getName(this.currentScope(), name) ||
                this.getName(this.global, name);
