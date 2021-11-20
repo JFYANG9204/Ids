@@ -445,6 +445,7 @@ export class StatementParser extends ExpressionParser {
         node.push(node.declarator, node.init);
         let right: { type: DeclarationBase | undefined } = { type: undefined };
         node.declarator.binding = this.getExprType(node.init, right);
+        node.declarator.bindingType = right.type;
         this.scope.declareName(
             node.declarator.name.name,
             BindTypes.const,
