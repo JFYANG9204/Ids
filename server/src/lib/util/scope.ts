@@ -72,6 +72,9 @@ export class ScopeHandler {
     stack: Array<Scope> = [];
     raise: RaiseFunction;
 
+    // Function
+    curFunc?: FunctionDeclaration;
+
     constructor(
         parser: ParserBase,
         raise: RaiseFunction,
@@ -107,12 +110,14 @@ export class ScopeHandler {
         return this.currentScope().flags === ScopeFlags.event;
     }
 
-    enter(flags: ScopeFlags) {
+    enter(flags: ScopeFlags, func?: FunctionDeclaration) {
         this.stack.push(new Scope(flags));
+        this.curFunc = func;
     }
 
     exit() {
         this.stack.pop();
+        this.curFunc = undefined;
     }
 
     declareName(
@@ -253,6 +258,32 @@ export class ScopeHandler {
 
     isUndefine(name: string) {
         return this.currentScope().undefined.has(name.toLowerCase());
+    }
+
+    isCurFunction(name: string) {
+        if (!this.curFunc) {
+            return false;
+        }
+        return this.curFunc.name.name.toLowerCase() === name.toLowerCase();
+    }
+
+    updateFuncReturnType(name: string) {
+        if (!this.curFunc) {
+            return;
+        }
+        if (this.curFunc.binding) {
+            let match = false;
+            if (typeof this.curFunc.binding === "string") {
+                match = this.curFunc.binding.toLowerCase() === name.toLowerCase();
+            } else {
+                match = this.curFunc.binding.name.name.toLowerCase() === name.toLowerCase();
+            }
+            if (!match) {
+                this.curFunc.binding = "Variant";
+            }
+        } else {
+            this.curFunc.binding = name;
+        }
     }
 
     currentScope() {

@@ -1029,7 +1029,7 @@ export class StatementParser extends ExpressionParser {
             node.needReturn = true;
             isFunction = true;
         }
-        this.scope.enter(ScopeFlags.function);
+        this.scope.enter(ScopeFlags.function, node);
         this.next();
         node.name = this.parseIdentifier();
         this.expect(tt.braceL);

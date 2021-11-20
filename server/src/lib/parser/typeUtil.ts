@@ -513,6 +513,8 @@ export class TypeUtil extends UtilParser {
                             true);
                     }
                 }
+            } else if (this.scope.isCurFunction(expr.left.name)) {
+                this.scope.updateFuncReturnType(right);
             } else {
                 if (raiseError) {
                     this.undefined(expr.left, expr.left.name);
