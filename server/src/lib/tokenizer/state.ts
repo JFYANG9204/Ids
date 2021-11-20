@@ -10,8 +10,7 @@ import {
     File,
     DeclarationBase
 } from "../types";
-import { Position } from "../util/location";
-import { Scope, ScopeFlags } from "../util/scope";
+import { Position, Scope, ScopeFlags } from "../util";
 import { TokenType, types } from "./type";
 
 

@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import { SourceLocation } from "../util/location";
+import { SourceLocation } from "../util";
 import { State } from "./state";
 
 const beforeExpr = true;

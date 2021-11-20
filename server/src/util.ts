@@ -1,11 +1,14 @@
+import { join } from "path";
 import { fileURLToPath } from "url";
 import { TextDocuments, _Connection } from "vscode-languageserver";
 import {
     Position,
     TextDocument
 } from "vscode-languageserver-textdocument";
+import { builtInModule, loadDecarationFiles } from "./declaration";
 import { raiseErrors } from "./errors";
 import {
+    getAllUsefulFile,
     getCurrentParser,
     getFileTypeMark,
     ParserFileDigraph,
@@ -15,8 +18,13 @@ import {
 import { createBasicOptions } from "./lib/options";
 import { Parser } from "./lib/parser";
 import { File } from "./lib/types";
-import { builtInModule } from "./lib/util/declaration";
 
+
+export function loadBuiltInModule() {
+    const folder = join(__dirname, "../../../src/lib/built_in_modules");
+    const module = getAllUsefulFile(folder);
+    return loadDecarationFiles(module);
+}
 
 
 export function updateAndVaidateDocument(

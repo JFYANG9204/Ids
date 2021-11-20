@@ -1,9 +1,9 @@
 import { join } from "path";
-import { getAllUsefulFile } from "../file/util";
-import { createBasicOptions } from "../options";
-import { Parser } from "../parser";
-import { File } from "../types";
-import { Scope } from "./scope";
+import { getAllUsefulFile } from "../lib/file/util";
+import { createBasicOptions } from "../lib/options";
+import { Parser } from "../lib/parser";
+import { File } from "../lib/types";
+import { Scope } from "../lib/util";
 
 export interface DeclarationLoadResult {
     scope?: Scope,
@@ -12,7 +12,7 @@ export interface DeclarationLoadResult {
 }
 
 export function loadBuiltInModule() {
-    const folder = join(__dirname, "../../../src/lib/built_in_modules");
+    const folder = join(__dirname, "../../src/lib/built_in_modules");
     const module = getAllUsefulFile(folder);
     return loadDecarationFiles(module);
 }
@@ -37,4 +37,6 @@ export function loadDecarationFiles(files: Map<string, string>): DeclarationLoad
     };
 }
 
-export const builtInModule = loadBuiltInModule();
+const builtInModule = loadBuiltInModule();
+
+export { builtInModule };

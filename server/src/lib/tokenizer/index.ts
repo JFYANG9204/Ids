@@ -1,16 +1,21 @@
 /* eslint-disable curly */
 /* eslint-disable @typescript-eslint/naming-convention */
-import * as charCodes from "../util/charcodes";
 import { Options } from "../options";
 import { ErrorMessages } from "../parser/error-messages";
 import { ErrorParser } from "../parser/errors";
 import { Comment } from "../types";
-import { SourceLocation } from "../util/location";
-import { isNewLine, isWhitespace, lineBreakG, skipWhiteSpace } from "../util/whitespace";
+import {
+    charCodes,
+    isIdentifierChar,
+    isIdentifierStart,
+    isNewLine,
+    isWhitespace,
+    lineBreakG,
+    skipWhiteSpace,
+    SourceLocation
+} from "../util";
 import { LookaheadState, State } from "./state";
 import { keywords, Token, TokenType, types } from "./type";
-import { isIdentifierChar, isIdentifierStart } from "../util/identifier";
-import { DefinitionBase } from "../util/definition";
 
 const allowedNumberCharactor = {
     octal: [

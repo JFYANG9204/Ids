@@ -1,7 +1,7 @@
 import * as path from "path";
+import { DeclarationLoadResult, loadDecarationFiles } from "../../declaration";
 import { createBasicOptions, SourceType } from "../options";
 import { Parser } from "../parser";
-import { DeclarationLoadResult, loadDecarationFiles } from "../util/declaration";
 import { mergeScope, Scope } from "../util/scope";
 import {
     createParserFileNode,

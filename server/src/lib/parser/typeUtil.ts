@@ -35,6 +35,13 @@ export class TypeUtil extends UtilParser {
         return this.scope.get("Variant")?.result;
     }
 
+    maybeCopyType(dec: DeclarationBase) {
+        if (dec instanceof SingleVarDeclarator) {
+            return Object.assign({}, dec);
+        }
+        return dec;
+    }
+
     getBindingTypeName(binding: BindingDeclarator | string) {
         return typeof binding === "string" ? binding :
             binding.name.name;
@@ -536,7 +543,7 @@ export class TypeUtil extends UtilParser {
         const name = id.name;
         let find = this.scope.get(name)?.result;
         if (find) {
-            this.addExtra(id, "declaration", find);
+            this.addExtra(id, "declaration", this.maybeCopyType(find));
             return find;
         } else {
             let isFunction = false;

@@ -31,7 +31,7 @@ import {
     raiseErrorsFromFile,
     updateAndVaidateDocument,
 } from "./util";
-import { builtInModule } from "./lib/util/declaration";
+import { builtInModule } from "./declaration";
 
 let connection = createConnection(ProposedFeatures.all);
 let documents = new TextDocuments(TextDocument);

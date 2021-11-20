@@ -2,13 +2,13 @@ import { readFileSync } from "fs";
 import {
     resolve,
 } from "path";
+import { builtInModule } from "../../server/src/declaration";
 import {
     ParserFileDigraph
 } from "../../server/src/lib/file";
 import { getCurrentParser, getFileTypeMark, positionAt, positionInWith, readFileAndConvertToUtf8 } from "../../server/src/lib/file/util";
 import { createBasicOptions } from "../../server/src/lib/options";
 import { Parser } from "../../server/src/lib/parser";
-import { builtInModule } from "../../server/src/lib/util/declaration";
 
 //const folderPath = resolve("./test/parser/fixture/dpgm");
 //const startPath = resolve("./test/parser/fixture/dpgm/Run.mrs");

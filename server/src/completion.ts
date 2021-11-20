@@ -1,4 +1,3 @@
-import * as charCodes from "./lib/util/charcodes";
 import {
     existsSync,
     readdirSync
@@ -15,6 +14,7 @@ import {
     MarkupKind,
     SignatureHelp
 } from 'vscode-languageserver-types';
+import { builtInModule } from "./declaration";
 import {
     distanceTo,
     positionAt,
@@ -34,14 +34,12 @@ import {
     FunctionDeclaration,
     MacroDeclaration,
     NamespaceDeclaration,
-    NumericLiteral,
     PreIncludeStatement,
     PropertyDeclaration,
     SingleVarDeclarator,
-    StringLiteral
 } from "./lib/types";
+import { charCodes } from "./lib/util";
 import { isIdentifierChar } from "./lib/util/identifier";
-import { builtInModule } from "./lib/util/declaration";
 import { Scope } from "./lib/util/scope";
 
 
