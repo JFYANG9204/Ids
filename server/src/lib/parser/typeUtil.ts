@@ -943,7 +943,7 @@ export class TypeUtil extends UtilParser {
                     if (nece === "") {
                         nece = arg.declarator.name.name;
                     } else {
-                        nece += arg.declarator.name.name;
+                        nece += "," + arg.declarator.name.name;
                     }
                 }
             }

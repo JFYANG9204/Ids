@@ -630,6 +630,7 @@ Class Categorical Implements IEnumerable
     Function IsOneOf(Optional ParamArray Vals As Variant) As Boolean
     End Function
 
+
 End Class
 
 
@@ -1091,3 +1092,109 @@ Here is the result set:
 !'
 Function IsOneOf(Val As Categorical, Optional ParamArray Vals As Variant) As Boolean
 End Function
+
+
+'!
+Returns the smallest available subscript for the indicated dimension of an array. By default, the lower bound is returned for the first dimension of the array.
++ `List`: *Categorical* - *Array* or *Categorical* value.
++ `Dimension`: *Long* - *Array* dimension to use. The default is 1.
++ `return`: *Long* - Lower bound of the list.
+
+### Remarks
+This function returns the numeric index of the first item in (a particular dimension of) an array. If `Dimension` is greater than the number of dimensions in the array, the last dimension is used, and if `Dimension` is less than 1, the first dimension is used. A *Categorical* value is treated as a one-dimensional array. For arrays created in mrScriptBasic and the IBM® SPSS® Data Collection Data Model, the lower bound is always 0.
+This function is similar to the LBound function in Visual Basic.
+
+### Examples
+The following mrScriptBasic example defines a two-dimensional array that has 10 rows and an undefined number of columns and assigns a value to the third column in the fourth row. `LBound` is then used to return the lower bound values of the two dimensions. However, because the array was created in mrScriptBasic, the return value for both dimensions is 0.
+```ds
+Dim MyArray[10][], a, b
+
+MyArray[3][2] = 28
+
+a = LBound(MyArray, 1)       ' Returns 0
+b = LBound(MyArray, 2)       ' Returns 0
+```
+!'
+Function LBound(List As Variant, Optional Dimension As Long) As Long
+End Function
+
+'!
+Returns the union of a number of categorical values; that is, returns the categories that are in any of the input categorical values.
++ `Vals`: *Variant* - One or more values.
++ `return`: *Categorical* - The union of categorical values from `Vals`.
+
+### Remarks
+Values in `Vals` are converted to categorical values if necessary, and the return value is their union. *NULL* values are ignored. If a value cannot be converted to a categorical type, an error occurs. If `Vals` is empty (no arguments are supplied), or all the values are *NULL*, the return value is *NULL*. This function differs from using the `+ operator` to get the union of categorical values, by ignoring *NULL* values instead of giving a *NULL* result if any *NULL* values are present. It differs from the `Union` function by not supporting the use of category expressions.
+
+### Examples
+The following mrScriptBasic example combines the results of three categorical variables to produce a merged categorical variable.
+```ds
+Merge(Q1, Q2, Q3)
+```
+!'
+Function Merge(Optional ParamArray Vals As Variant) As Categorical
+End Function
+
+'!
+Re-sizes an array to a given size. By default, the array contents are preserved, unless `Preserve` is set to *False*.
++ `List`: *Categorical* - *Array* or *Categorical* value.
++ `Size`: *Long* - New size of the array.
++ `Preserve`: *Boolean* - Defines whether to keep the existing contents. The default is *True*.
++ `return`: *Long* - Always zero.
+
+### Remarks
+This function changes the size of the last dimension of an array. If `Preserve` is *False*, all items in all dimensions are cleared. A *Categorical* value is treated as a one-dimensional array.
+This function is similar to the `ReDim` function in Visual Basic.
+
+### Examples
+The following mrScriptBasic example uses `ReDim` to redefine a categorical value without clearing it. `UBound` is used to return the upper bound value before and after calling ReDim.
+```ds
+Dim MyCategorical, x, y
+
+MyCategorical = {1, 3, 5, 8}
+
+x = UBound(MyCategorical)   ' Returns 3
+
+ReDim(MyCategorical, 2)
+
+y = UBound(MyCategorical)   ' Returns 1
+```
+
+In this next example, the `Size` parameter is set to 4 and the `Preserve` parameter is set to *False*.
+```ds
+Dim MyCategorical, x, y
+
+MyCategorical = {1, 3, 5, 8}
+
+ReDim(MyCategorical, 4, False)
+
+z = UBound(MyCategorical)   ' Returns 3
+```
+!'
+Function ReDim(List As Variant, Size As Long, Optional Preserve As Boolean = True) As Long
+End Function
+
+'!
+Returns the largest available subscript for the indicated dimension of an array. By default, the upper bound is returned for the first dimension of the array.
++ `List`: *Categorical* - *Array* or *Categorical* value.
++ `Dimension`: *Long* - Array dimension to use. The default is 1.
++ `return`: *Long* - Upper bound of the list.
+
+### Remarks
+This function returns the numeric index of the last item in (a particular dimension of) an array. If `Dimension` is greater than the number of dimensions in the array, the last dimension is used, and if `Dimension` is less than 1, the first dimension is used. A *Categorical* value is treated as a one-dimensional array.
+This function is similar to the UBound function in Visual Basic.
+
+### Examples
+The following mrScriptBasic example defines a two-dimensional array that has 10 rows and an undefined number of columns and assigns a value to the third column in the fourth row. `UBound` is then used to return the upper bound values of the two dimensions.
+```ds
+Dim MyArray[10][], x, y
+
+MyArray[3][2] = 28
+
+x = UBound(MyArray, 1)    ' Returns 9
+y = UBound(MyArray, 2)    ' Returns 2
+```
+!'
+Function UBound(List As Variant, Optional Dimension As Long = 1) As Long
+End Function
+

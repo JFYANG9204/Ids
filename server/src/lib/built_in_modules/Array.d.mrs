@@ -177,4 +177,29 @@ Class Array Implements IEnumerable
     Function Right(Length As Long) As Variant
     End Function
 
+    '!
+    Returns the smallest available subscript for the indicated dimension of an array. By default, the lower bound is returned for the first dimension of the array.
+    + `Dimension`: *Long* - *Array* dimension to use. The default is 1.
+    + `return`: *Long* - Lower bound of the list.
+
+    ### Remarks
+    This function returns the numeric index of the first item in (a particular dimension of) an array. If `Dimension` is greater than the number of dimensions in the array, the last dimension is used, and if `Dimension` is less than 1, the first dimension is used. A *Categorical* value is treated as a one-dimensional array. For arrays created in mrScriptBasic and the IBM® SPSS® Data Collection Data Model, the lower bound is always 0.
+    This function is similar to the LBound function in Visual Basic.
+
+    ### Examples
+    The following mrScriptBasic example defines a two-dimensional array that has 10 rows and an undefined number of columns and assigns a value to the third column in the fourth row. `LBound` is then used to return the lower bound values of the two dimensions. However, because the array was created in mrScriptBasic, the return value for both dimensions is 0.
+    ```ds
+    Dim MyArray[10][], a, b
+
+    MyArray[3][2] = 28
+
+    a = LBound(MyArray, 1)       ' Returns 0
+    b = LBound(MyArray, 2)       ' Returns 0
+    ```
+    !'
+    Function LBound(Optional Dimension As Long) As Long
+    End Function
+
+
+
 End Class
