@@ -1,0 +1,349 @@
+'!
+Returns the absolute value of a number.
++ `Val`: *Double* - A numeric value.
++ `return`: *Double* - `Val` with any negative sign removed.
+
+### Remarks
+If `Val` is negative, the return value is `-Val`, otherwise the return value is `Val`. If the current data value is *NULL*, `Val` is 0.0 and the return value is 0.0.
+This function is similar to the `Abs` function in VBScript.
+
+### Examples
+The following mrScriptBasic example uses the `Abs` function to get the absolute value of two numbers:
+```ds
+Dim MyPositiveNumber, MyNegativeNumber
+
+MyPositiveNumber = Abs(150)       ' Returns 150
+MyNegativeNumber = Abs(-150)      ' Returns 150
+```
+!'
+Function Abs(Val As Double) As Double
+End Function
+
+'!
+Returns the arctangent of a number.
++ `Val`: *Double* - A numeric value that represents the ratio of the two shorter sides of a right-angled triangle. (The ratio is the length of the side opposite a particular angle divided by the length of the side adjacent to the angle.)
++ `return`: *Double* - Arctangent of `Val`.
+
+### Remarks
+The return value is the angle in radians whose tangent is `Val` and which is in the range -pi/2 to pi/2. If the current data value is *NULL*, `Val` is 0.0 and the return value is 0.0.
+This function is similar to the `Atn` function in VBScript.
+
+### Examples
+The following mrScriptBasic example uses the Atn function to get the arctangent of a number that represents the ratio of two sides of a right-angled triangle:
+```ds
+Dim MyArcTangent
+
+MyArcTangent = Atn(12.0/5.0)   ' Returns 1.17600520709514
+```
+!'
+Function Atn(Val As Double) As Double
+End Function
+
+'!
+Returns the cosine of an angle.
++ `Val`: *Double* - A numeric value that represents an angle in radians.
++ `return`: *Double* - Cosine of `Val`.
+
+### Remarks
+The `Cos` function takes an angle in a right-angled triangle and returns a value that corresponds to the length of the side adjacent to the angle divided by the length of the hypotenuse.
+If the current data value is *NULL*, `Val` is 0.0 and the return value is 1.0.
+This function is similar to the `Cos` function in VBScript.
+
+### Examples
+The following mrScriptBasic example uses the `Cos` function to get the cosine of an angle:
+```ds
+Dim MyCosine
+
+MyCosine = Cos(2.7)     ' Returns -0.904072142017061
+```
+!'
+Function Cos(Val As Double) As Double
+End Function
+
+'!
+Returns e (the base of natural logarithms) raised to a power.
++ `Val`: *Double* - A numeric value.
++ `return`: *Double* - *e* to the power of `Val`.
+
+### Remarks
+The return value is *e* (the base of natural logarithms) raised to the power of `Val`. If the current data value is *NULL*, `Val` is 0.0 and the return value is 1.0.
+When `Val` is a large number, the return value can have more digits than can be accurately represented by the *Double* data type. However, the function does not check for this and does not issue an error when this happens. This function is therefore unsuitable for use with positive values greater than about 709 or negative values less than about -745.
+This function is similar to the `Exp` function in VBScript.
+
+### Examples
+The following mrScriptBasic example uses the `Exp` function to return e raised to a power:
+```ds
+Dim MyNumber, MyBigNumber1, MyBigNumber2, MyBigNegativeNumber1, MyBigNegativeNumber2
+
+MyNumber = Exp(1.32581766366803)         ' Returns 3.76526281526936
+MyBigNumber1 = Exp(709.782712893)        ' Returns 1.79769313417214E+308
+MyBigNumber2 = Exp(709.782712894)        ' Returns 1.#INF, which indicates \"overflow\"
+MyBigNegativeNumber1 = Exp(-744.44007)   ' Returns 4.94065645841247E-324
+MyBigNegativeNumber2 = Exp(-745.2)       ' Returns 0, which indicates \"underflow\"
+```
+The next example demonstrates using the `Exp` and `Log` functions to return *x* to the power of *y* (when *x* is greater than zero):
+```ds
+Dim x, y, XToThePowerOfY
+
+XToThePowerOfY = Exp(Log(x) * y)
+```
+Note that this example is not suitable when *x* is negative because the parameter to the `Log` function must be a positive number.
+The next example demonstrates using the `Exp` and `Log` functions to return the cube root of *x*:
+```ds
+Dim x, CubeRootOfX
+
+If x > 0 Then
+   CubeRootOfX = Exp(Log(x) / 3)
+ElseIf x < 0 Then
+   CubeRootOfX = - Exp(Log(-x) / 3)
+Else
+   CubeRootOfX = 0
+End If
+```
+!'
+Function Exp(Val As Double) As Double
+End Function
+
+'!
+Returns the integer portion of a number.
++ `Val`: *Double* - A numeric value.
++ `return`: *Long* - The greatest integer that is less than or equal to `Val`.
+
+### Remarks
+An error occurs if `Val` is outside the range of integer values that can be stored in the Long data type (-2,147,483,648 to 2,147,483,647). If the current data value is *NULL*, `Val` is 0.0 and the return value is 0.
+This function is similar to the `Int` function in VBScript.
+
+### Examples
+The following mrScriptBasic example uses the `Int` function to return the integer portion of a number:
+```ds
+Dim MyInteger1, MyInteger2, MyInteger3
+
+MyInteger1 = Int(9.88)              ' Returns 9
+MyInteger2 = Int(-9.88)             ' Returns -10
+MyInteger3 = Int(12345678901234.89) ' Error
+```
+!'
+Function Int(Val As Double) As Long
+End Function
+
+'!
+Returns the logarithm of a number.
++ `Val`: *Double* - A numeric value.
++ `Base`: *Double* - Optional. The base for the logarithm. If omitted or <= 0.0, e is used.
++ `return`: *Double* - Logarithm of `Val`.
+
+### Remarks
+The logarithm is the power to which `Base` must be raised to get `Val`. If `Base` is not specified, base e is used to return the natural logarithm of `Val`. `Base` e is approximately 2.718282.
+An error occurs if `Val` is negative or if `Base` is 1.0 (as 1.0 raised to any power is always 1.0). If `Val` is 0.0, the return value is 0.0. If the current data value is *NULL*, `Val` is 0.0 and the return value is 0.0.
+This function is similar to the `Log` function in VBScript.
+
+### Examples
+The following mrScriptBasic example uses the Log function to return the natural logarithm of 15, and the logarithm of 15 to the base of 10:
+```ds
+Dim MyNaturalLogarithm, MyLog10
+
+MyNaturalLogarithm = Log(15)    ' Returns 2.70805020110221
+
+MyLog10 = Log(15, 10)
+```
+!'
+Function Log(Val As Double, Optional Base As Double) As Double
+End Function
+
+'!
+Returns the highest value from a list of values.
++ `Val1`: *Variant* - First data value.
++ `Vals`: *Variant* - Variable number of other values.
++ `return`: *Variant* - The maximum of all values.
+
+### Remarks
+The `MaxOf` function compares non-null values and returns the highest value. If all values are null, the return value is null. If no other values are supplied, the return value is `Val1`. For values of type *Object*, the value of the object's default property is used.
+
+### Examples
+The following mrScriptBasic example uses the `MaxOf` function to get the highest of a number of values:
+```ds
+MaxOf(8, 9.2, 24, 1.75)
+```
+!'
+Function MaxOf(Val1 As Variant, Optional ParamArray Vals As Variant) As Variant
+End Function
+
+'!
+Returns the lowest value from a list of values.
++ `Val1`: *Variant* - First data value.
++ `Vals`: *Variant* - Variable number of other values.
++ `return`: *Variant* - The minimum of all values.
+
+### Remarks
+The `MinOf` function compares non-null values and returns the lowest value. If all values are null, the return value is null. If no other values are supplied, the return value is `Val1`. For values of type *Object*, the value of the object's default property is used.
+
+### Examples
+The following mrScriptBasic example uses the `MinOf` function to get the lowest of a number of values:
+```ds
+MinOf(8, 9.2, 24, 1.75)
+```
+!'
+Function MinOf(Val1 As Variant, Optional ParamArray Vals As Variant) As Variant
+End Function
+
+'!
+Returns a number rounded to a specified number of decimal places or significant digits.
++ `Val`: *Double* - The value to be rounded.
++ `Digits`: *Long* - Optional. The number of decimal places or significant digits in the result. Treated as 0 if omitted or is < 0.
++ `Policy`: *Long* - Optional. The type of rounding to use as described in the table below. Treated as 0 if omitted or is < 0.
++ `return`: *Double* - `Val` rounded as specified.
+
+### Remarks
+The return value is the number nearest to `Val` with either the required number of digits after the decimal point or the required number of significant digits, depending on `Policy`. If `Policy` is 0, `Val` is rounded to the number of decimal places specified by `Digit`. If `Policy` is 0 and `Val` is exactly halfway between two possible rounded values (a \"borderline\" case) then this function performs **round to even**. This means that of the two possible rounded values, the one that has an even number as the last significant digit is returned. For example, 15.25 is rounded to 15.2 rather than 15.3.
+`Policy` can also be set to any combination of the values in the following table. To combine values, add them together:
+- **1** - Round `Val` to a number of significant digits rather than to a number of decimal places.
+- **2** - If `Val` is exactly halfway between the two nearest values of the required precision, round to the higher value rather than rounding to even. However, if value 4 below is also set, round to the lower value of the two nearest values.
+- **4** - If `Val` is exactly halfway between the two nearest values of the required precision, round to odd rather than rounding to even. However, if value 2 above is also set, round to the lower of the two nearest values.
+- **8** - If `Val` is negative and exactly halfway between the two nearest values of the required precision, round the absolute value and make its sign negative. If this value is set, \"higher\" and \"lower\" in values 2 and 4 above means \"having a larger absolute value\" and \"having a smaller absolute value\" respectively. This value has no effect if value 2 is not set.
+
+If `Val` is 0.0, the return value is 0.0. If the current data value is *NULL*, `Val` is 0.0 and the return value is 0.0.
+If `Digits` is 0 and `Policy` is 0 or an even number, Val is rounded to an integer. If `Digits` is 0 and `Policy` is an odd number, `Val` is rounded to one significant digit.
+
+### Examples
+
+| Function call      | Val       | Digits  | Result  | Notes |
+| :----------------  | :-------  | :------ | :------ | :------------- |
+| Round(Val, Digits) | 1234.5678 | 2       | 1234.57 | Rounded to 2 decimal places |
+| Round(Val, Digits) | 28.613    | 1       | 28.6    | Rounded to 1 decimal place |
+| Round(Val, Digits) | 62.75     | 1       | 62.8    | Borderline case, rounded to even |
+| Round(Val, Digits) | 62.85     | 1       | 62.8    | Borderline case, rounded to even |
+| Round(Val, Digits) | 1234.5678 | NULL    | 1235    | Rounded to an integer |
+
+| Function call              | Val       | Digits | Policy | Result   | Notes |
+| :-------------------       | :-------- | :----- | :----- | :------  | :------------- |
+| Round(Val, Digits, Policy) | 1234.5678 | 3      | 0      | 1234.568 | Rounded to 3 decimal places |
+| Round(Val, Digits, Policy) | 1234.5678 | 3      | 1      | 1230     | Rounded to 3 significant digits |
+| Round(Val, Digits, Policy) | 1234.5678 | 6      | 1      | 1234.57  | Rounded to 6 significant digits |
+| Round(Val, Digits, Policy) | 1234.5678 | 0      | 1      | 1000     | Rounded to 1 significant digit |
+| Round(Val, Digits, Policy) | 62.85     | 1      | 0      | 62.8     | Borderline case, rounded to even |
+| Round(Val, Digits, Policy) | 62.85     | 1      | 2      | 62.9     | Borderline case, rounded to higher value |
+| Round(Val, Digits, Policy) | -62.85    | 1      | 2      | -62.8    | Borderline case, rounded to higher value |
+| Round(Val, Digits, Policy) | -62.85    | 1      | 6      | -62.9    | Borderline case, rounded to lower value |
+| Round(Val, Digits, Policy) | 135       | 2      | 1      | 140      | Borderline case, rounded to even |
+| Round(Val, Digits, Policy) | 135       | 2      | 5      | 130      | Borderline case, rounded to odd |
+| Round(Val, Digits, Policy) | -107.135  | 2      | 2      | -107.13  | Borderline case, rounded to higher value |
+| Round(Val, Digits, Policy) | -107.135  | 2      | 10     | -107.14  | Borderline case, rounded to absolute higher value and made negative |
+
+The following mrScriptBasic example sets variable myResult to the value of myVariable rounded to two decimal places:
+```ds
+Dim myVariable, myResult
+
+myVariable = 255.2914
+
+myResult = myVariable.Round(2)    ' Returns 255.29
+```
+!'
+Function Round(Val As Double, Optional Digits As Long, Optional Policy As Long) As Double
+End Function
+
+'!
+Returns the value of a number raised to a power.
++ `Val1`: *Double* - The base value.
++ `Val2`: *Double* - The exponent value.
++ `return`: *Double* - `Val1` to the power of `Val2`.
+
+### Remarks
+The return value is `Val1` raised to the power of `Val2`. If `Val1` is 0.0, the return value is 0.0. If the current data value is *NULL*, `Val1` is 0.0 and the return value is 0.0. If `Val1` is < 0, an error occurs if `Val2` is not an integer value.
+When `Val1` or `Val2` are large numbers, the return value can have more digits than can be accurately represented by the *Double* data type. However, the function does not check for this and does not issue an error when this happens.
+
+### Examples
+The following mrScriptBasic example uses the `Pow` function to return the result of 10 raised to the power of 3:
+```ds
+Dim MyVariable
+
+MyVariable = Pow(10, 3)    ' Returns 1000
+```
+!'
+Function Pow(Val1 As Double, Val2 As Double) As Double
+End Function
+
+'!
+Returns an integer that indicates the sign of a number. The function returns 1 if the number is greater than 0, 0 if it is equal to 0, and -1 if it is less than zero.
++ `Val`: *Double* - A numeric value.
++ `return`: *Long* - 1, 0, or -1, depending on whether `Val` is positive, 0, or negative.
+
+### Remarks
+If the current data value is *NULL*, `Val` is 0.0 and the return value is 0.
+This function is similar to the `Sgn` function in VBScript.
+
+### Examples
+The following mrScriptBasic example uses the `Sgn` function to determine the sign of a number:
+```ds
+Dim Positive, Zero, Negative
+
+Positive = Sgn(50.05)        ' Returns 1
+Zero = Sgn(0)                ' Returns 0
+Negative = Sgn(-10)          ' Returns -1
+```
+!'
+Function Sgn(Val As Double) As Long
+End Function
+
+'!
+Returns the sine of an angle.
++ `Val`: *Double* - A numeric value that represents an angle in radians.
++ `return`: *Double* - `Sine` of `Val`.
+
+### Remarks
+The `Sin` function takes an angle and returns the ratio of two sides of a right-angled triangle. The ratio is the length of the side opposite the angle divided by the length of the hypotenuse.
+If the current data value is *NULL*, `Val` is 0.0 and the return value is 0.0.
+This function is similar to the `Sin` function in VBScript.
+
+### Examples
+The following mrScriptBasic example uses the Sin function to get the sine of an angle:
+```ds
+Dim MySine
+MySine = Sin(2.7)       ' Returns 0.42737988023383
+```
+!'
+Function Sin(Val As Double) As Double
+End Function
+
+'!
+Returns the square root of a number.
++ `Val`: *Double* - A numeric value that represents an angle in radians.
++ `return`: *Double* - `Square` root of `Val`.
+
+### Remarks
+The square root is the number that when multiplied by itself gives `Val`.
+An error occurs if `Val` is negative. If the current data value is *NULL*, `Val` is 0.0 and the return value is 0.0.
+This function is similar to the `Sqr` function in VBScript.
+
+### Examples
+The following mrScriptBasic example uses the `Sqrt` function to return the square root of a number:
+```ds
+Dim MyValue1, MyValue2, MyValue3
+
+MyValue1 = Sqrt(9)    ' Returns 3
+MyValue2 = Sqrt(3)    ' Returns 1.73205080756888
+MyValue3 = Sqrt(-3)   ' Error
+```
+!'
+Functionn Sqrt(Val As Double) As Double
+End Function
+
+'!
+Returns the tangent of an angle.
++ `Val`: *Double* - A numeric value that represents an angle in radians.
++ `return`: *Double* - `Tangent` of `Val`.
+
+### Remarks
+`Tan` is used to return the ratio of two sides of a right-angled triangle, relative to one of the smaller angles. The ratio is the length of the side opposite the angle divided by the length of the side adjacent to the angle.
+An error occurs if `Val` is an odd multiple of pi/2 (for example, -pi/2, pi/2, 3pi/2, etc.). If the current data value is *NULL*, `Val` is 0.0 and the return value is 0.0.
+This function is similar to the `Tan` function in VBScript.
+
+### Examples
+The following mrScriptBasic example uses the Tan function to get the tangent of an angle:
+```ds
+Dim MyTangent
+
+MyTangent = Tan(1.37340076694502)  ' Returns 5.0000000000001
+```
+!'
+Function Tan(Val As Double) As Double
+End Function

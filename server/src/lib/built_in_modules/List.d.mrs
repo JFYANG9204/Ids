@@ -1,0 +1,683 @@
+'!
+This function returns a specified item from a list, or *NULL* if the item isn't found.
++ `List`: *Variant* - *Array*, *collection* or *Categorical* value to operate on.
++ `Key`: *Variant* - Index, name, or value of the item to be found.
++ `return`: *Variant* - A copy of the requested item if found in *List*, or *NULL* if the item is not found.
+
+### Remarks
+This function can be used to look up an item in a list, without generating an error if the item doesn't exist. If `List` or `Key` are *NULL*, the return value is *NULL*.
+The way in which `Key` is used to locate an item depends on the type of the list, as follows:
+- **1. If List is a Collection** -
+`Key` is passed to the list's \"Evaluate method\", that is, the property or method that is given a COM Dispatch identifier of -5. If the list has no `Evaluate` method, `Key` is passed to the Item property of the list. If the list has neither an `Evaluate` method, nor a property or method called \"Item\" (in English only), or if accessing the `Evaluate` method or the Item property generates an error, the return value is *NULL*. Otherwise, the return value is the value returned by the `Evaluate` method or the Item property, which may be *NULL* if the item isn't found.
+- **2. If List is an Array or Categorical Value, and Key is of type Long** -
+    - `Key` is taken as the positional index of an item in the list, starting at 0 for the first item. If `Key` is greater than or equal to zero and less than the number of items in List, the return value is the item at that position. Otherwise, the return value is *NULL*.
+    - For example, if *List* is a *Categorical* value that contains three or more categories and `Key` is 2 (*Long*), the return value is the third category in the list.
+- **3. If List is an Array or Categorical Value, and Key is not of type Long** -
+    - `Key` is compared with each list item in turn until a match is found. The way that Key is compared with each item depends on the type of the item:
+        - For a *string* item, `Key` is converted to a string and compared with the item.
+        - For an item that is an object, `Key` is converted to a string and compared with the value of the object's \"Name property\", that is, the property that is given a COM Dispatch identifier of -800. If the object has no \"Name property\", the `Key` is compared with the value of the object's default property, which is converted to a string if necessary. If the object has no Name or default properties, or if accessing the Name or default properties generates an error, the item is considered not to be a match for `Key`.
+        - For any other type of item, Key is compared with the item using the normal conversion and comparison rules for variant types.
+    - In all string comparisons, differences between upper and lower case are ignored. If a matching item is found, the return value is the matching item. Otherwise the return value is *NULL*.
+    - For example, if `List` is a *Categorical* value that contains a category with a value of 2 and `Key` is “2” (*Text*) or 2.0 (*Double*), the return value is 2 (*Long*).
+
+### Examples
+
+| Function call       |  List                           |  Key     |  Result    | Notes |
+| :-----------------  |  :----------------              |  :-----  |  :------   | :------------- |
+| FindItem(List, Key) |  {8,5,7,1,3,4,9}                |  4       |  3         | The item with a positional index of 4 (that is, the fifth item) in the categorical value is returned. |
+| FindItem(List, Key) |  {8,5,7,1,3,4,9}                |  10      |  NULL      | There is no item with a positional index of 10, so NULL is returned. |
+| FindItem(List, Key) |  {8,5,7,1,3,4,9}                |  \"4.0\" |  4         | To compare with the Long values in the categorical value, Key is converted from a Text to a Long value, and the matching item is returned. |
+| FindItem(List, Key) |  {8,5,7,1,3,4,9}                |  4.0     |  4         | To compare with the Long values in the categorical value, Key is converted from a Double to a Long value, and the matching item is returned. |
+| FindItem(List, Key) |  split(\"The quick brown fox\") |  1       |  \"quick\" | The item with a positional index of 1 (that is, the second item) in the array is returned. |
+| FindItem(List, Key) |  split(\"The quick brown fox\") |  \"THE\" |  \"The\"   | The matching Text item in the array is returned. String comparisons are always case insensitive. |
+| FindItem(List, Key) |  split(\"1 2 3 4 5\")           |  4       |  \"5\"     | Key is a Long value, so the item with a positional index of 4 in the array is returned. |
+| FindItem(List, Key) |  split(\"1 2 3 4 5\")           |  \"4\"   |  \"4\"     | Key is a Text value, so the matching text item in the array is returned. |
+| FindItem(List, Key) |  split(\"1 2 3 4 5\")           |  4.0     |  \"4\"     | Key is converted from a Double to a Text value, and the matching text item in the array is returned. |
+
+The `Split` function is used in some of the above examples to create an array of substrings that `FindItem` can operate on.
+The following mrScriptBasic example uses the `FindItem` function to find an item called \"Country\" in a collection:
+```ds
+Dim myItem
+
+myItem = myCollection.FindItem(\"Country\")
+
+If myItem <> NULL Then
+    ...                   ' Item found
+Else
+    ...                   ' Item not found
+End If
+```
+!'
+Function FindItem(List As Variant, Key As Varaint) As Varaint
+End Function
+
+'!
+Returns the current reversal state. This is the value that was used by the most recent call to the `Rev` function to determine whether the list was reversed or not. An odd value means that the list was reversed, an even value means that the list was presented in its normal order.
++ `return`: *Long* - Current reversal state.
+
+### Remarks
+The current reversal state is stored by the mrScriptBasic engine and Evaluate component and passed to the `Rev` function as a hidden parameter.
+
+### Examples
+```ds
+Dim seed
+
+seed = GetReversalSeed()
+```
+Function GetReversalSeed() As Long
+End Function
+
+'!
+Returns the current rotation state, which is used by the `Rot` function. This represents the offset that was used for the most recent rotation.
++ `return`: *Long* - Current rotation state.
+
+### Remarks
+The current rotation state is stored by the mrScriptBasic engine and Evaluate component and passed to the `Rot` function as a hidden parameter.
+The `GetRotationSeed` function is similar to using the rotation keyword in IBM® SPSS® Quancept™.
+
+### Examples
+```ds
+Dim seed
+
+seed = GetRotationSeed()
+```
+!'
+Function GetRotationSeed() As Long
+End Function
+
+'!
+This function returns a randomized copy of a list. The optional `Count` parameter defines how many items from the input list are included in the returned randomized list.
++ `List`: *Variant* - *Array*, *collection*, or *Categorical* value to operate on.
++ `Count`: *Long* - Optional. Number of items to return. If omitted, negative, or greater than the number of input items, all items are returned.
++ `Seed`: *Long* - Optional. The starting point to be used for the generation of the random ordering. The default is 0.
++ `return`: *Variant* - An array consisting of a randomized copy of the input list.
+
+### Remarks
+An error occurs if `List` is a collection that doesn't support the For Each...Next syntax. When List is a collection object, the return value is an array that contains copies of the objects in the collection and the input collection object is unchanged. Because the return value is an array, it does not have a `Count` property.
+If `Seed` is supplied, it is used to reset the starting point for the random number generator, as in `SetRandomSeed`, before the randomization. If `Seed` is not supplied or has a value of 0, the function will use the starting point stored for the random number generator by the mrScriptBasic engine or Evaluate component and passed as a hidden parameter. Each time you call one of the randomization functions, the starting point stored for the random number generator is updated. This means that if you call the function repeatedly without specifying the `Seed` parameter, the sequence of results is determined by the changing value passed as a hidden parameter. Specifying the `Seed` parameter is a way of resetting this sequence. It also means that the randomization can be repeated. For example, if you use this function to randomize a category list in an interview, by using the same seed value you could present the category list in the same sequence should the interview be restarted.
+The `Ran` function is similar to using the ran keyword in IBM® SPSS® Quancept™.
+
+### Examples
+`Ran` is useful when you are cleaning data. For example, when a respondent has selected more than one category in response to a single response question, you can use Ran to select one of the responses randomly, as shown in the following snippet of mrScriptBasic code:
+```ds
+If time_spent.AnswerCount() > 1 Then
+   time_spent = time_spent.Ran(1)
+End If
+```
+The next example shows using Ran with a multiple response variable called remember (which is in the IBM® SPSS® Data Collection Data File version of the Museum sample data set) in an SQL query. The example uses the `Ran` function twice, both times it is used to return one response from the list of responses stored in the variable. However, the first time the `Seed` parameter is not specified and the second time it is.
+```sql
+SELECT Respondent.Serial,
+    remember,
+    Ran(remember, 1) AS Remember1,
+    Ran(remember, 1, 1) AS Remember2,
+    remember.AnswerCount() AS HowMany
+FROM vdata
+WHERE remember IS NOT NULL
+```
+
+
+|       | Remember                                       | Remember1           | Remember2           | HowMany |
+| :---- | :--------------------------------------------- | :------------------ | :------------------ | :------ |
+| 1     | {dinosaurs,fish_and_reptiles,fossils,mammals,m | {fish_and_reptiles} | {dinosaurs}         | 7 |
+| 2     | {dinosaurs,fish_and_reptiles,fossils,mammals,m | {origin_of_species} | {fish_and_reptiles} | 8 |
+| 3     | {dinosaurs,fossils,birds,insects,whales,mammal | {minerals}          | {other}             | 11 |
+| 4     | {dinosaurs,conservation,birds,mammals,minerals | {other}             | {mammals}           | 6 |
+| 5     | {dinosaurs,birds,minerals,human_biology,evolut | {birds}             | {minerals}          | 5 |
+| 6     | {dinosaurs,birds,whales,mammals,origin_of_spec | {mammals}           | {dinosaurs}         | 7 |
+| 7     | {dinosaurs,birds,whales,mammals,minerals,botan | {human_biology}     | {birds}             | 8 |
+| 8     | {dinosaurs,insects,human_biology}              | {human_biology}     | {dinosaurs}         | 3 |
+
+Notice that the results in the Remember2 column are different from those in the Remember1 column, because the Seed parameter was used to specify a different starting point for the randomization. Although the results appear to be different in the Remember2 column for every case, in fact the choice of the category is based on the same random number each time. The reason the results appear to be different is that the cases have different numbers of responses. The HowMany column shows us how many responses have been selected in each row. We can see that:
++ In rows where 3 or 7 responses were chosen, *Remember2* contains the first response.
++ In rows where 4 or 8 responses were chosen, *Remember2* contains the second response.
++ In rows where 5 responses were chosen, *Remember2* contains the third response.
++ In rows where 6 responses were chosen, *Remember2* contains the fourth response.
+
+This is because if *N* is the random number being used, then:
+```ds
+N mod 3 = 0
+N mod 4 = 1
+N mod 5 = 2
+N mod 6 = 3
+N mod 7 = 0
+N mod 8 = 1
+```
+For example, *N* might be 777.
+!'
+Function Ran(List As Variant, Optional Count As Long, Optional Seed As Long = 0) As Varaint
+End Function
+
+'!
+Returns a string whose content and length are selected randomly within the constraints specified by the parameters. This function is intended to be used to generate unpredictable passwords.
++ `Val`: *String* - Optional. The characters allowed in the password. If `Val` is omitted or empty, “0123456789” is used.
++ `MinLength`: *Long* - Optional. The minimum length of the password. If `MinLength` is omitted or is less than 1, the minimum length is set to 8.
++ `MaxLength`: *Long* - Optional. The maximum length of the password. If `MaxLength` is omitted or is less than `MinLength`, the maximum length is set to `MinLength`.
++ `return`: *String* - A password whose content and length are selected randomly within the constraints specified by the parameters
+
+### Remarks
+If Val begins with \"[\" and ends with \"]\", Val is interpreted as a regular expression, which enables ranges of characters to be specified without listing them all explicitly. For example, \"[0-9a-fA-F]\" is equivalent to \"0123456789abcdefABCDEF\".
+The selection is truly random, like `SetRandomSeed(0)`, so the results are not reproducible.
+This function has no effect on the randomization state of the calling program.
+
+### Examples
+The following script generates a password that is between 10 and 16 characters long and contains a random selection of digits and lower-case letters:
+```ds
+Dim MyPassword
+MyPassword = RandomPassword(\"[a-z0-9]\", 10, 16)
+```
+!'
+Function RandomPassword(Optional Val As String, Optional MinLength As Long, Optional MaxLength As Long) As String
+End Function
+
+'!
+This function returns an array containing values selected randomly from a given series of integers.
++ `Start`: *Long* - The first possible value.
++ `End`: *Long* - The last possible value.
++ `Step`: *Long* - Optional. The increment between consecutive possible values. The default is 1.
++ `Count`: *Long* - Optional. The number of items to return. If omitted, negative, or greater than the number of possible values, all items are returned.
++ `Seed`: *Long* - Optional. The starting point to be used for the random number generator. The default is 0.
++ `return`: *Array* - An array containing a random selection from the set of possible numbers.
+
+### Remarks
+The `RanSequence` function returns an array containing numbers from the sequence `Start`, `Start + Step`, `Start + Step * 2`, ... , `Start + Step * N` (where *N* is the maximum integer such that the sequence doesn't pass `End`), in a random order. `Step` may be positive or negative. If `Step` is 0, `Count` copies of Start are returned, unless `Count` is omitted or negative, in which case an empty array is returned. If `Step` is positive and `Start > End`, or if `Step` is negative and `Start < End`, an empty array is returned.
+The `Start`, `End`, and `Step` arguments define the potential set of numbers to return (for example, a setting of (1, 10, 2) produces the set {1, 3, 5, 7, 9}, while (10, 1, -2) produces {10, 8, 6, 4, 2}). Then the Seed and the starting point for random number generation determine in which order those numbers would be returned. Finally, the `Count` argument controls how much of that ordered set is returned. Provided `Step` is not set to 0, the returned numbers are guaranteed to be unique, so no number occurs more than once in the array.
+If `Seed` is non-zero, it is used to reset the starting point for the random number generator, as in `SetRandomSeed`, before the randomization. If Seed is not supplied or has a value of 0, the function will use the starting point stored for the random number generator by the mrScriptBasic engine or Evaluate component and passed as a hidden parameter. Each time you call one of the randomization functions, the starting point stored for the random number generator is updated even if no numbers are returned. This means that if you call the function repeatedly without specifying the `Seed` parameter, the sequence of results is determined by the changing value passed as a hidden parameter. Specifying the Seed parameter is a way of resetting this sequence and means that the sequence of returned values can be repeated. For example, if you use this function to assign random responses to a categorical question, by using the same `Seed` value you could reassign the same responses.
+
+### Examples
+You can use `RanSequence` to generate random responses to a categorical question. To illustrate this, let's consider the Remember and Interest variables in the Museum sample IBM SPSS Data Collection Data File. These are categorical variables that have identical category lists that contain categories for the various museum galleries. The categories that represent the various galleries have mapped category values of 31 through 45. The following query uses the IIf function to test whether the value of the *Interest* variable is *Null*. If the value is *Null*, `RanSequence` is used to assign a single response chosen at random from the possible response values. The multiple response *Remember* variable is handled in a similar way, except three responses are assigned at random.
+```sq'
+SELECT Respondent.Serial,
+    IIf(Interest IS NULL, RanSequence(31, 45, 1, 1), Interest) AS Interest,
+    IIf(Remember IS NULL, RanSequence(31, 45, 1, 3), Remember) AS Remember
+FROM vdata
+```
+Here are the results for the first five respondents (for whom the *Interest* and *Remember* variables are *Null* in the case data):
+
+| Respondent.Serial | Interest       | Remember |
+| :---------------- | :------------- | :--------------------------------------- |
+| 1                 | {insects}      | {insects,minerals,origin_of_species} |
+| 2                 | {ecology}      | {insects,dinosaurs,mammals}  |
+| 3                 | {conservation} | {dinosaurs,ecology,whales}   |
+| 4                 | {insects}      | {fish_and_reptiles,botany,human_biology} |
+| 5                 | {conservation} | {conservation,evolution,whales}  |
+
+The next example is a snippet of mrScriptBasic that uses `RanSequence` in combination with the `CLong` function to assign to a variable a number taken randomly from a series of numbers. The series of numbers from which the random number is chosen is 0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100.
+```ds
+Dim GroupID
+GroupID = CLong(RanSequence(0, 100, 10, 1))
+```
+This example is provided to illustrate using `RanSequence` in mrScriptBasic and is not necessarily something you will want to do in practice and there are in fact other ways you could achieve the same result. For example:
+```ds
+GroupID = 10 * CLong(11 * Rnd())
+
+GroupID = 10 * (RanInt() Mod 11)
+```
+!'
+Function RanSequence(Start As Long, End As Long, Optional Step As Long, Optional Count As Long, Optional Seed As Long) As Array
+End Function
+
+'!
+This function returns an array containing copies of items from the input list, either in the normal order or in reverse order. The optional `Count` parameter defines how many items from the input list are included in the returned list.
++ `List`: *Variant* - *Array*, *collection*, or *Categorical* value to operate on.
++ `Count`: *Long* - Optional. Number of items to return. If omitted, negative, or greater than the number of input items, all items are returned.
++ `Policy`: *Long* - Optional. Controls the way the list order is chosen. The default is 1.
++ `Seed`: *Long* - Optional. The state to be used for the reversal. The default is 0.
++ `return`: *Array* - An array consisting of a copy of the input list.
+
+### Remarks
+An error occurs if `List` is a collection that doesn’t support the `For Each...Next` syntax. When List is a collection object, the return value is an array that contains copies of the objects in the collection and the input collection object is unchanged. Because the return value is an array, it does not have a `Count` property.
+This function uses the reversal state stored by the mrScriptBasic engine or Evaluate component and passed as a hidden parameter. However, when both `Policy` and `Seed` are nonzero, the reversal state is set to `Seed` before the `Policy` is applied. If the resulting reversal state is even, the list is presented in normal order; if odd, the list is reversed.
+The possible values for `Policy` are:
+- **0** - No reversal and the reversal state is set to 0.
+- **1** - The reversal state is used without changing it.
+- **2** - The reversal state is incremented by one and used.
+- **3** - 	Use the starting point of the random number generator and update both the reversal state and the random number generator starting point.
+The `Rev` function is similar to using the rev keyword in IBM® SPSS® Quancept™.
+
+### Examples
+This example shows using `Rev` with *museums* (which is a multiple response variable in the IBM® SPSS® Data Collection Data File version of the Museum sample data set) in an SQL query. The example uses the `Rev` function four times, each time using a different value for the `Policy` parameter.
+```sql
+SELECT museums AS Museums,
+    Rev(museums, , 0) AS Policy0,
+    Rev(museums, , 1) AS Policy1,
+    Rev(museums, , 2) AS Policy2,
+    Rev(museums, , 3) AS Policy3
+FROM vdata WHERE museums.AnswerCount() > 2
+```
+Here are the results for the first five respondents:
+
+|       | Museums       | Policy0       | Policy1       | Policy2       | Policy3   |
+| :---- | :------------ | :-----------  | :------------ | :------------ | :-----------  |
+| 1     | {25,28,29}    | {25,28,29}    | {25,28,29}    | {29,28,25}    | {25,28,29}    |
+| 2     | {26,28,29,30} | {26,28,29,30} | {26,28,29,30} | {26,28,29,30} | {26,28,29,30} |
+| 3     | {25,26,27}    | {25,26,27}    | {25,26,27}    | {27,26,25}    | {27,26,25}    |
+| 4     | {25,28,30}    | {25,28,30}    | {25,28,30}    | {25,28,30}    | {30,28,25}    |
+| 5     | {25,26,27}    | {25,26,27}    | {25,26,27}    | {27,26,25}    | {25,26,27}    |
+
+In the first column, *Museums*, the responses are presented as they are stored in the variable, which is the \"normal\" order. Notice that the responses are also presented in the normal order in the next two columns:
+- The second column, *Policy0*, presents the responses in the normal order because `Policy` is set to 0 and `Seed` is not specified. This means that the list is presented in the normal order.
+- The third column, *Policy1*, presents the responses in the normal order because `Policy` is set to 1 and `Seed` is not specified. This means that whether the list is reversed or not is determined by the current setting of the reversal state. However, because the `Seed` parameter has not been specified, the reversal state defaults to 0, which is an even number, and so the list is presented in the normal order. If we changed the query to specify the `Seed` parameter as 1, the order would be reversed, because 1 is an odd number.
+
+In the fourth column, *Policy2*, the list is presented in normal and reverse order alternately. This is because `Policy` is set to 2, which means that each time the function is called, one is added to the reversal state, thus causing it to alternate between odd and even values.
+In the fourth column, *Policy3*, the list is presented in normal and reverse orders at random because `Policy` is set to 3. This means that the reversal state is set to a random value each time the function is called. This means that the list is presented in normal and reverse order randomly.
+!'
+Function Rev(List As Variant, Optional Count As Long, Optional Policy As Long, Optional Seed As Long) As Array
+End Function
+
+'!
+This function returns an array containing values selected from a given series of integers, either in the original order or in reverse order.
++ `Start`: *Long* - The first possible value.
++ `End`: *Long* - The last possible value.
++ `Step`: *Long* - Optional. The increment between consecutive possible values. The default is 1.
++ `Count`: *Long* - Optional. The number of items to return. If omitted, negative, or greater than the number of possible values, all items are returned.
++ `Policy`: *Long* - Optional. Controls the way the list order is chosen. The default is 1.
++ `Seed`: *Long* - Optional. The state to be used for the reversal. The default is 0.
++ `return`: *Array* - An array containing a selection from the set of possible numbers.
+
+### Remarks
+The `RevSequence` function returns an array containing numbers from the sequence `Start`, `Start + Step`, `Start + Step * 2`, ... ,` Start + Step * N` (where N is the maximum integer such that the sequence doesn’t pass `End`), either in the normal order or in reverse order. `Step` may be positive or negative. If `Step` is 0, `Count` copies of Start are returned, unless `Count` is omitted or negative, in which case an empty array is returned. If `Step` is positive and `Start > End`, or if `Step` is negative and `Start < End`, an empty array is returned.
+Note that the `Start`, `End`, and `Step` arguments define the potential set of numbers to return (for example, a setting of (1, 10, 2) produces the set {1, 3, 5, 7, 9}, while (10, 1, -2) produces {10, 8, 6, 4, 2}). Then the `Policy` and `Seed` parameters and the reversal state determine in which order those numbers are returned. Finally, the `Count` argument controls how much of that ordered set is returned.
+This function uses the reversal state stored by the mrScriptBasic engine or Evaluate component and passed as a hidden parameter. However, when both `Policy` and Seed are nonzero, the reversal state is set to `Seed` before the `Policy` is applied. If the resulting reversal state is even, the list is presented in normal order; if odd, the list is reversed.
+The possible values for Policy are:
+- **0** - No reversal and the reversal state is set to 0.
+- **1** - The reversal state is used without changing it.
+- **2** - The reversal state is incremented by one and used.
+- **3** - Use the starting point of the random number generator and update both the reversal state and the random number generator starting point.
+
+### Examples
+This example shows using `RevSequence` in an SQL query. The example uses `RevSequence` four times to select five values from the values 1 through 10, each time using a different value for the `Policy` parameter, so that sometimes the values are presented in the normal (specified) order and sometimes in reversed order.
+```sql
+SELECT
+    RevSequence(1, 10, 1, 5, 0) AS Policy0,
+    RevSequence(1, 10, 1, 5, 1) AS Policy1,
+    RevSequence(1, 10, 1, 5, 2) AS Policy2,
+    RevSequence(1, 10, 1, 5, 3) AS Policy3
+FROM vdata
+```
+Here are the results for the first five respondents:
+
+|       | Policy0     | Policy1     | Policy2      | Policy3 |
+| :---- | :---------- | :---------- | :----------- | :----------- |
+| 1     | {1,2,3,4,5} | {1,2,3,4,5} | {10,9,8,7,6} | {1,2,3,4,5} |
+| 2     | {1,2,3,4,5} | {1,2,3,4,5} | {1,2,3,4,5}  | {1,2,3,4,5} |
+| 3     | {1,2,3,4,5} | {1,2,3,4,5} | {10,9,8,7,6} | {10,9,8,7,6} |
+| 4     | {1,2,3,4,5} | {1,2,3,4,5} | {1,2,3,4,5}  | {10,9,8,7,6} |
+| 5     | {1,2,3,4,5} | {1,2,3,4,5} | {10,9,8,7,6} | {1,2,3,4,5} |
+
+Notice that the function orders the list of values before selecting the required number of values. The following notes explain how the value of the `Policy` parameter affects the ordering:
+- In the first column, *Policy0*, the list is in the normal order because `Policy` is set to 0. This means that the list is always presented in the normal order.
+- In the second column, *Policy1*, the list is also in the normal order. This time `Policy` is set to 1, which means that whether the list is reversed or not is determined by the current setting of the reversal state. Since the Seed parameter is not specified, the reversal state remains at its initial value of 0, which is an even number, and so the list is always presented in the normal order. If we changed the query to specify the `Seed` parameter as 1, the order would always be reversed, because 1 is an odd number.
+- In the third column, *Policy2*, the list is in normal and reverse order alternately. This is because `Policy` is set to 2, which means that each time the function is called, one is added to the reversal state, thus causing it to alternate between odd and even values.
+- In the fourth column, *Policy3*, the list is presented in normal and reverse order at random because `Policy` is set to 3. This means that the reversal state is set to a random value each time the function is called, thus causing it to switch randomly between odd and even values.
+!'
+Function RevSequence(Start As Long, End As Long, Optional Step As Long = 1, Optional Count As Long, Optional Policy As Long = 1, Optional Seed As Long = 0) As Array
+End Function
+
+'!
+This function returns an array containing copies of items from the input list, in a rotated order. The optional `Count` parameter defines how many items from the input list are included in the returned list.
++ `List`: *Variant* - *Array*, *collection*, or *Categorical* value to operate on.
++ `Count`: *Long* - Optional. Number of items to return. If omitted, negative, or greater than the number of input items, all items are returned.
++ `Policy`: *Long* - Optional. Controls the way the rotation is chosen. The default is 2.
++ `Seed`: *Long* - Optional. The state to be used for the rotation. The default is 0.
++ `return`: *Array* - An array consisting of a copy of the input list.
+
+### Remarks
+An error occurs if `List` is a collection that doesn’t support the `For Each...Next` syntax. When `List` is a collection object, the return value is an array that contains copies of the objects in the collection and the input collection object is unchanged. Because the return value is an array, it does not have a `Count` property.
+This function uses the rotation state stored by the mrScriptBasic engine or Evaluate component and passed as a hidden parameter. However, when both `Policy` and `Seed` are nonzero, the rotation state is set to `Seed` before the `Policy` is applied. The resulting rotation state determines which item from the original list is to appear first in the rotated list.
+The possible values for `Policy` are:
+- **0** - No rotation and the rotation state is set to 0.
+- **1** - The rotation state is used without changing it.
+- **2** - The rotation state is incremented by one and used.
+- **3** - Use the starting point of the random number generator and update both the rotation state and the random number generator starting point.
+
+The rotation state is used to calculate the number of items by which the list should be \"rotated\". This is called the **offset** and is calculated as follows:
+```ds
+Rotation_state mod Number_of_items_in_list
+```
+For example, if the rotation state is 9 and there are 7 items in the list, the first item in the rotated list will be the third item, because the offset is 2 (which is 9 mod 7). However, if there were 5 items in the list, the rotated list would start with the fifth item, because the offset is 4 (which is 9 mod 5).
+The `Rot` function is similar to using the rot keyword in IBM® SPSS® Quancept™.
+
+### Examples
+This mrScriptBasic example uses a loop to call the `Rot` function repeatedly using a `Categories` collection object as the input. Note that the function returns an array that contains copies of the objects in the `Categories` collection and does not actually change the order of the objects in the `Categories` collection. Because the return value is an array, it does not have a `Count` property.
+```ds
+Dim MyDocument, MyCategories, MyElement
+Dim Rotated, Counter
+
+Set MyDocument = CreateObject(\"MDM.Document\")
+
+MyDocument.Open(\"C:\\Program Files\\IBM\\SPSS\\DataCollection\\6\\DDL\\Data\\Data Collection File\\museum.mdd\", , _
+    MDMLib.openConstants.oREAD)
+
+Set MyCategories = MyDocument.Fields[\"museums\"].Categories
+
+For Each MyElement in MyCategories
+    Debug.Log(MyElement.Name)
+Next
+
+For Counter = 0 To 6
+    Debug.Log(mr.NewLine)
+    Set Rotated = MyCategories.Rot(, 2)
+    For Each MyElement in Rotated
+        Debug.Log(myElement.Name)
+    Next
+Next
+```
+Here is the output:
+```ds
+National_Museum_of_Science
+Museum_of_Design
+Institute_of_Textiles_and_Fashion
+Archeological_Museum
+National_Art_Gallery
+Northern_Gallery
+Other
+Not_answered
+
+
+Museum_of_Design
+Institute_of_Textiles_and_Fashion
+Archeological_Museum
+National_Art_Gallery
+Northern_Gallery
+Other
+Not_answered
+National_Museum_of_Science
+
+
+Institute_of_Textiles_and_Fashion
+Archeological_Museum
+National_Art_Gallery
+Northern_Gallery
+Other
+Not_answered
+National_Museum_of_Science
+Museum_of_Design
+
+
+Archeological_Museum
+National_Art_Gallery
+Northern_Gallery
+Other
+Not_answered
+National_Museum_of_Science
+Museum_of_Design
+Institute_of_Textiles_and_Fashion
+
+
+National_Art_Gallery
+Northern_Gallery
+Other
+Not_answered
+National_Museum_of_Science
+Museum_of_Design
+Institute_of_Textiles_and_Fashion
+Archeological_Museum
+
+
+Northern_Gallery
+Other
+Not_answered
+National_Museum_of_Science
+Museum_of_Design
+Institute_of_Textiles_and_Fashion
+Archeological_Museum
+National_Art_Gallery
+
+
+Other
+Not_answered
+National_Museum_of_Science
+Museum_of_Design
+Institute_of_Textiles_and_Fashion
+Archeological_Museum
+National_Art_Gallery
+Northern_Gallery
+
+
+Not_answered
+National_Museum_of_Science
+Museum_of_Design
+Institute_of_Textiles_and_Fashion
+Archeological_Museum
+National_Art_Gallery
+Northern_Gallery
+Other
+```
+!'
+Function Rot(List As Variant, Optional Count As Long, Optional Policy As Long = 2, Optional Seed As Long = 0) As Array
+End Function
+
+'!
+This function returns an array containing values selected from a given series of integers in a \"rotated\" order.
++ `Start`: *Long* - The first possible value.
++ `End`: *Long* - The last possible value.
++ `Step`: *Long* - Optional. The increment between consecutive possible values. The default is 1.
++ `Count`: *Long* - Optional. The number of items to return. If omitted, negative, or greater than the number of possible values, all items are returned.
++ `Policy`: *Long* - Optional. Controls the way the rotation is performed. The default is 2.
++ `Seed`: *Long* - Optional. The state to be used for the rotation. The default is the value acquired from the `GetRotationSeed()` function.
++ `return`: *Array* - An array containing a rotated selection from the set of possible numbers.
+
+### Remarks
+The `RotSequence` function returns an array containing numbers from the sequence `Start, Start + Step, Start + Step * 2, ... , Start + Step * N` (where *N* is the maximum integer such that the sequence doesn’t pass `End`) in a \"rotated\" order. `Step` may be positive or negative. If `Step` is 0, `Count` copies of `Start` are returned, unless `Count` is omitted or negative, in which case an empty array is returned. If `Step` is positive and `Start > End`, or if `Step` is negative and `Start < End`, an empty array is returned.
+Note that the `Start`, `End`, and `Step` arguments define the potential set of numbers to return (for example, a setting of (1, 10, 2) produces the set {1, 3, 5, 7, 9}, while (10, 1, -2) produces {10, 8, 6, 4, 2}). Then the `Policy` and `Seed` parameters and the rotation state determine in which order those numbers are returned. Finally, the `Count` argument controls how much of that ordered set is returned.
+This function uses the rotation state stored by the mrScriptBasic engine or Evaluate component and passed as a hidden parameter. However, when both `Policy` and `Seed` are nonzero, the rotation state is set to `Seed` before the `Policy` is applied. The resulting rotation state determines which item from the original list is to appear first in the rotated list.
+The possible values for *Policy* are:
+- **0** - No rotation and the rotation state is set to 0.
+- **1** - The rotation state is used without changing it.
+- **2** - The rotation state is incremented by one and used.
+- **3** - Use the starting point of the random number generator and update both the rotation state and the random number generator starting point.
+
+The rotation state is used to calculate the number of items by which the list should be \"rotated\". This is called the offset and is calculated as follows:
+```ds
+Rotation_state mod Number_of_items_in_list
+```
+For example, if the rotation state is 9 and there are 7 items in the list, the rotated list will start with the third item from the original list, because the offset is 2 (which is 9 mod 7). However, if there were 5 items in the list, the rotated list would start with the fifth item from the original list, because the offset is 4 (which is 9 mod 5).
+
+### Examples
+This example shows using `RotSequence` in an SQL query.
+```sql
+SELECT Respondent.Serial,
+    RotSequence(1, 5, 1, 5, 2) AS RotSequence
+FROM vdata
+```
+Here are the results for the first seven respondents:
+
+| Respondent.Serial | RotSequence |
+| :---------------- | :---------- |
+| 1                 | {2,3,4,5,1} |
+| 2                 | {3,4,5,1,2} |
+| 3                 | {4,5,1,2,3} |
+| 4                 | {5,1,2,3,4} |
+| 5                 | {1,2,3,4,5} |
+| 6                 | {2,3,4,5,1} |
+| 7                 | {3,4,5,1,2} |
+
+In this example, the `Count` parameter has been set to the same value as the number of input values. This is deliberately simplistic and is designed to make it clear how the function works. In \"real life\", you may want to return fewer values than are input. For example:
+```sql
+SELECT Respondent.Serial,
+    RotSequence(1, 14, 2, 5, 2) AS RotSequence
+FROM vdata
+```
+Here are the results for the first seven respondents:
+
+| Respondent.Serial | RotSequence |
+| :---------------- | :------------ |
+| 1                 | {3,5,7,9,11} |
+| 2                 | {5,7,9,11,13} |
+| 3                 | {7,9,11,13,1} |
+| 4                 | {9,11,13,1,3} |
+| 5                 | {11,13,1,3,5} |
+| 6                 | {13,1,3,5,7} |
+| 7                 | {1,3,5,7,9} |
+
+!'
+Function RotSequence(Start As Long, End As Long, Optional Step As Long = 1, Optional Count As Long, Optional Policy As Long = 2, Optional Seed As Long) As Array
+End Function
+
+'!
+This function returns an array containing copies of selected items from the input list, in the same order as in the list.
++ `List`: *Variant* - *Array*, *collection* or *Categorical* value to operate on.
++ `Range`: *Variant* - *Text*, *Long* or *Categorical* value for selecting list items.
++ `Count`: *Long* - Optional. Number of items to return. If omitted, negative, or greater than the maximum number of items selected by `Range`, all selected items are returned.
++ `return`: *Categorical* - *Array* containing a selection of items from the list.
+
+### Remarks
+If `List` is a collection, an error occurs if it does not support _NewEnum (that is, `for each ... next`). If `List` is *NULL*, an empty array is returned.
+If `Range` is of type *Categorical*, the values within it are taken as positional indexes of items in `List`, as described below. If `Range` is of type *Long*, it is taken as a single positional index. If `Range` is of type *Text*, it is assumed to be a range expression, of the same syntax as a category expression. Numbers in the range expression refer to positional indexes of items in `List`; names are used to identify list items as described below. If `Range` is *NULL*, all list items are returned. If `Range` is of any other type, an error occurs.
+Positional indexes start at 0 for the first item in `List`. Indexes less than zero or greater than or equal to the number of items in `List` are ignored. For example, in a list of 4 items, a range of \"-1..10\" will select all items, the same as \"0..3\" or \"..\".
+The way names in the range expression are used depends on the type of the items in `List`:
+- For a **string** item, the name is simply compared with the string.
+- For an item that is an **object**, the name is first compared with the value of the object's Name property, if it has one. This property is not necessarily called \"Name\", but it is defined internally as representing a name for the object. In COM, this is done by giving the property a Dispatch identifier of -800. If the object has no Name property, the name is compared with the value of the object's default property. If the object has no Name or default properties, or their values cannot be determined, or the value is not a string, an error occurs.
+- For any **other** type of item, an error occurs if `Range` contains item names. In particular, if `List` is a *Categorical* value, only numeric (positional) indexes can be used, not category values or names.
+
+When comparing names, differences between upper and lower case are ignored. Like out-of-range indexes, any name in Range that does not match an item in `List` is ignored. For example, if an item called \"Good\" exists but no item called \"Bad\", then the range expression \"Good..Bad\" is equivalent to \"Good..\" (selecting all items from \"Good\" to the end of `List`), \"Bad\" will select no items, \"^Bad\" will select all items, and \"^Bad, Good\" will select only \"Good\".
+
+### Examples
+
+| Function call            | List                           | Range               | Result |
+| :---------------------   | :------------------            | :--------------     | :---------- |
+| SelectRange(List, Range) | {8,5,7,1,3,2,9}                | 2                   | {7} |
+| SelectRange(List, Range) | {8,5,7,1,3,2,9}                | {2,4}               | {7,3} |
+| SelectRange(List, Range) | {8,5,7,1,3,2,9}                | \"2 .. 4\"          | {7,1,3} |
+| SelectRange(List, Range) | {8,5,7,1,3,2,9}                | \"2 .., ^4\"        | {7,1,2,9} |
+| SelectRange(List, Range) | Split(\"The quick brown fox\") | 3                   | {fox} |
+| SelectRange(List, Range) | Split(\"The quick brown fox\") | \"quick .. jumped\" | {quick,brown,fox} |
+
+| Function call                   | List                           | Range    | Count  | Result |
+| :-----------------------        | :-------------------           | :------- | :----- | :-------- |
+| SelectRange(List, Range, Count) | {8,5,7,1,3,2,9}                | \"2 ..\" | 4      | {7,1,3,2} |
+| SelectRange(List, Range, Count) | {8,5,7,1,3,2,9}                | NULL     | 5      | {8,5,7,1,3} |
+| SelectRange(List, Range, Count) | Split(\"The quick brown fox\") | NULL     | 2      | {The,quick} |
+
+The `Split` function is used in some of these examples to create an array of substrings that SelectRange can operate on.
+!'
+Function SelectRange(List As Variant, Optional Range As Variant, Optional Count As Long) As Categorical
+End Function
+
+'!
+This function sets the reversal state. This is stored by the mrScript engine and Evaluate component and passed to the `Rev` function.
++ `Seed`: *Long* - Optional. State to use for reversals. The default is 0.
++ `return`: *Long* - New state for reversals.
+
+### Remarks
+`Seed` can be any Long value, positive, zero, or negative. If `Seed` is not supplied or has a value of 0, a random number is used.
+
+### Examples
+This example sets the reversal state to 3.
+```ds
+SetReversalSeed(3)
+```
+!'
+Function SetReversalSeed(Optional Seed As Long = 0) As Long
+End Function
+
+'!
+This function sets the rotation state. This is stored by the mrScript engine and Evaluate component and passed to the `Rot` function.
++ `Seed`: *Long* - Optional. Rotation state value. The default is 0.
++ `return`: *Long* - New rotation state value.
+
+### Remarks
+`Seed` can be any Long value, positive, zero, or negative. This function sets the rotation state for the `Rot` function.
+
+### Examples
+This example sets the starting point for rotations to 3.
+```ds
+SetRotationSeed(3)
+```
+!'
+Function SetRotationSeed(Optional Seed As Long = 0) As Long
+End Function
+
+'!
+This function returns an array containing copies of items from the input list, sorted in ascending order. The optional `Count` parameter defines how many items from the input list are included in the returned list.
++ `List`: *Variant* - *Array*, *collection*, or *Categorical* value to operate on.
++ `Count`: *Long* - Optional. Number of items to return. If omitted, negative, or greater than the number of input items, all items are returned.
++ `IgnoreLocale`: *Boolean* - Optional. When *True*, the rules of the input locale are ignored when sorting text and the text is sorted in a language-neutral way. The default is *False*.
++ `return`: *Array* - An array consisting of a sorted copy of the input list.
+
+### Remarks
+An error occurs if `List` is a collection that doesn’t support the `For Each...Next` syntax. When `List` is a collection object, the return value is an array that contains copies of the objects in the collection and the input collection object is unchanged. Because the return value is an array, it does not have a `Count` property.
+The sorting method depends on the type of the items in the list. If they are simple *Long*, *Double*, *Text*, *Date*, or *Boolean* values, they are sorted in ascending order. When sorting *Boolean* values, `SortAsc` considers *False* to be less than *True*.
+If the items are objects, they are sorted by the value of their default property. An error occurs if the objects do not have a default property or its value cannot be determined.
+The input locale is used to determine the correct ordering for text values, unless IgnoreLocale is True, when the sorting is performed in a locale-independent way. The locale-independent sort is case-sensitive and is likely to give unexpected results. When the input locale is used, the sort is always case-insensitive. Note that items with the same equivalent values may not appear in the same relative order in the sorted list as in the original list.
+
+### Examples
+The following mrScriptBasic example writes the short and long names of each language in the MDM Languages collection to a text file two times. First in the order in which they appear in the collection and then after using `SortAsc` to sort the collection in ascending order. The collection is sorted in ascending order of the three-character language codes stored in the Name property because it is the default property of the `Language` object.
+```ds
+Dim MyDocument, MyLanguage, Sorted
+
+Set MyDocument = CreateObject(\"MDM.Document\")
+
+MyDocument.Open(\"C:\\Program Files\\IBM\\SPSS\\DataCollection\\6\\DDL\\Scripts\\Interview\\Projects\\Museum\\Museum.backup.mdd\", , _
+    MDMLib.openConstants.oREAD)
+
+For Each MyLanguage in MyDocument.Languages
+    Debug.Log(MyLanguage.Name + \": \" + MyLanguage.LongName)
+Next
+
+Debug.Log(\" \")
+
+Set Sorted = SortAsc(MyDocument.Languages)
+
+For Each MyLanguage in Sorted
+    Debug.Log(MyLanguage.Name + \": \" + MyLanguage.LongName)
+Next
+```
+Here is the output:
+```ds
+CHS: Chinese (China)
+ZHH: Chinese (Hong Kong SAR)
+ENU: English (United States)
+ESN: Spanish (International Sort)
+JPN: Japanese
+KOR: Korean
+THA: Thai
+
+CHS: Chinese (China)
+ENU: English (United States)
+ESN: Spanish (International Sort)
+JPN: Japanese
+KOR: Korean
+THA: Thai
+ZHH: Chinese (Hong Kong SAR)
+```
+!'
+Function SortAsc(List As Variant, Optional Count As Long, Optional IgnoreLocale As Boolean) As Array
+End Function
+
+'!
+This function returns an array containing copies of items from the input list, sorted in descending order. The optional `Count` parameter defines how many items from the input list are included in the returned list.
++ `List`: *Variant* - *Array*, *collection*, or *Categorical* value to operate on.
++ `Count`: *Long* - Optional. Number of items to return. If omitted, negative, or greater than the number of input items, all items are returned.
++ `IgnoreLocale`: *Boolean* - Optional. When *True*, the rules of the input locale are ignored when sorting text and the text is sorted in a language-neutral way. The default is *False*.
++ `return`: *Array* - An array consisting of a sorted copy of the input list.
+
+### Remarks
+An error occurs if `List` is a collection that doesn’t support the `For Each...Next` syntax. When `List` is a collection object, the return value is an array that contains copies of the objects in the collection and the input collection object is unchanged. Because the return value is an array, it does not have a `Count` property.
+The sorting method depends on the type of the items in the list. If they are simple *Long*, *Double*, *Text*, *Date*, or *Boolean* values, they are sorted in descending order. When sorting *Boolean* values, `SortAsc` considers *False* to be less than *True*.
+If the items are objects, they are sorted by the value of their default property. An error occurs if the objects do not have a default property or its value cannot be determined.
+The input locale is used to determine the correct ordering for text values, unless IgnoreLocale is True, when the sorting is performed in a locale-independent way. The locale-independent sort is case-sensitive and is likely to give unexpected results. When the input locale is used, the sort is always case-insensitive. Note that items with the same equivalent values may not appear in the same relative order in the sorted list as in the original list.
+
+### Examples
+This example shows using `SortDesc` in an SQL query to sort the responses given to a multiple response question.
+```sql
+SELECT Respondent.Serial,
+    Remember,
+    Remember.SortDesc() AS 'Remember.SortDesc'
+FROM vdata
+WHERE Remember IS NOT NULL
+```
+Here is the result set for the first five respondents:
+
+| Respondent.Serial | Remember                           | Remember.SortDesc |
+| :---------------- | :--------------------------------  | :--------------------------------- |
+| 305               | {31,33,34,38,39,44,18}             | {44,39,38,34,33,31,18} |
+| 306               | {31,33,34,38,39,40,42,18}          | {42,40,39,38,34,33,31,18} |
+| 307               | {31,34,35,36,37,38,39,42,43,44,18} | {44,43,42,39,38,37,36,35,34,31,18} |
+| 308               | {31,32,35,38,39,18}                | {39,38,35,32,31,18} |
+| 309               | {31,35,39,43,44}                   | {44,43,39,35,31} |
+| 310               | {31,35,37,38,42,43,18}             | {43,42,38,37,35,31,18} |
+!'
+Function SortDesc(List As Variant, Optional Count As Long, Optional IgnoreLocale As Boolean) As Array
+End Function
+
