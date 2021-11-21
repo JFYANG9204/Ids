@@ -452,8 +452,10 @@ export class ScopeHandler {
             } else if (exist.result instanceof ArrayDeclarator) {
                 if (!exist.result.binding) {
                     exist.result.binding = newType.name.name;
+                    exist.result.bindingType = newType;
                 } else {
                     exist.result.binding = "Variant";
+                    exist.result.bindingType = this.get("Variant")?.result;
                 }
             }
             return;

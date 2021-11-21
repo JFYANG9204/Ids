@@ -42,6 +42,38 @@ export class TypeUtil extends UtilParser {
         return dec;
     }
 
+    maybeDeclaratorBinding(dec: DeclarationBase) : DeclarationBase | undefined {
+        if (dec instanceof SingleVarDeclarator ||
+            dec instanceof ArrayDeclarator) {
+            if (dec.bindingType) {
+                return dec.bindingType;
+            }
+            if (typeof dec.binding === "string") {
+                return this.scope.get(
+                    dec.binding, dec.namespace)?.result;
+            } else if (dec.binding) {
+                return dec.binding;
+            }
+        } else if (dec instanceof ArgumentDeclarator) {
+            return this.maybeDeclaratorBinding(dec.declarator);
+        }
+        return dec;
+    }
+
+    getMaybeDecaratorBindingName(dec: DeclarationBase) : string {
+        if (dec instanceof ArgumentDeclarator) {
+            return this.getMaybeDecaratorBindingName(dec.declarator);
+        } else if (dec instanceof SingleVarDeclarator ||
+            dec instanceof ArrayDeclarator) {
+            let binding = this.maybeDeclaratorBinding(dec);
+            if (!binding) {
+                return "Variant";
+            }
+            return binding.name.name;
+        }
+        return dec.name.name;
+    }
+
     getBindingTypeName(binding: BindingDeclarator | string) {
         return typeof binding === "string" ? binding :
             binding.name.name;
@@ -79,8 +111,11 @@ export class TypeUtil extends UtilParser {
         } else if (dec instanceof FunctionDeclaration && dec.class) {
             return dec.class.namespace;
         } else if (dec instanceof SingleVarDeclarator) {
-            return typeof dec.binding !== "string" ? this.getDeclareNamespace(dec.binding) :
-                dec.binding;
+            return typeof dec.binding !== "string" ?
+                this.getDeclareNamespace(dec.binding) :
+                (dec.bindingType ?
+                    this.getDeclareNamespace(dec.bindingType) :
+                    undefined);
         }
         return dec.namespace;
     }
@@ -516,16 +551,9 @@ export class TypeUtil extends UtilParser {
         }
         //
         if (this.matchType(left, right, expr.right, false, nsName)) {
-            let namespace: NamespaceDeclaration | string | undefined;
-            if (rightReturn.type instanceof SingleVarDeclarator) {
-                if (typeof rightReturn.type.binding === "string") {
-                    namespace = rightReturn.type.binding;
-                } else {
-                    namespace = rightReturn.type.binding.namespace;
-                }
-            }
+            let namespace = this.getDeclareNamespace(rightReturn.type);
             return left.toLowerCase() === "variant" ?
-                rightReturn.type :
+                this.maybeDeclaratorBinding(rightReturn.type) :
                 this.getMaybeBindingType(
                     leftReturn.type, namespace);
         } else {
@@ -557,21 +585,21 @@ export class TypeUtil extends UtilParser {
                 this.scope.update(
                     expr.left.name,
                     BindTypes.var,
-                    rightType.type,
+                    this.maybeDeclaratorBinding(rightType.type) ?? rightType.type,
                     expr);
-                if (expr.treeParent &&
-                    expr.treeParent.type !== "SetStatement") {
-                    let finalType = rightType.type;
-                    if (finalType instanceof ClassOrInterfaceDeclaration) {
-                        finalType = this.getFinalType(finalType);
-                    }
-                    if (!isBasicType(finalType.name.name) && raiseError) {
-                        this.raiseAtNode(
-                            expr,
-                            WarningMessages["AssignmentMaybeObject"],
-                            true);
-                    }
-                }
+                //if (expr.treeParent &&
+                //    expr.treeParent.type !== "SetStatement") {
+                //    let finalType = rightType.type;
+                //    if (finalType instanceof ClassOrInterfaceDeclaration) {
+                //        finalType = this.getFinalType(finalType);
+                //    }
+                //    if (!isBasicType(finalType.name.name) && raiseError) {
+                //        this.raiseAtNode(
+                //            expr,
+                //            WarningMessages["AssignmentMaybeObject"],
+                //            true);
+                //    }
+                //}
             } else if (this.scope.isCurFunction(expr.left.name)) {
                 this.scope.updateFuncReturnType(right);
             } else {

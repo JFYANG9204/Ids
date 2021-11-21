@@ -601,7 +601,7 @@ export class ForEachStatement extends Statement {
 }
 
 export class ForStatement extends Statement {
-    variable: Expression;
+    variable: Identifier;
     range: {
         lbound: Expression | NumericLiteral,
         ubound: Expression | NumericLiteral,
@@ -611,7 +611,7 @@ export class ForStatement extends Statement {
     constructor(parser: ParserBase, pos: number, loc: Position) {
         super(parser, pos, loc);
         this.type = "ForStatement";
-        this.variable = new Expression(parser, 0, emptyLoc);
+        this.variable = new Identifier(parser, 0, emptyLoc);
         this.body = new Statement(parser, 0, emptyLoc);
         this.range = {
             lbound: new Expression(parser, 0, emptyLoc),

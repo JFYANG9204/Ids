@@ -703,6 +703,11 @@ export class StatementParser extends ExpressionParser {
         this.next();
         node.variable = this.parseIdentifier();
         node.push(node.variable);
+        let long = this.scope.get("Long")?.result;
+        if (long) {
+            this.scope.update(node.variable.name,
+                BindTypes.var, long, node.variable);
+        }
         this.checkVarDeclared((node.variable as Identifier).name, node);
         this.expect(tt.equal);
         const lbound = this.parseForBoundary();
