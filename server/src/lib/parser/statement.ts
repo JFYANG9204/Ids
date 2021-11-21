@@ -703,12 +703,18 @@ export class StatementParser extends ExpressionParser {
         this.next();
         node.variable = this.parseIdentifier();
         node.push(node.variable);
-        let long = this.scope.get("Long")?.result;
-        if (long) {
-            this.scope.update(node.variable.name,
-                BindTypes.var, long, node.variable);
+        let declared = this.checkVarDeclared(
+            (node.variable as Identifier).name, node);
+        if (declared) {
+            let long = this.scope.get("Long")?.result;
+            if (long) {
+                this.scope.update(node.variable.name,
+                    BindTypes.var, long, node.variable);
+                this.addExtra(node.variable,
+                    "declaration",
+                    this.scope.get(node.variable.name)?.result);
+            }
         }
-        this.checkVarDeclared((node.variable as Identifier).name, node);
         this.expect(tt.equal);
         const lbound = this.parseForBoundary();
         this.checkExprError(lbound);
@@ -767,6 +773,7 @@ export class StatementParser extends ExpressionParser {
         const node = this.startNode(WhileStatement);
         this.next();
         node.test = this.parseExpression();
+        this.checkExprError(node.test);
         node.body = this.parseBlock(tt._end);
         node.push(node.test, node.body);
         this.expect(tt._end);
@@ -794,6 +801,7 @@ export class StatementParser extends ExpressionParser {
         if (testAhead) {
             this.next();
             node.test = this.parseExpression();
+            this.checkExprError(node.test);
         }
         node.body = this.parseBlock(tt._loop);
         this.expect(tt._loop);
@@ -804,6 +812,7 @@ export class StatementParser extends ExpressionParser {
                 this.unexpected();
             }
             node.test = this.parseExpression();
+            this.checkExprError(node.test);
         }
         node.push(node.test, node.body);
         return this.finishNode(node, "DoWhileStatement");

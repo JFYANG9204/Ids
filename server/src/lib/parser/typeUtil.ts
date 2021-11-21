@@ -20,6 +20,7 @@ import {
     NodeBase,
     PropertyDeclaration,
     SingleVarDeclarator,
+    UnaryExpression,
 } from "../types";
 import { isBasicType, isConversionFunction } from "../util/match";
 import { BindTypes } from "../util/scope";
@@ -419,6 +420,7 @@ export class TypeUtil extends UtilParser {
                 find = this.getCallExprType(expr as CallExpression, raiseError);
                 break;
             case "UnaryExpression":
+                this.checkExprError((expr as UnaryExpression).argument);
                 find = this.scope.get("Boolean")?.result;
                 break;
             case "BinaryExpression":
