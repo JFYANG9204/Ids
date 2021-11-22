@@ -707,6 +707,7 @@ export class FunctionDeclaration extends DeclarationBase {
     needReturn = false;
     binding?: string | BindingDeclarator;
     class?: ClassOrInterfaceDeclaration;
+    declare scope: Scope;
     constructor(parser: ParserBase, pos: number, loc: Position) {
         super(parser, pos, loc);
         this.type = "FunctionDeclaration",

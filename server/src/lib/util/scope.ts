@@ -224,13 +224,9 @@ export class ScopeHandler {
         name: string,
         node: DeclarationBase
     ) {
-        if (this.inClassOrInterface || this.inEnumerator) {
-            if (this.isRedeclared(scope, name)) {
-                this.raise(node.name, ErrorMessages["VarRedeclaration"], false, name);
-            }
-            return;
-        }
-        if (this.inFunction) {
+        if (this.inClassOrInterface ||
+            this.inEnumerator       ||
+            this.inFunction) {
             if (this.isRedeclared(scope, name)) {
                 this.raise(node.name, ErrorMessages["VarRedeclaration"], false, name);
             }

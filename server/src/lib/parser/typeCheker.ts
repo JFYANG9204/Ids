@@ -1,3 +1,4 @@
+import { Parser } from ".";
 import {
     BlockStatement,
     ConstDeclaration,
@@ -23,9 +24,11 @@ import {
     WhileStatement,
     WithStatement
 } from "../types";
-import { BindTypes, Scope, ScopeFlags } from "../util";
+import { BindTypes, getLineInfo, Scope, ScopeFlags } from "../util";
 import { ErrorMessages } from "./error-messages";
+import { ParsingError } from "./errors";
 import { StatementParser } from "./statement";
+import { TypeRaiseFunction } from "./typeUtil";
 
 
 /**
@@ -41,7 +44,7 @@ export class StaticTypeChecker extends StatementParser {
             if (file.scope &&
                 file.treeParent instanceof PreIncludeStatement) {
 
-                this.includeRaiseFunction = file.parser.raiseAtNode;
+                this.includeRaiseFunction = this.createTypeRaiseFunction(file, file.parser);
                 this.checkFuncInScope(file.scope);
                 this.includeRaiseFunction = undefined;
             }
@@ -181,9 +184,11 @@ export class StaticTypeChecker extends StatementParser {
                         BindTypes.var,
                         this.getMaybeBindingType(rightType.type) ?? rightType.type,
                         setStat.assignment);
+                    let search;
                     this.addExtra(setStat.id,
                         "declaration",
-                        this.scope.get(setStat.id.name)?.result);
+                        (search = this.scope.get(setStat.id.name)?.result) ?
+                        this.maybeCopyType(search) : search);
                 }
             } else {
                 this.checkVarDeclared(setStat.id.name, setStat.id);
@@ -293,7 +298,7 @@ export class StaticTypeChecker extends StatementParser {
     }
 
     checkPreIncludeStatement(pre: PreIncludeStatement) {
-        this.includeRaiseFunction = pre.parser.raiseAtNode;
+        this.includeRaiseFunction = this.createTypeRaiseFunction(pre.file, pre.parser);
         this.checkFile(pre.file);
         this.includeRaiseFunction = undefined;
     }
@@ -303,6 +308,29 @@ export class StaticTypeChecker extends StatementParser {
         if (type.toLowerCase() !== returnType.toLowerCase()) {
             this.raiseTypeError(node, ErrorMessages["NeedType"], false, type);
         }
+    }
+
+    createTypeRaiseFunction(file: File, parser: Parser): TypeRaiseFunction {
+        return (node, template, warning, ...param) => {
+            const loc = getLineInfo(parser.input, node.start);
+            const message =
+                template.template.replace(/%(\d+)/g, (_, i: number) => param[i]);
+            const err: ParsingError = {
+                name: template.code,
+                start: node.start,
+                pos: node.end,
+                loc: loc,
+                message: message,
+                path: parser.fileName,
+                fileName: parser.fileName,
+            };
+            if (warning) {
+                file.warnings.push(err);
+            } else {
+                file.errors.push(err);
+            }
+            return err;
+        };
     }
 
 }

@@ -28,14 +28,15 @@ import { ErrorMessages, WarningMessages } from "./error-messages";
 import { ErrorTemplate, ParsingError } from "./errors";
 import { UtilParser } from "./util";
 
+export interface TypeRaiseFunction {
+    (node: NodeBase, template: ErrorTemplate, warning: boolean, ...params: any): ParsingError
+}
+
 export class TypeUtil extends UtilParser {
 
     needCheckLineMark: Identifier[] = [];
 
-    includeRaiseFunction?: (node: NodeBase,
-        template: ErrorTemplate,
-        warning: boolean,
-        ...params: any) => ParsingError;
+    includeRaiseFunction?: TypeRaiseFunction;
 
     raiseTypeError(node: NodeBase,
         template: ErrorTemplate,

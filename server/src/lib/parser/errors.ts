@@ -92,7 +92,6 @@ export class ErrorParser extends CommentParser {
     }
 
     raiseOverwirte(pos: number, template: ErrorTemplate, ...params: any) {
-        const loc = getLineInfo(this.input, pos);
         const message =
             template.template.replace(/%(\d+)/g, (_, i: number) => params[i]);
         if (this.options.errorRecovery) {

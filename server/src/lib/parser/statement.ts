@@ -983,6 +983,7 @@ export class StatementParser extends ExpressionParser {
         }
         node.push(node.body);
         node.pushArr(node.params);
+        node.scope = this.scope.currentScope();
         this.scope.exit();
         this.scope.declareName(node.name.name, BindTypes.function, node);
         return this.finishNode(node, "FunctionDeclaration");
