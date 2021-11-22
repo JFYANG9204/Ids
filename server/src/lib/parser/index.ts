@@ -45,6 +45,7 @@ export class Parser extends StaticTypeChecker {
                 this.scope.enter(ScopeFlags.program);
                 file.program = this.parseProgram();
                 if (!isInclude) {
+                    this.checkIncludeFiles();
                     this.checkFuncInScope(this.scope.currentScope());
                     this.checkBlock(file.program.body);
                 }
@@ -60,6 +61,7 @@ export class Parser extends StaticTypeChecker {
         file.warnings = this.state.warnings;
         file.includes = this.state.includes;
         file.scope = this.scope.store;
+        file.parser = this;
         this.scope.exit();
         return this.finishNode(file, "File");
     }

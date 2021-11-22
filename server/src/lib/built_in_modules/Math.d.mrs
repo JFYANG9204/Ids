@@ -324,7 +324,7 @@ MyValue2 = Sqrt(3)    ' Returns 1.73205080756888
 MyValue3 = Sqrt(-3)   ' Error
 ```
 !'
-Functionn Sqrt(Val As Double) As Double
+Function Sqrt(Val As Double) As Double
 End Function
 
 '!

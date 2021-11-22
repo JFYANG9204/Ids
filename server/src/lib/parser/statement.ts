@@ -1348,6 +1348,7 @@ export class StatementParser extends ExpressionParser {
             if (search) {
                 search.file = node.file;
             }
+            node.push(node.file);
             this.state.includes.set(node.path.toLowerCase(), node.file);
             this.scope.joinScope(node.file.scope);
             if (node.file.errors.length > 0) {

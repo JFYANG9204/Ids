@@ -319,7 +319,8 @@ export class File extends NodeBase {
     warnings: Array<ParsingError> = [];
     tokens?: Array<Token>;
     includes: Map<string, File> = new Map();
-    scope?: Scope;
+    declare scope: Scope;
+    declare parser: Parser;
 
     constructor(parser: ParserBase, pos: number, loc: Position) {
         super(parser, pos, loc);

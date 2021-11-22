@@ -3,6 +3,7 @@ import {
     ConstDeclaration,
     DeclarationBase,
     DoWhileStatement,
+    EventSection,
     Expression,
     ExpressionStatement,
     File,
@@ -37,8 +38,12 @@ export class StaticTypeChecker extends StatementParser {
 
     checkIncludeFiles() {
         this.state.includes.forEach(file => {
-            if (file.scope) {
+            if (file.scope &&
+                file.treeParent instanceof PreIncludeStatement) {
+
+                this.includeRaiseFunction = file.parser.raiseAtNode;
                 this.checkFuncInScope(file.scope);
+                this.includeRaiseFunction = undefined;
             }
         });
     }
@@ -108,6 +113,10 @@ export class StaticTypeChecker extends StatementParser {
                 break;
             case "SetStatement":
                 this.checkSetStatement(stat as SetStatement);
+                break;
+
+            case "EventSection":
+                this.checkEvent(stat as EventSection);
                 break;
 
             // Pre
@@ -186,13 +195,15 @@ export class StaticTypeChecker extends StatementParser {
         this.checkExprError(ifStat.test);
         if (ifStat.consequent instanceof Expression) {
             this.checkExprError(ifStat.consequent as Expression);
-        } else {
+        } else if (ifStat.consequent instanceof BlockStatement) {
             this.checkBlock(ifStat.consequent as BlockStatement);
         }
         if (ifStat.alternate instanceof Expression) {
             this.checkExprError(ifStat.alternate as Expression);
-        } else if (ifStat.alternate instanceof Statement) {
+        } else if (ifStat.alternate instanceof BlockStatement) {
             this.checkBlock(ifStat.alternate as BlockStatement);
+        } else if (ifStat.alternate instanceof IfStatement) {
+            this.checkIfStatement(ifStat.alternate as IfStatement);
         }
     }
 
@@ -228,8 +239,9 @@ export class StaticTypeChecker extends StatementParser {
     }
 
     checkSelectStatement(selectStat: SelectStatement) {
-        let type = this.getExprType(selectStat.discriminant);
-        if (type === "Void") {
+        let search: { type: DeclarationBase | undefined } = { type: undefined };
+        this.getExprType(selectStat.discriminant, search);
+        if (!search.type) {
             this.raiseTypeError(selectStat.discriminant,
                 ErrorMessages["ExpressionNeedReturn"], false);
         }
@@ -249,9 +261,17 @@ export class StaticTypeChecker extends StatementParser {
             this.scope.enterHeader(this.getMaybeBindingType(header.type,
                 this.getDeclareNamespace(header.type)));
             this.addExtra(withStat, "declaration", header.type);
+            this.checkBlockContent(withStat.body);
+            this.scope.exitHeader();
         }
-        this.checkBlockContent(withStat.body);
-        this.scope.exitHeader();
+        this.scope.exit();
+    }
+
+    checkEvent(event: EventSection) {
+        this.scope.enter(ScopeFlags.event);
+        if (event.body) {
+            this.checkBlock(event.body);
+        }
         this.scope.exit();
     }
 

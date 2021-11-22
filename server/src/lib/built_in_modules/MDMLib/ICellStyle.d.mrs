@@ -1,7 +1,7 @@
 
 Namespace MDMLib
 
-    Interface ICellStyle As Object
+    Interface ICellStyle Implements Object
 
         Property Width() As String
         Property Height() As String

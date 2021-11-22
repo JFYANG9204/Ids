@@ -32,9 +32,15 @@ export class TypeUtil extends UtilParser {
 
     needCheckLineMark: Identifier[] = [];
 
-    includeRaiseFunction?: (node: NodeBase, template: ErrorTemplate, warning: boolean, ...params: any) => ParsingError;
+    includeRaiseFunction?: (node: NodeBase,
+        template: ErrorTemplate,
+        warning: boolean,
+        ...params: any) => ParsingError;
 
-    raiseTypeError(node: NodeBase, template: ErrorTemplate, warning: boolean, ...params: any) {
+    raiseTypeError(node: NodeBase,
+        template: ErrorTemplate,
+        warning: boolean,
+        ...params: any) {
         if (this.includeRaiseFunction) {
             this.includeRaiseFunction(node,
                 template, warning, params);

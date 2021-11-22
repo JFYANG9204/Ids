@@ -8,12 +8,12 @@ Namespace MDMLib
         flDontknow      = 2
         flRefuse        = 4
         flNoanswer      = 8
-        flOther         = 0x10
-        flMultiplier    = 0x20
-        flExclusive     = 0x1000
-        flFixedPosition = 0x40
-        flNoFilter      = 0x80
-        flInline        = 0x100
+        flOther         = &H10
+        flMultiplier    = &H20
+        flExclusive     = &H1000
+        flFixedPosition = &H40
+        flNoFilter      = &H80
+        flInline        = &H100
 
     End Enum
 

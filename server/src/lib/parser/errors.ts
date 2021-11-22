@@ -53,8 +53,7 @@ export class ErrorParser extends CommentParser {
     raiseAtLocation(start: number, end: number, template: ErrorTemplate, warning: boolean, ...param: any) {
         const loc = getLineInfo(this.input, start);
         const message =
-            template.template.replace(/%(\d+)/g, (_, i: number) => param[i])
-            + `[${loc.line}, ${loc.column}]`;
+            template.template.replace(/%(\d+)/g, (_, i: number) => param[i]);
         const err: ParsingError = {
             name: template.code,
             start: start,
@@ -83,8 +82,7 @@ export class ErrorParser extends CommentParser {
     raise(pos: number, template: ErrorTemplate, ...params: any) {
         const loc = getLineInfo(this.input, pos);
         const message =
-            template.template.replace(/%(\d+)/g, (_, i: number) => params[i])
-            + `[${loc.line}, ${loc.column}]`;
+            template.template.replace(/%(\d+)/g, (_, i: number) => params[i]);
         return this._raise({
             pos: pos,
             loc: loc,
@@ -96,8 +94,7 @@ export class ErrorParser extends CommentParser {
     raiseOverwirte(pos: number, template: ErrorTemplate, ...params: any) {
         const loc = getLineInfo(this.input, pos);
         const message =
-            template.template.replace(/%(\d+)/g, (_, i: number) => params[i])
-            + `[${loc.line}, ${loc.column}]`;
+            template.template.replace(/%(\d+)/g, (_, i: number) => params[i]);
         if (this.options.errorRecovery) {
             const errors = this.state.errors;
             for (let i = errors.length - 1; i >=0; i--) {

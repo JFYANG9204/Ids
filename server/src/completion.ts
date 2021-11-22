@@ -258,7 +258,7 @@ function getDefaultNote(dec: DeclarationBase): string {
 
     if (!dec.declare) {
         const t = dec as SingleVarDeclarator;
-        return "```ds\n(undefined variable) " + t.name.name +
+        return "```\n(undefined variable) " + t.name.name +
             (t.binding ? (": " + getBindingName(t.binding)) : "") + "\n```";
     }
 
@@ -273,7 +273,7 @@ function getDefaultNote(dec: DeclarationBase): string {
             args = getArgumentNote((dec as FunctionDeclaration).params);
             let bind = (dec as FunctionDeclaration).binding;
             value = (bind ? getBindingName(bind) : undefined) ?? "Void";
-            return "```ds\n" + text + name + "(" + args + "): " + value + "\n```";
+            return "```\n" + text + name + "(" + args + "): " + value + "\n```";
 
         case "PropertyDeclaration":
             const prop = dec as PropertyDeclaration;
@@ -282,26 +282,26 @@ function getDefaultNote(dec: DeclarationBase): string {
                 text += "(" + getArgumentNote(prop.params) + ")";
             }
             text += ": " + getBindingName(prop.binding);
-            return "```ds\n" + text + "\n```";
+            return "```\n" + text + "\n```";
 
         case "SingleVarDeclarator":
             const dim = dec as SingleVarDeclarator;
 
             if (dec.treeParent?.type === "ArgumentDeclarator") {
-                return "```ds\n" + `(parameter) ${getDeclaratorNote(dim)}\n` + "```";
+                return "```\n" + `(parameter) ${getDeclaratorNote(dim)}\n` + "```";
             }
-            return "```ds\n" + `(variable) ${getDeclaratorNote(dim)}\n` + "```";
+            return "```\n" + `(variable) ${getDeclaratorNote(dim)}\n` + "```";
 
         case "ArrayDeclarator":
             const arr = dec as ArrayDeclarator;
             if (dec.treeParent?.type === "ArgumentDeclarator") {
-                return "```ds\n" + `(parameter) ${getDeclaratorNote(arr)}\n` + "```";
+                return "```\n" + `(parameter) ${getDeclaratorNote(arr)}\n` + "```";
             }
-            return "```ds\n" + `(variable) ${getDeclaratorNote(arr)}\n` + "```";
+            return "```\n" + `(variable) ${getDeclaratorNote(arr)}\n` + "```";
 
         case "MacroDeclaration":
             const macro = dec as MacroDeclaration;
-            return "```ds\n(macro) " + macro.name.name +
+            return "```\n(macro) " + macro.name.name +
                 (macro.initValue ? " = " + macro.initValue : "") + "\n```";
 
         case "ClassOrInterfaceDeclaration":
@@ -311,7 +311,7 @@ function getDefaultNote(dec: DeclarationBase): string {
             } else {
                 text += "(class) " + namespace;
             }
-            return "```ds\n" + text + classOrInterface.name.name + "\n```";
+            return "```\n" + text + classOrInterface.name.name + "\n```";
 
         case "ConstDeclarator":
             const constant = dec as ConstDeclarator;
@@ -332,7 +332,7 @@ function getDefaultNote(dec: DeclarationBase): string {
                 default:
                     break;
             }
-            return "```ds\n" + text + "\n```";
+            return "```\n" + text + "\n```";
 
         default:
             return "";
