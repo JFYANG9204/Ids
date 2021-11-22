@@ -44,6 +44,7 @@ export const ErrorMessages: ErrorTemplates = makeErrorTemplates({
     MacroHasNoInitValue:             "宏定义未定义对应值，不能用于操作符计算.",
     NumberIdentifier:                "数字后不能紧跟标识符.",
     NumberIsTooLong:                 "数字超过32位数字范围(-2147483648~2147483647)",
+    NeedType:                        "需要类型为'%0'的返回值.",
     UnknownFunction:                 "未知名为'%0'的函数或方法.",
     UnexpectedKeyword:               "不应为关键字 '%0'.",
     UnexpectedToken:                 "不应为 '%0'.",

@@ -18,6 +18,7 @@ export type ParsingError = {
     pos: number,
     loc: Position,
     fileName: string,
+    path: string,
     code?: string,
     reasonCode?: string,
 } & SyntaxError;
@@ -60,6 +61,7 @@ export class ErrorParser extends CommentParser {
             pos: end,
             loc: loc,
             message: message,
+            path: this.fileName,
             fileName: this.fileName,
         };
         if (this.options.errorRecovery) {
@@ -116,6 +118,7 @@ export class ErrorParser extends CommentParser {
             pos: context.pos,
             loc: context.loc,
             message: message,
+            path: this.fileName,
             fileName: this.fileName,
         };
         if (this.options.errorRecovery) {

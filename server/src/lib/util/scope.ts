@@ -20,6 +20,7 @@ export type RaiseFunction = (node: NodeBase, template: ErrorTemplate, warning: b
 export enum ScopeFlags {
     program,
     function,
+    with,
     enumerator,
     classOrInterface,
     namespace,
@@ -91,7 +92,7 @@ export class ScopeHandler {
     }
 
     get inWith() {
-        return this.currentScope().withHeader.length > 0;
+        return this.currentScope().flags === ScopeFlags.with;
     }
 
     get inClassOrInterface() {

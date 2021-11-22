@@ -201,6 +201,7 @@ export class ParserFileDigraph {
             if (this.start.fileTypeMark) {
                 parser.options.sourceType = this.start.fileTypeMark;
             }
+            parser.catchFileTypeMarkFunction = getFileTypeMark;
             return parser.parse();
         }
     }

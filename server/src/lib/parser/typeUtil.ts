@@ -25,12 +25,24 @@ import {
 import { isBasicType, isConversionFunction } from "../util/match";
 import { BindTypes } from "../util/scope";
 import { ErrorMessages, WarningMessages } from "./error-messages";
+import { ErrorTemplate, ParsingError } from "./errors";
 import { UtilParser } from "./util";
 
 export class TypeUtil extends UtilParser {
 
     needCheckLineMark: Identifier[] = [];
-    needCheckCallExpr: CallExpression[] = [];
+
+    includeRaiseFunction?: (node: NodeBase, template: ErrorTemplate, warning: boolean, ...params: any) => ParsingError;
+
+    raiseTypeError(node: NodeBase, template: ErrorTemplate, warning: boolean, ...params: any) {
+        if (this.includeRaiseFunction) {
+            this.includeRaiseFunction(node,
+                template, warning, params);
+        } else {
+            this.raiseAtNode(node,
+                template, warning, params);
+        }
+    }
 
     getVariant() {
         return this.scope.get("Variant")?.result;
@@ -186,7 +198,7 @@ export class TypeUtil extends UtilParser {
             checkResult = checkString === baseString;
         }
         if (!checkResult) {
-            this.raiseAtNode(
+            this.raiseTypeError(
                 node,
                 ErrorMessages["UnmatchedVarType"],
                 false,
@@ -220,7 +232,7 @@ export class TypeUtil extends UtilParser {
         if (this.state.getLineMark(line.id.name) &&
             this.options.raiseTypeError &&
             !this.scope.inFunction) {
-            this.raiseAtNode(
+            this.raiseTypeError(
                 line.id,
                 ErrorMessages["LineMarkRedeclaration"],
                 false,
@@ -252,26 +264,11 @@ export class TypeUtil extends UtilParser {
         }
     }
 
-    checkAheadCallExpr(funcDeclaration: FunctionDeclaration) {
-        if (this.needCheckCallExpr.length === 0) {
-            return;
-        }
-        const funcName = funcDeclaration.name.name.toLowerCase();
-        for (let i = this.needCheckCallExpr.length - 1;
-            i >= 0; i--) {
-            const expr = this.needCheckCallExpr[i];
-            if ((expr.callee as Identifier).name.toLowerCase() === funcName) {
-                this.checkExprError(expr);
-                this.needCheckCallExpr.splice(i, 1);
-            }
-        }
-    }
-
     checkVarDeclared(name: string, node: NodeBase) {
         let find = this.scope.get(name)?.result;
         if (!find) {
             if (!this.scope.inFunction) {
-                this.raiseAtNode(
+                this.raiseTypeError(
                     node,
                     ErrorMessages["VarIsNotDeclared"],
                     false,
@@ -288,7 +285,7 @@ export class TypeUtil extends UtilParser {
                 const prop = type as PropertyDeclaration;
                 if (prop.readonly &&
                     this.options.raiseTypeError) {
-                    this.raiseAtNode(
+                    this.raiseTypeError(
                         node,
                         ErrorMessages["ReadonlyPropertCannotBeLeft"],
                         false,
@@ -297,7 +294,7 @@ export class TypeUtil extends UtilParser {
                 break;
             case "FunctionDeclaration":
                 if (this.options.raiseTypeError) {
-                    this.raiseAtNode(
+                    this.raiseTypeError(
                         node,
                         ErrorMessages["FunctionCannotBeLeft"],
                         false);
@@ -305,7 +302,7 @@ export class TypeUtil extends UtilParser {
                 break;
             case "MacroDeclaration":
                 if (this.options.raiseTypeError) {
-                    this.raiseAtNode(
+                    this.raiseTypeError(
                         node,
                         ErrorMessages["ConstVarCannotBeAssigned"],
                         false);
@@ -334,7 +331,7 @@ export class TypeUtil extends UtilParser {
     raiseIndexError(node: NodeBase, type: string) {
         if (this.options.raiseTypeError &&
             !this.scope.inFunction) {
-                this.raiseAtNode(
+                this.raiseTypeError(
                     node,
                     ErrorMessages["UnmatchedIndexType"],
                     false,
@@ -345,7 +342,7 @@ export class TypeUtil extends UtilParser {
     needReturn(expr: Expression) {
         if (this.options.raiseTypeError &&
             !this.scope.inFunction) {
-            this.raiseAtNode(
+            this.raiseTypeError(
                 expr,
                 ErrorMessages["ExpressionNeedReturn"],
                 false);
@@ -355,7 +352,7 @@ export class TypeUtil extends UtilParser {
     needCollection(expr: Expression) {
         if (this.options.raiseTypeError &&
             !this.scope.inFunction) {
-            this.raiseAtNode(
+            this.raiseTypeError(
                 expr,
                 ErrorMessages["PropertyOrObjectIsNotCollection"],
                 false);
@@ -365,7 +362,7 @@ export class TypeUtil extends UtilParser {
     undefined(node: NodeBase, name: string, isFunction?: boolean) {
         if (this.options.raiseTypeError &&
             !this.scope.inFunction) {
-            this.raiseAtNode(
+            this.raiseTypeError(
                 node,
                 isFunction ? ErrorMessages["UnknownFunction"] :
                 ErrorMessages["VarIsNotDeclared"],
@@ -451,7 +448,7 @@ export class TypeUtil extends UtilParser {
             case "MacroDeclaration":
                 const macro = dec as MacroDeclaration;
                 if (!macro.init) {
-                    this.raiseAtNode(
+                    this.raiseTypeError(
                         node,
                         ErrorMessages["MacroHasNoInitValue"],
                         false);
@@ -578,7 +575,7 @@ export class TypeUtil extends UtilParser {
             left = leftResult?.result;
             if (leftResult?.type === BindTypes.const) {
                 if (raiseError) {
-                    this.raiseAtNode(
+                    this.raiseTypeError(
                         expr.left,
                         ErrorMessages["ConstVarCannotBeAssigned"],
                         false);
@@ -589,19 +586,6 @@ export class TypeUtil extends UtilParser {
                     BindTypes.var,
                     this.maybeDeclaratorBinding(rightType.type) ?? rightType.type,
                     expr);
-                //if (expr.treeParent &&
-                //    expr.treeParent.type !== "SetStatement") {
-                //    let finalType = rightType.type;
-                //    if (finalType instanceof ClassOrInterfaceDeclaration) {
-                //        finalType = this.getFinalType(finalType);
-                //    }
-                //    if (!isBasicType(finalType.name.name) && raiseError) {
-                //        this.raiseAtNode(
-                //            expr,
-                //            WarningMessages["AssignmentMaybeObject"],
-                //            true);
-                //    }
-                //}
             } else if (this.scope.isCurFunction(expr.left.name)) {
                 this.scope.updateFuncReturnType(right);
             } else {
@@ -703,7 +687,7 @@ export class TypeUtil extends UtilParser {
             if (!this.scope.inFunction &&
                 this.options.raiseTypeError &&
                 raiseError) {
-                this.raiseAtNode(
+                this.raiseTypeError(
                     member.object,
                     ErrorMessages["MissingParenObject"],
                     true,
@@ -734,7 +718,7 @@ export class TypeUtil extends UtilParser {
                 if (!this.scope.inFunction &&
                     this.options.raiseTypeError &&
                     raiseError) {
-                    this.raiseAtNode(
+                    this.raiseTypeError(
                         prop,
                         ErrorMessages["MissingProperty"],
                         false,
@@ -865,11 +849,9 @@ export class TypeUtil extends UtilParser {
         }
 
         if (!objType) {
-            if (isFunction) {
-                this.needCheckCallExpr.push(callExpr);
-            } else if (!this.scope.inFunction && this.options.raiseTypeError &&
+            if (!this.scope.inFunction && this.options.raiseTypeError &&
                         raiseError) {
-                this.raiseAtNode(
+                this.raiseTypeError(
                     callee.type === "Identifier" ?
                     callee : (callee as MemberExpression).property,
                     ErrorMessages["UnknownFunction"],
@@ -880,7 +862,7 @@ export class TypeUtil extends UtilParser {
         } else if (objType.type !== "FunctionDeclaration") {
             if (!this.scope.inFunction && this.options.raiseTypeError &&
                 raiseError) {
-                this.raiseAtNode(
+                this.raiseTypeError(
                     callee.type === "Identifier" ?
                     callee : (callee as MemberExpression).property,
                     ErrorMessages["IdentifierIsNotFunction"],
@@ -952,7 +934,7 @@ export class TypeUtil extends UtilParser {
         }
         if (args.length < params.length && !cur &&
             !this.scope.inFunction && this.options.raiseTypeError) {
-            this.raiseAtNode(callExpr,
+            this.raiseTypeError(callExpr,
                 ErrorMessages["IncorrectFunctionArgumentNumber"],
                 false,
                 func.name.name,
@@ -962,7 +944,7 @@ export class TypeUtil extends UtilParser {
         if (nece !== "" &&
             !this.scope.inFunction &&
             this.options.raiseTypeError) {
-            this.raiseAtNode(callExpr,
+            this.raiseTypeError(callExpr,
                 ErrorMessages["ArgumentIsNotOptional"],
                 false,
                 nece);
@@ -1119,7 +1101,7 @@ export class TypeUtil extends UtilParser {
                     return this.scope.get("Application", "Excel")?.result;
                 default:
                     if (this.options.raiseTypeError && !this.scope.inFunction) {
-                        this.raiseAtNode(
+                        this.raiseTypeError(
                             func.arguments[0],
                             ErrorMessages["InvalidObjectScripting"],
                             false);
@@ -1147,7 +1129,7 @@ export class TypeUtil extends UtilParser {
         }
         if (argType === funcDeclare.binding && !this.options.raiseTypeError &&
             !this.scope.inFunction) {
-            this.raiseAtNode(func, WarningMessages["RedundantTypeConvertion"], true);
+            this.raiseTypeError(func, WarningMessages["RedundantTypeConvertion"], true);
         }
     }
 

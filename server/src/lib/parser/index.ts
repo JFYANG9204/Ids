@@ -1,13 +1,14 @@
 import { extname } from "path";
 import { Options, ScriptFileType, SourceType } from "../options";
-import { StatementParser } from "./statement";
-import { DeclarationBase, File } from "../types";
+import { File } from "../types";
 import { Scope, ScopeFlags, ScopeHandler } from "../util/scope";
 import { ErrorMessages } from "./error-messages";
-import { getFileTypeMark } from "../file/util";
+import { StaticTypeChecker } from "./typeCheker";
 
 
-export class Parser extends StatementParser {
+export class Parser extends StaticTypeChecker {
+
+    catchFileTypeMarkFunction?: (content: string) => SourceType | undefined;
 
     constructor(options: Options, input: string) {
         super(options, input);
@@ -25,13 +26,15 @@ export class Parser extends StatementParser {
         if (this.fileName.toLowerCase().endsWith(".d.mrs")) {
             this.options.sourceType = SourceType.declare;
         }
-        const typeMark = getFileTypeMark(input);
-        if (typeMark !== undefined) {
-            this.options.sourceType = typeMark;
+        if (this.catchFileTypeMarkFunction) {
+            const typeMark = this.catchFileTypeMarkFunction(input);
+            if (typeMark !== undefined) {
+                this.options.sourceType = typeMark;
+            }
         }
     }
 
-    parse(preDef?: Scope, header?: DeclarationBase): File {
+    parse(preDef?: Scope, isInclude?: boolean): File {
         const file = this.startNode(File);
         if (preDef) {
             this.scope.joinScope(preDef);
@@ -40,10 +43,11 @@ export class Parser extends StatementParser {
             this.nextToken();
             try {
                 this.scope.enter(ScopeFlags.program);
-                if (header) {
-                    this.scope.enterHeader(header);
-                }
                 file.program = this.parseProgram();
+                if (!isInclude) {
+                    this.checkFuncInScope(this.scope.currentScope());
+                    this.checkBlock(file.program.body);
+                }
                 this.scope.exit();
             // eslint-disable-next-line no-empty
             } catch (error) {

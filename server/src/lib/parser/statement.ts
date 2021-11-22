@@ -350,7 +350,6 @@ export class StatementParser extends ExpressionParser {
             case tt._sub:
             case tt._function:
                 const func = this.parseFunctionDeclaration();
-                this.checkAheadCallExpr(func);
                 return func;
             // Jump Statement
             case tt._exit:
@@ -446,11 +445,6 @@ export class StatementParser extends ExpressionParser {
         let right: { type: DeclarationBase | undefined } = { type: undefined };
         node.declarator.binding = this.getExprType(node.init, right);
         node.declarator.bindingType = right.type;
-        this.scope.declareName(
-            node.declarator.name.name,
-            BindTypes.const,
-            node.declarator,
-            right.type);
         return this.finishNode(node, "ConstDeclarator");
     }
 
@@ -506,10 +500,6 @@ export class StatementParser extends ExpressionParser {
         }
         node.boundaries = boundaries;
         node.dimensions = dimensions;
-        this.scope.declareName(
-            node.name.name,
-            BindTypes.var,
-            node);
         return this.finishNode(node, "ArrayDeclarator");
     }
 
@@ -522,15 +512,6 @@ export class StatementParser extends ExpressionParser {
                 node.initValue = node.init.extra["raw"];
             }
         }
-        let rightType: { type: DeclarationBase | undefined } = { type: undefined };
-        if (node.init) {
-            this.getExprType(node.init, rightType, false);
-        }
-        this.scope.declareName(
-            node.name.name,
-            BindTypes.const,
-            node,
-            rightType.type);
         return this.finishNode(node, "MacroDeclaration");
     }
 
@@ -547,7 +528,6 @@ export class StatementParser extends ExpressionParser {
                 hasComma = false;
             } else {
                 const id = this.parseSingleVarDeclarator();
-                this.scope.declareName(id.name.name, BindTypes.var, id);
                 declarators.push(id);
                 hasComma = false;
             }
@@ -582,7 +562,6 @@ export class StatementParser extends ExpressionParser {
         const node = this.startNode(ExpressionStatement);
         node.expression = this.parseExpression(true);
         node.push(node.expression);
-        this.checkExprError(node.expression);
         return this.finishNodeAt(node,
             "ExpressionStatement",
             this.state.lastTokenEnd,
@@ -595,33 +574,6 @@ export class StatementParser extends ExpressionParser {
         node.id = this.parseCallOrMember();
         this.expect(tt.equal);
         node.assignment = this.parseExpression(true);
-        if (node.id instanceof Identifier) {
-            const declared = this.scope.get(node.id.name);
-            if (declared?.result) {
-                if (declared.type === BindTypes.const) {
-                    this.raiseAtNode(
-                        node.id,
-                        ErrorMessages["ConstVarCannotBeAssigned"],
-                        false);
-                } else {
-                    let declareType: {
-                        type: DeclarationBase | undefined } = { type: undefined };
-                    this.getExprType(node.assignment, declareType);
-                    if (declareType.type) {
-                        this.scope.update(
-                            node.id.name,
-                            BindTypes.var,
-                            this.getMaybeBindingType(declareType.type) ?? declareType.type,
-                            node.assignment);
-                        if (declared.result) {
-                            this.addExtra(node.id,
-                                "declaration",
-                                this.scope.get(node.id.name)?.result);
-                        }
-                    }
-                }
-            }
-        }
         node.push(node.id, node.assignment);
         return this.finishNode(node, "SetStatement");
     }
@@ -644,7 +596,6 @@ export class StatementParser extends ExpressionParser {
         const node = this.startNode(IfStatement);
         this.next();
         node.test = this.parseExpression();
-        this.checkExprError(node.test);
         this.expect(tt._then);
         if (this.hasPrecedingLineBreak()) {
             node.consequent = this.parseBlock([ tt._end, tt._else, tt._elseif ]);
@@ -668,12 +619,10 @@ export class StatementParser extends ExpressionParser {
                 node.consequent = this.parseExit();
             } else {
                 node.consequent = this.parseExpression(true);
-                this.checkExprError(node.consequent);
             }
             if (this.match(tt._else) && !this.hasPrecedingLineBreak()) {
                 this.next();
                 node.alternate = this.parseExpression();
-                this.checkExprError(node.consequent);
                 node.push(node.alternate);
             }
         }
@@ -703,29 +652,14 @@ export class StatementParser extends ExpressionParser {
         this.next();
         node.variable = this.parseIdentifier();
         node.push(node.variable);
-        let declared = this.checkVarDeclared(
-            (node.variable as Identifier).name, node);
-        if (declared) {
-            let long = this.scope.get("Long")?.result;
-            if (long) {
-                this.scope.update(node.variable.name,
-                    BindTypes.var, long, node.variable);
-                this.addExtra(node.variable,
-                    "declaration",
-                    this.scope.get(node.variable.name)?.result);
-            }
-        }
         this.expect(tt.equal);
         const lbound = this.parseForBoundary();
-        this.checkExprError(lbound);
         this.expect(tt._to);
         const ubound = this.parseForBoundary();
-        this.checkExprError(ubound);
         node.range = { lbound, ubound };
         node.push(lbound, ubound);
         if (this.eat(tt._step)) {
             const stepExpr = this.parseExpression();
-            this.checkExprError(stepExpr);
             node.push(stepExpr);
             if (stepExpr instanceof NumericLiteral) {
                 node.range.step = Number(stepExpr.extra["raw"]);
@@ -749,12 +683,10 @@ export class StatementParser extends ExpressionParser {
         this.next();
         this.expect(tt._each);
         const variable = this.parseIdentifier();
-        this.checkVarDeclared(variable.name, variable);
         node.variable = variable;
         this.expect(tt._in);
         const collection = this.parseExpression();
         node.collection = collection;
-        this.checkIfCollection(collection, variable);
         node.body = this.parseBlock(tt._next);
         this.expect(tt._next);
         node.push(variable, collection, node.body);
@@ -773,7 +705,6 @@ export class StatementParser extends ExpressionParser {
         const node = this.startNode(WhileStatement);
         this.next();
         node.test = this.parseExpression();
-        this.checkExprError(node.test);
         node.body = this.parseBlock(tt._end);
         node.push(node.test, node.body);
         this.expect(tt._end);
@@ -801,7 +732,6 @@ export class StatementParser extends ExpressionParser {
         if (testAhead) {
             this.next();
             node.test = this.parseExpression();
-            this.checkExprError(node.test);
         }
         node.body = this.parseBlock(tt._loop);
         this.expect(tt._loop);
@@ -812,7 +742,6 @@ export class StatementParser extends ExpressionParser {
                 this.unexpected();
             }
             node.test = this.parseExpression();
-            this.checkExprError(node.test);
         }
         node.push(node.test, node.body);
         return this.finishNode(node, "DoWhileStatement");
@@ -827,19 +756,12 @@ export class StatementParser extends ExpressionParser {
     parseWithStatement(): WithStatement {
         const node = this.startNode(WithStatement);
         this.next();
+        this.scope.enter(ScopeFlags.with);
         node.object = this.parseExpression();
-        let type: { type: DeclarationBase | undefined } = { type: undefined };
-        this.getExprType(node.object, type);
-        if (type.type) {
-            this.scope.enterHeader(
-                this.getMaybeBindingType(type.type,
-                    this.getDeclareNamespace(type.type)));
-            this.addExtra(node, "declaration", type.type);
-        }
         node.body = this.parseBlock(tt._end);
         this.expect(tt._end);
         this.expect(tt._with);
-        this.scope.exitHeader();
+        this.scope.exit();
         node.push(node.object, node.body);
         return this.finishNode(node, "WithStatement");
     }
@@ -1044,7 +966,7 @@ export class StatementParser extends ExpressionParser {
             node.needReturn = true;
             isFunction = true;
         }
-        this.scope.enter(ScopeFlags.function, node);
+        this.scope.enter(ScopeFlags.function);
         this.next();
         node.name = this.parseIdentifier();
         this.expect(tt.braceL);
@@ -1063,7 +985,6 @@ export class StatementParser extends ExpressionParser {
         node.pushArr(node.params);
         this.scope.exit();
         this.scope.declareName(node.name.name, BindTypes.function, node);
-        this.addExtra(node.name, "declaration", node);
         return this.finishNode(node, "FunctionDeclaration");
     }
 
@@ -1079,9 +1000,6 @@ export class StatementParser extends ExpressionParser {
             node.declarator = this.parseArrayDeclarator();
         } else {
             node.declarator = this.parseSingleVarDeclarator();
-            this.scope.declareName(node.declarator.name.name,
-                BindTypes.var,
-                node.declarator);
         }
         node.push(node.declarator);
         if (this.eat(tt.equal)) {
@@ -1258,12 +1176,7 @@ export class StatementParser extends ExpressionParser {
             this.expect(tt._interface);
         }
         this.scope.exit();
-        this.scope.declareName(
-            node.name.name,
-            node.constants.size === 0 ?
-            BindTypes.classOrInterface :
-            BindTypes.const,
-            node);
+        this.scope.declareName(node.name.name, BindTypes.classOrInterface, node);
         return this.finishNode(node, "ClassOrInterfaceDeclaration");
     }
 
@@ -1289,7 +1202,6 @@ export class StatementParser extends ExpressionParser {
         this.scope.enter(ScopeFlags.enumerator);
         while (!this.eat(tt._end)) {
             const item = this.parseEnumItemDeclarator();
-            this.scope.declareName(item.name.name, BindTypes.const, item);
             node.enumItems.push(item);
         }
         this.scope.exit();
@@ -1355,7 +1267,6 @@ export class StatementParser extends ExpressionParser {
         this.next();
         node.id = this.parseIdentifier();
         node.push(node.id);
-        this.scope.delete(node.id.name);
         return this.finishNode(node, "PreUndefStatement");
     }
 
@@ -1433,8 +1344,7 @@ export class StatementParser extends ExpressionParser {
                 node.parser.options.sourceType = SourceType.metadata;
             }
             node.parser.fileName = node.parser.options.sourceFileName = node.path;
-            let headerDef = this.scope.currentScope().currentHeader;
-            node.file = node.parser.parse(this.scope.store, headerDef);
+            node.file = node.parser.parse(this.scope.store, true);
             if (search) {
                 search.file = node.file;
             }
@@ -1485,7 +1395,6 @@ export class StatementParser extends ExpressionParser {
         const node = this.startNode(PreIfStatement);
         this.next();
         node.test = this.parseExpression(undefined, true);
-        this.checkExprError(node.test);
         node.consequent = this.parseBlock([ tt.pre_endif, tt.pre_elif, tt.pre_else ]);
         if (this.match(tt.pre_elif)) {
             node.alternate = this.parsePreIfStatement();

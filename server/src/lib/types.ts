@@ -261,7 +261,7 @@ export class PreUndefStatement extends PreprocessorBase {
 export class PreIncludeStatement extends PreprocessorBase {
     path: string = "";
     inc: StringLiteral | Identifier;
-    parser?: Parser;
+    declare parser: Parser;
     file: File;
     constructor(parser: ParserBase, pos: number, loc: Position) {
         super(parser, pos, loc);
@@ -592,11 +592,11 @@ export class DoWhileStatement extends Statement {
 export class ForEachStatement extends Statement {
     variable?: Identifier;
     collection?: Expression;
-    body: Statement;
+    body: BlockStatement;
     constructor(parser: ParserBase, pos: number, loc: Position) {
         super(parser, pos, loc);
         this.type = "ForEachStatement";
-        this.body = new Statement(parser, 0, emptyLoc);
+        this.body = new BlockStatement(parser, 0, emptyLoc);
     }
 }
 
@@ -607,12 +607,12 @@ export class ForStatement extends Statement {
         ubound: Expression | NumericLiteral,
         step?: number
     };
-    body: Statement;
+    body: BlockStatement;
     constructor(parser: ParserBase, pos: number, loc: Position) {
         super(parser, pos, loc);
         this.type = "ForStatement";
         this.variable = new Identifier(parser, 0, emptyLoc);
-        this.body = new Statement(parser, 0, emptyLoc);
+        this.body = new BlockStatement(parser, 0, emptyLoc);
         this.range = {
             lbound: new Expression(parser, 0, emptyLoc),
             ubound: new Expression(parser, 0, emptyLoc)
