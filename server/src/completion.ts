@@ -12,7 +12,9 @@ import {
     Hover,
     MarkupContent,
     MarkupKind,
-    SignatureHelp
+    ParameterInformation,
+    SignatureHelp,
+    SignatureInformation,
 } from 'vscode-languageserver-types';
 import { builtInModule } from "./declaration";
 import {
@@ -192,6 +194,8 @@ function getDeclarationNote(dec: DeclarationBase, addHeader: boolean = true): st
         return (addHeader ? header : "") + mergeComments(dec.innerComments);
     } else if (dec.leadingComments.length > 0) {
         return (addHeader ? header : "") + mergeComments(dec.leadingComments);
+    } else if (!addHeader) {
+        return "";
     }
     return header;
 }
@@ -592,17 +596,16 @@ export function getHoverFromDeclaration(dec: DeclarationBase): Hover {
 }
 
 
-export function getSignatureHelp(func: FunctionDeclaration, curCount: number, otherNote?: string) {
+export function getSignatureHelp(func: FunctionDeclaration): SignatureInformation {
     let note = func.name.name + "(";
+    let parameters: ParameterInformation[] = [];
     for (let i = 0; i < func.params.length; ++i) {
         const param = func.params[i];
         let argContent = (param.paramArray ? "..." : "") + getDeclaratorNote(param.declarator);
         if (param.optional) {
             argContent = "[" + argContent + "]";
         }
-        if (curCount === i) {
-            argContent = "**" + argContent + "**";
-        }
+        parameters.push({ label: argContent });
         if (i === 0) {
             note += argContent;
         } else {
@@ -612,7 +615,10 @@ export function getSignatureHelp(func: FunctionDeclaration, curCount: number, ot
     note += "): " + (func.binding ?
         (typeof func.binding === "string" ? func.binding : func.binding.name.name) :
         "Void");
-    return note + (otherNote ?? "");
+    return {
+        label: note,
+        documentation: getDeclarationNote(func, false),
+        parameters };
 }
 
 export function getSignatureHelpFromFunction(func: CallExpression) {
@@ -620,18 +626,10 @@ export function getSignatureHelpFromFunction(func: CallExpression) {
     if (!dec || !(dec instanceof FunctionDeclaration)) {
         return null;
     }
-    let label = getSignatureHelp(dec, func.arguments.length);
-    let documents: MarkupContent = {
-        kind: MarkupKind.Markdown,
-        value: getDeclarationNote(dec, false)
-    };
+    let signature = getSignatureHelp(dec);
+    signature.activeParameter = func.arguments.length;
     const help: SignatureHelp = {
-        signatures: [
-            {
-                label: label,
-                documentation: documents
-            }
-        ],
+        signatures: [ signature ],
         activeParameter: null,
         activeSignature: null
     };
