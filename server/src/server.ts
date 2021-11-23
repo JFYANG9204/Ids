@@ -170,9 +170,9 @@ documents.onDidOpen(listener => {
     let exist;
     if (graph && (exist = graph.getData(path))) {
         raiseErrorsFromFile(connection, listener.document, exist.file);
-        return;
+    } else {
+        updateAndVaidateDocument(listener.document, connection, current, last, graph);
     }
-    updateAndVaidateDocument(listener.document, connection, current, last, graph);
 });
 
 documents.listen(connection);

@@ -31,7 +31,7 @@ export function loadDecarationFiles(files: Map<string, FileContent>): Declaratio
         }
     });
     return {
-        scope: scope,
+        scope,
         files: fileMap,
         contents
     };

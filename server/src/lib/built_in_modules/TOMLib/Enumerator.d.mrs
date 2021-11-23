@@ -130,14 +130,6 @@ Namespace TOMLib
         ipImageOnly = &H0004
     End Enum
 
-    Enum ImagePositions
-        ipLeft      = &H0000
-        ipRight     = &H0001
-        ipTop       = &H0002
-        ipBottom    = &H0003
-        ipImageOnly = &H0004
-    End Enum
-
     Enum MinBaseOptionsConstants
         sbSymbolInFirstCellItemOnly = &H0001
         sbUseWeightedBase           = &H0002

@@ -81,7 +81,7 @@ Namespace TOMLib
         MyAgeAxis.Elements.AddNew("meanage", eMean)   ' Add a factor based mean value
         ``
         !'
-        Function Add(ElementName As String, Optional Index As Long = -1) As IElement
+        Function AddNew(Name As String, Type As ElementType, Optional Index As Long = -1) As IElement
         End Function
 
         '!

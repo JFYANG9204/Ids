@@ -128,7 +128,9 @@ export class ScopeHandler {
         type?: DeclarationBase) {
 
         const scope = this.currentScope();
-        this.checkRedeclarationInScope(scope, name, node);
+        if(this.checkRedeclarationInScope(scope, name, node)) {
+            return;
+        };
 
         if ((bindingType === BindTypes.function) &&
             node instanceof FunctionDeclaration) {
@@ -196,7 +198,7 @@ export class ScopeHandler {
             }
             if (exist) {
                 node.body.forEach(member => {
-                    exist?.body.push(member);
+                    exist?.body.set(member.name.name.toLowerCase(), member);
                 });
             } else {
                 this.store.namespaces.set(name.toLowerCase(), node);
@@ -229,14 +231,17 @@ export class ScopeHandler {
             this.inFunction) {
             if (this.isRedeclared(scope, name)) {
                 this.raise(node.name, ErrorMessages["VarRedeclaration"], false, name);
+                return true;
             }
-            return;
+            return false;
         }
         if (this.isRedeclared(scope, name) ||
             this.isRedeclared(this.global, name) ||
             this.isRedeclared(this.store, name)) {
             this.raise(node.name, ErrorMessages["VarRedeclaration"], false, name);
+            return true;
         }
+        return false;
     }
 
     isRedeclared(scope: Scope, name: string) {
@@ -309,7 +314,7 @@ export class ScopeHandler {
         }
     }
 
-    getName(
+    private getName(
         scope: Scope,
         name: string,
         isFunction?: boolean): ScopeSearchResult | undefined {
@@ -395,7 +400,7 @@ export class ScopeHandler {
         return this.currentScope().undefined.get(name.toLowerCase());
     }
 
-    deleteName(scope: Scope, name: string) {
+    private deleteName(scope: Scope, name: string) {
         const lowerName = name.toLowerCase();
         if (scope.dims.has(lowerName)) {
             scope.dims.delete(lowerName);
@@ -511,15 +516,14 @@ export class ScopeHandler {
     private searchInNamespace(
         namespace: NamespaceDeclaration,
         name: string): ScopeSearchResult | undefined {
-        for (const child of namespace.body) {
-            if (name.toLowerCase() === child.name.name.toLowerCase()) {
-                let type = child.type === "ClassOrInterfaceDeclaration" ?
-                        BindTypes.classOrInterface : BindTypes.function;
-                return {
-                    type: type,
-                    result: child
-                };
-            }
+        let child = namespace.body.get(name.toLowerCase());
+        if (child) {
+            let type = child.type === "ClassOrInterfaceDeclaration" ?
+            BindTypes.classOrInterface : BindTypes.function;
+            return {
+                type: type,
+                result: child
+            };
         }
         return undefined;
     }
@@ -530,7 +534,7 @@ export function mergeSingleNamespace(
     source: NamespaceDeclaration,
     map: NamespaceDeclaration) {
     source.body.forEach(member => {
-        map.body.push(member);
+        map.body.set(member.name.name.toLowerCase(), member);
     });
 }
 
@@ -562,3 +566,29 @@ function mergeMap<K, V>(source: Map<K, V>, target: Map<K, V>) {
     });
 }
 
+export function updateScope(scope: Scope, target: Scope) {
+    updateMap(scope.dims, target.dims);
+    updateMap(scope.consts, target.consts);
+    updateMap(scope.classes, target.classes);
+    updateMap(scope.functions, target.functions);
+    updateMap(scope.macros, target.macros);
+    scope.namespaces.forEach((ns, n) => {
+        let exist = target.namespaces.get(n);
+        if (exist) {
+            ns.body.forEach((child, name) => exist?.body.set(name, child));
+        } else {
+            target.namespaces.set(n, ns);
+        }
+    });
+}
+
+/**
+ * 将source内的数据更新到target数据中
+ * @param source 原始对象
+ * @param target 更新对象
+ */
+function updateMap<K, V>(source: Map<K, V>, target: Map<K, V>) {
+    source.forEach((v, k) => {
+        target.set(k, v);
+    });
+}

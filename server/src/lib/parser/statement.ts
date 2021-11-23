@@ -1239,17 +1239,18 @@ export class StatementParser extends ExpressionParser {
                 case tt._interface:
                     const classOrInterface = this.parseClassOrInterface();
                     classOrInterface.namespace = node;
-                    node.body.push(classOrInterface);
+                    node.body.set(classOrInterface.name.name.toLowerCase(), classOrInterface);
                     break;
                 case tt._function:
                 case tt._sub:
                     const func = this.parseFunctionDeclaration();
                     func.namespace = node;
-                    node.body.push(func);
+                    node.body.set(func.name.name.toLowerCase(), func);
                     break;
 
                 case tt._enum:
-                    node.body.push(this.parseEnumDeclaration());
+                    const enumerator = this.parseEnumDeclaration();
+                    node.body.set(enumerator.name.name.toLowerCase(), enumerator);
                     break;
 
                 default:

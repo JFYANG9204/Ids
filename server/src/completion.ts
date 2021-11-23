@@ -385,11 +385,7 @@ function getDeclarationFromScope(scope: Scope,
         declaredNamespace = scope.namespaces.get(
             typeof namespace === "string" ? namespace.toLowerCase() :
             namespace.name.name.toLowerCase()))) {
-        for (const child of declaredNamespace.body) {
-            if (child.name.name.toLowerCase() === lowerName) {
-                return child;
-            }
-        }
+        return declaredNamespace.body.get(lowerName);
     }
     return scope.classes.get(lowerName) ||
         scope.consts.get(lowerName)     ||

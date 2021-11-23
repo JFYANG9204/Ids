@@ -1,7 +1,7 @@
 import { extname } from "path";
 import { types as tt } from "../tokenizer/type";
 import { Options, ScriptFileType, SourceType } from "../options";
-import { DeclarationBase, File, WithStatement } from "../types";
+import { File } from "../types";
 import { Scope, ScopeFlags, ScopeHandler } from "../util/scope";
 import { ErrorMessages } from "./error-messages";
 import { StaticTypeChecker } from "./typeCheker";

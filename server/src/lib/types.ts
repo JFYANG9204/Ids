@@ -1708,7 +1708,7 @@ export class ClassOrInterfaceDeclaration extends DeclarationBase {
 
 export class NamespaceDeclaration extends DeclarationBase {
     name: Identifier;
-    body: Array<DeclarationBase> = [];
+    body: Map<string, DeclarationBase> = new Map();
     level: Array<string> = [];
     constructor(parser: ParserBase, pos: number, loc: Position) {
         super(parser, pos, loc);

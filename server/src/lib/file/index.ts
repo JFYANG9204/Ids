@@ -42,6 +42,16 @@ export class ParserFileDigraph {
                 fileNode.file = global.files.get(k);
                 this.nodeMap.set(k, fileNode);
             });
+            global.files.forEach((f, p) => {
+                const fNode = createParserFileNode(f.uri,
+                    f.path,
+                    f.parser.input,
+                    undefined,
+                    undefined);
+                fNode.file = f;
+                fNode.parser = f.parser;
+                this.nodeMap.set(p, fNode);
+            });
         }
     }
 

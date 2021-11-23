@@ -27,7 +27,7 @@ Interface IValue Implements Object
 
     Clears the current contents of the value.
     !'
-    Sub AppendChunk(Data As Variant)
+    Sub Clear()
     End Sub
 
     '!

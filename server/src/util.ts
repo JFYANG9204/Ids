@@ -15,9 +15,11 @@ import {
     positionAt,
     readFileAndConvertToUtf8
 } from "./lib/file";
+import { FileContent } from "./lib/file/util";
 import { createBasicOptions } from "./lib/options";
 import { Parser } from "./lib/parser";
 import { File } from "./lib/types";
+import { updateScope } from "./lib/util/scope";
 
 
 export function loadBuiltInModule() {
@@ -38,9 +40,21 @@ export function updateAndVaidateDocument(
     const path = fileURLToPath(uri);
     const content = textdocument.getText();
     let file;
-    if (graph && graph.getData(path)) {
-        graph.updateData(path, content);
-        graph.setStart(path);
+    let exist;
+    if (graph && (exist = graph.getData(path))) {
+        if (exist.filePath.endsWith(".d.mrs") &&
+            exist.file) {
+            let fileMap = new Map<string, FileContent>();
+            fileMap.set(exist.filePath.toLowerCase(),
+                { uri: exist.uri, content: exist.file.parser.input });
+            let declares = loadDecarationFiles(fileMap);
+            if (declares.scope && graph.global) {
+                updateScope(graph.global, declares.scope);
+            }
+        } else {
+            graph.updateData(path, content);
+            graph.setStart(path);
+        }
         const start = graph.startParse();
         if (start) {
             if (start.path.toLowerCase() === path.toLowerCase()) {
