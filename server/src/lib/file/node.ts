@@ -5,6 +5,7 @@ import { File } from "../types";
 
 export type ParserFileNode = {
 
+    uri: string,
     filePath: string;
     content: string;
     include: Map<string, ParserFileNode>;
@@ -18,11 +19,13 @@ export type ParserFileNode = {
 };
 
 export function createParserFileNode(
+    uri: string,
     path: string,
     content: string,
     refMark?: FileReferenceMark,
     fileTypeMark?: SourceType): ParserFileNode {
     return {
+        uri,
         filePath: path,
         content: content,
         include: new Map(),

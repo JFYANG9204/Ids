@@ -1,0 +1,105 @@
+#include "job.ini"
+#include "Library\Library.mrs"
+
+Dim TableDoc,StartTime,EndTime
+StartTime = Now()
+Set TableDoc = CreateObject("TOM.Document")
+
+'''''' Modify Metadata ''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+sbAddMetadata("data\" + INPUT_METADATA + "_UPDATE.mdd","data\" + INPUT_METADATA + "_FINAL.mdd","sbMetadata.mrs")
+
+TableDoc.DataSet.Load(JOB_ROOT + "data\" + INPUT_METADATA + "_FINAL.mdd",,JOB_ROOT + "data\" + INPUT_METADATA + "_FINAL.ddf","mrDataFileDsc")
+
+'''''' AddNewGrid ''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+'TableDoc.DataSet.Variables.AddNewGrid("V5Q1,V5Q2,V5Q3","V5Q123","","(V5Q1\V5Q2\V5Q3) Summary Grid")
+'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+
+Dim MDM
+Set MDM = TableDoc.DataSet.MdmDocument
+
+#if AUTO_SPEC == TRUE
+        #include "Auto_Create.mrs"
+#endif
+
+#include "functions.mrs"
+#include "MDD_Manipulation.mrs"
+
+#if AUTO_SPEC == TRUE
+        #include "Auto_Manip.mrs"
+#endif
+
+'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+#if MTD == TRUE
+        #include "Library\PrepareDTR_MDD.mrs"
+#endif
+'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+
+MDM.Save("data\" + INPUT_METADATA + "_FINAL.mdd")
+
+'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+With TableDoc
+
+.DataSet.Description = "77414413 - OPPO Reno6 Campaign Evaluation"
+
+.Default.Annotations[0].Specification = "" '"{ProjectDescription \n}" 'With break line before and after the Description
+.Default.Annotations[1].Specification = "" '"{TableDescription} <br> Base: Total Respondents <font color='red'> ({TableBase}) </font> </br>" 'Set (Base) font color as red
+.Default.Annotations[2].Specification = "Top Break: By " + GLOBALLABEL 'Center Header
+.Default.Annotations[3].Specification = "" '"<right> <br> {Level \p} </br> </right>" 'Right Header NOTE: <right> format is not affected in Excel output
+.Default.Annotations[4].Specification = "" '"Done" 'Title Footer
+.Default.Annotations[5].Specification = "" '"<br> <b> NOTE: Among Rep </b> </br>" 'Left Footer
+.Default.Annotations[6].Specification = "" '"Current Table No: {TableNumber}" 'Center Footer
+.Default.Annotations[7].Specification = "Table No: {TableNumber} / {TotalNumberOfTables}" '"Total Table No: {TotalNumberOfTables}" 'Right Footer NOTE: <right> format is not affected in Excel output
+
+.Default.Properties["RoundingOptions"] = 1
+
+.Global.Filters.AddNew("GlobalFilter",GLOBALFILTER,"")
+
+With .Default
+    .CellItems.Clear()
+
+    If COUNTS = True Then
+        .CellItems.AddNew(0,0) '(0,0) Means showing Count and Decimals=0
+        .Properties["ShowPercentSigns"] = True
+    Else
+        .Properties["ShowPercentSigns"] = True
+    End If
+
+    If PERCENTS = True Then
+        .CellItems.AddNew(1,0) '(1,0) Means showing Column % and Decimals=0
+    End If
+
+    .Properties["ZeroCountSymbol"] = "0" 'If the count is 0, it will show "-"
+    .Properties["ZeroPercentSymbol"] = "0" 'If the % is 0, it will show "-"
+    .Properties["RoundZeroCountSymbol"] = ">" 'If the count is rounded to 0, it will show "-"
+    .Properties["RoundZeroPercentSymbol"] = ">" 'If the % is rounded to 0, it will show "*", usually we show ">" in QTM
+    .Properties["Show100Percent"] = False 'If TRUE, show 100% on base line
+    .Properties["ShowPercentSigns"] = False
+
+End With
+
+With .Tables
+
+#if AUTO_SPEC == TRUE
+        #include "Auto_Filter.mrs"
+#endif
+
+Dim banner
+#if AUTO_SPEC == TRUE
+        #include "Auto_Break.mrs"
+#endif
+
+banner=TOPBREAK
+'banner="bk01a + bk01b + bk01c + bk01d"
+
+#include "Tab.mrs"
+#include table_file
+#if AUTO_SPEC == TRUE
+        #include "Auto_Tables.mrs"
+#endif
+
+End With 'End .Tables
+
+#include "LIBRARY\Table_Output.mrs"
+
+End With 'TableDoc
+

@@ -1,6 +1,7 @@
 import { extname } from "path";
+import { types as tt } from "../tokenizer/type";
 import { Options, ScriptFileType, SourceType } from "../options";
-import { File } from "../types";
+import { DeclarationBase, File, WithStatement } from "../types";
 import { Scope, ScopeFlags, ScopeHandler } from "../util/scope";
 import { ErrorMessages } from "./error-messages";
 import { StaticTypeChecker } from "./typeCheker";
@@ -34,24 +35,27 @@ export class Parser extends StaticTypeChecker {
         }
     }
 
-    parse(preDef?: Scope, isInclude?: boolean): File {
+    parse(preDef?: Scope, isInclude?: boolean, inWith?: boolean): File {
         const file = this.startNode(File);
         if (preDef) {
             this.scope.joinScope(preDef);
         }
         if (this.length > 0) {
+            this.scope.enter(ScopeFlags.program);
             this.nextToken();
             try {
-                this.scope.enter(ScopeFlags.program);
-                file.program = this.parseProgram();
+                file.program = this.parseProgram(tt.eof,
+                    this.options.sourceType, inWith);
+                file.push(file.program);
                 if (!isInclude) {
                     this.checkFuncInScope(this.scope.currentScope());
                     this.checkBlock(file.program.body);
                 }
-                this.scope.exit();
             // eslint-disable-next-line no-empty
             } catch (error) {
                 //const err = error;
+            } finally {
+                this.scope.exit();
             }
         }
         this.checkLineMarkError();

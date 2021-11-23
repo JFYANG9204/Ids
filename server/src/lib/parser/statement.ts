@@ -269,13 +269,24 @@ export class StatementParser extends ExpressionParser {
 
     parseProgram(
         end: TokenType = tt.eof,
-        sourceType: SourceType = this.options.sourceType
+        sourceType: SourceType = this.options.sourceType,
+        inWith?: boolean
     ): Program {
         const node = this.startNode(Program);
         node.sourceType = sourceType;
         if (this.options.sourceType !== SourceType.metadata) {
-            node.body = this.parseBlock(end);
-            node.push(node.body);
+            if (inWith) {
+                const withNode = this.startNode(WithStatement);
+                withNode.body = this.parseBlock(end);
+                withNode.push(withNode.body);
+                this.finishNode(withNode, "WithStatement");
+                node.body = withNode;
+                node.globalWith = withNode;
+                node.push(withNode.body);
+            } else {
+                node.body = this.parseBlock(end);
+                node.push(node.body);
+            }
         } else {
             node.metadata = this.parseMetadata();
             node.pushArr(node.metadata);
@@ -1345,7 +1356,8 @@ export class StatementParser extends ExpressionParser {
                 node.parser.options.sourceType = SourceType.metadata;
             }
             node.parser.fileName = node.parser.options.sourceFileName = node.path;
-            node.file = node.parser.parse(this.scope.store, true);
+            node.file = node.parser.parse(
+                this.scope.store, true, this.scope.inWith);
             if (search) {
                 search.file = node.file;
             }

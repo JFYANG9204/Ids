@@ -9,6 +9,7 @@ import {
     WithStatement
 } from "../types";
 import { SourceType } from "../options";
+import { pathToFileURL } from "url";
 
 export function readFileAndConvertToUtf8(filePath: string): string {
     const file = fs.readFileSync(filePath);
@@ -19,14 +20,19 @@ export function readFileAndConvertToUtf8(filePath: string): string {
     return "";
 }
 
+export interface FileContent {
+    uri: string,
+    content: string
+}
+
 /**
  * 遍历文件夹下所有扩展名为.ini,.inc,.dms,.mrs的文件，并读取其中内容,
  * 并保存在一个Map中。
  * @param folder 文件夹路径
  * @returns _key_ - 小写完整文件路径  _value_ - 文件内容
  */
-export function getAllUsefulFile(folder: string): Map<string, string> {
-    const list = new Map<string, string>();
+export function getAllUsefulFile(folder: string): Map<string, FileContent> {
+    const list = new Map<string, FileContent>();
     const fileNames = fs.readdirSync(path.resolve(folder), { withFileTypes: true });
     fileNames.forEach(file => {
         if (file.isDirectory()) {
@@ -37,9 +43,10 @@ export function getAllUsefulFile(folder: string): Map<string, string> {
                 exten === ".inc" ||
                 exten === ".dms" ||
                 exten === ".mrs") {
-                const fullPath = path.join(folder, file.name).toLowerCase();
+                const fullPath = path.join(folder, file.name);
                 const content = readFileAndConvertToUtf8(fullPath);
-                list.set(fullPath.toLowerCase(), content);
+                const uri = pathToFileURL(fullPath).toString();
+                list.set(fullPath.toLowerCase(), { uri, content});
             }
         }
     });

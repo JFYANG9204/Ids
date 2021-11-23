@@ -8,6 +8,7 @@ import {
     ParserFileNode
 } from "./node";
 import {
+    FileContent,
     getAllIncludeInFile,
     getAllUsefulFile,
     getFileReferenceMark,
@@ -37,7 +38,7 @@ export class ParserFileDigraph {
         this.global = global?.scope;
         if (global) {
             global.contents.forEach((v, k) => {
-                let fileNode = createParserFileNode(k, v);
+                let fileNode = createParserFileNode(v.uri, k, v.content);
                 fileNode.file = global.files.get(k);
                 this.nodeMap.set(k, fileNode);
             });
@@ -47,7 +48,7 @@ export class ParserFileDigraph {
     init() {
         const fileMap = getAllUsefulFile(this.folder);
         const nodes: Map<string, ParserFileNode> = new Map();
-        const declares: Map<string, string> = new Map();
+        const declares: Map<string, FileContent> = new Map();
 
         // 读取文件夹内所有文件的内容
         fileMap.forEach((value, key) => {
@@ -55,9 +56,9 @@ export class ParserFileDigraph {
             if (key.endsWith(".d.mrs")) {
                 declares.set(key, value);
             } else {
-                const refMark = getFileReferenceMark(value);
-                const typeMark = getFileTypeMark(value);
-                const node = createParserFileNode(key, value, refMark, typeMark);
+                const refMark = getFileReferenceMark(value.content);
+                const typeMark = getFileTypeMark(value.content);
+                const node = createParserFileNode(value.uri, key, value.content, refMark, typeMark);
                 nodes.set(key, node);
             }
         });
@@ -192,7 +193,7 @@ export class ParserFileDigraph {
     startParse() {
         if (this.start) {
             const parser = new Parser(
-                createBasicOptions(this.start.filePath, true, undefined, this.global),
+                createBasicOptions(this.start.filePath, true, this.start.uri, this.global),
                 this.start.content
             );
             parser.searchParserNode = (filePath: string) => {

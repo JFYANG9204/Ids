@@ -334,8 +334,9 @@ export class File extends NodeBase {
 export class Program extends Statement {
     type: "Program";
     sourceType: SourceType = SourceType.script;
-    body: BlockStatement;
+    body: BlockStatement | WithStatement;
     metadata?: NodeBase[];
+    globalWith?: WithStatement;
 
     constructor(parser: ParserBase, pos: number, loc: Position) {
         super(parser, pos, loc);

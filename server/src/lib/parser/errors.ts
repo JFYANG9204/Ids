@@ -14,6 +14,7 @@ export type ErrorContext = {
 };
 
 export type ParsingError = {
+    uri: string,
     start: number,
     pos: number,
     loc: Position,
@@ -55,6 +56,7 @@ export class ErrorParser extends CommentParser {
         const message =
             template.template.replace(/%(\d+)/g, (_, i: number) => param[i]);
         const err: ParsingError = {
+            uri: this.options.uri,
             name: template.code,
             start: start,
             pos: end,
@@ -109,6 +111,7 @@ export class ErrorParser extends CommentParser {
 
     _raise(context: ErrorContext, message: string, name: string): ParsingError {
         const err: ParsingError = {
+            uri: this.options.uri,
             name: name,
             start: this.state.start,
             pos: context.pos,

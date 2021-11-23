@@ -69,12 +69,22 @@ export class StaticTypeChecker extends StatementParser {
     }
 
     checkFile(file: File) {
+        if (file.program.globalWith) {
+            this.addExtra(
+                file.program.globalWith,
+                "declaration",
+                this.scope.currentScope().currentHeader);
+        }
         this.checkBlock(file.program.body);
     }
 
-    checkBlock(block: BlockStatement) {
-        for (let i = 0; i < block.body.length; ++i) {
-            this.checkBlockContent(block.body[i]);
+    checkBlock(block: BlockStatement | WithStatement) {
+        if (block instanceof BlockStatement) {
+            for (let i = 0; i < block.body.length; ++i) {
+                this.checkBlockContent(block.body[i]);
+            }
+        } else {
+            this.checkBlockContent(block.body);
         }
     }
 
@@ -316,6 +326,7 @@ export class StaticTypeChecker extends StatementParser {
             const message =
                 template.template.replace(/%(\d+)/g, (_, i: number) => param[i]);
             const err: ParsingError = {
+                uri: parser.options.uri,
                 name: template.code,
                 start: node.start,
                 pos: node.end,
