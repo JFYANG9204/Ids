@@ -37,6 +37,7 @@ export const ErrorMessages: ErrorTemplates = makeErrorTemplates({
     EventSectionNameRedeclared:      "Section名已经声明.",
     EventSectionNotDeclared:         "名为'%0'的Event未声明.",
     ExpressionNeedReturn:            "语句需要返回值.",
+    FunctionNeedReturn:              "'Function'定义的函数需要返回值,如果不需要返回值,请改用'Sub'声明.",
     MissingSemicolon:                "缺少';'.",
     MissingRightParen:               "缺少')'.",
     MissingParenObject:              "缺少父级对象.",

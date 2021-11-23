@@ -989,10 +989,7 @@ export class StatementParser extends ExpressionParser {
         node.body = this.parseBlock(tt._end);
         this.expect(tt._end);
         isFunction ? this.expect(tt._function) : this.expect(tt._sub);
-        if (isFunction && !node.binding) {
-            node.binding = "Variant";
-        }
-        node.push(node.body);
+        node.push(node.name, node.body);
         node.pushArr(node.params);
         node.scope = this.scope.currentScope();
         this.scope.exit();

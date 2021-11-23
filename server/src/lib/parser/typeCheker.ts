@@ -65,6 +65,11 @@ export class StaticTypeChecker extends StatementParser {
                 BindTypes.var, param.declarator);
         });
         this.checkBlock(func.body);
+        if (func.needReturn && !func.binding) {
+            this.raiseTypeError(func.name,
+                ErrorMessages["FunctionNeedReturn"],
+                false);
+        }
         this.scope.exit();
     }
 
