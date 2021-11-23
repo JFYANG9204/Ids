@@ -47,9 +47,9 @@ export class Parser extends StaticTypeChecker {
                 file.program = this.parseProgram(tt.eof,
                     this.options.sourceType, inWith);
                 file.push(file.program);
-                if (!isInclude) {
-                    this.checkIncludeFiles();
-                    this.checkFuncInScope(this.scope.currentScope());
+                if (!isInclude &&
+                    this.options.sourceType !== SourceType.declare) {
+                    this.checkFuncInScope(this.scope.store);
                     this.checkBlock(file.program.body);
                 }
             // eslint-disable-next-line no-empty

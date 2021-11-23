@@ -26,7 +26,7 @@ export class NodeBase {
         this.start = pos;
         this.end = 0;
         this.loc = new SourceLocation(loc);
-        if (parser.fileName) {this.loc.fileName = parser.fileName;}
+        this.loc.fileName = parser.fileName;
     }
 
     push(...nodes: NodeBase[]) {

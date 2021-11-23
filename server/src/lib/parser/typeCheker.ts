@@ -52,9 +52,20 @@ export class StaticTypeChecker extends StatementParser {
     }
 
     checkFuncInScope(scope: Scope) {
-        scope.functions.forEach(func => {
+        if (!this.searchParserNode) {
+            return;
+        }
+
+        for (const func of scope.functions.values()) {
+            let search = this.searchParserNode(func.loc.fileName);
+            if (!search || !search.parser || !search.file) {
+                continue;
+            }
+            this.includeRaiseFunction = this.createTypeRaiseFunction(search.file, search.parser);
             this.checkFunctionBody(func);
-        });
+            this.includeRaiseFunction = undefined;
+        }
+
     }
 
     checkFunctionBody(func: FunctionDeclaration) {

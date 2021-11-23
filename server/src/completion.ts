@@ -617,7 +617,10 @@ export function getSignatureHelp(func: FunctionDeclaration): SignatureInformatio
         "Void");
     return {
         label: note,
-        documentation: getDeclarationNote(func, false),
+        documentation: {
+            kind: MarkupKind.Markdown,
+            value: getDeclarationNote(func, false)
+        },
         parameters };
 }
 

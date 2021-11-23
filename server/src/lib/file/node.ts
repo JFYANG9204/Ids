@@ -1,7 +1,7 @@
-import { ParserBase } from "../base";
 import { FileReferenceMark } from "./util";
 import { SourceType } from "../options";
 import { File } from "../types";
+import { Parser } from "../parser";
 
 export type ParserFileNode = {
 
@@ -12,7 +12,7 @@ export type ParserFileNode = {
     referenced: Map<string, ParserFileNode>;
     fileReferenceMark?: FileReferenceMark;
     fileTypeMark?: SourceType;
-    parser?: ParserBase;
+    parser?: Parser;
     file?: File;
     isVertex?: true;
 

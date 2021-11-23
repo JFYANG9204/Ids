@@ -19,7 +19,7 @@ export class SourceLocation {
     start: Position;
     end: Position;
 
-    fileName?: string;
+    fileName: string = "";
     identifierName?: string;
 
     constructor(start: Position, end?: Position) {

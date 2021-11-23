@@ -991,6 +991,9 @@ export class StatementParser extends ExpressionParser {
         isFunction ? this.expect(tt._function) : this.expect(tt._sub);
         node.push(node.name, node.body);
         node.pushArr(node.params);
+        if (isFunction && !node.binding) {
+            node.binding = "Variant";
+        }
         node.scope = this.scope.currentScope();
         this.scope.exit();
         this.scope.declareName(node.name.name, BindTypes.function, node);
@@ -1315,6 +1318,7 @@ export class StatementParser extends ExpressionParser {
                         false,
                         node.path
                     );
+                    return node;
                 }
                 if (content) {
                     node.parser = new Parser(
@@ -1354,10 +1358,12 @@ export class StatementParser extends ExpressionParser {
                 node.parser.options.sourceType = SourceType.metadata;
             }
             node.parser.fileName = node.parser.options.sourceFileName = node.path;
+            node.parser.searchParserNode = this.searchParserNode;
             node.file = node.parser.parse(
                 this.scope.store, true, this.scope.inWith);
             if (search) {
                 search.file = node.file;
+                search.parser = node.parser;
             }
             node.push(node.file);
             this.state.includes.set(node.path.toLowerCase(), node.file);
