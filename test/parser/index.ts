@@ -11,9 +11,7 @@ import { createBasicOptions } from "../../server/src/lib/options";
 import { Parser } from "../../server/src/lib/parser";
 
 const folderPath = resolve("./test/parser/fixture/dpgm");
-const startPath = resolve("./test/parser/fixture/dpgm/Run.mrs");
-const changePath = resolve("./test/parser/fixture/dpgm/Run_jacc.mrs");
-const changeContent = readFileAndConvertToUtf8(changePath);
+const startPath = resolve("./test/parser/fixture/dpgm/Run test.mrs");
 const graph = new ParserFileDigraph(folderPath, builtInModule);
 graph.init();
 graph.setStart(startPath);

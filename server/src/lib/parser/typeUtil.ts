@@ -114,6 +114,10 @@ export class TypeUtil extends UtilParser {
             return dec.declarator.binding instanceof DeclarationBase ?
                 dec.declarator.binding : this.scope.get(dec.declarator.binding)?.result;
         } else if (dec instanceof PropertyDeclaration) {
+            let binding = this.getPropertyBindingType(dec);
+            if (isBasicType(binding)) {
+                return this.scope.get(binding)?.result;
+            }
             return this.scope.get(
                 this.getPropertyBindingType(dec),
                 this.getDeclareNamespace(dec))?.result;
