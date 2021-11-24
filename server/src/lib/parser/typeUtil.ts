@@ -588,6 +588,8 @@ export class TypeUtil extends UtilParser {
             }
             return this.getVariant();
         }
+
+        this.guessMaybeArgumentType(expr, left, right);
         //
         if (expr.operator.binop === BinopType.logical     ||
             expr.operator.binop === BinopType.realational ||
@@ -1219,6 +1221,33 @@ export class TypeUtil extends UtilParser {
         if (argType === funcDeclare.binding && !this.options.raiseTypeError &&
             !this.scope.inFunction) {
             this.raiseTypeError(func, WarningMessages["RedundantTypeConvertion"], true);
+        }
+    }
+
+    guessMaybeArgumentType(expr: BinaryExpression,
+        left: string,
+        right: string) {
+
+        let find;
+        let guess;
+
+        if (expr.left instanceof Identifier) {
+            find = this.scope.get(expr.left.name)?.result;
+            guess = right;
+        } else if (expr.right instanceof Identifier) {
+            find = this.scope.get(expr.right.name)?.result;
+            guess = left;
+        }
+
+        if (guess && find &&
+            find.treeParent?.type === "ArgumentDeclarator") {
+
+            if (find instanceof SingleVarDeclarator &&
+                guess.toLowerCase() !== "null") {
+                find.binding = guess;
+                find.bindingType = this.scope.get(guess)?.result;
+            }
+
         }
     }
 
