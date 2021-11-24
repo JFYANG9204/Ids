@@ -92,12 +92,12 @@ export function raiseErrorsFromFile(connection: _Connection, doc: TextDocument, 
     });
 }
 
-export function createSingleParser(path: string, content?: string, uri?: string) {
+export function createSingleParser(path: string, content?: string, uri?: string, graph?: boolean) {
     let text = content;
     if (!text) {
         text = readFileAndConvertToUtf8(path);
     }
-    return new Parser(createBasicOptions(path, false, uri, builtInModule.scope), text);
+    return new Parser(createBasicOptions(path, false, uri, builtInModule.scope, graph), text);
 }
 
 export function getNodeFromDocPos(

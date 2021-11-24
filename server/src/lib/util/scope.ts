@@ -285,7 +285,11 @@ export class ScopeHandler {
         if (this.curFunc.binding) {
             let match = false;
             if (typeof this.curFunc.binding === "string") {
-                match = this.curFunc.binding.toLowerCase() === name.toLowerCase();
+                if (name.toLowerCase() === "null") {
+                    return;
+                } else {
+                    match = this.curFunc.binding.toLowerCase() === name.toLowerCase();
+                }
             } else {
                 match = this.curFunc.binding.name.name.toLowerCase() === name.toLowerCase();
             }

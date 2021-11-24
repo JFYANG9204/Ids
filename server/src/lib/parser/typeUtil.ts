@@ -419,7 +419,7 @@ export class TypeUtil extends UtilParser {
                 break;
 
             case "Identifier":
-                find = this.getIdentifierType(expr as Identifier, raiseError);
+                find = this.getIdentifierType(expr as Identifier, raiseError, this.scope.inFunction);
                 break;
             case "MemberExpression":
                 find = this.getMemberType(expr as MemberExpression, raiseError);
@@ -444,7 +444,6 @@ export class TypeUtil extends UtilParser {
         if (findType) {
             findType.type = find;
         }
-        this.addExtra(expr, "declaration", find);
         if (!type) {
             type = this.getDeclareBaseType(expr, find);
         }
@@ -591,14 +590,14 @@ export class TypeUtil extends UtilParser {
                         ErrorMessages["ConstVarCannotBeAssigned"],
                         false);
                 }
+            } else if (this.scope.isCurFunction(expr.left.name)) {
+                this.scope.updateFuncReturnType(right);
             } else if (left) {
                 this.scope.update(
                     expr.left.name,
                     BindTypes.var,
                     this.maybeDeclaratorBinding(rightType.type) ?? rightType.type,
                     expr);
-            } else if (this.scope.isCurFunction(expr.left.name)) {
-                this.scope.updateFuncReturnType(right);
             } else {
                 if (raiseError) {
                     this.undefined(expr.left, expr.left.name);
@@ -789,7 +788,7 @@ export class TypeUtil extends UtilParser {
         if (memberDec instanceof PropertyDeclaration &&
             memberDec.params.length === 0) {
             if (raiseError) {
-                this.raiseIndexError(member.property, "");
+                this.raiseIndexError(member.property, exprType);
             }
         } else if (memberDec instanceof PropertyDeclaration) {
             needParam = this.getBindingTypeName(memberDec.params[0].declarator.binding);

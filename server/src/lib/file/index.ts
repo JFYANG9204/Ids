@@ -203,7 +203,7 @@ export class ParserFileDigraph {
     startParse() {
         if (this.start) {
             const parser = new Parser(
-                createBasicOptions(this.start.filePath, true, this.start.uri, this.global),
+                createBasicOptions(this.start.filePath, true, this.start.uri, this.global, true),
                 this.start.content
             );
             parser.searchParserNode = (filePath: string) => {

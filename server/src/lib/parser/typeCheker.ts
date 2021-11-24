@@ -53,6 +53,11 @@ export class StaticTypeChecker extends StatementParser {
 
     checkFuncInScope(scope: Scope) {
         if (!this.searchParserNode) {
+            if (!this.options.inGraph) {
+                for (const func of scope.functions.values()) {
+                    this.checkFunctionBody(func);
+                }
+            }
             return;
         }
 
@@ -197,7 +202,7 @@ export class StaticTypeChecker extends StatementParser {
 
     checkSetStatement(setStat: SetStatement) {
         let rightType: { type: DeclarationBase | undefined } = { type: undefined };
-        this.getExprType(setStat.assignment, rightType);
+        let right = this.getExprType(setStat.assignment, rightType);
         if (rightType.type && setStat.id instanceof Identifier) {
             let declared = this.scope.get(setStat.id.name);
             if (declared?.result) {
@@ -216,6 +221,8 @@ export class StaticTypeChecker extends StatementParser {
                         (search = this.scope.get(setStat.id.name)?.result) ?
                         this.maybeCopyType(search) : search);
                 }
+            } else if (this.scope.isCurFunction(setStat.id.name)) {
+                this.scope.updateFuncReturnType(right);
             } else {
                 this.checkVarDeclared(setStat.id.name, setStat.id);
             }

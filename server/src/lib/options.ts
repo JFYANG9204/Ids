@@ -29,8 +29,9 @@ export type Options = {
     errorRecovery: boolean,
     commentType: MarkDownCommentType,
     globalVarName?: string,
-    globalType?: DeclarationBase
-    globalDeclarations?: Scope
+    globalType?: DeclarationBase,
+    globalDeclarations?: Scope,
+    inGraph?: boolean,
 };
 
 
@@ -59,7 +60,8 @@ export function createBasicOptions(
     path: string,
     raiseTypeError: boolean,
     uri?: string,
-    global?: Scope): Options {
+    global?: Scope,
+    graph?: boolean): Options {
     return {
         uri: uri ?? "",
         sourceType: SourceType.script,
@@ -71,7 +73,8 @@ export function createBasicOptions(
         errorRecovery: true,
         treatUnkownAsQuesion: true,
         commentType: MarkDownCommentType.inner,
-        globalDeclarations: global
+        globalDeclarations: global,
+        inGraph: graph
     };
 }
 
