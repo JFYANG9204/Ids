@@ -429,7 +429,7 @@ export class TypeUtil extends UtilParser {
         }
     }
 
-    undefined(node: NodeBase, name: string, isFunction?: boolean) {
+    isUndefined(node: NodeBase, name: string, isFunction?: boolean) {
         if (this.options.raiseTypeError &&
             !this.scope.inFunction) {
             this.raiseTypeError(
@@ -667,7 +667,7 @@ export class TypeUtil extends UtilParser {
                     expr);
             } else {
                 if (raiseError) {
-                    this.undefined(expr.left, expr.left.name);
+                    this.isUndefined(expr.left, expr.left.name);
                 }
                 this.scope.declareUndefined(
                     expr.left,
@@ -717,7 +717,7 @@ export class TypeUtil extends UtilParser {
             let undef = this.scope.getUndefined(name);
             if (undef) {
                 if (raiseError) {
-                    this.undefined(id, id.name, isFunction);
+                    this.isUndefined(id, id.name, isFunction);
                 }
                 return undef;
             }
@@ -729,7 +729,7 @@ export class TypeUtil extends UtilParser {
                 return question;
             } else {
                 if (raiseError) {
-                    this.undefined(id, id.name, isFunction);
+                    this.isUndefined(id, id.name, isFunction);
                 }
             }
         }
