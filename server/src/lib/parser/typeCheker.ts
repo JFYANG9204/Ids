@@ -88,9 +88,9 @@ export class StaticTypeChecker extends StatementParser {
             if (file.scope &&
                 file.treeParent instanceof PreIncludeStatement) {
 
-                this.includeRaiseFunction = this.createTypeRaiseFunction(file, file.parser);
+                this.enterIncludeRaiseFunction(this.createTypeRaiseFunction(file, file.parser));
                 this.checkFuncInScope(file.scope);
-                this.includeRaiseFunction = undefined;
+                this.exitIncludeRaiseFunction();
             }
         });
     }
@@ -121,9 +121,9 @@ export class StaticTypeChecker extends StatementParser {
                 continue;
             }
 
-            this.includeRaiseFunction = this.createTypeRaiseFunction(search.file, search.parser);
+            this.enterIncludeRaiseFunction(this.createTypeRaiseFunction(search.file, search.parser));
             this.checkFunctionBody(func);
-            this.includeRaiseFunction = undefined;
+            this.exitIncludeRaiseFunction();
         }
 
     }
@@ -325,7 +325,7 @@ export class StaticTypeChecker extends StatementParser {
             this.checkVarDeclared(forEach.variable.name, forEach.variable);
         }
         if (forEach.collection) {
-            this.checkIfCollection(forEach.collection);
+            this.checkIfCollection(forEach.collection, forEach.variable);
         }
         this.checkBlockContent(forEach.body);
     }
@@ -369,15 +369,15 @@ export class StaticTypeChecker extends StatementParser {
     checkWithStatement(withStat: WithStatement) {
         let header: { type: DeclarationBase | undefined } = { type: undefined };
         this.getExprType(withStat.object, header);
-        this.scope.inWith = true;
         if (header.type) {
             this.scope.enterHeader(this.getMaybeBindingType(header.type,
                 this.getDeclareNamespace(header.type)));
             this.addExtra(withStat, "declaration", header.type);
-            this.checkBlockContent(withStat.body);
+        }
+        this.checkBlockContent(withStat.body);
+        if (header.type) {
             this.scope.exitHeader();
         }
-        this.scope.inWith = false;
     }
 
     checkEvent(event: EventSection) {
@@ -406,9 +406,9 @@ export class StaticTypeChecker extends StatementParser {
     }
 
     checkPreIncludeStatement(pre: PreIncludeStatement) {
-        this.includeRaiseFunction = this.createTypeRaiseFunction(pre.file, pre.parser);
+        this.enterIncludeRaiseFunction(this.createTypeRaiseFunction(pre.file, pre.parser));
         this.checkFile(pre.file);
-        this.includeRaiseFunction = undefined;
+        this.exitIncludeRaiseFunction();
     }
 
     needType(type: string, node: Expression) {

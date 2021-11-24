@@ -37,16 +37,33 @@ export class TypeUtil extends UtilParser {
 
     needCheckLineMark: Identifier[] = [];
 
-    includeRaiseFunction?: TypeRaiseFunction;
+    includeRaiseFunctionStack: TypeRaiseFunction[] = [];
     updateFuncType?: (func: FunctionDeclaration) => void;
     updatedReturnTypeFunction = new Set<string>();
+
+    enterIncludeRaiseFunction(func: TypeRaiseFunction) {
+        this.includeRaiseFunctionStack.push(func);
+    }
+
+    exitIncludeRaiseFunction() {
+        if (this.includeRaiseFunctionStack.length > 0) {
+            this.includeRaiseFunctionStack.pop();
+        }
+    }
+
+    get currentIncludeRaiseFunction() {
+        if (this.includeRaiseFunctionStack.length === 0) {
+            return undefined;
+        }
+        return this.includeRaiseFunctionStack[this.includeRaiseFunctionStack.length - 1];
+    }
 
     raiseTypeError(node: NodeBase,
         template: ErrorTemplate,
         warning: boolean,
         ...params: any) {
-        if (this.includeRaiseFunction) {
-            this.includeRaiseFunction(node,
+        if (this.currentIncludeRaiseFunction) {
+            this.currentIncludeRaiseFunction(node,
                 template, warning, params);
         } else {
             this.raiseAtNode(node,
@@ -1067,11 +1084,16 @@ export class TypeUtil extends UtilParser {
                 let find = this.scope.get(name, def.namespace)?.result;
                 if (element && find) {
                     if (this.scope.get(element.name)) {
-                        this.scope.update(element.name, BindTypes.var, find, element);
+                        this.scope.update(
+                            element.name,
+                            BindTypes.var,
+                            find, element);
                     } else {
                         find = this.scope.declareUndefined(element, find);
                     }
-                    this.addExtra(element, "declaration", find);
+                    this.addExtra(element,
+                        "declaration",
+                        this.scope.get(element.name)?.result);
                 }
                 return find;
             } else {

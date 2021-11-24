@@ -767,12 +767,12 @@ export class StatementParser extends ExpressionParser {
     parseWithStatement(): WithStatement {
         const node = this.startNode(WithStatement);
         this.next();
-        this.scope.inWith = true;
+        this.scope.enterHeader(this.getVariant());
         node.object = this.parseExpression();
         node.body = this.parseBlock(tt._end);
         this.expect(tt._end);
         this.expect(tt._with);
-        this.scope.inWith = false;
+        this.scope.exitHeader();
         node.push(node.object, node.body);
         return this.finishNode(node, "WithStatement");
     }

@@ -72,8 +72,6 @@ export class ScopeHandler {
     stack: Array<Scope> = [];
     raise: RaiseFunction;
 
-    inWith = false;
-
     constructor(
         parser: ParserBase,
         raise: RaiseFunction,
@@ -83,6 +81,10 @@ export class ScopeHandler {
         this.raise = raise;
         this.global = global ?? new Scope(ScopeFlags.program);
         this.store = store ?? new Scope(ScopeFlags.program);
+    }
+
+    get inWith() {
+        return this.currentScope().withHeader.length > 0;
     }
 
     get inFunction() {
