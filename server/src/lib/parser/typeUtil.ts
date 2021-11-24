@@ -82,6 +82,12 @@ export class TypeUtil extends UtilParser {
         return dec;
     }
 
+    /**
+     * 对于可能是SingleDeclarator、ArrayDeclarator或ArgumentDeclarator的声明，
+     * 返回其绑定类型，否则不做处理
+     * @param dec
+     * @returns
+     */
     maybeDeclaratorBinding(dec: DeclarationBase) : DeclarationBase | undefined {
         if (dec instanceof SingleVarDeclarator ||
             dec instanceof ArrayDeclarator) {
@@ -114,32 +120,39 @@ export class TypeUtil extends UtilParser {
         return dec.name.name;
     }
 
-    getBindingTypeName(binding: BindingDeclarator | string) {
+    getBindingTypeNameString(binding: BindingDeclarator | string) {
         return typeof binding === "string" ? binding :
             binding.name.name;
     }
 
-    getPropertyBindingType(prop: PropertyDeclaration) {
-        return this.getBindingTypeName(prop.binding);
+    getPropertyBindingTypeString(prop: PropertyDeclaration) {
+        return this.getBindingTypeNameString(prop.binding);
     }
 
+    /**
+     * 对于所有可能包含绑定类型的声明类型，返回其绑定的结果类型，
+     * 支持在指定的命名空间中搜索
+     * @param dec
+     * @param namespace
+     * @returns
+     */
     getMaybeBindingType(dec?: DeclarationBase,
         namespace?: string | NamespaceDeclaration) {
         if (dec instanceof SingleVarDeclarator ||
             dec instanceof ArrayDeclarator) {
             return dec.bindingType ?? this.scope.get(
-                this.getBindingTypeName(dec.binding),
+                this.getBindingTypeNameString(dec.binding),
                 namespace)?.result;
         } else if (dec instanceof ConstDeclarator) {
             return dec.declarator.binding instanceof DeclarationBase ?
                 dec.declarator.binding : this.scope.get(dec.declarator.binding)?.result;
         } else if (dec instanceof PropertyDeclaration) {
-            let binding = this.getPropertyBindingType(dec);
+            let binding = this.getPropertyBindingTypeString(dec);
             if (isBasicType(binding)) {
                 return this.scope.get(binding)?.result;
             }
             return this.scope.get(
-                this.getPropertyBindingType(dec),
+                this.getPropertyBindingTypeString(dec),
                 this.getDeclareNamespace(dec))?.result;
         }
         return dec;
@@ -536,7 +549,7 @@ export class TypeUtil extends UtilParser {
                 return "Array";
 
             case "PropertyDeclaration":
-                return this.getPropertyBindingType(dec as PropertyDeclaration);
+                return this.getPropertyBindingTypeString(dec as PropertyDeclaration);
 
             case "EnumDeclaration":
                 return "Enum";
@@ -587,7 +600,7 @@ export class TypeUtil extends UtilParser {
             leftReturn.type instanceof PropertyDeclaration) {
             final = this.getFinalType(leftReturn.type);
             if (final instanceof PropertyDeclaration) {
-                left = this.getPropertyBindingType(final);
+                left = this.getPropertyBindingTypeString(final);
             } else {
                 left = final.name.name;
             }
@@ -598,7 +611,7 @@ export class TypeUtil extends UtilParser {
             rightReturn.type instanceof PropertyDeclaration) {
             final = this.getFinalType(rightReturn.type);
             if (final instanceof PropertyDeclaration) {
-                right = this.getPropertyBindingType(final);
+                right = this.getPropertyBindingTypeString(final);
                 nsName = final.class.namespace;
             } else {
                 right = final.name.name;
@@ -731,7 +744,7 @@ export class TypeUtil extends UtilParser {
                 if (type?.type === "SingleVarDeclarator") {
                     const single = type as SingleVarDeclarator;
                     return single.bindingType ??
-                        this.scope.get(this.getBindingTypeName(single.binding))?.result;
+                        this.scope.get(this.getBindingTypeNameString(single.binding))?.result;
                 }
                 return type;
             case "MemberExpression":
@@ -772,7 +785,7 @@ export class TypeUtil extends UtilParser {
             let parent: DeclarationBase | undefined = obj;
             let child: DeclarationBase | undefined;
             if (obj.type === "PropertyDeclaration") {
-                const objReturn = this.getPropertyBindingType(obj as PropertyDeclaration);
+                const objReturn = this.getPropertyBindingTypeString(obj as PropertyDeclaration);
                 const objProp = obj as PropertyDeclaration;
                 parent = this.scope.get(objReturn,
                     typeof objProp.class.namespace === "string" ? objProp.namespace :
@@ -809,7 +822,7 @@ export class TypeUtil extends UtilParser {
             memberDec = obj as PropertyDeclaration;
             if (memberDec.params.length === 0) {
                 let search = this.scope.get(
-                    this.getPropertyBindingType(memberDec),
+                    this.getPropertyBindingTypeString(memberDec),
                     memberDec.class.namespace)?.result;
                 if ((!search ||
                     search.type !== "ClassOrInterfaceDeclaration") &&
@@ -852,7 +865,7 @@ export class TypeUtil extends UtilParser {
                 this.raiseIndexError(member.property, exprType);
             }
         } else if (memberDec instanceof PropertyDeclaration) {
-            needParam = this.getBindingTypeName(memberDec.params[0].declarator.binding);
+            needParam = this.getBindingTypeNameString(memberDec.params[0].declarator.binding);
         } else {
             if (this.isCollection(memberDec as ClassOrInterfaceDeclaration)) {
                 if (memberDec.name.name === "Array") {
@@ -869,7 +882,7 @@ export class TypeUtil extends UtilParser {
         }
         if (memberDec.name.name === "Array") {
             const arr = obj as ArrayDeclarator;
-            return arr.bindingType ?? this.scope.get(this.getBindingTypeName(arr.binding))?.result;
+            return arr.bindingType ?? this.scope.get(this.getBindingTypeNameString(arr.binding))?.result;
         }
         if (isCategorical) {
             return this.getVariant();
@@ -977,7 +990,7 @@ export class TypeUtil extends UtilParser {
                 if (arg.paramArray) {
                     cur = arg;
                 }
-                let typeName = this.getBindingTypeName(arg.declarator.binding);
+                let typeName = this.getBindingTypeNameString(arg.declarator.binding);
                 if (this.scope.get(typeName,
                     this.getDeclareNamespace(func))?.result?.type === "EnumDeclaration") {
                     typeName = "Enum";
@@ -986,7 +999,7 @@ export class TypeUtil extends UtilParser {
                     paramType, param, true, ns);
             } else if (cur) {
                 ns = cur.declarator.namespace ?? func.class?.namespace;
-                this.matchType(this.getBindingTypeName(cur.declarator.binding),
+                this.matchType(this.getBindingTypeNameString(cur.declarator.binding),
                     paramType, param, true, ns);
             }
             index++;
@@ -1037,7 +1050,7 @@ export class TypeUtil extends UtilParser {
         if (resultType.type.type === "PropertyDeclaration") {
             const prop = resultType.type as PropertyDeclaration;
             final = this.scope.get(
-                this.getPropertyBindingType(prop),
+                this.getPropertyBindingTypeString(prop),
                 this.getDeclareNamespace(prop))?.result;
             if (!final) {
                 this.needCollection(node);
@@ -1079,7 +1092,7 @@ export class TypeUtil extends UtilParser {
             const def = final as ClassOrInterfaceDeclaration;
             const name: string | undefined =
                 def.default ?
-                this.getPropertyBindingType(def.default) : undefined;
+                this.getPropertyBindingTypeString(def.default) : undefined;
             if (name) {
                 let find = this.scope.get(name, def.namespace)?.result;
                 if (element && find) {
@@ -1113,7 +1126,7 @@ export class TypeUtil extends UtilParser {
         let dec;
         if (node instanceof PropertyDeclaration) {
             dec = this.scope.get(
-                this.getPropertyBindingType(node))?.result;
+                this.getPropertyBindingTypeString(node))?.result;
         } else {
             dec = node;
         }

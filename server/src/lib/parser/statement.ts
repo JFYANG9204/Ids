@@ -439,7 +439,7 @@ export class StatementParser extends ExpressionParser {
         if (this.eat(tt._as)) {
             node.binding = this.parseBindingDeclarator();
             node.bindingType =
-                this.scope.get(this.getBindingTypeName(node.binding))?.result;
+                this.scope.get(this.getBindingTypeNameString(node.binding))?.result;
         } else {
             node.binding = "Variant";
             node.bindingType = this.scope.get("Variant")?.result;
