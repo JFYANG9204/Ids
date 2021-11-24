@@ -767,12 +767,12 @@ export class StatementParser extends ExpressionParser {
     parseWithStatement(): WithStatement {
         const node = this.startNode(WithStatement);
         this.next();
-        this.scope.enter(ScopeFlags.with);
+        this.scope.inWith = true;
         node.object = this.parseExpression();
         node.body = this.parseBlock(tt._end);
         this.expect(tt._end);
         this.expect(tt._with);
-        this.scope.exit();
+        this.scope.inWith = false;
         node.push(node.object, node.body);
         return this.finishNode(node, "WithStatement");
     }
@@ -995,6 +995,9 @@ export class StatementParser extends ExpressionParser {
             node.binding = "Variant";
         }
         node.scope = this.scope.currentScope();
+        if (this.options.sourceType === SourceType.declare) {
+            node.declare = true;
+        }
         this.scope.exit();
         this.scope.declareName(node.name.name, BindTypes.function, node);
         return this.finishNode(node, "FunctionDeclaration");

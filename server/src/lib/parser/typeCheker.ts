@@ -1,5 +1,7 @@
 import { Parser } from ".";
 import {
+    ArrayDeclarator,
+    BindingDeclarator,
     BlockStatement,
     ConstDeclaration,
     DeclarationBase,
@@ -19,12 +21,13 @@ import {
     PreUndefStatement,
     SelectStatement,
     SetStatement,
+    SingleVarDeclarator,
     Statement,
     VariableDeclaration,
     WhileStatement,
     WithStatement
 } from "../types";
-import { BindTypes, getLineInfo, Scope, ScopeFlags } from "../util";
+import { BindTypes, getLineInfo, Position, Scope, ScopeFlags } from "../util";
 import { ErrorMessages } from "./error-messages";
 import { ParsingError } from "./errors";
 import { StatementParser } from "./statement";
@@ -38,6 +41,47 @@ import { TypeRaiseFunction } from "./typeUtil";
  * 总体顺序为：函数声明 -> 函数体类型检查 -> 更新函数返回类型 -> 程序整体类型检查
  */
 export class StaticTypeChecker extends StatementParser {
+
+    createBindingTypeFromDeclarator(dec: DeclarationBase) {
+        if (dec instanceof BindingDeclarator) {
+            return dec;
+        }
+        if (dec instanceof SingleVarDeclarator) {
+            return this.createBindingTypeFromSingleDeclarator(dec);
+        }
+        if (dec instanceof ArrayDeclarator) {
+            return this.createBindingTypeFromArrayDeclarator(dec);
+        }
+        const binding = this.startNodeAtNode(dec, BindingDeclarator);
+        binding.name = dec.name;
+        return this.finishNodeAt(binding, "BindingDeclarator", dec.end, dec.loc.end);
+    }
+
+    createBindingTypeFromSingleDeclarator(dec: SingleVarDeclarator): BindingDeclarator {
+        if (dec.bindingType) {
+            if (dec.bindingType instanceof ArrayDeclarator) {
+                return this.createBindingTypeFromArrayDeclarator(dec.bindingType);
+            }
+            if (dec.bindingType instanceof SingleVarDeclarator) {
+                return this.createBindingTypeFromSingleDeclarator(dec.bindingType);
+            }
+        }
+        const binding = this.startNodeAtNode(dec, BindingDeclarator);
+        const id = new Identifier(this, 0, new Position(0, 0));
+        id.name = typeof dec.binding === "string" ? dec.binding : dec.binding.name.name;
+        binding.name = id;
+        return this.finishNodeAt(binding, "", binding.end, binding.loc.end);
+    }
+
+    createBindingTypeFromArrayDeclarator(arr: ArrayDeclarator): BindingDeclarator {
+        const arrBinding = this.startNodeAtNode(arr, BindingDeclarator);
+        const id = new Identifier(this, 0, new Position(0, 0));
+        id.name = "Array";
+        arrBinding.name = id;
+        arrBinding.generics = typeof arr.binding === "string" ?
+            arr.binding : arr.binding.name.name;
+        return this.finishNodeAt(arrBinding, "BindingDeclarator", arr.end, arr.loc.end);
+    }
 
     checkIncludeFiles() {
         this.state.includes.forEach(file => {
@@ -55,17 +99,28 @@ export class StaticTypeChecker extends StatementParser {
         if (!this.searchParserNode) {
             if (!this.options.inGraph) {
                 for (const func of scope.functions.values()) {
+                    const lowerName = func.name.name.toLowerCase();
+                    if (this.updatedReturnTypeFunction.has(lowerName)) {
+                        continue;
+                    }
                     this.checkFunctionBody(func);
+                    this.updatedReturnTypeFunction.add(lowerName);
                 }
             }
             return;
         }
 
         for (const func of scope.functions.values()) {
+
             let search = this.searchParserNode(func.loc.fileName);
             if (!search || !search.parser || !search.file) {
                 continue;
             }
+
+            if (this.updatedReturnTypeFunction.has(func.name.name.toLowerCase())) {
+                continue;
+            }
+
             this.includeRaiseFunction = this.createTypeRaiseFunction(search.file, search.parser);
             this.checkFunctionBody(func);
             this.includeRaiseFunction = undefined;
@@ -75,12 +130,34 @@ export class StaticTypeChecker extends StatementParser {
 
     checkFunctionBody(func: FunctionDeclaration) {
         this.addExtra(func.name, "declaration", func);
-        this.scope.enter(ScopeFlags.function, func);
+        this.scope.enter(ScopeFlags.function);
+        if (func.needReturn && func.binding) {
+            let binding;
+            if (typeof func.binding === "string") {
+                binding = this.scope.get(func.binding)?.result;
+            } else if (func.binding) {
+                binding = this.scope.get(func.binding.name.name,
+                    func.binding.namespace)?.result;
+            }
+            let declarator = this.startNodeAtNode(func.name, SingleVarDeclarator);
+            this.finishNodeAt(declarator, "SingleVarDeclarator", func.name.end, func.name.loc.end);
+            declarator.name = func.name;
+            declarator.binding = binding ?? "Variant";
+            this.scope.declareName(func.name.name,
+                BindTypes.var, declarator);
+        }
         func.params.forEach(param => {
             this.scope.declareName(param.declarator.name.name,
                 BindTypes.var, param.declarator);
         });
         this.checkBlock(func.body);
+        if (func.needReturn) {
+            let update = this.scope.get(func.name.name, undefined)?.result;
+            if (update) {
+                func.binding = this.createBindingTypeFromDeclarator(update);
+            }
+        }
+        func.scope = this.scope.currentScope();
         if (func.needReturn && !func.binding) {
             this.raiseTypeError(func.name,
                 ErrorMessages["FunctionNeedReturn"],
@@ -202,7 +279,7 @@ export class StaticTypeChecker extends StatementParser {
 
     checkSetStatement(setStat: SetStatement) {
         let rightType: { type: DeclarationBase | undefined } = { type: undefined };
-        let right = this.getExprType(setStat.assignment, rightType);
+        this.getExprType(setStat.assignment, rightType);
         if (rightType.type && setStat.id instanceof Identifier) {
             let declared = this.scope.get(setStat.id.name);
             if (declared?.result) {
@@ -221,8 +298,6 @@ export class StaticTypeChecker extends StatementParser {
                         (search = this.scope.get(setStat.id.name)?.result) ?
                         this.maybeCopyType(search) : search);
                 }
-            } else if (this.scope.isCurFunction(setStat.id.name)) {
-                this.scope.updateFuncReturnType(right);
             } else {
                 this.checkVarDeclared(setStat.id.name, setStat.id);
             }
@@ -294,7 +369,7 @@ export class StaticTypeChecker extends StatementParser {
     checkWithStatement(withStat: WithStatement) {
         let header: { type: DeclarationBase | undefined } = { type: undefined };
         this.getExprType(withStat.object, header);
-        this.scope.enter(ScopeFlags.with);
+        this.scope.inWith = true;
         if (header.type) {
             this.scope.enterHeader(this.getMaybeBindingType(header.type,
                 this.getDeclareNamespace(header.type)));
@@ -302,7 +377,7 @@ export class StaticTypeChecker extends StatementParser {
             this.checkBlockContent(withStat.body);
             this.scope.exitHeader();
         }
-        this.scope.exit();
+        this.scope.inWith = false;
     }
 
     checkEvent(event: EventSection) {

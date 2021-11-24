@@ -22,6 +22,7 @@ import {
     SingleVarDeclarator,
     UnaryExpression,
 } from "../types";
+import { Position } from "../util";
 import { isBasicType, isConversionFunction } from "../util/match";
 import { BindTypes } from "../util/scope";
 import { ErrorMessages, WarningMessages } from "./error-messages";
@@ -37,6 +38,8 @@ export class TypeUtil extends UtilParser {
     needCheckLineMark: Identifier[] = [];
 
     includeRaiseFunction?: TypeRaiseFunction;
+    updateFuncType?: (func: FunctionDeclaration) => void;
+    updatedReturnTypeFunction = new Set<string>();
 
     raiseTypeError(node: NodeBase,
         template: ErrorTemplate,
@@ -142,6 +145,32 @@ export class TypeUtil extends UtilParser {
                     undefined);
         }
         return dec.namespace;
+    }
+
+    createBindingTypeFromDeclaration(dec: DeclarationBase): BindingDeclarator {
+        const binding = new BindingDeclarator(this, 0, new Position(0, 0));
+        if (dec instanceof ArrayDeclarator) {
+            let id = new Identifier(this, 0, new Position(0, 0));
+            id.name = "Array";
+            binding.name = id;
+            binding.generics = typeof dec.binding === "string" ?
+                dec.binding : dec.binding.name.name;
+        } else if (dec instanceof SingleVarDeclarator) {
+            if (dec.bindingType) {
+                binding.name = dec.bindingType.name;
+            } else {
+                if (typeof dec.binding === "string") {
+                    let id = new Identifier(this, 0, new Position(0, 0));
+                    id.name = dec.binding;
+                    binding.name = id;
+                } else {
+                    return dec.binding;
+                }
+            }
+        } else {
+            binding.name = dec.name;
+        }
+        return binding;
     }
 
     /**
@@ -419,7 +448,7 @@ export class TypeUtil extends UtilParser {
                 break;
 
             case "Identifier":
-                find = this.getIdentifierType(expr as Identifier, raiseError, this.scope.inFunction);
+                find = this.getIdentifierType(expr as Identifier, raiseError);
                 break;
             case "MemberExpression":
                 find = this.getMemberType(expr as MemberExpression, raiseError);
@@ -519,6 +548,7 @@ export class TypeUtil extends UtilParser {
         let rightReturn: { type: DeclarationBase | undefined } = { type: undefined };
         let left = this.getExprType(expr.left, leftReturn, raiseError);
         let right = this.getExprType(expr.right, rightReturn, raiseError);
+        //
         if (!leftReturn.type || !rightReturn.type) {
             if (!leftReturn.type) {
                 this.needReturn(expr.left);
@@ -581,7 +611,7 @@ export class TypeUtil extends UtilParser {
             return this.getVariant();
         }
         if (expr.left instanceof Identifier) {
-            const leftResult = this.scope.get(expr.left.name);
+            const leftResult = this.scope.get(expr.left.name, undefined);
             left = leftResult?.result;
             if (leftResult?.type === BindTypes.const) {
                 if (raiseError) {
@@ -590,13 +620,20 @@ export class TypeUtil extends UtilParser {
                         ErrorMessages["ConstVarCannotBeAssigned"],
                         false);
                 }
-            } else if (this.scope.isCurFunction(expr.left.name)) {
-                this.scope.updateFuncReturnType(right);
             } else if (left) {
+                // 考虑到可能的可迭代Collection赋值，
+                // 右值如果为Identifier，直接将右值类型更新给左值，
+                // 否则，将绑定类型更新给左值。
+                let update;
+                if (expr.right instanceof Identifier) {
+                    update = rightType.type;
+                } else {
+                    update = this.maybeDeclaratorBinding(rightType.type) ?? rightType.type;
+                }
                 this.scope.update(
                     expr.left.name,
                     BindTypes.var,
-                    this.maybeDeclaratorBinding(rightType.type) ?? rightType.type,
+                    this.createBindingTypeFromDeclaration(update),
                     expr);
             } else {
                 if (raiseError) {
@@ -621,6 +658,7 @@ export class TypeUtil extends UtilParser {
                 this.scope.updateGeneric((expr.left.object as Identifier).name, right);
             }
         }
+
         return rightType.type;
     }
 
@@ -632,6 +670,12 @@ export class TypeUtil extends UtilParser {
         const name = id.name;
         let find = this.scope.get(name, undefined, isFunction)?.result;
         if (find) {
+            if (find instanceof FunctionDeclaration &&
+                !find.declare &&
+                !this.updatedReturnTypeFunction.has(find.name.name.toLowerCase()) &&
+                this.updateFuncType) {
+                this.updateFuncType(find);
+            }
             this.addExtra(id, "declaration", this.maybeCopyType(find));
             return find;
         } else {
@@ -707,7 +751,7 @@ export class TypeUtil extends UtilParser {
         }
         let prop = member.property;
         // Object.Member
-        if (prop.type === "Identifier") {
+        if (prop.type === "Identifier" && !member.computed) {
             let parent: DeclarationBase | undefined = obj;
             let child: DeclarationBase | undefined;
             if (obj.type === "PropertyDeclaration") {
@@ -820,7 +864,9 @@ export class TypeUtil extends UtilParser {
         const obj = this.getMemberObjectType(member, raiseError);
         const type = this.getMemberPropertyType(member, obj, raiseError);
         this.addExtra(member, "declaration", this.getMaybeBindingType(type));
-        this.addExtra(member.property, "declaration", type);
+        if (!member.property.extra["declaration"]) {
+            this.addExtra(member.property, "declaration", type);
+        }
         return type;
     }
 
@@ -833,13 +879,11 @@ export class TypeUtil extends UtilParser {
     getCallExprType(callExpr: CallExpression, raiseError = true) {
         const callee = callExpr.callee;
         let objType: DeclarationBase | undefined;
-        let isFunction = false;
         if (callee.type === "Identifier") {
             objType = this.getIdentifierType(
                 callee as Identifier,
                 raiseError,
                 true);
-            isFunction = true;
         } else {
             objType = this.getMemberType(callee as MemberExpression, raiseError);
         }

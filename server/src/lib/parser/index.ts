@@ -33,6 +33,7 @@ export class Parser extends StaticTypeChecker {
                 this.options.sourceType = typeMark;
             }
         }
+        this.updateFuncType = this.checkFunctionBody;
     }
 
     parse(preDef?: Scope, isInclude?: boolean, inWith?: boolean): File {

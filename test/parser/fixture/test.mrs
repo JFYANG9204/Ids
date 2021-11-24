@@ -1,47 +1,7 @@
 
-function build_axis_for_split_base( mdm, str_side_var, str_side_code_label, str_filter_var, str_filter_code_label, str_code_group[], str_base_text, bln_hide_base )
+function rebase_on_total( str_flt, str_txt, str_side, bln_mean )
 
-    dim axis, cat
-    dim side_var, filter_var
-    set side_var = mdm.fields[str_side_var]
-    set filter_var = mdm.fields[str_filter_var]
-
-    axis = "axis({e1 '' text(), base 'Base : " + str_base_text + "' base() [ishidden=" + iif(bln_hide_base = true, "false", "true") + "], e2 '' text()"
-
-    dim str_hidden
-    str_hidden = iif(bln_hide_base = true, " [ishidden=true]", "")
-
-    if str_code_group <> null then
-        dim ndx, str_codes, str_label
-        for ndx = lbound(str_code_group) to ubound(str_code_group)
-            if find(str_code_group[ndx], ";") <> -1 then
-                str_codes = left(str_code_group[ndx], find(str_code_group[ndx], ";"))
-                str_label = right(str_code_group[ndx], len(str_code_group[ndx]) - find(str_code_group[ndx], ";") - 1)
-                axis = axis + ",base_nt" + ctext(ndx) + " 'Base' base('" + str_side_var + " is not null and " + str_filter_var + "*{" + string_join(str_codes, ",", str_filter_code_label) + "}')" + str_hidden + ",_
-                ex_nt" + ctext(ndx) + " '" + str_label + "' expression('" + str_side_var + "*{" + string_join(str_codes, ",", str_side_code_label) + "} and " + str_filter_var + "*{" + string_join(str_codes, ",", str_filter_code_label) + "}')"
-                for each cat in split(str_codes, ",")
-                    axis = axis + ",base_" + trim(cat) + " 'Base' base('" + str_side_var + " is not null and " + str_filter_var + "*{" + str_filter_code_label + trim(cat) + "}')" + str_hidden + ",_
-                    ex_" + trim(cat) + " '" + side_var.categories[str_side_code_label + trim(cat)].label + "' expression('" + str_side_var + "*{" + str_side_code_label + trim(cat) + "} and " + str_filter_var + "*{" + str_filter_code_label + trim(cat) + "}')"
-                next
-            else
-                for each cat in split(str_code_group[ndx], ",")
-                    axis = axis + ",base_" + trim(cat) + " 'Base' base('" + str_side_var + " is not null and " + str_filter_var + "*{" + str_filter_code_label + trim(cat) + "}')" + str_hidden + ",_
-                    ex_" + trim(cat) + "'" + side_var.categories[str_side_code_label + trim(cat)].label + "' expression('" + str_side_var + "*{" + str_side_code_label + trim(cat) + "} and " + str_filter_var + "*{" + str_filter_code_label + trim(cat) + "}')"
-                next
-            end if
-        next
-    else
-        dim filter_code
-        for each cat in side_var.categories
-            filter_code = str_filter_code_label + right(cat.name, len(cat.name) - len(str_side_code_label))
-            if code_in_field(mdm, str_filter_var, filter_code) = true then
-                axis = axis + ",base_" + cat.name + " 'Base' base('" + str_side_var + " is not null and " + str_filter_var + "*{" + filter_code + "}')" + str_hidden + ",_
-                ex_" + cat + " '" + cat.label + "' expression('" + str_side_var + "*{" + cat.name + "} and " + str_filter_var + "*{" + filter_code + "}')"
-            end if
-        next
-    end if
-    axis = axis + "})"
-    'debug.log(axis)
-    build_axis_for_split_base = axis
+    rebase_on_total = "{e1 '' text(), base 'Base : " + str_txt + "' base(" + str_flt + "),e2 '' text(), " + iif(str_side = NULL, "..", str_side) + ", e3 '' text(), sigma 'Sigma' subtotal()" + iif( bln_mean = true, mean_inc(""), "" ) + "}"
 
 end function
+

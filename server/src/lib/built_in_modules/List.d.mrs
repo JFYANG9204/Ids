@@ -48,7 +48,7 @@ Else
 End If
 ```
 !'
-Function FindItem(List As Variant, Key As Varaint) As Varaint
+Function FindItem(List As Variant, Key As Variant) As Variant
 End Function
 
 '!
@@ -144,7 +144,7 @@ N mod 8 = 1
 ```
 For example, *N* might be 777.
 !'
-Function Ran(List As Variant, Optional Count As Long, Optional Seed As Long = 0) As Varaint
+Function Ran(List As Variant, Optional Count As Long, Optional Seed As Long = 0) As Variant
 End Function
 
 '!

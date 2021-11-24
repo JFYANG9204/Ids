@@ -20,7 +20,6 @@ export type RaiseFunction = (node: NodeBase, template: ErrorTemplate, warning: b
 export enum ScopeFlags {
     program,
     function,
-    with,
     enumerator,
     classOrInterface,
     namespace,
@@ -73,9 +72,7 @@ export class ScopeHandler {
     stack: Array<Scope> = [];
     raise: RaiseFunction;
 
-    // Function
-    private curFunc?: FunctionDeclaration;
-    private updatedFuncType = false;
+    inWith = false;
 
     constructor(
         parser: ParserBase,
@@ -90,10 +87,6 @@ export class ScopeHandler {
 
     get inFunction() {
         return this.currentScope().flags === ScopeFlags.function;
-    }
-
-    get inWith() {
-        return this.currentScope().flags === ScopeFlags.with;
     }
 
     get inClassOrInterface() {
@@ -112,16 +105,12 @@ export class ScopeHandler {
         return this.currentScope().flags === ScopeFlags.event;
     }
 
-    enter(flags: ScopeFlags, func?: FunctionDeclaration) {
+    enter(flags: ScopeFlags) {
         this.stack.push(new Scope(flags));
-        this.curFunc = func;
-        this.updatedFuncType = false;
     }
 
     exit() {
         this.stack.pop();
-        this.curFunc = undefined;
-        this.updatedFuncType = false;
     }
 
     declareName(
@@ -155,10 +144,9 @@ export class ScopeHandler {
             node instanceof ArrayDeclarator     ||
             node instanceof ClassOrInterfaceDeclaration)) {
             if (node instanceof SingleVarDeclarator) {
-                node.bindingType = this.get(
-                    typeof node.binding === "string" ?
-                    node.binding : node.binding.name.name
-                )?.result;
+                if (typeof node.binding === "string") {
+                    node.bindingType = this.get(node.binding)?.result;
+                }
             }
             this.insertName(scope, name, node, "dims");
             return;
@@ -264,43 +252,6 @@ export class ScopeHandler {
         return this.currentScope().undefined.has(name.toLowerCase());
     }
 
-    isCurFunction(name: string) {
-        if (!this.curFunc) {
-            return false;
-        }
-        return this.curFunc.name.name.toLowerCase() === name.toLowerCase();
-    }
-
-    updateFuncReturnType(name: string) {
-        if (!this.curFunc) {
-            return;
-        }
-
-        if (!this.updatedFuncType) {
-            this.curFunc.binding = name;
-            this.updatedFuncType = true;
-            return;
-        }
-
-        if (this.curFunc.binding) {
-            let match = false;
-            if (typeof this.curFunc.binding === "string") {
-                if (name.toLowerCase() === "null") {
-                    return;
-                } else {
-                    match = this.curFunc.binding.toLowerCase() === name.toLowerCase();
-                }
-            } else {
-                match = this.curFunc.binding.name.name.toLowerCase() === name.toLowerCase();
-            }
-            if (!match) {
-                this.curFunc.binding = "Variant";
-            }
-        } else {
-            this.curFunc.binding = name;
-        }
-    }
-
     currentScope() {
         return this.stack[this.stack.length - 1];
     }
@@ -341,23 +292,16 @@ export class ScopeHandler {
 
     private getName(
         scope: Scope,
-        name: string,
-        isFunction?: boolean): ScopeSearchResult | undefined {
+        name: string): ScopeSearchResult | undefined {
 
         const lowerName = name.toLowerCase();
 
-        if (isFunction) {
-            return this.getFromMap(scope.dims, lowerName, BindTypes.var)  ||
-                this.getFromMap(scope.consts, lowerName, BindTypes.const) ||
-                this.getFromMap(scope.macros, lowerName, BindTypes.const);
-        }
-
-        return this.getFromMap(scope.dims, lowerName, BindTypes.var)  ||
-            this.getFromMap(scope.consts, lowerName, BindTypes.const) ||
-            this.getFromMap(scope.macros, lowerName, BindTypes.const) ||
-            this.getFromMap(scope.classes, lowerName, BindTypes.classOrInterface) ||
-            this.getFromMap(scope.functions, lowerName, BindTypes.function) ||
-            this.getFromMap(scope.namespaces, lowerName, BindTypes.namespace);
+        return this.getFromMap(scope.dims,       lowerName, BindTypes.var)              ||
+               this.getFromMap(scope.consts,     lowerName, BindTypes.const)            ||
+               this.getFromMap(scope.macros,     lowerName, BindTypes.const)            ||
+               this.getFromMap(scope.classes,    lowerName, BindTypes.classOrInterface) ||
+               this.getFromMap(scope.functions,  lowerName, BindTypes.function)         ||
+               this.getFromMap(scope.namespaces, lowerName, BindTypes.namespace);
     }
 
     get(name: string,
@@ -379,14 +323,23 @@ export class ScopeHandler {
         }
 
         if (isFunction) {
-            return this.getName(this.store, name)       ||
-                this.getName(this.currentScope(), name) ||
-                this.getFromMap(this.global.consts,    name, BindTypes.const)    ||
-                this.getFromMap(this.global.macros,    name, BindTypes.const)    ||
-                this.getFromMap(this.global.functions, name, BindTypes.function);
+            return this.getFromMap(this.global.functions, name, BindTypes.function)  ||
+                   this.getFromMap(this.store.functions,  name, BindTypes.function);
         }
 
-        return this.getName(this.store, name) ||
+        if (this.inFunction) {
+            return this.getName(this.currentScope(),      name)                             ||
+                   this.getFromMap(this.store.consts,     name, BindTypes.const)            ||
+                   this.getFromMap(this.store.macros,     name, BindTypes.const)            ||
+                   this.getFromMap(this.store.functions,  name, BindTypes.function)         ||
+                   this.getFromMap(this.global.consts,    name, BindTypes.const)            ||
+                   this.getFromMap(this.global.macros,    name, BindTypes.const)            ||
+                   this.getFromMap(this.global.functions, name, BindTypes.function)         ||
+                   this.getFromMap(this.global.classes,   name, BindTypes.classOrInterface) ||
+                   this.getFromMap(this.global.namespaces,name, BindTypes.namespace);
+        }
+
+        return this.getName(this.store, name)          ||
                this.getName(this.currentScope(), name) ||
                this.getName(this.global, name);
     }
