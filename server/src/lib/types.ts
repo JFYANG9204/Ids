@@ -326,8 +326,8 @@ export class File extends NodeBase {
         super(parser, pos, loc);
         this.type = "File";
         this.program = new Program(parser, 0, emptyLoc);
-        this.path = "";
-        this.uri = "";
+        this.path = parser.fileName;
+        this.uri = parser.options.uri ?? parser.fileName;
     }
 }
 
