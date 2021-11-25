@@ -58,6 +58,13 @@ export class TypeUtil extends UtilParser {
         return this.includeRaiseFunctionStack[this.includeRaiseFunctionStack.length - 1];
     }
 
+    isArgumentDeclarator(dec: DeclarationBase) {
+        if (dec.treeParent?.type === "ArgumentDeclarator") {
+            return true;
+        }
+        return false;
+    }
+
     raiseTypeError(node: NodeBase,
         template: ErrorTemplate,
         warning: boolean,
@@ -76,7 +83,8 @@ export class TypeUtil extends UtilParser {
     }
 
     maybeCopyType(dec: DeclarationBase) {
-        if (dec instanceof SingleVarDeclarator) {
+        if (dec instanceof SingleVarDeclarator &&
+            !this.isArgumentDeclarator(dec)) {
             return Object.assign({}, dec);
         }
         return dec;
@@ -589,7 +597,7 @@ export class TypeUtil extends UtilParser {
             return this.getVariant();
         }
 
-        this.guessMaybeArgumentType(expr, left, right);
+        this.guessMaybeArgumentTypeByBinaryExpr(expr, left, right);
         //
         if (expr.operator.binop === BinopType.logical     ||
             expr.operator.binop === BinopType.realational ||
@@ -993,6 +1001,7 @@ export class TypeUtil extends UtilParser {
                     cur = arg;
                 }
                 let typeName = this.getBindingTypeNameString(arg.declarator.binding);
+                this.guessMaybeArgumentTypeByCaller(typeName, param);
                 if (this.scope.get(typeName,
                     this.getDeclareNamespace(func))?.result?.type === "EnumDeclaration") {
                     typeName = "Enum";
@@ -1001,7 +1010,9 @@ export class TypeUtil extends UtilParser {
                     paramType, param, true, ns);
             } else if (cur) {
                 ns = cur.declarator.namespace ?? func.class?.namespace;
-                this.matchType(this.getBindingTypeNameString(cur.declarator.binding),
+                let typeName = this.getBindingTypeNameString(cur.declarator.binding);
+                this.guessMaybeArgumentTypeByCaller(typeName, param);
+                this.matchType(typeName,
                     paramType, param, true, ns);
             }
             index++;
@@ -1224,7 +1235,7 @@ export class TypeUtil extends UtilParser {
         }
     }
 
-    guessMaybeArgumentType(expr: BinaryExpression,
+    guessMaybeArgumentTypeByBinaryExpr(expr: BinaryExpression,
         left: string,
         right: string) {
 
@@ -1240,7 +1251,7 @@ export class TypeUtil extends UtilParser {
         }
 
         if (guess && find &&
-            find.treeParent?.type === "ArgumentDeclarator") {
+            this.isArgumentDeclarator(find)) {
 
             if (find instanceof SingleVarDeclarator &&
                 guess.toLowerCase() !== "null") {
@@ -1248,6 +1259,25 @@ export class TypeUtil extends UtilParser {
                 find.bindingType = this.scope.get(guess)?.result;
             }
 
+        }
+    }
+
+    guessMaybeArgumentTypeByCaller(needType: string, param: Expression) {
+
+        if (!(param instanceof Identifier) ||
+            needType.toLowerCase() === "null") {
+            return;
+        }
+
+        let find = this.scope.get(param.name)?.result;
+
+        if (!find || !this.isArgumentDeclarator(find)) {
+            return;
+        }
+
+        if (find instanceof SingleVarDeclarator) {
+            find.binding = needType;
+            find.bindingType = this.scope.get(needType)?.result;
         }
     }
 

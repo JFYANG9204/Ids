@@ -53,9 +53,9 @@ export class Parser extends StaticTypeChecker {
                     this.checkFuncInScope(this.scope.store);
                     this.checkBlock(file.program.body);
                 }
-            // eslint-disable-next-line no-empty
             } catch (error) {
-                //const err = error;
+                file.esc = true;
+                file.escError = error;
             } finally {
                 this.scope.exit();
             }

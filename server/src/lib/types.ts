@@ -319,6 +319,8 @@ export class File extends NodeBase {
     warnings: Array<ParsingError> = [];
     tokens?: Array<Token>;
     includes: Map<string, File> = new Map();
+    esc: boolean = false;
+    escError?: any;
     declare scope: Scope;
     declare parser: Parser;
 
