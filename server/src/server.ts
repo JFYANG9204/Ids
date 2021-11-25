@@ -28,7 +28,6 @@ import {
 } from "./completion";
 import {
     getNodeFromDocPos,
-    raiseErrorsFromFile,
     updateAndVaidateDocument,
 } from "./util";
 import { builtInModule } from "./declaration";

@@ -1318,7 +1318,7 @@ export class StatementParser extends ExpressionParser {
                     this.raiseAtNode(
                         node.inc,
                         ErrorMessages["PreIncludeFileDontExist"],
-                        false,
+                        true,
                         node.path
                     );
                     return node;
@@ -1375,7 +1375,7 @@ export class StatementParser extends ExpressionParser {
                 this.raiseAtNode(
                     node.inc,
                     ErrorMessages["IncludeFileExistError"],
-                    false
+                    true
                 );
             }
         }
