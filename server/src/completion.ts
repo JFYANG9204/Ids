@@ -10,7 +10,6 @@ import {
     CompletionItem,
     CompletionItemKind,
     Hover,
-    MarkupContent,
     MarkupKind,
     ParameterInformation,
     SignatureHelp,
@@ -153,9 +152,10 @@ function setBuiltInCompletions(
         builtInCompletions.push({
             label: def.name.name,
             kind: kind,
+            detail: getDefaultNote(def, false),
             documentation: {
                 kind: MarkupKind.Markdown,
-                value: getDeclarationNote(def)
+                value: getDeclarationNote(def, false)
             }
         });
     });

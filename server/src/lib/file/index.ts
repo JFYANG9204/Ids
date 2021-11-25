@@ -8,11 +8,14 @@ import {
     ParserFileNode
 } from "./node";
 import {
+    BatMacro,
+    createDeclarationFromBatMacro,
     FileContent,
     getAllIncludeInFile,
     getAllUsefulFile,
     getFileReferenceMark,
     getFileTypeMark,
+    getMacroFromBatFile,
     mergeMap,
 } from "./util";
 
@@ -59,12 +62,15 @@ export class ParserFileDigraph {
         const fileMap = getAllUsefulFile(this.folder);
         const nodes: Map<string, ParserFileNode> = new Map();
         const declares: Map<string, FileContent> = new Map();
+        const macros: Map<string, BatMacro> = new Map();
 
         // 读取文件夹内所有文件的内容
         fileMap.forEach((value, key) => {
             // 区分是否为声明文件(.d.mrs)
             if (key.endsWith(".d.mrs")) {
                 declares.set(key, value);
+            } else if (key.endsWith(".bat")) {
+                getMacroFromBatFile(key, value.content, macros);
             } else {
                 const refMark = getFileReferenceMark(value.content);
                 const typeMark = getFileTypeMark(value.content);
@@ -82,6 +88,13 @@ export class ParserFileDigraph {
         } else if (this.global && local) {
             mergeScope(local, this.global);
         }
+
+        if (macros.size > 0) {
+            macros.forEach((m, n) => {
+                this.global?.consts.set(n, createDeclarationFromBatMacro(m));
+            });
+        }
+
         mergeMap(this.nodeMap, nodes);
         this.buildGraph(nodes);
     }

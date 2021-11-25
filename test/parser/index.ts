@@ -10,12 +10,12 @@ import { BatMacro, batMrScriptItemRegex, batMrScriptRegex, getCurrentParser, get
 import { createBasicOptions } from "../../server/src/lib/options";
 import { Parser } from "../../server/src/lib/parser";
 
-//const folderPath = resolve("./test/parser/fixture/dpgm");
-//const startPath = resolve("./test/parser/fixture/dpgm/Run.mrs");
-//const graph = new ParserFileDigraph(folderPath, builtInModule);
-//graph.init();
-//graph.setStart(startPath);
-//const file = graph.startParse();
+const folderPath = resolve("./test/parser/fixture/dpgm");
+const startPath = resolve("./test/parser/fixture/dpgm/Run.mrs");
+const graph = new ParserFileDigraph(folderPath, builtInModule);
+graph.init();
+graph.setStart(startPath);
+const file = graph.startParse();
 //let mdd;
 //if (file) {
 //    mdd = getCurrentParser(file, startPath);
@@ -36,9 +36,5 @@ import { Parser } from "../../server/src/lib/parser";
 //const content = readFileAndConvertToUtf8(testpath);
 //const parser = new Parser(createBasicOptions(testpath, true, undefined, builtInModule.scope), content);
 //const file = parser.parse();
-
-const batPath = resolve("./test/parser/fixture/dpgm/RunTables_add.bat");
-let macroMap = new Map<string, BatMacro>();
-const macros = getMacroFromBatFile(batPath, macroMap);
 
 console.log("end");

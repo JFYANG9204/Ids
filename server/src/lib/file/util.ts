@@ -5,11 +5,15 @@ import * as iconv from "iconv-lite";
 import { lineBreak } from "../util/whitespace";
 import {
     File,
+    Identifier,
     NodeBase,
+    SingleVarDeclarator,
     WithStatement
 } from "../types";
-import { SourceType } from "../options";
+import { createBasicOptions, SourceType } from "../options";
 import { pathToFileURL } from "url";
+import { Parser } from "../parser";
+import { Position } from "../util";
 
 export function readFileAndConvertToUtf8(filePath: string): string {
     const file = fs.readFileSync(filePath);
@@ -26,7 +30,7 @@ export interface FileContent {
 }
 
 /**
- * 遍历文件夹下所有扩展名为.ini,.inc,.dms,.mrs的文件，并读取其中内容,
+ * 遍历文件夹下所有扩展名为.ini,.inc,.dms,.mrs,.bat的文件，并读取其中内容,
  * 并保存在一个Map中。
  * @param folder 文件夹路径
  * @returns _key_ - 小写完整文件路径  _value_ - 文件内容
@@ -42,7 +46,8 @@ export function getAllUsefulFile(folder: string): Map<string, FileContent> {
             if (exten === ".ini" ||
                 exten === ".inc" ||
                 exten === ".dms" ||
-                exten === ".mrs") {
+                exten === ".mrs" ||
+                exten === ".bat") {
                 const fullPath = path.join(folder, file.name);
                 const content = readFileAndConvertToUtf8(fullPath);
                 const uri = pathToFileURL(fullPath).toString();
@@ -249,12 +254,14 @@ export const batMrScriptRegex = /\s*(?:mrscriptcl)\s*(?:\".*\"|[a-zA-Z_0-9]*\.mr
 export const batMrScriptItemRegex = /(?:\s*\/d\:([a-zA-Z_0-9]*=(?:(?:\"\\\".*?\\\"\")|(?:[0-9]*)|true|false)))/i;
 
 export interface BatMacro {
+    path: string,
     id: string,
-    type: "string" | "boolean" | "number"
+    type: "string" | "boolean" | "number",
+    start: number,
+    end: number
 }
 
-export function getMacroFromBatFile(path: string, macros: Map<string, BatMacro>) {
-    let content = readFileAndConvertToUtf8(path);
+export function getMacroFromBatFile(path: string, content: string, macros: Map<string, BatMacro>) {
     if (batMrScriptRegex.test(content)) {
         let match;
         let itemRegex = new RegExp(batMrScriptItemRegex.source, "igm");
@@ -279,9 +286,29 @@ export function getMacroFromBatFile(path: string, macros: Map<string, BatMacro>)
                 type = "number";
             }
 
-            macros.set(macroName.toLowerCase(), { id: macroName, type });
+            let end = itemRegex.lastIndex;
+            let start = end - itemMath[0].length;
+
+            macros.set(macroName.toLowerCase(), { path, id: macroName, type, start, end });
         }
     }
+}
+
+export function createDeclarationFromBatMacro(bat: BatMacro) {
+    let parser = new Parser(createBasicOptions(bat.path, false), "");
+    let macro = new SingleVarDeclarator(parser, bat.start, new Position(0, 0));
+    macro.end = bat.end;
+    let id = new Identifier(parser, bat.start, new Position(0, 0));
+    id.name = bat.id;
+    macro.name = id;
+    if (bat.type === "boolean") {
+        macro.binding = "Boolean";
+    } else if (bat.type === "number") {
+        macro.binding = "Long";
+    } else {
+        macro.binding = "String";
+    }
+    return macro;
 }
 
 
