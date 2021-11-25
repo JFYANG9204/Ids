@@ -69,8 +69,13 @@ export class TypeUtil extends UtilParser {
         template: ErrorTemplate,
         warning: boolean,
         ...params: any) {
+
+        if (node.loc.fileName.toLowerCase().endsWith(".d.mrs")) {
+            return;
+        }
+
         if (this.currentIncludeRaiseFunction) {
-            this.currentIncludeRaiseFunction(node,
+           this.currentIncludeRaiseFunction(node,
                 template, warning, params);
         } else {
             this.raiseAtNode(node,
@@ -501,6 +506,9 @@ export class TypeUtil extends UtilParser {
             case "BinaryExpression":
                 find = this.getBinaryExprType(expr as BinaryExpression, raiseError);
                 break;
+            case "LogicalExpression":
+                find = this.getLogicalExprType(expr as LogicalExpression);
+                break;
             case "AssignmentExpression":
                 find = this.getAssignExprType(expr as AssignmentExpression, raiseError);
                 break;
@@ -775,9 +783,28 @@ export class TypeUtil extends UtilParser {
         if (!obj) {
             return this.getVariant();
         }
-        if ((obj.type !== "ClassOrInterfaceDeclaration") &&
-            (obj.type !== "PropertyDeclaration")         &&
-            (obj.type !== "ArrayDeclarator")) {
+
+        let objType = obj;
+
+        if (obj.name.name === "Variant" && member.property instanceof Identifier) {
+            let guess = this.guessMemberObjectTypeByPropName(member.property.name);
+            if (guess?.class) {
+                objType = guess.class;
+                this.addExtra(member.object, "declaration", objType);
+                if (member.object instanceof Identifier) {
+                    let curObj = this.scope.get(member.object.name)?.result;
+                    if (curObj && this.isArgumentDeclarator(curObj) &&
+                        curObj instanceof SingleVarDeclarator) {
+                        curObj.binding = objType.name.name;
+                        curObj.bindingType = objType;
+                    }
+                }
+            }
+        }
+
+        if ((objType.type !== "ClassOrInterfaceDeclaration") &&
+            (objType.type !== "PropertyDeclaration")         &&
+            (objType.type !== "ArrayDeclarator")) {
             if (!this.scope.inFunction &&
                 this.options.raiseTypeError &&
                 raiseError) {
@@ -792,15 +819,15 @@ export class TypeUtil extends UtilParser {
         let prop = member.property;
         // Object.Member
         if (prop.type === "Identifier" && !member.computed) {
-            let parent: DeclarationBase | undefined = obj;
+            let parent: DeclarationBase | undefined = objType;
             let child: DeclarationBase | undefined;
-            if (obj.type === "PropertyDeclaration") {
-                const objReturn = this.getPropertyBindingTypeString(obj as PropertyDeclaration);
-                const objProp = obj as PropertyDeclaration;
+            if (objType.type === "PropertyDeclaration") {
+                const objReturn = this.getPropertyBindingTypeString(objType as PropertyDeclaration);
+                const objProp = objType as PropertyDeclaration;
                 parent = this.scope.get(objReturn,
                     typeof objProp.class.namespace === "string" ? objProp.namespace :
                     objProp.class.namespace?.name.name)?.result;
-            } else if (obj.type === "ArrayDeclarator") {
+            } else if (objType.type === "ArrayDeclarator") {
                 parent = this.scope.get("Array")?.result;
             }
             if (parent && parent.type === "ClassOrInterfaceDeclaration") {
@@ -828,8 +855,8 @@ export class TypeUtil extends UtilParser {
         let needParam;
         let isCategorical = false;
         let exprType = this.getExprType(member.property, undefined, raiseError);
-        if (obj.type === "PropertyDeclaration") {
-            memberDec = obj as PropertyDeclaration;
+        if (objType.type === "PropertyDeclaration") {
+            memberDec = objType as PropertyDeclaration;
             if (memberDec.params.length === 0) {
                 let search = this.scope.get(
                     this.getPropertyBindingTypeString(memberDec),
@@ -844,24 +871,24 @@ export class TypeUtil extends UtilParser {
                     search as ClassOrInterfaceDeclaration,
                     true);
             }
-        } else if (obj.type === "ClassOrInterfaceDeclaration" &&
-            obj.name.name === "IQuestion") {
+        } else if (objType.type === "ClassOrInterfaceDeclaration" &&
+            objType.name.name === "IQuestion") {
             memberDec = this.scope.get("IQuestion")?.result;
             if (!memberDec) {
                 return this.getVariant();
             }
-        } else if (obj.type === "ClassOrInterfaceDeclaration" &&
-            obj.name.name === "Categorical") {
-            memberDec = obj;
+        } else if (objType.type === "ClassOrInterfaceDeclaration" &&
+            objType.name.name === "Categorical") {
+            memberDec = objType;
             isCategorical = true;
-        } else if (obj.type === "ArrayDeclarator") {
+        } else if (objType.type === "ArrayDeclarator") {
             memberDec = this.scope.get("Array")?.result;
             if (!memberDec) {
                 return this.getVariant();
             }
         } else {
             memberDec = this.getFinalType(
-                obj as ClassOrInterfaceDeclaration, true);
+                objType as ClassOrInterfaceDeclaration, true);
             if (memberDec.type === "ClassOrInterfaceDeclaration" &&
                 !this.isCollection(memberDec as ClassOrInterfaceDeclaration) &&
                 raiseError) {
@@ -891,7 +918,7 @@ export class TypeUtil extends UtilParser {
             this.matchType(needParam, exprType, member.property);
         }
         if (memberDec.name.name === "Array") {
-            const arr = obj as ArrayDeclarator;
+            const arr = objType as ArrayDeclarator;
             return arr.bindingType ?? this.scope.get(this.getBindingTypeNameString(arr.binding))?.result;
         }
         if (isCategorical) {
@@ -1242,12 +1269,25 @@ export class TypeUtil extends UtilParser {
         let find;
         let guess;
 
+        let isArray = false;
+        let arrDec;
+
         if (expr.left instanceof Identifier) {
             find = this.scope.get(expr.left.name)?.result;
             guess = right;
         } else if (expr.right instanceof Identifier) {
             find = this.scope.get(expr.right.name)?.result;
             guess = left;
+        } else if (expr.left instanceof MemberExpression &&
+            expr.left.object instanceof Identifier &&
+            expr.left.computed) {
+            isArray = true;
+            arrDec = this.scope.get(expr.left.object.name)?.result;
+        } else if (expr.right instanceof MemberExpression &&
+            expr.right.object instanceof Identifier &&
+            expr.right.computed) {
+            isArray = true;
+            arrDec = this.scope.get(expr.right.object.name)?.result;
         }
 
         if (guess && find &&
@@ -1259,6 +1299,12 @@ export class TypeUtil extends UtilParser {
                 find.bindingType = this.scope.get(guess)?.result;
             }
 
+        }
+
+        if (isArray && arrDec instanceof ArrayDeclarator &&
+            guess && guess.toLowerCase() !== "null") {
+            arrDec.binding = guess;
+            arrDec.bindingType = this.scope.get(guess)?.result;
         }
     }
 
@@ -1280,6 +1326,69 @@ export class TypeUtil extends UtilParser {
             find.bindingType = this.scope.get(needType)?.result;
         }
     }
+
+    searchPropertyOrMethodInNamespace(name: string, source: NamespaceDeclaration) {
+        let find = source.body.get(name.toLowerCase());
+
+        if (find) {
+            return find;
+        }
+
+        for (const child of source.body.values()) {
+            if (child instanceof ClassOrInterfaceDeclaration) {
+                find = child.properties.get(name.toLowerCase()) ||
+                    child.methods.get(name.toLowerCase());
+                if (find) {
+                    return find;
+                }
+            }
+        }
+
+        return undefined;
+    }
+
+    searchPropertyOrMethod(name: string,
+        source: Map<string, ClassOrInterfaceDeclaration> | Map<string, NamespaceDeclaration>) {
+
+        let find;
+        for (const obj of source.values()) {
+            if (obj instanceof NamespaceDeclaration) {
+                find = this.searchPropertyOrMethodInNamespace(name, obj);
+                if (find) {
+                    return find;
+                }
+            }
+
+            if (obj instanceof ClassOrInterfaceDeclaration) {
+                find = obj.properties.get(name.toLowerCase()) ||
+                    obj.methods.get(name.toLowerCase());
+                if (find) {
+                    return find;
+                }
+            }
+        }
+
+        return undefined;
+
+    }
+
+    guessMemberObjectTypeByPropName(propName: string) {
+        let search = this.searchPropertyOrMethod(propName, this.scope.global.namespaces) ||
+            this.searchPropertyOrMethod(propName, this.scope.global.classes);
+        if (search) {
+            let objClass;
+            if (search instanceof PropertyDeclaration ||
+                search instanceof FunctionDeclaration) {
+                objClass = search.class;
+            }
+            return {
+                class: objClass,
+                child: search
+            };
+        }
+        return undefined;
+    }
+
 
 }
 

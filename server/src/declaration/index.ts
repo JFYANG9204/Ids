@@ -17,15 +17,13 @@ export function loadBuiltInModule() {
     return loadDecarationFiles(module);
 }
 
-export function loadDecarationFiles(files: Map<string, FileContent>): DeclarationLoadResult {
+export function loadDecarationFiles(contents: Map<string, FileContent>): DeclarationLoadResult {
     let fileMap: Map<string, File> = new Map();
-    let contents: Map<string, FileContent> = new Map();
     let scope: Scope | undefined;
-    files.forEach((f, p) => {
+    contents.forEach((f, p) => {
         const parser = new Parser(createBasicOptions(p, false, f.uri), f.content);
         const file = parser.parse(scope ?? undefined);
         fileMap.set(p, file);
-        contents.set(p, f);
         if (file.scope) {
             scope = file.scope;
         }

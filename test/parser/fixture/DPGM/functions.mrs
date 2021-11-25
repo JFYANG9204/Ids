@@ -313,7 +313,7 @@ function build_axis_for_split_base( mdm, str_side_var, str_side_code_label, str_
             filter_code = str_filter_code_label + right(cat.name, len(cat.name) - len(str_side_code_label))
             if code_in_field(mdm, str_filter_var, filter_code) = true then
                 axis = axis + ",base_" + cat.name + " 'Base' base('" + str_side_var + " is not null and " + str_filter_var + "*{" + filter_code + "}')" + str_hidden + ",_
-                ex_" + cat + " '" + cat.label + "' expression('" + str_side_var + "*{" + cat.name + "} and " + str_filter_var + "*{" + filter_code + "}')"
+                ex_" + cat.Name + " '" + cat.label + "' expression('" + str_side_var + "*{" + cat.name + "} and " + str_filter_var + "*{" + filter_code + "}')"
             end if
         next
     end if

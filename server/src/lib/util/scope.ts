@@ -1,6 +1,6 @@
 import { ParserBase } from "../base";
 import { ErrorMessages } from "../parser/error-messages";
-import { ErrorTemplate, ParsingError } from "../parser/errors";
+import { ErrorTemplate } from "../parser/errors";
 import {
     ArrayDeclarator,
     ClassOrInterfaceDeclaration,
@@ -15,7 +15,7 @@ import {
     SingleVarDeclarator
 } from "../types";
 
-export type RaiseFunction = (node: NodeBase, template: ErrorTemplate, warning: boolean, ...params: any) => ParsingError;
+export type RaiseFunction = (node: NodeBase, template: ErrorTemplate, warning: boolean, ...params: any) => void;
 
 export enum ScopeFlags {
     program,

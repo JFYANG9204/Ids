@@ -254,7 +254,7 @@ function getDeclarationNamespace(dec: DeclarationBase) {
     return getNamespaceText(ns);
 }
 
-function getDefaultNote(dec: DeclarationBase): string {
+function getDefaultNote(dec: DeclarationBase, appendMd: boolean = true): string {
     const name = dec.name.name;
     let text = "";
     let args = "";
@@ -262,8 +262,10 @@ function getDefaultNote(dec: DeclarationBase): string {
 
     if (!dec.declare) {
         const t = dec as SingleVarDeclarator;
-        return "```\n(undefined variable) " + t.name.name +
-            (t.binding ? (": " + getBindingName(t.binding)) : "") + "\n```";
+            return appendMd ? ("```\n(undefined variable) " + t.name.name +
+                (t.binding ? (": " + getBindingName(t.binding)) : "") + "\n```")
+                : ("(undefined variable) " + t.name.name +
+                (t.binding ? (": " + getBindingName(t.binding)) : ""));
     }
 
     let namespace = getDeclarationNamespace(dec);
@@ -277,7 +279,8 @@ function getDefaultNote(dec: DeclarationBase): string {
             args = getArgumentNote((dec as FunctionDeclaration).params);
             let bind = (dec as FunctionDeclaration).binding;
             value = (bind ? getBindingName(bind) : undefined) ?? "Void";
-            return "```\n" + text + name + "(" + args + "): " + value + "\n```";
+            return appendMd ? ("```\n" + text + name + "(" + args + "): " + value + "\n```") :
+                (text + name + "(" + args + "): " + value);
 
         case "PropertyDeclaration":
             const prop = dec as PropertyDeclaration;
@@ -286,27 +289,34 @@ function getDefaultNote(dec: DeclarationBase): string {
                 text += "(" + getArgumentNote(prop.params) + ")";
             }
             text += ": " + getBindingName(prop.binding);
-            return "```\n" + text + "\n```";
+            return appendMd ? "```\n" + text + "\n```" : text;
 
         case "SingleVarDeclarator":
             const dim = dec as SingleVarDeclarator;
 
             if (dec.treeParent?.type === "ArgumentDeclarator") {
-                return "```\n" + `(parameter) ${getDeclaratorNote(dim)}\n` + "```";
+                return appendMd ?
+                    ("```\n" + `(parameter) ${getDeclaratorNote(dim)}\n` + "```") :
+                    (`(parameter) ${getDeclaratorNote(dim)}`);
             }
-            return "```\n" + `(variable) ${getDeclaratorNote(dim)}\n` + "```";
+            return appendMd ? ("```\n" + `(variable) ${getDeclaratorNote(dim)}\n` + "```") :
+                (`(variable) ${getDeclaratorNote(dim)}`);
 
         case "ArrayDeclarator":
             const arr = dec as ArrayDeclarator;
             if (dec.treeParent?.type === "ArgumentDeclarator") {
-                return "```\n" + `(parameter) ${getDeclaratorNote(arr)}\n` + "```";
+                return appendMd ? ("```\n" + `(parameter) ${getDeclaratorNote(arr)}\n` + "```") :
+                    (`(parameter) ${getDeclaratorNote(arr)}`);
             }
-            return "```\n" + `(variable) ${getDeclaratorNote(arr)}\n` + "```";
+            return appendMd ? ("```\n" + `(variable) ${getDeclaratorNote(arr)}\n` + "```") :
+                (`(variable) ${getDeclaratorNote(arr)}`);
 
         case "MacroDeclaration":
             const macro = dec as MacroDeclaration;
-            return "```\n(macro) " + macro.name.name +
-                (macro.initValue ? " = " + macro.initValue : "") + "\n```";
+            return appendMd ? ("```\n(macro) " + macro.name.name +
+                (macro.initValue ? " = " + macro.initValue : "") + "\n```") :
+                ("(macro) " + macro.name.name +
+                (macro.initValue ? " = " + macro.initValue : ""));
 
         case "ClassOrInterfaceDeclaration":
             const classOrInterface = dec as ClassOrInterfaceDeclaration;
@@ -315,7 +325,8 @@ function getDefaultNote(dec: DeclarationBase): string {
             } else {
                 text += "(class) " + namespace;
             }
-            return "```\n" + text + classOrInterface.name.name + "\n```";
+            return appendMd ? ("```\n" + text + classOrInterface.name.name + "\n```") :
+                (text + classOrInterface.name.name);
 
         case "ConstDeclarator":
             const constant = dec as ConstDeclarator;
@@ -336,7 +347,7 @@ function getDefaultNote(dec: DeclarationBase): string {
                 default:
                     break;
             }
-            return "```\n" + text + "\n```";
+            return appendMd ? "```\n" + text + "\n```" : text;
 
         default:
             return "";
@@ -426,9 +437,10 @@ function getCompletionFromDeclarationBase(
     return {
         label: name ?? getDeclaratorName(dec),
         kind: type,
+        detail: getDefaultNote(dec, false),
         documentation: {
             kind: MarkupKind.Markdown,
-            value: getDeclarationNote(dec)
+            value: getDeclarationNote(dec, false)
         }
     };
 }

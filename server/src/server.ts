@@ -165,15 +165,5 @@ documents.onDidChangeContent(change => {
     updateAndVaidateDocument(change.document, connection, current, last, graph);
 });
 
-documents.onDidOpen(listener => {
-    let path = fileURLToPath(listener.document.uri).toLowerCase();
-    let exist;
-    if (graph && (exist = graph.getData(path))) {
-        raiseErrorsFromFile(connection, listener.document, exist.file);
-    } else {
-        updateAndVaidateDocument(listener.document, connection, current, last, graph);
-    }
-});
-
 documents.listen(connection);
 connection.listen();

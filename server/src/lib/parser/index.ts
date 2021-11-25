@@ -16,7 +16,7 @@ export class Parser extends StaticTypeChecker {
         this.fileName = this.options.sourceFileName ?? "";
         this.scope = new ScopeHandler(
             this,
-            (node, template, warning,...params) => this.raiseAtLocation(node.start, node.end, template, warning, ...params),
+            this.raiseTypeError,
             this.options.globalDeclarations,
             this.state.localDefinitions);
         if (extname(this.fileName).toLowerCase() === ".dms") {
