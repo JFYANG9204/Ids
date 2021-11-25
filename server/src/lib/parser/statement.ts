@@ -438,14 +438,17 @@ export class StatementParser extends ExpressionParser {
         node.push(node.name);
         if (this.eat(tt._as)) {
             node.binding = this.parseBindingDeclarator();
-            node.bindingType =
-                this.scope.get(this.getBindingTypeNameString(node.binding))?.result;
+            node.bindingType = this.scope.get(
+                    this.getBindingTypeNameString(node.binding),
+                    this.getDeclareNamespace(node))?.result;
         } else {
             node.binding = "Variant";
             node.bindingType = this.scope.get("Variant")?.result;
         }
         if (this.options.sourceType === SourceType.declare) {
-            this.scope.declareName(node.name.name, BindTypes.const, node);
+            this.scope.declareName(node.name.name,
+                BindTypes.const,
+                node, node);
         }
         return this.finishNode(node, "SingleVarDeclarator");
     }

@@ -762,7 +762,9 @@ export class TypeUtil extends UtilParser {
                 if (type?.type === "SingleVarDeclarator") {
                     const single = type as SingleVarDeclarator;
                     return single.bindingType ??
-                        this.scope.get(this.getBindingTypeNameString(single.binding))?.result;
+                        this.scope.get(
+                            this.getBindingTypeNameString(single.binding),
+                            this.getDeclareNamespace(single))?.result;
                 }
                 return type;
             case "MemberExpression":

@@ -2,6 +2,7 @@ import { readFileSync } from "fs";
 import {
     resolve,
 } from "path";
+import { builtInCompletions } from "../../server/src/completion";
 import { builtInModule } from "../../server/src/declaration";
 import {
     ParserFileDigraph
@@ -10,12 +11,12 @@ import { BatMacro, batMrScriptItemRegex, batMrScriptRegex, getCurrentParser, get
 import { createBasicOptions } from "../../server/src/lib/options";
 import { Parser } from "../../server/src/lib/parser";
 
-const folderPath = resolve("./test/parser/fixture/dpgm");
-const startPath = resolve("./test/parser/fixture/dpgm/Run.mrs");
-const graph = new ParserFileDigraph(folderPath, builtInModule);
-graph.init();
-graph.setStart(startPath);
-const file = graph.startParse();
+//const folderPath = resolve("./test/parser/fixture/dpgm");
+//const startPath = resolve("./test/parser/fixture/dpgm/Run.mrs");
+//const graph = new ParserFileDigraph(folderPath, builtInModule);
+//graph.init();
+//graph.setStart(startPath);
+//const file = graph.startParse();
 //let mdd;
 //if (file) {
 //    mdd = getCurrentParser(file, startPath);
@@ -36,5 +37,7 @@ const file = graph.startParse();
 //const content = readFileAndConvertToUtf8(testpath);
 //const parser = new Parser(createBasicOptions(testpath, true, undefined, builtInModule.scope), content);
 //const file = parser.parse();
+
+const completion = builtInCompletions;
 
 console.log("end");

@@ -1,7 +1,7 @@
 
 Namespace MRSCRIPTCORELib
 
-    Class IDebugObject Implements Object
+    Interface IDebugObject Implements Object
 
         Function MsgBox(Prompt As String, Optional Button As Long = 0, Optional Title As String = "mrScriptBasic") As DebugMsgBoxResults
         End Function
@@ -18,6 +18,6 @@ Namespace MRSCRIPTCORELib
         Property Logger() As ConsoleLogger
         Property IsInteractive() As Boolean
 
-    End Class
+    End Interface
 
 End Namespace

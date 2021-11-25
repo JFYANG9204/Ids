@@ -2,7 +2,7 @@ import { join } from "path";
 import { FileContent, getAllUsefulFile } from "../lib/file/util";
 import { createBasicOptions } from "../lib/options";
 import { Parser } from "../lib/parser";
-import { File } from "../lib/types";
+import { BindingDeclarator, DeclarationBase, File, SingleVarDeclarator } from "../lib/types";
 import { Scope } from "../lib/util";
 
 export interface DeclarationLoadResult {
@@ -36,5 +36,33 @@ export function loadDecarationFiles(contents: Map<string, FileContent>): Declara
 }
 
 const builtInModule = loadBuiltInModule();
+
+if (builtInModule.scope) {
+    correctVarInScope(builtInModule.scope, builtInModule.scope.consts);
+    correctVarInScope(builtInModule.scope, builtInModule.scope.dims);
+}
+
+function correctVarInScope(scope: Scope, vars: Map<string, DeclarationBase>) {
+    vars.forEach(dim => {
+        if (dim instanceof SingleVarDeclarator) {
+            if (typeof dim.binding === "string") {
+                dim.bindingType = scope.classes.get(dim.binding.toLowerCase());
+            } else {
+                let name = dim.binding.name.name.toLowerCase();
+                if (dim.binding.namespace) {
+                    let ns = dim.binding.namespace;
+                    if (typeof ns === "string") {
+                        dim.bindingType = scope.namespaces.get(ns.toLowerCase())?.body.get(name);
+                    } else {
+                        dim.bindingType = ns.body.get(name);
+                    }
+                } else {
+                    dim.bindingType = scope.classes.get(name);
+                }
+            }
+        }
+    });
+}
+
 
 export { builtInModule };
