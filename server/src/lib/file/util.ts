@@ -244,3 +244,44 @@ export function getCurrentParser(file: File, path: string): File | undefined {
     }
     return undefined;
 }
+
+export const batMrScriptRegex = /\s*(?:mrscriptcl)\s*(?:\".*\"|[a-zA-Z_0-9]*\.mrs)(?:\s*\/d\:([a-zA-Z_0-9]*=(?:(?:\"\\\".*?\\\"\")|(?:[0-9]*)|true|false)))*\s*(?:>>\s*[a-zA-Z_0-9]*\.[a-zA-Z_0-9]*)?/ig;
+export const batMrScriptItemRegex = /(?:\s*\/d\:([a-zA-Z_0-9]*=(?:(?:\"\\\".*?\\\"\")|(?:[0-9]*)|true|false)))/i;
+
+export interface BatMacro {
+    id: string,
+    type: "string" | "boolean" | "number"
+}
+
+export function getMacroFromBatFile(path: string, macros: Map<string, BatMacro>) {
+    let content = readFileAndConvertToUtf8(path);
+    if (batMrScriptRegex.test(content)) {
+        let match;
+        let itemRegex = new RegExp(batMrScriptItemRegex.source, "igm");
+        while (match = itemRegex.exec(content)) {
+            let reg = /(?:\s*\/d\:(?:([a-zA-Z_0-9]*)=((?:\"\\\".*?\\\"\")|(?:[0-9]*)|true|false)))/i;
+            let itemMath = reg.exec(match[0]);
+            if (!itemMath) {
+                continue;
+            }
+            let macroName = itemMath[1];
+            let value = itemMath[2];
+            if (macros.has(macroName.toLowerCase())) {
+                continue;
+            }
+
+            let type: "string" | "number" | "boolean";
+            if (/true|false/i.test(value)) {
+                type = "boolean";
+            } else if (/\"\\\".*?\\\"\"/.test(value)) {
+                type = "string";
+            } else {
+                type = "number";
+            }
+
+            macros.set(macroName.toLowerCase(), { id: macroName, type });
+        }
+    }
+}
+
+
