@@ -444,6 +444,9 @@ export class StatementParser extends ExpressionParser {
             node.binding = "Variant";
             node.bindingType = this.scope.get("Variant")?.result;
         }
+        if (this.options.sourceType === SourceType.declare) {
+            this.scope.declareName(node.name.name, BindTypes.const, node);
+        }
         return this.finishNode(node, "SingleVarDeclarator");
     }
 

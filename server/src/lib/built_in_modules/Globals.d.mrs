@@ -4,3 +4,4 @@ Dim dmgrGlobal As IDataManagerGlobalVariables
 Dim dmgrLog As IDataManagerLogging
 Dim dmgrQuestions As IQuestions
 Dim dmgrWeightEngines As IDataManagerWeightEngines
+Dim Debug As MRSCRIPTCORELib.IDebugObject

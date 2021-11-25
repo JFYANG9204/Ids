@@ -1,0 +1,23 @@
+
+Namespace MRSCRIPTCORELib
+
+    Class IDebugObject Implements Object
+
+        Function MsgBox(Prompt As String, Optional Button As Long = 0, Optional Title As String = "mrScriptBasic") As DebugMsgBoxResults
+        End Function
+
+        Sub Log(Message As String, Optional logLevels As Long = 64)
+        End Sub
+
+        Sub LogIf(Condition As Boolean, Message As String, Optional logLevels As Long = 64)
+        End Sub
+
+        Sub Echo(Message As String)
+        End Sub
+
+        Property Logger() As ConsoleLogger
+        Property IsInteractive() As Boolean
+
+    End Class
+
+End Namespace

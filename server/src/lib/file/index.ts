@@ -40,11 +40,6 @@ export class ParserFileDigraph {
         this.folder = folder;
         this.global = global?.scope;
         if (global) {
-            global.contents.forEach((v, k) => {
-                let fileNode = createParserFileNode(v.uri, k, v.content);
-                fileNode.file = global.files.get(k);
-                this.nodeMap.set(k, fileNode);
-            });
             global.files.forEach((f, p) => {
                 const fNode = createParserFileNode(f.uri,
                     f.path,
