@@ -268,7 +268,8 @@ export class TypeUtil extends UtilParser {
         if (checkString === "variant"   ||
             baseString  === "variant"   ||
             checkString === "iquestion" ||
-            baseString  === "iquestion" || (
+            baseString  === "iquestion" ||
+            checkString === "null"      || (
             baseString  === "enum"   && checkString === "long") || (
             baseString  === "double" && checkString === "long") || (
             baseString  === "date"   && checkString === "long") || (
@@ -1234,6 +1235,8 @@ export class TypeUtil extends UtilParser {
                     return this.scope.get("WshShell")?.result;
                 case "vbscript.regexp":
                     return this.scope.get("RegExp")?.result;
+                case "mroledb.datalinkhelper":
+                    return this.scope.get("IDataLinkHelper", "MROLEDBLib")?.result;
                 default:
                     if (this.options.raiseTypeError && !this.scope.inFunction) {
                         this.raiseTypeError(

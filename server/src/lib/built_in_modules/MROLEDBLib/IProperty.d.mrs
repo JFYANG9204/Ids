@@ -1,0 +1,14 @@
+
+
+Namespace MROLEDBLib
+
+    Interface IProperty Implements Object
+
+        Readonly Property Name() As String
+        Readonly Property Type() As PropertyTypeConstants
+        Property Value() As Variant
+        Readonly Property Attributes() As Long
+
+    End Interface
+
+End Namespace

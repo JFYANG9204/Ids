@@ -1,0 +1,15 @@
+
+Namespace MROLEDBLib
+
+    Enum PropertyTypeConstants
+        cdLong        = 0
+        cdBoolean     = 1
+        cdString      = 2
+        cdDouble      = 3
+        cdDate        = 4
+        cdIUnknown    = 5
+        cdIDispatch   = 6
+        cdCategorical = 7
+    End Enum
+
+End Namespace

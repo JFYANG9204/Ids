@@ -1,0 +1,11 @@
+
+Namespace MROLEDBLib
+
+    Interface IProperties Implements IEnumerable, Object
+
+        Default Readonly Property Item(Index As Variant) IProperty
+        Readonly Property Count() As Long
+
+    End Interface
+
+End Namespace

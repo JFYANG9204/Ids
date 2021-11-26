@@ -1,0 +1,26 @@
+
+Namespace MROLEDBLib
+
+    Interface IDataLinkHelper Implements Object
+
+        Function DisplayWizard(Optional Parent As Long = 0, Optional ConnectionIn As String = "Provider=mrOleDB.Provider.2") As String
+        End Function
+
+        Function CreateDocumentObjectString(Document As Variant) As String
+        End String
+
+        Function GetObjectFromConnection(Connection As Variant, PropertyName As String) As Variant
+        End Function
+
+        Function GetConnectionStringProperties(ConnectionString As String) As IProperties
+        End Function
+
+        Function DisplayMetadataVersions(MetadataLocation As String, Optional Parent As Long = 0, Optional SelectedVersions As String = "{..}") As String
+        End Function
+
+        Function DisplayWizardEx(Optional Parent As Long = 0, Optional Options As Long = 0, Optional ConnectionIn As String = "Provider=mrOleDB.Provider.2") As String
+        End Function
+
+    End Interface
+
+End Namespace
