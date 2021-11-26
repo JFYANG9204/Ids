@@ -447,8 +447,8 @@ export class StatementParser extends ExpressionParser {
         }
         if (this.options.sourceType === SourceType.declare) {
             this.scope.declareName(node.name.name,
-                BindTypes.const,
-                node, node);
+                BindTypes.var,
+                node);
         }
         return this.finishNode(node, "SingleVarDeclarator");
     }
@@ -457,11 +457,18 @@ export class StatementParser extends ExpressionParser {
         const node = this.startNode(ConstDeclarator);
         node.declarator = this.parseSingleVarDeclarator();
         this.expect(tt.equal);
-        node.init = this.parseExpression(true);
+        if (this.options.sourceType !== SourceType.declare) {
+            node.init = this.parseExpression(true);
+        }
         node.push(node.declarator, node.init);
         let right: { type: DeclarationBase | undefined } = { type: undefined };
-        node.declarator.binding = this.getExprType(node.init, right);
-        node.declarator.bindingType = right.type;
+        if (this.options.sourceType !== SourceType.declare) {
+            node.declarator.binding = this.getExprType(node.init, right);
+            node.declarator.bindingType = right.type;
+        } else {
+            this.scope.declareName(node.declarator.name.name,
+                BindTypes.const, node.declarator);
+        }
         return this.finishNode(node, "ConstDeclarator");
     }
 

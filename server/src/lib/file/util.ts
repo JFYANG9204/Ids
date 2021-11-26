@@ -5,6 +5,7 @@ import * as iconv from "iconv-lite";
 import { lineBreak } from "../util/whitespace";
 import {
     File,
+    FunctionDeclaration,
     Identifier,
     NodeBase,
     SingleVarDeclarator,
@@ -233,6 +234,16 @@ export function positionInWith(node: NodeBase, pos: number) {
     return withStatement;
 }
 
+export function positionInFunction(node: NodeBase, pos: number) {
+    let func: FunctionDeclaration | undefined;
+    positionIn(node, pos, sub => {
+        if (sub.type === "FunctionDeclaration") {
+            func = sub as FunctionDeclaration;
+        }
+    });
+    return func;
+}
+
 export function getCurrentParser(file: File, path: string): File | undefined {
     if (file.loc.fileName?.toLowerCase() === path.toLowerCase()) {
         return file;
@@ -253,17 +264,20 @@ export function getCurrentParser(file: File, path: string): File | undefined {
 export const batMrScriptRegex = /\s*(?:mrscriptcl)\s*(?:\".*\"|[a-zA-Z_0-9]*\.mrs)(?:\s*\/d\:([a-zA-Z_0-9]*=(?:(?:\"\\\".*?\\\"\")|(?:[0-9]*)|true|false)))*\s*(?:>>\s*[a-zA-Z_0-9]*\.[a-zA-Z_0-9]*)?/ig;
 export const batMrScriptItemRegex = /(?:\s*\/d\:([a-zA-Z_0-9]*=(?:(?:\"\\\".*?\\\"\")|(?:[0-9]*)|true|false)))/i;
 
+export const batRunDmsScriptRegex = /\s*(?:dmsrun)\s*(?:(?:\"[a-zA-Z_0-9]*\")|(?:[a-zA-Z_0-9]*\.dms))(\s+\/d\s*\"[a-zA-Z_]\w*\s+(?:(?:\\\".*\\\")|(?:[0-9]+)|(?:[a-zA-Z_][\w\.]*))\")*/igm;
+export const batRunDmsScriptItemRegex = /(?:\s+\/d\s*\"([a-zA-Z_]\w*)\s+((?:\\\".*\\\")|(?:[0-9]+)|(?:[a-zA-Z_][\w\.]*))\")/i;
+
 export interface BatMacro {
     path: string,
     id: string,
-    type: "string" | "boolean" | "number",
+    type: "string" | "boolean" | "number" | "other",
     start: number,
     end: number
 }
 
 export function getMacroFromBatFile(path: string, content: string, macros: Map<string, BatMacro>) {
+    let match;
     if (batMrScriptRegex.test(content)) {
-        let match;
         let itemRegex = new RegExp(batMrScriptItemRegex.source, "igm");
         while (match = itemRegex.exec(content)) {
             let reg = /(?:\s*\/d\:(?:([a-zA-Z_0-9]*)=((?:\"\\\".*?\\\"\")|(?:[0-9]*)|true|false)))/i;
@@ -277,17 +291,46 @@ export function getMacroFromBatFile(path: string, content: string, macros: Map<s
                 continue;
             }
 
-            let type: "string" | "number" | "boolean";
+            let type: "string" | "number" | "boolean" | "other";
             if (/true|false/i.test(value)) {
                 type = "boolean";
             } else if (/\"\\\".*?\\\"\"/.test(value)) {
                 type = "string";
-            } else {
+            } else if (/[0-9]+/.test(value)) {
                 type = "number";
+            } else {
+                type = "other";
             }
 
             let end = itemRegex.lastIndex;
             let start = end - itemMath[0].length;
+
+            macros.set(macroName.toLowerCase(), { path, id: macroName, type, start, end });
+        }
+    }
+
+    if (batRunDmsScriptRegex.test(content)) {
+        let itemRegex = new RegExp(batRunDmsScriptItemRegex.source, "igm");
+        while (match = itemRegex.exec(content)) {
+            let macroName = match[1];
+            let value = match[2];
+            if (macros.has(macroName.toLowerCase())) {
+                continue;
+            }
+
+            let type: "string" | "number" | "boolean" | "other";
+            if (/true|false/i.test(value)) {
+                type = "boolean";
+            } else if (/\\\".*?\\\"/i.test(value)) {
+                type = "string";
+            } else if (/[0-9]+/.test(value)) {
+                type = "number";
+            } else {
+                type = "other";
+            }
+
+            let end = itemRegex.lastIndex;
+            let start = end - match[0].length;
 
             macros.set(macroName.toLowerCase(), { path, id: macroName, type, start, end });
         }
@@ -305,8 +348,10 @@ export function createDeclarationFromBatMacro(bat: BatMacro) {
         macro.binding = "Boolean";
     } else if (bat.type === "number") {
         macro.binding = "Long";
-    } else {
+    } else if (bat.type === "string") {
         macro.binding = "String";
+    } else {
+        macro.binding = "Variant";
     }
     return macro;
 }

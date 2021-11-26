@@ -136,20 +136,27 @@ preKeywords.forEach(kw => {
     });
 });
 
-const builtInCompletions: CompletionItem[] = [];
+const builtInVarCompletions: CompletionItem[] = [];
+const builtInConstCompletions: CompletionItem[] = [];
+const builtInFunctionCompletions: CompletionItem[] = [];
 
 if (builtInModule.scope) {
-    setBuiltInCompletions(builtInModule.scope.dims,      CompletionItemKind.Variable);
-    setBuiltInCompletions(builtInModule.scope.consts,    CompletionItemKind.Constant);
-    setBuiltInCompletions(builtInModule.scope.functions, CompletionItemKind.Function);
-    setBuiltInCompletions(builtInModule.scope.macros,    CompletionItemKind.Variable);
+    setBuiltInCompletions(builtInModule.scope.dims,      CompletionItemKind.Variable, builtInVarCompletions);
+    setBuiltInCompletions(builtInModule.scope.consts,    CompletionItemKind.Constant, builtInConstCompletions);
+    setBuiltInCompletions(builtInModule.scope.functions, CompletionItemKind.Function, builtInFunctionCompletions);
+    setBuiltInCompletions(builtInModule.scope.macros,    CompletionItemKind.Variable, builtInConstCompletions);
 }
+
+const builtInCompletions = builtInConstCompletions.concat(
+                                builtInVarCompletions,
+                                builtInFunctionCompletions);
 
 function setBuiltInCompletions(
     defs: Map<string, DeclarationBase>,
-    kind: CompletionItemKind) {
+    kind: CompletionItemKind,
+    target: CompletionItem[]) {
     defs.forEach(def => {
-        builtInCompletions.push({
+        target.push({
             label: def.name.name,
             kind: kind,
             detail: getDefaultNote(def, false),
@@ -539,8 +546,15 @@ function getCompletionsFromDeclarations(decs: Map<string, DeclarationBase>): Com
     return completions;
 }
 
-export function getCompletionsFromScope(scope: Scope) {
+export function getCompletionsFromScope(scope: Scope, inFunction = false) {
     let completions: CompletionItem[] = [];
+    if (inFunction) {
+        return completions.concat(
+            getCompletionsFromDeclarations(scope.functions),
+            getCompletionsFromDeclarations(scope.macros),
+            getCompletionsFromDeclarations(scope.consts)
+        );
+    }
     completions = completions.concat(
         getCompletionsFromDeclarations(scope.dims),
         getCompletionsFromDeclarations(scope.consts),
@@ -595,7 +609,14 @@ export function getCompletionFromPosition(
 }
 
 
-export { keywordsCompletions, preKeywordsCompletions, builtInCompletions };
+export {
+    keywordsCompletions,
+    preKeywordsCompletions,
+    builtInCompletions,
+    builtInConstCompletions,
+    builtInFunctionCompletions,
+    builtInVarCompletions
+};
 
 
 export function getHoverFromDeclaration(dec: DeclarationBase): Hover {

@@ -10,7 +10,7 @@ import {
     TextDocuments,
     TextDocumentSyncKind
 } from "vscode-languageserver/node";
-import { ParserFileDigraph } from "./lib/file";
+import { ParserFileDigraph, positionInFunction } from "./lib/file";
 import {
     CallExpression,
     DeclarationBase,
@@ -19,6 +19,8 @@ import {
 } from "./lib/types";
 import {
     builtInCompletions,
+    builtInConstCompletions,
+    builtInFunctionCompletions,
     getCompletionFromPosition,
     getCompletionsFromScope,
     getHoverFromDeclaration,
@@ -38,6 +40,7 @@ let current: Map<string, File> = new Map();
 let last: Map<string, File> = new Map();
 let graph: ParserFileDigraph;
 let folderPath: string;
+let currentCompletions: CompletionItem[] = [];
 
 connection.onInitialize((params) => {
     const result: InitializeResult = {
@@ -68,29 +71,45 @@ connection.onCompletion(
         if (!doc) {
             return [];
         }
+
         let pos = doc.offsetAt(textDocumentPosition.position);
         let text = doc.getText().substring(0, pos);
         let path = fileURLToPath(textDocumentPosition.textDocument.uri);
+
         if (text.endsWith("#")) {
             return preKeywordsCompletions;
         };
+
         let lastFile = last.get(path.toLowerCase());
-        if (lastFile && (
-            text.endsWith(".") ||
-            text.endsWith("/") ||
-            text.endsWith("\\"))) {
-            return getCompletionFromPosition(
-                lastFile,
-                pos - 1,
-                text.slice(pos - 1, pos),
-                text.charCodeAt(pos - 2)
-            );
+        if (lastFile) {
+
+            if (text.endsWith(".") ||
+                text.endsWith("/") ||
+                text.endsWith("\\")) {
+                return getCompletionFromPosition(
+                    lastFile,
+                    pos - 1,
+                    text.slice(pos - 1, pos),
+                    text.charCodeAt(pos - 2)
+                );
+            }
+
+            let func = positionInFunction(lastFile.program.body, pos);
+            if (func) {
+                let funcCompletions = getCompletionsFromScope(func.scope);
+                return funcCompletions.concat(keywordsCompletions,
+                    builtInFunctionCompletions,
+                    builtInConstCompletions,
+                    getCompletionsFromScope(lastFile.scope, true));
+            }
         }
+
         let completions: CompletionItem[] = builtInCompletions.concat(
             keywordsCompletions);
         if (lastFile?.scope) {
-            completions = completions.concat(getCompletionsFromScope(lastFile.scope));
+            completions = completions.concat(currentCompletions);
         }
+
         return completions;
     }
 );
@@ -162,6 +181,11 @@ connection.onDefinition(params => {
 
 documents.onDidChangeContent(change => {
     updateAndVaidateDocument(change.document, connection, current, last, graph);
+    let path = fileURLToPath(change.document.uri).toLowerCase();
+    let lastFile = last.get(path);
+    if (lastFile) {
+        currentCompletions = getCompletionsFromScope(lastFile.scope);
+    }
 });
 
 documents.listen(connection);

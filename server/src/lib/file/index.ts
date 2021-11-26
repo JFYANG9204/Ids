@@ -261,6 +261,7 @@ export {
     distanceTo,
     positionAt,
     positionIn,
+    positionInFunction,
     positionInWith,
     readFileAndConvertToUtf8,
     getCurrentParser
