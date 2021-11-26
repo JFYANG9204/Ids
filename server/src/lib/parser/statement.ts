@@ -1004,6 +1004,7 @@ export class StatementParser extends ExpressionParser {
             node.binding = this.parseBindingDeclarator();
         }
         node.body = this.parseBlock(tt._end);
+        node.innerComments = node.body.leadingComments;
         this.expect(tt._end);
         isFunction ? this.expect(tt._function) : this.expect(tt._sub);
         node.push(node.name, node.body);
