@@ -676,7 +676,7 @@ export class TypeUtil extends UtilParser {
                 if (expr.right instanceof Identifier) {
                     update = rightType.type;
                 } else {
-                    update = this.maybeDeclaratorBinding(rightType.type) ?? rightType.type;
+                    update = this.getMaybeBindingType(rightType.type) ?? rightType.type;
                 }
                 this.scope.update(
                     expr.left.name,
@@ -788,21 +788,21 @@ export class TypeUtil extends UtilParser {
 
         let objType = obj;
 
-        if (obj.name.name === "Variant" && member.property instanceof Identifier) {
-            let guess = this.guessMemberObjectTypeByPropName(member.property.name);
-            if (guess?.class) {
-                objType = guess.class;
-                this.addExtra(member.object, "declaration", objType);
-                if (member.object instanceof Identifier) {
-                    let curObj = this.scope.get(member.object.name)?.result;
-                    if (curObj && this.isArgumentDeclarator(curObj) &&
-                        curObj instanceof SingleVarDeclarator) {
-                        curObj.binding = objType.name.name;
-                        curObj.bindingType = objType;
-                    }
-                }
-            }
-        }
+        //if (obj.name.name === "Variant" && member.property instanceof Identifier) {
+        //    let guess = this.guessMemberObjectTypeByPropName(member.property.name);
+        //    if (guess?.class) {
+        //        objType = guess.class;
+        //        this.addExtra(member.object, "declaration", objType);
+        //        if (member.object instanceof Identifier) {
+        //            let curObj = this.scope.get(member.object.name)?.result;
+        //            if (curObj && this.isArgumentDeclarator(curObj) &&
+        //                curObj instanceof SingleVarDeclarator) {
+        //                curObj.binding = objType.name.name;
+        //                curObj.bindingType = objType;
+        //            }
+        //        }
+        //    }
+        //}
 
         if ((objType.type !== "ClassOrInterfaceDeclaration") &&
             (objType.type !== "PropertyDeclaration")         &&

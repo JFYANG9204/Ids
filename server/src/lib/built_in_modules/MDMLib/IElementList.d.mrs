@@ -1,0 +1,16 @@
+
+
+Namespace MDMLib
+
+    Interface IElementList Implements Object, IEnumerable
+
+        Default ReadOnly Property Item(Index As Variant) As IElement
+
+        ReadOnly Property Count() As Long
+        ReadOnly Property Value(Index As Variant) As Long
+        ReadOnly Property FullName(Index As Variant) As String
+
+    End Interface
+
+End Namespace
+
