@@ -85,5 +85,66 @@ Class Dictionary Implements Object
     Function Keys() As Array
     End Function
 
+    '!
+    Sets or returns an item for a specified *key* in a `Dictionary` object.
+    For collections, returns an item based on the specified *key*. Read/write.
+
+    ### Remarks
+    If *key* is not found when changing an item, a new *key* is created with the
+    specified newitem. If *key* is not found when attempting to return an existing item,
+    a new *key* is created and its corresponding item is left empty.
+    !'
+    Property Item(key As Variant) As Variant
+
+    '!
+    Sets and returns the comparison mode for comparing string keys in a `Dictionary` object.
+
+    ### Settings
+    The compare argument can have the following values:
+
+    | Constant            | Value | Description  |
+    | :------------------ | :---- | :--------------  |
+    | vbUseCompareOption  | -1    | Performs a comparison by using the setting of the Option Compare statement.  |
+    | vbBinaryCompare     | 0     | Performs a binary comparison.  |
+    | vbTextCompare       | 1     | Performs a textual comparison.  |
+    | vbDatabaseCompare   | 2     | Microsoft Access only. Performs a comparison based on information in your database.  |
+
+    ### Remarks
+    An error occurs if you try to change the comparison mode of a `Dictionary` object
+    that already contains data.
+
+    The `CompareMode` property uses the same values as the compare argument for the
+    `StrComp` function. Values greater than 2 can be used to refer to comparisons by
+    using specific Locale IDs (LCID).
+    !'
+    Property CompareMode() As Long
+
+    '!
+    Returns a *Long* (long integer) containing the number of items in a collection or
+    `Dictionary` object. Read-only.
+
+    ### Remarks
+    ```vb
+    Dim a, d, i             'Create some variables
+    Set d = CreateObject("Scripting.Dictionary")
+    d.Add "a", "Athens"     'Add some keys and items.
+    d.Add "b", "Belgrade"
+    d.Add "c", "Cairo"
+    a = d.Keys              'Get the keys
+    For i = 0 To d.Count -1 'Iterate the array
+        Print a(i)          'Print key
+    Next
+    ```
+    !'
+    Property Count() As Long
+
+    '!
+    Sets a key in a `Dictionary` object.
+
+    ### Remarks
+    If key is not found when changing a key, a run-time error will occur.
+    !'
+    Property Key(key As Variant) As Variant
+
 End Class
 
