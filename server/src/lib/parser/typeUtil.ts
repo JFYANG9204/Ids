@@ -1398,6 +1398,19 @@ export class TypeUtil extends UtilParser {
         return undefined;
     }
 
+    guessFunctionParamTypeFromName(declarator: SingleVarDeclarator) {
+        let name = declarator.name.name.toLowerCase();
+        let bind: string | undefined;
+        if (name.startsWith("str")) {
+            bind = "String";
+        } else if (name.startsWith("bln")) {
+            bind = "Boolean";
+        }
+        if (bind) {
+            declarator.binding = bind;
+            declarator.bindingType = this.scope.get(bind)?.result;
+        }
+    }
 
 }
 
