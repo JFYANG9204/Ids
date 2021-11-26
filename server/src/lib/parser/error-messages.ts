@@ -26,7 +26,7 @@ export const ErrorMessages: ErrorTemplates = makeErrorTemplates({
     InvalidLoggingParameter:         "无效的Logging参数，应为'Group,Path,Alias,FileSize'.",
     InvalidNumber:                   "无效数字.",
     InvalidNumberRadix:              "无效数字, '&'后应为'H','h','O','o'.",
-    InvalidObjectScripting:          "无效的对象字符串.",
+    InvalidObjectScripting:          "无效的ProgID.",
     InvalidOrUnexpectedToken:        "无效的标识符.",
     InvalidPreprocessor:             "无效的预处理关键字，应为'include','define','undef','if','elif','else','endif','error','line'",
     InvalidEnumIdentifier:           "无效的枚举类型值.",

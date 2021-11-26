@@ -1,0 +1,15 @@
+
+
+Namespace MDMLib
+
+    Interface IFontStyle Implements Object
+
+        Property Family() As String
+        Property Size() As Long
+        Property Effects() As Long
+        ReadOnly Property IsEmpty() As Boolean
+
+    End Interface
+
+End Namespace
+

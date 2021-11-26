@@ -1,0 +1,32 @@
+
+Namespace MDMLib
+
+    Interface IIfBlock Implements Object, IMDMObject
+
+        Sub Add(ConditionalBranch As IConditionalRouting, Optional Index As Long = -1)
+        End Sub
+
+        Sub AddElse(ConditionalRouting As IRouting)
+        End Sub
+
+        Sub Remove(Index As Long)
+        End Sub
+
+        Sub RemoveElse()
+        End Sub
+
+        Property Name() As String
+        ReadOnly Property Parent() As IMDMObject
+        Property Document() As IDocument
+        ReadOnly Property Properties() As IProperties
+        ReadOnly Property ObjectTypeValue() As ObjectTypesConstants
+        ReadOnly Property IsReference() As Boolean
+        ReadOnly Property UUID() As String
+        ReadOnly Property IsSystem() As Boolean
+        ReadOnly Property IfBranches() As ConditionalRoutings
+        Property ElseBranch() As IRouting
+        Property Script() As String
+
+    End Interface
+
+End Namespace

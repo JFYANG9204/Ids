@@ -1,0 +1,48 @@
+
+Namespace MDMLib
+
+    Interface IGrid Implements IMDMLabeledObject, Object
+
+        ReadOnly Property Labels(Optional LabelTypes As Variant = "LABEL") As ILabel
+        Property Script(Options As Variant) As Variant
+        ReadOnly Property Style(LCL As Variant) As IStyle
+        ReadOnly Property Templates(LCL As Variant) As ITemplates
+        ReadOnly Property LabelStyle(LCL As Variant) As IStyle
+        Property Name() As String
+        ReadOnly Property Parent() As IMDMObject
+        Property Document() As IDocument
+        ReadOnly Property Properties() As IProperties
+        ReadOnly Property ObjectTypeValue() As ObjectTypesConstants
+        ReadOnly Property IsReference() As Boolean
+        ReadOnly Property UUID() As String
+        ReadOnly Property IsSystem() As Boolean
+        Property Label() As String
+        ReadOnly Property Size() As Long
+        Property Class() As IClass
+        Property Reference() As IGrid
+        ReadOnly Property Elements() As IElements
+        ReadOnly Property HelperFields() As ITypes
+        ReadOnly Property Questions() As ICategories
+        ReadOnly Property Fields() As ITypes
+        Property Versioned() As Boolean
+        ReadOnly Property FullName() As String
+        Property Orientation() As OrientationConstants
+        ReadOnly Property DataSourceProperties() As IProperties
+        Property CurrentIndexPath() As String
+        ReadOnly Property Indices() As IElementInstances
+        Property ReferenceName() As String
+        ReadOnly Property RelativeName() As String
+        ReadOnly Property LevelDepth() As Long
+        ReadOnly Property FullLabel() As ILabel
+        ReadOnly Property Level() As ILevel
+        ReadOnly Property Items() As ITypes
+        ReadOnly Property VersionsInfo() As IVersionsInfo
+        ReadOnly Property OtherCategories() As ICategories
+        ReadOnly Property Notes() As INotes
+        ReadOnly Property IsValid() As Boolean
+        Property AxisExpression() As String
+
+    End Interface
+
+End Namespace
+

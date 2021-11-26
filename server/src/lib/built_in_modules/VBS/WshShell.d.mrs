@@ -1,0 +1,616 @@
+
+'!
+Provides access to the native Windows shell.
+### Remarks
+You create a `WshShell` object whenever you want to run a program locally,
+manipulate the contents of the registry, create a shortcut, or access a system folder.
+The `WshShell` object provides the `Environment` collection.
+This collection allows you to handle environmental variables (such as WINDIR, PATH, or PROMPT).
+!'
+Class WshShell Implements Object
+
+    '!
+    Retrieves or changes the current active directory.
+
+    ### Remarks
+    The `CurrentDirectory` returns a string that contains the fully
+    qualified path of the current working directory of the active process.
+
+    ### Legacy Code Example
+    The following code displays the current active directory.
+    ```vb
+    Dim WshShell
+    Set WshShell = WScript.CreateObject("WScript.Shell")
+    WScript.Echo WshShell.CurrentDirectory
+    ```
+    !'
+    ReadOnly Property CurrentDirectory() As String
+
+    '!
+    Returns the `WshEnvironment` object (a collection of environment variables).
+
+    ### Remarks
+    The `Environment` property contains the `WshEnvironment` object (a collection
+    of environment variables). If `strType` is supplied, it specifies where the environment
+    variable resides with possible values of *System*, *User*, *Volatile*, or *Process*.
+    If `strType` is not supplied, the `Environment` property returns different environment variable
+    types depending on the operating system.
+
+    | Type of Environment Variable | Operating System          |
+    | :--------------------------- | :----------------         |
+    | System                       | Microsoft Windows NT/2000 |
+    | Process                      | Windows 95/98/Me          |
+
+    @note: For Windows95/98/Me, only one `strType` is permitted — *Process*.
+
+    ### Legacy Code Example
+    The following code retrieves the system environment variable NUMBER_OF_PROCESSORS.
+
+    ```vb
+    Set WshShell = WScript.CreateObject("WScript.Shell")
+    Set WshSysEnv = WshShell.Environment("SYSTEM")
+    WScript.Echo WshSysEnv("NUMBER_OF_PROCESSORS")
+    ```
+    !'
+    ReadOnly Property Environment(Optional strType As String) As WshEnvironment
+
+    '!
+    Returns a `SpecialFolders` object (a collection of special folders).
+
+    ### Remarks
+    The `WshSpecialFolders` object is a collection. It contains the entire set of
+    Windows special folders, such as the Desktop folder, the Start Menu folder,
+    and the Personal Documents folder. The special folder name is used to index into
+    the collection to retrieve the special folder you want. The `SpecialFolders` property
+    returns an empty string if the requested folder (*strFolderName*) is not available.
+    For example, Windows 95 does not have an AllUsersDesktop folder and returns an empty
+    string if *strFolderNameis* AllUsersDesktop.
+
+    !'
+    ReadOnly Property SpecialFolders(objWshSpecialFolders As String) As SpecialFolders
+
+
+    '!
+    Activates an application window.
+
+    ### Remarks
+    This method changes the focus to the named application or window.
+    The window must be attached to the calling thread's message queue.
+    It does not affect whether it is maximized or minimized. Focus moves
+    from the activated application window when the user takes action to
+    change the focus (or closes the window).
+
+    In determining which application to activate, the specified `title` is
+    compared to the `title` string of each running application. If no exact
+    match exists, any application whose `title` string begins with `title` is
+    activated. If an application still cannot be found, any application whose
+    `title` string ends with `title` is activated. If more than one instance
+    of the application named by `title` exists, one instance is arbitrarily
+    activated.
+
+    ### Return Value
+    Return Value
+    The `AppActivate` method returns a *Boolean* value that specifies whether the
+    activation operation is successful. The method might return *False* under the
+    following conditions:
+
+    + The window is not brought to the foreground.
+    + The window is brought to the foreground but is not given keyboard focus.
+    + A Command Prompt window (cmd.exe) is brought to the foreground and is given keyboard focus.
+
+    @note: The method can return False when an internal call to `SetForegroundWindow`
+    succeeds but an internal call to `SetFocus` fails. This is known to occur when the
+    target window is attached to another thread's message queue, which can occur when
+    a window is hosted by another process. An example is a Command Prompt window that
+    is hosted by the Console Window Host process.
+    !'
+    Function AppActivate(Title As Variant) As Boolean
+    End Function
+
+
+    '!
+    Creates a new shortcut, or opens an existing shortcut.
+
+    ### Remarks
+    The `CreateShortcut` method returns either a `WshShortcut` object or
+    a `WshURLShortcut` object. Simply calling the `CreateShortcut` method
+    does not result in the creation of a shortcut. The shortcut object
+    and changes you may have made to it are stored in memory until you
+    save it to disk with the Save method. To create a shortcut, you must:
+
+    1.Create an instance of a WshShortcut object.
+    2.Initialize its properties.
+    3.Save it to disk with the Save method.
+
+    @note: A common problem is putting arguments in the TargetPath property
+    of the shortcut object, which doesn't work. All arguments to the shortcut
+    must be put in the `Arguments` property.
+    !'
+    Sub CreateShortcut(strPathname As String)
+    End Sub
+
+    '!
+    Runs an application in a child command-shell, providing access
+    to the `StdIn/StdOut/StdErr` streams.
+
+    ### Remarks
+    The `Exec` method returns a `WshScriptExec` object, which provides status
+    and error information about a script run with `Exec` along with access
+    to the StdIn, StdOut, and StdErr channels. The `Exec` method allows the
+    execution of command line applications only. The `Exec` method cannot
+    be used to run remote scripts. Do not confuse the `Exec` method with the
+    `Execute` method (of the WshRemote object).
+
+    ### Legacy Code Example
+    ```vb
+    Dim WshShell, oExec
+    Set WshShell = CreateObject("WScript.Shell")
+
+    Set oExec = WshShell.Exec("calc")
+
+    Do While oExec.Status = 0
+        WScript.Sleep 100
+    Loop
+
+    WScript.Echo oExec.Status
+    ```
+    !'
+    Sub Exec(strCommand As String)
+    End Sub
+
+
+    '!
+    Returns an environment variable's expanded value.
+
+    ### Remarks
+    The `ExpandEnvironmentStrings` method expands environment variables
+    defined in the PROCESS environment space only. Environment variable
+    names, which must be enclosed between "%" characters, are not case-sensitive.
+
+    ### Legacy Code Example
+    The following code expands the Windows Directory environment variable and displays it:
+    ```vb
+    set WshShell = WScript.CreateObject("WScript.Shell")
+    WScript.Echo "WinDir is " & WshShell.ExpandEnvironmentStrings("%WinDir%")
+    ```
+    !'
+    Sub ExpandEnvironmentStrings(strString As String)
+    End Sub
+
+
+    '!
+    Adds an event entry to a log file.
+
+    ### Remarks
+    The `LogEvent` method returns a *Boolean* value (true if the event is logged successfully,
+    otherwise false). In Windows NT/2000, events are logged in the Windows NT Event Log.
+    In Windows 9x/Me, events are logged in WSH.log (located in the Windows directory). There
+    are six event types.
+
+    | Type  | Value         |
+    | :---- | :--------     |
+    | 0     | SUCCESS       |
+    | 1     | ERROR         |
+    | 2     | WARNING       |
+    | 4     | INFORMATION   |
+    | 8     | AUDIT_SUCCESS |
+    | 16    | AUDIT_FAILURE |
+
+    ### Legacy Code Example
+    The following code logs SUCCESS or ERROR depending on the outcome of
+    the function `runLoginScript()`.
+    ```vb
+    Set WshShell = WScript.CreateObject("WScript.Shell")
+    rc = runLoginScript()      'Returns true if logon succeeds.
+
+    if rc then
+    WshShell.LogEvent 0, "Logon Script Completed Successfully"
+    else
+    WshShell.LogEvent 1, "Logon Script failed"
+    end if
+    ```
+    !'
+    Sub LogEvent(intType As Long, strMessage As String, Optional strTarget As String)
+    End Sub
+
+    '!
+    Displays text in a pop-up message box.
+
+    ### Remarks
+    The `Popup` method displays a message box regardless of which host executable
+    file is running (WScript.exe or CScript.exe).
+
+    If `nSecondsToWait` equals zero (the default), the pop-up message box remains
+    visible until closed by the user. If `nSecondsToWaitis` is greater than zero,
+    the pop-up message box closes after `nSecondsToWait` seconds.
+
+    If you do not supply the argument `strTitle`, the title of the pop-up message
+    box defaults to "Windows Script Host."
+
+    ### Type Parameter
+    The meaning of the nType parameter is the same as it is in the Microsoft Win32
+    API `MessageBox` function. The following tables show the values and their meanings.
+    You can add values in these tables to combine them.
+
+    ### Button Types
+
+    | Decimal value | Hexadecimal value | Description                                      |
+    | :------------ | :---------------- | :----------------------------------------------- |
+    | 0             | 0x0               | Show OK button.                                  |
+    | 1             | 0x1               | Show OK and Cancel buttons.                      |
+    | 2             | 0x2               | Show Abort, Retry, and Ignore buttons.           |
+    | 3             | 0x3               | Show Yes, No, and Cancel buttons.                |
+    | 4             | 0x4               | Show Yes and No buttons.                         |
+    | 5             | 0x5               | Show Retry and Cancel buttons.                   |
+    | 6             | 0x6               | Show Cancel, Try Again, and Continue buttons.    |
+
+    ### Icon Types
+
+    | Decimal value | Hexadecimal value | Description                                      |
+    | :------------ | :---------------- | :----------------------------------------------- |
+    | 16            | 0x10              | Show "Stop Mark" icon.                           |
+    | 32            | 0x20              | Show "Question Mark" icon.                       |
+    | 48            | 0x30              | Show "Exclamation Mark" icon.                    |
+    | 64            | 0x40              | Show "Information Mark" icon.                    |
+
+    ### Other Type Values
+
+    | Decimal value | Hexadecimal value | Description                                      |
+    | :------------ | :---------------- | :----------------------------------------------- |
+    | 256           | 0x100             | The second button is the default button.         |
+    | 512           | 0x200             | The third button is the default button.          |
+    | 4096          | 0x1000            | The message box is a system modal message box and appears in a topmost window. |
+    | 524288        | 0x80000           | The text is right-justified.                     |
+    | 1048576       | 0x100000          | The message and caption text display in right-to-left reading order, which is useful for some languages. |
+
+    ### Return Value
+    The return value *intButton* is the number of the button that the user clicked,
+    or is -1 if the message box timed out. The following table lists possible return values.
+
+    | Decimal value | Description                                       |
+    | :------------ | :------------------------------------------------ |
+    | -1            | The user did not click a button before nSecondsToWait seconds elapsed. |
+    | 1             | OK button                                         |
+    | 2             | Cancel button                                     |
+    | 3             | Abort button                                      |
+    | 4             | Retry button                                      |
+    | 5             | Ignore button                                     |
+    | 6             | Yes button                                        |
+    | 7             | No button                                         |
+    | 10            | Try Again button                                  |
+    | 11            | Continue button                                   |
+
+    ### Legacy Code Example
+    The following code generates a simple pop-up message box.
+    ```vb
+    Dim wshShell, btn
+    Set wshShell = WScript.CreateObject("WScript.Shell")
+
+    ' Call the Popup method with a 7 second timeout.
+    btn = WshShell.Popup("Do you feel alright?", 7, "Question:", &H4 + &H20)
+
+    Select Case btn
+        ' Yes button pressed.
+        case 6
+            WScript.Echo "Glad to hear you feel alright."
+        ' No button pressed.
+        case 7
+            WScript.Echo "Hope you're feeling better soon."
+        ' Timed out.
+        case -1
+            WScript.Echo "Is there anybody out there?"
+    End Select
+    ```
+    !'
+    Function Popup(strText As String, Optional nSecondsToWait As Long, Optional strTitle As String, Optional nType As Long) As Long
+    End Function
+
+
+    '!
+    Deletes a key or one of its values from the registry.
+
+    ### Remarks
+    Specify a key-name by ending `strName` with a final backslash; leave it off to
+    specify a value-name. Fully qualified key-names and value-names are prefixed
+    with a root key. You may use abbreviated versions of root key names with the
+    `RegDelete` method. The five possible root keys you can use are listed in the
+    following table.
+
+    | Root key Name       | Abbreviation                |
+    | :------------------ | :-------------------------- |
+    | HKEY_CURRENT_USER   | HKCU                        |
+    | HKEY_LOCAL_MACHINE  | HKLM                        |
+    | HKEY_CLASSES_ROOT   | HKCR                        |
+    | HKEY_USERS          | HKEY_USERS                  |
+    | HKEY_CURRENT_CONFIG | HKEY_CURRENT_CONFIG         |
+
+    ### Legacy Code Example
+    The following code creates a key and two values, reads them, and deletes them.
+    ```vb
+    Dim WshShell, bKey
+    Set WshShell = WScript.CreateObject("WScript.Shell")
+
+    WshShell.RegWrite "HKCU\Software\ACME\FortuneTeller\", 1, "REG_BINARY"
+    WshShell.RegWrite "HKCU\Software\ACME\FortuneTeller\MindReader", "Goocher!", "REG_SZ"
+
+    bKey = WshShell.RegRead("HKCU\Software\ACME\FortuneTeller\")
+    WScript.Echo WshShell.RegRead("HKCU\Software\ACME\FortuneTeller\MindReader")
+
+    WshShell.RegDelete "HKCU\Software\ACME\FortuneTeller\MindReader"
+    WshShell.RegDelete "HKCU\Software\ACME\FortuneTeller\"
+    WshShell.RegDelete "HKCU\Software\ACME\"
+    ```
+    !'
+    Sub RegDelete(strName As String)
+    End Sub
+
+
+    '!
+    Returns the value of a key or value-name from the registry.
+
+    ### Remarks
+    The `RegRead` method returns values of the following five types.
+
+    | Type          | Description                                       | In the Form of              |
+    | :-----------  | :-----------------------------                    | :-------------------------- |
+    | REG_SZ        | A string                                          | A string                    |
+    | REG_DWORD     | A number                                          | An integer                  |
+    | REG_BINARY    | A binary value                                    | A VBArray of integers       |
+    | REG_EXPAND_SZ | An expandable string (e.g., "%windir%\\calc.exe") | A string                    |
+    | REG_MULTI_SZ  | An array of strings                               | A VBArray of strings        |
+
+    If the key does not exist, `RegRead` throws an error "Unable to open registry key",
+    or, for subkeys, "Invalid root in registry key".
+
+    You can specify a key-name by ending `strName` with a final backslash.
+    Do not include a final backslash to specify a value-name. A value entry
+    has three parts: its name, its data type, and its value. When you specify
+    a key-name (as opposed to a value-name), `RegRead` returns the default value.
+    To read a key's default value, specify the name of the key itself. Fully
+    qualified key-names and value-names begin with a root key. You may use
+    abbreviated versions of root key names with the `RegRead` method. The five
+    possible root keys are listed in the following table.
+
+    | Root key Name        | Abbreviation        |
+    | :------------------- | :----------------   |
+    | HKEY_CURRENT_USER    | HKCU                |
+    | HKEY_LOCAL_MACHINE   | HKLM                |
+    | HKEY_CLASSES_ROOT    | HKCR                |
+    | HKEY_USERS           | HKEY_USERS          |
+    | HKEY_CURRENT_CONFIG  | HKEY_CURRENT_CONFIG |
+
+    ### Legacy Code Example
+    The following code creates a key and two values, reads them, and deletes them.
+    ```vb
+    Dim WshShell, bKey
+    Set WshShell = WScript.CreateObject("WScript.Shell")
+
+    WshShell.RegWrite "HKCU\Software\ACME\FortuneTeller\", 1, "REG_BINARY"
+    WshShell.RegWrite "HKCU\Software\ACME\FortuneTeller\MindReader", "Goocher!", "REG_SZ"
+
+    bKey = WshShell.RegRead("HKCU\Software\ACME\FortuneTeller\")
+    WScript.Echo WshShell.RegRead("HKCU\Software\ACME\FortuneTeller\MindReader")
+
+    WshShell.RegDelete "HKCU\Software\ACME\FortuneTeller\MindReader"
+    WshShell.RegDelete "HKCU\Software\ACME\FortuneTeller\"
+    WshShell.RegDelete "HKCU\Software\ACME\"
+    ```
+    !'
+    Sub RegRead(strName As String)
+    End Sub
+
+    '!
+    Creates a new key, adds another value-name to an existing key (and assigns it a value),
+    or changes the value of an existing value-name.
+
+    ### Remarks
+    Specify a key-name by ending `strName` with a final backslash. Do not include
+    a final backslash to specify a value name. The `RegWrite` method automatically
+    converts the parameter anyValue to either a string or an integer. The value
+    of strType determines its data type (either a string or an integer). The options
+    for strType are listed in the following table.
+
+    | Converted to | strType                    |
+    | :----------- | :------------------------- |
+    | String       | REG_SZ                     |
+    | String       | REG_EXPAND_SZ              |
+    | Integer      | REG_DWORD                  |
+    | Integer      | REG_BINARY                 |
+
+    @note: The REG_MULTI_SZ type is not supported for the `RegWrite` method.
+    @tip: `RegWrite` will write at most one DWORD to a REG_BINARY value. Larger values are not supported with this method.
+
+    Fully qualified key-names and value-names are prefixed with a root key.
+    You may use abbreviated versions of root key names with the `RegWrite` method.
+    The five root keys are listed in the following table.
+
+    | Root key Name         | Abbreviation         |
+    | :-------------------- | :------------------- |
+    | HKEY_CURRENT_USER     | HKCU                 |
+    | HKEY_LOCAL_MACHINE    | HKLM                 |
+    | HKEY_CLASSES_ROOT     | HKCR                 |
+    | HKEY_USERS            | HKEY_USERS           |
+    | HKEY_CURRENT_CONFIG   | HKEY_CURRENT_CONFIG  |
+
+    The four possible data types you can specify with `strType` are listed in the following table.
+
+    | Type             | Description                                       | In the Form of  |
+    | :--------------- | :-------------------------------------------      | :-------------- |
+    | REG_SZ           | A string                                          | A string        |
+    | REG_DWORD        | A number                                          | An integer      |
+    | REG_BINARY       | A binary value                                    | An integer      |
+    | REG_EXPAND_SZ    | An expandable string (e.g., "%windir%\\calc.exe") | A string        |
+
+    ### Legacy Code Example
+    The following code creates a key and two values, reads them, and deletes them.
+    ```vb
+    Dim WshShell, bKey
+    Set WshShell = WScript.CreateObject("WScript.Shell")
+
+    WshShell.RegWrite "HKCU\Software\ACME\FortuneTeller\", 1, "REG_BINARY"
+    WshShell.RegWrite "HKCU\Software\ACME\FortuneTeller\MindReader", "Goocher!", "REG_SZ"
+
+    bKey = WshShell.RegRead("HKCU\Software\ACME\FortuneTeller\")
+    WScript.Echo WshShell.RegRead("HKCU\Software\ACME\FortuneTeller\MindReader")
+
+    WshShell.RegDelete "HKCU\Software\ACME\FortuneTeller\MindReader"
+    WshShell.RegDelete "HKCU\Software\ACME\FortuneTeller\"
+    WshShell.RegDelete "HKCU\Software\ACME\"
+    ```
+    !'
+    Sub RegWrite(strName As String, anyValue As Variant, Optional strType As String)
+    End Sub
+
+    '!
+    Runs a program in a new process.
+
+    ### Remarks
+    The `Run` method returns an integer. The `Run` method starts a program running
+    in a new Windows process. You can have your script wait for the program
+    to finish execution before continuing. This allows you to run scripts and
+    programs synchronously. Environment variables within the argument strCommand
+    are automatically expanded. If a file type has been properly registered to a
+    particular program, calling run on a file of that type executes the program.
+    For example, if Word is installed on your computer system, calling `Run` on a *.doc
+    file starts Word and loads the document. The following table lists the available
+    settings for `intWindowStyle`.
+
+    ### Example 1
+    The following VBScript code opens a copy of the currently running script with Notepad.
+    ```vb
+    Set WshShell = WScript.CreateObject("WScript.Shell")
+    WshShell.Run "%windir%\notepad " & WScript.ScriptFullName
+    ```
+    The following VBScript code does the same thing, except it specifies the window type,
+    waits for Notepad to be shut down by the user, and saves the error code returned from
+    Notepad when it is shut down.
+    ```vb
+    Set WshShell = WScript.CreateObject("WScript.Shell")
+    Return = WshShell.Run("notepad " & WScript.ScriptFullName, 1, true)
+    ```
+
+    ### Example 2
+    The following VBScript code opens a command window, changes to the path to C:\ ,
+    and executes the DIR command.
+    ```vb
+    Dim oShell
+    Set oShell = WScript.CreateObject ("WScript.Shell")
+    oShell.run "cmd /K CD C:\ & Dir"
+    Set oShell = Nothing
+    ```
+    !'
+    Sub Run(strCommand As String, Optional intWindowStyle As Long, Optional bWaitOnReturn As Boolean)
+    End Sub
+
+    '!
+    Sends one or more keystrokes to the active window (as if typed on the keyboard).
+
+    ### Remarks
+    Use the `SendKeys` method to send keystrokes to applications that have no automation
+    interface. Most keyboard characters are represented by a single keystroke. Some
+    keyboard characters are made up of combinations of keystrokes (CTRL+SHIFT+HOME,
+    for example). To send a single keyboard character, send the character itself as
+    the string argument. For example, to send the letter x, send the string argument "x".
+
+    @note: To send a space, send the string " ".
+
+    You can use `SendKeys` to send more than one keystroke at a time. To do this,
+    create a compound string argument that represents a sequence of keystrokes by
+    appending each keystroke in the sequence to the one before it. For example,
+    to send the keystrokes a, b, and c, you would send the string argument "abc".
+    The `SendKeys` method uses some characters as modifiers of characters (instead
+    of using their face-values). This set of special characters consists of parentheses,
+    brackets, braces, and the:
+
+    + plus sign         "+"
+    + caret             "^"
+    + percent sign      "%"
+    + and tilde         "~"
+
+    Send these characters by enclosing them within braces "{}". For example,
+    to send the plus sign, send the string argument "{+}". Brackets "[ ]" have no
+    special meaning when used with `SendKeys`, but you must enclose them within
+    braces to accommodate applications that do give them a special meaning (for
+    dynamic data exchange (DDE) for example).
+
+    + To send bracket characters, send the string argument "{[}" for the left bracket and "{]}" for the right one.
+    + To send brace characters, send the string argument "{{}" for the left brace and "{}}" for the right one.
+
+    Some keystrokes do not generate characters (such as ENTER and TAB).
+    Some keystrokes represent actions (such as BACKSPACE and BREAK).
+    To send these kinds of keystrokes, send the arguments shown in the following table:
+
+    | Key            | Argument                     |
+    | :------------- | :--------------------------  |
+    | BACKSPACE      | {BACKSPACE}, {BS}, or {BKSP} |
+    | BREAK          | {BREAK}                      |
+    | CAPS LOCK      | {CAPSLOCK}                   |
+    | DEL or DELETE  | {DELETE} or {DEL}            |
+    | DOWN ARROW     | {DOWN}                       |
+    | END            | {END}                        |
+    | ENTER          | {ENTER} or ~                 |
+    | ESC            | {ESC}                        |
+    | HELP           | {HELP}                       |
+    | HOME           | {HOME}                       |
+    | INS or INSERT  | {INSERT} or {INS}            |
+    | LEFT ARROW     | {LEFT}                       |
+    | NUM LOCK       | {NUMLOCK}                    |
+    | PAGE DOWN      | {PGDN}                       |
+    | PAGE UP        | {PGUP}                       |
+    | PRINT SCREEN   | {PRTSC}                      |
+    | RIGHT ARROW    | {RIGHT}                      |
+    | SCROLL LOCK    | {SCROLLLOCK}                 |
+    | TAB            | {TAB}                        |
+    | UP ARROW       | {UP}                         |
+    | F1             | {F1}                         |
+    | F2             | {F2}                         |
+    | F3             | {F3}                         |
+    | F4             | {F4}                         |
+    | F5             | {F5}                         |
+    | F6             | {F6}                         |
+    | F7             | {F7}                         |
+    | F8             | {F8}                         |
+    | F9             | {F9}                         |
+    | F10            | {F10}                        |
+    | F11            | {F11}                        |
+    | F12            | {F12}                        |
+    | F13            | {F13}                        |
+    | F14            | {F14}                        |
+    | F15            | {F15}                        |
+    | F16            | {F16}                        |
+
+    To send keyboard characters that are comprised of a regular keystroke in
+    combination with a SHIFT, CTRL, or ALT, create a compound string argument
+    that represents the keystroke combination. You do this by preceding the
+    regular keystroke with one or more of the following special characters:
+
+    | Key     | Special Character |
+    | :------ | :---------------- |
+    | SHIFT   | +                 |
+    | CTRL    | ^                 |
+    | ALT     | %                 |
+
+    @note: When used this way, these special characters are not enclosed within a set of braces.
+
+    To specify that a combination of SHIFT, CTRL, and ALT should be held down while
+    several other keys are pressed, create a compound string argument with the modified
+    keystrokes enclosed in parentheses. For example, to send the keystroke combination
+    that specifies that the SHIFT key is held down while:
+
+    + e and c are pressed, send the string argument "+(ec)".
+    + e is pressed, followed by a lone c (with no SHIFT), send the string argument "+ec".
+
+    You can use the `SendKeys` method to send a pattern of keystrokes that consists of
+    a single keystroke pressed several times in a row. To do this, create a compound
+    string argument that specifies the keystroke you want to repeat, followed by the
+    number of times you want it repeated. You do this using a compound string argument
+    of the form {keystroke number}. For example, to send the letter "x" ten times,
+    you would send the string argument "{x 10}". Be sure to include a space between
+    keystroke and number.
+
+    @note: The only keystroke pattern you can send is the kind that is comprised of a single keystroke pressed several times. For example, you can send "x" ten times, but you cannot do the same for "Ctrl+x".
+    !'
+    Sub SendKeys(string As String)
+    End Sub
+
+End Class
