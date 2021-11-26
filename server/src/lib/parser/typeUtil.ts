@@ -1232,6 +1232,8 @@ export class TypeUtil extends UtilParser {
                     return this.scope.get("Application", "Excel")?.result;
                 case "wscript.shell":
                     return this.scope.get("WshShell")?.result;
+                case "vbscript.regexp":
+                    return this.scope.get("RegExp")?.result;
                 default:
                     if (this.options.raiseTypeError && !this.scope.inFunction) {
                         this.raiseTypeError(

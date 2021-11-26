@@ -1,0 +1,41 @@
+
+'!
+Collection of regular expression `Match` objects.
+
+### Remarks
+A `Matches` collection contains individual Match objects,
+and can be only created using the `Execute` method of the
+RegExp object. The `Count` property of the `Matches` collection
+is read-only, as are the individual `Match` object properties.
+
+When a regular expression is executed, zero or more `Match` objects
+can result. Each `Match` object provides access to the string found
+by the regular expression, the length of the string, and an index
+to where the match was found.
+
+The following code illustrates how to obtain a `Matches` collection
+from a regular expression search and how to iterate the collection:
+
+```vb
+Function RegExpTest(patrn, strng)
+   Dim regEx, Match, Matches   ' Create variable.
+   Set regEx = New RegExp   ' Create regular expression.
+   regEx.Pattern = patrn   ' Set pattern.
+   regEx.IgnoreCase = True   ' Set case insensitivity.
+   regEx.Global = True   ' Set global applicability.
+   Set Matches = regEx.Execute(strng)   ' Execute search.
+   For Each Match in Matches   ' Iterate Matches collection.
+      RetStr = RetStr & "Match found at position "
+      RetStr = RetStr & Match.FirstIndex & ". Match Value is '"
+      RetStr = RetStr & Match.Value & "'." & vbCRLF
+   Next
+   RegExpTest = RetStr
+End Function
+MsgBox(RegExpTest("is.", "IS1 is2 IS3 is4"))
+```
+!'
+Class Matches Implements IEnumerable
+
+    Default Readonly Property Item(Index As Long) As Match
+
+End Class

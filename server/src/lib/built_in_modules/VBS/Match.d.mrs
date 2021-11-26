@@ -1,0 +1,158 @@
+
+'!
+The Match object provides access to the read-only properties of a regular expression match.
+!'
+Class Match Implements Object
+
+    '!
+    Returns the position in a search string where a match occurs
+
+    ### Remarks
+    The `FirstIndex` property uses a zero-based offset from the beginning
+    of the search string. In other words, the first character in the string
+    is identified as character zero (0). The following code illustrates
+    the use of the `FirstIndex` property.
+
+    ```vb
+    Function RegExpTest(patrn, strng)
+    Dim regEx, Match, Matches, s
+
+    ' Create the regular expression.
+    Set regEx = New RegExp
+    regEx.Pattern = patrn
+    regEx.IgnoreCase = True
+    regEx.Global = True
+
+    ' Do the search.
+    Set Matches = regEx.Execute(strng)
+
+    ' Iterate through the Matches collection.
+    s = ""
+    For Each Match in Matches
+        s = s & "Match found at position "
+        s = s & Match.FirstIndex & ". "
+        s = s & "Match Value is '"
+        s = s & Match.Value & "'."
+        s = s & vbCRLF
+    Next
+
+    RegExpTest = s
+    End Function
+    MsgBox(RegExpTest("is.", "IS1 is2 IS3 is4"))
+    ```
+    !'
+    ReadOnly Property FirstIndex() As Long
+
+    '!
+    Returns the length of a match found in a search string.
+
+    ### Remarks
+    The following code illustrates the use of the `Length` property:
+    ```vb
+    Function RegExpTest(patrn, strng)
+        Dim regEx, Match, Matches, s
+
+        ' Create the regular expression.
+        Set regEx = New RegExp
+        regEx.Pattern = patrn
+        regEx.IgnoreCase = True
+        regEx.Global = True
+
+        ' Do the search.
+        Set Matches = regEx.Execute(strng)
+
+        ' Iterate through the Matches collection.
+        s = ""
+        For Each Match in Matches
+        s = s & "Match found at position "
+        s = s & Match.FirstIndex & ".  "
+        s = s & "Match Length is "
+        s = s & Match.Length & "."
+        s = s & vbCRLF
+        Next
+
+        RegExpTest = s
+    End Function
+    MsgBox(RegExpTest("is.", "IS1 is2 IS3 is4"))
+    ```
+    !'
+    ReadOnly Property Length() As Long
+
+    '!
+    Returns the value or text of a match found in a search string.
+
+    ### Remarks
+    The following code illustrates the use of the `Value` property.
+
+    ```vb
+    Function RegExpTest(patrn, strng)
+        Dim regEx, Match, Matches, s
+
+        ' Create the regular expression.
+        Set regEx = New RegExp
+        regEx.Pattern = patrn
+        regEx.IgnoreCase = True
+        regEx.Global = True
+
+        ' Do the search.
+        Set Matches = regEx.Execute(strng)
+
+        ' Iterate through the Matches collection.
+        s = ""
+        For Each Match in Matches
+        s = s & "Match found at position "
+        s = s & Match.FirstIndex & ". "
+        s = s & "Match Value is '"
+        s = s & Match.Value & "'."
+        s = s & vbCRLF
+        Next
+
+        RegExpTest = s
+    End Function
+    MsgBox(RegExpTest("is.", "IS1 is2 IS3 is4"))
+    ```
+    !'
+    ReadOnly Property Value() As String
+
+    '!
+    Returns the submatches of a `Match` Object object.
+
+    ### Remarks
+    A `SubMatches` collection contains individual submatch strings,
+    and can be created only by using the `Execute` method of the `RegExp` object.
+    The `SubMatches` collection's properties are read-only.
+    When a regular expression is executed, zero or more submatches can
+    result when subexpressions are enclosed in capturing parentheses.
+    Each item in the `SubMatches` collection is the string found and captured
+    by the regular expression.
+    The following code illustrates how to obtain the `SubMatches` property
+    from a regular expression search and how to access its individual members:
+    ```vb
+    Function SubMatchTest(inpStr)
+    Dim oRe, oMatch, oMatches
+    Set oRe = New RegExp
+    ' Look for an email address (not a perfect RegExp).
+    oRe.Pattern = "(\w+)@(\w+)\.(\w+)"
+    ' Get the Matches collection.
+    Set oMatches = oRe.Execute(inpStr)
+    ' Get the first item in the Matches collection.
+    Set oMatch = oMatches(0)
+    ' Create the results string.
+    ' The Match object is the entire match - someone@example.com.
+    retStr = "Email address is: " & oMatch & vbNewline
+    ' Get the sub-matched parts of the address.
+    ' someone
+    retStr = retStr & "Email alias is: " & oMatch.SubMatches(0)
+    retStr = retStr & vbNewline
+    ' example
+    retStr = retStr & "Organization is: " & oMatch. SubMatches(1)
+    SubMatchTest = retStr
+    End Function
+
+    MsgBox(SubMatchTest("Please send mail to someone@example.com. Thanks!"))
+    ```
+    !'
+    ReadOnly Property SubMatches() As Array(of String)
+
+
+End Class
