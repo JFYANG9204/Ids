@@ -445,17 +445,18 @@ export class StatementParser extends ExpressionParser {
             node.binding = "Variant";
             node.bindingType = this.scope.get("Variant")?.result;
         }
-        if (this.options.sourceType === SourceType.declare) {
-            this.scope.declareName(node.name.name,
-                BindTypes.var,
-                node);
-        }
         return this.finishNode(node, "SingleVarDeclarator");
     }
 
     parseConstDeclarator(): ConstDeclarator {
         const node = this.startNode(ConstDeclarator);
         node.declarator = this.parseSingleVarDeclarator();
+        if (this.options.sourceType === SourceType.declare) {
+            this.scope.declareName(node.declarator.name.name,
+                BindTypes.const,
+                node.declarator,
+                node.declarator);
+        }
         this.expect(tt.equal);
         if (this.options.sourceType !== SourceType.declare) {
             node.init = this.parseExpression(true);
@@ -465,9 +466,6 @@ export class StatementParser extends ExpressionParser {
         if (this.options.sourceType !== SourceType.declare) {
             node.declarator.binding = this.getExprType(node.init, right);
             node.declarator.bindingType = right.type;
-        } else {
-            this.scope.declareName(node.declarator.name.name,
-                BindTypes.const, node.declarator);
         }
         return this.finishNode(node, "ConstDeclarator");
     }
@@ -576,6 +574,12 @@ export class StatementParser extends ExpressionParser {
         }
         node.declarations = declarators;
         node.pushArr(declarators);
+        if (this.options.sourceType === SourceType.declare) {
+            node.declarations.forEach(dec => {
+                this.scope.declareName(dec.name.name,
+                    BindTypes.var, dec, dec);
+            });
+        }
         return this.finishNodeAt(node,
             "VariableDeclaration",
             this.state.lastTokenEnd,
