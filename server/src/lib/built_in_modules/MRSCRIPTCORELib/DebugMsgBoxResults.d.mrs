@@ -1,0 +1,16 @@
+
+Namespace MRSCRIPTCORELib
+
+    Enum DebugMsgBoxResults
+
+        Abort
+        Cancel
+        Ignore
+        No
+        OK
+        Retry
+        Yes
+
+    End Enum
+
+End Namespace

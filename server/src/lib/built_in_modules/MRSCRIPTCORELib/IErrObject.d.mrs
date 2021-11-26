@@ -1,0 +1,25 @@
+
+Namespace MRSCRIPTCORELib
+
+    Interface IErrObject Implements Object
+
+        Property Name() As Long
+        Property Description() As String
+        Property Source() As String
+        Property HelpFile() As String
+        Property HelpContext() As Long
+        Property LineNumber() As Long
+        Property Location() As String
+
+        Sub Raise(Number As Long, Source As Variant, Description As Variant, HelpFile As Variant, HelpContext As Variant)
+        End Sub
+
+        Sub Clear()
+        End Sub
+
+        Sub SetErrorInfo(Number As Long, ErrorInfo As Variant, Optional Location As String = "", Optional LineNumber As Long = -1, Optional OutputLCID As Long = 0)
+        End Sub
+
+    End Interface
+
+End Namespace

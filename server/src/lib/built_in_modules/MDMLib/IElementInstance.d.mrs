@@ -1,0 +1,49 @@
+
+Namespace MDMLib
+
+    Interface IElementInstance Implements Object, IElement
+
+        ReadOnly Property Labels(Optional LabelTypes As Variant = "LABEL") As ILabel
+        Property Name() As String
+        ReadOnly Property Parent() As IMDMObject
+        Property Document() As IDocument
+        ReadOnly Property Properties() As IProperties
+        ReadOnly Property ObjectTypeValue() As ObjectTypesConstants
+        ReadOnly Property IsReference() As Boolean
+        ReadOnly Property UUID() As String
+        ReadOnly Property IsSystem() As Boolean
+        Property Label() As String
+        Property Reference() As IElement
+        Property Type() As ElementTypeConstants
+        Property Flag() As CategoryFlagConstants
+        Property OtherReference() As IVariable
+        Property Factor() As Variant
+        WriteOnly Property OtherVariable() As IVariable
+        ReadOnly Property IsOtherLocal() As Boolean
+        Property MultiplierReference() As IVariable
+        WriteOnly Property MultiplierVariable() As IVariable
+        ReadOnly Property IsMultiplierLocal() As Boolean
+        Property Versioned() As Boolean
+        Property Value() As Long
+        ReadOnly Property FullName() As String
+        Property NV() As Long
+        ReadOnly Property DataSourceProperties() As IProperties
+        ReadOnly Property Element() As IElement
+        Property Fixed() As Boolean
+        Property Expression() As String
+        Property ReferenceName() As String
+        ReadOnly Property IsDerived() As Boolean
+        Property TypeName() As String
+        ReadOnly Property HasNoData() As Boolean
+        Property NativeValue() As Variant
+        ReadOnly Property VersionsInfo() As IVersionsInfo
+        ReadOnly Property OwnerField() As IMDMField
+        Property OtherReferenceName() As String
+        Property MultiplierReferenceName() As String
+        Property CanFilter() As Boolean
+        ReadOnly Property Notes() As INotes
+        Property KeyCode() As String
+
+    End Interface
+
+End Namespace

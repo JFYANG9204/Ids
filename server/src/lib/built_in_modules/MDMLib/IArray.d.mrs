@@ -1,7 +1,7 @@
 
 Namespace MDMLib
 
-    Interface IArray Implements Object
+    Interface IArray Implements Object, IMDMLabeledObject
 
         Property AxisExpression() As String
         Property Categories() As ICategories

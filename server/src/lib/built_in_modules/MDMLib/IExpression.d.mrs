@@ -1,0 +1,12 @@
+
+Namespace MDMLib
+
+    Interface IExpression Implements Object
+
+        ReadOnly Property Name() As String
+        Property Value() As String
+
+    End Interface
+
+End Namespace
+

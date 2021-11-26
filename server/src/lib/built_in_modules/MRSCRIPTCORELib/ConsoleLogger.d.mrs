@@ -1,0 +1,14 @@
+
+Namespace MRSCRIPTCORELib
+
+    Class ConsoleLogger
+
+        ReadOnly Property LogID() As Long
+        ReadOnly Property CurrentLogFile() As String
+
+        Sub Log(Message As String, Optional logLevels As Long = 64])
+        End Sub
+
+    End Class
+
+End Namespace

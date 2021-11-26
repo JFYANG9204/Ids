@@ -1,0 +1,24 @@
+
+Namespace MDMLib
+
+    Interface IExpressions Implements Object, IEnumerable
+
+        Default ReadOnly Property Item(Index As Variant) As IExpression
+        ReadOnly Property Count() As Long
+        ReadOnly Property Name(Index As Variant) As String
+
+        Sub Add(Name As String, Expression As String)
+        End Sub
+
+        Sub Clear()
+        End Sub
+
+        Function AddNew(Name As String, Value As String) As IExpression
+        End Function
+
+        Sub Remove(Index As Variant)
+        End Sub
+
+    End Interface
+
+End Namespace
