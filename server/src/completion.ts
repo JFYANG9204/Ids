@@ -198,26 +198,57 @@ function getCompletionTypeFromDeclare(dec: DeclarationBase): CompletionItemKind 
 function getDeclarationNote(dec: DeclarationBase, addHeader: boolean = true): string {
     let header = "\n" + getDefaultNote(dec) + "\n";
     if (dec.innerComments.length > 0) {
-        return (addHeader ? header : "") + mergeComments(dec.innerComments);
+        return (addHeader ? header : "") + mergeComments(dec.innerComments, dec);
     } else if (dec.leadingComments.length > 0) {
-        return (addHeader ? header : "") + mergeComments(dec.leadingComments);
+        return (addHeader ? header : "") + mergeComments(dec.leadingComments, dec);
     } else if (!addHeader) {
         return "";
     }
     return header;
 }
 
-function mergeComments(comments: Array<Comment>) {
+function mergeComments(comments: Array<Comment>, dec: DeclarationBase) {
+    if (comments[comments.length - 1].type === "CommentBlock") {
+        return removeAheadSpace(comments[comments.length - 1].value);
+    }
+
+    let maybeFuncParams: string[] = [];
+    if (dec instanceof FunctionDeclaration) {
+        dec.params.forEach(param => maybeFuncParams.push(param.declarator.name.name));
+    }
+
     let text = "";
     comments.forEach(comment => {
-        text += comment.value;
+        text += formatStatement(comment.value, maybeFuncParams) + "\n";
     });
-    return formatStatement(text);
+
+    return text;
 }
 
-function formatStatement(comment: string): string {
+function removeAheadSpace(comment: string) {
     const regexp = /\n\s*/gm;
     return comment.replace(regexp, "\n");
+}
+
+function formatStatement(comment: string, funcParams: string[]): string {
+
+    let result = comment;
+
+    while (result.startsWith("'") || result.startsWith(" ")) {
+        result = result.slice(1);
+    }
+
+    if (funcParams.length > 0) {
+        let param = funcParams.join("|") + "|return";
+        let regex = new RegExp(`(${param})\s*.*?`, "i");
+        if (regex.test(result)) {
+            let paramReg = new RegExp(param, "i");
+            result = result.replace(paramReg, word => { return "`" + word + "`"; });
+            result = "+ " + result;
+        }
+    }
+
+    return result;
 }
 
 function getBindingName(dec: BindingDeclarator | string) {
