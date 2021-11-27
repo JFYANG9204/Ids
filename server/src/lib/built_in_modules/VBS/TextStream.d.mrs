@@ -1,4 +1,6 @@
 
+Namespace Scripting
+
 '!
 Facilitates sequential access to file.
 
@@ -142,3 +144,5 @@ Class TextStream Implements Object
 
 
 End Class
+
+End Namespace

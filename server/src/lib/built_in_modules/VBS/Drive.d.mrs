@@ -1,4 +1,6 @@
 
+Namespace Scripting
+
 '!
 Provides access to the properties of a particular disk drive or network share.
 
@@ -271,3 +273,4 @@ Class Drive Implements Object
 
 End Class
 
+End Namespace

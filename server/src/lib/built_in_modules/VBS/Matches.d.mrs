@@ -1,4 +1,6 @@
 
+Namespace VBScript
+
 '!
 Collection of regular expression `Match` objects.
 
@@ -39,3 +41,5 @@ Class Matches Implements IEnumerable
     Default Readonly Property Item(Index As Long) As Match
 
 End Class
+
+End Namespace

@@ -1,4 +1,6 @@
 
+Namespace VBScript
+
 '!
 Provides simple regular expression support.
 
@@ -262,3 +264,6 @@ Class RegExp Implements Object
     End Function
 
 End Class
+
+
+End Namespace

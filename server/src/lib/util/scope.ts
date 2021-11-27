@@ -239,8 +239,7 @@ export class ScopeHandler {
 
     isRedeclared(scope: Scope, name: string) {
         const checkName = name.toLowerCase();
-        return scope.classes.has(checkName)   ||
-               scope.consts.has(checkName)    ||
+        return scope.consts.has(checkName)    ||
                scope.dims.has(checkName)      ||
                scope.functions.has(checkName) ||
                scope.macros.has(checkName);

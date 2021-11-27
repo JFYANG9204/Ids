@@ -1,4 +1,6 @@
 
+Namespace VBScript
+
 '!
 The Match object provides access to the read-only properties of a regular expression match.
 !'
@@ -156,3 +158,5 @@ Class Match Implements Object
 
 
 End Class
+
+End Namespace

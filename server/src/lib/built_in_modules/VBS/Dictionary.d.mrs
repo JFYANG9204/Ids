@@ -1,27 +1,14 @@
 
-'!
-Object that stores data key, item pairs.
+Namespace Scripting
 
-### Remarks
-A `Dictionary` object is the equivalent of a PERL associative array. Items can be any form of data, and are stored in the array. Each item is associated with a unique key. The key is used to retrieve an individual item and is usually an integer or a string, but can be anything except an array.
-The following code illustrates how to create a Dictionary object:
-``` vb
-Dim d   ' Create a variable.
-Set d = CreateObject(\"Scripting.Dictionary\")
-d.Add \"a\", \"Athens\"   ' Add some keys and items.
-d.Add \"b\", \"Belgrade\"
-d.Add \"c\", \"Cairo\"
-```
-!'
-Class Dictionary Implements Object
 
     '!
-    Adds a key and item pair to a `Dictionary` object.
+    Object that stores data key, item pairs.
 
     ### Remarks
-    An error occurs if the key already exists.
-    The following example illustrates the use of the Add method.
-    ```vb
+    A `Dictionary` object is the equivalent of a PERL associative array. Items can be any form of data, and are stored in the array. Each item is associated with a unique key. The key is used to retrieve an individual item and is usually an integer or a string, but can be anything except an array.
+    The following code illustrates how to create a Dictionary object:
+    ``` vb
     Dim d   ' Create a variable.
     Set d = CreateObject(\"Scripting.Dictionary\")
     d.Add \"a\", \"Athens\"   ' Add some keys and items.
@@ -29,122 +16,139 @@ Class Dictionary Implements Object
     d.Add \"c\", \"Cairo\"
     ```
     !'
-    Sub Add(Key As Variant, Item As Variant)
-    End Sub
+    Class Dictionary Implements Object
 
-    '!
-    Returns `true` if a specified key exists in the Dictionary object, `false` if it does not.
+        '!
+        Adds a key and item pair to a `Dictionary` object.
 
-    ### Remarks
-    The following example illustrates the use of the `Exists` method.
-    ```vb
-    Function KeyExists(k)
-        Dim d, msg
+        ### Remarks
+        An error occurs if the key already exists.
+        The following example illustrates the use of the Add method.
+        ```vb
+        Dim d   ' Create a variable.
         Set d = CreateObject(\"Scripting.Dictionary\")
-        d.Add \"a\", \"Athens\"
+        d.Add \"a\", \"Athens\"   ' Add some keys and items.
         d.Add \"b\", \"Belgrade\"
         d.Add \"c\", \"Cairo\"
-        If d.Exists(k) Then
-            msg = \"Specified key exists.\"
-        Else
-            msg = \"Specified key does not exist.\"
-        End If
-        KeyExists = msg
-    End Function
-    ```
-    !'
-    Function Exist(Key As Variant) As Boolean
-    End Function
+        ```
+        !'
+        Sub Add(Key As Variant, Item As Variant)
+        End Sub
 
-    '!
-    Returns an array containing all the items in a `Dictionary` object.
+        '!
+        Returns `true` if a specified key exists in the Dictionary object, `false` if it does not.
 
-    ### Remarks
-    The following code illustrates use of the `Items` method:
-    ```vb
-    Function DicDemo
-    Dim a, d, i, s   ' Create some variables.
-    Set d = CreateObject(\"Scripting.Dictionary\")
-    d.Add \"a\", \"Athens\"   ' Add some keys and items.
-    d.Add \"b\", \"Belgrade\"
-    d.Add \"c\", \"Cairo\"
-    a = d.Items   ' Get the items.
-    For i = 0 To d.Count -1 ' Iterate the array.
-        s = s & a(i) & \"<BR>\" ' Create return string.
-    Next
-    DicDemo = s
-    End Function
-    ```
-    !'
-    Function Items() As Array
-    End Function
+        ### Remarks
+        The following example illustrates the use of the `Exists` method.
+        ```vb
+        Function KeyExists(k)
+            Dim d, msg
+            Set d = CreateObject(\"Scripting.Dictionary\")
+            d.Add \"a\", \"Athens\"
+            d.Add \"b\", \"Belgrade\"
+            d.Add \"c\", \"Cairo\"
+            If d.Exists(k) Then
+                msg = \"Specified key exists.\"
+            Else
+                msg = \"Specified key does not exist.\"
+            End If
+            KeyExists = msg
+        End Function
+        ```
+        !'
+        Function Exist(Key As Variant) As Boolean
+        End Function
 
-    '!
-    Returns an array containing all the keys in a `Dictionary` object.
-    !'
-    Function Keys() As Array
-    End Function
+        '!
+        Returns an array containing all the items in a `Dictionary` object.
 
-    '!
-    Sets or returns an item for a specified *key* in a `Dictionary` object.
-    For collections, returns an item based on the specified *key*. Read/write.
+        ### Remarks
+        The following code illustrates use of the `Items` method:
+        ```vb
+        Function DicDemo
+        Dim a, d, i, s   ' Create some variables.
+        Set d = CreateObject(\"Scripting.Dictionary\")
+        d.Add \"a\", \"Athens\"   ' Add some keys and items.
+        d.Add \"b\", \"Belgrade\"
+        d.Add \"c\", \"Cairo\"
+        a = d.Items   ' Get the items.
+        For i = 0 To d.Count -1 ' Iterate the array.
+            s = s & a(i) & \"<BR>\" ' Create return string.
+        Next
+        DicDemo = s
+        End Function
+        ```
+        !'
+        Function Items() As Array
+        End Function
 
-    ### Remarks
-    If *key* is not found when changing an item, a new *key* is created with the
-    specified newitem. If *key* is not found when attempting to return an existing item,
-    a new *key* is created and its corresponding item is left empty.
-    !'
-    Property Item(key As Variant) As Variant
+        '!
+        Returns an array containing all the keys in a `Dictionary` object.
+        !'
+        Function Keys() As Array
+        End Function
 
-    '!
-    Sets and returns the comparison mode for comparing string keys in a `Dictionary` object.
+        '!
+        Sets or returns an item for a specified *key* in a `Dictionary` object.
+        For collections, returns an item based on the specified *key*. Read/write.
 
-    ### Settings
-    The compare argument can have the following values:
+        ### Remarks
+        If *key* is not found when changing an item, a new *key* is created with the
+        specified newitem. If *key* is not found when attempting to return an existing item,
+        a new *key* is created and its corresponding item is left empty.
+        !'
+        Property Item(key As Variant) As Variant
 
-    | Constant            | Value | Description  |
-    | :------------------ | :---- | :--------------  |
-    | vbUseCompareOption  | -1    | Performs a comparison by using the setting of the Option Compare statement.  |
-    | vbBinaryCompare     | 0     | Performs a binary comparison.  |
-    | vbTextCompare       | 1     | Performs a textual comparison.  |
-    | vbDatabaseCompare   | 2     | Microsoft Access only. Performs a comparison based on information in your database.  |
+        '!
+        Sets and returns the comparison mode for comparing string keys in a `Dictionary` object.
 
-    ### Remarks
-    An error occurs if you try to change the comparison mode of a `Dictionary` object
-    that already contains data.
+        ### Settings
+        The compare argument can have the following values:
 
-    The `CompareMode` property uses the same values as the compare argument for the
-    `StrComp` function. Values greater than 2 can be used to refer to comparisons by
-    using specific Locale IDs (LCID).
-    !'
-    Property CompareMode() As Long
+        | Constant            | Value | Description  |
+        | :------------------ | :---- | :--------------  |
+        | vbUseCompareOption  | -1    | Performs a comparison by using the setting of the Option Compare statement.  |
+        | vbBinaryCompare     | 0     | Performs a binary comparison.  |
+        | vbTextCompare       | 1     | Performs a textual comparison.  |
+        | vbDatabaseCompare   | 2     | Microsoft Access only. Performs a comparison based on information in your database.  |
 
-    '!
-    Returns a *Long* (long integer) containing the number of items in a collection or
-    `Dictionary` object. Read-only.
+        ### Remarks
+        An error occurs if you try to change the comparison mode of a `Dictionary` object
+        that already contains data.
 
-    ### Remarks
-    ```vb
-    Dim a, d, i             'Create some variables
-    Set d = CreateObject("Scripting.Dictionary")
-    d.Add "a", "Athens"     'Add some keys and items.
-    d.Add "b", "Belgrade"
-    d.Add "c", "Cairo"
-    a = d.Keys              'Get the keys
-    For i = 0 To d.Count -1 'Iterate the array
-        Print a(i)          'Print key
-    Next
-    ```
-    !'
-    Property Count() As Long
+        The `CompareMode` property uses the same values as the compare argument for the
+        `StrComp` function. Values greater than 2 can be used to refer to comparisons by
+        using specific Locale IDs (LCID).
+        !'
+        Property CompareMode() As Long
 
-    '!
-    Sets a key in a `Dictionary` object.
+        '!
+        Returns a *Long* (long integer) containing the number of items in a collection or
+        `Dictionary` object. Read-only.
 
-    ### Remarks
-    If key is not found when changing a key, a run-time error will occur.
-    !'
-    Property Key(key As Variant) As Variant
+        ### Remarks
+        ```vb
+        Dim a, d, i             'Create some variables
+        Set d = CreateObject("Scripting.Dictionary")
+        d.Add "a", "Athens"     'Add some keys and items.
+        d.Add "b", "Belgrade"
+        d.Add "c", "Cairo"
+        a = d.Keys              'Get the keys
+        For i = 0 To d.Count -1 'Iterate the array
+            Print a(i)          'Print key
+        Next
+        ```
+        !'
+        Property Count() As Long
 
-End Class
+        '!
+        Sets a key in a `Dictionary` object.
 
+        ### Remarks
+        If key is not found when changing a key, a run-time error will occur.
+        !'
+        Property Key(key As Variant) As Variant
+
+    End Class
+
+End Namespace

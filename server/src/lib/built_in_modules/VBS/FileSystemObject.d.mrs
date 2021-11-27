@@ -1,4 +1,6 @@
 
+Namespace Scripting
+
 '!
 Provides access to a computer's file system.
 
@@ -360,3 +362,5 @@ Class FileSystemObject Implements Object
     Property Drives() As Array
 
 End Class
+
+End Namespace

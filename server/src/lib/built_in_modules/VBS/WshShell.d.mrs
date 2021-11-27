@@ -1,4 +1,7 @@
 
+
+Namespace WScript
+
 '!
 Provides access to the native Windows shell.
 ### Remarks
@@ -614,3 +617,5 @@ Class WshShell Implements Object
     End Sub
 
 End Class
+
+End Namespace

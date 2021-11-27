@@ -1244,15 +1244,15 @@ export class TypeUtil extends UtilParser {
                 case "mdm.document":
                     return this.scope.get("IDocument", "MDMLib")?.result;
                 case "scripting.dictionary":
-                    return this.scope.get("Dictionary")?.result;
+                    return this.scope.get("Dictionary", "Scripting")?.result;
                 case "scripting.filesystemobject":
-                    return this.scope.get("FileSystemObject")?.result;
+                    return this.scope.get("FileSystemObject", "Scripting")?.result;
                 case "excel.application":
                     return this.scope.get("Application", "Excel")?.result;
                 case "wscript.shell":
-                    return this.scope.get("WshShell")?.result;
+                    return this.scope.get("WshShell", "WScript")?.result;
                 case "vbscript.regexp":
-                    return this.scope.get("RegExp")?.result;
+                    return this.scope.get("RegExp", "VBScript")?.result;
                 case "mroledb.datalinkhelper":
                     return this.scope.get("IDataLinkHelper", "MROLEDBLib")?.result;
                 default:

@@ -1,4 +1,6 @@
 
+Namespace Scripting
+
 '!
 Provides access to all the properties of a folder.
 
@@ -423,3 +425,5 @@ Class Folder Implements Object
     ReadOnly Property IsRootFolder() As Boolean
 
 End Class
+
+End Namespace
