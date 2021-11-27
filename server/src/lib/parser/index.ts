@@ -42,8 +42,9 @@ export class Parser extends StaticTypeChecker {
             this.scope.joinScope(preDef);
         }
         if (this.length > 0) {
-            this.scope.enter(ScopeFlags.program);
             this.nextToken();
+            this.checkIfMetadata();
+            this.scope.enter(ScopeFlags.program);
             try {
                 file.program = this.parseProgram(tt.eof,
                     this.options.sourceType, inWith);
@@ -80,6 +81,21 @@ export class Parser extends StaticTypeChecker {
                     false,
                     line.name)
             );
+        }
+    }
+
+    checkIfMetadata() {
+        if (this.options.sourceType === SourceType.metadata ||
+            this.options.sourceType === SourceType.declare) {
+            return;
+        }
+
+        let comments = this.state.comments;
+        for (let i = 0; i < comments.length; ++i) {
+            if (/\s*metadata\s*/i.test(comments[i].value)) {
+                this.options.sourceType = SourceType.metadata;
+                return;
+            }
         }
     }
 
