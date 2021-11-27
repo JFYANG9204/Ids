@@ -263,6 +263,7 @@ export class PreIncludeStatement extends PreprocessorBase {
     inc: StringLiteral | Identifier;
     declare parser: Parser;
     file: File;
+    exist: boolean = true;
     constructor(parser: ParserBase, pos: number, loc: Position) {
         super(parser, pos, loc);
         this.type = "PreIncludeStatement";

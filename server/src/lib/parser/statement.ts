@@ -1315,9 +1315,12 @@ export class StatementParser extends ExpressionParser {
             node.inc = includeFilePath;
             try {
                 node.path = this.options.sourceFileName ?
-                path.join(path.dirname(this.options.sourceFileName), includeFilePath.extra["rawValue"]) :
+                path.join(
+                    path.dirname(this.options.sourceFileName),
+                    includeFilePath.extra["rawValue"]) :
                 includeFilePath.extra["rawValue"];
             } catch (error) {
+                node.exist = false;
                 return node;
             }
             if (this.searchParserNode &&
@@ -1339,6 +1342,7 @@ export class StatementParser extends ExpressionParser {
                         true,
                         node.path
                     );
+                    node.exist = false;
                     return node;
                 }
                 if (content) {

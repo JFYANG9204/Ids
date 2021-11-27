@@ -406,6 +406,9 @@ export class StaticTypeChecker extends StatementParser {
     }
 
     checkPreIncludeStatement(pre: PreIncludeStatement) {
+        if (!pre.exist) {
+            return;
+        }
         this.enterIncludeRaiseFunction(this.createTypeRaiseFunction(pre.file, pre.parser));
         this.checkFile(pre.file);
         this.exitIncludeRaiseFunction();
@@ -438,7 +441,6 @@ export class StaticTypeChecker extends StatementParser {
             } else {
                 file.errors.push(err);
             }
-            return err;
         };
     }
 

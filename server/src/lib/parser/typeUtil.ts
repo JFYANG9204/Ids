@@ -26,11 +26,28 @@ import { Position } from "../util";
 import { isBasicType, isConversionFunction } from "../util/match";
 import { BindTypes } from "../util/scope";
 import { ErrorMessages, WarningMessages } from "./error-messages";
-import { ErrorTemplate, ParsingError } from "./errors";
+import { ErrorTemplate } from "./errors";
 import { UtilParser } from "./util";
 
 export interface TypeRaiseFunction {
-    (node: NodeBase, template: ErrorTemplate, warning: boolean, ...params: any): ParsingError
+    (node: NodeBase, template: ErrorTemplate, warning: boolean, ...params: any) : void
+}
+
+export function createTypeRaiseFunction(parser: TypeUtil) : TypeRaiseFunction {
+    return (node, template, warning, ...params) => {
+        if (node.loc.fileName.toLowerCase().endsWith(".d.mrs")) {
+            return;
+        }
+
+        if (parser.currentIncludeRaiseFunction) {
+            parser.currentIncludeRaiseFunction(node,
+                template, warning, ...params);
+        } else {
+            parser.raiseAtLocation(node.start,
+                node.end,
+                template, warning, ...params);
+        }
+    };
 }
 
 export class TypeUtil extends UtilParser {
@@ -76,10 +93,11 @@ export class TypeUtil extends UtilParser {
 
         if (this.currentIncludeRaiseFunction) {
            this.currentIncludeRaiseFunction(node,
-                template, warning, params);
+                template, warning, ...params);
         } else {
-            this.raiseAtNode(node,
-                template, warning, params);
+            this.raiseAtLocation(node.start,
+                node.end,
+                template, warning, ...params);
         }
     }
 

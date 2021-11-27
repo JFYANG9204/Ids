@@ -5,6 +5,7 @@ import { File } from "../types";
 import { Scope, ScopeFlags, ScopeHandler } from "../util/scope";
 import { ErrorMessages } from "./error-messages";
 import { StaticTypeChecker } from "./typeCheker";
+import { createTypeRaiseFunction } from "./typeUtil";
 
 
 export class Parser extends StaticTypeChecker {
@@ -16,7 +17,7 @@ export class Parser extends StaticTypeChecker {
         this.fileName = this.options.sourceFileName ?? "";
         this.scope = new ScopeHandler(
             this,
-            this.raiseTypeError,
+            createTypeRaiseFunction(this),
             this.options.globalDeclarations,
             this.state.localDefinitions);
         if (extname(this.fileName).toLowerCase() === ".dms") {
@@ -85,16 +86,16 @@ export class Parser extends StaticTypeChecker {
     }
 
     checkIfMetadata() {
-        if (this.options.sourceType === SourceType.metadata ||
-            this.options.sourceType === SourceType.declare) {
-            return;
-        }
+
+        let declared = this.options.sourceType === SourceType.declare;
 
         let comments = this.state.comments;
         for (let i = 0; i < comments.length; ++i) {
-            if (/\s*metadata\s*/i.test(comments[i].value)) {
+            if (/\s*metadata\s*/i.test(comments[i].value) && !declared) {
                 this.options.sourceType = SourceType.metadata;
-                return;
+            }
+            if (/\s*ignore-type-error\s*/i.test(comments[i].value)) {
+                this.options.raiseTypeError = false;
             }
         }
     }
