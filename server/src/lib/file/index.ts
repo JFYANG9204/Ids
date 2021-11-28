@@ -65,11 +65,11 @@ export class ParserFileDigraph {
             if (key.endsWith(".d.mrs")) {
                 declares.set(key, value);
             } else if (key.endsWith(".bat")) {
-                getMacroFromBatFile(key, value.content, macros);
+                getMacroFromBatFile(value.path, value.content, macros);
             } else {
                 const refMark = getFileReferenceMark(value.content);
                 const typeMark = getFileTypeMark(value.content);
-                const node = createParserFileNode(value.uri, key, value.content, refMark, typeMark);
+                const node = createParserFileNode(value.uri, value.path, value.content, refMark, typeMark);
                 nodes.set(key, node);
             }
         });

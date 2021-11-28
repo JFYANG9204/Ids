@@ -241,7 +241,6 @@ export class ScopeHandler {
         const checkName = name.toLowerCase();
         return scope.consts.has(checkName)    ||
                scope.dims.has(checkName)      ||
-               scope.functions.has(checkName) ||
                scope.macros.has(checkName);
     }
 
@@ -325,7 +324,8 @@ export class ScopeHandler {
 
         if (isFunction) {
             return this.getFromMap(this.global.functions, name, BindTypes.function)  ||
-                   this.getFromMap(this.store.functions,  name, BindTypes.function);
+                   this.getFromMap(this.store.functions,  name, BindTypes.function)  ||
+                   this.getFromMap(this.currentScope().functions, name, BindTypes.function);
         }
 
         if (this.inFunction) {

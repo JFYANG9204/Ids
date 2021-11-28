@@ -1014,6 +1014,7 @@ export class TypeUtil extends UtilParser {
             return this.getVariant();
         }
 
+        (objType as FunctionDeclaration).referenced.push(callExpr);
         this.checkFunctionParams(callExpr, objType as FunctionDeclaration);
 
         const func = objType as FunctionDeclaration;

@@ -457,13 +457,16 @@ export class StatementParser extends ExpressionParser {
                 node.declarator,
                 node.declarator);
         }
-        this.expect(tt.equal);
-        if (this.options.sourceType !== SourceType.declare) {
+        let hasInit = false;
+        if (this.options.sourceType !== SourceType.declare ||
+            (this.match(tt.equal))) {
+            this.expect(tt.equal);
             node.init = this.parseExpression(true);
+            hasInit = true;
         }
         node.push(node.declarator, node.init);
         let right: { type: DeclarationBase | undefined } = { type: undefined };
-        if (this.options.sourceType !== SourceType.declare) {
+        if (hasInit) {
             node.declarator.binding = this.getExprType(node.init, right);
             node.declarator.bindingType = right.type;
         }
@@ -1209,7 +1212,13 @@ export class StatementParser extends ExpressionParser {
             this.expect(tt._interface);
         }
         this.scope.exit();
-        this.scope.declareName(node.name.name, BindTypes.classOrInterface, node);
+        if (this.options.sourceType === SourceType.declare) {
+            if (node.constants.size === 0) {
+                this.scope.declareName(node.name.name, BindTypes.classOrInterface, node);
+            } else {
+                this.scope.declareName(node.name.name, BindTypes.const, node);
+            }
+        }
         return this.finishNode(node, "ClassOrInterfaceDeclaration");
     }
 

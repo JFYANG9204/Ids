@@ -27,6 +27,7 @@ export function readFileAndConvertToUtf8(filePath: string): string {
 
 export interface FileContent {
     uri: string,
+    path: string,
     content: string
 }
 
@@ -52,7 +53,7 @@ export function getAllUsefulFile(folder: string): Map<string, FileContent> {
                 const fullPath = path.join(folder, file.name);
                 const content = readFileAndConvertToUtf8(fullPath);
                 const uri = pathToFileURL(fullPath).toString();
-                list.set(fullPath.toLowerCase(), { uri, content});
+                list.set(fullPath.toLowerCase(), { uri, content, path: fullPath });
             }
         }
     });

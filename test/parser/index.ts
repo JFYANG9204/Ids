@@ -11,8 +11,8 @@ import { BatMacro, batMrScriptItemRegex, batMrScriptRegex, getCurrentParser, get
 import { createBasicOptions } from "../../server/src/lib/options";
 import { Parser } from "../../server/src/lib/parser";
 
-const folderPath = resolve("./test/parser/fixture/dpgm");
-const startPath = resolve("./test/parser/fixture/dpgm/Run.mrs");
+const folderPath = resolve("./test/parser/fixture/DPGM");
+const startPath = resolve("./test/parser/fixture/DPGM/Run.mrs");
 const graph = new ParserFileDigraph(folderPath, builtInModule);
 graph.init();
 graph.setStart(startPath);

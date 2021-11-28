@@ -46,7 +46,7 @@ export function updateAndVaidateDocument(
             exist.file) {
             let fileMap = new Map<string, FileContent>();
             fileMap.set(exist.filePath.toLowerCase(),
-                { uri: exist.uri, content: exist.file.parser.input });
+                { uri: exist.uri, content: exist.file.parser.input, path: exist.filePath });
             let declares = loadDecarationFiles(fileMap);
             if (declares.scope && graph.global) {
                 updateScope(graph.global, declares.scope);

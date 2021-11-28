@@ -1,11 +1,14 @@
 import { fileURLToPath, pathToFileURL } from "url";
-import { Position, TextDocument } from "vscode-languageserver-textdocument";
+import { TextDocument } from "vscode-languageserver-textdocument";
 import {
     CompletionItem,
     createConnection,
     Hover,
     InitializeResult,
+    Location,
+    Position,
     ProposedFeatures,
+    Range,
     TextDocumentPositionParams,
     TextDocuments,
     TextDocumentSyncKind
@@ -15,6 +18,7 @@ import {
     CallExpression,
     DeclarationBase,
     File,
+    FunctionDeclaration,
     PreIncludeStatement,
 } from "./lib/types";
 import {
@@ -55,6 +59,7 @@ connection.onInitialize((params) => {
                 triggerCharacters: [ "(", "," ]
             },
             definitionProvider: true,
+            referencesProvider: true
         }
     };
     if (params.workspaceFolders) {
@@ -177,6 +182,36 @@ connection.onDefinition(params => {
     let start: Position = { line: dec.name.loc.start.line - 1, character: dec.name.start };
     let end: Position = { line: dec.name.loc.end.line - 1, character: dec.name.end };
     return { uri, range: { start, end } };
+});
+
+connection.onReferences(param => {
+
+    const node = getNodeFromDocPos(documents,
+        param.textDocument.uri,
+        param.position,
+        current,
+        true);
+
+    if (!node) {
+        return null;
+    }
+
+    const dec: DeclarationBase | undefined = node.extra["declaration"];
+
+    if (!dec || !(dec instanceof FunctionDeclaration)) {
+        return null;
+    }
+
+    let referenced: Location[] = [];
+    for (let i = 0; i < dec.referenced.length; ++i) {
+        const cur = dec.referenced[i];
+        const uri = pathToFileURL(cur.loc.fileName).toString();
+        referenced.push(Location.create(uri,
+            Range.create(
+                Position.create(cur.loc.start.line - 1, cur.start),
+                Position.create(cur.loc.end.line - 1, cur.end))));
+    }
+    return referenced;
 });
 
 documents.onDidChangeContent(change => {

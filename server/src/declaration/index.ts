@@ -21,7 +21,7 @@ export function loadDecarationFiles(contents: Map<string, FileContent>): Declara
     let fileMap: Map<string, File> = new Map();
     let scope: Scope | undefined;
     contents.forEach((f, p) => {
-        const parser = new Parser(createBasicOptions(p, false, f.uri), f.content);
+        const parser = new Parser(createBasicOptions(f.path, false, f.uri), f.content);
         const file = parser.parse(scope ?? undefined);
         fileMap.set(p, file);
         if (file.scope) {
