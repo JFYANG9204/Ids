@@ -1,6 +1,7 @@
 import { fileURLToPath, pathToFileURL } from "url";
 import { TextDocument } from "vscode-languageserver-textdocument";
 import {
+    CodeAction,
     CompletionItem,
     createConnection,
     Hover,
@@ -59,7 +60,8 @@ connection.onInitialize((params) => {
                 triggerCharacters: [ "(", "," ]
             },
             definitionProvider: true,
-            referencesProvider: true
+            referencesProvider: true,
+            codeActionProvider: true
         }
     };
     if (params.workspaceFolders) {
@@ -212,6 +214,15 @@ connection.onReferences(param => {
                 Position.create(cur.loc.end.line - 1, cur.end))));
     }
     return referenced;
+});
+
+connection.onCodeAction(params => {
+    const diags = params.context.diagnostics;
+    const actions: CodeAction[] = [];
+    diags.forEach(diag => {
+        let action = CodeAction.create("忽略该文件的所有类型错误.", );
+    });
+    return actions;
 });
 
 documents.onDidChangeContent(change => {
