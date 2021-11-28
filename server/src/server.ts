@@ -198,7 +198,7 @@ connection.onReferences(param => {
 
     const dec: DeclarationBase | undefined = node.extra["declaration"];
 
-    if (!dec || !(dec instanceof FunctionDeclaration)) {
+    if (!dec) {
         return null;
     }
 

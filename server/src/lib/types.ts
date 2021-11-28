@@ -87,6 +87,7 @@ export class DeclarationBase extends NodeBase {
     enumerable: boolean = false;
     name: Identifier;
     namespace?: NamespaceDeclaration | string;
+    referenced: NodeBase[] = [];
     constructor(parser: ParserBase, pos: number, loc: Position) {
         super(parser, pos, loc);
         this.declare = true;
@@ -711,7 +712,6 @@ export class FunctionDeclaration extends DeclarationBase {
     needReturn = false;
     binding?: string | BindingDeclarator;
     class?: ClassOrInterfaceDeclaration;
-    referenced: CallExpression[] = [];
     declare scope: Scope;
     constructor(parser: ParserBase, pos: number, loc: Position) {
         super(parser, pos, loc);

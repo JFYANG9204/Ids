@@ -743,6 +743,7 @@ export class TypeUtil extends UtilParser {
                 this.updateFuncType) {
                 this.updateFuncType(find);
             }
+            find.referenced.push(id);
             this.addExtra(id, "declaration", this.maybeCopyType(find));
             return find;
         } else {
