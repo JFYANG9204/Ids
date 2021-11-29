@@ -37,6 +37,10 @@
 			{
 				"command": "ids.executeIgnoreTypeError",
 				"title": "忽略文件内所有类型错误."
+			},
+			{
+				"command": "ids.executeIgnorePathError",
+				"title": "忽略文件内所有路径错误"
 			}
 		]
 	},

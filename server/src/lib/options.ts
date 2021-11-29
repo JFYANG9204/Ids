@@ -20,6 +20,7 @@ export enum ScriptFileType {
 export type Options = {
     uri: string,
     raiseTypeError: boolean,
+    raisePathError: boolean,
     sourceType: SourceType,
     sourceFileName?: string,
     scriptFileType: ScriptFileType,
@@ -40,6 +41,7 @@ export const defaultOptions: Options = {
     uri: "",
 
     raiseTypeError: true,
+    raisePathError: true,
     // metadata定义文件或script脚本文件
     sourceType: SourceType.script,
     // dms/mrs 文件
@@ -67,6 +69,7 @@ export function createBasicOptions(
         sourceType: SourceType.script,
         sourceFileName: path,
         raiseTypeError: raiseTypeError,
+        raisePathError: true,
         scriptFileType: ScriptFileType.mrs,
         startLine: 1,
         tokens: false,

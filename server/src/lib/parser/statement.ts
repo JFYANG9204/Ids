@@ -1345,12 +1345,14 @@ export class StatementParser extends ExpressionParser {
                 try {
                     content = fs.readFileSync(node.path).toString();
                 } catch (error) {
-                    this.raiseAtNode(
-                        node.inc,
-                        ErrorMessages["PreIncludeFileDontExist"],
-                        true,
-                        node.path
+                    if (this.options.raisePathError) {
+                        this.raiseAtNode(
+                            node.inc,
+                            ErrorMessages["PreIncludeFileDontExist"],
+                            true,
+                            node.path
                     );
+                    }
                     node.exist = false;
                     return node;
                 }
@@ -1402,7 +1404,8 @@ export class StatementParser extends ExpressionParser {
             node.push(node.file);
             this.state.includes.set(node.path.toLowerCase(), node.file);
             this.scope.joinScope(node.file.scope);
-            if (node.file.errors.length > 0) {
+            if (node.file.errors.length > 0 &&
+                this.options.raisePathError) {
                 this.raiseAtNode(
                     node.inc,
                     ErrorMessages["IncludeFileExistError"],

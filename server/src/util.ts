@@ -1,6 +1,13 @@
 import { join } from "path";
 import { fileURLToPath } from "url";
-import { TextDocuments, _Connection } from "vscode-languageserver";
+import {
+    Range,
+    TextDocumentEdit,
+    TextDocuments,
+    TextEdit,
+    WorkspaceEdit,
+    _Connection
+} from "vscode-languageserver";
 import {
     Position,
     TextDocument
@@ -124,5 +131,19 @@ export function getNodeFromDocPos(
     }
 
     return positionAt(curFile.program.body, position, untilId, 0);
+}
+
+
+export function createWorkspaceEditorContent(uri: string, start: Position, text: string) {
+    let textEdit: TextEdit = {
+        newText: text,
+        range: Range.create(start, start)
+    };
+    let edit = TextDocumentEdit.create({ version: null, uri }, [ textEdit ]);
+    let workspaceEdit: WorkspaceEdit = {
+        changes: { uri: [ textEdit ] },
+        documentChanges: [ edit ]
+    };
+    return workspaceEdit;
 }
 

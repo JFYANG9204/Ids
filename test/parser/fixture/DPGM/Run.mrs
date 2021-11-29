@@ -1,4 +1,3 @@
-'ignore-type-error
 #include "job.ini"
 #include "Library\Library.mrs"
 

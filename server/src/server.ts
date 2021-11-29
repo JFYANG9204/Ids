@@ -2,7 +2,6 @@ import { fileURLToPath, pathToFileURL } from "url";
 import { TextDocument } from "vscode-languageserver-textdocument";
 import {
     CodeAction,
-    Command,
     CompletionItem,
     createConnection,
     Hover,
@@ -20,7 +19,6 @@ import {
     CallExpression,
     DeclarationBase,
     File,
-    FunctionDeclaration,
     PreIncludeStatement,
 } from "./lib/types";
 import {
@@ -35,10 +33,12 @@ import {
     preKeywordsCompletions
 } from "./completion";
 import {
+    createWorkspaceEditorContent,
     getNodeFromDocPos,
     updateAndVaidateDocument,
 } from "./util";
 import { builtInModule } from "./declaration";
+import { actionMessages } from "./messages";
 
 let connection = createConnection(ProposedFeatures.all);
 let documents = new TextDocuments(TextDocument);
@@ -225,12 +225,20 @@ connection.onCodeAction(params => {
     const diags = params.context.diagnostics;
     const actions: CodeAction[] = [];
 
-    let ignoreAllErrorAction = CodeAction.create("忽略该文件的所有类型错误");
+    let ignoreAllErrorAction = CodeAction.create(actionMessages.ignoreTypeError);
     ignoreAllErrorAction.diagnostics = [];
-    ignoreAllErrorAction.command = Command.create("忽略所有错误", "ids.executeIgnoreTypeError");
+    ignoreAllErrorAction.edit = createWorkspaceEditorContent(
+        params.textDocument.uri,
+        Position.create(0, 0), "'ignore-type-error\n");
+
+    let ignoreAllPathErrorAction = CodeAction.create(actionMessages.ignorePathError);
+    ignoreAllPathErrorAction.edit = createWorkspaceEditorContent(
+        params.textDocument.uri,
+        Position.create(0, 0), "'ignore-path-error\n");
 
     diags.forEach(diag => {
         ignoreAllErrorAction.diagnostics?.push(diag);
+        ignoreAllPathErrorAction.diagnostics?.push(diag);
     });
 
     actions.push(ignoreAllErrorAction);
