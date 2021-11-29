@@ -32,7 +32,13 @@
                 "language": "ds",
                 "path": "./snippets/ds.code-snippets"
             }
-        ]
+        ],
+		"commands": [
+			{
+				"command": "ids.executeIgnoreTypeError",
+				"title": "忽略文件内所有类型错误."
+			}
+		]
 	},
 	"scripts": {
 		"vscode:prepublish": "yarn run compile",

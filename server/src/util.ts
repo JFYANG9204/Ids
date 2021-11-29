@@ -15,10 +15,10 @@ import {
     positionAt,
     readFileAndConvertToUtf8
 } from "./lib/file";
-import { FileContent } from "./lib/file/util";
+import { FileContent, positionIn } from "./lib/file/util";
 import { createBasicOptions } from "./lib/options";
 import { Parser } from "./lib/parser";
-import { File } from "./lib/types";
+import { File, NodeBase } from "./lib/types";
 import { updateScope } from "./lib/util/scope";
 
 
@@ -105,7 +105,8 @@ export function getNodeFromDocPos(
     uri: string,
     pos: Position,
     fileMap: Map<string, File>,
-    untilId: boolean = false) {
+    untilId: boolean = false,
+    additional?: (node: NodeBase) => void) {
     const doc = docmuents.get(uri);
     if (!doc) {
         return null;
@@ -115,6 +116,13 @@ export function getNodeFromDocPos(
     if (!curFile) {
         return null;
     }
+
+    if (additional) {
+        let node = curFile.program.body;
+        positionIn(node, position, additional);
+        return node;
+    }
+
     return positionAt(curFile.program.body, position, untilId, 0);
 }
 

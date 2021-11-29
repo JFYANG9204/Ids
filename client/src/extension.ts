@@ -1,7 +1,11 @@
+import { readFileSync, writeFileSync } from "fs";
 import { join } from "path";
+import { fileURLToPath } from "url";
 import {
     workspace,
-    ExtensionContext
+    ExtensionContext,
+    window,
+    commands
 } from "vscode";
 import {
     LanguageClient,
@@ -30,6 +34,21 @@ export function activate(context: ExtensionContext) {
             fileEvents: workspace.createFileSystemWatcher('**/.clientrc')
         }
     };
+
+    const executeIgnoreTypeError = () => {
+        const activeEditor = window.activeTextEditor;
+        if (!activeEditor) {
+            return;
+        }
+        const path = fileURLToPath(activeEditor.document.uri.toString());
+        const text = readFileSync(path).toString();
+        let updateText = "'ignore-type-error\n" + text;
+        writeFileSync(path, updateText);
+    };
+
+    context.subscriptions.push(
+        commands.registerCommand("ids.executeIgnoreTypeError", executeIgnoreTypeError)
+    );
 
     client = new LanguageClient(
         'dsLanguageServer',

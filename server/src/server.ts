@@ -2,6 +2,7 @@ import { fileURLToPath, pathToFileURL } from "url";
 import { TextDocument } from "vscode-languageserver-textdocument";
 import {
     CodeAction,
+    Command,
     CompletionItem,
     createConnection,
     Hover,
@@ -12,7 +13,7 @@ import {
     Range,
     TextDocumentPositionParams,
     TextDocuments,
-    TextDocumentSyncKind
+    TextDocumentSyncKind,
 } from "vscode-languageserver/node";
 import { ParserFileDigraph, positionInFunction } from "./lib/file";
 import {
@@ -145,18 +146,22 @@ connection.onHover(params => {
 });
 
 connection.onSignatureHelp(params => {
-    const node = getNodeFromDocPos(documents,
+    let node: CallExpression | undefined;
+    getNodeFromDocPos(documents,
         params.textDocument.uri,
         params.position,
-        current);
+        current,
+        false,
+        sub => {
+            if (sub.type === "CallExpression") {
+                node = sub as CallExpression;
+            }
+        });
     if (!node) {
         return null;
     }
-    if (node.type === "CallExpression") {
-        const func = node as CallExpression;
-        return getSignatureHelpFromFunction(func);
-    }
-    return null;
+
+    return getSignatureHelpFromFunction(node);
 });
 
 connection.onDefinition(params => {
@@ -219,9 +224,16 @@ connection.onReferences(param => {
 connection.onCodeAction(params => {
     const diags = params.context.diagnostics;
     const actions: CodeAction[] = [];
+
+    let ignoreAllErrorAction = CodeAction.create("忽略该文件的所有类型错误");
+    ignoreAllErrorAction.diagnostics = [];
+    ignoreAllErrorAction.command = Command.create("忽略所有错误", "ids.executeIgnoreTypeError");
+
     diags.forEach(diag => {
-        let action = CodeAction.create("忽略该文件的所有类型错误.", );
+        ignoreAllErrorAction.diagnostics?.push(diag);
     });
+
+    actions.push(ignoreAllErrorAction);
     return actions;
 });
 

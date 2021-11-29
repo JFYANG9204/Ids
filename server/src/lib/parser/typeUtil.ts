@@ -91,6 +91,10 @@ export class TypeUtil extends UtilParser {
             return;
         }
 
+        if (!this.options.raiseTypeError) {
+            return;
+        }
+
         if (this.currentIncludeRaiseFunction) {
            this.currentIncludeRaiseFunction(node,
                 template, warning, ...params);
@@ -283,11 +287,12 @@ export class TypeUtil extends UtilParser {
         let baseString = base.toLowerCase();
         let checkResult: boolean;
 
-        if (checkString === "variant"   ||
-            baseString  === "variant"   ||
-            checkString === "iquestion" ||
-            baseString  === "iquestion" ||
-            checkString === "null"      || (
+        if (checkString === "variant" || baseString === "variant" || checkString === "null") {
+            return true;
+        }
+
+        if (checkString === "iquestion" ||
+            baseString  === "iquestion" || (
             baseString  === "enum"   && checkString === "long") || (
             baseString  === "double" && checkString === "long") || (
             baseString  === "date"   && checkString === "long") || (
@@ -308,26 +313,6 @@ export class TypeUtil extends UtilParser {
                 base);
         }
         return checkResult;
-    }
-
-    declareLocalVar(
-        name: string,
-        node: DeclarationBase) {
-        this.scope.declareName(
-            name,
-            BindTypes.var,
-            node
-        );
-    }
-
-    declareMacroVar(
-        name: string,
-        node: MacroDeclaration) {
-        this.scope.declareName(
-            name,
-            BindTypes.const,
-            node
-        );
     }
 
     checkNewLineMark(line: LineMark) {
