@@ -109,6 +109,14 @@ export class TypeUtil extends UtilParser {
             return;
         }
 
+        let parent = node.treeParent;
+        while (parent) {
+            if (this.checkLeadingCommentOption(parent, "ignore-type-error")) {
+                return;
+            }
+            parent = parent.treeParent;
+        }
+
         if (this.currentIncludeRaiseFunction) {
            this.currentIncludeRaiseFunction(node,
                 template, warning, ...params);

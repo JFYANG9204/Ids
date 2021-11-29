@@ -1,6 +1,4 @@
-import { readFileSync, writeFileSync } from "fs";
 import { join } from "path";
-import { fileURLToPath } from "url";
 import {
     workspace,
     ExtensionContext,
@@ -74,8 +72,8 @@ export function activate(context: ExtensionContext) {
         }
         let textLine = activeDoc.lineAt(line);
         let start = textLine.range.start.character + textLine.firstNonWhitespaceCharacterIndex;
-        let leadingWs = " ".repeat(textLine.firstNonWhitespaceCharacterIndex);
         let edit = new WorkspaceEdit();
+        let leadingWs = " ".repeat(textLine.firstNonWhitespaceCharacterIndex);
         edit.insert(activeDoc.uri, new Position(line, start), "'" + text + "\n" + leadingWs);
         workspace.applyEdit(edit);
     };
