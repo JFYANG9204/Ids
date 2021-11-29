@@ -82,6 +82,16 @@ export class TypeUtil extends UtilParser {
         return false;
     }
 
+    checkLeadingCommentOption(node: NodeBase, text: string) {
+        let reg = new RegExp(text, "i");
+        for (let i = 0; i < node.leadingComments.length; ++i) {
+            if (reg.test(node.leadingComments[i].value)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     raiseTypeError(node: NodeBase,
         template: ErrorTemplate,
         warning: boolean,
@@ -92,6 +102,10 @@ export class TypeUtil extends UtilParser {
         }
 
         if (!this.options.raiseTypeError) {
+            return;
+        }
+
+        if (this.checkLeadingCommentOption(node, "ignore-type-error")) {
             return;
         }
 

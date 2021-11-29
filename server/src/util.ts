@@ -1,6 +1,9 @@
 import { join } from "path";
 import { fileURLToPath } from "url";
 import {
+    CodeAction,
+    Command,
+    Position as Pos,
     Range,
     TextDocumentEdit,
     TextDocuments,
@@ -136,7 +139,7 @@ export function getNodeFromDocPos(
 
 export function createWorkspaceEditorContent(uri: string, start: Position, text: string) {
     let textEdit: TextEdit = {
-        newText: text,
+        newText: text + "\n",
         range: Range.create(start, start)
     };
     let edit = TextDocumentEdit.create({ version: null, uri }, [ textEdit ]);
@@ -145,5 +148,13 @@ export function createWorkspaceEditorContent(uri: string, start: Position, text:
         documentChanges: [ edit ]
     };
     return workspaceEdit;
+}
+
+export function createCodeAction(uri: string, title: string, text: string) {
+    return CodeAction.create(title, createWorkspaceEditorContent(uri, Pos.create(0, 0), text));
+}
+
+export function createCodeActionByCommand(title: string, text: string, line: number) {
+    return CodeAction.create(title, Command.create(title, "ids.insertTextAtPosition", text, line));
 }
 

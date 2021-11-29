@@ -5,7 +5,9 @@ import {
     workspace,
     ExtensionContext,
     window,
-    commands
+    commands,
+    WorkspaceEdit,
+    Position
 } from "vscode";
 import {
     LanguageClient,
@@ -35,19 +37,53 @@ export function activate(context: ExtensionContext) {
         }
     };
 
-    const executeIgnoreTypeError = () => {
+    function createWorkspaceEdit(text: string) {
+        let uri = window.activeTextEditor?.document.uri;
+        if (!uri) {
+            return undefined;
+        }
+        let edit = new WorkspaceEdit();
+        edit.insert(uri, new Position(0, 0), "'" + text + "\n");
+        return edit;
+    }
+
+    function addTextAtBegining(text: string) {
         const activeEditor = window.activeTextEditor;
         if (!activeEditor) {
             return;
         }
-        const path = fileURLToPath(activeEditor.document.uri.toString());
-        const text = readFileSync(path).toString();
-        let updateText = "'ignore-type-error\n" + text;
-        writeFileSync(path, updateText);
+        let edit = createWorkspaceEdit(text);
+        if (!edit) {
+            return;
+        }
+        workspace.applyEdit(edit);
+    }
+
+    const executeIgnoreTypeError = () => {
+        addTextAtBegining("ignore-type-error");
+    };
+
+    const executeIgnorePathError = () => {
+        addTextAtBegining("ignore-path-error");
+    };
+
+    const insertTextAtPosition = (text: string, line: number) => {
+        let activeDoc = window.activeTextEditor?.document;
+        if (!activeDoc) {
+            return;
+        }
+        let textLine = activeDoc.lineAt(line);
+        let start = textLine.range.start.character + textLine.firstNonWhitespaceCharacterIndex;
+        let leadingWs = " ".repeat(textLine.firstNonWhitespaceCharacterIndex);
+        let edit = new WorkspaceEdit();
+        edit.insert(activeDoc.uri, new Position(line, start), "'" + text + "\n" + leadingWs);
+        workspace.applyEdit(edit);
     };
 
     context.subscriptions.push(
-        commands.registerCommand("ids.executeIgnoreTypeError", executeIgnoreTypeError)
+        commands.registerCommand("ids.executeIgnoreTypeError", executeIgnoreTypeError),
+        commands.registerCommand("ids.executeIgnorePathError", executeIgnorePathError),
+        commands.registerCommand("ids.insertTextAtPosition", insertTextAtPosition)
     );
 
     client = new LanguageClient(

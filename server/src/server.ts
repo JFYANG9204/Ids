@@ -33,7 +33,8 @@ import {
     preKeywordsCompletions
 } from "./completion";
 import {
-    createWorkspaceEditorContent,
+    createCodeAction,
+    createCodeActionByCommand,
     getNodeFromDocPos,
     updateAndVaidateDocument,
 } from "./util";
@@ -223,25 +224,29 @@ connection.onReferences(param => {
 
 connection.onCodeAction(params => {
     const diags = params.context.diagnostics;
+    const uri = params.textDocument.uri;
     const actions: CodeAction[] = [];
 
-    let ignoreAllErrorAction = CodeAction.create(actionMessages.ignoreTypeError);
-    ignoreAllErrorAction.diagnostics = [];
-    ignoreAllErrorAction.edit = createWorkspaceEditorContent(
-        params.textDocument.uri,
-        Position.create(0, 0), "'ignore-type-error\n");
+    let ignoreAllErrorAction = createCodeAction(
+        uri,
+        actionMessages.ignoreTypeError,
+        "'ignore-type-error");
 
-    let ignoreAllPathErrorAction = CodeAction.create(actionMessages.ignorePathError);
-    ignoreAllPathErrorAction.edit = createWorkspaceEditorContent(
-        params.textDocument.uri,
-        Position.create(0, 0), "'ignore-path-error\n");
+    let ignoreAllPathErrorAction = createCodeAction(
+        uri,
+        actionMessages.ignorePathError,
+        "'ignore-path-error");
 
     diags.forEach(diag => {
         ignoreAllErrorAction.diagnostics?.push(diag);
         ignoreAllPathErrorAction.diagnostics?.push(diag);
+        actions.push(
+            createCodeActionByCommand(actionMessages.ignoreThisPathError, "ignore-path-error", diag.range.start.line),
+            createCodeActionByCommand(actionMessages.ignoreThisTypeError, "ignore-type-error", diag.range.start.line)
+        );
     });
 
-    actions.push(ignoreAllErrorAction);
+    actions.push(ignoreAllErrorAction, ignoreAllPathErrorAction);
     return actions;
 });
 

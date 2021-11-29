@@ -1345,7 +1345,8 @@ export class StatementParser extends ExpressionParser {
                 try {
                     content = fs.readFileSync(node.path).toString();
                 } catch (error) {
-                    if (this.options.raisePathError) {
+                    if (this.options.raisePathError &&
+                        !this.checkLeadingCommentOption(node, "ignore-path-error")) {
                         this.raiseAtNode(
                             node.inc,
                             ErrorMessages["PreIncludeFileDontExist"],
@@ -1405,7 +1406,8 @@ export class StatementParser extends ExpressionParser {
             this.state.includes.set(node.path.toLowerCase(), node.file);
             this.scope.joinScope(node.file.scope);
             if (node.file.errors.length > 0 &&
-                this.options.raisePathError) {
+                this.options.raisePathError &&
+                !this.checkLeadingCommentOption(node, "ignore-path-error")) {
                 this.raiseAtNode(
                     node.inc,
                     ErrorMessages["IncludeFileExistError"],
