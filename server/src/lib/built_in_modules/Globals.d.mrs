@@ -7,5 +7,5 @@ Dim dmgrWeightEngines As IDataManagerWeightEngines
 
 
 Const Debug As MRSCRIPTCORELib.IDebugObject
-
+Const Err As MRSCRIPTCORELib.IErr­Object
 

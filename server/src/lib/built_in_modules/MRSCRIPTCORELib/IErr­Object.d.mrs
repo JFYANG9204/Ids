@@ -1,0 +1,188 @@
+
+Namespace MRSCRIPTCORELib
+    '!
+    The `ErrObject` is used to retrieve information about run-time errors.
+    The `Err` object is an intrinsic mrScriptBasic object, which means that
+    you can use it without first creating an instance of it.
+
+    ### Remarks
+    With the properties and methods of the `ErrObject`, you can:
+    + Get the latest run-time error `Number` or `Description`.
+    + `Clear` the error information using the `Clear` method.
+    + `Raise` an error using the `Raise` method.
+    !'
+    Interface IErr­Object Implements Object
+
+        '!
+        Clears all property settings of the `Err` object.
+
+        ### Remarks
+        mrScriptBasic calls the Clear method automatically whenever an `On Error Resume Next`
+        statement is executed. However, unlike VBScript, mrScriptBasic does not call the `Clear`
+        method automatically when an `Exit Sub` or `Exit Function` statement is executed.
+
+        ### Example
+        ```ds
+        Dim x, ErrorCount
+        On Error Resume Next
+
+        If x > 5 Then
+        Err.Raise (1001, , "x is too big")
+        End If
+
+        If Err.Number {html:<>} 0 Then
+        ' Count the number of errors
+        ErrorCount = ErrorCount + 1
+        End If
+
+        Err.Clear()
+        ```
+        !'
+        Sub Clear()
+        End Sub
+
+        '!
+        Generates a run-time error.
+
+        ### Parameters
+        + `Number`: *Long* - The error number.
+        + `Source`: *Variant* - The name of the object that originated the error.
+        + `Description`: *Variant* - The error description. If unspecified and the error number specified corresponds to an existing error number, the description corresponding to that error number is used.
+        + `HelpFile`: *Variant* - The path to a Help file.
+        + `HelpContext`: *Variant* - A context ID for a topic in the Help file.
+
+        ### Remarks
+        If the `Err` object has not been cleared, the existing property settings are used for any arguments that are not specified.
+        Note that the error number is converted to the HRESULT data type. This means that if you set the error number to 1, for example, it will automatically be converted to an HRESULT value of &H80000001. If you want to test for the error numbers you set, the easiest way is to use a user-defined constant. For an example of doing this, see the second example below.
+        !'
+        Sub Raise(Number As Long, Optional Source As Variant, Optional Description As Variant, Optional HelpField As Variant, Optional HelpContext As Variant)
+        End Sub
+
+        '!
+        Returns or sets the error description associated with an object.
+
+        ### Example
+        ```ds
+        ' The following example sets up an error text that
+        ' includes the description.
+
+        Dim ErrorText
+        ErrorText = "Error : " + Err.Description
+        ```
+        !'
+        Property Description() As String
+
+        '!
+        Returns or sets a context ID for a topic in a Help file.
+        !'
+        Property HelpContext() As Long
+
+        '!
+        Returns or sets a fully qualified path to a Help file.
+        !'
+        Property HelpFile() As String
+
+        '!
+        Returns or sets the line number on which the error occurred.
+
+        ### Remarks
+        This property is very useful when you are debugging scripts.
+
+        ### Example
+        ```ds
+        ' The following example sets up an error text that
+        ' includes the line number and writes it to the log.
+        ' If you try running the following script and then
+        ' examine the output, you will see that the error
+        ' text is "Division by zero error occurred on line
+        ' number 7".
+
+        Dim x, y, z
+
+        On Error Goto ErrorHandler
+
+        x = 30
+        y = 0
+        z = x / y
+
+        Exit              ' Success
+
+        ErrorHandler:
+        debug.Log(Err.Description + _
+        " error occurred on line number " + _
+        CText(Err.LineNumber))
+        ```
+        !'
+        Property LineNumber() As Long
+
+        '!
+        Returns or sets the script location at which the error occurred.
+
+        ### Remarks
+        An empty location indicates that the error occurred in the main script block.
+
+        ### Example
+        ```ds
+        ' The following example uses a #line directive to set
+        ' the line number to 100 and the location to "MyScript"
+        ' and includes a deliberate divide by zero error.
+        ' When you run this code the error text would be
+        ' "Division by zero error occurred on line number 102
+        ' in MyScript".
+
+        #line 100 "MyScript"
+        Dim x, ErrorText
+        On Error Goto ErrorHandler
+        x = 30 / 0
+
+        Exit              ' Success
+
+        ErrorHandler:
+        debug.Log(Err.Description + _
+        " error occurred on line number " + _
+        CText(Err.LineNumber) + " in " + Err.Location)
+        ```
+        !'
+        Property Location() As String
+
+        '!
+        Returns or sets a numeric value representing an error.
+
+        ### Remarks
+        When `Err.Number` is 0, it means that no error has occurred. This means that testing whether `Err.Number` is not equal to zero can tell you whether an error has occurred.
+
+        ### Example
+        ```ds
+        ' This example shows Err.Number being used to test
+        ' for errors when On Error Resume Next is being used.
+
+        On Error Resume Next
+
+        ...
+
+        If Err.Number <> 0 Then
+        ' Count the number of errors
+        ErrorCount = ErrorCount + 1
+        End If
+        ```
+        !'
+        Property Number() As Long
+
+        '!
+        Returns or sets the name of the object that originated the error.
+
+        ### Example
+        ```ds
+        ' The following example sets up an error text that
+        ' includes the Description and Source properties.
+
+        Dim ErrorText
+        ErrorText = "Error : " + Err.Description + " in: " + Err.Source
+        ```
+        !'
+        Property Source() As String
+
+
+    End Interface
+
+End Namespace
