@@ -338,7 +338,7 @@ export class File extends NodeBase {
 export class Program extends Statement {
     type: "Program";
     sourceType: SourceType = SourceType.script;
-    body: BlockStatement | WithStatement;
+    body: BlockStatement | WithStatement | EventSection;
     metadata?: NodeBase[];
     globalWith?: WithStatement;
 

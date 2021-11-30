@@ -270,7 +270,7 @@ export class StatementParser extends ExpressionParser {
     parseProgram(
         end: TokenType = tt.eof,
         sourceType: SourceType = this.options.sourceType,
-        inWith?: boolean
+        inWith?: boolean,
     ): Program {
         const node = this.startNode(Program);
         node.sourceType = sourceType;
@@ -1451,7 +1451,22 @@ export class StatementParser extends ExpressionParser {
     parsePreIfStatement(): PreIfStatement {
         const node = this.startNode(PreIfStatement);
         this.next();
+
+        // #if defined()
+        // #if not defined()
+        let defined = false;
+        if (this.match(tt._not)) {
+            this.next();
+        }
+        if (this.state.value.toLowerCase() === "defined") {
+            defined = true;
+            this.next();
+            this.expect(tt.braceL);
+        }
         node.test = this.parseExpression(undefined, true);
+        if (defined) {
+            this.expect(tt.braceR);
+        }
         node.consequent = this.parseBlock([ tt.pre_endif, tt.pre_elif, tt.pre_else ]);
         if (this.match(tt.pre_elif)) {
             node.alternate = this.parsePreIfStatement();
@@ -1525,7 +1540,6 @@ export class StatementParser extends ExpressionParser {
         this.expectString(eventName);
         this.next();
         this.checkEventSectionError(node);
-        node.scope = this.scope.currentScope();
         this.scope.exit(true);
         return this.finishNode(node, `${eventName}Section`);
     }

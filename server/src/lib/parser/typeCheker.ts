@@ -176,10 +176,14 @@ export class StaticTypeChecker extends StatementParser {
         this.checkBlock(file.program.body);
     }
 
-    checkBlock(block: BlockStatement | WithStatement) {
+    checkBlock(block: BlockStatement | WithStatement | EventSection) {
         if (block instanceof BlockStatement) {
             for (let i = 0; i < block.body.length; ++i) {
                 this.checkBlockContent(block.body[i]);
+            }
+        } else if (block instanceof EventSection) {
+            if (block.body) {
+                this.checkBlock(block.body);
             }
         } else {
             this.checkBlockContent(block.body);
@@ -381,11 +385,12 @@ export class StaticTypeChecker extends StatementParser {
     }
 
     checkEvent(event: EventSection) {
-        this.scope.enter(ScopeFlags.event);
+        this.scope.enter(ScopeFlags.event, event.name.name);
         if (event.body) {
             this.checkBlock(event.body);
         }
-        this.scope.exit();
+        event.scope = this.scope.currentScope();
+        this.scope.exit(true);
     }
 
     checkPreDefineStatement(pre: PreDefineStatement) {
