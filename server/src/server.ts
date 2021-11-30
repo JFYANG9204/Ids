@@ -80,7 +80,7 @@ connection.onCompletion(
     (textDocumentPosition: TextDocumentPositionParams) => {
         let doc = documents.get(textDocumentPosition.textDocument.uri);
         if (!doc) {
-            return [];
+            return;
         }
 
         let pos = doc.offsetAt(textDocumentPosition.position);
@@ -88,7 +88,7 @@ connection.onCompletion(
         let path = fileURLToPath(textDocumentPosition.textDocument.uri);
 
         if (text.endsWith("#")) {
-            return preKeywordsCompletions;
+            return { isIncomplete: false, items: preKeywordsCompletions };
         };
 
         let lastFile = last.get(path.toLowerCase());
@@ -108,10 +108,11 @@ connection.onCompletion(
             let func = positionInFunction(lastFile.program.body, pos);
             if (func) {
                 let funcCompletions = getCompletionsFromScope(func.scope);
-                return funcCompletions.concat(keywordsCompletions,
+                funcCompletions = funcCompletions.concat(keywordsCompletions,
                     builtInFunctionCompletions,
                     builtInConstCompletions,
                     getCompletionsFromScope(lastFile.scope, true));
+                return { isIncomplete: true, items: funcCompletions };
             }
 
             let event = positionInEvent(lastFile.program.body, pos);
@@ -121,9 +122,10 @@ connection.onCompletion(
                     eventCompletions = eventCompletions.concat(
                         getCompletionsFromDeclarations(lastFile.scope.metadata));
                 }
-                return eventCompletions.concat(keywordsCompletions,
+                eventCompletions = eventCompletions.concat(keywordsCompletions,
                     builtInFunctionCompletions,
                     builtInConstCompletions);
+                return { isIncomplete: true, items: eventCompletions };
             }
         }
 
@@ -133,7 +135,7 @@ connection.onCompletion(
             completions = completions.concat(currentCompletions);
         }
 
-        return completions;
+        return { isIncomplete: true, items: completions };
     }
 );
 
