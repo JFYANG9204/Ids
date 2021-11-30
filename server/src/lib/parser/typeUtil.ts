@@ -811,7 +811,8 @@ export class TypeUtil extends UtilParser {
     getMemberPropertyType(
         member: MemberExpression,
         obj?: DeclarationBase,
-        raiseError = true): DeclarationBase | undefined {
+        raiseError = true,
+        checkCallByDot?: { isCallByDot: boolean }): DeclarationBase | undefined {
         if (!obj) {
             return this.getVariant();
         }
@@ -868,6 +869,15 @@ export class TypeUtil extends UtilParser {
                     (parent as ClassOrInterfaceDeclaration));
             }
             if (!child) {
+                // 判断是否为'.'调用的函数
+                let maybeFunc = this.scope.get((prop as Identifier).name, undefined, true);
+                if (maybeFunc?.result) {
+                    if (checkCallByDot) {
+                        checkCallByDot.isCallByDot = true;
+                    }
+                    return maybeFunc.result;
+                }
+
                 if (!this.scope.inFunction &&
                     this.options.raiseTypeError &&
                     raiseError) {
@@ -959,9 +969,9 @@ export class TypeUtil extends UtilParser {
         return memberDec;
     }
 
-    getMemberType(member: MemberExpression, raiseError = true): DeclarationBase | undefined {
+    getMemberType(member: MemberExpression, raiseError = true, callByDot?: { isCallByDot: boolean }): DeclarationBase | undefined {
         const obj = this.getMemberObjectType(member, raiseError);
-        const type = this.getMemberPropertyType(member, obj, raiseError);
+        const type = this.getMemberPropertyType(member, obj, raiseError, callByDot);
         this.addExtra(member, "declaration", this.getMaybeBindingType(type));
         if (!member.property.extra["declaration"]) {
             this.addExtra(member.property, "declaration", type);
@@ -978,13 +988,14 @@ export class TypeUtil extends UtilParser {
     getCallExprType(callExpr: CallExpression, raiseError = true) {
         const callee = callExpr.callee;
         let objType: DeclarationBase | undefined;
+        let callByDot: { isCallByDot: boolean } = { isCallByDot: false };
         if (callee.type === "Identifier") {
             objType = this.getIdentifierType(
                 callee as Identifier,
                 raiseError,
                 true);
         } else {
-            objType = this.getMemberType(callee as MemberExpression, raiseError);
+            objType = this.getMemberType(callee as MemberExpression, raiseError, callByDot);
         }
 
         let funcName;
@@ -1025,7 +1036,7 @@ export class TypeUtil extends UtilParser {
             return this.getVariant();
         }
 
-        this.checkFunctionParams(callExpr, objType as FunctionDeclaration);
+        this.checkFunctionParams(callExpr, objType as FunctionDeclaration, callByDot.isCallByDot);
 
         const func = objType as FunctionDeclaration;
         if (func.binding) {
@@ -1044,12 +1055,15 @@ export class TypeUtil extends UtilParser {
         }
     }
 
-    checkFunctionParams(callExpr: CallExpression, func: FunctionDeclaration) {
+    checkFunctionParams(callExpr: CallExpression, func: FunctionDeclaration, callByDot?: boolean) {
         let cur: ArgumentDeclarator | undefined;
         let index = 0;
         let nece = "";
-        const params = callExpr.arguments;
-        const args = func.params;
+        let params = callExpr.arguments;
+        let args = func.params;
+        if (callByDot && func.params.length > 0) {
+            args = func.params.slice(1);
+        }
         let ns;
         for (const param of params) {
             const paramType = this.getExprType(param);
