@@ -134,7 +134,7 @@ export function getFileTypeMark(content: string): SourceType | undefined {
  * @returns
  */
 export function getAllIncludeInFile(content: string) {
-    const reg = /^[^']*?\s*#\s*include\s*"(.*?)"\s*/g;
+    const reg = /^(?<!['])\s*#include\s*"(.*?)"/gm;
     const regexp = new RegExp(reg.source, "gm");
     const incs: string[] = [];
     if (!regexp.test(content)) {

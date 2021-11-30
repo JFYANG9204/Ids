@@ -192,7 +192,7 @@ export class ParserFileDigraph {
         }
 
         // 查找对应入口文件
-        this.current = this.getData(filePath);
+        this.current = this.getData(filePath.toLowerCase());
         if (!this.current) {
             return;
         }
@@ -221,7 +221,9 @@ export class ParserFileDigraph {
                 parser.options.sourceType = this.start.fileTypeMark;
             }
             parser.catchFileTypeMarkFunction = getFileTypeMark;
-            return parser.parse();
+            let file = parser.parse();
+            this.start.file = file;
+            return file;
         }
     }
 
