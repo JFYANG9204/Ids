@@ -11,7 +11,7 @@ Namespace MRSCRIPTCORELib
     + `Clear` the error information using the `Clear` method.
     + `Raise` an error using the `Raise` method.
     !'
-    Interface IErr­Object Implements Object
+    Interface IErrObject Implements Object
 
         '!
         Clears all property settings of the `Err` object.

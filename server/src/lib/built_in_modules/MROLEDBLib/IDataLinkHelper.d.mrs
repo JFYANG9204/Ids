@@ -7,7 +7,7 @@ Namespace MROLEDBLib
         End Function
 
         Function CreateDocumentObjectString(Document As Variant) As String
-        End String
+        End Function
 
         Function GetObjectFromConnection(Connection As Variant, PropertyName As String) As Variant
         End Function

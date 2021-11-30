@@ -5,7 +5,6 @@ Dim dmgrLog As IDataManagerLogging
 Dim dmgrQuestions As IQuestions
 Dim dmgrWeightEngines As IDataManagerWeightEngines
 
-
 Const Debug As MRSCRIPTCORELib.IDebugObject
-Const Err As MRSCRIPTCORELib.IErr­Object
+Const Err   As MRSCRIPTCORELib.IErrObject
 
