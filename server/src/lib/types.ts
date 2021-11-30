@@ -448,7 +448,7 @@ export class EventSection extends Statement {
     name: Identifier;
     description?: StringLiteral;
     body: BlockStatement;
-    scope?: Scope;
+    declare scope: Scope;
     constructor(parser: ParserBase, pos: number, loc: Position) {
         super(parser, pos, loc);
         this.name = new Identifier(parser, pos, loc);

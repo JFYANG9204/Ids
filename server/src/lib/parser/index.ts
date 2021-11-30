@@ -1,7 +1,7 @@
 import { extname } from "path";
 import { types as tt } from "../tokenizer/type";
 import { Options, ScriptFileType, SourceType } from "../options";
-import { File } from "../types";
+import { EventSection, File } from "../types";
 import { Scope, ScopeFlags, ScopeHandler } from "../util/scope";
 import { ErrorMessages } from "./error-messages";
 import { StaticTypeChecker } from "./typeCheker";
@@ -37,7 +37,7 @@ export class Parser extends StaticTypeChecker {
         this.updateFuncType = this.checkFunctionBody;
     }
 
-    parse(preDef?: Scope, isInclude?: boolean, inWith?: boolean): File {
+    parse(preDef?: Scope, isInclude?: boolean, inWith?: boolean, event?: EventSection): File {
         const file = this.startNode(File);
         if (preDef) {
             this.scope.joinScope(preDef);
@@ -48,7 +48,7 @@ export class Parser extends StaticTypeChecker {
             this.scope.enter(ScopeFlags.program);
             try {
                 file.program = this.parseProgram(tt.eof,
-                    this.options.sourceType, inWith);
+                    this.options.sourceType, inWith, event);
                 file.push(file.program);
                 if (!isInclude &&
                     this.options.sourceType !== SourceType.declare) {

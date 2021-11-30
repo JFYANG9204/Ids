@@ -296,6 +296,7 @@ export class StatementParser extends ExpressionParser {
                     eventNode.body.push(withNode);
                     eventNode.push(eventNode.body);
                     this.finishNode(eventNode.body, "BlockStatement");
+                    this.finishNode(eventNode, event?.type ?? "EventSection");
                     node.body = eventNode;
                     node.push(eventNode);
                 }
@@ -303,6 +304,12 @@ export class StatementParser extends ExpressionParser {
                 if (!eventNode) {
                     node.body = this.parseBlock(end);
                     node.push(node.body);
+                } else {
+                    eventNode.body = this.parseBlock(end);
+                    eventNode.push(eventNode.body);
+                    this.finishNode(eventNode, event?.type ?? "EventSection");
+                    node.body = eventNode;
+                    node.push(eventNode);
                 }
             }
         } else {
@@ -1415,7 +1422,7 @@ export class StatementParser extends ExpressionParser {
             node.parser.fileName = node.parser.options.sourceFileName = node.path;
             node.parser.searchParserNode = this.searchParserNode;
             node.file = node.parser.parse(
-                this.scope.store, true, this.scope.inWith);
+                this.scope.store, true, this.scope.inWith, this.scope.currentEvent);
             if (search) {
                 search.file = node.file;
                 search.parser = node.parser;
@@ -1515,7 +1522,7 @@ export class StatementParser extends ExpressionParser {
         allowDiscription: boolean
     ): T {
         const node = this.startNode(n);
-        this.scope.enter(ScopeFlags.event, eventName);
+        this.scope.enter(ScopeFlags.event, node);
         this.next();
         this.expect(tt.braceL);
         const name = this.parseIdentifier(true);

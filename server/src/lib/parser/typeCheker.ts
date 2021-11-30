@@ -27,7 +27,7 @@ import {
     WhileStatement,
     WithStatement
 } from "../types";
-import { BindTypes, getLineInfo, Position, Scope, ScopeFlags } from "../util";
+import { BindTypes, getLineInfo, mergeScope, Position, Scope, ScopeFlags } from "../util";
 import { ErrorMessages } from "./error-messages";
 import { ParsingError } from "./errors";
 import { StatementParser } from "./statement";
@@ -388,11 +388,12 @@ export class StaticTypeChecker extends StatementParser {
     }
 
     checkEvent(event: EventSection) {
-        this.scope.enter(ScopeFlags.event, event.name.name);
+        this.scope.enter(ScopeFlags.event, event);
         if (event.body) {
+            this.checkFuncInScope(event.scope);
             this.checkBlock(event.body);
         }
-        event.scope = this.scope.currentScope();
+        mergeScope(this.scope.currentScope(), event.scope);
         this.scope.exit(true);
     }
 

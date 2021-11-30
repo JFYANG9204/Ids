@@ -6,6 +6,7 @@ import {
     ClassOrInterfaceDeclaration,
     DeclarationBase,
     EnumDeclaration,
+    EventSection,
     Expression,
     FunctionDeclaration,
     Identifier,
@@ -75,7 +76,7 @@ export class ScopeHandler {
     stack: Array<Scope> = [];
     raise: RaiseFunction;
 
-    currentEvent?: string;
+    currentEvent?: EventSection;
 
     constructor(
         parser: ParserBase,
@@ -116,13 +117,13 @@ export class ScopeHandler {
         if (!this.currentEvent) {
             return false;
         }
-        return name.toLowerCase() === this.currentEvent.toLowerCase();
+        return name.toLowerCase() === this.currentEvent.name.name.toLowerCase();
     }
 
-    enter(flags: ScopeFlags, eventName?: string) {
+    enter(flags: ScopeFlags, event?: EventSection) {
         this.stack.push(new Scope(flags));
-        if (eventName) {
-            this.currentEvent = eventName;
+        if (event) {
+            this.currentEvent = event;
         }
     }
 
@@ -471,7 +472,7 @@ export class ScopeHandler {
             this.store = scope;
             return;
         }
-        mergeScope(scope, this.store);
+        mergeScope(scope, this.inEvent ? this.currentScope() : this.store);
     }
 
     private insertName(
