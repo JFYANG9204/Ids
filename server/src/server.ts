@@ -26,6 +26,7 @@ import {
     builtInConstCompletions,
     builtInFunctionCompletions,
     getCompletionFromPosition,
+    getCompletionsFromDeclarations,
     getCompletionsFromScope,
     getHoverFromDeclaration,
     getSignatureHelpFromFunction,
@@ -40,6 +41,7 @@ import {
 } from "./util";
 import { builtInModule } from "./declaration";
 import { actionMessages } from "./messages";
+import { positionInEvent } from "./lib/file/util";
 
 let connection = createConnection(ProposedFeatures.all);
 let documents = new TextDocuments(TextDocument);
@@ -110,6 +112,18 @@ connection.onCompletion(
                     builtInFunctionCompletions,
                     builtInConstCompletions,
                     getCompletionsFromScope(lastFile.scope, true));
+            }
+
+            let event = positionInEvent(lastFile.program.body, pos);
+            if (event && event.scope) {
+                let eventCompletions = getCompletionsFromScope(event.scope);
+                if (event.name.name.toLowerCase() === "onnextcase") {
+                    eventCompletions = eventCompletions.concat(
+                        getCompletionsFromDeclarations(lastFile.scope.metadata));
+                }
+                return eventCompletions.concat(keywordsCompletions,
+                    builtInFunctionCompletions,
+                    builtInConstCompletions);
             }
         }
 

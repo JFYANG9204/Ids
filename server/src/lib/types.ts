@@ -448,6 +448,7 @@ export class EventSection extends Statement {
     name: Identifier;
     description?: StringLiteral;
     body?: BlockStatement;
+    scope?: Scope;
     constructor(parser: ParserBase, pos: number, loc: Position) {
         super(parser, pos, loc);
         this.name = new Identifier(parser, pos, loc);
@@ -946,7 +947,7 @@ export class MetadataAxisExpression extends NodeBase {
 
 // categorical
 
-export class MetadataBase extends NodeBase {
+export class MetadataBase extends DeclarationBase {
     header: MetadataFieldHeadDefinition;
     tail?: MetadataFieldTailDefinition;
     typeDef?: MetadataFieldTypeDefinition;
@@ -1184,7 +1185,6 @@ export class MetadataRange extends NodeBase {
 }
 
 export class MetadataCategoryList extends MetadataBase {
-    name?: Identifier;
     categories: Array<MetadataCategory> = [];
     sublist?: Array<MetadataSubList>;
     defined?: Identifier;
@@ -1194,7 +1194,7 @@ export class MetadataCategoryList extends MetadataBase {
     ascending?: Identifier;
     descending?: Identifier;
     fix?: Identifier;
-    namespace?: Identifier;
+    namespace?: string;
     constructor(parser: ParserBase, pos: number, loc: Position) {
         super(parser, pos, loc);
         this.type = "MetadataCategoryList";

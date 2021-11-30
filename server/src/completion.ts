@@ -34,6 +34,7 @@ import {
     File,
     FunctionDeclaration,
     MacroDeclaration,
+    MetadataBase,
     NamespaceDeclaration,
     PreIncludeStatement,
     PropertyDeclaration,
@@ -191,7 +192,11 @@ function getCompletionTypeFromDeclare(dec: DeclarationBase): CompletionItemKind 
         case "ArrayDeclarator":              return CompletionItemKind.Variable;
         case "ArgumentDeclarator":           return CompletionItemKind.Variable;
         case "ConstDeclaration":             return CompletionItemKind.Constant;
-        default:                             return CompletionItemKind.Text;
+        default:
+            if (dec instanceof MetadataBase) {
+                return CompletionItemKind.Field;
+            }
+            return CompletionItemKind.Text;
     }
 }
 
@@ -306,6 +311,10 @@ function getDefaultNote(dec: DeclarationBase, appendMd: boolean = true): string 
                 (t.binding ? (": " + getBindingName(t.binding)) : ""));
     }
 
+    if (dec instanceof MetadataBase) {
+        text = dec.header.name.name;
+    }
+
     let namespace = getDeclarationNamespace(dec);
     switch (dec.type) {
         case "FunctionDeclaration":
@@ -388,6 +397,9 @@ function getDefaultNote(dec: DeclarationBase, appendMd: boolean = true): string 
             return appendMd ? "```\n" + text + "\n```" : text;
 
         default:
+            if (dec.type.startsWith("Metadata")) {
+                return "(metadata) " + text;
+            }
             return "";
     }
 }
@@ -465,6 +477,8 @@ function getDeclarationFromFileOrBuiltIn(
 function getDeclaratorName(declarator: DeclarationBase) {
     if (declarator.type === "ConstDeclarator") {
         return (declarator as ConstDeclarator).declarator.name.name;
+    } else if (declarator instanceof MetadataBase) {
+        return declarator.header.name.name;
     }
     return declarator.name.name;
 }
@@ -569,7 +583,7 @@ function getMemberCompletions(dec: DeclarationBase, file: File): CompletionItem[
     return completions;
 }
 
-function getCompletionsFromDeclarations(decs: Map<string, DeclarationBase>): CompletionItem[] {
+export function getCompletionsFromDeclarations(decs: Map<string, DeclarationBase>): CompletionItem[] {
     const completions: CompletionItem[] = [];
     decs.forEach((value) => {
         completions.push(getCompletionFromDeclarationBase(value));

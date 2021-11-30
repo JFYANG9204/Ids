@@ -4,6 +4,7 @@ import * as jschardet from "jschardet";
 import * as iconv from "iconv-lite";
 import { lineBreak } from "../util/whitespace";
 import {
+    EventSection,
     File,
     FunctionDeclaration,
     Identifier,
@@ -243,6 +244,27 @@ export function positionInFunction(node: NodeBase, pos: number) {
         }
     });
     return func;
+}
+
+export function positionInEvent(node: NodeBase, pos: number) {
+    let event: EventSection | undefined;
+    positionIn(node, pos, sub => {
+        if (sub instanceof EventSection) {
+            event = sub;
+        }
+    });
+    return event;
+}
+
+export function positionInUniqueEvent(node: NodeBase, pos: number, name: string) {
+    let event: EventSection | undefined;
+    positionIn(node, pos, sub => {
+        if (sub instanceof EventSection &&
+            sub.name.name.toLowerCase() === name.toLowerCase()) {
+            event = sub;
+        }
+    });
+    return event;
 }
 
 export function getCurrentParser(file: File, path: string): File | undefined {

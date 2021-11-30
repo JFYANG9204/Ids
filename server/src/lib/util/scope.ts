@@ -10,6 +10,7 @@ import {
     FunctionDeclaration,
     Identifier,
     MacroDeclaration,
+    MetadataBase,
     NamespaceDeclaration,
     NodeBase,
     SingleVarDeclarator
@@ -32,6 +33,7 @@ export enum BindTypes {
     function,
     classOrInterface,
     namespace,
+    metadata,
     undefined
 }
 
@@ -52,6 +54,7 @@ export class Scope {
     classes: Map<string, ClassOrInterfaceDeclaration> = new Map();
     namespaces: Map<string, NamespaceDeclaration> = new Map();
     undefined: Map<string, DeclarationBase> = new Map();
+    metadata: Map<string, MetadataBase> = new Map();
 
     constructor(flags: ScopeFlags) {
         this.flags = flags;
@@ -71,6 +74,8 @@ export class ScopeHandler {
     store: Scope;
     stack: Array<Scope> = [];
     raise: RaiseFunction;
+
+    currentEvent?: string;
 
     constructor(
         parser: ParserBase,
@@ -107,12 +112,25 @@ export class ScopeHandler {
         return this.currentScope().flags === ScopeFlags.event;
     }
 
-    enter(flags: ScopeFlags) {
-        this.stack.push(new Scope(flags));
+    inSpecialEvent(name: string) {
+        if (!this.currentEvent) {
+            return false;
+        }
+        return name.toLowerCase() === this.currentEvent.toLowerCase();
     }
 
-    exit() {
+    enter(flags: ScopeFlags, eventName?: string) {
+        this.stack.push(new Scope(flags));
+        if (eventName) {
+            this.currentEvent = eventName;
+        }
+    }
+
+    exit(isEvent?: boolean) {
         this.stack.pop();
+        if (isEvent) {
+            this.currentEvent = undefined;
+        }
     }
 
     declareName(
@@ -196,6 +214,11 @@ export class ScopeHandler {
             } else {
                 this.store.namespaces.set(name.toLowerCase(), node);
             }
+        }
+
+        if (bindingType === BindTypes.metadata &&
+            node instanceof MetadataBase) {
+            this.store.metadata.set(name.toLowerCase(), node);
         }
     }
 
@@ -342,7 +365,10 @@ export class ScopeHandler {
 
         return this.getName(this.store, name)          ||
                this.getName(this.currentScope(), name) ||
-               this.getName(this.global, name);
+               this.getName(this.global, name)         || (
+               this.inSpecialEvent("OnNextCase") ?
+               this.getFromMap(this.store.metadata, name, BindTypes.metadata) :
+               undefined);
     }
 
     getUndefined(name: string) {
@@ -506,6 +532,7 @@ export function mergeScope(scope: Scope, target: Scope) {
     mergeMap(scope.macros,    target.macros);
     mergeMap(scope.functions, target.functions);
     mergeMap(scope.classes,   target.classes);
+    mergeMap(scope.metadata,  target.metadata);
     mergeNamespace(scope.namespaces, target.namespaces);
 }
 

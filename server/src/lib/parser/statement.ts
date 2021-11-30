@@ -1482,7 +1482,7 @@ export class StatementParser extends ExpressionParser {
         allowDiscription: boolean
     ): T {
         const node = this.startNode(n);
-        this.scope.enter(ScopeFlags.event);
+        this.scope.enter(ScopeFlags.event, eventName);
         this.next();
         this.expect(tt.braceL);
         const name = this.parseIdentifier(true);
@@ -1525,7 +1525,8 @@ export class StatementParser extends ExpressionParser {
         this.expectString(eventName);
         this.next();
         this.checkEventSectionError(node);
-        this.scope.exit();
+        node.scope = this.scope.currentScope();
+        this.scope.exit(true);
         return this.finishNode(node, `${eventName}Section`);
     }
 
@@ -3113,7 +3114,7 @@ export class StatementParser extends ExpressionParser {
                     node.fix = kw;
                     break;
                 case "namespace":
-                    node.namespace = kw;
+                    node.namespace = kw.name;
                     break;
                 default:
                     this.unexpected();
@@ -3136,6 +3137,7 @@ export class StatementParser extends ExpressionParser {
         node.typeDef = typeDef;
         callback(node);
         node.tail = this.parseMetadataFieldTail(initialType);
+        this.scope.declareName(node.header.name.name, BindTypes.metadata, node);
         return this.finishNode(node, nodeType);
     }
 
@@ -3368,8 +3370,10 @@ export class StatementParser extends ExpressionParser {
         header: MetadataFieldHeadDefinition,
         typeDef: MetadataFieldTypeDefinition) {
         const node = this.startNodeAtNode(header, MetadataCategoryList);
+        node.header = header;
         node.defined = typeDef.typeKw;
         node.categories = this.parseMetadataCategoryList();
+        this.scope.declareName(node.header.name.name, BindTypes.metadata, node);
         return this.finishNode(node, "MetadataCategoryList");
     }
 
@@ -3384,6 +3388,7 @@ export class StatementParser extends ExpressionParser {
         const node = this.startNodeAtNode(header, MetadataInfoVariable);
         node.header = header;
         node.typeDef = this.parseMetadataFieldTypeDefinition();
+        this.scope.declareName(node.header.name.name, BindTypes.metadata, node);
         return this.finishNode(node, "MetadataInfoVariable");
     }
 
@@ -3475,6 +3480,7 @@ export class StatementParser extends ExpressionParser {
         node.fields = this.parseMetadataFields();
         this.expect(tt.braceR);
         this.parseMetadataLoopVariableTail(node);
+        this.scope.declareName(node.header.name.name, BindTypes.metadata, node);
         return this.finishNode(node,
             typeDef ?
             "MetadataNumericLoopVariable" :
