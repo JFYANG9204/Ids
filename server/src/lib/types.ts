@@ -447,11 +447,12 @@ export class ExitStatement extends Statement {
 export class EventSection extends Statement {
     name: Identifier;
     description?: StringLiteral;
-    body?: BlockStatement;
+    body: BlockStatement;
     scope?: Scope;
     constructor(parser: ParserBase, pos: number, loc: Position) {
         super(parser, pos, loc);
         this.name = new Identifier(parser, pos, loc);
+        this.body = new BlockStatement(parser, pos, loc);
         this.type = "EventSection";
     }
 }

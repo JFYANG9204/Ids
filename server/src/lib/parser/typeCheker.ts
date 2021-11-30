@@ -182,6 +182,9 @@ export class StaticTypeChecker extends StatementParser {
                 this.checkBlockContent(block.body[i]);
             }
         } else if (block instanceof EventSection) {
+            if (block.scope) {
+                this.checkFuncInScope(block.scope);
+            }
             if (block.body) {
                 this.checkBlock(block.body);
             }

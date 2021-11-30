@@ -704,11 +704,14 @@ export class TypeUtil extends UtilParser {
                 } else {
                     update = this.getMaybeBindingType(rightType.type) ?? rightType.type;
                 }
-                this.scope.update(
-                    expr.left.name,
-                    BindTypes.var,
-                    this.createBindingTypeFromDeclaration(update),
-                    expr);
+                // 检查是否为null，如果为null，不更新类型
+                if (update.name.name.toLowerCase() !== "null") {
+                    this.scope.update(
+                        expr.left.name,
+                        BindTypes.var,
+                        this.createBindingTypeFromDeclaration(update),
+                        expr);
+                }
             } else {
                 if (raiseError) {
                     this.isUndefined(expr.left, expr.left.name);

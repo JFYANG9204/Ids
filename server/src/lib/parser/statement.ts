@@ -271,21 +271,39 @@ export class StatementParser extends ExpressionParser {
         end: TokenType = tt.eof,
         sourceType: SourceType = this.options.sourceType,
         inWith?: boolean,
+        event?: EventSection
     ): Program {
         const node = this.startNode(Program);
         node.sourceType = sourceType;
         if (this.options.sourceType !== SourceType.metadata) {
+            let eventNode: EventSection | undefined;
+            if (event) {
+                eventNode = this.startNode(EventSection);
+                eventNode.name = event.name;
+                eventNode.body = this.startNode(BlockStatement);
+            }
             if (inWith) {
                 const withNode = this.startNode(WithStatement);
                 withNode.body = this.parseBlock(end);
                 withNode.push(withNode.body);
                 this.finishNode(withNode, "WithStatement");
-                node.body = withNode;
-                node.globalWith = withNode;
-                node.push(withNode.body);
+                if (!eventNode) {
+                    node.body = withNode;
+                    node.globalWith = withNode;
+                    node.push(withNode.body);
+                } else {
+                    eventNode.body.body.push(withNode);
+                    eventNode.body.push(withNode);
+                    eventNode.push(eventNode.body);
+                    this.finishNode(eventNode.body, "BlockStatement");
+                    node.body = eventNode;
+                    node.push(eventNode);
+                }
             } else {
-                node.body = this.parseBlock(end);
-                node.push(node.body);
+                if (!eventNode) {
+                    node.body = this.parseBlock(end);
+                    node.push(node.body);
+                }
             }
         } else {
             node.metadata = this.parseMetadata();
@@ -1540,6 +1558,7 @@ export class StatementParser extends ExpressionParser {
         this.expectString(eventName);
         this.next();
         this.checkEventSectionError(node);
+        node.scope = this.scope.currentScope();
         this.scope.exit(true);
         return this.finishNode(node, `${eventName}Section`);
     }
