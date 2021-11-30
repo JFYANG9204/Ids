@@ -398,7 +398,8 @@ function getDefaultNote(dec: DeclarationBase, appendMd: boolean = true): string 
 
         default:
             if (dec.type.startsWith("Metadata")) {
-                return "(metadata) " + text;
+                return appendMd ? ("```\n(metadata) " + text + "\n```") :
+                    ("(metadata) " + text);
             }
             return "";
     }
@@ -503,56 +504,69 @@ function getMemberCompletions(dec: DeclarationBase, file: File): CompletionItem[
 
     if (dec.type !== "ClassOrInterfaceDeclaration" &&
         dec.type !== "EnumDeclaration") {
-        if (dec.type === "SingleVarDeclarator") {
-            const single = dec as SingleVarDeclarator;
-            if (!single.bindingType || !(
-                single.bindingType instanceof ClassOrInterfaceDeclaration ||
-                single.bindingType instanceof EnumDeclaration)) {
+        let find: DeclarationBase | undefined;
+        switch (dec.type) {
+            case "SingleVarDeclarator":
+                const single = dec as SingleVarDeclarator;
+                if (!single.bindingType || !(
+                    single.bindingType instanceof ClassOrInterfaceDeclaration ||
+                    single.bindingType instanceof EnumDeclaration)) {
+                    return [];
+                } else {
+                    bindingType = single.bindingType;
+                }
+            case "PropertyDeclaration":
+                const prop = dec as PropertyDeclaration;
+                let bindingName = typeof prop.binding === "string" ?
+                    prop.binding : prop.binding.name.name;
+                find = getDeclarationFromFileOrBuiltIn(
+                    file, bindingName,
+                    (typeof prop.binding !== "string" ?
+                    prop.binding.namespace : undefined) ?? prop.class.namespace);
+                if (!find || !(
+                    find instanceof ClassOrInterfaceDeclaration ||
+                    find instanceof EnumDeclaration)) {
+                    return [];
+                }
+                bindingType = find;
+            case "FunctionDeclaration":
+                const func = dec as FunctionDeclaration;
+                if (!func.binding) {
+                    return [];
+                }
+                find = getDeclarationFromFileOrBuiltIn(file,
+                    typeof func.binding === "string" ?
+                    func.binding : func.binding.name.name,
+                    (typeof func.binding !== "string" ?
+                    func.binding.namespace : undefined) ?? func.class?.namespace);
+                if (!find || !(
+                    find instanceof ClassOrInterfaceDeclaration ||
+                    find instanceof EnumDeclaration)) {
+                    return [];
+                }
+                bindingType = find;
+            case "ArrayDeclarator":
+                if (!builtInModule.scope) {
+                    return [];
+                }
+                let arr = getDeclarationFromScope(builtInModule.scope, "Array");
+                if (!arr) {
+                    return [];
+                }
+                bindingType = arr as ClassOrInterfaceDeclaration;
+
+            case "MetadataCategoricalVariable":
+                if (!builtInModule.scope) {
+                    return [];
+                }
+                let categorical = getDeclarationFromScope(builtInModule.scope, "Categorical");
+                if (!categorical) {
+                    return [];
+                }
+                bindingType = categorical as ClassOrInterfaceDeclaration;
+
+            default:
                 return [];
-            } else {
-                bindingType = single.bindingType;
-            }
-        } else if (dec.type === "PropertyDeclaration") {
-            const prop = dec as PropertyDeclaration;
-            let bindingName = typeof prop.binding === "string" ?
-                prop.binding : prop.binding.name.name;
-            let find = getDeclarationFromFileOrBuiltIn(
-                file, bindingName,
-                (typeof prop.binding !== "string" ?
-                prop.binding.namespace : undefined) ?? prop.class.namespace);
-            if (!find || !(
-                find instanceof ClassOrInterfaceDeclaration ||
-                find instanceof EnumDeclaration)) {
-                return [];
-            }
-            bindingType = find;
-        } else if (dec.type === "FunctionDeclaration") {
-            const func = dec as FunctionDeclaration;
-            if (!func.binding) {
-                return [];
-            }
-            let find = getDeclarationFromFileOrBuiltIn(file,
-                typeof func.binding === "string" ?
-                func.binding : func.binding.name.name,
-                (typeof func.binding !== "string" ?
-                func.binding.namespace : undefined) ?? func.class?.namespace);
-            if (!find || !(
-                find instanceof ClassOrInterfaceDeclaration ||
-                find instanceof EnumDeclaration)) {
-                return [];
-            }
-            bindingType = find;
-        } else if (dec.type === "ArrayDeclarator") {
-            if (!builtInModule.scope) {
-                return [];
-            }
-            let arr = getDeclarationFromScope(builtInModule.scope, "Array");
-            if (!arr) {
-                return [];
-            }
-            bindingType = arr as ClassOrInterfaceDeclaration;
-        } else {
-            return [];
         }
     } else {
         bindingType = dec.type === "ClassOrInterfaceDeclaration" ?
