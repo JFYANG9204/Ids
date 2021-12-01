@@ -781,11 +781,12 @@ export function getSignatureHelp(func: FunctionDeclaration): SignatureInformatio
 
 export function getSignatureHelpFromFunction(func: CallExpression) {
     const dec: DeclarationBase | undefined = func.callee.extra["declaration"];
+    const callByDot = func.callee.extra["callByDot"];
     if (!dec || !(dec instanceof FunctionDeclaration)) {
         return null;
     }
     let signature = getSignatureHelp(dec);
-    signature.activeParameter = func.arguments.length;
+    signature.activeParameter = callByDot ? func.arguments.length + 1 : func.arguments.length;
     const help: SignatureHelp = {
         signatures: [ signature ],
         activeParameter: null,

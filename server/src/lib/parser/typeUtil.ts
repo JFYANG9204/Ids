@@ -1009,6 +1009,9 @@ export class TypeUtil extends UtilParser {
         const obj = this.getMemberObjectType(member, raiseError);
         const type = this.getMemberPropertyType(member, obj, raiseError, callByDot);
         this.addExtra(member, "declaration", this.getMaybeBindingType(type));
+        if (callByDot?.isCallByDot) {
+            this.addExtra(member, "callByDot", true);
+        }
         if (!member.property.extra["declaration"]) {
             this.addExtra(member.property, "declaration", type);
         }
