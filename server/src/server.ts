@@ -25,6 +25,7 @@ import {
     builtInCompletions,
     builtInConstCompletions,
     builtInFunctionCompletions,
+    builtInVarCompletions,
     getCompletionFromPosition,
     getCompletionsFromDeclarations,
     getCompletionsFromScope,
@@ -124,7 +125,8 @@ connection.onCompletion(
                 }
                 eventCompletions = eventCompletions.concat(keywordsCompletions,
                     builtInFunctionCompletions,
-                    builtInConstCompletions);
+                    builtInConstCompletions,
+                    builtInVarCompletions);
                 return { isIncomplete: true, items: eventCompletions };
             }
         }
