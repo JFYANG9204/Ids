@@ -425,7 +425,7 @@ export class StaticTypeChecker extends StatementParser {
     }
 
     checkPreIfStatement(pre: PreIfStatement) {
-        if (pre.test) {
+        if (pre.test && !pre.defined) {
             this.checkExprError(pre.test);
         }
         if (pre.alternate) {

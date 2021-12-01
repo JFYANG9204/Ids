@@ -1500,6 +1500,7 @@ export class StatementParser extends ExpressionParser {
         }
         node.test = this.parseExpression(undefined, true);
         if (defined) {
+            node.defined = true;
             this.expect(tt.braceR);
         }
         node.consequent = this.parseBlock([ tt.pre_endif, tt.pre_elif, tt.pre_else ]);

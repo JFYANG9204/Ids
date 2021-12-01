@@ -274,6 +274,7 @@ export class PreIncludeStatement extends PreprocessorBase {
 }
 
 export class PreIfStatement extends PreprocessorBase {
+    defined?: boolean;
     test?: Expression;
     consequent?: Expression;
     alternate?: PreIfStatement | BlockStatement;
