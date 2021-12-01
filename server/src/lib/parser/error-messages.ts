@@ -98,4 +98,5 @@ export const ErrorMessages: ErrorTemplates = makeErrorTemplates({
 export const WarningMessages: ErrorTemplates = makeErrorTemplates({
     RedundantTypeConvertion:             "多余的类型转换.",
     AssignmentMaybeObject:               "赋值结果为对象，且不具备类型为基础类型的默认属性，应使用'Set'语句.",
+    MissingMetadataField:                "未找到名为'%0'的子元数据变量.",
 }, "DATACOLLECTION_SCRIPT_PARSER_SYNTAX_WARNING");

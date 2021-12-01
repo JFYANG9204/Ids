@@ -16,6 +16,8 @@ import {
     LogicalExpression,
     MacroDeclaration,
     MemberExpression,
+    MetadataBase,
+    MetadataLoopVariableBase,
     NamespaceDeclaration,
     NodeBase,
     PropertyDeclaration,
@@ -818,6 +820,15 @@ export class TypeUtil extends UtilParser {
         }
 
         let objType = obj;
+        let originMetadata: MetadataBase | undefined;
+
+        if (obj instanceof MetadataBase) {
+            let mdmField = this.scope.get("IMDMField", "MDMLib")?.result;
+            if (mdmField) {
+                objType = mdmField;
+            }
+            originMetadata = obj;
+        }
 
         //if (obj.name.name === "Variant" && member.property instanceof Identifier) {
         //    let guess = this.guessMemberObjectTypeByPropName(member.property.name);
@@ -869,6 +880,7 @@ export class TypeUtil extends UtilParser {
                     (parent as ClassOrInterfaceDeclaration));
             }
             if (!child) {
+
                 // 判断是否为'.'调用的函数
                 let maybeFunc = this.scope.get((prop as Identifier).name, undefined, true);
                 if (maybeFunc?.result) {
@@ -876,6 +888,30 @@ export class TypeUtil extends UtilParser {
                         checkCallByDot.isCallByDot = true;
                     }
                     return maybeFunc.result;
+                }
+
+                // 判断是否为MDMField
+                if (parent && parent.name.name === "IMDMField") {
+                    if (originMetadata) {
+                        if (originMetadata instanceof MetadataLoopVariableBase) {
+                            let column = originMetadata.fields.get((prop as Identifier).name.toLowerCase());
+                            if (!column) {
+                                this.raiseTypeError(prop,
+                                    WarningMessages["MissingMetadataField"],
+                                    true,
+                                    (prop as Identifier).name);
+                            }
+                        }
+                    } else {
+                        let existUndefined = this.scope.getUndefined((prop as Identifier).name);
+                        if (!existUndefined) {
+                            existUndefined = this.scope.declareUndefined(
+                                (prop as Identifier),
+                                this.scope.get("IMDMField", "MDMLib")?.result);
+                        }
+                        return existUndefined;
+                    }
+                    return this.scope.get("IMDMField", "MDMLib")?.result;
                 }
 
                 if (!this.scope.inFunction &&
@@ -914,8 +950,8 @@ export class TypeUtil extends UtilParser {
                     true);
             }
         } else if (objType.type === "ClassOrInterfaceDeclaration" &&
-            objType.name.name === "IQuestion") {
-            memberDec = this.scope.get("IQuestion")?.result;
+            objType.name.name === "IMDMField") {
+            memberDec = this.scope.get("IMDMField", "MDMLib")?.result;
             if (!memberDec) {
                 return this.getVariant();
             }

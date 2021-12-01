@@ -1050,7 +1050,7 @@ export class MetadataLoopVariableBase extends MetadataBase {
     expand?: Identifier;
     grid?: Identifier;
     iterationLabel?: StringLiteral | "-";
-    fields: Array<MetadataBase> = [];
+    fields: Map<string, MetadataBase> = new Map();
     constructor(parser: ParserBase, pos: number, loc: Position) {
         super(parser, pos, loc);
         this.type = "MetadataLoopVariableBase";
@@ -1086,7 +1086,7 @@ export class MetadataGridVariable extends MetadataLoopVariableBase {
 }
 
 export class MetadataBlockVariable extends MetadataBase {
-    fields: Array<MetadataBase> = [];
+    fields: Map<string, MetadataBase> = new Map();
     constructor(parser: ParserBase, pos: number, loc: Position) {
         super(parser, pos, loc);
         this.type = "MetadataBlockVariable";
@@ -1129,7 +1129,7 @@ export class MetadataDataBaseNonLoopQuestion extends MetadataBase {
 
 export class MetadataDataBaseLoopQuestion extends MetadataBase {
     definition?: MetadataDbDefinition;
-    fields: Array<MetadataBase> = [];
+    fields: Map<string, MetadataBase> = new Map();
     iterationLabel?: StringLiteral | "-";
     row?: Identifier;
     column?: Identifier;

@@ -4056,9 +4056,10 @@ export class StatementParser extends ExpressionParser {
     }
 
     parseMetadataFields() {
-        const fields: MetadataBase[] = [];
+        const fields: Map<string, MetadataBase> = new Map;
         while (!this.match(tt.braceR)) {
-            fields.push(this.parseMetadataField());
+            let field = this.parseMetadataField();
+            fields.set(field.header.name.name.toLowerCase(), field);
             if (!this.eat(tt.semi) && this.lookahead().type !== tt.braceR) {
                 this.unexpected(undefined, undefined, tt.semi, false);
                 this.next();
