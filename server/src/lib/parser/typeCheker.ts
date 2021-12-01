@@ -15,6 +15,7 @@ import {
     FunctionDeclaration,
     Identifier,
     IfStatement,
+    NodeBase,
     PreDefineStatement,
     PreIfStatement,
     PreIncludeStatement,
@@ -387,9 +388,26 @@ export class StaticTypeChecker extends StatementParser {
         }
     }
 
+    createSingleDeclaration(name: string, parentNode: NodeBase) {
+        const node = this.startNodeAtNode(parentNode, SingleVarDeclarator);
+        let nameNode = this.startNodeAtNode(parentNode, Identifier);
+        nameNode.name = name;
+        this.finishNodeAt(nameNode, "Identifier", parentNode.end, parentNode.loc.end);
+        node.name = nameNode;
+        node.binding = "Variant";
+        return this.finishNodeAt(node, "SingleVarDeclarator", parentNode.end, parentNode.loc.end);
+    }
+
     checkEvent(event: EventSection) {
         this.scope.stack.push(event.scope);
         this.scope.currentEvent = event;
+
+        if (this.scope.inSpecialEvent("OnNextCase")) {
+            this.scope.declareName("cat",   BindTypes.var, this.createSingleDeclaration("cat", event));
+            this.scope.declareName("cat_1", BindTypes.var, this.createSingleDeclaration("cat_1", event));
+            this.scope.declareName("cat_2", BindTypes.var, this.createSingleDeclaration("cat_2", event));
+        }
+
         if (event.body) {
             this.checkFuncInScope(event.scope);
             this.checkBlock(event.body);

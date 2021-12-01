@@ -297,7 +297,10 @@ export class StatementParser extends ExpressionParser {
                     eventNode.body.push(withNode);
                     eventNode.push(eventNode.body);
                     this.finishNode(eventNode.body, "BlockStatement");
-                    this.finishNode(eventNode, event?.type ?? "EventSection");
+                    this.finishNodeAt(eventNode,
+                        event?.type ?? "EventSection",
+                        this.state.pos + 1,
+                        this.state.curPostion());
                     node.body = eventNode;
                     node.push(eventNode);
                 }
@@ -308,7 +311,11 @@ export class StatementParser extends ExpressionParser {
                 } else {
                     eventNode.body = this.parseBlock(end);
                     eventNode.push(eventNode.body);
-                    this.finishNode(eventNode, event?.type ?? "EventSection");
+                    this.finishNodeAt(
+                        eventNode,
+                        event?.type ?? "EventSection",
+                        this.state.pos + 1,
+                        this.state.curPostion());
                     node.body = eventNode;
                     node.push(eventNode);
                 }
@@ -317,7 +324,9 @@ export class StatementParser extends ExpressionParser {
             node.metadata = this.parseMetadata();
             node.pushArr(node.metadata);
         }
-        return this.finishNode(node, "Program");
+        return this.finishNodeAt(node,
+            "Program",
+            this.state.pos + 1, this.state.curPostion());
     }
 
 
