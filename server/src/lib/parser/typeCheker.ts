@@ -388,7 +388,8 @@ export class StaticTypeChecker extends StatementParser {
     }
 
     checkEvent(event: EventSection) {
-        this.scope.enter(ScopeFlags.event, event);
+        this.scope.stack.push(event.scope);
+        this.scope.currentEvent = event;
         if (event.body) {
             this.checkFuncInScope(event.scope);
             this.checkBlock(event.body);

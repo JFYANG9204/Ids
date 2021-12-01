@@ -770,7 +770,8 @@ export class TypeUtil extends UtilParser {
                 return undef;
             }
             if (this.options.treatUnkownAsQuesion &&
-                !isFunction) {
+                !isFunction &&
+                this.scope.inSpecialEvent("OnNextCase")) {
                 let question = this.scope.get("IQuestion")?.result;
                 this.scope.declareUndefined(id);
                 this.addExtra(id, "declaration", question);

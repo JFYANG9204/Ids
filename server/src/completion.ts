@@ -398,11 +398,45 @@ function getDefaultNote(dec: DeclarationBase, appendMd: boolean = true): string 
 
         default:
             if (dec.type.startsWith("Metadata")) {
-                return appendMd ? ("```\n(metadata) " + text + "\n```") :
-                    ("(metadata) " + text);
+                text = getMetadataDeclarationNote(dec);
+                return appendMd ? ("```\n" + text + "\n```") :
+                    text;
             }
             return "";
     }
+}
+
+function getMetadataDeclarationNote(dec: DeclarationBase) {
+    if (!(dec instanceof MetadataBase)) {
+        return "";
+    }
+
+    let text = "(metadata) " + (dec as MetadataBase).header.name.name;
+
+    switch (dec.type) {
+        case "MetadataCategoricalVariable":       text += ": Categorical";      break;
+        case "MetadataLongVariable":              text += ": Long";             break;
+        case "MetadataDoubleVariable":            text += ": Double";           break;
+        case "MetadataTextVariable":              text += ": Text";             break;
+        case "MetadataDateVariable":              text += ": Date";             break;
+        case "MetadataBooleanVariable":           text += ": Boolean";          break;
+        case "MetadataInfoVariable":              text += ": Info";             break;
+        case "MetadataCategoricalLoopVariable":   text += ": Categorical Loop"; break;
+        case "MetadataNumericLoopVariable":       text += ": Numeric Loop";     break;
+        case "MetadataGridVariable":              text += ": Grid";             break;
+        case "MetadataBlockVariable":             text += ": Block";            break;
+        case "MetadataPageVariable":              text += ": Page";             break;
+        case "MetadataCompoundVariable":          text += ": Compound";         break;
+        case "MetadataDataBaseNonLoopQuestion":
+        case "MetadataDataBaseLoopQuestion":
+            text += ": Database Questions";
+            break;
+
+        default:
+            break;
+    }
+
+    return text;
 }
 
 function getDeclaratorNote(dec: SingleVarDeclarator | ArrayDeclarator | BindingDeclarator) {

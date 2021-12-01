@@ -280,6 +280,7 @@ export class StatementParser extends ExpressionParser {
             if (event) {
                 eventNode = this.startNode(EventSection);
                 eventNode.name = event.name;
+                eventNode.scope = event.scope;
                 eventNode.body = this.startNode(BlockStatement);
             }
             if (inWith) {
@@ -1523,6 +1524,7 @@ export class StatementParser extends ExpressionParser {
     ): T {
         const node = this.startNode(n);
         this.scope.enter(ScopeFlags.event, node);
+        node.scope = this.scope.currentScope();
         this.next();
         this.expect(tt.braceL);
         const name = this.parseIdentifier(true);
@@ -1565,7 +1567,6 @@ export class StatementParser extends ExpressionParser {
         this.expectString(eventName);
         this.next();
         this.checkEventSectionError(node);
-        node.scope = this.scope.currentScope();
         this.scope.exit(true);
         return this.finishNode(node, `${eventName}Section`);
     }
