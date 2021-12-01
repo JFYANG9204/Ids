@@ -343,7 +343,8 @@ export class ScopeHandler {
                this.getFromMap(scope.macros,     lowerName, BindTypes.const)            ||
                this.getFromMap(scope.classes,    lowerName, BindTypes.classOrInterface) ||
                this.getFromMap(scope.functions,  lowerName, BindTypes.function)         ||
-               this.getFromMap(scope.namespaces, lowerName, BindTypes.namespace);
+               this.getFromMap(scope.namespaces, lowerName, BindTypes.namespace)        ||
+               this.getFromMap(scope.undefined,  lowerName, BindTypes.var);
     }
 
     get(name: string,
