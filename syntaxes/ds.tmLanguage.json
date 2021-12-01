@@ -8,6 +8,13 @@
 	],
 	"patterns": [
 		{
+			"match": "\\n",
+			"name": "meta.ending-space"
+		},
+		{
+			"include": "#square-brackets"
+		},
+		{
 			"name": "meta.leading-space",
 			"begin": "^(?=\\t)",
 			"end": "(?=[^\\t])",
@@ -53,7 +60,10 @@
 			"include": "#string"
 		},
 		{
-			"#include": "#numeric"
+			"include": "#numeric"
+		},
+		{
+			"include": "#member-access"
 		},
 		{
 			"name": "keyword.operator.ds",
@@ -208,6 +218,122 @@
 		"numeric": {
 			"name": "constant.numeric.ds",
 			"match": "\\b(&(?:h|H)[0-9a-fA-F]+)|(\\.[0-9]+)|([0-9]+\\.?[0-9]*)\\b"
+		},
+		"operators": {
+			"match": "!|%|&&|\\|\\||\\+|\\-|\\*|/|=|==|!=|>|<|>=|<=|<>"
+		},
+		"square-brackets": {
+			"begin": "\\s*([a-zA-Z_]\\s*|(?<=[\\]\\)]))?(\\[)(?!\\])",
+			"end": "\\]",
+			"beginCaptures": {
+				"1": {
+					"name": "variable.other.object.ds"
+				},
+				"2": {
+					"name": "punctuation.definition.begin.bracket.square"
+				}
+			},
+			"endCaptures": {
+				"0": {
+					"name": "punctuation.definition.end.bracket.square"
+				}
+			},
+			"name": "meta.bracket.square.access.ds",
+			"patterns": [
+				{
+					"include": "#string"
+				},
+				{
+					"include": "#numeric"
+				},
+				{
+					"include": "#operators"
+				}
+			]
+		},
+		"member-access": {
+			"match": "((\\.)(?:(?:\\s)*)(\\b[a-zA-Z_]\\w*\\b)(?![\\[\\(]))|((?!\\.)\\b([a-zA-Z_]\\w*\\b)(?:(?:\\s)*)(?=\\.))",
+			"captures": {
+				"2": {
+					"name": "punctuation.separator.dot-access.ds"
+				},
+				"3": {
+					"name": "variable.other.object.property.ds"
+				},
+				"5": {
+					"name": "variable.other.object.ds"
+				}
+			}
+		},
+		"pre-include": {
+			"name": "meta.preprocessor.include.ds",
+			"match": "^(?:[\\t\\s]*)(#)(?:(?:\\s)+)?(\\binclude\\b)\\s+((\".*?\")|([a-zA-Z_]\\w*))",
+			"captures": {
+				"1": {
+					"name": "punctuation.definition.directive.ds"
+				},
+				"2": {
+					"name": "keyword.control.directive.include.ds"
+				},
+				"4": {
+					"name": "string.quoted.double.ds"
+				},
+				"5": {
+					"name": "variable.other.bfeac.ds"
+				}
+			}
+		},
+		"pre-line": {
+			"name": "meta.preprocessor.line.ds",
+			"begin": "^(?:[\\t\\s]*)(#)(?:(?:\\s)+)?)(\\bline\\b)",
+			"end": "(\\n*)$",
+			"beginCaptures": {
+				"0": {
+					"name": "keyword.control.directive.line.ds"
+				},
+				"1": {
+					"name": "punctuation.definition.directive.ds"
+				}
+			},
+			"patterns": [
+				{
+					"include": "#string"
+				},
+				{
+					"include": "#numeric"
+				}
+			]
+		},
+		"pre-macro": {
+			"name": "meta.preprocessor.macro.ds",
+			"begin": "^(?:[\\s\\t]*)(#)(?:(?:\\s)+)?(\\bdefine\\b)(?:(?:\\s)+)",
+			"beginCaptures": {
+				"0": {
+					"name": "keyword.control.directive.define.ds"
+				},
+				"1": {
+					"name": "punctuation.definition.directive.ds"
+				}
+			},
+			"patterns": [
+				{
+					"include": "#string"
+				},
+				{
+					"include": "#numeric"
+				},
+				{
+					"include": "#operators"
+				},
+				{
+					"name": "variable.parameter.preprocessor.ds",
+					"match": "\\b[a-zA-Z_]\\w*\\b"
+				},
+				{
+					"name": "constant.language.ds",
+					"match": "(?i:\\s*\\b(const|false|nothing|null|true)\\b)"
+				}
+			]
 		}
 	},
 	"scopeName": "source.ds"
