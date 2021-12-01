@@ -428,6 +428,9 @@ export class StaticTypeChecker extends StatementParser {
         if (pre.test && !pre.defined) {
             this.checkExprError(pre.test);
         }
+        if (pre.consequent) {
+            this.checkBlockContent(pre.consequent);
+        }
         if (pre.alternate) {
             this.checkBlockContent(pre.alternate);
         }
