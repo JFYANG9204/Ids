@@ -76,15 +76,15 @@
 		},
 		{
 			"name": "storage.type.ds",
-			"match": "(?i:\\s*\\b(class|const|dim|function|end\\s+function|sub|end\\s+sub|set|option\\s+explicit|namespace|end\\s+namespace|property|end\\s+property|Implements|interface|end\\s+interface)\\b\\s*)"
+			"match": "(?i:\\s*\\b(class|const|dim|function|end\\s+function|sub|end\\s+sub|set|option\\s+explicit|namespace|end\\s+namespace|property|end\\s+property|Implements|interface|end\\s+interface)(?!\\()\\b\\s*)"
 		},
 		{
 			"name": "keyword.control.ds",
-			"match": "(?i:\\b(case|do|each|else|elseif|end|error|exit|explicit|for|globalvariables|goto|if|implicit|in|loop|next|null|on|option|paper|resume|section|select|step|then|to|until|while|with)\\b)"
+			"match": "(?i:\\b(case|do|each|else|elseif|end|error|exit|explicit|for|globalvariables|goto|if|implicit|in|loop|next|null|on|option|paper|resume|section|select|step|then|to|until|while|with)(?!\\()\\b)"
 		},
 		{
 			"name": "storage.modifier.ds",
-			"match": "((?:readonly|writeonly))\\s+(?:default)"
+			"match": "\\b(?i:default|readonly|writeonly)\\b"
 		},
 		{
 			"name": "constant.language.ds",
