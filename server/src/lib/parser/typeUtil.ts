@@ -313,8 +313,8 @@ export class TypeUtil extends UtilParser {
             return true;
         }
 
-        if (checkString === "iquestion" ||
-            baseString  === "iquestion" || (
+        if (checkString === "imdmfield" ||
+            baseString  === "imdmfield" || (
             baseString  === "enum"   && checkString === "long") || (
             baseString  === "double" && checkString === "long") || (
             baseString  === "date"   && checkString === "long") || (
@@ -772,10 +772,9 @@ export class TypeUtil extends UtilParser {
             if (this.options.treatUnkownAsQuesion &&
                 !isFunction &&
                 this.scope.inSpecialEvent("OnNextCase")) {
-                let question = this.scope.get("IQuestion")?.result;
-                this.scope.declareUndefined(id);
-                this.addExtra(id, "declaration", question);
-                return question;
+                let declared = this.scope.declareUndefined(id);
+                this.addExtra(id, "declaration", declared);
+                return declared;
             } else {
                 if (raiseError) {
                     this.isUndefined(id, id.name, isFunction);
@@ -1442,17 +1441,14 @@ export class TypeUtil extends UtilParser {
         return undefined;
     }
 
-    guessFunctionParamTypeFromName(declarator: SingleVarDeclarator) {
+    guessFunctionParamType(declarator: SingleVarDeclarator) {
         let name = declarator.name.name.toLowerCase();
-        let bind: string | undefined;
-        if (name.startsWith("str")) {
-            bind = "String";
-        } else if (name.startsWith("bln")) {
-            bind = "Boolean";
-        }
-        if (bind) {
-            declarator.binding = bind;
-            declarator.bindingType = this.scope.get(bind)?.result;
+        let definition = this.scope.get(name)?.result;
+        if (definition) {
+            if (definition instanceof SingleVarDeclarator) {
+                declarator.binding = definition.binding;
+                declarator.bindingType = definition.bindingType;
+            }
         }
     }
 

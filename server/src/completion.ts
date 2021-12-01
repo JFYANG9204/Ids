@@ -260,11 +260,21 @@ function getBindingName(dec: BindingDeclarator | string) {
     if (typeof dec === "string") {
         return dec;
     }
-    return (dec.namespace ? ((
-        typeof dec.namespace === "string" ?
-        dec.namespace :
-        dec.namespace.name.name) + ".") : "") +
-        dec.name.name + (dec.generics ? ("<" + dec.generics + ">") : "");
+    let namespace = "";
+    if (dec.namespace) {
+        if (typeof dec.namespace === "string") {
+            namespace = dec.namespace + ".";
+        } else {
+            namespace = dec.namespace.name.name + ".";
+        }
+    }
+
+    let generic = "";
+    if (dec.generics) {
+        generic = "<" + dec.generics + ">";
+    }
+
+    return namespace + dec.name.name + generic;
 }
 
 function getNamespaceText(ns: string | NamespaceDeclaration | undefined) {
@@ -303,14 +313,6 @@ function getDefaultNote(dec: DeclarationBase, appendMd: boolean = true): string 
     let args = "";
     let value = "";
 
-    if (!dec.declare) {
-        const t = dec as SingleVarDeclarator;
-            return appendMd ? ("```\n(undefined variable) " + t.name.name +
-                (t.binding ? (": " + getBindingName(t.binding)) : "") + "\n```")
-                : ("(undefined variable) " + t.name.name +
-                (t.binding ? (": " + getBindingName(t.binding)) : ""));
-    }
-
     if (dec instanceof MetadataBase) {
         text = dec.header.name.name;
     }
@@ -341,13 +343,18 @@ function getDefaultNote(dec: DeclarationBase, appendMd: boolean = true): string 
         case "SingleVarDeclarator":
             const dim = dec as SingleVarDeclarator;
 
+            let header = "variable";
+            if (!dim.declare) {
+                header = "undefined variable";
+            }
+
             if (dec.treeParent?.type === "ArgumentDeclarator") {
                 return appendMd ?
                     ("```\n" + `(parameter) ${getDeclaratorNote(dim)}\n` + "```") :
                     (`(parameter) ${getDeclaratorNote(dim)}`);
             }
-            return appendMd ? ("```\n" + `(variable) ${getDeclaratorNote(dim)}\n` + "```") :
-                (`(variable) ${getDeclaratorNote(dim)}`);
+            return appendMd ? ("```\n" + `(${header}) ${getDeclaratorNote(dim)}\n` + "```") :
+                (`(${header}) ${getDeclaratorNote(dim)}`);
 
         case "ArrayDeclarator":
             const arr = dec as ArrayDeclarator;
@@ -549,13 +556,15 @@ function getMemberCompletions(dec: DeclarationBase, file: File): CompletionItem[
                 } else {
                     bindingType = single.bindingType;
                 }
+                break;
+
             case "PropertyDeclaration":
                 const prop = dec as PropertyDeclaration;
                 let bindingName = typeof prop.binding === "string" ?
                     prop.binding : prop.binding.name.name;
                 find = getDeclarationFromFileOrBuiltIn(
                     file, bindingName,
-                    (typeof prop.binding !== "string" ?
+                    ((prop.binding && typeof prop.binding !== "string") ?
                     prop.binding.namespace : undefined) ?? prop.class.namespace);
                 if (!find || !(
                     find instanceof ClassOrInterfaceDeclaration ||
@@ -563,6 +572,8 @@ function getMemberCompletions(dec: DeclarationBase, file: File): CompletionItem[
                     return [];
                 }
                 bindingType = find;
+                break;
+
             case "FunctionDeclaration":
                 const func = dec as FunctionDeclaration;
                 if (!func.binding) {
@@ -571,7 +582,7 @@ function getMemberCompletions(dec: DeclarationBase, file: File): CompletionItem[
                 find = getDeclarationFromFileOrBuiltIn(file,
                     typeof func.binding === "string" ?
                     func.binding : func.binding.name.name,
-                    (typeof func.binding !== "string" ?
+                    ((func.binding && typeof func.binding !== "string") ?
                     func.binding.namespace : undefined) ?? func.class?.namespace);
                 if (!find || !(
                     find instanceof ClassOrInterfaceDeclaration ||
@@ -579,6 +590,8 @@ function getMemberCompletions(dec: DeclarationBase, file: File): CompletionItem[
                     return [];
                 }
                 bindingType = find;
+                break;
+
             case "ArrayDeclarator":
                 if (!builtInModule.scope) {
                     return [];
@@ -588,6 +601,7 @@ function getMemberCompletions(dec: DeclarationBase, file: File): CompletionItem[
                     return [];
                 }
                 bindingType = arr as ClassOrInterfaceDeclaration;
+                break;
 
             case "MetadataCategoricalVariable":
                 if (!builtInModule.scope) {
@@ -598,6 +612,7 @@ function getMemberCompletions(dec: DeclarationBase, file: File): CompletionItem[
                     return [];
                 }
                 bindingType = categorical as ClassOrInterfaceDeclaration;
+                break;
 
             default:
                 return [];
@@ -652,7 +667,8 @@ export function getCompletionsFromScope(scope: Scope, inFunction = false) {
         getCompletionsFromDeclarations(scope.dims),
         getCompletionsFromDeclarations(scope.consts),
         getCompletionsFromDeclarations(scope.macros),
-        getCompletionsFromDeclarations(scope.functions));
+        getCompletionsFromDeclarations(scope.functions),
+        getCompletionsFromDeclarations(scope.undefined));
     return completions;
 }
 

@@ -3,6 +3,7 @@ import { ErrorMessages } from "../parser/error-messages";
 import { ErrorTemplate } from "../parser/errors";
 import {
     ArrayDeclarator,
+    BindingDeclarator,
     ClassOrInterfaceDeclaration,
     DeclarationBase,
     EnumDeclaration,
@@ -223,17 +224,34 @@ export class ScopeHandler {
         }
     }
 
+    private createBindingTypeFromId(id: Identifier, type?: string, ns?: NamespaceDeclaration | string) {
+        let declare = new BindingDeclarator(this.parser, id.start, id.loc.start);
+        // 新建Id
+        let bindName = new Identifier(this.parser, id.start, id.loc.start);
+        bindName.end = id.end;
+        bindName.loc.end = id.loc.end;
+        bindName.name = type ?? "IMDMField";
+        //
+        declare.name = bindName;
+        declare.namespace = ns;
+        declare.end = id.end;
+        declare.loc.end = id.loc.end;
+        return declare;
+    }
+
     declareUndefined(name: Identifier, type?: DeclarationBase) {
         let declare = new SingleVarDeclarator(this.parser, this.parser.state.pos, this.parser.state.curPostion());
         declare.name = name;
         if (!type) {
-            declare.bindingType = this.get("IQuestion")?.result;
-            declare.binding = "IQuestion";
+            declare.bindingType = this.get("IMDMField", "MDMLib")?.result;
+            declare.binding = this.createBindingTypeFromId(name, "IMDMField", "MDMLib");
         } else {
             declare.bindingType = type;
             declare.binding = type.name.name;
         }
         declare.declare = undefined;
+        declare.end = name.end;
+        declare.loc.end = name.loc.end;
         this.currentScope().undefined.set(name.name.toLowerCase(), declare);
         return declare;
     }
