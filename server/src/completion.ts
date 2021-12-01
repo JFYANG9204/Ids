@@ -649,15 +649,11 @@ function getMemberCompletions(dec: DeclarationBase, file: File): CompletionItem[
         });
     }
 
-    if (metadataType && builtInModule.scope) {
-        switch (metadataType) {
-            case "categorical":
-                let categorical = getDeclarationFromScope(builtInModule.scope, "Categorical");
-                (categorical as ClassOrInterfaceDeclaration).methods.forEach(method => {
-                    completions.push(getCompletionFromDeclarationBase(method));
-                });
-                break;
-        }
+    if ((metadataType || bindingType.name.name === "IMDMField") && builtInModule.scope) {
+        let categorical = getDeclarationFromScope(builtInModule.scope, "Categorical");
+        (categorical as ClassOrInterfaceDeclaration).methods.forEach(method => {
+            completions.push(getCompletionFromDeclarationBase(method));
+        });
     }
 
     return completions;

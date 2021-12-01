@@ -53,8 +53,10 @@ export function getAllUsefulFile(folder: string): Map<string, FileContent> {
                 exten === ".bat") {
                 const fullPath = path.join(folder, file.name);
                 const content = readFileAndConvertToUtf8(fullPath);
-                const uri = pathToFileURL(fullPath).toString();
-                list.set(fullPath.toLowerCase(), { uri, content, path: fullPath });
+                if (!content.startsWith("Metadata")) {
+                    const uri = pathToFileURL(fullPath).toString();
+                    list.set(fullPath.toLowerCase(), { uri, content, path: fullPath });
+                }
             }
         }
     });

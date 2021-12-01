@@ -1,9 +1,9 @@
 
-Dim dmgrjob As IDataManagerJob
-Dim dmgrGlobal As IDataManagerGlobalVariables
-Dim dmgrLog As IDataManagerLogging
-Dim dmgrQuestions As IQuestions
-Dim dmgrWeightEngines As IDataManagerWeightEngines
+Const dmgrjob As IDataManagerJob
+Const dmgrGlobal As IDataManagerGlobalVariables
+Const dmgrLog As IDataManagerLogging
+Const dmgrQuestions As IQuestions
+Const dmgrWeightEngines As IDataManagerWeightEngines
 
 Const Debug As MRSCRIPTCORELib.IDebugObject
 Const Err   As MRSCRIPTCORELib.IErrObject
