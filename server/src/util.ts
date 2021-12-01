@@ -2,6 +2,7 @@ import { join } from "path";
 import { fileURLToPath } from "url";
 import {
     CodeAction,
+    CodeActionKind,
     Command,
     Position as Pos,
     Range,
@@ -151,10 +152,10 @@ export function createWorkspaceEditorContent(uri: string, start: Position, text:
 }
 
 export function createCodeAction(uri: string, title: string, text: string) {
-    return CodeAction.create(title, createWorkspaceEditorContent(uri, Pos.create(0, 0), text));
+    return CodeAction.create(title, createWorkspaceEditorContent(uri, Pos.create(0, 0), text), CodeActionKind.QuickFix);
 }
 
 export function createCodeActionByCommand(title: string, text: string, line: number) {
-    return CodeAction.create(title, Command.create(title, "ids.insertTextAtPosition", text, line));
+    return CodeAction.create(title, Command.create(title, "ids.insertTextAtPosition", text, line), CodeActionKind.QuickFix);
 }
 
