@@ -542,6 +542,7 @@ function getCompletionFromDeclarationBase(
 function getMemberCompletions(dec: DeclarationBase, file: File): CompletionItem[] {
     let completions: CompletionItem[] = [];
     let bindingType: ClassOrInterfaceDeclaration | EnumDeclaration | undefined;
+    let metadataType: string | undefined;
 
     if (dec.type !== "ClassOrInterfaceDeclaration" &&
         dec.type !== "EnumDeclaration") {
@@ -555,6 +556,9 @@ function getMemberCompletions(dec: DeclarationBase, file: File): CompletionItem[
                     return [];
                 } else {
                     bindingType = single.bindingType;
+                    if (bindingType.name.name === "IMDMField") {
+                        metadataType = "categorical";
+                    }
                 }
                 break;
 
@@ -607,11 +611,12 @@ function getMemberCompletions(dec: DeclarationBase, file: File): CompletionItem[
                 if (!builtInModule.scope) {
                     return [];
                 }
-                let categorical = getDeclarationFromScope(builtInModule.scope, "Categorical");
-                if (!categorical) {
+                let field = getDeclarationFromScope(builtInModule.scope, "IMDMField", "MDMLib");
+                if (!field) {
                     return [];
                 }
-                bindingType = categorical as ClassOrInterfaceDeclaration;
+                bindingType = field as ClassOrInterfaceDeclaration;
+                metadataType = "categorical";
                 break;
 
             default:
@@ -643,6 +648,18 @@ function getMemberCompletions(dec: DeclarationBase, file: File): CompletionItem[
             completions.push(getCompletionFromDeclarationBase(enumItem));
         });
     }
+
+    if (metadataType && builtInModule.scope) {
+        switch (metadataType) {
+            case "categorical":
+                let categorical = getDeclarationFromScope(builtInModule.scope, "Categorical");
+                (categorical as ClassOrInterfaceDeclaration).methods.forEach(method => {
+                    completions.push(getCompletionFromDeclarationBase(method));
+                });
+                break;
+        }
+    }
+
     return completions;
 }
 
