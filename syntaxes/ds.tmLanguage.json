@@ -15,6 +15,9 @@
 			"include": "#square-brackets"
 		},
 		{
+			"include": "#curly-block"
+		},
+		{
 			"name": "meta.leading-space",
 			"begin": "^(?=\\t)",
 			"end": "(?=[^\\t])",
@@ -57,6 +60,18 @@
 			"include": "#line-comment"
 		},
 		{
+			"include": "#pre-include"
+		},
+		{
+			"include": "#pre-macro"
+		},
+		{
+			"include": "#pre-conditional-defined"
+		},
+		{
+			"include": "#pre-conditional-range"
+		},
+		{
 			"include": "#string"
 		},
 		{
@@ -90,15 +105,14 @@
 		},
 		{
 			"name": "keyword.control.ds",
-			"match": "(?i:\\b(case|do|each|else|elseif|end|error|exit|explicit|for|globalvariables|goto|if|implicit|in|loop|next|null|on|option|paper|resume|section|select|step|then|to|until|while|with)(?!\\()\\b)"
+			"match": "(?i:\\b(case|do|each|else|elseif|end|error|exit|explicit|event|for|globalvariables|goto|if|implicit|in|loop|next|null|on|option|paper|resume|section|select|step|then|to|until|while|with)(?!\\()\\b)"
 		},
 		{
 			"name": "storage.modifier.ds",
 			"match": "\\b(?i:default|readonly|writeonly)\\b"
 		},
 		{
-			"name": "constant.language.ds",
-			"match": "(?:\\s*\\b(empty|nothing|true|false|null)\\b\\s*)"
+			"include": "#language-constants"
 		},
 		{
 			"name": "meta.function.ds",
@@ -163,7 +177,31 @@
 				}
 			}
 		},
+        {
+            "match": "(?i:\\b(answercount|containsall|containsallexactly|containsany|containsanyexactly|containssome|definedcategories|definedelements|definedfactors|definedlistelements|difference|factor|filterby|getanswer|hasanswer|intersection|lbound|merge|redim|ubound|union|unique|xunion|ccategorical|clong|cdouble|cboolean|cdate|ctext|find|left|right|len|mid|ascw|chrw|format|formatvalue|hex|lcase|ltrim|makemdmname|makestring|oct|rtrim|split|trim|ucase|getrandomseed|ranint|rnd|setrandomseed|finditem|getreversalseed|getrotationseed|ran|randompassword|ransequence|rot|rotsequence|selectrange|setreversalseed|setrotationseed|sortasc|sortdesc|band|bitand|bitnot|bitor|bitxor|categorize|categorizeloopvariable|createobject|dbnull|decode|engineversion|equalband|eval|evaluatederivediteration|execute|getinterface|iif|inputbox|isdbnull|iselementinversions|isempty|isequalobject|isnullobject|isoneof|isset|rgb|samplecategorize|shellexecute|sleep|validate|vartype|vartypename|abs|atn|cos|exp|int|log|maxof|minof|pow|round|sgn|sin|sqrt|tan)\\b)",
+            "name": "support.function.ds"
+        },
+        {
+            "match": "(?i:\\b((mr\\.cr)|(mr\\.crlf)|(mr\\.formfeed)|(mr\\.lf)|(mr\\.newline)|(mr\\.tab))\\b)",
+            "name": "support.type.ds"
+        },
 		{
+			"include": "#function-entity"
+		},
+		{
+			"include": "#operators"
+		}
+	],
+	"repository": {
+		"language-constants": {
+			"match": "(?<!\\w)(?:(?:false)|(?:NULL)|(?:true)|(?:nothing)|(?:const))(?!\\w)",
+			"name": "constant.language.ds"
+		},
+		"empty-square-brackets": {
+			"match": "\\[(?:(?:\\s)+)?\\]",
+			"name": "storage.modifier.array.bracket.square.ds"
+		},
+		"function-entity": {
 			"name": "support.function.ds",
 			"match": "(?i:(\\b[a-zA-Z_x7f-xff][a-zA-Z0-9_x7f-xff]*?\\b)(?=\\(\\)?))",
 			"captures": {
@@ -171,9 +209,7 @@
 					"name": "entity.name.function.ds"
 				}
 			}
-		}
-	],
-	"repository": {
+		},
 		"block-comment": {
 			"name": "comment.block.apostrophe.ds",
 			"begin": "('\\!)",
@@ -248,6 +284,39 @@
 				},
 				{
 					"include": "#operators"
+				},
+				{
+					"include": "#member-access"
+				},
+				{
+					"include": "#function-entity"
+				}
+			]
+		},
+		"curly-block": {
+			"begin": "\\{",
+            "beginCaptures": {
+                "0": {
+                    "name": "punctuation.section.block.begin.bracket.curly.ds"
+                }
+            },
+			"end": "\\}",
+            "endCaptures": {
+                "0": {
+                    "name": "punctuation.section.block.end.bracket.curly.ds"
+                }
+            },
+            "name": "meta.block.ds",
+			"patterns": [
+				{
+					"include": "#strings"
+				},
+				{
+					"math": "[a-zA-Z_]\\w*",
+					"name": "variable.other.enummember.ds"
+				},
+				{
+					"include": "#numeric"
 				}
 			]
 		},
@@ -265,10 +334,17 @@
 				}
 			}
 		},
+        "macro-name": {
+            "match": "(?<!\\w)(?:[a-zA-Z_]|(?:\\\\u[0-9a-fA-F]{4}|\\\\U[0-9a-fA-F]{8}))(?:[a-zA-Z0-9_]|(?:\\\\u[0-9a-fA-F]{4}|\\\\U[0-9a-fA-F]{8}))*(?!\\w)",
+            "name": "entity.name.function.preprocessor.ds"
+        },
 		"pre-include": {
 			"name": "meta.preprocessor.include.ds",
 			"match": "^(?:[\\t\\s]*)(#)(?:(?:\\s)+)?(\\binclude\\b)\\s+((\".*?\")|([a-zA-Z_]\\w*))",
 			"captures": {
+				"0": {
+					"name": "keyword.control.directive.include.ds"
+				},
 				"1": {
 					"name": "punctuation.definition.directive.ds"
 				},
@@ -301,6 +377,9 @@
 				},
 				{
 					"include": "#numeric"
+				},
+				{
+					"include": "$self"
 				}
 			]
 		},
@@ -332,6 +411,59 @@
 				{
 					"name": "constant.language.ds",
 					"match": "(?i:\\s*\\b(const|false|nothing|null|true)\\b)"
+				}
+			]
+		},
+		"pre-conditional-defined": {
+            "begin": "((?<!\\w)defined(?!\\w))(\\()",
+            "end": "(?:\\)|(?<!\\\\)(?=\\n))",
+            "beginCaptures": {
+                "1": {
+                    "name": "keyword.control.directive.conditional.defined.ds"
+                },
+                "2": {
+                    "name": "punctuation.section.parens.control.defined.ds"
+                }
+            },
+            "endCaptures": {
+                "0": {
+                    "name": "punctuation.section.parens.control.defined.ds"
+                }
+            },
+            "patterns": [
+                {
+                    "include": "#macro-name"
+                }
+            ]
+		},
+		"pre-conditional-range": {
+			"begin": "^(?:[\\t\\s]*)(#)(?:(?:\\s)+)?(\\bif\\b)(?:(?:\\s)+)",
+			"beginCaptures": {
+				"0": {
+					"name": "keyword.control.directive.if.ds"
+				},
+				"1": {
+					"name": "punctuation.definition.directive.ds"
+				}
+			},
+			"end": "^(?:[\\t\\s]*)(#)(\\belse|endif\\b)",
+			"endCaptures": {
+				"0": {
+					"name": "keyword.control.directive.if.ds"
+				},
+				"1": {
+					"name": "punctuation.definition.directive.ds"
+				}
+			},
+			"patterns": [
+				{
+					"include": "#pre-conditional-defined"
+				},
+				{
+					"include": "#pre-include"
+				},
+				{
+					"include": "#pre-macro"
 				}
 			]
 		}
