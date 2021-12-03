@@ -19,7 +19,7 @@
         "languages": [{
             "id": "ds",
             "aliases": ["DataCollection Script", "ds"],
-            "extensions": [".mrs",".dms"],
+            "extensions": [".mrs",".dms",".ini",".mdd"],
             "configuration": "./language-configuration.json"
         }],
         "grammars": [{
