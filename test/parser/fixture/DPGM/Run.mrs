@@ -91,7 +91,7 @@ Dim banner
 banner=TOPBREAK
 'banner="bk01a + bk01b + bk01c + bk01d"
 
-#include "Tab.mrs"
+'#include "Tab.mrs"
 #include table_file
 #if AUTO_SPEC == TRUE
         #include "Auto_Tables.mrs"

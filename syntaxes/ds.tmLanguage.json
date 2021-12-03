@@ -18,48 +18,6 @@
 			"include": "#curly-block"
 		},
 		{
-			"name": "meta.leading-space",
-			"begin": "^(?=\\t)",
-			"end": "(?=[^\\t])",
-			"patterns": [
-				{
-					"match": "(\\t)(\\t)?",
-					"catpures": {
-						"1": {
-							"name": "meta.odd-tab.tabs"
-						},
-						"2": {
-							"name": "meta.even-tab.tabs"
-						}
-					}
-				}
-			]
-		},
-		{
-			"name": "meta.leading-space",
-			"begin": "^(?= )",
-			"end": "(?=[^ ])",
-			"patterns": [
-			  	{
-					"match": "(  )(  )?",
-					"captures": {
-					  	"1": {
-							"name": "meta.odd-tab.spaces"
-					  	},
-					  	"2": {
-							"name": "meta.even-tab.spaces"
-					  	}
-					}
-			  	}
-			]
-		},
-		{
-			"include": "#block-comment"
-		},
-		{
-			"include": "#line-comment"
-		},
-		{
 			"include": "#pre-include"
 		},
 		{
@@ -70,6 +28,12 @@
 		},
 		{
 			"include": "#pre-conditional-range"
+		},
+		{
+			"include": "#block-comment"
+		},
+		{
+			"include": "#line-comment"
 		},
 		{
 			"name": "storage.type.ds",
@@ -133,7 +97,7 @@
 		},
 		{
 			"name": "meta.property.ds",
-			"match": "[\\s\\t]*((?:readonly|writeonly)?)\\s*((?:default)?)\\s*((?i:property))\\s*([a-zA-Z_x7f-xff][a-zA-Z0-9_x7f-xff]*)\\s*((\\()([^)]*)*(\\)))?.*\\n",
+			"match": "\\s*((?:readonly|writeonly)?)\\s*((?:default)?)\\s*((?i:property))\\s*([a-zA-Z_x7f-xff][a-zA-Z0-9_x7f-xff]*)\\s*((\\()([^)]*)*(\\)))?.*\\n",
 			"captures": {
 				"1": {
 					"name": "storage.modifier.property.ds"
@@ -180,9 +144,6 @@
         },
 		{
 			"include": "#function-entity"
-		},
-		{
-			"include": "#metadata-field"
 		},
 		{
 			"include": "#variable"
@@ -244,7 +205,7 @@
 			"end": "(?=(\\n|%>))"
 		},
 		"variable": {
-			"name": "variable.other.bfeac.ds",
+			"name": "variable.other.local.ds",
 			"match": "\\b[a-zA-Z_x7f-xff][a-zA-Z0-9_x7f-xff]*\\b"
 		},
 		"metadata-keywords": {
@@ -367,7 +328,7 @@
 			}
 		},
 		"pre-include": {
-			"match": "^(?:[\\t\\s]*)(#)(?:(?:\\s)+)?(\\binclude\\b)\\s+((\".*?\")|([a-zA-Z_x7f-xff][a-zA-Z0-9_x7f-xff]*))",
+			"match": "^(?:\\s*)(#)(?:(?:\\s)+)?(\\binclude\\b)\\s+((\".*?\")|([a-zA-Z_x7f-xff][a-zA-Z0-9_x7f-xff]*))",
 			"captures": {
 				"0": {
 					"name": "meta.preprocessor.include.ds"
@@ -384,7 +345,7 @@
 			}
 		},
 		"pre-line": {
-			"begin": "^(?:[\\t\\s]*)(#)(?:(?:\\s)+)?)(\\bline\\b)",
+			"begin": "^(?:\\s*)(#)(?:(?:\\s)+)?)(\\bline\\b)",
 			"end": "(\\n*)$",
 			"beginCaptures": {
 				"0": {
@@ -407,7 +368,7 @@
 			]
 		},
 		"pre-macro": {
-			"begin": "^(?:[\\s\\t]*)(#)(?:(?:\\s)+)?(\\bdefine\\b)(?:(?:\\s)+)",
+			"begin": "^(?:\\s*)(#)(?:(?:\\s)+)?(\\bdefine\\b)(?:(?:\\s)+)",
 			"beginCaptures": {
 				"0": {
 					"name": "meta.preprocessor.define.ds"
@@ -595,13 +556,12 @@
 		},
 		"metadata-brace-properties": {
 			"name": "meta.brace.properties.ds",
-			"match": "(?i:(labelstyle|templates|style|expression|defaultanswer|factor|keycode|multiplier|elementtype))\\s*(\\([\\s\\S]*\\))",
+			"match": "(?i:(labelstyle|templates|style|expression|defaultanswer|factor|keycode|multiplier|elementtype|axis|usagetype|helperfields))\\s*(\\([\\s\\S]*\\))",
 			"captures": {
 				"1": {
 					"name": "storage.type.ds"
 				},
 				"2": {
-					"name": "meta.brace.properties.ds",
 					"patterns": [
 						{
 							"include": "#metadata-brace"
@@ -609,41 +569,6 @@
 					]
 				}
 			}
-		},
-		"metadata-field-header": {
-			"name": "meta.variable.head.definition.ds",
-			"begin": "[a-zA-Z_x7f-xff][a-zA-Z0-9_x7f-xff]*",
-			"beginCaptures": {
-				"0": {
-					"name": "meta.definition.variable.name.ds"
-				}
-			},
-			"end": "(?i:(categorical|long|double|text|date|boolean|define|info|loop|grid|compound|block|page|db))\\s*((\\[)\\s*((?:\\d*\\.\\.\\d*)|(?:\\d+))\\s*(\\]))?",
-			"endCaptures": {
-				"1": {
-					"name": "storage.type.ds"
-				},
-				"3": {
-					"name": "meta.bracket.square.access.ds"
-				},
-				"4": {
-					"name": "meta.variable.definition.range.ds"
-				},
-				"5": {
-					"name": "meta.bracket.square.access.ds"
-				}
-			},
-			"patterns": [
-				{
-					"include": "#metadata-properties"
-				},
-				{
-					"include": "#metadata-brace-properties"
-				},
-				{
-					"include": "#string"
-				}
-			]
 		},
 		"metadata-category": {
 			"name": "meta.category.definition.ds",
@@ -690,51 +615,6 @@
 					"include": "#metadata-category"
 				}
 			]
-		},
-		"metadata-field": {
-			"match": "([a-zA-Z_x7f-xff][a-zA-Z0-9_x7f-xff]*)\\s*(?:\\s*(?:(\".*?\")|(\\[[\\s\\S]*?\\])|([a-zA-Z_x7f-xff][a-zA-Z0-9_x7f-xff]*\\s*\\([\\s\\S]*?\\)))\\s*)*\\s*((?i:categorical|text|date|long|double|boolean)?)\\s*(?:(\\[)((?:\\d+)|(?:\\d*\\.\\.\\d*))(\\]))?\\s*(\\{[\\s\\S]*?\\});",
-			"name": "meta.definition.ds",
-			"captures": {
-				"1": {
-					"name": "meta.definition.variable.name.ds"
-				},
-				"2": {
-					"name": "string.quoted.double.ds"
-				},
-				"3": {
-					"patterns": [
-						{
-							"include": "#metadata-properties"
-						}
-					]
-				},
-				"4": {
-					"patterns": [
-						{
-							"include": "#metadata-brace-properties"
-						}
-					]
-				},
-				"5": {
-					"name": "storage.type.ds"
-				},
-				"6": {
-					"name": "meta.bracket.square.access"
-				},
-				"7": {
-					"name": "keyword.operator.spread.ds"
-				},
-				"8": {
-					"name": "meta.bracket.square.access"
-				},
-				"9": {
-					"patterns": [
-						{
-							"include": "#curly-block"
-						}
-					]
-				}
-			}
 		}
 	},
 	"scopeName": "source.ds"
