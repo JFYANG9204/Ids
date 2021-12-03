@@ -205,8 +205,8 @@ connection.onDefinition(params => {
         return null;
     }
     uri = pathToFileURL(dec.loc.fileName).toString();
-    let start: Position = { line: dec.name.loc.start.line - 1, character: dec.name.start };
-    let end: Position = { line: dec.name.loc.end.line - 1, character: dec.name.end };
+    let start: Position = Position.create(dec.name.loc.start.line - 1, dec.name.loc.start.column);
+    let end: Position = Position.create(dec.name.loc.end.line - 1, dec.name.loc.end.column);
     return { uri, range: { start, end } };
 });
 
@@ -234,8 +234,8 @@ connection.onReferences(param => {
         const uri = pathToFileURL(cur.loc.fileName).toString();
         referenced.push(Location.create(uri,
             Range.create(
-                Position.create(cur.loc.start.line - 1, cur.start),
-                Position.create(cur.loc.end.line - 1, cur.end))));
+                Position.create(cur.loc.start.line - 1, cur.loc.start.column),
+                Position.create(cur.loc.end.line - 1, cur.loc.end.column))));
     }
     return referenced;
 });
