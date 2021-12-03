@@ -44,25 +44,57 @@
 			"match": "(?i:\\b(case|do|each|else|elseif|end|error|exit|explicit|event|for|globalvariables|goto|if|implicit|in|loop|next|null|on|option|paper|resume|section|select|step|then|to|until|while|with)(?!\\()\\b)"
 		},
 		{
+			"name": "variable.other.dim.ds",
+			"begin": "^\\s*(?i:(Dim))",
+			"beginCaptures": {
+				"0": {
+					"name": "storage.type.ds"
+				}
+			},
+			"end": "(\\n*)$",
+			"patterns": [
+				{
+					"match": "([a-zA-Z_x7f-xff$#][a-zA-Z0-9_x7f-xff$#]*)((?:\\[\\d*\\])*)(?:\\s+(?i:(As))\\s+([a-zA-Z_x7f-xff$#][a-zA-Z0-9_x7f-xff$#]*(?:\\.[a-zA-Z_x7f-xff$#][a-zA-Z0-9_x7f-xff$#]*)*))?\\s*([,]?)",
+					"captures": {
+						"1": {
+							"name": "variable.other.local.ds"
+						},
+						"2": {
+							"patterns": [
+								{
+									"match": "(\\[)(\\d*)(\\])",
+									"captures": {
+										"1": {
+											"name": "meta.bracket.square.access.ds"
+										},
+										"2": {
+											"name": "constant.numeric.ds"
+										},
+										"3": {
+											"name": "meta.bracket.square.access.ds"
+										}
+									}
+								}
+							]
+						},
+						"3": {
+							"name": "keyword.control.ds"
+						},
+						"4": {
+							"name": "support.type.ds"
+						},
+						"5": {
+							"name": "punctuation.separator.delimiter.ds"
+						}
+					}
+				}
+			]
+		},
+		{
 			"include": "#member-access"
 		},
 		{
 			"include": "#keyword-operator"
-		},
-		{
-			"name": "variable.other.dim.ds",
-			"match": "(?i:(dim)\\s*(?:(\\b[a-zA-Z_x7f-xff][a-zA-Z0-9_x7f-xff]*\\b)\\s*(,?)))",
-			"captures": {
-				"1": {
-					"name": "storage.type.ds"
-				},
-				"2": {
-					"name": "variable.other.bfeac.ds"
-				},
-				"3": {
-					"name": "meta.seperator.comma.ds"
-				}
-			}
 		},
 		{
 			"name": "storage.modifier.ds",
@@ -73,7 +105,7 @@
 		},
 		{
 			"name": "meta.function.ds",
-			"match": "[ \\t]*((?i:default)?)\\s*((?i:function|sub))\\s*([a-zA-Z_x7f-xff][a-zA-Z0-9_x7f-xff]*)\\s*((\\()([^)]*)*(\\)))?.*\\n",
+			"match": "[ \\t]*((?i:default)?)\\s*((?i:function|sub))\\s*([a-zA-Z_x7f-xff$#][a-zA-Z0-9_x7f-xff$#]*)\\s*((\\()([^)]*)*(\\)))?.*\\n",
 			"captures": {
 				"1": {
 					"name": "storage.modifier.function.ds"
@@ -97,7 +129,7 @@
 		},
 		{
 			"name": "meta.property.ds",
-			"match": "\\s*((?:readonly|writeonly)?)\\s*((?:default)?)\\s*((?i:property))\\s*([a-zA-Z_x7f-xff][a-zA-Z0-9_x7f-xff]*)\\s*((\\()([^)]*)*(\\)))?.*\\n",
+			"match": "\\s*((?:readonly|writeonly)?)\\s*((?:default)?)\\s*((?i:property))\\s*([a-zA-Z_x7f-xff$#][a-zA-Z0-9_x7f-xff$#]*)\\s*((\\()([^)]*)*(\\)))?.*\\n",
 			"captures": {
 				"1": {
 					"name": "storage.modifier.property.ds"
@@ -124,7 +156,7 @@
 		},
 		{
 			"name": "meta.type.ds",
-			"match": "^\\s*((?i:class|namespace))\\s*([a-zA-Z_x7f-xff][a-zA-Z0-9_x7f-xff]*)\\n",
+			"match": "^\\s*((?i:class|namespace))\\s*([a-zA-Z_x7f-xff$#][a-zA-Z0-9_x7f-xff$#]*)\\n",
 			"captures": {
 				"1": {
 					"name": "storage.type.ds"
@@ -146,13 +178,13 @@
 			"include": "#function-entity"
 		},
 		{
-			"include": "#variable"
-		},
-		{
 			"include": "#string"
 		},
 		{
 			"include": "#numeric"
+		},
+		{
+			"include": "#variable"
 		},
 		{
 			"include": "#operators"
@@ -173,7 +205,7 @@
 		},
 		"function-entity": {
 			"name": "support.function.ds",
-			"match": "(?i:(\\b[a-zA-Z_x7f-xff][a-zA-Z0-9_x7f-xff]*\\b)(?=\\(\\)?))",
+			"match": "(?i:(\\b[a-zA-Z_x7f-xff$#][a-zA-Z0-9_x7f-xff$#]*\\b)(?=\\(\\)?))",
 			"captures": {
 				"1": {
 					"name": "entity.name.function.ds"
@@ -206,7 +238,7 @@
 		},
 		"variable": {
 			"name": "variable.other.local.ds",
-			"match": "\\b[a-zA-Z_x7f-xff][a-zA-Z0-9_x7f-xff]*\\b"
+			"match": "\\b[a-zA-Z_x7f-xff$#][a-zA-Z0-9_x7f-xff$#]*\\b"
 		},
 		"metadata-keywords": {
 			"name": "keyword.control.ds",
@@ -314,7 +346,7 @@
 			]
 		},
 		"member-access": {
-			"match": "((\\.)(?:(?:\\s)*)(\\b[a-zA-Z_x7f-xff][a-zA-Z0-9_x7f-xff]*\\b))|((?!\\.)\\b([a-zA-Z_x7f-xff][a-zA-Z0-9_x7f-xff]*\\b)(?:(?:\\s)*)(?=\\.))",
+			"match": "((\\.)(?:(?:\\s)*)(\\b[a-zA-Z_x7f-xff$#][a-zA-Z0-9_x7f-xff$#]*\\b))|((?!\\.)\\b([a-zA-Z_x7f-xff$#][a-zA-Z0-9_x7f-xff$#]*\\b)(?:(?:\\s)*)(?=\\.))",
 			"captures": {
 				"2": {
 					"name": "punctuation.separator.dot-access.ds"
@@ -328,7 +360,7 @@
 			}
 		},
 		"pre-include": {
-			"match": "^(?:\\s*)(#)(?:(?:\\s)+)?(\\binclude\\b)\\s+((\".*?\")|([a-zA-Z_x7f-xff][a-zA-Z0-9_x7f-xff]*))",
+			"match": "^(?:\\s*)(#)(?:(?:\\s)+)?(\\binclude\\b)\\s+((\".*?\")|([a-zA-Z_x7f-xff$#][a-zA-Z0-9_x7f-xff$#]*))",
 			"captures": {
 				"0": {
 					"name": "meta.preprocessor.include.ds"
@@ -390,7 +422,7 @@
 				},
 				{
 					"name": "variable.parameter.preprocessor.ds",
-					"match": "\\b[a-zA-Z_x7f-xff][a-zA-Z0-9_x7f-xff]*\\b"
+					"match": "\\b[a-zA-Z_x7f-xff$#][a-zA-Z0-9_x7f-xff$#]*\\b"
 				},
 				{
 					"name": "constant.language.ds",
@@ -471,7 +503,7 @@
 		},
 		"metadata-property": {
 			"name": "meta.property.definition.ds",
-			"begin": "[a-zA-Z_x7f-xff][a-zA-Z0-9_x7f-xff]*",
+			"begin": "[a-zA-Z_x7f-xff$#][a-zA-Z0-9_x7f-xff$#]*",
 			"beginCaptures": {
 				"0": {
 					"name": "meta.property.ds"
@@ -572,7 +604,7 @@
 		},
 		"metadata-category": {
 			"name": "meta.category.definition.ds",
-			"begin": "([a-zA-Z_x7f-xff][a-zA-Z0-9_x7f-xff]*)",
+			"begin": "([a-zA-Z_x7f-xff$#][a-zA-Z0-9_x7f-xff$#]*)",
 			"beginCaptures": {
 				"0": {
 					"name": "variable.other.enummember.ds"
