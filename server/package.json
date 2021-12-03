@@ -1,6 +1,6 @@
 {
     "name": "ids-server",
-    "author": "Yang",
+    "author": "YangWei",
     "engines": {
         "node": "*"
     },
