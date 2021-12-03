@@ -72,21 +72,22 @@
 			"include": "#pre-conditional-range"
 		},
 		{
-			"include": "#string"
+			"name": "storage.type.ds",
+			"match": "(?i:\\s*\\b(class|const|dim|function|end\\s+function|sub|end\\s+sub|set|option\\s+explicit|namespace|end\\s+namespace|property|end\\s+property|Implements|interface|end\\s+interface)(?!\\()\\b\\s*)"
 		},
 		{
-			"include": "#numeric"
+			"name": "keyword.control.ds",
+			"match": "(?i:\\b(case|do|each|else|elseif|end|error|exit|explicit|event|for|globalvariables|goto|if|implicit|in|loop|next|null|on|option|paper|resume|section|select|step|then|to|until|while|with)(?!\\()\\b)"
 		},
 		{
 			"include": "#member-access"
 		},
 		{
-			"name": "keyword.operator.ds",
-			"match": "(?i:\\b(mod|and|or|xor|is|not|as|like)\\b)"
+			"include": "#keyword-operator"
 		},
 		{
 			"name": "variable.other.dim.ds",
-			"match": "(?i:(dim)\\s*(?:(\\b[a-zA-Z_x7f-xff][a-zA-Z0-9_x7f-xff]*?\\b)\\s*(,?)))",
+			"match": "(?i:(dim)\\s*(?:(\\b[a-zA-Z_x7f-xff][a-zA-Z0-9_x7f-xff]*\\b)\\s*(,?)))",
 			"captures": {
 				"1": {
 					"name": "storage.type.ds"
@@ -100,14 +101,6 @@
 			}
 		},
 		{
-			"name": "storage.type.ds",
-			"match": "(?i:\\s*\\b(class|const|dim|function|end\\s+function|sub|end\\s+sub|set|option\\s+explicit|namespace|end\\s+namespace|property|end\\s+property|Implements|interface|end\\s+interface)(?!\\()\\b\\s*)"
-		},
-		{
-			"name": "keyword.control.ds",
-			"match": "(?i:\\b(case|do|each|else|elseif|end|error|exit|explicit|event|for|globalvariables|goto|if|implicit|in|loop|next|null|on|option|paper|resume|section|select|step|then|to|until|while|with)(?!\\()\\b)"
-		},
-		{
 			"name": "storage.modifier.ds",
 			"match": "\\b(?i:default|readonly|writeonly)\\b"
 		},
@@ -116,7 +109,7 @@
 		},
 		{
 			"name": "meta.function.ds",
-			"match": "[ \\t]*((?i:default)?)\\s*((?i:function|sub))\\s*([a-zA-Z_]\\w*)\\s*((\\()([^)]*)*(\\)))?.*\\n",
+			"match": "[ \\t]*((?i:default)?)\\s*((?i:function|sub))\\s*([a-zA-Z_x7f-xff][a-zA-Z0-9_x7f-xff]*)\\s*((\\()([^)]*)*(\\)))?.*\\n",
 			"captures": {
 				"1": {
 					"name": "storage.modifier.function.ds"
@@ -140,7 +133,7 @@
 		},
 		{
 			"name": "meta.property.ds",
-			"match": "[ \\t]*((?:readonly|writeonly)?)\\s*((?:default)?)\\s*((?i:property))\\s*([a-zA-Z_]\\w*)\\s*((\\()([^)]*)*(\\)))?.*\\n",
+			"match": "[\\s\\t]*((?:readonly|writeonly)?)\\s*((?:default)?)\\s*((?i:property))\\s*([a-zA-Z_x7f-xff][a-zA-Z0-9_x7f-xff]*)\\s*((\\()([^)]*)*(\\)))?.*\\n",
 			"captures": {
 				"1": {
 					"name": "storage.modifier.property.ds"
@@ -167,7 +160,7 @@
 		},
 		{
 			"name": "meta.type.ds",
-			"match": "^\\s*((?i:class|namespace))\\s*([a-zA-Z_]\\w*)\\n",
+			"match": "^\\s*((?i:class|namespace))\\s*([a-zA-Z_x7f-xff][a-zA-Z0-9_x7f-xff]*)\\n",
 			"captures": {
 				"1": {
 					"name": "storage.type.ds"
@@ -189,12 +182,28 @@
 			"include": "#function-entity"
 		},
 		{
+			"include": "#metadata-field"
+		},
+		{
+			"include": "#variable"
+		},
+		{
+			"include": "#string"
+		},
+		{
+			"include": "#numeric"
+		},
+		{
 			"include": "#operators"
 		}
 	],
 	"repository": {
 		"language-constants": {
-			"match": "(?<!\\w)(?:(?:false)|(?:NULL)|(?:true)|(?:nothing)|(?:const))(?!\\w)",
+			"match": "(?<!\\w)(?i:(?:false)|(?:NULL)|(?:true)|(?:nothing)|(?:const))(?!\\w)",
+			"name": "constant.language.ds"
+		},
+		"metadata-constants": {
+			"match": "(?i:AnalysisBase|AnalysisCategory|AnalysisMaximum|AnalysisMean|AnalysisMinimum|AnalysisSampleVariance|AnalysisStdDev|AnalysisStdErr|AnalysisSubHeading|AnalysisSubTotal|AnalysisSummaryData|AnalysisTotal)",
 			"name": "constant.language.ds"
 		},
 		"empty-square-brackets": {
@@ -203,12 +212,16 @@
 		},
 		"function-entity": {
 			"name": "support.function.ds",
-			"match": "(?i:(\\b[a-zA-Z_x7f-xff][a-zA-Z0-9_x7f-xff]*?\\b)(?=\\(\\)?))",
+			"match": "(?i:(\\b[a-zA-Z_x7f-xff][a-zA-Z0-9_x7f-xff]*\\b)(?=\\(\\)?))",
 			"captures": {
 				"1": {
 					"name": "entity.name.function.ds"
 				}
 			}
+		},
+		"keyword-operator": {
+			"name": "keyword.control.ds",
+			"match": "(?i:\\b(mod|and|or|xor|is|not|as|like)\\b)"
 		},
 		"block-comment": {
 			"name": "comment.block.apostrophe.ds",
@@ -229,6 +242,14 @@
 				}
 			},
 			"end": "(?=(\\n|%>))"
+		},
+		"variable": {
+			"name": "variable.other.bfeac.ds",
+			"match": "\\b[a-zA-Z_x7f-xff][a-zA-Z0-9_x7f-xff]*\\b"
+		},
+		"metadata-keywords": {
+			"name": "keyword.control.ds",
+			"match": "\\b(?i:deriveelements|noderiveelements|initialanswer|defaultanswer|nocasedata|unversioned|rot|rotate|ran|randomize|rev|reverse|asc|ascending|desc|descending|fix|namespace|exclusive|nofilter|use|sublist|expand)\\b"
 		},
 		"string": {
 			"name": "string.quoted.double.ds",
@@ -253,7 +274,7 @@
 		},
 		"numeric": {
 			"name": "constant.numeric.ds",
-			"match": "\\b(&(?:h|H)[0-9a-fA-F]+)|(\\.[0-9]+)|([0-9]+\\.?[0-9]*)\\b"
+			"match": "(?<![a-zA-Z_x7f-xff])((&(?:h|H)[0-9a-fA-F]*)|(\\d+[\\.]?\\d*))"
 		},
 		"operators": {
 			"match": "!|%|&&|\\|\\||\\+|\\-|\\*|/|=|==|!=|>|<|>=|<=|<>"
@@ -280,6 +301,9 @@
 					"include": "#string"
 				},
 				{
+					"include": "#curly-block"
+				},
+				{
 					"include": "#numeric"
 				},
 				{
@@ -297,31 +321,39 @@
 			"begin": "\\{",
             "beginCaptures": {
                 "0": {
-                    "name": "punctuation.section.block.begin.bracket.curly.ds"
+                    "name": "punctuation.definition.list.begin.ds"
                 }
             },
 			"end": "\\}",
             "endCaptures": {
                 "0": {
-                    "name": "punctuation.section.block.end.bracket.curly.ds"
+                    "name": "punctuation.definition.list.end.ds"
                 }
             },
             "name": "meta.block.ds",
 			"patterns": [
 				{
-					"include": "#strings"
+					"include": "#block-comment"
 				},
 				{
-					"math": "[a-zA-Z_]\\w*",
-					"name": "variable.other.enummember.ds"
+					"include": "#line-comment"
+				},
+				{
+					"include": "#string"
 				},
 				{
 					"include": "#numeric"
+				},
+				{
+					"include": "#metadata-category"
+				},
+				{
+					"include": "#variable"
 				}
 			]
 		},
 		"member-access": {
-			"match": "((\\.)(?:(?:\\s)*)(\\b[a-zA-Z_]\\w*\\b)(?![\\[\\(]))|((?!\\.)\\b([a-zA-Z_]\\w*\\b)(?:(?:\\s)*)(?=\\.))",
+			"match": "((\\.)(?:(?:\\s)*)(\\b[a-zA-Z_x7f-xff][a-zA-Z0-9_x7f-xff]*\\b))|((?!\\.)\\b([a-zA-Z_x7f-xff][a-zA-Z0-9_x7f-xff]*\\b)(?:(?:\\s)*)(?=\\.))",
 			"captures": {
 				"2": {
 					"name": "punctuation.separator.dot-access.ds"
@@ -334,22 +366,14 @@
 				}
 			}
 		},
-        "macro-name": {
-            "match": "(?<!\\w)(?:[a-zA-Z_]|(?:\\\\u[0-9a-fA-F]{4}|\\\\U[0-9a-fA-F]{8}))(?:[a-zA-Z0-9_]|(?:\\\\u[0-9a-fA-F]{4}|\\\\U[0-9a-fA-F]{8}))*(?!\\w)",
-            "name": "entity.name.function.preprocessor.ds"
-        },
 		"pre-include": {
-			"name": "meta.preprocessor.include.ds",
-			"match": "^(?:[\\t\\s]*)(#)(?:(?:\\s)+)?(\\binclude\\b)\\s+((\".*?\")|([a-zA-Z_]\\w*))",
+			"match": "^(?:[\\t\\s]*)(#)(?:(?:\\s)+)?(\\binclude\\b)\\s+((\".*?\")|([a-zA-Z_x7f-xff][a-zA-Z0-9_x7f-xff]*))",
 			"captures": {
 				"0": {
-					"name": "keyword.control.directive.include.ds"
+					"name": "meta.preprocessor.include.ds"
 				},
 				"1": {
 					"name": "punctuation.definition.directive.ds"
-				},
-				"2": {
-					"name": "keyword.control.directive.include.ds"
 				},
 				"4": {
 					"name": "string.quoted.double.ds"
@@ -360,12 +384,11 @@
 			}
 		},
 		"pre-line": {
-			"name": "meta.preprocessor.line.ds",
 			"begin": "^(?:[\\t\\s]*)(#)(?:(?:\\s)+)?)(\\bline\\b)",
 			"end": "(\\n*)$",
 			"beginCaptures": {
 				"0": {
-					"name": "keyword.control.directive.line.ds"
+					"name": "meta.preprocessor.line.ds"
 				},
 				"1": {
 					"name": "punctuation.definition.directive.ds"
@@ -384,16 +407,16 @@
 			]
 		},
 		"pre-macro": {
-			"name": "meta.preprocessor.macro.ds",
 			"begin": "^(?:[\\s\\t]*)(#)(?:(?:\\s)+)?(\\bdefine\\b)(?:(?:\\s)+)",
 			"beginCaptures": {
 				"0": {
-					"name": "keyword.control.directive.define.ds"
+					"name": "meta.preprocessor.define.ds"
 				},
 				"1": {
 					"name": "punctuation.definition.directive.ds"
 				}
 			},
+			"end": "(\\n*)$",
 			"patterns": [
 				{
 					"include": "#string"
@@ -406,7 +429,7 @@
 				},
 				{
 					"name": "variable.parameter.preprocessor.ds",
-					"match": "\\b[a-zA-Z_]\\w*\\b"
+					"match": "\\b[a-zA-Z_x7f-xff][a-zA-Z0-9_x7f-xff]*\\b"
 				},
 				{
 					"name": "constant.language.ds",
@@ -416,10 +439,13 @@
 		},
 		"pre-conditional-defined": {
             "begin": "((?<!\\w)defined(?!\\w))(\\()",
-            "end": "(?:\\)|(?<!\\\\)(?=\\n))",
+            "end": "\\)",
             "beginCaptures": {
+				"0": {
+					"name": "meta.preprocessor.defined.ds"
+				},
                 "1": {
-                    "name": "keyword.control.directive.conditional.defined.ds"
+                    "name": "entity.name.function.preprocessor.ds"
                 },
                 "2": {
                     "name": "punctuation.section.parens.control.defined.ds"
@@ -431,16 +457,16 @@
                 }
             },
             "patterns": [
-                {
-                    "include": "#macro-name"
-                }
+				{
+					"include": "#variable"
+				}
             ]
 		},
 		"pre-conditional-range": {
 			"begin": "^(?:[\\t\\s]*)(#)(?:(?:\\s)+)?(\\bif\\b)(?:(?:\\s)+)",
 			"beginCaptures": {
 				"0": {
-					"name": "keyword.control.directive.if.ds"
+					"name": "meta.preprocessor.if.ds"
 				},
 				"1": {
 					"name": "punctuation.definition.directive.ds"
@@ -449,13 +475,19 @@
 			"end": "^(?:[\\t\\s]*)(#)(\\belse|endif\\b)",
 			"endCaptures": {
 				"0": {
-					"name": "keyword.control.directive.if.ds"
+					"name": "meta.preprocessor.if.ds"
 				},
 				"1": {
 					"name": "punctuation.definition.directive.ds"
 				}
 			},
 			"patterns": [
+				{
+					"include": "#language-constants"
+				},
+				{
+					"include": "#keyword-operator"
+				},
 				{
 					"include": "#pre-conditional-defined"
 				},
@@ -464,8 +496,245 @@
 				},
 				{
 					"include": "#pre-macro"
+				},
+				{
+					"include": "#variable"
+				},
+				{
+					"include": "#function-entity"
+				},
+				{
+					"include": "#operators"
 				}
 			]
+		},
+		"metadata-property": {
+			"name": "meta.property.definition.ds",
+			"begin": "[a-zA-Z_x7f-xff][a-zA-Z0-9_x7f-xff]*",
+			"beginCaptures": {
+				"0": {
+					"name": "meta.property.ds"
+				}
+			},
+			"end": "(\\n*)$",
+			"patterns": [
+				{
+					"include": "#numeric"
+				},
+				{
+					"include": "#string"
+				},
+				{
+					"include": "#variable"
+				},
+				{
+					"include": "#metadata-brace-properties"
+				},
+				{
+					"include": "#language-constants"
+				}
+			]
+		},
+		"metadata-properties": {
+			"name": "meta.properties.definition.ds",
+			"begin": "\\[",
+			"beginCaptures": {
+				"0": {
+					"name": "punctuation.section.block.begin.bracket.ds"
+				}
+			},
+			"end": "\\]",
+			"endCaptures": {
+				"0": {
+					"name": "punctuation.section.block.end.bracket.ds"
+				}
+			},
+			"patterns": [
+				{
+					"include": "#metadata-property"
+				},
+				{
+					"include": "$self"
+				}
+			]
+		},
+		"metadata-brace": {
+			"name": "meta.properties.definition.ds",
+			"begin": "\\(",
+			"beginCaptures": {
+				"0": {
+					"name": "punctuation.section.block.begin.brace.ds"
+				}
+			},
+			"end": "\\)",
+			"endCaptures": {
+				"0": {
+					"name": "punctuation.section.block.end.brace.ds"
+				}
+			},
+			"patterns": [
+				{
+					"include": "#metadata-property"
+				},
+				{
+					"include": "#curly-block"
+				},
+				{
+					"include": "#string"
+				},
+				{
+					"incldue": "#metadata-keywords"
+				},
+				{
+					"include": "#metadata-constants"
+				},
+				{
+					"include": "#variable"
+				}
+			]
+		},
+		"metadata-brace-properties": {
+			"name": "meta.brace.properties.ds",
+			"match": "(?i:(labelstyle|templates|style|expression|defaultanswer|factor|keycode|multiplier|elementtype))\\s*(\\([\\s\\S]*\\))",
+			"captures": {
+				"1": {
+					"name": "storage.type.ds"
+				},
+				"2": {
+					"name": "meta.brace.properties.ds",
+					"patterns": [
+						{
+							"include": "#metadata-brace"
+						}
+					]
+				}
+			}
+		},
+		"metadata-field-header": {
+			"name": "meta.variable.head.definition.ds",
+			"begin": "[a-zA-Z_x7f-xff][a-zA-Z0-9_x7f-xff]*",
+			"beginCaptures": {
+				"0": {
+					"name": "meta.definition.variable.name.ds"
+				}
+			},
+			"end": "(?i:(categorical|long|double|text|date|boolean|define|info|loop|grid|compound|block|page|db))\\s*((\\[)\\s*((?:\\d*\\.\\.\\d*)|(?:\\d+))\\s*(\\]))?",
+			"endCaptures": {
+				"1": {
+					"name": "storage.type.ds"
+				},
+				"3": {
+					"name": "meta.bracket.square.access.ds"
+				},
+				"4": {
+					"name": "meta.variable.definition.range.ds"
+				},
+				"5": {
+					"name": "meta.bracket.square.access.ds"
+				}
+			},
+			"patterns": [
+				{
+					"include": "#metadata-properties"
+				},
+				{
+					"include": "#metadata-brace-properties"
+				},
+				{
+					"include": "#string"
+				}
+			]
+		},
+		"metadata-category": {
+			"name": "meta.category.definition.ds",
+			"begin": "([a-zA-Z_x7f-xff][a-zA-Z0-9_x7f-xff]*)",
+			"beginCaptures": {
+				"0": {
+					"name": "variable.other.enummember.ds"
+				}
+			},
+			"end": "(\\s*(?=\\}))|,",
+			"patterns": [
+				{
+					"include": "#string"
+				},
+				{
+					"include": "#metadata-properties"
+				},
+				{
+					"include": "#metadata-brace-properties"
+				},
+				{
+					"include": "#variable"
+				}
+			]
+		},
+		"metadata-category-list": {
+			"begin": "\\{",
+			"beginCaptures": {
+				"0": {
+					"name": "punctuation.definition.directive.ds"
+				}
+			},
+			"end": "\\}(?i:(rot|rotate|ran|randomize|rev|reverse|asc|ascending|desc|descending|fix|namespace))*",
+			"endCaptures": {
+				"0": {
+					"name": "punctuation.definition.directive.ds"
+				},
+				"1": {
+					"name": "storage.type.ds"
+				}
+			},
+			"patterns": [
+				{
+					"include": "#metadata-category"
+				}
+			]
+		},
+		"metadata-field": {
+			"match": "([a-zA-Z_x7f-xff][a-zA-Z0-9_x7f-xff]*)\\s*(?:\\s*(?:(\".*?\")|(\\[[\\s\\S]*?\\])|([a-zA-Z_x7f-xff][a-zA-Z0-9_x7f-xff]*\\s*\\([\\s\\S]*?\\)))\\s*)*\\s*((?i:categorical|text|date|long|double|boolean)?)\\s*(?:(\\[)((?:\\d+)|(?:\\d*\\.\\.\\d*))(\\]))?\\s*(\\{[\\s\\S]*?\\});",
+			"name": "meta.definition.ds",
+			"captures": {
+				"1": {
+					"name": "meta.definition.variable.name.ds"
+				},
+				"2": {
+					"name": "string.quoted.double.ds"
+				},
+				"3": {
+					"patterns": [
+						{
+							"include": "#metadata-properties"
+						}
+					]
+				},
+				"4": {
+					"patterns": [
+						{
+							"include": "#metadata-brace-properties"
+						}
+					]
+				},
+				"5": {
+					"name": "storage.type.ds"
+				},
+				"6": {
+					"name": "meta.bracket.square.access"
+				},
+				"7": {
+					"name": "keyword.operator.spread.ds"
+				},
+				"8": {
+					"name": "meta.bracket.square.access"
+				},
+				"9": {
+					"patterns": [
+						{
+							"include": "#curly-block"
+						}
+					]
+				}
+			}
 		}
 	},
 	"scopeName": "source.ds"
