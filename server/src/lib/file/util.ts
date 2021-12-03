@@ -90,9 +90,15 @@ export type FileReferenceMark = {
  */
 export function getFileReferenceMark(content: string): FileReferenceMark | undefined {
     const regex = new RegExp(lineBreak.source, "g");
+    regex.lastIndex = 0;
+    let index = 0;
     let match;
-    if ((match = regex.exec(content))) {
-        const firstLine = content.slice(0, match.index);
+    while ((match = regex.exec(content))) {
+        const firstLine = content.slice(index, match.index);
+        if (!(/\s*[']+/.test(firstLine))) {
+            break;
+        }
+        index = match.index;
         const markReg = /\s*[']+\s*"([.]{0,2}(?:(?:\\|\/)*.*?)*(?:[.].*?)?)"\s*[@]\s*([a-zA-Z_][a-zA-Z0-9_]*)/;
         if (markReg.test(firstLine)) {
             const check = markReg.exec(firstLine);
