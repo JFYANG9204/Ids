@@ -12,7 +12,7 @@ import { createBasicOptions } from "../../server/src/lib/options";
 import { Parser } from "../../server/src/lib/parser";
 
 const folderPath = resolve("./test/parser/fixture/DPGM");
-const startPath = resolve("./test/parser/fixture/DPGM/data/Clean.dms");
+const startPath = resolve("./test/parser/fixture/DPGM/Run.mrs");
 const graph = new ParserFileDigraph(folderPath, builtInModule);
 graph.init();
 graph.setStart(startPath);

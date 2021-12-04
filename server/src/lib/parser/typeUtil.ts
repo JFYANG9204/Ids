@@ -258,6 +258,9 @@ export class TypeUtil extends UtilParser {
             }
         } else {
             binding.name = dec.name;
+            if (dec.name.name === "Categorical") {
+                binding.generics = "Variant";
+            }
         }
         return binding;
     }
@@ -1209,40 +1212,34 @@ export class TypeUtil extends UtilParser {
                 return false;
             }
         }
-        const variant = this.getVariant();
-        if (!(final as ClassOrInterfaceDeclaration).default) {
-            if (element) {
-                this.addExtra(element, "declaration", variant);
-            }
-            return variant;
-        } else {
-            const def = final as ClassOrInterfaceDeclaration;
-            const name: string | undefined =
-                def.default ?
-                this.getPropertyBindingTypeString(def.default) : undefined;
-            if (name) {
-                let find = this.scope.get(name, def.namespace)?.result;
-                if (element && find) {
-                    if (this.scope.get(element.name)) {
-                        this.scope.update(
-                            element.name,
-                            BindTypes.var,
-                            find, element);
-                    } else {
-                        find = this.scope.declareUndefined(element, find);
-                    }
-                    this.addExtra(element,
-                        "declaration",
-                        this.scope.get(element.name)?.result);
-                }
-                return find;
-            } else {
-                if (element) {
-                    this.addExtra(element, "declaration", variant);
-                }
-                return variant;
-            }
+        const def = final as ClassOrInterfaceDeclaration;
+        let name: string | undefined =
+            def.default ?
+            this.getPropertyBindingTypeString(def.default) : undefined;
+
+        let namespace = def.namespace;
+        if (!name) {
+            name = "Variant";
+            namespace = undefined;
         }
+
+        let find = this.scope.get(name, namespace)?.result;
+        if (element) {
+            if (find) {
+                if (this.scope.get(element.name)) {
+                    this.scope.update(
+                        element.name,
+                        BindTypes.var,
+                        find, element);
+                } else {
+                    find = this.scope.declareUndefined(element, find);
+                }
+            }
+            this.addExtra(element,
+                "declaration",
+                this.scope.get(element.name)?.result);
+        }
+        return find;
     }
 
     getFinalType(

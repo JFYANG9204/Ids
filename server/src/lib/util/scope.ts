@@ -444,8 +444,13 @@ export class ScopeHandler {
         // 检查是否为本地定义，如果为本地定义，则更新Decarator内的ValueType属性和bindingType属性
         if (exist.type === BindTypes.var) {
             if (exist.result instanceof SingleVarDeclarator) {
-                exist.result.binding = newType.name.name;
-                exist.result.bindingType = newType;
+                if (newType instanceof BindingDeclarator) {
+                    exist.result.binding = newType;
+                    exist.result.bindingType = this.get(newType.name.name)?.result;
+                } else {
+                    exist.result.binding = newType.name.name;
+                    exist.result.bindingType = newType;
+                }
             } else if (exist.result instanceof ArrayDeclarator) {
                 if (!exist.result.binding) {
                     exist.result.binding = newType.name.name;
