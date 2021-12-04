@@ -36,16 +36,8 @@
 			"include": "#line-comment"
 		},
 		{
-			"name": "storage.type.ds",
-			"match": "(?i:\\s*\\b(class|const|dim|function|end\\s+function|sub|end\\s+sub|set|option\\s+explicit|namespace|end\\s+namespace|property|end\\s+property|Implements|interface|end\\s+interface)(?!\\()\\b\\s*)"
-		},
-		{
-			"name": "keyword.control.ds",
-			"match": "(?i:\\b(case|do|each|else|elseif|end|error|exit|explicit|event|for|globalvariables|goto|if|implicit|in|loop|next|null|on|option|paper|resume|section|select|step|then|to|until|while|with)(?!\\()\\b)"
-		},
-		{
 			"name": "variable.other.dim.ds",
-			"begin": "^\\s*(?i:(Dim))",
+			"begin": "^\\s*(?i:Dim)",
 			"beginCaptures": {
 				"0": {
 					"name": "storage.type.ds"
@@ -54,28 +46,25 @@
 			"end": "(\\n*)$",
 			"patterns": [
 				{
+					"name": "variable.other.ds",
 					"match": "([a-zA-Z_x7f-xff$#][a-zA-Z0-9_x7f-xff$#]*)((?:\\[\\d*\\])*)(?:\\s+(?i:(As))\\s+([a-zA-Z_x7f-xff$#][a-zA-Z0-9_x7f-xff$#]*(?:\\.[a-zA-Z_x7f-xff$#][a-zA-Z0-9_x7f-xff$#]*)*))?\\s*([,]?)",
 					"captures": {
 						"1": {
 							"name": "variable.other.local.ds"
 						},
 						"2": {
-							"patterns": [
-								{
-									"match": "(\\[)(\\d*)(\\])",
-									"captures": {
-										"1": {
-											"name": "meta.bracket.square.access.ds"
-										},
-										"2": {
-											"name": "constant.numeric.ds"
-										},
-										"3": {
-											"name": "meta.bracket.square.access.ds"
-										}
-									}
+							"match": "(\\[)(\\d*)(\\])",
+							"captures": {
+								"1": {
+									"name": "meta.bracket.square.access.ds"
+								},
+								"2": {
+									"name": "constant.numeric.ds"
+								},
+								"3": {
+									"name": "meta.bracket.square.access.ds"
 								}
-							]
+							}
 						},
 						"3": {
 							"name": "keyword.control.ds"
@@ -89,6 +78,14 @@
 					}
 				}
 			]
+		},
+		{
+			"name": "storage.type.ds",
+			"match": "(?i:\\s*\\b(class|const|dim|function|end\\s+function|sub|end\\s+sub|set|option\\s+explicit|namespace|end\\s+namespace|property|end\\s+property|Implements|interface|end\\s+interface)(?!\\()\\b\\s*)"
+		},
+		{
+			"name": "keyword.control.ds",
+			"match": "(?i:\\b(case|do|each|else|elseif|end|error|exit|explicit|event|for|globalvariables|goto|if|implicit|in|loop|next|null|on|option|paper|resume|section|select|step|then|to|until|while|with)(?!\\()\\b)"
 		},
 		{
 			"include": "#member-access"
@@ -372,7 +369,7 @@
 					"name": "string.quoted.double.ds"
 				},
 				"5": {
-					"name": "variable.other.bfeac.ds"
+					"name": "variable.other.local.ds"
 				}
 			}
 		},
