@@ -36,7 +36,7 @@
 			"include": "#line-comment"
 		},
 		{
-			"name": "variable.other.dim.ds",
+			"name": "meta.definition.variable.ds",
 			"begin": "^\\s*(?i:Dim)",
 			"beginCaptures": {
 				"0": {
@@ -46,11 +46,10 @@
 			"end": "(\\n*)$",
 			"patterns": [
 				{
-					"name": "variable.other.ds",
 					"match": "([a-zA-Z_x7f-xff$#][a-zA-Z0-9_x7f-xff$#]*)((?:\\[\\d*\\])*)(?:\\s+(?i:(As))\\s+([a-zA-Z_x7f-xff$#][a-zA-Z0-9_x7f-xff$#]*(?:\\.[a-zA-Z_x7f-xff$#][a-zA-Z0-9_x7f-xff$#]*)*))?\\s*([,]?)",
 					"captures": {
 						"1": {
-							"name": "variable.other.local.ds"
+							"name": "variable.other.readwrite.ds"
 						},
 						"2": {
 							"match": "(\\[)(\\d*)(\\])",
@@ -70,10 +69,55 @@
 							"name": "keyword.control.ds"
 						},
 						"4": {
-							"name": "support.type.ds"
+							"name": "entity.name.type.ds"
 						},
 						"5": {
 							"name": "punctuation.separator.delimiter.ds"
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "meta.definition.variable.ds",
+			"begin": "^\\s*(?i:const)",
+			"beginCaptures": {
+				"0": {
+					"name": "storage.type.ds"
+				}
+			},
+			"end": "(\\n*)$",
+			"patterns": [
+				{
+					"match": "([a-zA-Z_x7f-xff$#][a-zA-Z0-9_x7f-xff$#]*)(?:\\s+(?i:(As))\\s+([a-zA-Z_x7f-xff$#][a-zA-Z0-9_x7f-xff$#]*(?:\\.[a-zA-Z_x7f-xff$#][a-zA-Z0-9_x7f-xff$#]*)*))?\\s*\\s*(?:(=)\\s*([^,\n]*))?\\s*(,)?",
+					"captures": {
+						"1": {
+							"name": "variable.other.contant.ds"
+						},
+						"2": {
+							"name": "keyword.control.ds"
+						},
+						"3": {
+							"name": "entity.name.type.ds"
+						},
+						"4": {
+							"name": "keyword.operator.assignment.ds"
+						},
+						"5": {
+							"patterns": [
+								{
+									"include": "#string"
+								},
+								{
+									"include": "#numeric"
+								},
+								{
+									"include": "#curly-block"
+								},
+								{
+									"include": "#variable"
+								}
+							]
 						}
 					}
 				}
@@ -100,7 +144,7 @@
 					"name": "keyword.control.ds"
 				},
 				"6": {
-					"name": "storage.type.ds"
+					"name": "entity.name.type.ds"
 				}
 			}
 		},
