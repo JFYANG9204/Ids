@@ -328,7 +328,7 @@ function getDefaultNote(dec: DeclarationBase, appendMd: boolean = true): string 
             args = getArgumentNote((dec as FunctionDeclaration).params);
             let bind = (dec as FunctionDeclaration).binding;
             value = (bind ? getBindingName(bind) : undefined) ?? "Void";
-            return appendMd ? ("```\n" + text + name + "(" + args + "): " + value + "\n```") :
+            return appendMd ? ("```ts\n" + text + name + "(" + args + "): " + value + "\n```") :
                 (text + name + "(" + args + "): " + value);
 
         case "PropertyDeclaration":
@@ -338,7 +338,7 @@ function getDefaultNote(dec: DeclarationBase, appendMd: boolean = true): string 
                 text += "(" + getArgumentNote(prop.params) + ")";
             }
             text += ": " + getBindingName(prop.binding);
-            return appendMd ? "```\n" + text + "\n```" : text;
+            return appendMd ? "```ts\n" + text + "\n```" : text;
 
         case "SingleVarDeclarator":
             const dim = dec as SingleVarDeclarator;
@@ -350,24 +350,24 @@ function getDefaultNote(dec: DeclarationBase, appendMd: boolean = true): string 
 
             if (dec.treeParent?.type === "ArgumentDeclarator") {
                 return appendMd ?
-                    ("```\n" + `(parameter) ${getDeclaratorNote(dim)}\n` + "```") :
+                    ("```ts\n" + `(parameter) ${getDeclaratorNote(dim)}\n` + "```") :
                     (`(parameter) ${getDeclaratorNote(dim)}`);
             }
-            return appendMd ? ("```\n" + `(${header}) ${getDeclaratorNote(dim)}\n` + "```") :
+            return appendMd ? ("```ts\n" + `(${header}) ${getDeclaratorNote(dim)}\n` + "```") :
                 (`(${header}) ${getDeclaratorNote(dim)}`);
 
         case "ArrayDeclarator":
             const arr = dec as ArrayDeclarator;
             if (dec.treeParent?.type === "ArgumentDeclarator") {
-                return appendMd ? ("```\n" + `(parameter) ${getDeclaratorNote(arr)}\n` + "```") :
+                return appendMd ? ("```ts\n" + `(parameter) ${getDeclaratorNote(arr)}\n` + "```") :
                     (`(parameter) ${getDeclaratorNote(arr)}`);
             }
-            return appendMd ? ("```\n" + `(variable) ${getDeclaratorNote(arr)}\n` + "```") :
+            return appendMd ? ("```ts\n" + `(variable) ${getDeclaratorNote(arr)}\n` + "```") :
                 (`(variable) ${getDeclaratorNote(arr)}`);
 
         case "MacroDeclaration":
             const macro = dec as MacroDeclaration;
-            return appendMd ? ("```\n(macro) " + macro.name.name +
+            return appendMd ? ("```ts\n(macro) " + macro.name.name +
                 (macro.initValue ? " = " + macro.initValue : "") + "\n```") :
                 ("(macro) " + macro.name.name +
                 (macro.initValue ? " = " + macro.initValue : ""));
@@ -379,7 +379,7 @@ function getDefaultNote(dec: DeclarationBase, appendMd: boolean = true): string 
             } else {
                 text += "(class) " + namespace;
             }
-            return appendMd ? ("```\n" + text + classOrInterface.name.name + "\n```") :
+            return appendMd ? ("```ts\n" + text + classOrInterface.name.name + "\n```") :
                 (text + classOrInterface.name.name);
 
         case "ConstDeclarator":
@@ -401,12 +401,12 @@ function getDefaultNote(dec: DeclarationBase, appendMd: boolean = true): string 
                 default:
                     break;
             }
-            return appendMd ? "```\n" + text + "\n```" : text;
+            return appendMd ? "```ts\n" + text + "\n```" : text;
 
         default:
             if (dec.type.startsWith("Metadata")) {
                 text = getMetadataDeclarationNote(dec);
-                return appendMd ? ("```\n" + text + "\n```") :
+                return appendMd ? ("```ts\n" + text + "\n```") :
                     text;
             }
             return "";
@@ -446,10 +446,12 @@ function getMetadataDeclarationNote(dec: DeclarationBase) {
     return text;
 }
 
-function getDeclaratorNote(dec: SingleVarDeclarator | ArrayDeclarator | BindingDeclarator) {
+function getDeclaratorNote(
+    dec: SingleVarDeclarator | ArrayDeclarator | BindingDeclarator,
+    isOptionalParam = false) {
     if (dec.type === "SingleVarDeclarator") {
         const single = dec as SingleVarDeclarator;
-        return single.name.name + ": " +
+        return single.name.name + (isOptionalParam ? "?" : "") + ": " +
             (single.bindingType ? getBindingName(single.bindingType) :
             (single.binding ? getBindingName(single.binding) : "Variant"));
     } else if (dec.type === "BindingDeclarator") {
@@ -458,7 +460,7 @@ function getDeclaratorNote(dec: SingleVarDeclarator | ArrayDeclarator | BindingD
         const arr = dec as ArrayDeclarator;
         let boundries = "";
         if (arr.dimensions === 1) {
-            return arr.name.name + "[]: Array<" + (typeof arr.binding === "string" ?
+            return arr.name.name + "[]" + (isOptionalParam ? "?" : "") + ": Array<" + (typeof arr.binding === "string" ?
             arr.binding : arr.binding.name.name) + ">";
         }
         for (let i = 0; i < arr.dimensions; i++) {
@@ -468,7 +470,7 @@ function getDeclaratorNote(dec: SingleVarDeclarator | ArrayDeclarator | BindingD
                 boundries += "[]";
             }
         }
-        return arr.name.name + boundries + ": Array<" + (typeof arr.binding === "string" ?
+        return arr.name.name + boundries + (isOptionalParam ? "?" : "") + ": Array<" + (typeof arr.binding === "string" ?
             arr.binding : arr.binding.name.name) + ">";
     }
 }
@@ -477,9 +479,7 @@ function getArgumentNote(args: Array<ArgumentDeclarator>) {
     let note = "";
     args.forEach((param, index) => {
         if (index > 0) { note += ", "; }
-        if (param.optional) { note += "["; }
-        note += getDeclaratorNote(param.declarator);
-        if (param.optional) { note += "]"; }
+        note += getDeclaratorNote(param.declarator, param.optional);
     });
     return note;
 }
