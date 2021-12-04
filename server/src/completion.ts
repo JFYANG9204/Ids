@@ -374,6 +374,9 @@ function getDefaultNote(dec: DeclarationBase, appendMd: boolean = true): string 
 
         case "ClassOrInterfaceDeclaration":
             const classOrInterface = dec as ClassOrInterfaceDeclaration;
+            if (classOrInterface.name.name === "Variant") {
+                return appendMd ? ("```ts\nany\n```") : "any";
+            }
             if (classOrInterface.defType === "interface") {
                 text += "(interface) " + namespace;
             } else {

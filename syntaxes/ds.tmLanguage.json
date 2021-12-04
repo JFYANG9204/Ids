@@ -193,7 +193,7 @@
 		},
 		{
 			"name": "keyword.control.ds",
-			"match": "(?i:\\b(case|do|each|else|elseif|end|error|exit|explicit|event|for|globalvariables|goto|if|implicit|in|loop|next|null|on|option|paper|resume|section|select|step|then|to|until|while|with)(?!\\()\\b)"
+			"match": "(?i:\\b(case|do|each|else|elseif|end|error|exit|explicit|event|for|globalvariables|goto|if|implicit|in|loop|next|on|option|paper|resume|section|select|step|then|to|until|while|with)(?!\\()\\b)"
 		},
 		{
 			"include": "#member-access"
