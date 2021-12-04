@@ -1,6 +1,7 @@
 import { join } from "path";
-import { fileURLToPath } from "url";
+import { fileURLToPath, pathToFileURL } from "url";
 import {
+    AnnotatedTextEdit,
     CodeAction,
     CodeActionKind,
     Command,
@@ -29,7 +30,7 @@ import {
 import { FileContent, positionIn } from "./lib/file/util";
 import { createBasicOptions } from "./lib/options";
 import { Parser } from "./lib/parser";
-import { File, NodeBase } from "./lib/types";
+import { File, Identifier, NodeBase } from "./lib/types";
 import { updateScope } from "./lib/util/scope";
 
 
@@ -137,12 +138,15 @@ export function getNodeFromDocPos(
     return positionAt(curFile.program.body, position, untilId, 0);
 }
 
-
-export function createWorkspaceEditorContent(uri: string, start: Position, text: string) {
-    let textEdit: TextEdit = {
-        newText: text + "\n",
-        range: Range.create(start, start)
+export function createTextEdit(start: Position, end: Position, newText: string): TextEdit {
+    return {
+        newText,
+        range: Range.create(start, end)
     };
+}
+
+export function createWorkspaceEditorNotReplace(uri: string, start: Position, end: Position, text: string) {
+    let textEdit = createTextEdit(start, end ,text);
     let edit = TextDocumentEdit.create({ version: null, uri }, [ textEdit ]);
     let workspaceEdit: WorkspaceEdit = {
         changes: { uri: [ textEdit ] },
@@ -151,11 +155,29 @@ export function createWorkspaceEditorContent(uri: string, start: Position, text:
     return workspaceEdit;
 }
 
+export function createWorkspaceEditorInsertContent(uri: string, start: Position, text: string) {
+    return createWorkspaceEditorNotReplace(uri, start, start, text + "\n");
+}
+
 export function createCodeAction(uri: string, title: string, text: string) {
-    return CodeAction.create(title, createWorkspaceEditorContent(uri, Pos.create(0, 0), text), CodeActionKind.QuickFix);
+    return CodeAction.create(title, createWorkspaceEditorInsertContent(uri, Pos.create(0, 0), text), CodeActionKind.QuickFix);
 }
 
 export function createCodeActionByCommand(title: string, text: string, line: number) {
     return CodeAction.create(title, Command.create(title, "ids.insertTextAtPosition", text, line), CodeActionKind.QuickFix);
 }
 
+export function createRenameTextEdit(node: NodeBase, changes: {[uri: string]: TextEdit[]}) {
+    let start = Pos.create(node.loc.start.line - 1, node.loc.start.column);
+    let end = Pos.create(node.loc.end.line - 1, node.loc.end.column);
+    let uri = pathToFileURL(node.loc.fileName).toString();
+    let text = (node instanceof Identifier) ? node.name : "";
+    let edit = createTextEdit(start, end ,text);
+    if (changes[uri]) {
+        changes[uri].push(edit);
+    } else {
+        changes[uri] = [ edit ];
+    }
+    let annotation: AnnotatedTextEdit = { annotationId: text, newText: text, range: Range.create(start, end) };
+    return annotation;
+}

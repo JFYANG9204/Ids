@@ -56,13 +56,13 @@
 							"match": "(\\[)(\\d*)(\\])",
 							"captures": {
 								"1": {
-									"name": "meta.bracket.square.access.ds"
+									"name": "storage.modifier.array.bracket.square.ds"
 								},
 								"2": {
 									"name": "constant.numeric.ds"
 								},
 								"3": {
-									"name": "meta.bracket.square.access.ds"
+									"name": "storage.modifier.array.bracket.square.ds"
 								}
 							}
 						},
@@ -80,29 +80,8 @@
 			]
 		},
 		{
-			"name": "storage.type.ds",
-			"match": "(?i:\\s*\\b(class|const|dim|function|end\\s+function|sub|end\\s+sub|set|option\\s+explicit|namespace|end\\s+namespace|property|end\\s+property|Implements|interface|end\\s+interface)(?!\\()\\b\\s*)"
-		},
-		{
-			"name": "keyword.control.ds",
-			"match": "(?i:\\b(case|do|each|else|elseif|end|error|exit|explicit|event|for|globalvariables|goto|if|implicit|in|loop|next|null|on|option|paper|resume|section|select|step|then|to|until|while|with)(?!\\()\\b)"
-		},
-		{
-			"include": "#member-access"
-		},
-		{
-			"include": "#keyword-operator"
-		},
-		{
-			"name": "storage.modifier.ds",
-			"match": "\\b(?i:default|readonly|writeonly)\\b"
-		},
-		{
-			"include": "#language-constants"
-		},
-		{
 			"name": "meta.function.ds",
-			"match": "[ \\t]*((?i:default)?)\\s*((?i:function|sub))\\s*([a-zA-Z_x7f-xff$#][a-zA-Z0-9_x7f-xff$#]*)\\s*((\\()([^)]*)*(\\)))?.*\\n",
+			"match": "\\s*(?:(?i:(default))\\s+)?((?i:function|sub))\\s+([a-zA-Z_x7f-xff$#][a-zA-Z0-9_x7f-xff$#]*)\\s*\\((.*?)\\)(?:\\s+((?i:as))\\s+([a-zA-Z_x7f-xff$#][a-zA-Z0-9_x7f-xff$#]*(?:\\.[a-zA-Z_x7f-xff$#][a-zA-Z0-9_x7f-xff$#]*)*))?",
 			"captures": {
 				"1": {
 					"name": "storage.modifier.function.ds"
@@ -113,14 +92,15 @@
 				"3": {
 					"name": "entity.name.function.ds"
 				},
-				"5": {
-					"name": "punctuation.definition.parameters.ds"
-				},
-				"6": {
+				"4": {
+					"match": "[a-zA-Z_x7f-xff$#][a-zA-Z0-9_x7f-xff$#]*(\\[\\d*\\])*",
 					"name": "variable.parameter.function.ds"
 				},
-				"7": {
-					"name": "punctuation.definition.parameters.ds"
+				"5": {
+					"name": "keyword.control.ds"
+				},
+				"6": {
+					"name": "storage.type.ds"
 				}
 			}
 		},
@@ -162,6 +142,27 @@
 					"name": "entity.name.type.ds"
 				}
 			}
+		},
+		{
+			"name": "storage.type.ds",
+			"match": "(?i:\\s*\\b(class|const|dim|function|end\\s+function|sub|end\\s+sub|set|option\\s+explicit|namespace|end\\s+namespace|property|end\\s+property|Implements|interface|end\\s+interface)(?!\\()\\b\\s*)"
+		},
+		{
+			"name": "keyword.control.ds",
+			"match": "(?i:\\b(case|do|each|else|elseif|end|error|exit|explicit|event|for|globalvariables|goto|if|implicit|in|loop|next|null|on|option|paper|resume|section|select|step|then|to|until|while|with)(?!\\()\\b)"
+		},
+		{
+			"include": "#member-access"
+		},
+		{
+			"include": "#keyword-operator"
+		},
+		{
+			"name": "storage.modifier.ds",
+			"match": "\\b(?i:default|readonly|writeonly)\\b"
+		},
+		{
+			"include": "#language-constants"
 		},
         {
             "match": "(?i:\\b(answercount|containsall|containsallexactly|containsany|containsanyexactly|containssome|definedcategories|definedelements|definedfactors|definedlistelements|difference|factor|filterby|getanswer|hasanswer|intersection|lbound|merge|redim|ubound|union|unique|xunion|ccategorical|clong|cdouble|cboolean|cdate|ctext|find|left|right|len|mid|ascw|chrw|format|formatvalue|hex|lcase|ltrim|makemdmname|makestring|oct|rtrim|split|trim|ucase|getrandomseed|ranint|rnd|setrandomseed|finditem|getreversalseed|getrotationseed|ran|randompassword|ransequence|rot|rotsequence|selectrange|setreversalseed|setrotationseed|sortasc|sortdesc|band|bitand|bitnot|bitor|bitxor|categorize|categorizeloopvariable|createobject|dbnull|decode|engineversion|equalband|eval|evaluatederivediteration|execute|getinterface|iif|inputbox|isdbnull|iselementinversions|isempty|isequalobject|isnullobject|isoneof|isset|rgb|samplecategorize|shellexecute|sleep|validate|vartype|vartypename|abs|atn|cos|exp|int|log|maxof|minof|pow|round|sgn|sin|sqrt|tan)\\b)",
@@ -277,12 +278,12 @@
 					"name": "variable.other.object.ds"
 				},
 				"2": {
-					"name": "punctuation.definition.begin.bracket.square"
+					"name": "storage.modifier.array.bracket.square.ds"
 				}
 			},
 			"endCaptures": {
 				"0": {
-					"name": "punctuation.definition.end.bracket.square"
+					"name": "storage.modifier.array.bracket.square.ds"
 				}
 			},
 			"name": "meta.bracket.square.access.ds",
@@ -304,6 +305,12 @@
 				},
 				{
 					"include": "#function-entity"
+				},
+				{
+					"include": "#variable"
+				},
+				{
+					"include": "#square-brackets"
 				}
 			]
 		},
@@ -530,13 +537,13 @@
 			"begin": "\\[",
 			"beginCaptures": {
 				"0": {
-					"name": "punctuation.section.block.begin.bracket.ds"
+					"name": "storage.modifier.array.bracket.square.ds"
 				}
 			},
 			"end": "\\]",
 			"endCaptures": {
 				"0": {
-					"name": "punctuation.section.block.end.bracket.ds"
+					"name": "storage.modifier.array.bracket.square.ds"
 				}
 			},
 			"patterns": [

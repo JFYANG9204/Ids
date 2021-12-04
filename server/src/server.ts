@@ -37,6 +37,7 @@ import {
 import {
     createCodeAction,
     createCodeActionByCommand,
+    createRenameTextEdit,
     getNodeFromDocPos,
     updateAndVaidateDocument,
 } from "./util";
@@ -66,7 +67,8 @@ connection.onInitialize((params) => {
             },
             definitionProvider: true,
             referencesProvider: true,
-            codeActionProvider: true
+            codeActionProvider: true,
+            renameProvider: true
         }
     };
     if (params.workspaceFolders) {
@@ -266,6 +268,21 @@ connection.onCodeAction(params => {
 
     actions.push(ignoreAllErrorAction, ignoreAllPathErrorAction);
     return actions;
+});
+
+connection.onRenameRequest(params => {
+    let node = getNodeFromDocPos(documents,
+        params.textDocument.uri,
+        params.position,
+        current,
+        true);
+
+    let def: DeclarationBase | undefined;
+    if (!node || !(def = node.extra["declaration"])) {
+        return null;
+    }
+
+    return null;
 });
 
 documents.onDidChangeContent(change => {

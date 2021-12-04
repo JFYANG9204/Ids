@@ -696,7 +696,9 @@ export class TypeUtil extends UtilParser {
                         ErrorMessages["ConstVarCannotBeAssigned"],
                         false);
                 }
+                left?.referenced.push(expr.left);
             } else if (left) {
+                left.referenced.push(expr.left);
                 // 考虑到可能的可迭代Collection赋值，
                 // 右值如果为Identifier，直接将右值类型更新给左值，
                 // 否则，将绑定类型更新给左值。
