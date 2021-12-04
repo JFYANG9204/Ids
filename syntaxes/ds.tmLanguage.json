@@ -394,7 +394,7 @@
 			]
 		},
 		"member-access": {
-			"match": "((\\.)(?:(?:\\s)*)(\\b[a-zA-Z_x7f-xff$#][a-zA-Z0-9_x7f-xff$#]*\\b))|((?!\\.)\\b([a-zA-Z_x7f-xff$#][a-zA-Z0-9_x7f-xff$#]*\\b)(?:(?:\\s)*)(?=\\.))",
+			"match": "((\\.)(?:(?:\\s)*)(\\b[a-zA-Z_x7f-xff$#][a-zA-Z0-9_x7f-xff$#]*\\b))(?![\\(])|((?!\\.)\\b([a-zA-Z_x7f-xff$#][a-zA-Z0-9_x7f-xff$#]*\\b)(?:(?:\\s)*)(?=\\.))",
 			"captures": {
 				"2": {
 					"name": "punctuation.separator.dot-access.ds"
