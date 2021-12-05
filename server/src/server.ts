@@ -37,7 +37,6 @@ import {
 import {
     createCodeAction,
     createCodeActionByCommand,
-    createRenameTextEdit,
     getNodeFromDocPos,
     updateAndVaidateDocument,
 } from "./util";
