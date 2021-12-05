@@ -270,6 +270,8 @@ export class StaticTypeChecker extends StatementParser {
     checkVarDeclaration(dec: VariableDeclaration) {
         dec.declarations.forEach(declarator => {
             this.scope.declareName(declarator.name.name, BindTypes.var, declarator);
+            this.addExtra(declarator.name, "declaration", declarator);
+            declarator.referenced.push(declarator.name);
         });
     }
 

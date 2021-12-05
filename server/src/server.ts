@@ -10,9 +10,11 @@ import {
     Position,
     ProposedFeatures,
     Range,
+    TextDocumentEdit,
     TextDocumentPositionParams,
     TextDocuments,
     TextDocumentSyncKind,
+    TextEdit,
 } from "vscode-languageserver/node";
 import { ParserFileDigraph, positionInFunction } from "./lib/file";
 import {
@@ -37,6 +39,7 @@ import {
 import {
     createCodeAction,
     createCodeActionByCommand,
+    createRenameTextEdit,
     getNodeFromDocPos,
     updateAndVaidateDocument,
 } from "./util";
@@ -281,7 +284,16 @@ connection.onRenameRequest(params => {
         return null;
     }
 
-    return null;
+    let changes: {[uri: string]: TextEdit[]} = {};
+    let textEdits: TextDocumentEdit[] = [];
+    def.referenced.forEach(ref => createRenameTextEdit(ref, changes, params.newName));
+
+    Object.keys(changes).forEach(k => {
+        let change = changes[k];
+        textEdits.push(TextDocumentEdit.create({ uri: k, version: null }, change));
+    });
+
+    return { changes, documentChanges: textEdits };
 });
 
 documents.onDidChangeContent(change => {

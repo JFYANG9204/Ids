@@ -167,17 +167,15 @@ export function createCodeActionByCommand(title: string, text: string, line: num
     return CodeAction.create(title, Command.create(title, "ids.insertTextAtPosition", text, line), CodeActionKind.QuickFix);
 }
 
-export function createRenameTextEdit(node: NodeBase, changes: {[uri: string]: TextEdit[]}) {
+export function createRenameTextEdit(node: NodeBase,
+    changes: {[uri: string]: TextEdit[]}, newText: string) {
     let start = Pos.create(node.loc.start.line - 1, node.loc.start.column);
     let end = Pos.create(node.loc.end.line - 1, node.loc.end.column);
     let uri = pathToFileURL(node.loc.fileName).toString();
-    let text = (node instanceof Identifier) ? node.name : "";
-    let edit = createTextEdit(start, end ,text);
+    let edit = createTextEdit(start, end ,newText);
     if (changes[uri]) {
         changes[uri].push(edit);
     } else {
         changes[uri] = [ edit ];
     }
-    let annotation: AnnotatedTextEdit = { annotationId: text, newText: text, range: Range.create(start, end) };
-    return annotation;
 }
