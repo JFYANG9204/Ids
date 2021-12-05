@@ -150,6 +150,7 @@ export class StaticTypeChecker extends StatementParser {
         func.params.forEach(param => {
             this.scope.declareName(param.declarator.name.name,
                 BindTypes.var, param.declarator);
+            this.addExtra(param.declarator.name, "declaration", param.declarator);
         });
         this.checkBlock(func.body);
         if (func.needReturn) {
