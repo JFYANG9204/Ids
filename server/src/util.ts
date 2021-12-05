@@ -1,7 +1,6 @@
 import { join } from "path";
 import { fileURLToPath, pathToFileURL } from "url";
 import {
-    AnnotatedTextEdit,
     CodeAction,
     CodeActionKind,
     Command,
