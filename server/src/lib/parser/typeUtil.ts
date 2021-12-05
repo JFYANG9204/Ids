@@ -308,7 +308,8 @@ export class TypeUtil extends UtilParser {
         check: string,
         node: NodeBase,
         isAssign: boolean = false,
-        namespace?: string | NamespaceDeclaration) {
+        namespace?: string | NamespaceDeclaration,
+        raiseError = true) {
 
         let checkString = check.toLowerCase();
         let baseString = base.toLowerCase();
@@ -331,7 +332,7 @@ export class TypeUtil extends UtilParser {
         } else {
             checkResult = checkString === baseString;
         }
-        if (!checkResult) {
+        if (!checkResult && raiseError) {
             this.raiseTypeError(
                 node,
                 ErrorMessages["UnmatchedVarType"],
@@ -668,7 +669,7 @@ export class TypeUtil extends UtilParser {
             }
         }
         //
-        if (this.matchType(left, right, expr.right, false, nsName)) {
+        if (this.matchType(left, right, expr.right, false, nsName, false)) {
             let namespace = this.getDeclareNamespace(rightReturn.type);
             return left.toLowerCase() === "variant" ?
                 this.maybeDeclaratorBinding(rightReturn.type) :
