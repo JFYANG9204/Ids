@@ -284,7 +284,7 @@ export class StaticTypeChecker extends StatementParser {
                 declarator.declarator.name.name,
                 BindTypes.const,
                 declarator.declarator,
-                type.type);
+                declarator.declarator);
         });
     }
 

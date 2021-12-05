@@ -1,7 +1,5 @@
 
-function rebase_on_total( str_flt, str_txt, str_side, bln_mean )
+Const A = 10
 
-    rebase_on_total = "{e1 '' text(), base 'Base : " + str_txt + "' base(" + str_flt + "),e2 '' text(), " + iif(str_side = NULL, "..", str_side) + ", e3 '' text(), sigma 'Sigma' subtotal()" + iif( bln_mean = true, mean_inc(""), "" ) + "}"
-
-end function
+A = 12
 

@@ -40,7 +40,7 @@ export function loadBuiltInModule() {
 }
 
 
-export function updateAndVaidateDocument(
+export async function updateAndVaidateDocument(
     textdocument: TextDocument,
     connection: _Connection,
     current: Map<string, File>,

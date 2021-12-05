@@ -352,6 +352,10 @@ function getDefaultNote(dec: DeclarationBase, appendMd: boolean = true): string 
                 return appendMd ?
                     ("```ts\n" + `(parameter) ${getDeclaratorNote(dim)}\n` + "```") :
                     (`(parameter) ${getDeclaratorNote(dim)}`);
+            } else if (dec.treeParent?.type === "ConstDeclarator") {
+                return appendMd ?
+                    ("```ts\n" + `(const) ${getDeclaratorNote(dim)}\n` + "```") :
+                    (`(const) ${getDeclaratorNote(dim)}`);
             }
             return appendMd ? ("```ts\n" + `(${header}) ${getDeclaratorNote(dim)}\n` + "```") :
                 (`(${header}) ${getDeclaratorNote(dim)}`);
@@ -694,7 +698,7 @@ function checkIfDotStart(char: number) {
            !isIdentifierChar(char);
 }
 
-export function getCompletionFromPosition(
+export async function getCompletionFromPosition(
     file: File, pos: number, triggerChar: string, lastChar: number) {
     let completions: CompletionItem[] = [];
     let pre = positionAt(file.program.body, pos, false, 0);
@@ -782,7 +786,7 @@ export function getSignatureHelp(func: FunctionDeclaration): SignatureInformatio
         parameters };
 }
 
-export function getSignatureHelpFromFunction(func: CallExpression) {
+export async function getSignatureHelpFromFunction(func: CallExpression) {
     const dec: DeclarationBase | undefined = func.callee.extra["declaration"];
     const callByDot = func.callee.extra["callByDot"];
     if (!dec || !(dec instanceof FunctionDeclaration)) {
