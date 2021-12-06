@@ -259,16 +259,22 @@ connection.onCodeAction(params => {
         actionMessages.ignorePathError,
         "'ignore-path-error");
 
+    let setFileAsMetadata = createCodeAction(
+        uri,
+        actionMessages.setFileAsMetadata,
+        "'metadata");
+
     diags.forEach(diag => {
         ignoreAllErrorAction.diagnostics?.push(diag);
         ignoreAllPathErrorAction.diagnostics?.push(diag);
+        setFileAsMetadata.diagnostics?.push(diag);
         actions.push(
             createCodeActionByCommand(actionMessages.ignoreThisPathError, "ignore-path-error", diag.range.start.line),
-            createCodeActionByCommand(actionMessages.ignoreThisTypeError, "ignore-type-error", diag.range.start.line)
+            createCodeActionByCommand(actionMessages.ignoreThisTypeError, "ignore-type-error", diag.range.start.line),
         );
     });
 
-    actions.push(ignoreAllErrorAction, ignoreAllPathErrorAction);
+    actions.push(ignoreAllErrorAction, ignoreAllPathErrorAction, setFileAsMetadata);
     return actions;
 });
 
