@@ -8,6 +8,9 @@
 	"engines": {
 		"vscode": "^1.61.0"
 	},
+	"repository": {
+		"url": "https://github.com/JFYANG9204/Ids"
+	},
 	"categories": [
 		"Programming Languages"
 	],
