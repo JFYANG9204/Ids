@@ -287,6 +287,7 @@ connection.onRenameRequest(params => {
     let changes: {[uri: string]: TextEdit[]} = {};
     let textEdits: TextDocumentEdit[] = [];
     def.referenced.forEach(ref => createRenameTextEdit(ref, changes, params.newName));
+    createRenameTextEdit(def.name, changes, params.newName);
 
     Object.keys(changes).forEach(k => {
         let change = changes[k];

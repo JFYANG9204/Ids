@@ -46,6 +46,12 @@
 			"end": "(\\n*)$",
 			"patterns": [
 				{
+					"include": "#line-comment"
+				},
+				{
+					"include": "#block-comment"
+				},
+				{
 					"match": "([a-zA-Z_x7f-xff$#][a-zA-Z0-9_x7f-xff$#]*)((?:\\[\\d*\\])*)(?:\\s+(?i:(As))\\s+([a-zA-Z_x7f-xff$#][a-zA-Z0-9_x7f-xff$#]*(?:\\.[a-zA-Z_x7f-xff$#][a-zA-Z0-9_x7f-xff$#]*)*))?\\s*([,]?)",
 					"captures": {
 						"1": {
@@ -88,6 +94,12 @@
 			},
 			"end": "(\\n*)$",
 			"patterns": [
+				{
+					"include": "#block-comment"
+				},
+				{
+					"include": "#line-comment"
+				},
 				{
 					"match": "([a-zA-Z_x7f-xff$#][a-zA-Z0-9_x7f-xff$#]*)(?:\\s+(?i:(As))\\s+([a-zA-Z_x7f-xff$#][a-zA-Z0-9_x7f-xff$#]*(?:\\.[a-zA-Z_x7f-xff$#][a-zA-Z0-9_x7f-xff$#]*)*))?\\s*\\s*(?:(=)\\s*([^,\n]*))?\\s*(,)?",
 					"captures": {
@@ -137,8 +149,11 @@
 					"name": "entity.name.function.ds"
 				},
 				"4": {
-					"match": "[a-zA-Z_x7f-xff$#][a-zA-Z0-9_x7f-xff$#]*(\\[\\d*\\])*",
-					"name": "variable.parameter.function.ds"
+					"patterns": [
+						{
+							"include": "#param-declaration"
+						}
+					]
 				},
 				"5": {
 					"name": "keyword.control.ds"
@@ -150,7 +165,7 @@
 		},
 		{
 			"name": "meta.property.ds",
-			"match": "\\s*((?:readonly|writeonly)?)\\s*((?:default)?)\\s*((?i:property))\\s*([a-zA-Z_x7f-xff$#][a-zA-Z0-9_x7f-xff$#]*)\\s*((\\()([^)]*)*(\\)))?.*\\n",
+			"match": "\\s*((?i:default)?)\\s*((?i:readonly|writeonly)?)\\s*((?i:property))\\s*([a-zA-Z_x7f-xff$#][a-zA-Z0-9_x7f-xff$#]*)\\s*((\\()([^)]*)(\\)))(?:\\s+(?i:(as))\\s+([a-zA-Z_x7f-xff$#][a-zA-Z0-9_x7f-xff$#]*(?:\\.[a-zA-Z_x7f-xff$#][a-zA-Z0-9_x7f-xff$#]*)*))?",
 			"captures": {
 				"1": {
 					"name": "storage.modifier.property.ds"
@@ -168,21 +183,37 @@
 					"name": "punctuation.definition.parameters.ds"
 				},
 				"7": {
-					"name": "variable.parameter.property.ds"
+					"patterns": [
+						{
+							"include": "#param-declaration"
+						}
+					]
 				},
 				"8": {
 					"name": "punctuation.definition.parameters.ds"
+				},
+				"9": {
+					"name": "keyword.control.ds"
+				},
+				"10": {
+					"name": "entity.name.type.ds"
 				}
 			}
 		},
 		{
 			"name": "meta.type.ds",
-			"match": "^\\s*((?i:class|namespace))\\s*([a-zA-Z_x7f-xff$#][a-zA-Z0-9_x7f-xff$#]*)\\n",
+			"match": "^\\s*((?i:class|interface|namespace))\\s*([a-zA-Z_x7f-xff$#][a-zA-Z0-9_x7f-xff$#]*)(\\s+(?i:(implements))\\s+((?:(?:[a-zA-Z_x7f-xff$#][a-zA-Z0-9_x7f-xff$#]*)(?:,)?)*))?",
 			"captures": {
 				"1": {
 					"name": "storage.type.ds"
 				},
 				"2": {
+					"name": "entity.name.type.ds"
+				},
+				"4": {
+					"name": "keyword.control.ds"
+				},
+				"5": {
 					"name": "entity.name.type.ds"
 				}
 			}
@@ -404,6 +435,40 @@
 				},
 				"5": {
 					"name": "variable.other.object.ds"
+				}
+			}
+		},
+		"param-declaration": {
+			"match": "(?:(?i:(optional))\\s+)?([a-zA-Z_x7f-xff$#][a-zA-Z0-9_x7f-xff$#]*)(?:\\s+(?i:(as))\\s+([a-zA-Z_x7f-xff$#][a-zA-Z0-9_x7f-xff$#]*(?:\\.[a-zA-Z_x7f-xff$#][a-zA-Z0-9_x7f-xff$#]*)*))?(?:\\s*(=)\\s*((?:\".*?\")|(?:[^,]*)))?(,)?",
+			"captures": {
+				"1": {
+					"name": "storage.type.ds"
+				},
+				"2": {
+					"name": "variable.parameter"
+				},
+				"3": {
+					"name": "keyword.control.ds"
+				},
+				"4": {
+					"name": "entity.name.type.ds"
+				},
+				"5": {
+					"name": "keyword.operator.assignment.ds"
+				},
+				"6": {
+					"patterns": [
+						{
+							"include": "#string"
+						},
+						{
+							"include": "#numeric"
+						},
+						{
+							"match": "[a-zA-Z_x7f-xff$#][a-zA-Z0-9_x7f-xff$#]*(?:\\.[a-zA-Z_x7f-xff$#][a-zA-Z0-9_x7f-xff$#]*)*",
+							"name": "storage.type.ds"
+						}
+					]
 				}
 			}
 		},

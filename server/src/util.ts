@@ -29,7 +29,7 @@ import {
 import { FileContent, positionIn } from "./lib/file/util";
 import { createBasicOptions } from "./lib/options";
 import { Parser } from "./lib/parser";
-import { File, Identifier, NodeBase } from "./lib/types";
+import { File, NodeBase } from "./lib/types";
 import { updateScope } from "./lib/util/scope";
 
 
@@ -40,7 +40,7 @@ export function loadBuiltInModule() {
 }
 
 
-export async function updateAndVaidateDocument(
+export function updateAndVaidateDocument(
     textdocument: TextDocument,
     connection: _Connection,
     current: Map<string, File>,

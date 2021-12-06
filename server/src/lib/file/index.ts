@@ -53,7 +53,7 @@ export class ParserFileDigraph {
         }
     }
 
-    async init() {
+    init() {
         const fileMap = getAllUsefulFile(this.folder);
         const nodes: Map<string, ParserFileNode> = new Map();
         const declares: Map<string, FileContent> = new Map();
