@@ -87,7 +87,9 @@ export function updateAndVaidateDocument(
     if (cur) {
         last.set(path.toLowerCase(), cur);
     }
-    current.set(path.toLowerCase(), file);
+    if (!file.esc) {
+        current.set(path.toLowerCase(), file);
+    }
     raiseErrorsFromFile(connection, textdocument, file);
     return file;
 }

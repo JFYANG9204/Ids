@@ -1437,7 +1437,6 @@ export class StatementParser extends ExpressionParser {
                 search.file = node.file;
                 search.parser = node.parser;
             }
-            node.push(node.file);
             this.state.includes.set(node.path.toLowerCase(), node.file);
             this.scope.joinScope(node.file.scope);
             if (node.file.errors.length > 0 &&
@@ -1499,15 +1498,19 @@ export class StatementParser extends ExpressionParser {
             this.expect(tt.braceL);
         }
         node.test = this.parseExpression(undefined, true);
+        node.push(node.test);
         if (defined) {
             node.defined = true;
             this.expect(tt.braceR);
         }
         node.consequent = this.parseBlock([ tt.pre_endif, tt.pre_elif, tt.pre_else ]);
+        node.push(node.consequent);
         if (this.match(tt.pre_elif)) {
             node.alternate = this.parsePreIfStatement();
+            node.push(node.alternate);
         } else if (this.match(tt._else)) {
             node.alternate = this.parseBlock(tt.pre_endif);
+            node.push(node.alternate);
         }
         this.expect(tt.pre_endif);
         return this.finishNode(node, "PreIfStatement");
