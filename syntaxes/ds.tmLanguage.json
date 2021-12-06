@@ -502,6 +502,12 @@
 			},
 			"patterns": [
 				{
+					"include": "#line-comment"
+				},
+				{
+					"include": "#block-comment"
+				},
+				{
 					"include": "#string"
 				},
 				{
@@ -524,6 +530,12 @@
 			},
 			"end": "(\\n*)$",
 			"patterns": [
+				{
+					"include": "#block-comment"
+				},
+				{
+					"include": "#line-comment"
+				},
 				{
 					"include": "#string"
 				},
