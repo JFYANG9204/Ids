@@ -1,5 +1,6 @@
 import { join } from "path";
 import { fileURLToPath, pathToFileURL } from "url";
+import { URI } from "vscode-uri";
 import {
     CodeAction,
     CodeActionKind,
@@ -31,14 +32,20 @@ import { createBasicOptions } from "./lib/options";
 import { Parser } from "./lib/parser";
 import { File, NodeBase } from "./lib/types";
 import { updateScope } from "./lib/util/scope";
+import { platform } from "os";
 
 
-export function loadBuiltInModule() {
-    const folder = join(__dirname, "../../../src/lib/built_in_modules");
-    const module = getAllUsefulFile(folder);
-    return loadDecarationFiles(module);
+export function getFileFsPath(uri: string) {
+    return URI.parse(uri).fsPath;
 }
 
+export function getFilePath(uri: string) {
+    if (platform() === "win32") {
+        return URI.parse(uri).path.replace(/^\/[a-zA-Z]/, (s: string) => s.slice(1).toLowerCase());
+    } else {
+        return URI.parse(uri).path;
+    }
+}
 
 export function updateAndVaidateDocument(
     textdocument: TextDocument,

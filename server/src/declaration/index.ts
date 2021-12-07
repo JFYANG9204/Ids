@@ -2,7 +2,7 @@ import { join } from "path";
 import { FileContent, getAllUsefulFile } from "../lib/file/util";
 import { createBasicOptions } from "../lib/options";
 import { Parser } from "../lib/parser";
-import { BindingDeclarator, DeclarationBase, File, SingleVarDeclarator } from "../lib/types";
+import { DeclarationBase, File, SingleVarDeclarator } from "../lib/types";
 import { Scope } from "../lib/util";
 
 export interface DeclarationLoadResult {
@@ -12,7 +12,7 @@ export interface DeclarationLoadResult {
 }
 
 export function loadBuiltInModule() {
-    const folder = join(__dirname, "../../src/lib/built_in_modules");
+    const folder = join(__dirname, "../../src/declaration/built_in_modules");
     const module = getAllUsefulFile(folder);
     return loadDecarationFiles(module);
 }

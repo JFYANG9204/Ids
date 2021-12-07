@@ -1,5 +1,5 @@
 import { TextDocument } from "vscode-languageserver-textdocument";
-import { Diagnostic, DiagnosticSeverity } from "vscode-languageserver/node";
+import { Diagnostic, DiagnosticSeverity, _Connection } from "vscode-languageserver/node";
 import { ParsingError } from "./lib/parser/errors";
 import { File } from "./lib/types";
 

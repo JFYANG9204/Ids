@@ -1093,7 +1093,7 @@ export class TypeUtil extends UtilParser {
                 undefined :
                 func.binding.namespace) ??
                 func.class?.namespace)?.result;
-            this.addExtra(func, "declaration", returnType);
+            this.addExtra(callExpr, "declaration", returnType);
             return returnType;
         } else {
             return undefined;

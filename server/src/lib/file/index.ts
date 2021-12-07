@@ -2,6 +2,7 @@ import * as path from "path";
 import { DeclarationLoadResult, loadDecarationFiles } from "../../declaration";
 import { createBasicOptions, SourceType } from "../options";
 import { Parser } from "../parser";
+import { File } from "../types";
 import { mergeScope, Scope } from "../util/scope";
 import {
     createParserFileNode,
@@ -22,19 +23,19 @@ import {
 
 export class ParserFileDigraph {
 
-    folder: string;
+    private folder: string;
     // 保存当前文件夹下内的入口文件(有引用但没有被引用)
-    vertex: ParserFileNode[] = [];
+    private vertex: ParserFileNode[] = [];
     // 保存当前文件夹下所有文件的内容和引用关系
-    nodeMap: Map<string, ParserFileNode> = new Map();
-    start: ParserFileNode | undefined;
-    current: ParserFileNode | undefined;
+    private nodeMap: Map<string, ParserFileNode> = new Map();
+    private start: ParserFileNode | undefined;
+    private current: ParserFileNode | undefined;
     // 保存使用过的入口文件，key为对应非入口文件的小写路径
-    parseMap: Map<string, ParserFileNode> = new Map();
+    private parseMap: Map<string, ParserFileNode> = new Map();
 
     global?: Scope;
 
-    startPath?: string;
+    private startPath?: string;
 
     constructor(folder: string, global?: DeclarationLoadResult) {
         this.folder = folder;
@@ -43,9 +44,7 @@ export class ParserFileDigraph {
             global.files.forEach((f, p) => {
                 const fNode = createParserFileNode(f.uri,
                     f.path,
-                    f.parser.input,
-                    undefined,
-                    undefined);
+                    f.parser.input);
                 fNode.file = f;
                 fNode.parser = f.parser;
                 this.nodeMap.set(p, fNode);
@@ -94,7 +93,7 @@ export class ParserFileDigraph {
         this.buildGraph(nodes);
     }
 
-    buildGraph(nodes: Map<string, ParserFileNode>) {
+    async buildGraph(nodes: Map<string, ParserFileNode>) {
         this.vertex = [];
         nodes.forEach((value, key) => {
             const refs = getAllIncludeInFile(value.content);
