@@ -5,8 +5,10 @@ import { createFileNode, FileNode } from "./fileNode";
 import { URI } from "vscode-uri";
 import { join } from "path";
 import { extname } from "path";
-import { SourceType } from "../lib/options";
-import { lineBreak } from "../lib/util";
+import { lineBreak, Position, Scope, ScopeFlags } from "../lib/util";
+import { Parser } from "../lib";
+import { createBasicOptions } from "../lib/options";
+import { Identifier, SingleVarDeclarator } from "../lib/types";
 
 
 const usefulExten = new Set([
@@ -199,4 +201,42 @@ export function getMacroFromBatFile(path: string, content: string, macros: Map<s
             macros.set(macroName.toLowerCase(), { path, id: macroName, type, start, end });
         }
     }
+}
+
+export async function loadDeclareFiles(fileNodes: Map<string, FileNode>) {
+    let scope: Scope = new Scope(ScopeFlags.program);
+    fileNodes.forEach(file => {
+        const parser = new Parser(createBasicOptions(file.fsPath, false, file.uri), file.content);
+        const f = parser.parse(scope);
+        file.parser = parser;
+        file.file = f;
+        scope.join(f.scope);
+    });
+    return { scope, nodes: fileNodes };
+}
+
+
+function createDeclarationFromBatMacro(bat: BatMacro) {
+    let parser = new Parser(createBasicOptions(bat.path, false), "");
+    let macro = new SingleVarDeclarator(parser, bat.start, new Position(0, 0));
+    macro.end = bat.end;
+    let id = new Identifier(parser, bat.start, new Position(0, 0));
+    id.name = bat.id;
+    macro.name = id;
+    if (bat.type === "boolean") {
+        macro.binding = "Boolean";
+    } else if (bat.type === "number") {
+        macro.binding = "Long";
+    } else if (bat.type === "string") {
+        macro.binding = "String";
+    } else {
+        macro.binding = "Variant";
+    }
+    return macro;
+}
+
+export function declareBatMacros(macros: Map<string, BatMacro>, scope: Scope) {
+    macros.forEach((macro, name) => {
+        scope.consts.set(name, createDeclarationFromBatMacro(macro));
+    });
 }

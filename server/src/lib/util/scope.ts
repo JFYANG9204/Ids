@@ -67,6 +67,10 @@ export class Scope {
                this.macros.size + this.functions.size +
                this.classes.size + this.namespaces.size;
     }
+
+    join(scope: Scope) {
+        mergeScope(scope, this);
+    }
 }
 
 export class ScopeHandler {

@@ -37,6 +37,14 @@ export interface FileNode {
      * 引用标记
      */
     referenceMark?: FileReferenceMark;
+    /**
+     * 是否为入口文件
+     */
+    isVertex: boolean;
+    /**
+     * 对应的入口文件
+     */
+    startNode?: FileNode;
 }
 
 export function createFileNode(uri: string, fsPath: string, content: string): FileNode {
@@ -45,6 +53,7 @@ export function createFileNode(uri: string, fsPath: string, content: string): Fi
         fsPath,
         content,
         includes: new Map(),
-        references: new Map()
+        references: new Map(),
+        isVertex: false
     };
 }

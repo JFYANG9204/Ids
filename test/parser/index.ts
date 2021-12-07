@@ -1,10 +1,8 @@
-import {
-    resolve,
-} from "path";
-import { FileHandler } from "../../server/src/fileHandler";
+import { resolve } from "path";
+import { isUri } from "../../server/src/fileHandler/path";
 
-const folderPath = resolve("./test/parser/fixture/DPGM");
-const handler = new FileHandler(folderPath);
-handler.init();
+
+const path = resolve("./fixture/DPGM");
+console.log(isUri(path));
 
 console.log("end");

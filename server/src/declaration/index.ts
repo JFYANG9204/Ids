@@ -1,5 +1,8 @@
 import { join } from "path";
-import { FileContent, getAllUsefulFile } from "../lib/file/util";
+import { FileNode } from "../fileHandler/fileNode";
+import { readAllUsefulFileInFolder } from "../fileHandler/load";
+import { getAllUsefulFile } from "../lib/file";
+import { FileContent } from "../lib/file/util";
 import { createBasicOptions } from "../lib/options";
 import { Parser } from "../lib/parser";
 import { DeclarationBase, File, SingleVarDeclarator } from "../lib/types";
@@ -17,7 +20,9 @@ export function loadBuiltInModule() {
     return loadDecarationFiles(module);
 }
 
-export function loadDecarationFiles(contents: Map<string, FileContent>): DeclarationLoadResult {
+export function loadDecarationFiles(
+    contents: Map<string, FileContent>): DeclarationLoadResult {
+
     let fileMap: Map<string, File> = new Map();
     let scope: Scope | undefined;
     contents.forEach((f, p) => {
