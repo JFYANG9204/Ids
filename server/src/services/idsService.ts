@@ -1,5 +1,6 @@
 import {
     CodeAction,
+    CodeActionKind,
     CodeActionParams,
     CompletionItem,
     CompletionList,
@@ -13,8 +14,10 @@ import {
     Location,
     ReferenceParams,
     RenameParams,
+    ServerCapabilities,
     SignatureHelp,
     SignatureHelpParams,
+    TextDocumentSyncKind,
     WorkspaceEdit
 } from "vscode-languageserver";
 import { EMPTYE_HOVER, EMPTY_COMPLETIONLIST } from "./capabilities";
@@ -103,6 +106,25 @@ export class IdsService {
     async onRenameRequest(params: RenameParams): Promise<WorkspaceEdit | null> {
         let project = await this.getProjectService(params.textDocument.uri);
         return project?.onRenameRequest(params) ?? null;
+    }
+
+
+    capabilities(): ServerCapabilities {
+        return {
+            textDocumentSync: TextDocumentSyncKind.Incremental,
+            workspace: {
+                workspaceFolders: { supported: true, changeNotifications: true },
+                fileOperations: { willRename: { filters: [{ pattern: { glob: "**/*.{mrs,dms,ini,inc}" } }] } }
+            },
+            completionProvider: { resolveProvider: true, triggerCharacters: [".", "\\", "/"] },
+            signatureHelpProvider: { triggerCharacters: [ "(", "," ] },
+            codeActionProvider: {
+                codeActionKinds: [
+                    CodeActionKind.QuickFix
+                ],
+                resolveProvider: true
+            },
+        };
     }
 
 }
