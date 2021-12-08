@@ -71,6 +71,19 @@ export class Scope {
     join(scope: Scope) {
         mergeScope(scope, this);
     }
+
+    clear() {
+        this.withHeader.splice(0);
+        this.currentHeader = undefined;
+        this.dims.clear();
+        this.consts.clear();
+        this.macros.clear();
+        this.functions.clear();
+        this.classes.clear();
+        this.namespaces.clear();
+        this.undefined.clear();
+        this.metadata.clear();
+    }
 }
 
 export class ScopeHandler {

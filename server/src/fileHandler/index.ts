@@ -40,9 +40,7 @@ export class FileHandler {
      */
     private startNode?: FileNode;
 
-
     private currentMap: Map<string, File> = new Map();
-    private lastMap: Map<string, File> = new Map();
 
     constructor(folder: string) {
         this.folderPath = folder;
@@ -145,7 +143,7 @@ export class FileHandler {
         return this.fileNodes.get(path.toLowerCase());
     }
 
-    current(pathLike: string) {
+    setStart(pathLike: string) {
         this.startNode = undefined;
         let path = pathLike;
         if (isUri(path)) {
@@ -200,33 +198,24 @@ export class FileHandler {
                 }
             });
             let lowerPath = this.startNode.fsPath.toLowerCase();
-            let current = this.getCurrent(this.startNode.fsPath);
-            if (current) {
-                this.lastMap.set(lowerPath, current);
-            } else {
-                this.lastMap.set(lowerPath, file);
-            }
             if (!file.esc) {
                 this.currentMap.set(lowerPath, file);
             }
         }
     }
 
-
     getCurrent(pathLike: string) {
         let path = pathLike;
-        if (isUri(path)) {
-            path = getFileFsPath(path);
+        if(isUri(path)) {
+            path = getFileFsPath(pathLike);
         }
         return this.currentMap.get(path.toLowerCase());
     }
 
-    getLast(pathLike: string) {
-        let path = pathLike;
-        if (isUri(path)) {
-            path = getFileFsPath(path);
-        }
-        return this.lastMap.get(path.toLowerCase());
+    dispose() {
+        this.fileNodes.clear();
+        this.declares.clear();
+        this.currentMap.clear();
     }
 
 }

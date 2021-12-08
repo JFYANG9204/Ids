@@ -6,10 +6,10 @@ import { FileContent } from "../lib/file/util";
 import { createBasicOptions } from "../lib/options";
 import { Parser } from "../lib/parser";
 import { DeclarationBase, File, SingleVarDeclarator } from "../lib/types";
-import { Scope } from "../lib/util";
+import { Scope, ScopeFlags } from "../lib/util";
 
 export interface DeclarationLoadResult {
-    scope?: Scope,
+    scope: Scope,
     files: Map<string, File>,
     contents: Map<string, FileContent>
 }
@@ -34,7 +34,7 @@ export function loadDecarationFiles(
         }
     });
     return {
-        scope,
+        scope: scope ?? new Scope(ScopeFlags.program),
         files: fileMap,
         contents
     };

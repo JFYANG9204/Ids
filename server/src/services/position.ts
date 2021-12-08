@@ -1,4 +1,13 @@
-import { EventSection, FunctionDeclaration, NodeBase, WithStatement } from "../lib/types";
+import {
+    CallExpression,
+    EventSection,
+    FunctionDeclaration,
+    Identifier,
+    MemberExpression,
+    NodeBase,
+    PreIncludeStatement,
+    WithStatement
+} from "../lib/types";
 
 
 
@@ -37,9 +46,7 @@ export function positionIn<T extends NodeBase>(
                 positionIn(sub, pos, callback);
                 hasFind = true;
             } else {
-                if (!hasFind) {
-                    continue;
-                } else {
+                if (hasFind) {
                     break;
                 }
             }
@@ -101,10 +108,29 @@ export interface NodePostionInfo {
     eventNode?: EventSection;
     funcNode?: FunctionDeclaration;
     withNode?: WithStatement;
-    eventNames?: Set<string>;
+    eventName?: string;
+    caller?: CallExpression | MemberExpression;
+    id?: Identifier;
+    preInclude?: PreIncludeStatement;
 }
 
 export function positionAtInfo<T extends NodeBase>(node: T,
     pos: number): NodePostionInfo {
-
+    let info: NodePostionInfo = {};
+    positionIn(node, pos, node => {
+        switch (node.type) {
+            case "Identifier":            info.id = node as Identifier;                  break;
+            case "WithStatement":         info.withNode = node as WithStatement;         break;
+            case "CallExpression":        info.caller = node as CallExpression;          break;
+            case "MemberExpression":      info.caller = node as MemberExpression;        break;
+            case "FunctionDeclaration":   info.funcNode = node as FunctionDeclaration;   break;
+            case "PreIncludeStatement":   info.preInclude = node as PreIncludeStatement; break;
+            default: break;
+        }
+        if (node instanceof EventSection) {
+            info.eventNode = node;
+            info.eventName = node.name.name;
+        }
+    });
+    return info;
 }

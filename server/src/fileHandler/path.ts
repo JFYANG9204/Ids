@@ -11,6 +11,10 @@ export function getFilePath(documentUri: string) {
     }
 }
 
+export function getFileFsPath(documentUri: string): string {
+    return URI.parse(documentUri).fsPath;
+}
+
 export function getFsPathToUri(fsPath: string) {
     return URI.file(fsPath).toString();
 }
