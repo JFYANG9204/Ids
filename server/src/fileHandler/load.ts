@@ -51,13 +51,14 @@ function readUsefulFsPathSync(folder: string): string[] {
 async function readUsefulFiles(paths: string[]) {
 
     async function getFileNode(fsPath: string) {
-        let uri = URI.file(fsPath).toString();
-        let buffer: Buffer | undefined = await readFileAsync(fsPath);
         let content = "";
-        if (buffer) {
-            let info = detect(buffer);
-            content = decode(buffer, info.encoding);
-        }
+        let uri = URI.file(fsPath).toString();
+        await readFileAsync(fsPath).then(buffer => {
+            if (buffer.length > 0) {
+                let info = detect(buffer);
+                content = decode(buffer, info.encoding);
+            }
+        });
         return createFileNode(uri, fsPath, content);
     }
 
