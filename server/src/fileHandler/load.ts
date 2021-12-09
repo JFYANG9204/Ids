@@ -1,14 +1,17 @@
-import { readdir, readFile } from "fs";
+import { readdir, readdirSync, readFile, readFileSync } from "fs";
 import { decode } from "iconv-lite";
 import { detect } from "jschardet";
 import { createFileNode, FileNode } from "./fileNode";
 import { URI } from "vscode-uri";
-import { extname, join } from "path";
+import { extname } from "path";
 import { lineBreak, Position, Scope, ScopeFlags } from "../lib/util";
 import { Parser } from "../lib";
 import { createBasicOptions, SourceType } from "../lib/options";
 import { Identifier, SingleVarDeclarator } from "../lib/types";
+import { promisify } from "util";
 
+const readdirAsync = promisify(readdir);
+const readFileAsync = promisify(readFile);
 
 const usefulExten = new Set([
     ".ini",
@@ -18,19 +21,28 @@ const usefulExten = new Set([
     ".bat"
 ]);
 
-function readUsefulFsPath(folder: string): string[] {
+async function readUsefulFsPath(folder: string): Promise<string[]> {
     let fsPaths: string[] = [];
-    readdir(folder, { withFileTypes: true }, (err, files) => {
-        if (!err) {
-            files.forEach(f => {
-                if (f.isDirectory()) {
-                    fsPaths.push(...readUsefulFsPath(join(folder, f.name)));
-                } else {
-                    if (usefulExten.has(extname(f.name).toLowerCase())) {
-                        fsPaths.push(join(folder, f.name));
-                    }
-                }
-            });
+    readdirAsync(folder, { withFileTypes: true }).
+    then(files => {
+        files.forEach(async f => {
+            if (f.isDirectory()) {
+                fsPaths.push(...(await readUsefulFsPath(f.name)));
+            } else if (usefulExten.has(extname(f.name).toLowerCase())) {
+                fsPaths.push(f.name);
+            }
+        });
+    });
+    return fsPaths;
+}
+
+function readUsefulFsPathSync(folder: string): string[] {
+    let fsPaths: string[] = [];
+    readdirSync(folder, { withFileTypes: true }).forEach(file => {
+        if (file.isDirectory()) {
+            fsPaths.push(...readUsefulFsPathSync(file.name));
+        } else if (usefulExten.has(extname(file.name).toLowerCase())) {
+            fsPaths.push(file.name);
         }
     });
     return fsPaths;
@@ -40,13 +52,8 @@ async function readUsefulFiles(paths: string[]) {
 
     async function getFileNode(fsPath: string) {
         let uri = URI.file(fsPath).toString();
-        let buffer: Buffer | undefined;
+        let buffer: Buffer | undefined = await readFileAsync(fsPath);
         let content = "";
-        readFile(fsPath, (err, data) => {
-            if (!err) {
-                buffer = data;
-            }
-        });
         if (buffer) {
             let info = detect(buffer);
             content = decode(buffer, info.encoding);
@@ -65,11 +72,12 @@ async function readUsefulFiles(paths: string[]) {
  * @returns _key_ - 小写完整文件路径  _value_ - 文件内容
  */
  export async function readAllUsefulFileInFolder(folder: string) {
-    const paths = readUsefulFsPath(folder);
-    const nodes = await readUsefulFiles(paths);
     const nodeMap = new Map<string, FileNode>();
-    nodes.forEach(node => {
-        nodeMap.set(node.fsPath.toLowerCase(), node);
+    const paths = await readUsefulFsPath(folder);
+    await readUsefulFiles(paths).then(nodes => {
+        nodes.forEach(node => {
+            nodeMap.set(node.fsPath.toLowerCase(), node);
+        });
     });
     return nodeMap;
 }
@@ -83,17 +91,12 @@ async function readUsefulFiles(paths: string[]) {
  */
 export function readAllUsefulFileInFolderSync(folder: string): Map<string, FileNode> {
     const list = new Map<string, FileNode>();
-    const fileNames = readUsefulFsPath(folder);
+    const fileNames = readUsefulFsPathSync(folder);
 
     function getFileNode(fsPath: string) {
         let uri = URI.file(fsPath).toString();
-        let buffer: Buffer | undefined;
+        let buffer: Buffer | undefined = readFileSync(fsPath);
         let content = "";
-        readFile(fsPath, (err, data) => {
-            if (!err) {
-                buffer = data;
-            }
-        });
         if (buffer) {
             let info = detect(buffer);
             content = decode(buffer, info.encoding);

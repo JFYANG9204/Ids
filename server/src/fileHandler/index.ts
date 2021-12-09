@@ -46,22 +46,35 @@ export class FileHandler {
 
     async init() {
         let batMacro = new Map<string, BatMacro>();
-        this.fileNodes = await readAllUsefulFileInFolder(this.folderPath);
-        this.fileNodes.forEach(node => {
-            let path = node.fsPath.toLowerCase();
-            if (path.endsWith(".d.mrs")) {
-                this.declares.set(path, node);
-            } else if (path.endsWith(".bat")) {
-                getMacroFromBatFile(node.fsPath, node.content, batMacro);
-            } else {
-                node.referenceMark = getFileReferenceMark(node.content);
-                this.fileNodes.set(path, node);
-            }
+        await readAllUsefulFileInFolder(this.folderPath).
+        then(map => {
+            map.forEach(node => {
+                let path = node.fsPath.toLowerCase();
+                if (path.endsWith(".d.mrs")) {
+                    this.declares.set(path, node);
+                } else if (path.endsWith(".bat")) {
+                    getMacroFromBatFile(node.fsPath, node.content, batMacro);
+                } else {
+                    node.referenceMark = getFileReferenceMark(node.content);
+                    this.fileNodes.set(path, node);
+                }
+            });
         });
-        const declares = await this.loadDeclareFiles(this.declares);
-        this.global.join(declares.scope);
-        this.declareBatMacros(batMacro, this.global);
-        // 构建有向图
+        await this.loadDeclareFiles(this.declares).
+        then(declare => {
+            this.global.join(declare.scope);
+            this.declareBatMacros(batMacro, this.global);
+        }).
+        then(() => {
+            // 构建有向图
+            this.fileNodes.forEach((node, path) => {
+                const refs = getAllIncludeInFile(node.content);
+                refs.forEach(ref => updateFileNodeMap(path, node, ref, this.fileNodes));
+                if (node.referenceMark) {
+                    updateFileNodeMap(path, node, node.referenceMark.path, this.fileNodes);
+                }
+            });
+        });
 
         function updateFileNodeMap(nodePath: string,
             node: FileNode,
@@ -80,14 +93,6 @@ export class FileHandler {
             }
 
         }
-
-        this.fileNodes.forEach((node, path) => {
-            const refs = getAllIncludeInFile(node.content);
-            refs.forEach(ref => updateFileNodeMap(path, node, ref, this.fileNodes));
-            if (node.referenceMark) {
-                updateFileNodeMap(path, node, node.referenceMark.path, this.fileNodes);
-            }
-        });
     }
 
     update(pathLike: string, content: string) {
