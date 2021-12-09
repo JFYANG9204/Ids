@@ -22,23 +22,39 @@ import {
 } from "vscode-languageserver";
 import { EMPTYE_HOVER, EMPTY_COMPLETIONLIST } from "./capabilities";
 import { DocumentService } from "./documentService";
-import { ProjectService } from "./projectSevice";
+import { createProjectService, ProjectService } from "./projectSevice";
 import { getFileFsPath } from "../fileHandler/path";
+import { dirname } from "path";
+import { TextDocument } from "vscode-languageserver-textdocument";
 
 
-export class IdsService {
+export class IdsLanguageService {
 
     private connection: Connection;
+    private workspaces: Map<string, { name: string, fsPath: string }>;
     private documentService: DocumentService;
-    private projects: Map<string, ProjectService> = new Map();
+    private projects: Map<string, ProjectService>;
+    private loadingProjects: Set<string>;
 
     constructor(connection: Connection) {
         this.connection = connection;
         this.documentService = new DocumentService(connection);
+        this.workspaces = new Map();
+        this.projects = new Map();
+        this.loadingProjects = new Set();
     }
 
     async init(params: InitializeParams) {
+        const workspaceFolders = params.workspaceFolders ?? [];
+        if (params.capabilities.workspace?.workspaceFolders) {
+            this.setupWorkspaceListeners();
+        }
+        await Promise.all(workspaceFolders.map(workspace => this.addWorkspace({ name: workspace.name, fsPath: getFileFsPath(workspace.uri) })));
         this.setupHandlers();
+        this.setupFileChangeListeners();
+        this.connection.onShutdown(() => {
+            this.dispose();
+        });
     }
 
     private setupHandlers() {
@@ -62,10 +78,29 @@ export class IdsService {
         this.connection.listen();
     }
 
+    private getAllWorkspaceRoot() {
+        return Array.from(this.workspaces.keys());
+    }
+
     private async getProjectService(uri: string): Promise<ProjectService | undefined> {
         const fsPath = getFileFsPath(uri);
-        const project = Array.from(this.projects.values()).
-            find(prj => fsPath.startsWith(prj.getRootPath()));
+        const workspaceRoots = this.getAllWorkspaceRoot();
+        let projectRoot = workspaceRoots.find(root => fsPath.startsWith(root)) ?? this.getProjectRootPath(fsPath);
+        if (!projectRoot) {
+            return undefined;
+        }
+        if (this.loadingProjects.has(projectRoot)) {
+            while (!this.projects.has(projectRoot)) {
+                await new Promise(resolve => setTimeout(resolve, 500));
+            }
+            return this.projects.get(fsPath);
+        }
+        this.loadingProjects.add(projectRoot);
+        const workDoneProgress = await this.connection.window.createWorkDoneProgress();
+        workDoneProgress.begin(`载入项目: ${projectRoot}`);
+        const project = await createProjectService(projectRoot, this.connection, this.documentService);
+        this.projects.set(projectRoot, project);
+        workDoneProgress.done();
         return project;
     }
 
@@ -108,8 +143,12 @@ export class IdsService {
         return project?.onRenameRequest(params) ?? null;
     }
 
+    async validateTextDocument(textDocument: TextDocument) {
+        let project = await this.getProjectService(textDocument.uri);
+        project?.doValidate(textDocument);
+    }
 
-    capabilities(): ServerCapabilities {
+    get capabilities(): ServerCapabilities {
         return {
             textDocumentSync: TextDocumentSyncKind.Incremental,
             workspace: {
@@ -125,6 +164,42 @@ export class IdsService {
                 resolveProvider: true
             },
         };
+    }
+
+    private async addWorkspace(workspace: { name: string, fsPath: string }) {
+        if (!this.workspaces.has(workspace.fsPath)) {
+            this.workspaces.set(workspace.fsPath, workspace);
+        }
+    }
+
+    private setupWorkspaceListeners() {
+        this.connection.onInitialized(() => {
+            this.connection.workspace.onDidChangeWorkspaceFolders(async e => {
+                await Promise.all(e.added.map(el => this.addWorkspace({ name: el.name, fsPath: getFileFsPath(el.uri) })));
+            });
+        });
+    }
+
+    private getProjectRootPath(path: string) {
+        let fsPath = path;
+        while (!(fsPath = dirname(fsPath)).toLowerCase().endsWith("dpgm")) {
+            if (fsPath.endsWith("\\") || fsPath.endsWith("/")) {
+                return undefined;
+            }
+        }
+        return fsPath;
+    }
+
+    private setupFileChangeListeners() {
+        this.documentService.onDidChangeContent(change => {
+            this.validateTextDocument(change.document);
+        });
+        this.documentService.onDidClose(async listener => {
+            let project = await this.getProjectService(listener.document.uri);
+            if (project) {
+                project.errorService.delete(listener.document.uri);
+            }
+        });
     }
 
 }

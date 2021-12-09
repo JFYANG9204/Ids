@@ -1,10 +1,8 @@
 import { dirname, join } from "path";
 import { Parser } from "../lib";
-import { getFileTypeMark } from "../lib/file";
 import { createBasicOptions } from "../lib/options";
 import { File } from "../lib/types";
 import { Scope, ScopeFlags } from "../lib/util";
-import { getFileFsPath } from "../util";
 import { FileNode } from "./fileNode";
 import {
     BatMacro,
@@ -15,7 +13,7 @@ import {
     loadDeclareFiles,
     readAllUsefulFileInFolder
 } from "./load";
-import { getFsPathToUri, isUri } from "./path";
+import { getFileFsPath, getFsPathToUri, isUri } from "./path";
 
 
 
@@ -185,7 +183,6 @@ export class FileHandler {
 
         if (this.startNode) {
             const parser = new Parser(createBasicOptions(this.startNode.fsPath, true, this.startNode.uri, this.global), this.startNode.content);
-            parser.catchFileTypeMarkFunction = getFileTypeMark;
             let file = parser.parse();
             this.startNode.file = file;
             this.startNode.parser = parser;

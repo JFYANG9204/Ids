@@ -1,8 +1,11 @@
 import { Parser } from "../lib";
-import { FileReferenceMark } from "../lib/file/util";
 import { File } from "../lib/types";
 
 
+export interface FileReferenceMark {
+    path: string,
+    mark: string
+};
 
 export interface FileNode {
     /**

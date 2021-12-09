@@ -20,7 +20,8 @@ export class ErrorService {
     }
 
     delete(uri: string) {
-        this.errMap.delete(uri);
+        this.errMap.set(uri, []);
+        this.connection.sendDiagnostics({ uri, diagnostics: [] });
     }
 
     raise() {

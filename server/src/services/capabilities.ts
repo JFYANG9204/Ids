@@ -1,3 +1,5 @@
+import { existsSync, readdirSync } from "fs";
+import { isAbsolute, resolve } from "path";
 import {
     CodeAction,
     CodeActionContext,
@@ -21,7 +23,6 @@ import {
     WorkspaceEdit,
 } from "vscode-languageserver";
 import { TextDocument } from "vscode-languageserver-textdocument";
-import { getPathCompletion } from "../completion";
 import { builtInModule } from "../declaration";
 import { getFsPathToUri } from "../fileHandler/path";
 import {
@@ -624,6 +625,30 @@ function getCompletionsFromScope(scope: Scope, inFunction = false) {
     return completions;
 }
 
+export function getPathCompletion(uri: string): CompletionItem[] {
+    const completion: CompletionItem[] = [];
+    if (!isAbsolute(uri)) {
+        return completion;
+    }
+    if (!existsSync(uri)) {
+        return [];
+    }
+    const fileNames = readdirSync(resolve(uri), { withFileTypes: true });
+    fileNames.forEach(item => {
+        if (item.isDirectory()) {
+            completion.push({
+                label: item.name,
+                kind: CompletionItemKind.Folder
+            });
+        } else if (item.isFile()) {
+            completion.push({
+                label: item.name,
+                kind: CompletionItemKind.File
+            });
+        }
+    });
+    return completion;
+}
 
 /**
  * 获得`DeclarationBase`的成员的补全对象，

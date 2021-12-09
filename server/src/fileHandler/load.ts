@@ -7,7 +7,7 @@ import { join } from "path";
 import { extname } from "path";
 import { lineBreak, Position, Scope, ScopeFlags } from "../lib/util";
 import { Parser } from "../lib";
-import { createBasicOptions } from "../lib/options";
+import { createBasicOptions, SourceType } from "../lib/options";
 import { Identifier, SingleVarDeclarator } from "../lib/types";
 
 
@@ -25,9 +25,9 @@ function readUsefulFsPath(folder: string): string[] {
         if (!err) {
             files.forEach(f => {
                 if (f.isDirectory()) {
-                    fsPaths = fsPaths.concat(readUsefulFsPath(join(folder, f.name)));
+                    fsPaths.push(...readUsefulFsPath(join(folder, f.name)));
                 } else {
-                    if (usefulExten.has(extname(f.name))) {
+                    if (usefulExten.has(extname(f.name).toLowerCase())) {
                         fsPaths.push(join(folder, f.name));
                     }
                 }
@@ -59,7 +59,13 @@ async function readUsefulFiles(paths: string[]) {
     return content;
 }
 
-export async function readAllUsefulFileInFolder(folder: string) {
+/**
+ * 遍历文件夹下所有扩展名为.ini,.inc,.dms,.mrs,.bat的文件，并读取其中内容,
+ * 并保存在一个Map中。
+ * @param folder 文件夹路径
+ * @returns _key_ - 小写完整文件路径  _value_ - 文件内容
+ */
+ export async function readAllUsefulFileInFolder(folder: string) {
     const paths = readUsefulFsPath(folder);
     const nodes = await readUsefulFiles(paths);
     const nodeMap = new Map<string, FileNode>();
@@ -69,6 +75,36 @@ export async function readAllUsefulFileInFolder(folder: string) {
     return nodeMap;
 }
 
+
+/**
+ * 遍历文件夹下所有扩展名为.ini,.inc,.dms,.mrs,.bat的文件，并读取其中内容,
+ * 并保存在一个Map中。
+ * @param folder 文件夹路径
+ * @returns _key_ - 小写完整文件路径  _value_ - 文件内容
+ */
+export function readAllUsefulFileInFolderSync(folder: string): Map<string, FileNode> {
+    const list = new Map<string, FileNode>();
+    const fileNames = readUsefulFsPath(folder);
+
+    function getFileNode(fsPath: string) {
+        let uri = URI.file(fsPath).toString();
+        let buffer: Buffer | undefined;
+        let content = "";
+        readFile(fsPath, (err, data) => {
+            if (!err) {
+                buffer = data;
+            }
+        });
+        if (buffer) {
+            let info = detect(buffer);
+            content = decode(buffer, info.encoding);
+        }
+        return createFileNode(uri, fsPath, content);
+    }
+
+    fileNames.forEach(file => { list.set(file.toLowerCase(), getFileNode(file)); });
+    return list;
+}
 
 export type FileReferenceMark = {
     path: string,
@@ -102,6 +138,29 @@ export type FileReferenceMark = {
                     mark: check[2]
                 };
             }
+        }
+    }
+    return undefined;
+}
+
+/**
+ * 判断并读取文件类型标注，标注在第一行
+ * - script - 'script
+ * - metadata - 'metadata
+ * @param content
+ * @returns
+ */
+ export function getFileTypeMark(content: string): SourceType | undefined {
+    const regex = new RegExp(lineBreak.source, "g");
+    let match;
+    if ((match = regex.exec(content))) {
+        const firstLine = content.slice(0, match.index);
+        const metadataReg = /\s*[']+\s*metadata/i;
+        const scriptReg = /\s*[']+\s*script/i;
+        if (metadataReg.test(firstLine)) {
+            return SourceType.metadata;
+        } else if (scriptReg.test(firstLine)) {
+            return SourceType.script;
         }
     }
     return undefined;

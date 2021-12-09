@@ -62,6 +62,7 @@ export interface ProjectService {
     onSignatureHelp(params: SignatureHelpParams): Promise<SignatureHelp | null>;
     onCodeAction(params: CodeActionParams): Promise<CodeAction[]>;
     onRenameRequest(params: RenameParams): Promise<WorkspaceEdit | null>;
+    doValidate(document: TextDocument): void;
     dispose(): Promise<void>;
 }
 
@@ -71,6 +72,7 @@ export async function createProjectService(
     documentService: DocumentService
 ): Promise<ProjectService> {
     const fileHandler = new FileHandler(folder);
+    await fileHandler.init();
     const errorService = new ErrorService(connection);
     return {
         fileHandler,
@@ -110,6 +112,16 @@ export async function createProjectService(
             let file = fileHandler.getCurrent(params.textDocument.uri);
             let document = documentService.getDocument(params.textDocument.uri);
             return await getRenameLocation(params, document, file);
+        },
+        async doValidate(document: TextDocument) {
+            fileHandler.update(document.uri, document.getText());
+            fileHandler.setStart(document.uri);
+            fileHandler.parse();
+            let file = fileHandler.getCurrent(document.uri);
+            if (file) {
+                errorService.set(document, file);
+                errorService.raise();
+            }
         },
         async dispose() {
             fileHandler.dispose();

@@ -122,10 +122,10 @@ import { ErrorMessages } from "./error-messages";
 import { ExpressionParser } from "./expression";
 import { ParserBase } from "../base";
 import { Position } from "../util/location";
-import { ParserFileNode } from "../file/node";
 import { ErrorTemplate } from "./errors";
 import { BindTypes, ScopeFlags } from "../util/scope";
 import { isEventName } from "../util/match";
+import { FileNode } from "../../fileHandler/fileNode";
 
 export class StatementParser extends ExpressionParser {
 
@@ -1406,10 +1406,10 @@ export class StatementParser extends ExpressionParser {
             node.inc = includeFilePath;
             const thisNode = this.searchParserNode(this.options.sourceFileName);
             if (thisNode) {
-                let incNode: ParserFileNode | undefined;
-                thisNode.include.forEach(fileNode => {
-                    if (fileNode.fileReferenceMark &&
-                        fileNode.fileReferenceMark.mark.toLowerCase() ===
+                let incNode: FileNode | undefined;
+                thisNode.includes.forEach(fileNode => {
+                    if (fileNode.referenceMark &&
+                        fileNode.referenceMark.mark.toLowerCase() ===
                         (includeFilePath as Identifier).name.toLowerCase()) {
                         incNode = fileNode;
                     }
@@ -1421,7 +1421,7 @@ export class StatementParser extends ExpressionParser {
                             this.options.uri,
                             this.options.globalDeclarations),
                         incNode.content);
-                    node.path = incNode.filePath;
+                    node.path = incNode.fsPath;
                 }
             }
         }

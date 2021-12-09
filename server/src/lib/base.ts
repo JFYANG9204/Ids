@@ -1,4 +1,4 @@
-import { ParserFileNode } from "./file/node";
+import { FileNode } from "../fileHandler/fileNode";
 import { Options } from "./options";
 import { State } from "./tokenizer/state";
 import { ScopeHandler } from "./util/scope";
@@ -12,6 +12,6 @@ export class ParserBase {
     declare state: State;
     declare length: number;
     declare scope: ScopeHandler;
-    declare searchParserNode?: (filePath: string) => ParserFileNode | undefined;
+    declare searchParserNode?: (filePath: string) => FileNode | undefined;
 }
 

@@ -1,42 +1,38 @@
 import { join } from "path";
 import { FileNode } from "../fileHandler/fileNode";
-import { readAllUsefulFileInFolder } from "../fileHandler/load";
-import { getAllUsefulFile } from "../lib/file";
-import { FileContent } from "../lib/file/util";
+import { readAllUsefulFileInFolderSync } from "../fileHandler/load";
 import { createBasicOptions } from "../lib/options";
 import { Parser } from "../lib/parser";
-import { DeclarationBase, File, SingleVarDeclarator } from "../lib/types";
+import { DeclarationBase, SingleVarDeclarator } from "../lib/types";
 import { Scope, ScopeFlags } from "../lib/util";
 
 export interface DeclarationLoadResult {
     scope: Scope,
-    files: Map<string, File>,
-    contents: Map<string, FileContent>
+    nodes: Map<string, FileNode>
 }
 
 export function loadBuiltInModule() {
     const folder = join(__dirname, "../../src/declaration/built_in_modules");
-    const module = getAllUsefulFile(folder);
+    const module = readAllUsefulFileInFolderSync(folder);
     return loadDecarationFiles(module);
 }
 
 export function loadDecarationFiles(
-    contents: Map<string, FileContent>): DeclarationLoadResult {
+    nodes: Map<string, FileNode>): DeclarationLoadResult {
 
-    let fileMap: Map<string, File> = new Map();
     let scope: Scope | undefined;
-    contents.forEach((f, p) => {
-        const parser = new Parser(createBasicOptions(f.path, false, f.uri), f.content);
+    nodes.forEach(f => {
+        const parser = new Parser(createBasicOptions(f.fsPath, false, f.uri), f.content);
         const file = parser.parse(scope ?? undefined);
-        fileMap.set(p, file);
+        f.file = file;
+        f.parser = parser;
         if (file.scope) {
             scope = file.scope;
         }
     });
     return {
         scope: scope ?? new Scope(ScopeFlags.program),
-        files: fileMap,
-        contents
+        nodes
     };
 }
 
