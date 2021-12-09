@@ -3,7 +3,7 @@ import { decode } from "iconv-lite";
 import { detect } from "jschardet";
 import { createFileNode, FileNode } from "./fileNode";
 import { URI } from "vscode-uri";
-import { extname } from "path";
+import { extname, join } from "path";
 import { lineBreak, Position, Scope, ScopeFlags } from "../lib/util";
 import { Parser } from "../lib";
 import { createBasicOptions, SourceType } from "../lib/options";
@@ -23,13 +23,13 @@ const usefulExten = new Set([
 
 async function readUsefulFsPath(folder: string): Promise<string[]> {
     let fsPaths: string[] = [];
-    readdirAsync(folder, { withFileTypes: true }).
+    await readdirAsync(folder, { withFileTypes: true }).
     then(files => {
         files.forEach(async f => {
             if (f.isDirectory()) {
-                fsPaths.push(...(await readUsefulFsPath(f.name)));
+                fsPaths.push(...(await readUsefulFsPath(join(folder, f.name))));
             } else if (usefulExten.has(extname(f.name).toLowerCase())) {
-                fsPaths.push(f.name);
+                fsPaths.push(join(folder, f.name));
             }
         });
     });
@@ -40,9 +40,9 @@ function readUsefulFsPathSync(folder: string): string[] {
     let fsPaths: string[] = [];
     readdirSync(folder, { withFileTypes: true }).forEach(file => {
         if (file.isDirectory()) {
-            fsPaths.push(...readUsefulFsPathSync(file.name));
+            fsPaths.push(...readUsefulFsPathSync(join(folder, file.name)));
         } else if (usefulExten.has(extname(file.name).toLowerCase())) {
-            fsPaths.push(file.name);
+            fsPaths.push(join(folder, file.name));
         }
     });
     return fsPaths;
@@ -97,7 +97,7 @@ export function readAllUsefulFileInFolderSync(folder: string): Map<string, FileN
         let uri = URI.file(fsPath).toString();
         let buffer: Buffer | undefined = readFileSync(fsPath);
         let content = "";
-        if (buffer) {
+        if (buffer.length > 0) {
             let info = detect(buffer);
             content = decode(buffer, info.encoding);
         }
