@@ -1,17 +1,15 @@
 import { dirname, join } from "path";
 import { Parser } from "../lib";
 import { createBasicOptions } from "../lib/options";
-import { File } from "../lib/types";
-import { Scope, ScopeFlags } from "../lib/util";
+import { File, Identifier, SingleVarDeclarator } from "../lib/types";
+import { Position, Scope, ScopeFlags } from "../lib/util";
 import { FileNode } from "./fileNode";
 import {
     BatMacro,
-    declareBatMacros,
     getAllIncludeInFile,
     getFileReferenceMark,
     getFileTypeMark,
     getMacroFromBatFile,
-    loadDeclareFiles,
     readAllUsefulFileInFolder
 } from "./load";
 import { getFileFsPath, getFsPathToUri, isUri } from "./path";
@@ -60,8 +58,9 @@ export class FileHandler {
                 this.fileNodes.set(path, node);
             }
         });
-        this.global.join((await loadDeclareFiles(this.declares)).scope);
-        declareBatMacros(batMacro, this.global);
+        const declares = await this.loadDeclareFiles(this.declares);
+        this.global.join(declares.scope);
+        this.declareBatMacros(batMacro, this.global);
         // 构建有向图
 
         function updateFileNodeMap(nodePath: string,
@@ -215,6 +214,45 @@ export class FileHandler {
         this.fileNodes.clear();
         this.declares.clear();
         this.currentMap.clear();
+    }
+
+    private async loadDeclareFiles(fileNodes: Map<string, FileNode>) {
+        let scope: Scope = new Scope(ScopeFlags.program);
+        fileNodes.forEach(file => {
+            const parser = new Parser(createBasicOptions(file.fsPath, false, file.uri), file.content);
+            const f = parser.parse(scope);
+            file.parser = parser;
+            file.file = f;
+            scope.join(f.scope);
+        });
+        return { scope, nodes: fileNodes };
+    }
+
+
+    private declareBatMacros(macros: Map<string, BatMacro>, scope: Scope) {
+
+        function createDeclarationFromBatMacro(bat: BatMacro) {
+            let parser = new Parser(createBasicOptions(bat.path, false), "");
+            let macro = new SingleVarDeclarator(parser, bat.start, new Position(0, 0));
+            macro.end = bat.end;
+            let id = new Identifier(parser, bat.start, new Position(0, 0));
+            id.name = bat.id;
+            macro.name = id;
+            if (bat.type === "boolean") {
+                macro.binding = "Boolean";
+            } else if (bat.type === "number") {
+                macro.binding = "Long";
+            } else if (bat.type === "string") {
+                macro.binding = "String";
+            } else {
+                macro.binding = "Variant";
+            }
+            return macro;
+        }
+
+        macros.forEach((macro, name) => {
+            scope.consts.set(name, createDeclarationFromBatMacro(macro));
+        });
     }
 
 }

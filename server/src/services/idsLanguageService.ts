@@ -91,7 +91,7 @@ export class IdsLanguageService {
         }
         if (this.loadingProjects.has(projectRoot)) {
             while (!this.projects.has(projectRoot)) {
-                await new Promise(resolve => setTimeout(resolve, 500));
+                await new Promise(resolve => setTimeout(resolve, 200));
             }
             return this.projects.get(fsPath);
         }

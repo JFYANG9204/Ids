@@ -3,8 +3,7 @@ import { decode } from "iconv-lite";
 import { detect } from "jschardet";
 import { createFileNode, FileNode } from "./fileNode";
 import { URI } from "vscode-uri";
-import { join } from "path";
-import { extname } from "path";
+import { extname, join } from "path";
 import { lineBreak, Position, Scope, ScopeFlags } from "../lib/util";
 import { Parser } from "../lib";
 import { createBasicOptions, SourceType } from "../lib/options";
@@ -275,26 +274,27 @@ export async function loadDeclareFiles(fileNodes: Map<string, FileNode>) {
 }
 
 
-function createDeclarationFromBatMacro(bat: BatMacro) {
-    let parser = new Parser(createBasicOptions(bat.path, false), "");
-    let macro = new SingleVarDeclarator(parser, bat.start, new Position(0, 0));
-    macro.end = bat.end;
-    let id = new Identifier(parser, bat.start, new Position(0, 0));
-    id.name = bat.id;
-    macro.name = id;
-    if (bat.type === "boolean") {
-        macro.binding = "Boolean";
-    } else if (bat.type === "number") {
-        macro.binding = "Long";
-    } else if (bat.type === "string") {
-        macro.binding = "String";
-    } else {
-        macro.binding = "Variant";
-    }
-    return macro;
-}
-
 export function declareBatMacros(macros: Map<string, BatMacro>, scope: Scope) {
+
+    function createDeclarationFromBatMacro(bat: BatMacro) {
+        let parser = new Parser(createBasicOptions(bat.path, false), "");
+        let macro = new SingleVarDeclarator(parser, bat.start, new Position(0, 0));
+        macro.end = bat.end;
+        let id = new Identifier(parser, bat.start, new Position(0, 0));
+        id.name = bat.id;
+        macro.name = id;
+        if (bat.type === "boolean") {
+            macro.binding = "Boolean";
+        } else if (bat.type === "number") {
+            macro.binding = "Long";
+        } else if (bat.type === "string") {
+            macro.binding = "String";
+        } else {
+            macro.binding = "Variant";
+        }
+        return macro;
+    }
+
     macros.forEach((macro, name) => {
         scope.consts.set(name, createDeclarationFromBatMacro(macro));
     });
