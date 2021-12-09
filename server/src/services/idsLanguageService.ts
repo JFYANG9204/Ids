@@ -183,7 +183,7 @@ export class IdsLanguageService {
     private getProjectRootPath(path: string) {
         let fsPath = path;
         while (!(fsPath = dirname(fsPath)).toLowerCase().endsWith("dpgm")) {
-            if (fsPath.endsWith("\\") || fsPath.endsWith("/")) {
+            if (fsPath.endsWith("\\") || fsPath.endsWith("/") || fsPath === ".") {
                 return undefined;
             }
         }

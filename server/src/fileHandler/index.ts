@@ -9,6 +9,7 @@ import {
     declareBatMacros,
     getAllIncludeInFile,
     getFileReferenceMark,
+    getFileTypeMark,
     getMacroFromBatFile,
     loadDeclareFiles,
     readAllUsefulFileInFolder
@@ -183,6 +184,7 @@ export class FileHandler {
 
         if (this.startNode) {
             const parser = new Parser(createBasicOptions(this.startNode.fsPath, true, this.startNode.uri, this.global), this.startNode.content);
+            parser.catchFileTypeMarkFunction = getFileTypeMark;
             let file = parser.parse();
             this.startNode.file = file;
             this.startNode.parser = parser;
