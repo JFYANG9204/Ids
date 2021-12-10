@@ -2,7 +2,6 @@ import {
     CodeAction,
     CodeActionKind,
     CodeActionParams,
-    CompletionItem,
     CompletionList,
     CompletionParams,
     Connection,
