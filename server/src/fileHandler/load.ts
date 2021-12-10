@@ -21,19 +21,19 @@ const usefulExten = new Set([
     ".bat"
 ]);
 
-async function readUsefulFsPath(folder: string): Promise<string[]> {
-    let fsPaths: string[] = [];
-    await readdirAsync(folder, { withFileTypes: true }).
-    then(files => {
-        files.forEach(async f => {
+async function readUsefulFsPath(folder: string) {
+    return await readdirAsync(folder, { withFileTypes: true })
+    .then(files => {
+        let paths: string[] = [];
+        files.forEach(f => {
             if (f.isDirectory()) {
-                fsPaths.push(...(await readUsefulFsPath(join(folder, f.name))));
+                paths.push(...readUsefulFsPathSync(join(folder, f.name)));
             } else if (usefulExten.has(extname(f.name).toLowerCase())) {
-                fsPaths.push(join(folder, f.name));
+                paths.push(join(folder, f.name));
             }
         });
+        return paths;
     });
-    return fsPaths;
 }
 
 function readUsefulFsPathSync(folder: string): string[] {
@@ -62,7 +62,7 @@ async function readUsefulFiles(paths: string[]) {
         return createFileNode(uri, fsPath, content);
     }
 
-    const content = await Promise.all(paths.map(path => getFileNode(path)));
+    const content = await Promise.all(paths.map(async path => await getFileNode(path)));
     return content;
 }
 
@@ -73,14 +73,15 @@ async function readUsefulFiles(paths: string[]) {
  * @returns _key_ - 小写完整文件路径  _value_ - 文件内容
  */
  export async function readAllUsefulFileInFolder(folder: string) {
-    const nodeMap = new Map<string, FileNode>();
-    const paths = await readUsefulFsPath(folder);
-    await readUsefulFiles(paths).then(nodes => {
+    let paths = await readUsefulFsPath(folder);
+    return await readUsefulFiles(paths)
+    .then(nodes => {
+        const nodeMap = new Map<string, FileNode>();
         nodes.forEach(node => {
             nodeMap.set(node.fsPath.toLowerCase(), node);
         });
+        return nodeMap;
     });
-    return nodeMap;
 }
 
 

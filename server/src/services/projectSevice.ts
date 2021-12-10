@@ -50,9 +50,9 @@ export async function createProjectService(
     connection: Connection,
     documentService: DocumentService
 ): Promise<ProjectService> {
+    const errorService = new ErrorService(connection);
     const fileHandler = new FileHandler(folder);
     await fileHandler.init();
-    const errorService = new ErrorService(connection);
     return {
         fileHandler,
         errorService,

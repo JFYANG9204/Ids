@@ -1,4 +1,5 @@
 import { dirname, join } from "path";
+import { builtInModule } from "../declaration";
 import { Parser } from "../lib";
 import { createBasicOptions } from "../lib/options";
 import { File, Identifier, SingleVarDeclarator } from "../lib/types";
@@ -42,12 +43,13 @@ export class FileHandler {
     constructor(folder: string) {
         this.folderPath = folder;
         this.uri = getFsPathToUri(folder);
+        this.global.join(builtInModule.scope);
     }
 
     async init() {
         let batMacro = new Map<string, BatMacro>();
-        await readAllUsefulFileInFolder(this.folderPath).
-        then(map => {
+        await readAllUsefulFileInFolder(this.folderPath)
+        .then(map => {
             map.forEach(node => {
                 let path = node.fsPath.toLowerCase();
                 if (path.endsWith(".d.mrs")) {
@@ -59,19 +61,15 @@ export class FileHandler {
                     this.fileNodes.set(path, node);
                 }
             });
-        });
-        await this.loadDeclareFiles(this.declares).
-        then(declare => {
+            let declare = this.loadDeclareFiles(this.declares);
             this.global.join(declare.scope);
             this.declareBatMacros(batMacro, this.global);
-        }).
-        then(() => {
             // 构建有向图
             this.fileNodes.forEach((node, path) => {
                 const refs = getAllIncludeInFile(node.content);
                 refs.forEach(ref => updateFileNodeMap(path, node, ref, this.fileNodes));
                 if (node.referenceMark) {
-                    updateFileNodeMap(path, node, node.referenceMark.path, this.fileNodes);
+                    updateFileNodeMap(path, node, node.referenceMark.path, this.fileNodes, true);
                 }
             });
         });
@@ -79,11 +77,21 @@ export class FileHandler {
         function updateFileNodeMap(nodePath: string,
             node: FileNode,
             incPath: string,
-            globalMap: Map<string, FileNode>) {
+            globalMap: Map<string, FileNode>,
+            isMark: boolean = false) {
 
             const fullPath = join(dirname(node.fsPath), incPath).toLowerCase();
             const existNode = globalMap.get(fullPath);
             if (existNode) {
+                if (isMark) {
+                    existNode.includes.set(nodePath, node);
+                    node.references.set(fullPath, existNode);
+                    node.isVertex = false;
+                    if (existNode.references.size === 0) {
+                        existNode.isVertex = true;
+                    }
+                    return;
+                }
                 existNode.references.set(nodePath, node);
                 node.includes.set(fullPath, existNode);
                 if (node.references.size === 0) {
@@ -221,7 +229,7 @@ export class FileHandler {
         this.currentMap.clear();
     }
 
-    private async loadDeclareFiles(fileNodes: Map<string, FileNode>) {
+    private loadDeclareFiles(fileNodes: Map<string, FileNode>) {
         let scope: Scope = new Scope(ScopeFlags.program);
         fileNodes.forEach(file => {
             const parser = new Parser(createBasicOptions(file.fsPath, false, file.uri), file.content);

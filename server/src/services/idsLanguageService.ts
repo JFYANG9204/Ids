@@ -95,17 +95,17 @@ export class IdsLanguageService {
             }
             return this.projects.get(fsPath);
         }
+        const workDoneProcess = await this.connection.window.createWorkDoneProgress();
+        workDoneProcess.begin(`载入项目: ${projectRoot}`);
         this.loadingProjects.add(projectRoot);
-        const workDoneProgress = await this.connection.window.createWorkDoneProgress();
-        workDoneProgress.begin(`载入项目: ${projectRoot}`);
         const project = await createProjectService(projectRoot, this.connection, this.documentService);
-        this.projects.set(projectRoot, project);
-        workDoneProgress.done();
+        this.projects.set(fsPath, project);
+        workDoneProcess.done();
         return project;
     }
 
     async onCompletion(params: CompletionParams): Promise<CompletionList> {
-        let project = await this.getProjectService(params.textDocument.uri);
+        const project = await this.getProjectService(params.textDocument.uri);
         return project?.onCompletion(params) ?? EMPTY_COMPLETIONLIST;
     }
 
@@ -114,37 +114,37 @@ export class IdsLanguageService {
     }
 
     async onHover(params: HoverParams): Promise<Hover | null> {
-        let project = await this.getProjectService(params.textDocument.uri);
+        const project = await this.getProjectService(params.textDocument.uri);
         return project?.onHover(params) ?? EMPTYE_HOVER;
     }
 
     async onDefinition(params: DefinitionParams): Promise<Definition | null> {
-        let project = await this.getProjectService(params.textDocument.uri);
+        const project = await this.getProjectService(params.textDocument.uri);
         return project?.onDefinition(params) ?? [];
     }
 
     async onReferences(params: ReferenceParams): Promise<Location[] | null> {
-        let project = await this.getProjectService(params.textDocument.uri);
+        const project = await this.getProjectService(params.textDocument.uri);
         return project?.onReferences(params) ?? [];
     }
 
     async onSignatureHelp(params: SignatureHelpParams): Promise<SignatureHelp | null> {
-        let project = await this.getProjectService(params.textDocument.uri);
+        const project = await this.getProjectService(params.textDocument.uri);
         return project?.onSignatureHelp(params) ?? null;
     }
 
     async onCodeAction(params: CodeActionParams): Promise<CodeAction[]> {
-        let project = await this.getProjectService(params.textDocument.uri);
+        const project = await this.getProjectService(params.textDocument.uri);
         return project?.onCodeAction(params) ?? [];
     }
 
     async onRenameRequest(params: RenameParams): Promise<WorkspaceEdit | null> {
-        let project = await this.getProjectService(params.textDocument.uri);
+        const project = await this.getProjectService(params.textDocument.uri);
         return project?.onRenameRequest(params) ?? null;
     }
 
     async validateTextDocument(textDocument: TextDocument) {
-        let project = await this.getProjectService(textDocument.uri);
+        const project = await this.getProjectService(textDocument.uri);
         project?.doValidate(textDocument);
     }
 
@@ -195,10 +195,8 @@ export class IdsLanguageService {
             this.validateTextDocument(change.document);
         });
         this.documentService.onDidClose(async listener => {
-            let project = await this.getProjectService(listener.document.uri);
-            if (project) {
-                project.errorService.delete(listener.document.uri);
-            }
+            this.getProjectService(listener.document.uri)
+            .then(project => project?.errorService.delete(listener.document.uri));
         });
     }
 
