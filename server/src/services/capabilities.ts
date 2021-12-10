@@ -822,26 +822,26 @@ async function getCompletionAtPostion(position: Position, textDocument?: TextDoc
         return EMPTY_COMPLETIONLIST;
     }
 
-    let pos = textDocument.offsetAt(position) - 1;
-    let text = textDocument.getText().substring(0, pos + 1);
-    let triggerChar = text.slice(pos, pos + 1);
+    let pos = textDocument.offsetAt(position);
+    let text = textDocument.getText().slice(0, pos + 1);
+    let triggerChar = text.charCodeAt(pos);
     let lastChar = text.charCodeAt(pos - 1);
 
-    if (triggerChar === "#") {
+    if (triggerChar === charCodes.numberSign) {
         return CompletionList.create(preKeywordsCompletions, false);
     }
 
-    let info = positionAtInfo(file.program.body, pos);
+    let info = positionAtInfo(file.program.body, pos - 1);
     // #include "path"
     if (info.preInclude &&
-        (triggerChar === "\\" || triggerChar === "/")) {
-        if (distanceTo(info.preInclude.inc, pos) === 0) {
+        (triggerChar === charCodes.backslash || triggerChar === charCodes.slash)) {
+        if (distanceTo(info.preInclude.inc, pos - 1) === 0) {
             return CompletionList.create(getPathCompletion(info.preInclude.path), true);
         }
         return EMPTY_COMPLETIONLIST;
     }
 
-    if (triggerChar === ".") {
+    if (triggerChar === charCodes.dot) {
         // with 内
         if (lastChar !== charCodes.rightParenthesis   &&
             lastChar !== charCodes.rightSquareBracket &&
