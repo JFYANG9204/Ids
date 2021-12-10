@@ -59,7 +59,7 @@ export async function createProjectService(
             return fileHandler.folderPath;
         },
         async onCompletion({ textDocument, position }) {
-            let file = fileHandler.getCurrent(textDocument.uri);
+            let file = fileHandler.getStore(textDocument.uri);
             let document = documentService.getDocument(textDocument.uri);
             return await getCompletionAtPostion(position, document, file);
         },

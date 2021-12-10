@@ -214,19 +214,23 @@ export class FileHandler {
                     fileNode.parser = inc.parser;
                     fileNode.startNode = this.startNode;
                     let fileName = inc.loc.fileName.toLowerCase();
-                    if (this.currentMap.has(fileName)) {
-                        this.storedMap.set(fileName, this.currentMap.get(fileName)!);
-                    } else {
-                        this.storedMap.set(fileName, inc);
+                    if (!inc.esc) {
+                        if (this.currentMap.has(fileName)) {
+                            this.storedMap.set(fileName, this.currentMap.get(fileName)!);
+                        } else {
+                            this.storedMap.set(fileName, inc);
+                        }
                     }
                     this.currentMap.set(fileName, inc);
                 }
             });
             let lowerPath = this.startNode.fsPath.toLowerCase();
-            if (this.currentMap.has(lowerPath)) {
-                this.storedMap.set(lowerPath, this.currentMap.get(lowerPath)!);
-            } else if (!this.storedMap.has(lowerPath)) {
-                this.storedMap.set(lowerPath, file);
+            if (!file.esc) {
+                if (this.currentMap.has(lowerPath)) {
+                    this.storedMap.set(lowerPath, this.currentMap.get(lowerPath)!);
+                } else if (!this.storedMap.has(lowerPath)) {
+                    this.storedMap.set(lowerPath, file);
+                }
             }
             this.currentMap.set(lowerPath, file);
             return file;
