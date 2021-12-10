@@ -59,7 +59,6 @@ export class IdsLanguageService {
 
     private setupHandlers() {
         this.connection.onCompletion(this.onCompletion.bind(this));
-        this.connection.onCompletionResolve(this.onCompletionResolve.bind(this));
         this.connection.onHover(this.onHover.bind(this));
         this.connection.onDefinition(this.onDefinition.bind(this));
         this.connection.onReferences(this.onReferences.bind(this));
@@ -112,10 +111,6 @@ export class IdsLanguageService {
         return project?.onCompletion(params) ?? EMPTY_COMPLETIONLIST;
     }
 
-    async onCompletionResolve(item: CompletionItem): Promise<CompletionItem> {
-        return item;
-    }
-
     async onHover(params: HoverParams): Promise<Hover | null> {
         const project = await this.getProjectService(params.textDocument.uri);
         return project?.onHover(params) ?? EMPTYE_HOVER;
@@ -165,7 +160,7 @@ export class IdsLanguageService {
                 workspaceFolders: { supported: true, changeNotifications: true },
                 fileOperations: { willRename: { filters: [{ pattern: { glob: "**/*.{mrs,dms,ini,inc}" } }] } }
             },
-            completionProvider: { resolveProvider: true, triggerCharacters: [".", "\\", "/"] },
+            completionProvider: { resolveProvider: false, triggerCharacters: [".", "\\", "/"] },
             signatureHelpProvider: { triggerCharacters: [ "(", "," ] },
             codeActionProvider: {
                 codeActionKinds: [
@@ -173,6 +168,10 @@ export class IdsLanguageService {
                 ],
                 resolveProvider: false
             },
+            hoverProvider: true,
+            renameProvider: true,
+            definitionProvider: true,
+            referencesProvider: true
         };
     }
 

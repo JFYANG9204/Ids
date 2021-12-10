@@ -21,7 +21,7 @@ export function getFsPathToUri(fsPath: string) {
 }
 
 export function isUri(pathLike: string) {
-    return URI.isUri(pathLike);
+    return pathLike.startsWith("file");
 }
 
 export function normalizeFileNameToFsPath(fileName: string) {
