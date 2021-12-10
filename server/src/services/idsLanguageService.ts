@@ -171,7 +171,7 @@ export class IdsLanguageService {
                 codeActionKinds: [
                     CodeActionKind.QuickFix
                 ],
-                resolveProvider: true
+                resolveProvider: false
             },
         };
     }

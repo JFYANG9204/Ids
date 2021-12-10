@@ -108,11 +108,8 @@ export class FileHandler {
         }
     }
 
-    update(pathLike: string, content: string) {
-        let path = pathLike;
-        if (isUri(pathLike)) {
-            path = getFileFsPath(pathLike);
-        }
+    update(uri: string, content: string) {
+        let path = getFileFsPath(uri);
         let exist = this.fileNodes.get(path.toLowerCase());
         if (!exist) {
             return;
@@ -151,15 +148,15 @@ export class FileHandler {
         exist.referenceMark = refMark;
     }
 
-    get(pathLike: string) {
-        let path = getFileFsPath(pathLike);
+    get(uri: string) {
+        let path = getFileFsPath(uri);
         return this.fileNodes.get(path.toLowerCase());
     }
 
-    setStart(pathLike: string) {
+    setStart(uri: string) {
         this.startNode = undefined;
-        let path = getFileFsPath(pathLike);
-        let find = this.get(path);
+        let path = getFileFsPath(uri);
+        let find = this.get(uri);
         if (!find) {
             this.connection?.console.log(`filehandler setstart failed at path = '${path}'`);
             return;
