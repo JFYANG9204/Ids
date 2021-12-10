@@ -887,13 +887,16 @@ export class TypeUtil extends UtilParser {
             }
             if (!child) {
 
-                // 判断是否为'.'调用的函数
-                let maybeFunc = this.scope.get((prop as Identifier).name, undefined, true);
-                if (maybeFunc?.result) {
-                    if (checkCallByDot) {
-                        checkCallByDot.isCallByDot = true;
+                // 判断是否为'.'调用的函数，需要父级对象为callee或者CallExpression
+                if (prop.treeParent?.type === "CallExpression" ||
+                    prop.treeParent?.treeParent?.type === "CallExpression") {
+                    let maybeFunc = this.scope.get((prop as Identifier).name, undefined, true);
+                    if (maybeFunc?.result) {
+                        if (checkCallByDot) {
+                            checkCallByDot.isCallByDot = true;
+                        }
+                        return maybeFunc.result;
                     }
-                    return maybeFunc.result;
                 }
 
                 // 判断是否为MDMField

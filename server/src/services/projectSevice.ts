@@ -50,7 +50,7 @@ export async function createProjectService(
     connection: Connection,
     documentService: DocumentService
 ): Promise<ProjectService> {
-    const fileHandler = new FileHandler(folder, connection);
+    const fileHandler = new FileHandler(folder);
     await fileHandler.init();
     connection.console.log(`project at '${folder}' initialized.`);
     return {
