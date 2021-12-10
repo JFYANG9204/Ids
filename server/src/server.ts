@@ -8,7 +8,7 @@ const idsService = new IdsLanguageService(connection);
 connection.onInitialize(
     async (params): Promise<InitializeResult> => {
         await idsService.init(params);
-        connection.console.log("Ids language service initialized");
+        connection.console.log("Ids language service initialized.");
         return { capabilities: idsService.capabilities };
     }
 );

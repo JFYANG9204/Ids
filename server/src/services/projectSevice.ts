@@ -5,6 +5,7 @@ import {
     CompletionParams,
     Connection,
     Definition,
+    Diagnostic,
     Hover,
     HoverParams,
     Location,
@@ -16,6 +17,7 @@ import {
     WorkspaceEdit
 } from "vscode-languageserver";
 import { TextDocument } from "vscode-languageserver-textdocument";
+import { raiseErrors } from "../errors";
 import { FileHandler } from "../fileHandler";
 import {
     getCodeAction,
@@ -27,11 +29,9 @@ import {
     getSignatureHelpAtPostion
 } from "./capabilities";
 import { DocumentService } from "./documentService";
-import { ErrorService } from "./errorService";
 
 
 export interface ProjectService {
-    errorService: ErrorService,
     fileHandler: FileHandler;
     getRootPath(): string,
     onCompletion(params: CompletionParams): Promise<CompletionList>;
@@ -41,7 +41,7 @@ export interface ProjectService {
     onSignatureHelp(params: SignatureHelpParams): Promise<SignatureHelp | null>;
     onCodeAction(params: CodeActionParams): Promise<CodeAction[]>;
     onRenameRequest(params: RenameParams): Promise<WorkspaceEdit | null>;
-    doValidate(document: TextDocument): void;
+    doValidate(document: TextDocument): Promise<Diagnostic[] | null>;
     dispose(): Promise<void>;
 }
 
@@ -50,12 +50,11 @@ export async function createProjectService(
     connection: Connection,
     documentService: DocumentService
 ): Promise<ProjectService> {
-    const errorService = new ErrorService(connection);
     const fileHandler = new FileHandler(folder);
     await fileHandler.init();
+    connection.console.log(`project at '${folder}' initialized.`);
     return {
         fileHandler,
-        errorService,
         getRootPath() {
             return fileHandler.folderPath;
         },
@@ -98,9 +97,9 @@ export async function createProjectService(
             fileHandler.parse();
             let file = fileHandler.getCurrent(document.uri);
             if (file) {
-                errorService.set(document, file);
-                errorService.raise();
+                return raiseErrors(document, file);
             }
+            return null;
         },
         async dispose() {
             fileHandler.dispose();

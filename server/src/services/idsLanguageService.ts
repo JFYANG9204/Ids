@@ -66,6 +66,7 @@ export class IdsLanguageService {
         this.connection.onSignatureHelp(this.onSignatureHelp.bind(this));
         this.connection.onCodeAction(this.onCodeAction.bind(this));
         this.connection.onRenameRequest(this.onRenameRequest.bind(this));
+        this.connection.console.log("Handlers Setup Complete.");
     }
 
     dispose() {
@@ -89,10 +90,14 @@ export class IdsLanguageService {
         if (!projectRoot) {
             return undefined;
         }
+        if (this.projects.has(projectRoot)) {
+            return this.projects.get(projectRoot);
+        }
         if (this.loadingProjects.has(projectRoot)) {
             while (!this.projects.has(projectRoot)) {
-                await new Promise(resolve => setTimeout(resolve, 200));
+                await new Promise(resolve => { setTimeout(resolve, 200); });
             }
+            this.connection.console.log("get project: " + fsPath);
             return this.projects.get(fsPath);
         }
         const workDoneProcess = await this.connection.window.createWorkDoneProgress();
@@ -143,9 +148,16 @@ export class IdsLanguageService {
         return project?.onRenameRequest(params) ?? null;
     }
 
+    async doValidate(doc: TextDocument) {
+        const project = await this.getProjectService(doc.uri);
+        return project?.doValidate(doc) ?? null;
+    }
+
     async validateTextDocument(textDocument: TextDocument) {
-        const project = await this.getProjectService(textDocument.uri);
-        project?.doValidate(textDocument);
+        const diagnostics = await this.doValidate(textDocument);
+        if (diagnostics) {
+            this.connection.sendDiagnostics({ uri: textDocument.uri, diagnostics });
+        }
     }
 
     get capabilities(): ServerCapabilities {
@@ -195,9 +207,9 @@ export class IdsLanguageService {
             this.validateTextDocument(change.document);
         });
         this.documentService.onDidClose(async listener => {
-            this.getProjectService(listener.document.uri)
-            .then(project => project?.errorService.delete(listener.document.uri));
+            this.connection.sendDiagnostics({ uri: listener.document.uri, diagnostics: [] });
         });
+        this.connection.console.log("Document Serice initialized.");
     }
 
 }
