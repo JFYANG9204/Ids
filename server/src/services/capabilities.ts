@@ -823,7 +823,7 @@ async function getCompletionAtPostion(position: Position, textDocument?: TextDoc
     }
 
     let pos = textDocument.offsetAt(position);
-    let text = textDocument.getText().slice(0, pos + 1);
+    let text = textDocument.getText();
     let triggerChar = text.charCodeAt(pos);
     let lastChar = text.charCodeAt(pos - 1);
 
