@@ -1,4 +1,5 @@
 import { dirname, join } from "path";
+import { Connection } from "vscode-languageserver";
 import { builtInModule } from "../declaration";
 import { Parser } from "../lib";
 import { createBasicOptions } from "../lib/options";
@@ -39,11 +40,15 @@ export class FileHandler {
     private startNode?: FileNode;
 
     private currentMap: Map<string, File> = new Map();
+    private storedMap: Map<string, File> = new Map();
 
-    constructor(folder: string) {
+    private connection?: Connection;
+
+    constructor(folder: string, connection?: Connection) {
         this.folderPath = folder;
         this.uri = getFsPathToUri(folder);
         this.global.join(builtInModule.scope);
+        this.connection = connection;
     }
 
     async init() {
@@ -147,26 +152,28 @@ export class FileHandler {
     }
 
     get(pathLike: string) {
-        let path = pathLike;
-        if (isUri(path)) {
-            path = getFileFsPath(path);
-        }
+        let path = getFileFsPath(pathLike);
         return this.fileNodes.get(path.toLowerCase());
     }
 
     setStart(pathLike: string) {
         this.startNode = undefined;
-        let path = pathLike;
-        if (isUri(path)) {
-            path = getFileFsPath(path);
-        }
+        let path = getFileFsPath(pathLike);
         let find = this.get(path);
         if (!find) {
+            this.connection?.console.log(`filehandler setstart failed at path = '${path}'`);
             return;
         }
 
         if (find.isVertex) {
             this.startNode = find;
+            this.connection?.console.log(`filehandler setstart at path = '${path}'`);
+            return;
+        }
+
+        if (find.startNode) {
+            this.startNode = find.startNode;
+            this.connection?.console.log(`filehandler setstart at path = '${path}'`);
             return;
         }
 
@@ -183,6 +190,7 @@ export class FileHandler {
         }
 
         this.startNode = getVertex(find);
+        this.connection?.console.log(`filehandler setstart at path = '${this.startNode?.fsPath}'`);
     }
 
     parse() {
@@ -197,7 +205,9 @@ export class FileHandler {
         if (this.startNode) {
             const parser = new Parser(createBasicOptions(this.startNode.fsPath, true, this.startNode.uri, this.global), this.startNode.content);
             parser.catchFileTypeMarkFunction = getFileTypeMark;
+            parser.searchParserNode = this.get.bind(this);
             let file = parser.parse();
+            this.connection?.console.log(`parser finished, file at ${file.loc.fileName}`);
             this.startNode.file = file;
             this.startNode.parser = parser;
             iterateIncludeFile(file, inc => {
@@ -206,21 +216,39 @@ export class FileHandler {
                     fileNode.file = inc;
                     fileNode.parser = inc.parser;
                     fileNode.startNode = this.startNode;
+                    let fileName = inc.loc.fileName.toLowerCase();
+                    if (this.currentMap.has(fileName)) {
+                        this.storedMap.set(fileName, this.currentMap.get(fileName)!);
+                    } else {
+                        this.storedMap.set(fileName, inc);
+                    }
+                    this.currentMap.set(fileName, inc);
                 }
             });
             let lowerPath = this.startNode.fsPath.toLowerCase();
-            if (!file.esc) {
-                this.currentMap.set(lowerPath, file);
+            if (this.currentMap.has(lowerPath)) {
+                this.storedMap.set(lowerPath, this.currentMap.get(lowerPath)!);
+            } else if (!this.storedMap.has(lowerPath)) {
+                this.storedMap.set(lowerPath, file);
             }
+            this.currentMap.set(lowerPath, file);
+            return file;
         }
     }
 
     getCurrent(pathLike: string) {
-        let path = pathLike;
-        if(isUri(path)) {
-            path = getFileFsPath(pathLike);
-        }
+        let path = getFileFsPath(pathLike);
+        this.connection?.console.log(`get file at path = '${path}'`);
         return this.currentMap.get(path.toLowerCase());
+    }
+
+    getStore(pathLike: string) {
+        let path = getFileFsPath(pathLike);
+        return this.storedMap.get(path.toLowerCase());
+    }
+
+    getStartNode() {
+        return this.startNode;
     }
 
     dispose() {

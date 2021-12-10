@@ -7,6 +7,7 @@ handler.init().then(() => {
     const runPath = join(handler.folderPath, "Run.mrs");
     handler.setStart(runPath);
     handler.parse();
+    let file = handler.getCurrent(runPath);
 });
 console.log("end");
 

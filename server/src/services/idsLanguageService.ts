@@ -66,7 +66,6 @@ export class IdsLanguageService {
         this.connection.onSignatureHelp(this.onSignatureHelp.bind(this));
         this.connection.onCodeAction(this.onCodeAction.bind(this));
         this.connection.onRenameRequest(this.onRenameRequest.bind(this));
-        this.connection.console.log("Handlers Setup Complete.");
     }
 
     dispose() {
@@ -97,14 +96,13 @@ export class IdsLanguageService {
             while (!this.projects.has(projectRoot)) {
                 await new Promise(resolve => { setTimeout(resolve, 200); });
             }
-            this.connection.console.log("get project: " + fsPath);
-            return this.projects.get(fsPath);
+            return this.projects.get(projectRoot);
         }
         const workDoneProcess = await this.connection.window.createWorkDoneProgress();
         workDoneProcess.begin(`载入项目: ${projectRoot}`);
         this.loadingProjects.add(projectRoot);
         const project = await createProjectService(projectRoot, this.connection, this.documentService);
-        this.projects.set(fsPath, project);
+        this.projects.set(projectRoot, project);
         workDoneProcess.done();
         return project;
     }
@@ -209,7 +207,6 @@ export class IdsLanguageService {
         this.documentService.onDidClose(async listener => {
             this.connection.sendDiagnostics({ uri: listener.document.uri, diagnostics: [] });
         });
-        this.connection.console.log("Document Serice initialized.");
     }
 
 }
