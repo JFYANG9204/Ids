@@ -1,6 +1,7 @@
 import {
     CodeAction,
     CodeActionParams,
+    CompletionItem,
     CompletionList,
     CompletionParams,
     Connection,
@@ -61,7 +62,8 @@ export async function createProjectService(
         async onCompletion({ textDocument, position }) {
             let file = fileHandler.getStore(textDocument.uri);
             let document = documentService.getDocument(textDocument.uri);
-            return await getCompletionAtPostion(position, document, file);
+            connection.console.log(`get current file at '${file?.loc.fileName}'`);
+            return await getCompletionAtPostion(position, document, file, text => connection.console.log(text));
         },
         async onHover({ textDocument, position }) {
             let file = fileHandler.getCurrent(textDocument.uri);
@@ -96,7 +98,6 @@ export async function createProjectService(
             fileHandler.setStart(document.uri);
             fileHandler.parse();
             let file = fileHandler.getCurrent(document.uri);
-            connection.console.log(`get current file at '${file?.loc.fileName}'`);
             if (file) {
                 return raiseErrors(document, file);
             }

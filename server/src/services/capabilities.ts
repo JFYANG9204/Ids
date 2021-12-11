@@ -815,8 +815,10 @@ const EMPTY_COMPLETIONLIST = CompletionList.create([], true);
 
 export { EMPTY_COMPLETIONLIST };
 
-async function getCompletionAtPostion(position: Position, textDocument?: TextDocument,
-    file?: File, usedList?: CompletionList) : Promise<CompletionList> {
+async function getCompletionAtPostion(position: Position,
+    textDocument?: TextDocument,
+    file?: File,
+    test?: (text: string) => void) : Promise<CompletionList> {
 
     if (!file || !textDocument) {
         return EMPTY_COMPLETIONLIST;
@@ -824,8 +826,12 @@ async function getCompletionAtPostion(position: Position, textDocument?: TextDoc
 
     let pos = textDocument.offsetAt(position);
     let text = textDocument.getText();
-    let triggerChar = text.charCodeAt(pos);
-    let lastChar = text.charCodeAt(pos - 1);
+    let triggerChar = text.charCodeAt(pos - 1);
+    let lastChar = text.charCodeAt(pos - 2);
+
+    if (test) {
+        test(`pos: ${pos}, trigger: ${String.fromCharCode(triggerChar)}, last: ${String.fromCharCode(lastChar)}`);
+    }
 
     if (triggerChar === charCodes.numberSign) {
         return CompletionList.create(preKeywordsCompletions, false);
@@ -873,9 +879,7 @@ async function getCompletionAtPostion(position: Position, textDocument?: TextDoc
         completions.push(...getCompletionsFromScope(info.funcNode.scope));
         inFunction = true;
     }
-    if (usedList) {
-        completions.push(...usedList.items);
-    } else if (info.eventNode) {
+    if (info.eventNode) {
         completions.push(...getCompletionsFromScope(info.eventNode.scope, inFunction));
     } else {
         completions.push(...getCompletionsFromScope(file.scope, inFunction));
