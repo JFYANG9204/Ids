@@ -28,7 +28,7 @@ import {
 }
 
 /**
- * 从最外围节点向对应位置便利，并执行回调函数
+ * 从最外围节点向对应位置遍历，并执行回调函数
  * @param node 节点
  * @param pos 搜索位置
  * @param callback 节点操作

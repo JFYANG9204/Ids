@@ -842,7 +842,7 @@ async function getCompletionAtPostion(position: Position,
     if (info.preInclude &&
         (triggerChar === charCodes.backslash || triggerChar === charCodes.slash)) {
         if (distanceTo(info.preInclude.inc, pos - 1) === 0) {
-            return CompletionList.create(getPathCompletion(info.preInclude.path), true);
+            return CompletionList.create(getPathCompletion(info.preInclude.path), false);
         }
         return EMPTY_COMPLETIONLIST;
     }
@@ -856,17 +856,30 @@ async function getCompletionAtPostion(position: Position,
             if (info.withNode) {
                 let withDec: DeclarationBase = info.withNode.extra["declaration"];
                 if (withDec) {
-                    return CompletionList.create(getMemberCompletions(withDec, file), true);
+                    return CompletionList.create(getMemberCompletions(withDec, file), false);
                 }
             }
             return EMPTY_COMPLETIONLIST;
 
         }
 
+        if (info.caller) {
+            let dec: DeclarationBase = info.caller.extra["declaration"];
+            if (test) {
+                test(`definition: ${dec.name.name}`);
+            }
+            if (dec) {
+                return CompletionList.create(getMemberCompletions(dec, file), false);
+            }
+        }
+
         if (info.id) {
             let dec: DeclarationBase = info.id.extra["declaration"];
+            if (test) {
+                test(`definition: ${dec.name.name}`);
+            }
             if (dec) {
-                return CompletionList.create(getMemberCompletions(dec, file), true);
+                return CompletionList.create(getMemberCompletions(dec, file), false);
             }
         }
 
@@ -936,10 +949,10 @@ async function getSignatureHelpAtPostion(position: Position,
     }
 
     let pos = textDocument.offsetAt(position);
-    let info = positionAtInfo(file.program.body, pos - 1);
+    let info = positionAtInfo(file.program.body, pos);
     let func: DeclarationBase;
     if (info.caller instanceof CallExpression &&
-        ((func = info.caller.extra["declaration"]) instanceof FunctionDeclaration)) {
+        ((func = info.caller.callee.extra["declaration"]) instanceof FunctionDeclaration)) {
 
         let note = func.name.name + "(";
         let paramInfo: ParameterInformation[] = [];
@@ -956,8 +969,14 @@ async function getSignatureHelpAtPostion(position: Position,
         note += "): " + (func.binding ?
             (typeof func.binding === "string" ? func.binding : func.binding.name.name) :
             "Void");
-        let signatureInfo = SignatureInformation.create(note,
-            getDeclarationNote(func), ...paramInfo);
+        let signatureInfo: SignatureInformation = {
+            label: note,
+            documentation: {
+                kind: MarkupKind.Markdown,
+                value: getDeclarationNote(func, false)
+            },
+            parameters: paramInfo
+        };
         let callByDot = info.caller.callee.extra["callByDot"];
         signatureInfo.activeParameter = callByDot ? info.caller.arguments.length + 1 : info.caller.arguments.length;
         return {
@@ -981,7 +1000,7 @@ async function getReferenceAtPosition(position: Position,
     }
 
     let pos = textDocument.offsetAt(position);
-    let info = positionAtInfo(file.program.body, pos);
+    let info = positionAtInfo(file.program.body, pos - 1);
 
     let dec: DeclarationBase;
     if (!info.id || !(dec = info.id.extra["declaration"])) {

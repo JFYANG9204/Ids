@@ -225,12 +225,10 @@ export class FileHandler {
                 }
             });
             let lowerPath = this.startNode.fsPath.toLowerCase();
-            if (!file.esc) {
-                if (this.currentMap.has(lowerPath)) {
-                    this.storedMap.set(lowerPath, this.currentMap.get(lowerPath)!);
-                } else if (!this.storedMap.has(lowerPath)) {
-                    this.storedMap.set(lowerPath, file);
-                }
+            if (this.currentMap.has(lowerPath)) {
+                this.storedMap.set(lowerPath, this.currentMap.get(lowerPath)!);
+            } else if (!this.storedMap.has(lowerPath)) {
+                this.storedMap.set(lowerPath, file);
             }
             this.currentMap.set(lowerPath, file);
             return file;
