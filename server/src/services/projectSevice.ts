@@ -1,7 +1,6 @@
 import {
     CodeAction,
     CodeActionParams,
-    CompletionItem,
     CompletionList,
     CompletionParams,
     Connection,
