@@ -236,14 +236,13 @@ export class FileHandler {
     }
 
     getCurrent(pathLike: string) {
-        let path = getFileFsPath(pathLike);
+        let path = isUri(pathLike) ? getFileFsPath(pathLike) : pathLike;
         this.connection?.console.log(`get file at path = '${path}'`);
-        return this.currentMap.get(path.toLowerCase());
-    }
-
-    getStore(pathLike: string) {
-        let path = getFileFsPath(pathLike);
-        return this.storedMap.get(path.toLowerCase());
+        let cur = this.currentMap.get(path.toLowerCase());
+        if (cur?.esc) {
+            return this.storedMap.get(path.toLowerCase());
+        }
+        return cur;
     }
 
     getStartNode() {

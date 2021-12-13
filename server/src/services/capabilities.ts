@@ -1,5 +1,5 @@
 import { existsSync, readdirSync } from "fs";
-import { isAbsolute, resolve } from "path";
+import { dirname, isAbsolute, resolve } from "path";
 import {
     CodeAction,
     CodeActionContext,
@@ -839,11 +839,19 @@ async function getCompletionAtPostion(position: Position,
 
     let info = positionAtInfo(file.program.body, pos - 1);
     // #include "path"
-    if (info.preInclude &&
-        (triggerChar === charCodes.backslash || triggerChar === charCodes.slash)) {
+    if (info.preInclude){
         if (distanceTo(info.preInclude.inc, pos - 1) === 0) {
-            return CompletionList.create(getPathCompletion(info.preInclude.path), false);
+            if (triggerChar === charCodes.backslash || triggerChar === charCodes.slash) {
+                return CompletionList.create(getPathCompletion(info.preInclude.path), false);
+            }
+            if (triggerChar === charCodes.quotationMark) {
+                return CompletionList.create(getPathCompletion(dirname(info.preInclude.loc.fileName)));
+            }
         }
+        return EMPTY_COMPLETIONLIST;
+    }
+
+    if (triggerChar === charCodes.quotationMark) {
         return EMPTY_COMPLETIONLIST;
     }
 

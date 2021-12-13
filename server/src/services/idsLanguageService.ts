@@ -165,7 +165,7 @@ export class IdsLanguageService {
                 workspaceFolders: { supported: true, changeNotifications: true },
                 fileOperations: { willRename: { filters: [{ pattern: { glob: "**/*.{mrs,dms,ini,inc}" } }] } }
             },
-            completionProvider: { resolveProvider: true, triggerCharacters: [".", "\\", "/", "#"] },
+            completionProvider: { resolveProvider: true, triggerCharacters: [".", "\\", "/", "#", "\""] },
             signatureHelpProvider: { triggerCharacters: [ "(", "," ] },
             codeActionProvider: {
                 codeActionKinds: [

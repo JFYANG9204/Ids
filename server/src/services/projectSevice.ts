@@ -59,7 +59,7 @@ export async function createProjectService(
             return fileHandler.folderPath;
         },
         async onCompletion({ textDocument, position }) {
-            let file = fileHandler.getStore(textDocument.uri);
+            let file = fileHandler.getCurrent(textDocument.uri);
             let document = documentService.getDocument(textDocument.uri);
             connection.console.log(`get current file at '${file?.loc.fileName}'`);
             return await getCompletionAtPostion(position, document, file, text => connection.console.log(text));
