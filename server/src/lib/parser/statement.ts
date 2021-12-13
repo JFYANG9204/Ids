@@ -1350,6 +1350,13 @@ export class StatementParser extends ExpressionParser {
         return this.finishNode(node, "PreUndefStatement");
     }
 
+    findAllReferenceFiles(mark: string) {
+        if (!this.searchParserNode) {
+            return undefined;
+        }
+        const thisNode = this.searchParserNode(this.options.sourceFileName);
+    }
+
     // #include "filename"
     parsePreIncludeStatement(metadata?: boolean): PreIncludeStatement {
         const node = this.startNode(PreIncludeStatement);

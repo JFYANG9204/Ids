@@ -1,7 +1,4 @@
-import {
-    MarkDownCommentType,
-    Options
-} from "../options";
+import { Options } from "../options";
 import { ParsingError } from "../parser/errors";
 import {
     Comment,
@@ -24,7 +21,6 @@ export class State {
         }
         this.curLine = options.startLine;
         this.startLoc = this.endLoc = this.curPostion();
-        this.markDownCommentType = options.commentType;
         this.globalType = options.globalType;
         this.globalVarName = options.globalVarName;
         this.raiseTypeError = options.raiseTypeError;
@@ -60,9 +56,6 @@ export class State {
     commentStack: Array<CommentWhitespace> = [];
 
     includes: Map<string, File> = new Map();
-
-    //
-    markDownCommentType: MarkDownCommentType;
 
     // 行标记集合
     lineMarks: Map<string, LineMark> = new Map();

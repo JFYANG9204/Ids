@@ -7,55 +7,70 @@ export enum SourceType {
     declare
 }
 
-export enum MarkDownCommentType {
-    inner,
-    leading,
-}
-
 export enum ScriptFileType {
     dms,
     mrs
 }
 
 export interface Options {
+    /**
+     * `Parser`所对应文件的Vscode URI
+     */
     uri: string;
+    /**
+     * 是否提示类型错误，此配置并不会跳过类型检查步骤，只是会抑制类型错误的生成
+     */
     raiseTypeError: boolean;
+    /**
+     * 是否提示路径错误，仅指`#include`语句对应的路径问题
+     */
     raisePathError: boolean;
+    /**
+     * 源文件脚本类型
+     * + `script`: 执行脚本文件
+     * + `declare`: 类型声明文件
+     * + `metadata`: 元数据文件
+     */
     sourceType: SourceType;
-    sourceFileName?: string;
+    /**
+     * 配置文件原始路径
+     */
+    sourceFileName: string;
+    /**
+     * 文件脚本类型
+     * + `mrs`: 此类型文件中，脚本不限制在`EventSection`模块中书写
+     * + `dms`: 此类型文件中，脚本需要处于`EventSection`中，不在其中会抛出错误
+     */
     scriptFileType: ScriptFileType;
+    /**
+     * 解析开始位置，一般为0
+     */
     startLine: number;
+    /**
+     * 是否将未知变量视为一般元数据类型，一般应用于`OnNextCase`中
+     */
     treatUnkownAsQuesion?: boolean;
+    /**
+     * 是否保存词法分析时的`Token`对象
+     */
     tokens: boolean;
+    /**
+     * 文件遇到一般错误时，是否直接跳出，如果此选项为True，不会直接跳出
+     */
     errorRecovery: boolean;
-    commentType: MarkDownCommentType;
+    /**
+     * 全局变量名称，用于在文件外的`WithStatement`定义
+     */
     globalVarName?: string;
+    /**
+     * 全局变量定义，用于存储在文件外的`WithStatement`具体声明
+     */
     globalType?: DeclarationBase;
+    /**
+     * 全局定义，用于存储在文件外的`EventSection`对应的本地定义
+     */
     globalDeclarations?: Scope;
     inGraph?: boolean;
-};
-
-
-export const defaultOptions: Options = {
-
-    uri: "",
-
-    raiseTypeError: true,
-    raisePathError: true,
-    // metadata定义文件或script脚本文件
-    sourceType: SourceType.script,
-    // dms/mrs 文件
-    scriptFileType: ScriptFileType.mrs,
-    // 起始行号
-    startLine: 1,
-    // 保存读取后的Token
-    tokens: false,
-    // 遇到错误不会立即结束，并会尝试返回恢复策略
-    errorRecovery: true,
-    // script脚本中将未定义的标识符视为IQuestion
-    treatUnkownAsQuesion: true,
-    // 加入代码提示的注释未知
-    commentType: MarkDownCommentType.inner,
 };
 
 export function createBasicOptions(
@@ -75,7 +90,6 @@ export function createBasicOptions(
         tokens: false,
         errorRecovery: true,
         treatUnkownAsQuesion: true,
-        commentType: MarkDownCommentType.inner,
         globalDeclarations: global,
         inGraph: graph
     };
