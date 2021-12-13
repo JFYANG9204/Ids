@@ -20,7 +20,7 @@ export function getFsPathToUri(fsPath: string) {
     return URI.file(fsPath).toString();
 }
 
-export function isUri(pathLike: string) {
+export function isFileUri(pathLike: string) {
     return pathLike.startsWith("file");
 }
 

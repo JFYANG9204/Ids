@@ -14,7 +14,7 @@ import {
     getMacroFromBatFile,
     readAllUsefulFileInFolder
 } from "./load";
-import { getFileFsPath, getFsPathToUri, isUri } from "./path";
+import { getFileFsPath, getFsPathToUri, isFileUri, normalizeFileNameResolve } from "./path";
 
 
 
@@ -90,7 +90,7 @@ export class FileHandler {
             globalMap: Map<string, FileNode>,
             isMark: boolean = false) {
 
-            const fullPath = join(dirname(node.fsPath), incPath).toLowerCase();
+            const fullPath = normalizeFileNameResolve(dirname(node.fsPath), incPath).toLowerCase();
             const existNode = globalMap.get(fullPath);
             if (existNode) {
                 if (isMark) {
@@ -114,7 +114,7 @@ export class FileHandler {
     }
 
     update(pathLike: string, content: string) {
-        let path = isUri(pathLike) ? getFileFsPath(pathLike) : pathLike;
+        let path = isFileUri(pathLike) ? getFileFsPath(pathLike) : pathLike;
         let exist = this.fileNodes.get(path.toLowerCase());
         if (!exist) {
             return;
@@ -123,6 +123,13 @@ export class FileHandler {
 
         let refMark = getFileReferenceMark(content);
         if (refMark === undefined) {
+            if (exist.referenceMark) {
+                let existRefPath = normalizeFileNameResolve(dirname(exist.fsPath), exist.referenceMark.path).toLowerCase();
+                let refNode = exist.references.get(existRefPath);
+                refNode?.includes.delete(path);
+                exist.references.delete(existRefPath);
+                this.connection?.console.log(`set reference: ${JSON.stringify(refMark)}, full path: ${existRefPath}`);
+            }
             if (exist.references.size === 0) {
                 exist.isVertex = true;
                 exist.startNode = undefined;
@@ -130,19 +137,23 @@ export class FileHandler {
             return;
         }
 
-        const refPath = join(dirname(exist.fsPath), refMark.path).toLowerCase();
+        const refPath = normalizeFileNameResolve(dirname(exist.fsPath), refMark.path).toLowerCase();
         const find = this.fileNodes.get(refPath);
-        if (find && !find.includes.has(path.toLowerCase())) {
+        if (find) {
             find.includes.set(path.toLowerCase(), exist);
             exist.references.set(refPath, find);
+            this.connection?.console.log(`set new reference: ${refPath}`);
         }
+
+        exist.isVertex = false;
 
         if (!exist.referenceMark) {
             exist.referenceMark = refMark;
+            this.connection?.console.log(`set reference: ${JSON.stringify(refMark)}, full path: ${refPath}`);
             return;
         }
 
-        const oldPath = join(dirname(path), exist.referenceMark.path).toLowerCase();
+        const oldPath = normalizeFileNameResolve(dirname(path), exist.referenceMark.path).toLowerCase();
         if (oldPath === refPath) {
             return;
         }
@@ -151,16 +162,17 @@ export class FileHandler {
         exist.references.get(oldPath)?.includes.delete(path.toLowerCase());
         exist.references.delete(oldPath);
         exist.referenceMark = refMark;
+        this.connection?.console.log(`delete old reference: ${JSON.stringify(refMark)}, full path: ${oldPath}`);
     }
 
     get(pathLike: string) {
-        let path = isUri(pathLike) ? getFileFsPath(pathLike) : pathLike;
+        let path = isFileUri(pathLike) ? getFileFsPath(pathLike) : pathLike;
         return this.fileNodes.get(path.toLowerCase());
     }
 
     setStart(pathLike: string) {
         this.startNode = undefined;
-        let path = isUri(pathLike) ? getFileFsPath(pathLike) : pathLike;
+        let path = isFileUri(pathLike) ? getFileFsPath(pathLike) : pathLike;
         let find = this.get(pathLike);
         if (!find) {
             this.connection?.console.log(`filehandler setstart failed at path = '${path}'`);
@@ -241,8 +253,8 @@ export class FileHandler {
     }
 
     getCurrent(pathLike: string, getStore = true) {
-        let path = isUri(pathLike) ? getFileFsPath(pathLike) : pathLike;
-        this.connection?.console.log(`get file at path = '${path}'`);
+        let path = isFileUri(pathLike) ? getFileFsPath(pathLike) : pathLike;
+        // this.connection?.console.log(`get file at path = '${path}'`);
         let cur = this.currentMap.get(path.toLowerCase());
         if (cur?.esc && getStore) {
             return this.storedMap.get(path.toLowerCase());

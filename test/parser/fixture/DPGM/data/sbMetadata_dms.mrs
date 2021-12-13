@@ -1,5 +1,5 @@
 
-DP_wave "" categorical[..1
+DP_wave "" categorical[..1]
 {
     v1 "Wave 1-2021 Jul",
     v2 "Wave 2-2021 Aug"

@@ -278,6 +278,13 @@ export class ScopeHandler {
         name: string,
         node: DeclarationBase
     ) {
+        if (node instanceof MetadataBase) {
+            if (this.isRedeclared(scope, name, true)) {
+                this.raise(node.name, ErrorMessages["VarRedeclaration"], false, name);
+                return true;
+            }
+            return false;
+        }
         if (this.inClassOrInterface ||
             this.inEnumerator       ||
             this.inFunction) {
@@ -296,8 +303,11 @@ export class ScopeHandler {
         return false;
     }
 
-    isRedeclared(scope: Scope, name: string) {
+    isRedeclared(scope: Scope, name: string, metadata = false) {
         const checkName = name.toLowerCase();
+        if (metadata) {
+            return scope.metadata.has(checkName);
+        }
         return scope.consts.has(checkName)    ||
                scope.dims.has(checkName)      ||
                scope.macros.has(checkName);
