@@ -96,7 +96,7 @@ export async function createProjectService(
             fileHandler.update(document.uri, document.getText());
             fileHandler.setStart(document.uri);
             fileHandler.parse();
-            let file = fileHandler.getCurrent(document.uri);
+            let file = fileHandler.getCurrent(document.uri, false);
             if (file) {
                 return raiseErrors(document, file);
             }

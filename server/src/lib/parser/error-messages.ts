@@ -51,6 +51,7 @@ export const ErrorMessages: ErrorTemplates = makeErrorTemplates({
     UnexpectedToken:                 "不应为 '%0'.",
     UnterminatedComment:             "未终结的块注释.",
     UnterminatedString:              "未终结的字符串.",
+    UnterminatedSection:             "未终结的语句块.",
     UnmatchedVarType:                "类型为'%0'的值不能分配给类型为'%1'的变量.",
     UnmatchedIndexType:              "没有登记为'%0'的索引类型.",
     UnknownMetadataProperty:         "未知名为'%0'的元数据属性.",
@@ -83,6 +84,7 @@ export const ErrorMessages: ErrorTemplates = makeErrorTemplates({
     MetadataRangeDontAllowExclude:      "此类型元数据区间不允许使用排除符'^'.",
     MetadataRangeDontAllowStep:         "此类型元数据区间不允许使用'step'.",
     MetadataRangeDontAllowSingle:       "此类型元数据区间不允许使用单值.",
+    MetadataRangeDontAllowDecimal:      "此处应使用正整数.",
     MetadataInvalidUsageType:           "无效的元数据使用类型.",
     MetadataUnkownProperty:             "未知的元数据属性.",
     MetadataInvalidCategoryElementType: "未知的元数据Category元素类型.",
@@ -93,6 +95,7 @@ export const ErrorMessages: ErrorTemplates = makeErrorTemplates({
     MetadataDontAllowValueRange:        "元数据类型不允许设置取值区间.",
     MetadataParamSequenceError:         "元数据参数'%0'应在'%1'之前.",
     MetadataLackNecessaryProperty:      "缺少必需的元数据属性'%0'.",
+    MeatdataUnterminatedParen:          "未终结Metadata语句块."
 }, "DATACOLLECTION_SCRIPT_PARSER_SYNTAX_ERROR");
 
 export const WarningMessages: ErrorTemplates = makeErrorTemplates({

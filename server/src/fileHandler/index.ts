@@ -240,12 +240,31 @@ export class FileHandler {
         }
     }
 
-    getCurrent(pathLike: string) {
+    getCurrent(pathLike: string, getStore = true) {
         let path = isUri(pathLike) ? getFileFsPath(pathLike) : pathLike;
         this.connection?.console.log(`get file at path = '${path}'`);
         let cur = this.currentMap.get(path.toLowerCase());
-        if (cur?.esc) {
+        if (cur?.esc && getStore) {
             return this.storedMap.get(path.toLowerCase());
+        }
+        if (!cur) {
+            let node = this.get(pathLike);
+            let content;
+            if (!node) {
+                return undefined;
+            }
+            content = node.content;
+            let parser = new Parser(createBasicOptions(path, false, undefined, this.global), content);
+            parser.catchFileTypeMarkFunction = getFileTypeMark;
+            parser.searchParserNode = this.get.bind(this);
+            let file = parser.parse();
+            this.currentMap.set(path.toLowerCase(), file);
+            if (!file.esc) {
+                this.storedMap.set(path.toLowerCase(), file);
+            }
+            node.file = file;
+            node.parser = parser;
+            return file;
         }
         return cur;
     }

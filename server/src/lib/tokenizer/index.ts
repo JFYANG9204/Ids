@@ -537,7 +537,8 @@ export class Tokenizer extends ErrorParser {
 
     readToken_dot() {
         const next = this.input.charCodeAt(this.state.pos + 1);
-        if (charCodes.isDigit(next)) {
+        const last = this.input.charCodeAt(this.state.pos - 1);
+        if (charCodes.isDigit(next) && last !== charCodes.dot) {
             this.readNumber(true);
             return;
         }

@@ -247,6 +247,8 @@ export class StatementParser extends ExpressionParser {
                 node
             );
         }
+        this.unexpected(undefined, undefined, undefined, false);
+        this.next();
     }
 
     //skipNewline() {
@@ -1715,6 +1717,10 @@ export class StatementParser extends ExpressionParser {
             node => {
                 let hasConnStr = false;
                 while (!this.match(tt._end)) {
+                    if (this.match(tt.eof)) {
+                        this.raiseAtNode(node, ErrorMessages["UnterminatedSection"], false);
+                        break;
+                    }
                     const text = this.state.value.toLowerCase();
                     this.next();
                     this.expect(tt.equal);
@@ -1812,6 +1818,10 @@ export class StatementParser extends ExpressionParser {
                 const hasinputAsOutput = false;
                 let order;
                 while (!this.match(tt._end)) {
+                    if (this.match(tt.eof)) {
+                        this.raiseAtNode(node, ErrorMessages["UnterminatedSection"], false);
+                        break;
+                    }
                     const text = this.state.value.toLowerCase();
                     this.next();
                     this.expect(tt.equal);
@@ -1904,6 +1914,10 @@ export class StatementParser extends ExpressionParser {
         return this.parseEventBase(
             node => {
                 while (!this.match(tt._end)) {
+                    if (this.match(tt.eof)) {
+                        this.raiseAtNode(node, ErrorMessages["UnterminatedSection"], false);
+                        break;
+                    }
                     const text = this.state.value.toLowerCase();
                     this.next();
                     this.expect(tt.equal);
@@ -1970,6 +1984,10 @@ export class StatementParser extends ExpressionParser {
                     const start = this.state.pos;
                     const startPos = this.state.curPostion();
                     while (!this.matchOne([ tt.comma, tt.braceR ])) {
+                        if (this.match(tt.eof)) {
+                            this.raiseAtNode(node, ErrorMessages["UnterminatedSection"], false);
+                            break;
+                        }
                         this.next();
                     }
                     const lang = this.input.slice(start, this.state.pos);
@@ -2009,7 +2027,7 @@ export class StatementParser extends ExpressionParser {
 
     raiseErrorAndSkipLine(node: NodeBase, template: ErrorTemplate, ...params: any) {
         this.raiseAtNode(node, template, false, params);
-        while (!this.hasPrecedingLineBreak()) {
+        while (!this.hasPrecedingLineBreak() && !this.match(tt.eof)) {
             this.next();
         }
     }
@@ -2020,6 +2038,10 @@ export class StatementParser extends ExpressionParser {
         callback: (node: T) => void) {
         let comma = false;
         while (this.eat(close)) {
+            if (this.match(tt.eof)) {
+                this.raiseAtNode(node, ErrorMessages["MeatdataUnterminatedParen"], false);
+                break;
+            }
             if (this.match(tt.comma)) {
                 if (comma) {
                     this.raise(
@@ -2057,6 +2079,7 @@ export class StatementParser extends ExpressionParser {
     // <Properties> ::= ( [ AreaName: ] [ <property> (, <property> )* ] )*
     parseMetaCustomProperties(close: TokenType = tt.bracketR): MetadataProperty[] {
         const props: MetadataProperty[] = [];
+        let start = this.state.pos;
         this.next();
         while (!this.eat(close)) {
             if (this.match(tt.comma)) {
@@ -2064,6 +2087,10 @@ export class StatementParser extends ExpressionParser {
             }
             if (!this.match(close)) {
                 props.push(this.parseMetaCustomProperty());
+            }
+            if (this.match(tt.eof)) {
+                this.raiseAtLocation(start, this.state.pos, ErrorMessages["MeatdataUnterminatedParen"], false);
+                break;
             }
         }
         return props;
@@ -2393,6 +2420,9 @@ export class StatementParser extends ExpressionParser {
         const node = this.startNode(MetadataFieldHeadDefinition);
         node.name = this.parseIdentifier();
         while (!this.checkIfHeaderEnd()) {
+            if (this.match(tt.eof)) {
+                break;
+            }
             this.parseMetadataFieldHeaderAtom(node);
         }
         return this.finishNode(node, "MetadataFieldHeaderDefinition");
@@ -2420,6 +2450,9 @@ export class StatementParser extends ExpressionParser {
                 } else {
                     this.unexpected();
                     while (!this.hasPrecedingLineBreak()) {
+                        if (this.match(tt.eof)) {
+                            break;
+                        }
                         this.next();
                     }
                 }
@@ -2428,6 +2461,9 @@ export class StatementParser extends ExpressionParser {
             default:
                 this.unexpected();
                 while (!this.hasPrecedingLineBreak()) {
+                    if (this.match(tt.eof)) {
+                        break;
+                    }
                     this.next();
                 }
                 return;
@@ -2465,6 +2501,10 @@ export class StatementParser extends ExpressionParser {
         this.expect(tt.braceL);
         let param = 1;
         while (!this.match(tt.braceR)) {
+            if (this.match(tt.eof)) {
+                this.raiseAtNode(node, ErrorMessages["MeatdataUnterminatedParen"], false);
+                break;
+            }
             if (this.match(tt.identifier)) {
                 const id = this.parseIdentifier();
                 switch (param) {
@@ -2531,8 +2571,12 @@ export class StatementParser extends ExpressionParser {
         allowSingle?: boolean) {
         const node = this.startNode(MetadataRange);
         let hasEllipse = false;
-        const single = true;
+        let single = true;
         while (!this.matchOne(close)) {
+            if (this.match(tt.eof)) {
+                this.raiseAtNode(node, ErrorMessages["MeatdataUnterminatedParen"], false);
+                break;
+            }
             if (this.match(tt.caret)) {
                 if (allowExclude) {
                     node.exclude = true;
@@ -2545,6 +2589,7 @@ export class StatementParser extends ExpressionParser {
                 this.next();
             } else if (this.match(tt.dot)) {
                 hasEllipse = true;
+                single = false;
                 this.next();
                 this.expect(tt.dot);
             } else if (this.match(tt._step)) {
@@ -2560,10 +2605,12 @@ export class StatementParser extends ExpressionParser {
                 }
             } else {
                 const val = this.expectAndParseNumericLiteral();
-                if (hasEllipse) {
-                    node.max = val;
-                } else {
-                    node.min = val;
+                if (val) {
+                    if (hasEllipse) {
+                        node.max = val;
+                    } else {
+                        node.min = val;
+                    }
                 }
             }
         }
@@ -2588,6 +2635,10 @@ export class StatementParser extends ExpressionParser {
         // 跳过'['
         this.next();
         while (!this.eat(tt.bracketR)) {
+            if (this.match(tt.eof)) {
+                this.raiseAtNode(node, ErrorMessages["MeatdataUnterminatedParen"], false);
+                break;
+            }
             const sub = this.parseMetadataRangeBase(
                 [ tt.bracketR, tt.comma ],
                 allowExclude, allowStep, allowSingle);
@@ -2641,6 +2692,9 @@ export class StatementParser extends ExpressionParser {
                 "字符串"
             );
             while (!this.eat(tt.braceR)) {
+                if (this.match(tt.eof)) {
+                    break;
+                }
                 this.next();
             }
         }
@@ -2651,6 +2705,12 @@ export class StatementParser extends ExpressionParser {
         const node = this.startNode(MetadataSingleHead);
         node.name = this.parseIdentifier();
         while (!this.matchOne(close)) {
+
+            if (this.match(tt.eof)) {
+                this.raiseAtNode(node, ErrorMessages["MeatdataUnterminatedParen"], false);
+                break;
+            }
+
             switch (this.state.type) {
 
                 case tt.string:
@@ -2686,6 +2746,10 @@ export class StatementParser extends ExpressionParser {
             node.fields.push(this.parseMetadataSingleHead([ tt.braceR, tt.semi ]));
             if (this.match(tt.semi)) {
                 this.next();
+            }
+            if (this.match(tt.eof)) {
+                this.raiseAtNode(node, ErrorMessages["MeatdataUnterminatedParen"], false);
+                break;
             }
         }
         return this.finishNode(node, "MetadataHelperFields");
@@ -2747,7 +2811,7 @@ export class StatementParser extends ExpressionParser {
         type?: "categorical" | "boolean" | "text" | "number"
     ): MetadataFieldTailDefinition {
         const node = this.startNode(MetadataFieldTailDefinition);
-        while (!this.matchOne([ tt.semi, tt.braceR ])) {
+        while (!this.matchOne([ tt.semi, tt.braceR, tt.eof ])) {
             this.parseMetadataFieldTailAtom(node, type);
         }
         return this.finishNode(node, "MetadataFieldTailDefinition");
@@ -2997,7 +3061,7 @@ export class StatementParser extends ExpressionParser {
         } else {
             node.name = this.parseIdentifier();
         }
-        while (!this.matchOne([ tt.comma, tt.curlyR ])) {
+        while (!this.matchOne([ tt.comma, tt.curlyR, tt.eof ])) {
             this.parseMetadataCategorySuffixAtom(node);
         }
         return this.finishNode(node, "MetadataCategory");
@@ -3080,11 +3144,16 @@ export class StatementParser extends ExpressionParser {
     parseMetadataCategoryList(): MetadataCategory[] {
         const categories: MetadataCategory[] = [];
         let comma = true;
+        let start = this.state.pos;
         this.expect(tt.curlyL);
         let existCat: string[] = [];
         while (!this.eat(tt.curlyR)) {
             if (!comma) {
                 this.unexpected(undefined, undefined, tt.comma);
+            }
+            if (this.match(tt.eof)) {
+                this.raiseAtLocation(start, this.state.pos, ErrorMessages["MeatdataUnterminatedParen"], false);
+                break;
             }
             const cat = this.parseMetadataCategory();
             if (cat.name instanceof Identifier) {
@@ -3104,7 +3173,7 @@ export class StatementParser extends ExpressionParser {
             if (this.match(tt.comma)) {
                 comma = true;
                 if (this.lookahead().type === tt.curlyR) {
-                    this.unexpected(undefined, undefined, tt.comma);
+                    this.unexpected();
                 }
                 this.next();
             }
@@ -3126,7 +3195,7 @@ export class StatementParser extends ExpressionParser {
         if (!MetadataSublistSuffix.includes(cur)) {
             return this.finishNode(node, "MetadataCategoryList");
         }
-        while (!this.matchOne([ tt.semi, tt.braceR ])) {
+        while (!this.matchOne([ tt.semi, tt.braceR, tt.eof ])) {
             const kw = this.parseIdentifier();
             const kwVal = kw.name.toLowerCase();
             if (MetadataSublistSuffix.includes(kwVal) && existKw) {
@@ -3448,7 +3517,7 @@ export class StatementParser extends ExpressionParser {
 
 
     parseMetadataLoopVariableTail(node: MetadataLoopVariableBase) {
-        while (!this.matchOne([ tt.semi, tt.braceR ])) {
+        while (!this.matchOne([ tt.semi, tt.braceR, tt.eof ])) {
             if (this.match(tt.identifier)) {
                 const kw = this.parseIdentifier();
                 const rowOrColumn = undefined;
@@ -3680,6 +3749,10 @@ export class StatementParser extends ExpressionParser {
         const questions: Array<Identifier> = [];
         let comma = true;
         while (!this.eat(tt.braceR)) {
+            if (this.match(tt.eof)) {
+                this.raiseAtNode(node, ErrorMessages["MeatdataUnterminatedParen"], false);
+                break;
+            }
             if (this.match(tt.identifier)) {
                 if (!comma) {
                     this.unexpected(undefined, undefined, tt.comma, false);
@@ -3716,6 +3789,10 @@ export class StatementParser extends ExpressionParser {
         this.expect(tt.braceL);
         let existId = false, existLabel = false;
         while (!this.eat(tt.braceR)) {
+            if (this.match(tt.eof)) {
+                this.raiseAtNode(node, ErrorMessages["MeatdataUnterminatedParen"], false);
+                break;
+            }
             const kw = this.state.value.toLowerCase();
             if (!this.match(tt.identifier)) {
                 throw this.unexpected();
@@ -3744,6 +3821,9 @@ export class StatementParser extends ExpressionParser {
                         ErrorMessages["MetadataUnkownProperty"],
                         false);
                     while (!this.hasPrecedingLineBreak()) {
+                        if (this.match(tt.eof)) {
+                            break;
+                        }
                         this.next();
                     }
                     break;
@@ -3786,6 +3866,10 @@ export class StatementParser extends ExpressionParser {
         let hasConnstr = false, hasTable = false, hasColumn = false;
         while (!this.eat(tt.braceR)) {
             const kw = this.state.value.toLowerCase();
+            if (this.match(tt.eof)) {
+                this.raiseAtNode(node, ErrorMessages["MeatdataUnterminatedParen"], false);
+                break;
+            }
             if (!this.match(tt.identifier)) {
                 throw this.unexpected();
             }
@@ -3973,6 +4057,10 @@ export class StatementParser extends ExpressionParser {
         this.expect(tt.braceR);
         let rowOrColumn: string | undefined;
         while (!this.match(tt.semi)) {
+            if (this.match(tt.eof)) {
+                this.raiseAtNode(node, ErrorMessages["MeatdataUnterminatedParen"], false);
+                break;
+            }
             const text = this.state.value.toLowerCase();
             let kw;
             switch (text) {
@@ -4061,7 +4149,12 @@ export class StatementParser extends ExpressionParser {
 
     parseMetadataFields() {
         const fields: Map<string, MetadataBase> = new Map;
+        let start = this.state.pos;
         while (!this.match(tt.braceR)) {
+            if (this.match(tt.eof)) {
+                this.raiseAtLocation(start, this.state.pos, ErrorMessages["MeatdataUnterminatedParen"], false);
+                break;
+            }
             let field = this.parseMetadataField();
             fields.set(field.header.name.name.toLowerCase(), field);
             if (!this.eat(tt.semi) && this.lookahead().type !== tt.braceR) {
