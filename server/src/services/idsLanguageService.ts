@@ -98,9 +98,9 @@ export class IdsLanguageService {
             }
             return this.projects.get(projectRoot);
         }
+        this.loadingProjects.add(projectRoot);
         const workDoneProcess = await this.connection.window.createWorkDoneProgress();
         workDoneProcess.begin(`载入项目: ${projectRoot}`);
-        this.loadingProjects.add(projectRoot);
         const project = await createProjectService(projectRoot, this.connection, this.documentService);
         this.projects.set(projectRoot, project);
         workDoneProcess.done();
