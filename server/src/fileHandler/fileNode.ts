@@ -37,11 +37,15 @@ export interface FileNode {
      */
     references: Map<string, FileNode>;
     /**
-     * 引用标记
+     * 当前文件所配置的引用文件标记
+     * @note 需要注意，引用标记可能出现多对一的情况，这种情况下，应当
+     * 在`PreIncludeStatement`解析时，进行轮流解析，以避免文件重复
+     * 解析和文件内可能的变量重复声明问题.
      */
     referenceMark?: FileReferenceMark;
     /**
      * 是否为入口文件
+     * + 入口文件定义: 被引用数为0，`reference.size === 0`
      */
     isVertex: boolean;
     /**

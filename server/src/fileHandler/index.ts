@@ -1,4 +1,4 @@
-import { dirname, join } from "path";
+import { dirname } from "path";
 import { Connection } from "vscode-languageserver";
 import { builtInModule } from "../declaration";
 import { Parser } from "../lib";
@@ -94,7 +94,6 @@ export class FileHandler {
             const existNode = globalMap.get(fullPath);
             if (existNode) {
                 if (isMark) {
-                    existNode.includes.set(nodePath, node);
                     node.references.set(fullPath, existNode);
                     node.isVertex = false;
                     if (existNode.references.size === 0) {
@@ -128,7 +127,7 @@ export class FileHandler {
                 let refNode = exist.references.get(existRefPath);
                 refNode?.includes.delete(path);
                 exist.references.delete(existRefPath);
-                this.connection?.console.log(`set reference: ${JSON.stringify(refMark)}, full path: ${existRefPath}`);
+                this.connection?.console.log(`delete reference: ${existRefPath}`);
             }
             if (exist.references.size === 0) {
                 exist.isVertex = true;

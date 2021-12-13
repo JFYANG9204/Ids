@@ -17,22 +17,22 @@ export enum ScriptFileType {
     mrs
 }
 
-export type Options = {
-    uri: string,
-    raiseTypeError: boolean,
-    raisePathError: boolean,
-    sourceType: SourceType,
-    sourceFileName?: string,
-    scriptFileType: ScriptFileType,
-    startLine: number,
-    treatUnkownAsQuesion?: boolean,
-    tokens: boolean,
-    errorRecovery: boolean,
-    commentType: MarkDownCommentType,
-    globalVarName?: string,
-    globalType?: DeclarationBase,
-    globalDeclarations?: Scope,
-    inGraph?: boolean,
+export interface Options {
+    uri: string;
+    raiseTypeError: boolean;
+    raisePathError: boolean;
+    sourceType: SourceType;
+    sourceFileName?: string;
+    scriptFileType: ScriptFileType;
+    startLine: number;
+    treatUnkownAsQuesion?: boolean;
+    tokens: boolean;
+    errorRecovery: boolean;
+    commentType: MarkDownCommentType;
+    globalVarName?: string;
+    globalType?: DeclarationBase;
+    globalDeclarations?: Scope;
+    inGraph?: boolean;
 };
 
 

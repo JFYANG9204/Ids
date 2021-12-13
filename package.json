@@ -3,7 +3,7 @@
 	"displayName": "Ids",
     "publisher": "YangWei",
     "license": "MIT",
-	"description": "Vscode Support for IBM DataCollection Base Script and Metadata",
+	"description": "IBM DataCollection Base Script and Metadata Support for Vscode",
 	"version": "0.8.2",
 	"engines": {
 		"vscode": "^1.61.0"
