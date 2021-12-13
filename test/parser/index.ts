@@ -1,13 +1,9 @@
-import { join, resolve } from "path";
-import { FileHandler } from "../../server/src/fileHandler";
+import { readdirSync, readFileSync } from "fs";
+import { resolve } from "path";
+import { getFileReferenceMark } from "../../server/src/fileHandler/load";
 
-const path = resolve("./test/parser/fixture/dpgm");
-const handler = new FileHandler(path);
-handler.init().then(() => {
-    const runPath = join(handler.folderPath, "Run.mrs");
-    handler.setStart(runPath);
-    handler.parse();
-    let file = handler.getCurrent(runPath);
-});
+const path = resolve("d:\\Project\\77404181---8次方\\DPGM\\data\\Beast\\Output\\tab.mrs");
+const content = readFileSync(path).toString();
+const mark = getFileReferenceMark(content);
 console.log("end");
 

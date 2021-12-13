@@ -58,6 +58,9 @@ async function readUsefulFiles(paths: string[]) {
                 let info = detect(buffer);
                 content = decode(buffer, info.encoding);
             }
+            if (content.startsWith("Metadata")) {
+                content = "";
+            }
         });
         return createFileNode(uri, fsPath, content);
     }
@@ -129,7 +132,7 @@ export type FileReferenceMark = {
     let match;
     while ((match = regex.exec(content))) {
         const firstLine = content.slice(index, match.index);
-        if (!(/\s*[']+/.test(firstLine))) {
+        if (!(/^\s*[']+/.test(firstLine))) {
             break;
         }
         index = match.index;

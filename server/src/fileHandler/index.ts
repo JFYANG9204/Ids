@@ -55,8 +55,10 @@ export class FileHandler {
         let batMacro = new Map<string, BatMacro>();
         await readAllUsefulFileInFolder(this.folderPath)
         .then(map => {
+            this.connection?.console.log("file paths loading complete.");
             map.forEach(node => {
                 let path = node.fsPath.toLowerCase();
+                this.connection?.console.log(`start loading ${node.fsPath}`);
                 if (path.endsWith(".d.mrs")) {
                     this.declares.set(path, node);
                 } else if (path.endsWith(".bat")) {
@@ -66,10 +68,12 @@ export class FileHandler {
                     this.fileNodes.set(path, node);
                 }
             });
+            this.connection?.console.log("file mark and macro loading complete.");
             let declare = this.loadDeclareFiles(this.declares);
             this.global.join(declare.scope);
             this.declareBatMacros(batMacro, this.global);
             // 构建有向图
+            this.connection?.console.log("start building graph.");
             this.fileNodes.forEach((node, path) => {
                 const refs = getAllIncludeInFile(node.content);
                 refs.forEach(ref => updateFileNodeMap(path, node, ref, this.fileNodes));
@@ -77,6 +81,7 @@ export class FileHandler {
                     updateFileNodeMap(path, node, node.referenceMark.path, this.fileNodes, true);
                 }
             });
+            this.connection?.console.log("file handler initialized.");
         });
 
         function updateFileNodeMap(nodePath: string,
