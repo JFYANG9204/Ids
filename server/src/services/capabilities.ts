@@ -37,7 +37,9 @@ import {
     EnumDeclaration,
     File,
     FunctionDeclaration,
+    Identifier,
     MacroDeclaration,
+    MemberExpression,
     MetadataBase,
     NamespaceDeclaration,
     NodeBase,
@@ -871,10 +873,10 @@ async function getCompletionAtPostion(position: Position,
 
         }
 
-        if (info.caller) {
+        if (info.caller && !(info.caller instanceof MemberExpression && info.caller.object instanceof Identifier)) {
             let dec: DeclarationBase = info.caller.extra["declaration"];
             if (test) {
-                test(`definition: ${dec.name.name}`);
+                test(`caller: ${info.caller}, definition: ${dec.name.name}`);
             }
             if (dec) {
                 return CompletionList.create(getMemberCompletions(dec, file), false);
@@ -884,7 +886,7 @@ async function getCompletionAtPostion(position: Position,
         if (info.id) {
             let dec: DeclarationBase = info.id.extra["declaration"];
             if (test) {
-                test(`definition: ${dec.name.name}`);
+                test(`id: ${info.id.name}, definition: ${dec.name.name}`);
             }
             if (dec) {
                 return CompletionList.create(getMemberCompletions(dec, file), false);
