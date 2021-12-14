@@ -179,6 +179,7 @@ export class StaticTypeChecker extends StatementParser {
                 this.scope.currentScope().currentHeader);
         }
         this.checkBlock(file.program.body);
+        file.scope.join(this.scope.currentScope());
     }
 
     checkBlock(block: BlockStatement | WithStatement | EventSection) {
