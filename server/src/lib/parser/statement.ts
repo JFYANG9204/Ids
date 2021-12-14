@@ -1353,6 +1353,14 @@ export class StatementParser extends ExpressionParser {
         return this.finishNode(node, "PreUndefStatement");
     }
 
+    /**
+     * 对于`#include identifier`的情况，可能出现一对多的情况，
+     * 此方法根据`identifier`的内容，对`FileNode.includes`对象中
+     * 的所有对象进行检索，返回所有符合的`FileNode`，不区分大小写
+     *
+     * @param mark `#include id`中id的内容，不区分大小写
+     * @returns
+     */
     findAllReferenceFiles(mark: string) {
         if (!this.searchParserNode) {
             return undefined;
@@ -1398,22 +1406,25 @@ export class StatementParser extends ExpressionParser {
 
     /**
      * 对于可能的对应多个`FileReferenceMark`的情况，应将所有解析结果`File`保存在
-     * `this.state.includes`对象中， `PreIncludeStatement`对象中仅保存最后一个，
-     * 最后将所有`File`的`Scope`合并并返回
+     * `this.state.includes`对象中，最后将所有`File`返回
      * @param fileNodes
      */
     protected parseIncludeMarksRotation(refNodes: FileNode[]) {
         let scope = new Scope(ScopeFlags.program);
-        let file: File | undefined;
+        let files: File[] = [];
+        let parsers: Parser[] = [];
+        let file: File;
         refNodes.forEach(node => {
             node.parser = this.createParser(node.fsPath, node.content);
             file = node.parser.parse(this.scope.store, true, this.scope.inWith, this.scope.currentEvent);
             node.file = file;
             scope.join(file.scope);
             this.state.includes.set(node.fsPath.toLowerCase(), file);
+            files.push(file);
+            parsers.push(node.parser);
         });
         this.scope.joinScope(scope);
-        return file;
+        return { files, parsers };
     }
 
     // #include "filename"
@@ -1423,6 +1434,7 @@ export class StatementParser extends ExpressionParser {
         const includeFilePath = this.parseExpression();
         this.finishNode(node, "PreIncludeStatement");
         let search;
+        let parser;
         if (includeFilePath instanceof StringLiteral) {
             node.inc = includeFilePath;
             try {
@@ -1433,11 +1445,13 @@ export class StatementParser extends ExpressionParser {
             }
             if (this.searchParserNode &&
                 (search = this.searchParserNode(node.path))) {
-                node.parser = this.createParser(node.path, search.content);
+                parser = this.createParser(node.path, search.content);
+                node.parsers.push(parser);
             } else {
                 let content = this.tryReadFile(node);
                 if (content) {
-                    node.parser = this.createParser(node.path, content);
+                    parser = this.createParser(node.path, content);
+                    node.parsers.push(parser);
                 }
             }
         } else if (includeFilePath instanceof Identifier) {
@@ -1445,29 +1459,31 @@ export class StatementParser extends ExpressionParser {
             if (!findNodes) {
                 return node;
             }
-            let file = this.parseIncludeMarksRotation(findNodes);
-            if (!file) {
+            let parseResult = this.parseIncludeMarksRotation(findNodes);
+            if (!parseResult) {
                 return node;
             }
-            node.file = file;
+            node.files = parseResult.files;
+            node.parsers = parseResult.parsers;
             node.inc = includeFilePath;
             return node;
         }
-        if (node.parser) {
+        if (parser) {
             if (metadata) {
-                node.parser.options.sourceType = SourceType.metadata;
+                parser.options.sourceType = SourceType.metadata;
             }
-            node.parser.fileName = node.parser.options.sourceFileName = node.path;
-            node.parser.searchParserNode = this.searchParserNode;
-            node.file = node.parser.parse(
+            parser.fileName = parser.options.sourceFileName = node.path;
+            parser.searchParserNode = this.searchParserNode;
+            let file = parser.parse(
                 this.scope.store, true, this.scope.inWith, this.scope.currentEvent);
+            node.files.push(file);
             if (search) {
-                search.file = node.file;
-                search.parser = node.parser;
+                search.file = file;
+                search.parser = parser;
             }
-            this.state.includes.set(node.path.toLowerCase(), node.file);
-            this.scope.joinScope(node.file.scope);
-            if (node.file.errors.length > 0 &&
+            this.state.includes.set(node.path.toLowerCase(), file);
+            this.scope.joinScope(file.scope);
+            if (file.errors.length > 0 &&
                 this.options.raisePathError &&
                 !this.checkLeadingCommentOption(node, "ignore-path-error")) {
                 this.raiseAtNode(

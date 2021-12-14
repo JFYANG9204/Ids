@@ -131,6 +131,29 @@ export class ScopeHandler {
         return this.currentScope().flags === ScopeFlags.event;
     }
 
+    backup() {
+
+        let backScope = new Scope(this.currentScope().flags);
+        backScope.join(this.currentScope());
+        backScope.currentHeader = this.currentScope().currentHeader;
+        backScope.withHeader = this.currentScope().withHeader.slice(0);
+
+        let backStore = new Scope(this.store.flags);
+        backStore.join(this.store);
+
+        return { current: backScope, store: backStore };
+    }
+
+    recovery(backup: { current: Scope, store: Scope }) {
+        let scope = this.currentScope();
+        scope.clear();
+        scope.join(backup.current);
+        scope.currentHeader = backup.current.currentHeader;
+        scope.withHeader = backup.current.withHeader.slice(0);
+        this.store.clear();
+        this.store.join(backup.store);
+    }
+
     inSpecialEvent(name: string) {
         if (!this.currentEvent) {
             return false;
@@ -519,11 +542,7 @@ export class ScopeHandler {
         if (!scope) {
             return;
         }
-        if (this.store.size === 0) {
-            this.store = scope;
-            return;
-        }
-        mergeScope(scope, this.inEvent ? this.currentScope() : this.store);
+        mergeScope(scope, this.store);
     }
 
     private insertName(

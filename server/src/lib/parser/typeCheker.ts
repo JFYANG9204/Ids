@@ -84,7 +84,10 @@ export class StaticTypeChecker extends StatementParser {
         return this.finishNodeAt(arrBinding, "BindingDeclarator", arr.end, arr.loc.end);
     }
 
-    checkIncludeFiles() {
+    /**
+     * 检查`#include`文件的函数声明
+     */
+    checkIncludeFilesFunctions() {
         this.state.includes.forEach(file => {
             if (file.scope &&
                 file.treeParent instanceof PreIncludeStatement) {
@@ -439,13 +442,42 @@ export class StaticTypeChecker extends StatementParser {
         }
     }
 
+    /**
+     * `PreIncludeStatement`可能出现对应多个目标文件的情况，对于这种情况，
+     * 需要对所有文件进行轮流检查，且同时使用同一个`Scope`，最后将所有结果`Scope`
+     * 进行合并，作为父级文件的最终`Scope`
+     *
+     * @param pre
+     * @returns
+     */
     checkPreIncludeStatement(pre: PreIncludeStatement) {
-        if (!pre.exist) {
+        if (!pre.exist || pre.files.length === 0) {
             return;
         }
-        this.enterIncludeRaiseFunction(this.createTypeRaiseFunction(pre.file, pre.parser));
-        this.checkFile(pre.file);
-        this.exitIncludeRaiseFunction();
+
+        if (pre.files.length === 1) {
+            let incFile = pre.files[0];
+            this.enterIncludeRaiseFunction(this.createTypeRaiseFunction(incFile, incFile.parser));
+            this.checkFile(incFile);
+            this.exitIncludeRaiseFunction();
+            return;
+        }
+
+        // 对于一对多的情况，分多个文件轮流核对
+        // 保存Scope当前的状态，用于同时多个引入文件时恢复当前状态
+        let backup = this.scope.backup();
+        // 最终结果
+        let finalStore = new Scope(this.scope.store.flags);
+        let finalScope = new Scope(this.scope.currentScope().flags);
+        pre.files.forEach((file, ndx) => {
+            this.scope.recovery(backup);
+            this.enterIncludeRaiseFunction(this.createTypeRaiseFunction(file, pre.parsers[ndx]));
+            this.checkFile(file);
+            this.exitIncludeRaiseFunction();
+            finalStore.join(this.scope.store);
+            finalScope.join(this.scope.currentScope());
+        });
+        this.scope.recovery({ current: finalScope, store: finalStore });
     }
 
     needType(type: string, node: Expression) {

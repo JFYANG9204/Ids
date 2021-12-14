@@ -37,6 +37,14 @@ export class Parser extends StaticTypeChecker {
         this.updateFuncType = this.checkFunctionBody;
     }
 
+    /**
+     *
+     * @param preDef 在解析前需要预先引入的定义，可选
+     * @param isInclude 是否为`PreIncludeStatement`内的引入内容，如果为`true`，会在解析后抑制类型检查，类型检查交由最外层文件完成
+     * @param inWith 是否在`WithStatement`内，如果为`true`，`Program`的`body`属性为`WithStatement`
+     * @param event 是否在`EventSection`内，如果有值，`Program`的`body`属性为`EventSection`
+     * @returns
+     */
     parse(preDef?: Scope, isInclude?: boolean, inWith?: boolean, event?: EventSection): File {
         const file = this.startNode(File);
         if (preDef) {
