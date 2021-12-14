@@ -968,7 +968,7 @@ async function getSignatureHelpAtPostion(position: Position,
         let paramInfo: ParameterInformation[] = [];
         for (let i = 0; i < func.params.length; ++i) {
             const param = func.params[i];
-            let argContent = (param.paramArray ? "..." : "") + getDeclaratorNote(param.declarator);
+            let argContent = (param.paramArray ? "..." : "") + getDeclaratorNote(param.declarator, param.optional);
             paramInfo.push({ label: argContent });
             if (i === 0) {
                 note += argContent;
