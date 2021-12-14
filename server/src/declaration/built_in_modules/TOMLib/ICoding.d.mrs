@@ -1,0 +1,54 @@
+
+Namespace TOMLib
+
+    '!
+    The `Coding` object includes methods that can be used to categorize and band text, numeric, and date variables in the TOM document.
+    !'
+    Interface ICoding Implements Object
+
+        '!
+        Creates or updates a categorized, derived variable object from a DB variable. Database variables usually have underlying MDM types of Text, Long, Double and Date, and cannot be populated directly, thus categorized derived variables must be created instead.
+
+        ### Parameters
+        + `DBVariableFullName`: *String* - The full name of the source DB question. The source variable must belongs to DB variable types (DB Array, Single Response DBQ or Multiple Response DBQ).
+        + `NewVariableName`: *String* - The name of the new variable. If the source DB question is not of type DB Array and NewVariableName is empty, the new variable is added as a helper field for the source variable, with name "DBCodes". If the source DB question is not of type DB Array and `NewVariableName` is of the form `SourceVariableName.NewName` or `.NewName`, the new variable is added as a helper field for the source variable, with NewName as its name. If the source DB question is not of type DB Array and `NewVariableName` is of the form "NewName", the new variable is added at the same level as the source variable with the given name. If the source DB question is of type DB Array, then the new variable is (and must be) added into the Fields collection of the DB Array with `NewVariableName` as its name, and NewVariableName should not contain ".".
+        + `MaxCategories`: *Long* - The maximum number of categories to generate. -1 indicates no maximum. The maximum number of categories does not include the 'other' categories.
+        + `GenerateOtherCategory`: *Boolean* - Indicates whether or not to generate an 'other' category for uncategorized data. By default, an 'other' category is generated.
+        + `SaveVariable`: *Boolean* - Indicates whether or not to save the new variable to the MTD.
+
+        ### Remarks
+        If the derived variable with name `NewVariableName` already exists, this method will update the existing derived variable by adding new elements and updating changed properties of existed elements, but not deleting removed elements. In this situation, parameter `MaxCategories`, `GenerateOtherCategory` and `SaveVariable` will not have any effect.
+        If the derived variable with name `NewVariableName` does not exist, this method will create a new derived variable.
+        If you want to create a new derived variable but it already exists, just delete the existing derived variable and call this method again.
+        !'
+        Function CreateCategorizedDBVariable(DBVariableFullName As String, Optional NewVariableName As String = "", Optional MaxCategories As Long = -1, Optional GenerateOtherCategory As Boolean = 1, Optional SaveVariable As Boolean = 1) As Variant
+        End Function
+
+        '!
+        Creates and returns a categorized, derived variable object.
+
+        ### Parameters
+        + `SourceVariableName`: *String* - The source variable's full name. The source variable data type must be *Text*, *Long*, *Double*, or *Date*.
+        + `NewVariableName`: *String* - The new variable's name. If the input value is empty, the new variable is added as a helper field for the source variable, with name "Codes". If the input value is of the form `SourceVariableName.NewName` or `.NewName`, the new variable is added as a helper field for the source variable, with name `NewName`. If the input value is of the form "NewName", the new variable is added at the same level as the source variable with the given name.
+        + `NewCategoryLabelFormat`: *String* - The new variable's category label format string. A named insertion of '{value}' in this arugument will be replaced by a value that is queried from the source variable. It is also possible to use a format option. For more information, refer to the Label Text Insertion topic and Format topic in the Data Collection Developer Library. e.g. "{value:U}".
+        + `CategorizationExpression`: *String* - The expression used to categorize the values in the source variable, e.g. `name`, `name.left(3)`. The default value is the source variable name. The new variable's categories are generated using the query statement `SELECT DISTINCT [CategorizationExpression] FROM [TABLE] ORDER BY [CategorizationExpression]`; If the table document's dataview is VDATA, the queried table is VDATA. Otherwise, the queried table is HDATA and the level is the same level as the source variable. The new variable's expression is `Categorize([CategorizationExpression], "[NewVariableRelativeName]")`.
+        + `MaxCategories`: *Long* - The maximum number of categories to generate. -1 indicates no maximum. The maximum number of categories does not include the 'other' or 'NoAnswer' categories.
+        + `GenerateOtherCategory`: *Boolean* - Indicates whether to generate an 'other' category for uncategorized data. By default, an 'other' category is generated.
+        + `GenerateNoAnswerCategory`: *Boolean* - Indicates whether to generate a 'NoAnswer' category for empty or NULL data. By default, a 'NoAnswer' category is not created and empty or NULL data is returned as NULL (not asked).
+        + `NoAnswerCategoryLabel`: *String* - The 'NoAnswer' category label.
+
+        ### Remarks
+        This method creates a derived variable that categorizes a text, numeric, or date variable. By default a category is created for each unique value in the source variable, but an expression can be used to control how the variable is categorized. The new variable is created with the supplied name and label and is added to the tables document.
+        !'
+        Function CreateCategorizedVariable(SourceVariableName As String, Optional NewVariableName As String = "", Optional NewCategoryLabelFormat As String = "{value}", Optional CategorizationExpression As String = "", Optional MaxCategories As Long = -1, Optional GenerateOtherCategory As Boolean = 1, Optional GenerateNoAnswerCategory As Boolean = 0, Optional NoAnswerCategoryLabel As String = "") As Variant
+        End Function
+
+        '!
+        Cancel an existing creation started via `CreateCategorizedVariable()`
+        !'
+        Sub CreateCategorizedVariableCancel()
+        End Sub
+
+    End Interface
+
+End Namespace
