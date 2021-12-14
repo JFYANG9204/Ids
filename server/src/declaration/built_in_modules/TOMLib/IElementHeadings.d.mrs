@@ -1,0 +1,26 @@
+
+Namespace TOMLib
+
+    '!
+    A collection of `IElementHeading` objects
+    !'
+    Interface IElementHeadings Implements IEnumerable, Object
+
+        '!
+        The number of `ElementHeading` objects in the collection
+        !'
+        ReadOnly Property Count() As Long
+
+        '!
+        Returns the specified `ElementHeading` in the collection.
+        !'
+        Default ReadOnly Property Item(Index As Variant) As IElementHeading
+
+        '!
+        The parent object
+        !'
+        ReadOnly Property Parent() As IElements
+
+    End Interface
+
+End Namespace

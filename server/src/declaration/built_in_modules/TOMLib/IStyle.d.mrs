@@ -1,0 +1,37 @@
+
+Namespace TOMLib
+
+    '!
+    The `Style` object is used to set presentation styles for the element labels in the table.
+    !'
+    Interface IStyle Implements Object
+
+
+        '!
+        The parent object
+
+        ### Remarks
+        The `Parent` property of the `Style` object always currently returns a `Element` object, but this may change in the future.
+        !'
+        ReadOnly Property Parent() As IElement
+
+        '!
+        The name of the image to use for the element.
+
+        ### Remarks
+        The image name will either be the full URL to an image file or a relative path to an image file which is prefixed with the `IDocument.ImageLocation` property.
+        !'
+        Property Image() As String
+
+        '!
+        The image position relative to the text.
+
+        ### Remarks
+        The image position can be *ipLeft*, *ipRight*, *ipTop*, *ipBottom*, or *ipImageOnly*. The *ipImageOnly* setting causes only the image to be displayed even if there is label text for the element.
+        !'
+        Property ImagePosition() As ImagePositions
+
+    End Namespace
+
+End Namespace
+

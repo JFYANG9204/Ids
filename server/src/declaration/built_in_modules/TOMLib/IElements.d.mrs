@@ -26,7 +26,7 @@ Namespace TOMLib
         ### Remarks
         The `Parent` property of the `Elements` object will either return a `Net` or `Combine` Element or an `Axis` object.
         !'
-        ReadOnly Property Parent() As Variant
+        ReadOnly Property Parent() As IAxis
 
         '!
 

@@ -1,0 +1,83 @@
+
+Namespace TOMLib
+
+    '!
+    An `IElementHeading` object is an instance of a `IElement` object. In the case of a nested table, at the inner-most nest level there is a separate `IElementHeading` object corresponding to each `IElement` object in the outer axis. After a table has been populated, the order of the `IElementHeading` objects in the `IElementHeadings` collections represents the sorted order of the table.
+    !'
+    Interface IElementHeading Implements Object
+
+        Function GetSuppressed() As Boolean
+        End Function
+
+        Sub SetSuppressed(newVal As Boolean)
+        End Sub
+
+        '!
+        The `Element` object that this `IElementHeading` object is based on
+        !'
+        ReadOnly Property Element() As IElement
+
+        '!
+        An id string assigned to the row or column
+
+        ### Remarks
+        `HeadingIds` are currently used to identify columns for the column proportions statistics test. HeadingIds are only assigned after the table has been populated and only to element headings at the inner-most nest on the top of the table, since those headings are the ones that correspond to columns in the table.
+        !'
+        ReadOnly Property HeadingId() As String
+
+        '!
+        The label for the `ElementHeading`.
+
+        ### Parameters
+        + `Language`: *String* - The Language to get or set the label for. If this is not specified then the current IDocument.Language is used.
+
+        ### Remarks
+        The label of the `ElementHeading` is that same as the label for the `Element` that the `ElementHeading` is based upon.
+        !'
+        ReadOnly Property Label(Optional Language As String = "") As String
+
+        '!
+        The name used to reference the `ElementHeading` object.
+
+        ### Remarks
+        The name of the `ElementHeading` objects matches that of the `Element` object that it is based upon.
+        !'
+        ReadOnly Property Name() As String
+
+        '!
+        The parent object
+        !'
+        ReadOnly Property Parent() As IElementHeadings
+
+        '!
+        The `AxisHeading` object that this `ElementHeading` is to be displayed under
+        !'
+        ReadOnly Property ParentAxisHeading() As IAxisHeading
+
+        '!
+        The `AxisHeading` objects that are to be displayed under this `ElementHeading`
+
+        ### Remarks
+        In the case of a table containing nesting of axes, the `SubAxisHeadings` collection contains the `AxisHeading` objects that are to be displayed under the current element heading.
+        !'
+        ReadOnly Property SubAxisHeadings() As IAxisHeadings
+
+        '!
+        The child element headings in the case of a heading based on a net element.
+
+        ### Remarks
+        Only an `IElementHeading` object that represents a net element will have sub element headings.
+        !'
+        ReadOnly Property SubElementHeadings() As IElementHeadings
+
+        '!
+        True if the table has been sorted on the row or column corresponding to this `ElementHeading`
+
+        ### Remarks
+        The property is only set to *True* if the table has been populated and the `SortRow` or `SortColumn` property specifies that this `ElementHeading` is the one that the table is being sorted on.
+        !'
+        Property IsSortedOn() As Boolean
+
+    End Interface
+
+End Namespace

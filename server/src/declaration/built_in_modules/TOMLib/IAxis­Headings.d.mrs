@@ -1,0 +1,26 @@
+
+Namespace TOMLib
+
+    '!
+    A collection of `IAxisHeading` objects. The order of the `IAxisHeading` objects in the collection is modified by the sorting of the table.
+    !'
+    Interface IAxisHeadings Implements IEnumerable, Object
+
+        '!
+        Returns the specified `AxisHeading` in the collection.
+        !'
+        Default Readonly Property Item(Index As Variant) As IAxisHeading
+
+        '!
+        The number of AxisHeading objects in the collection
+        !'
+        ReadOnly Property Count() As Long
+
+        '!
+        The parent object
+        !'
+        ReadOnly Property Parent() As IElements
+
+    End Interface
+
+End Namespace
