@@ -27,5 +27,9 @@ export class DocumentService {
         return this.documents.onDidClose;
     }
 
+    get onDidOpen() {
+        return this.documents.onDidOpen;
+    }
+
 }
 

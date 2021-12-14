@@ -31,7 +31,7 @@ import { TextDocument } from "vscode-languageserver-textdocument";
 export class IdsLanguageService {
 
     private connection: Connection;
-    private workspaces: Map<string, { name: string, fsPath: string }>;
+    private workspaces: Map<string, { name: string, fsPath: string, refCount: number }>;
     private documentService: DocumentService;
     private projects: Map<string, ProjectService>;
     private loadingProjects: Set<string>;
@@ -49,7 +49,7 @@ export class IdsLanguageService {
         if (params.capabilities.workspace?.workspaceFolders) {
             this.setupWorkspaceListeners();
         }
-        await Promise.all(workspaceFolders.map(workspace => this.addWorkspace({ name: workspace.name, fsPath: getFileFsPath(workspace.uri) })));
+        await Promise.all(workspaceFolders.map(workspace => this.addWorkspace({ name: workspace.name, fsPath: getFileFsPath(workspace.uri), refCount: 1 })));
         this.setupHandlers();
         this.setupFileChangeListeners();
         this.connection.onShutdown(() => {
@@ -180,7 +180,7 @@ export class IdsLanguageService {
         };
     }
 
-    private async addWorkspace(workspace: { name: string, fsPath: string }) {
+    private async addWorkspace(workspace: { name: string, fsPath: string, refCount: number }) {
         if (!this.workspaces.has(workspace.fsPath)) {
             this.workspaces.set(workspace.fsPath, workspace);
         }
@@ -189,7 +189,7 @@ export class IdsLanguageService {
     private setupWorkspaceListeners() {
         this.connection.onInitialized(() => {
             this.connection.workspace.onDidChangeWorkspaceFolders(async e => {
-                await Promise.all(e.added.map(el => this.addWorkspace({ name: el.name, fsPath: getFileFsPath(el.uri) })));
+                await Promise.all(e.added.map(el => this.addWorkspace({ name: el.name, fsPath: getFileFsPath(el.uri), refCount: 1 })));
             });
         });
     }
@@ -205,11 +205,36 @@ export class IdsLanguageService {
     }
 
     private setupFileChangeListeners() {
+        this.documentService.onDidOpen(listener => {
+            let fsPath = getFileFsPath(listener.document.uri);
+            let root = this.getProjectRootPath(fsPath);
+            let workspace = Array.from(this.workspaces.values()).find(ws => fsPath.startsWith(ws.fsPath));
+            if (!workspace) {
+                if (root) {
+                    this.addWorkspace({ name: "", fsPath: root, refCount: 1 });
+                }
+            } else {
+                workspace.refCount++;
+                this.connection.console.log(`workspace increase by count ${workspace.refCount} at ${workspace.fsPath}`);
+            }
+        });
         this.documentService.onDidChangeContent(change => {
             this.validateTextDocument(change.document);
         });
         this.documentService.onDidClose(async listener => {
             this.connection.sendDiagnostics({ uri: listener.document.uri, diagnostics: [] });
+            let fsPath = getFileFsPath(listener.document.uri);
+            let workspace = Array.from(this.workspaces.values()).find(ws => fsPath.startsWith(ws.fsPath));
+            if (workspace) {
+                workspace.refCount--;
+                this.connection.console.log(`workspace decrease by count ${workspace.refCount} at ${workspace.fsPath}`);
+                if (workspace.refCount === 0) {
+                    this.projects.delete(workspace.fsPath);
+                    this.workspaces.delete(workspace.fsPath);
+                    this.connection.console.log(`uninstall project: ${workspace.fsPath}`);
+                    this.loadingProjects.delete(workspace.fsPath);
+                }
+            }
         });
     }
 
