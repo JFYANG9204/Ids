@@ -14,7 +14,7 @@ export class Parser extends StaticTypeChecker {
 
     constructor(options: Options, input: string) {
         super(options, input);
-        this.fileName = this.options.sourceFileName ?? "";
+        this.fileName = this.options.sourceFileName;
         this.scope = new ScopeHandler(
             this,
             createTypeRaiseFunction(this),

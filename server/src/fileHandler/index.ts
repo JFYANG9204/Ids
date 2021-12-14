@@ -171,22 +171,18 @@ export class FileHandler {
 
     setStart(pathLike: string) {
         this.startNode = undefined;
-        let path = isFileUri(pathLike) ? getFileFsPath(pathLike) : pathLike;
         let find = this.get(pathLike);
         if (!find) {
-            this.connection?.console.log(`filehandler setstart failed at path = '${path}'`);
             return;
         }
 
         if (find.isVertex) {
             this.startNode = find;
-            this.connection?.console.log(`filehandler setstart at path = '${path}'`);
             return;
         }
 
         if (find.startNode) {
             this.startNode = find.startNode;
-            this.connection?.console.log(`filehandler setstart at path = '${path}'`);
             return;
         }
 
@@ -224,21 +220,19 @@ export class FileHandler {
             this.startNode.file = file;
             this.startNode.parser = parser;
             iterateIncludeFile(file, inc => {
-                let fileNode = this.get(inc.loc.fileName);
+                let fileNode = this.get(inc.loc.fileName)?.startNode;
                 if (fileNode) {
-                    fileNode.file = inc;
-                    fileNode.parser = inc.parser;
                     fileNode.startNode = this.startNode;
-                    let fileName = inc.loc.fileName.toLowerCase();
-                    if (!inc.esc) {
-                        if (this.currentMap.has(fileName)) {
-                            this.storedMap.set(fileName, this.currentMap.get(fileName)!);
-                        } else {
-                            this.storedMap.set(fileName, inc);
-                        }
-                    }
-                    this.currentMap.set(fileName, inc);
                 }
+                let fileName = inc.loc.fileName.toLowerCase();
+                if (!inc.esc) {
+                    if (this.currentMap.has(fileName)) {
+                        this.storedMap.set(fileName, this.currentMap.get(fileName)!);
+                    } else {
+                        this.storedMap.set(fileName, inc);
+                    }
+                }
+                this.currentMap.set(fileName, inc);
             });
             let lowerPath = this.startNode.fsPath.toLowerCase();
             if (this.currentMap.has(lowerPath)) {
@@ -253,11 +247,11 @@ export class FileHandler {
 
     getCurrent(pathLike: string, getStore = true) {
         let path = isFileUri(pathLike) ? getFileFsPath(pathLike) : pathLike;
-        // this.connection?.console.log(`get file at path = '${path}'`);
         let cur = this.currentMap.get(path.toLowerCase());
         if (cur?.esc && getStore) {
             return this.storedMap.get(path.toLowerCase());
         }
+        this.connection?.console.log(cur ? `get file at ${path}` : `lost file at ${path}`);
         if (!cur) {
             let node = this.get(pathLike);
             let content;

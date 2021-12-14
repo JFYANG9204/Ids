@@ -67,7 +67,8 @@ export interface Options {
      */
     globalType?: DeclarationBase;
     /**
-     * 全局定义，用于存储在文件外的`EventSection`对应的本地定义
+     * 全局定义，用于在解析`PreIncludeStatement`时传递定义或者
+     * 在最开始时传递内建全局定义
      */
     globalDeclarations?: Scope;
     inGraph?: boolean;

@@ -1,5 +1,4 @@
 import * as charCodes from "../util/charcodes";
-import * as path from "path";
 import * as fs from "fs";
 import { Parser } from ".";
 import { createBasicOptions, ScriptFileType, SourceType } from "../options";
@@ -123,9 +122,13 @@ import { ExpressionParser } from "./expression";
 import { ParserBase } from "../base";
 import { Position } from "../util/location";
 import { ErrorTemplate } from "./errors";
-import { BindTypes, ScopeFlags } from "../util/scope";
+import { BindTypes, Scope, ScopeFlags } from "../util/scope";
 import { isEventName } from "../util/match";
 import { FileNode } from "../../fileHandler/fileNode";
+import { detect } from "jschardet";
+import { decode } from "iconv-lite";
+import { normalizeFileNameResolve } from "../../fileHandler/path";
+import { dirname } from "path";
 
 export class StatementParser extends ExpressionParser {
 
@@ -1355,6 +1358,62 @@ export class StatementParser extends ExpressionParser {
             return undefined;
         }
         const thisNode = this.searchParserNode(this.options.sourceFileName);
+        if (!thisNode) {
+            return undefined;
+        }
+        const findNodes: FileNode[] = [];
+        thisNode.includes.forEach(node => {
+            if (node.referenceMark &&
+                node.referenceMark.mark.toLowerCase() === mark.toLowerCase()) {
+                findNodes.push(node);
+            }
+        });
+        return findNodes;
+    }
+
+    protected createParser(path:string, input: string, global?: Scope) {
+        return new Parser(createBasicOptions(path,
+            this.options.raiseTypeError,
+            undefined,
+            global ?? this.options.globalDeclarations,
+            this.options.inGraph), input);
+    }
+
+    protected tryReadFile(node: PreIncludeStatement) {
+        let content: string | undefined;
+        try {
+            let buffer = fs.readFileSync(node.path);
+            if (buffer.length > 0) {
+                let info = detect(buffer);
+                content = decode(buffer, info.encoding);
+            }
+        } catch (error) {
+            node.exist = false;
+            if (this.options.raisePathError && !this.checkLeadingCommentOption(node, "ignore-path-error")) {
+                this.raiseAtNode(node.inc, ErrorMessages["PreIncludeFileDontExist"], true, node.path);
+            }
+        }
+        return content;
+    }
+
+    /**
+     * 对于可能的对应多个`FileReferenceMark`的情况，应将所有解析结果`File`保存在
+     * `this.state.includes`对象中， `PreIncludeStatement`对象中仅保存最后一个，
+     * 最后将所有`File`的`Scope`合并并返回
+     * @param fileNodes
+     */
+    protected parseIncludeMarksRotation(refNodes: FileNode[]) {
+        let scope = new Scope(ScopeFlags.program);
+        let file: File | undefined;
+        refNodes.forEach(node => {
+            node.parser = this.createParser(node.fsPath, node.content);
+            file = node.parser.parse(this.scope.store, true, this.scope.inWith, this.scope.currentEvent);
+            node.file = file;
+            scope.join(file.scope);
+            this.state.includes.set(node.fsPath.toLowerCase(), file);
+        });
+        this.scope.joinScope(scope);
+        return file;
     }
 
     // #include "filename"
@@ -1367,72 +1426,32 @@ export class StatementParser extends ExpressionParser {
         if (includeFilePath instanceof StringLiteral) {
             node.inc = includeFilePath;
             try {
-                node.path = this.options.sourceFileName ?
-                path.join(
-                    path.dirname(this.options.sourceFileName),
-                    includeFilePath.extra["rawValue"]) :
-                includeFilePath.extra["rawValue"];
+                node.path = normalizeFileNameResolve(dirname(this.options.sourceFileName), includeFilePath.extra["rawValue"]);
             } catch (error) {
                 node.exist = false;
                 return node;
             }
             if (this.searchParserNode &&
                 (search = this.searchParserNode(node.path))) {
-                node.parser = new Parser(
-                    createBasicOptions(node.path,
-                        this.options.raiseTypeError,
-                        this.options.uri,
-                        this.options.globalDeclarations),
-                    search.content);
+                node.parser = this.createParser(node.path, search.content);
             } else {
-                let content = "";
-                try {
-                    content = fs.readFileSync(node.path).toString();
-                } catch (error) {
-                    if (this.options.raisePathError &&
-                        !this.checkLeadingCommentOption(node, "ignore-path-error")) {
-                        this.raiseAtNode(
-                            node.inc,
-                            ErrorMessages["PreIncludeFileDontExist"],
-                            true,
-                            node.path
-                    );
-                    }
-                    node.exist = false;
-                    return node;
-                }
+                let content = this.tryReadFile(node);
                 if (content) {
-                    node.parser = new Parser(
-                        createBasicOptions(node.path,
-                            this.options.raiseTypeError,
-                            this.options.uri,
-                            this.options.globalDeclarations),
-                        content);
+                    node.parser = this.createParser(node.path, content);
                 }
             }
-        } else if (includeFilePath instanceof Identifier &&
-            this.searchParserNode && this.options.sourceFileName) {
+        } else if (includeFilePath instanceof Identifier) {
+            let findNodes = this.findAllReferenceFiles(includeFilePath.name);
+            if (!findNodes) {
+                return node;
+            }
+            let file = this.parseIncludeMarksRotation(findNodes);
+            if (!file) {
+                return node;
+            }
+            node.file = file;
             node.inc = includeFilePath;
-            const thisNode = this.searchParserNode(this.options.sourceFileName);
-            if (thisNode) {
-                let incNode: FileNode | undefined;
-                thisNode.includes.forEach(fileNode => {
-                    if (fileNode.referenceMark &&
-                        fileNode.referenceMark.mark.toLowerCase() ===
-                        (includeFilePath as Identifier).name.toLowerCase()) {
-                        incNode = fileNode;
-                    }
-                });
-                if (incNode) {
-                    node.parser = new Parser(
-                        createBasicOptions(node.path,
-                            this.options.raiseTypeError,
-                            this.options.uri,
-                            this.options.globalDeclarations),
-                        incNode.content);
-                    node.path = incNode.fsPath;
-                }
-            }
+            return node;
         }
         if (node.parser) {
             if (metadata) {
