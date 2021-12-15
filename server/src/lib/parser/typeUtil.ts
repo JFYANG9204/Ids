@@ -321,9 +321,10 @@ export class TypeUtil extends UtilParser {
 
         if (checkString === "imdmfield" ||
             baseString  === "imdmfield" || (
-            baseString  === "enum"   && checkString === "long") || (
-            baseString  === "double" && checkString === "long") || (
-            baseString  === "date"   && checkString === "long") || (
+            baseString  === "enum"    && checkString === "long") || (
+            baseString  === "double"  && checkString === "long") || (
+            baseString  === "date"    && checkString === "long") || (
+            baseString  === "boolean" && checkString === "long" ) || (
             !isAssign && baseString === "long" && checkString === "double"
             )) {
             checkResult = true;
@@ -869,6 +870,10 @@ export class TypeUtil extends UtilParser {
         let prop = member.property;
         // Object.Member
         if (prop.type === "Identifier" && !member.computed) {
+            let maybeBinding = this.getMaybeBindingType(objType);
+            if (maybeBinding) {
+                objType = maybeBinding;
+            }
             let parent: DeclarationBase | undefined = objType;
             let child: DeclarationBase | undefined;
             if (objType.type === "PropertyDeclaration") {
@@ -1114,7 +1119,7 @@ export class TypeUtil extends UtilParser {
         }
         let ns;
         for (const param of params) {
-            const paramType = this.getExprType(param);
+            let paramType = this.getExprType(param);
             if (index < args.length) {
                 const arg = args[index];
                 ns = arg.declarator.namespace ?? func.class?.namespace;

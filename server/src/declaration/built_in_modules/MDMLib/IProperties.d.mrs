@@ -4,7 +4,7 @@ Namespace MDMLib
 
     Interface IProperties Implements IEnumerable, Object
 
-        Default Property Item(Index As Variant, Context As Variant) As Variant
+        Default Property Item(Index As Variant, Optional Context As Variant) As Variant
         ReadOnly Property Count(Context As Variant) As Long
         Property Document() As IDocument
         ReadOnly Property Name(Index As Long) As String

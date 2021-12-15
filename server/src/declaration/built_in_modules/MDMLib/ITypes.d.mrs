@@ -21,7 +21,7 @@ Namespace MDMLib
         Function ReplaceChild(newChild As IMDMObject, oldChild As IMDMObject) As IMDMObject
         End Function
 
-        Default ReadOnly Property Item(Index As Variant) As IField
+        Default ReadOnly Property Item(Index As Variant) As IMDMField
         ReadOnly Property Count() As Long
         ReadOnly Property Exist(Name As String, Options As Variant) As Boolean
         ReadOnly Property Expanded() As ITypes
