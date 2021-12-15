@@ -1,0 +1,12 @@
+
+Namespace MDMLib
+
+    Interface IVariables Implements IEnumerable
+
+        Readonly Property Children(ParentName As String, Children As Boolean) As IVariable
+        Readonly Property Count() As Long
+        Default Readonly Property Item(Index As Variant) As IVariable
+
+    End Interface
+
+End Namespace

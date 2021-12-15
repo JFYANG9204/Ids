@@ -99,13 +99,13 @@ export class Parser extends StaticTypeChecker {
 
         let comments = this.state.comments;
         for (let i = 0; i < comments.length; ++i) {
-            if (/\s*metadata\s*/i.test(comments[i].value) && !declared) {
+            if (/\s*'\s*metadata\s*/i.test(comments[i].value) && !declared) {
                 this.options.sourceType = SourceType.metadata;
             }
-            if (/\s*ignore-type-error\s*/i.test(comments[i].value)) {
+            if (/\s*'\s*ignore-type-error\s*/i.test(comments[i].value)) {
                 this.options.raiseTypeError = false;
             }
-            if (/\s*ignore-path-error\s*/i.test(comments[i].value)) {
+            if (/\s*'\s*ignore-path-error\s*/i.test(comments[i].value)) {
                 this.options.raisePathError = false;
             }
         }
