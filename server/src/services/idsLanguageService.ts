@@ -8,6 +8,8 @@ import {
     Connection,
     Definition,
     DefinitionParams,
+    DocumentLink,
+    DocumentLinkParams,
     Hover,
     HoverParams,
     InitializeParams,
@@ -66,6 +68,7 @@ export class IdsLanguageService {
         this.connection.onSignatureHelp(this.onSignatureHelp.bind(this));
         this.connection.onCodeAction(this.onCodeAction.bind(this));
         this.connection.onRenameRequest(this.onRenameRequest.bind(this));
+        this.connection.onDocumentLinks(this.onDocumentLinks.bind(this));
     }
 
     dispose() {
@@ -146,6 +149,11 @@ export class IdsLanguageService {
         return project?.onRenameRequest(params) ?? null;
     }
 
+    async onDocumentLinks(params: DocumentLinkParams): Promise<DocumentLink[]> {
+        const project = await this.getProjectService(params.textDocument.uri);
+        return project?.onDocumentLinks(params) ?? [];
+    }
+
     async doValidate(doc: TextDocument) {
         const project = await this.getProjectService(doc.uri);
         return project?.doValidate(doc) ?? null;
@@ -176,7 +184,10 @@ export class IdsLanguageService {
             hoverProvider: true,
             renameProvider: true,
             definitionProvider: true,
-            referencesProvider: true
+            referencesProvider: true,
+            documentLinkProvider: {
+                resolveProvider: false
+            }
         };
     }
 

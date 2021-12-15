@@ -6,6 +6,8 @@ import {
     Connection,
     Definition,
     Diagnostic,
+    DocumentLink,
+    DocumentLinkParams,
     Hover,
     HoverParams,
     Location,
@@ -23,6 +25,7 @@ import {
     getCodeAction,
     getCompletionAtPostion,
     getDefinitionAtPosition,
+    getDocumentLinks,
     getHoverAtPosition,
     getReferenceAtPosition,
     getRenameLocation,
@@ -41,6 +44,7 @@ export interface ProjectService {
     onSignatureHelp(params: SignatureHelpParams): Promise<SignatureHelp | null>;
     onCodeAction(params: CodeActionParams): Promise<CodeAction[]>;
     onRenameRequest(params: RenameParams): Promise<WorkspaceEdit | null>;
+    onDocumentLinks(params: DocumentLinkParams): Promise<DocumentLink[]>;
     doValidate(document: TextDocument): Promise<Diagnostic[] | null>;
     dispose(): Promise<void>;
 }
@@ -90,6 +94,10 @@ export async function createProjectService(
             let file = fileHandler.getCurrent(params.textDocument.uri);
             let document = documentService.getDocument(params.textDocument.uri);
             return await getRenameLocation(params, document, file);
+        },
+        async onDocumentLinks(params: DocumentLinkParams) {
+            let document = documentService.getDocument(params.textDocument.uri);
+            return await getDocumentLinks(params, document);
         },
         async doValidate(document: TextDocument) {
             fileHandler.update(document.uri, document.getText());

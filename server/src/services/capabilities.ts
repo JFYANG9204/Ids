@@ -9,6 +9,8 @@ import {
     CompletionItemKind,
     CompletionList,
     Definition,
+    DocumentLink,
+    DocumentLinkParams,
     Hover,
     Location,
     MarkupKind,
@@ -24,7 +26,8 @@ import {
 } from "vscode-languageserver";
 import { TextDocument } from "vscode-languageserver-textdocument";
 import { builtInModule } from "../declaration";
-import { getFsPathToUri } from "../fileHandler/path";
+import { getAllIncludeInFile } from "../fileHandler/load";
+import { getFileFsPath, getFsPathToUri, normalizeFileNameResolve } from "../fileHandler/path";
 import {
     ArgumentDeclarator,
     ArrayDeclarator,
@@ -1157,7 +1160,6 @@ async function getRenameLocation(params: RenameParams,
     let changes: {[uri: string]: TextEdit[]} = {};
     let textEdits: TextDocumentEdit[] = [];
     def.referenced.forEach(ref => createRenameTextEdit(ref, changes, params.newName));
-    createRenameTextEdit(def.name, changes, params.newName);
 
     Object.keys(changes).forEach(k => {
         let change = changes[k];
@@ -1170,4 +1172,26 @@ async function getRenameLocation(params: RenameParams,
 
 export { getRenameLocation };
 
+async function getDocumentLinks(params: DocumentLinkParams, document?: TextDocument) {
+    const links: DocumentLink[] = [];
+    if (!document) {
+        return links;
+    }
+    const refs = getAllIncludeInFile(document.getText());
+    const folder = getFileFsPath(params.textDocument.uri);
+    refs.forEach(ref => {
+        let target = normalizeFileNameResolve(dirname(folder), ref);
+        if (existsSync(target)) {
+            links.push({
+                range: {
+                    start: { line: 0, character: 0 },
+                    end: { line: 0, character: 0 }
+                },
+                target
+            });
+        }
+    });
+    return links;
+}
 
+export { getDocumentLinks };

@@ -313,6 +313,7 @@ export class StaticTypeChecker extends StatementParser {
                         (search = this.scope.get(setStat.id.name)?.result) ?
                         this.maybeCopyType(search) : search);
                 }
+                declared.result.referenced.push(setStat.id);
             } else {
                 this.checkVarDeclared(setStat.id.name, setStat.id);
             }
