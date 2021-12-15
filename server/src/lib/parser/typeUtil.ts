@@ -627,7 +627,7 @@ export class TypeUtil extends UtilParser {
         let rightReturn: { type: DeclarationBase | undefined } = { type: undefined };
         let left = this.getExprType(expr.left, leftReturn, raiseError);
         let right = this.getExprType(expr.right, rightReturn, raiseError);
-        //
+
         if (!leftReturn.type || !rightReturn.type) {
             if (!leftReturn.type) {
                 this.needReturn(expr.left);
@@ -639,13 +639,13 @@ export class TypeUtil extends UtilParser {
         }
 
         this.guessMaybeArgumentTypeByBinaryExpr(expr, left, right);
-        //
+
         if (expr.operator.binop === BinopType.logical     ||
             expr.operator.binop === BinopType.realational ||
             expr.operator.label === "=") {
             return this.scope.get("Boolean")?.result;
         }
-        //
+
         let final;
         if (leftReturn.type instanceof ClassOrInterfaceDeclaration ||
             leftReturn.type instanceof PropertyDeclaration) {
@@ -656,7 +656,7 @@ export class TypeUtil extends UtilParser {
                 left = final.name.name;
             }
         }
-        //
+
         let nsName: string | NamespaceDeclaration | undefined;
         if (rightReturn.type instanceof ClassOrInterfaceDeclaration ||
             rightReturn.type instanceof PropertyDeclaration) {
@@ -669,7 +669,7 @@ export class TypeUtil extends UtilParser {
                 nsName = final.namespace;
             }
         }
-        //
+
         if (this.matchType(left, right, expr.right, false, nsName, false)) {
             let namespace = this.getDeclareNamespace(rightReturn.type);
             return left.toLowerCase() === "variant" ?
@@ -853,6 +853,18 @@ export class TypeUtil extends UtilParser {
         //    }
         //}
 
+        function getRaiseErrorNode(obj: CallExpression | MemberExpression | Identifier | Expression): Identifier | Expression {
+            if (obj instanceof CallExpression) {
+                if (obj.callee instanceof Identifier) {
+                    return obj.callee;
+                }
+                return getRaiseErrorNode(obj.callee);
+            } else if (obj instanceof MemberExpression) {
+                return obj.property;
+            }
+            return obj;
+        }
+
         if ((objType.type !== "ClassOrInterfaceDeclaration") &&
             (objType.type !== "PropertyDeclaration")         &&
             (objType.type !== "ArrayDeclarator")) {
@@ -860,7 +872,7 @@ export class TypeUtil extends UtilParser {
                 this.options.raiseTypeError &&
                 raiseError) {
                 this.raiseTypeError(
-                    member.object,
+                    getRaiseErrorNode(member.object),
                     ErrorMessages["MissingParenObject"],
                     true,
                 );
@@ -1122,41 +1134,37 @@ export class TypeUtil extends UtilParser {
             let paramType = this.getExprType(param);
             if (index < args.length) {
                 const arg = args[index];
-                ns = arg.declarator.namespace ?? func.class?.namespace;
-                if (arg.paramArray) {
-                    cur = arg;
+                if (param.type === "PlaceHolder") {
+                    if (!arg.optional && this.options.raiseTypeError) {
+                        this.raiseTypeError(callExpr, ErrorMessages["ArgumentIsNotOptional"], false, arg.declarator.name.name);
+                    }
+                } else {
+                    ns = arg.declarator.namespace ?? func.class?.namespace;
+                    if (arg.paramArray) {
+                        cur = arg;
+                    }
+                    let typeName = arg.declarator.type === "ArrayDeclarator" ? "Array" : this.getBindingTypeNameString(arg.declarator.binding);
+                    this.guessMaybeArgumentTypeByCaller(typeName, param);
+                    if (this.scope.get(typeName, ns)?.result?.type === "EnumDeclaration") {
+                        typeName = "Enum";
+                    }
+                    this.matchType(typeName, paramType, param, true, ns);
                 }
-                let typeName = this.getBindingTypeNameString(arg.declarator.binding);
-                this.guessMaybeArgumentTypeByCaller(typeName, param);
-                if (this.scope.get(typeName,
-                    this.getDeclareNamespace(func))?.result?.type === "EnumDeclaration") {
-                    typeName = "Enum";
-                }
-                this.matchType(typeName,
-                    paramType, param, true, ns);
             } else if (cur) {
                 ns = cur.declarator.namespace ?? func.class?.namespace;
-                let typeName = this.getBindingTypeNameString(cur.declarator.binding);
+                let typeName = cur.declarator.type === "ArrayDeclarator" ? "Array" : this.getBindingTypeNameString(cur.declarator.binding);
                 this.guessMaybeArgumentTypeByCaller(typeName, param);
-                this.matchType(typeName,
-                    paramType, param, true, ns);
+                this.matchType(typeName, paramType, param, true, ns);
             }
             index++;
         }
-        if (index < args.length - 1) {
-            for (let i = index + 1; i < args.length; ++i) {
-                const arg = args[i];
-                if (!arg.optional) {
-                    if (nece === "") {
-                        nece = arg.declarator.name.name;
-                    } else {
-                        nece += "," + arg.declarator.name.name;
-                    }
-                }
-            }
+        if (index < args.length) {
+            nece = args
+            .slice(index)
+            .filter(arg => !arg.optional)
+            .map(arg => arg.declarator.name.name).join(",");
         }
-        if (args.length < params.length && !cur &&
-            !this.scope.inFunction && this.options.raiseTypeError) {
+        if (args.length < params.length && !cur && this.options.raiseTypeError) {
             this.raiseTypeError(callExpr,
                 ErrorMessages["IncorrectFunctionArgumentNumber"],
                 false,
@@ -1164,9 +1172,7 @@ export class TypeUtil extends UtilParser {
                 args.length.toString(),
                 params.length.toString());
         }
-        if (nece !== "" &&
-            !this.scope.inFunction &&
-            this.options.raiseTypeError) {
+        if (nece !== "" && this.options.raiseTypeError) {
             this.raiseTypeError(callExpr,
                 ErrorMessages["ArgumentIsNotOptional"],
                 false,
@@ -1486,17 +1492,6 @@ export class TypeUtil extends UtilParser {
             };
         }
         return undefined;
-    }
-
-    guessFunctionParamType(declarator: SingleVarDeclarator) {
-        let name = declarator.name.name.toLowerCase();
-        let definition = this.scope.get(name)?.result;
-        if (definition) {
-            if (definition instanceof SingleVarDeclarator) {
-                declarator.binding = definition.binding;
-                declarator.bindingType = definition.bindingType;
-            }
-        }
     }
 
 }

@@ -657,6 +657,7 @@ export class SingleVarDeclarator extends DeclarationBase {
 
 export class ArrayDeclarator extends DeclarationBase {
     name: Identifier;
+    // Array的binding作为Array的泛型存储类保存
     binding: BindingDeclarator | string = "Variant";
     dimensions: number;
     boundaries?: number[];
