@@ -166,9 +166,6 @@ export class ScopeHandler {
         if (event) {
             this.currentEvent = event;
         }
-        if (flags === ScopeFlags.function && this.stack.length > 1) {
-            this.joinScope(this.stack[this.stack.length - 1], true);
-        }
     }
 
     exit(isEvent?: boolean) {
@@ -541,22 +538,8 @@ export class ScopeHandler {
         this.currentScope().undefined.set(name.toLowerCase(), newType);
     }
 
-    /**
-     * 向当前`Scope`或者`Store Map`中添加需要的内容，
-     * `isFunction`为`true`时，会将`Scope`参数中的
-     * 函数、宏、常量定义引入到当前`Scope`中
-     * @param scope
-     * @param isFunction
-     * @returns
-     */
-    joinScope(scope?: Scope, isFunction?: boolean) {
+    joinScope(scope?: Scope) {
         if (!scope) {
-            return;
-        }
-        if (isFunction) {
-            mergeMap(scope.functions, this.currentScope().functions);
-            mergeMap(scope.macros,    this.currentScope().macros);
-            mergeMap(scope.consts,    this.currentScope().consts);
             return;
         }
         mergeScope(scope, this.store);

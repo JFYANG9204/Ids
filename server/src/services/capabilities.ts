@@ -831,10 +831,6 @@ async function getCompletionAtPostion(position: Position,
     let triggerChar = text.charCodeAt(pos - 1);
     let lastChar = text.charCodeAt(pos - 2);
 
-    if (test) {
-        test(`pos: ${pos}, trigger: ${String.fromCharCode(triggerChar)}, last: ${String.fromCharCode(lastChar)}`);
-    }
-
     if (triggerChar === charCodes.numberSign) {
         return CompletionList.create(preKeywordsCompletions, false);
     }
@@ -904,9 +900,9 @@ async function getCompletionAtPostion(position: Position,
     }
     if (info.eventNode) {
         completions.push(...getCompletionsFromScope(info.eventNode.scope, inFunction));
-    } else {
-        completions.push(...getCompletionsFromScope(file.scope, inFunction));
     }
+    completions.push(...getCompletionsFromScope(file.scope, inFunction));
+
     if (!inFunction) {
         completions.push(...builtInVarCompletions);
     }
