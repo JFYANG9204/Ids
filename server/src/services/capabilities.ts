@@ -691,11 +691,8 @@ function getMemberCompletions(dec: DeclarationBase, file: File): CompletionItem[
         file: File,
         name: string,
         namespace?: string | NamespaceDeclaration) {
-        let find: DeclarationBase | undefined;
-        if (builtInModule.scope) {
-            find = getDeclarationFromScope(builtInModule.scope, name, namespace);
-        }
-        if (!find && file.scope) {
+        let find = getDeclarationFromScope(builtInModule.scope, name, namespace);
+        if (!find) {
             find = getDeclarationFromScope(file.scope, name, namespace);
         }
         return find;
@@ -754,9 +751,6 @@ function getMemberCompletions(dec: DeclarationBase, file: File): CompletionItem[
                 break;
 
             case "ArrayDeclarator":
-                if (!builtInModule.scope) {
-                    return [];
-                }
                 let arr = getDeclarationFromScope(builtInModule.scope, "Array");
                 if (!arr) {
                     return [];
@@ -765,9 +759,6 @@ function getMemberCompletions(dec: DeclarationBase, file: File): CompletionItem[
                 break;
 
             case "MetadataCategoricalVariable":
-                if (!builtInModule.scope) {
-                    return [];
-                }
                 let field = getDeclarationFromScope(builtInModule.scope, "IMDMField", "MDMLib");
                 if (!field) {
                     return [];
@@ -871,8 +862,8 @@ async function getCompletionAtPostion(position: Position,
             return EMPTY_COMPLETIONLIST;
 
         }
-
-        if (info.caller && !(info.caller instanceof MemberExpression && info.caller.object instanceof Identifier)) {
+        // object.member. 或 object.method(). 或 function(). 或 object.member[]. 或 array[].
+        if (info.caller) {
             let dec: DeclarationBase = info.caller.extra["declaration"];
             if (test) {
                 test(`caller: ${info.caller}, definition: ${dec.name.name}`);
@@ -881,7 +872,7 @@ async function getCompletionAtPostion(position: Position,
                 return CompletionList.create(getMemberCompletions(dec, file), false);
             }
         }
-
+        // identifier.
         if (info.id) {
             let dec: DeclarationBase = info.id.extra["declaration"];
             if (test) {

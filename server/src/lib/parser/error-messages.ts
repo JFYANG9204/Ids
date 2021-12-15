@@ -74,6 +74,7 @@ export const ErrorMessages: ErrorTemplates = makeErrorTemplates({
     PropertyAutoImplementAlreadyExist: "属性自动实现'%0'已存在.",
     TypeReferenceCanOnlyBeUsedInDeclareFile: "'As'类型声明只能在声明文件(.d.mrs)中使用.",
     KeywordCanOnlyBeUsedInDeclareFile: "'%0'关键字只能在声明文件(.d.mrs)中使用.",
+    MemberOrMethodHasLineBreak:   "属性或方法调用时不允许换行.",
     // Axis
     AxisElementRedeclared:           "Axis表达式元素'%0'被重定义.",
     AxisInvalidCharactor:            "无效字符.",

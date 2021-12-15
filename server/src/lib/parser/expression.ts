@@ -463,6 +463,9 @@ export class ExpressionParser extends NodeUtils {
 
         if (this.match(tt.dot)) {
             this.next();
+            if (this.hasPrecedingLineBreak()) {
+                throw this.raise(this.state.pos, ErrorMessages["MemberOrMethodHasLineBreak"]);
+            }
             expr = this.parseMember(expr, false);
             return this.parseCallOrMember(expr);
         }

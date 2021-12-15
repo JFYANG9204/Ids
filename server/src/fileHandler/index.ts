@@ -38,8 +38,13 @@ export class FileHandler {
      * 当前入口文件Node
      */
     private startNode?: FileNode;
-
+    /**
+     * 保存文档当前的结果
+     */
     private currentMap: Map<string, File> = new Map();
+    /**
+     * 保存文档上一次没有抛出错误的结果
+     */
     private storedMap: Map<string, File> = new Map();
 
     private connection?: Connection;
@@ -226,18 +231,12 @@ export class FileHandler {
                 }
                 let fileName = inc.loc.fileName.toLowerCase();
                 if (!inc.esc) {
-                    if (this.currentMap.has(fileName)) {
-                        this.storedMap.set(fileName, this.currentMap.get(fileName)!);
-                    } else {
-                        this.storedMap.set(fileName, inc);
-                    }
+                    this.storedMap.set(fileName, inc);
                 }
                 this.currentMap.set(fileName, inc);
             });
             let lowerPath = this.startNode.fsPath.toLowerCase();
-            if (this.currentMap.has(lowerPath)) {
-                this.storedMap.set(lowerPath, this.currentMap.get(lowerPath)!);
-            } else if (!this.storedMap.has(lowerPath)) {
+            if (!file.esc) {
                 this.storedMap.set(lowerPath, file);
             }
             this.currentMap.set(lowerPath, file);
@@ -251,7 +250,7 @@ export class FileHandler {
         if (cur?.esc && getStore) {
             return this.storedMap.get(path.toLowerCase());
         }
-        this.connection?.console.log(cur ? `get file at ${path}` : `lost file at ${path}`);
+        // this.connection?.console.log(cur ? `get file at ${path}` : `lost file at ${path}`);
         if (!cur) {
             let node = this.get(pathLike);
             let content;

@@ -1000,19 +1000,33 @@ export class TypeUtil extends UtilParser {
                 return this.getVariant();
             }
         }
+        // object.property[]中property没有登记索引
         if (memberDec instanceof PropertyDeclaration &&
             memberDec.params.length === 0) {
             if (raiseError) {
                 this.raiseIndexError(member.property, exprType);
             }
+        // object.property[]中property有登记索引，获取需要的索引类型
         } else if (memberDec instanceof PropertyDeclaration) {
             needParam = this.getBindingTypeNameString(memberDec.params[0].declarator.binding);
         } else {
+            // 其他情况，判断类型是否为集合
             if (this.isCollection(memberDec as ClassOrInterfaceDeclaration)) {
+                // 数组的索引类型固定为长整型
                 if (memberDec.name.name === "Array") {
                     needParam = "Long";
                 } else {
-                    needParam = (memberDec as ClassOrInterfaceDeclaration).default?.name.name;
+                    // 检查默认属性
+                    let defaultProperty = (memberDec as ClassOrInterfaceDeclaration).default;
+                    if (defaultProperty) {
+                        if (defaultProperty.params.length === 0) {
+                            if (raiseError) {
+                                this.raiseIndexError(member.property, exprType);
+                            }
+                        } else {
+                            needParam = this.getBindingTypeNameString(defaultProperty.params[0].declarator.binding);
+                        }
+                    }
                 }
             } else {
                 needParam = memberDec.name.name;
