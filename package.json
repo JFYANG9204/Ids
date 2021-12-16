@@ -4,7 +4,7 @@
     "publisher": "YangWei",
     "license": "MIT",
 	"description": "IBM DataCollection Base Script and Metadata Support for Vscode",
-	"version": "0.8.4",
+	"version": "0.8.5",
 	"engines": {
 		"vscode": "^1.61.0"
 	},
