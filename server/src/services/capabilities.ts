@@ -866,21 +866,21 @@ async function getCompletionAtPostion(position: Position,
             return EMPTY_COMPLETIONLIST;
 
         }
-        // object.member. 或 object.method(). 或 function(). 或 object.member[]. 或 array[].
-        if (info.caller) {
-            let dec: DeclarationBase = info.caller.extra["declaration"];
+        // identifier.
+        if (info.id && !(info.id.treeParent instanceof MemberExpression)) {
+            let dec: DeclarationBase = info.id.extra["declaration"];
             if (test) {
-                test(`caller: ${info.caller}, definition: ${dec.name.name}`);
+                test(`id: ${info.id.name}, definition: ${dec.name.name}`);
             }
             if (dec) {
                 return CompletionList.create(getMemberCompletions(dec, file), false);
             }
         }
-        // identifier.
-        if (info.id) {
-            let dec: DeclarationBase = info.id.extra["declaration"];
+        // object.member. 或 object.method(). 或 function(). 或 object.member[]. 或 array[].
+        if (info.caller) {
+            let dec: DeclarationBase = info.caller.extra["declaration"];
             if (test) {
-                test(`id: ${info.id.name}, definition: ${dec.name.name}`);
+                test(`caller: ${info.caller}, definition: ${dec.name.name}`);
             }
             if (dec) {
                 return CompletionList.create(getMemberCompletions(dec, file), false);
