@@ -78,7 +78,7 @@ export class Parser extends StaticTypeChecker {
         file.scope = this.scope.store;
         file.parser = this;
         this.scope.exit();
-        return this.finishNodeAt(file, "File", this.state.pos + 1, this.state.curPostion());
+        return this.finishNodeAt(file, "File", this.length, this.state.curPostion());
     }
 
     checkLineMarkError() {

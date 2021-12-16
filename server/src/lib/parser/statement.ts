@@ -290,9 +290,9 @@ export class StatementParser extends ExpressionParser {
             }
             if (inWith) {
                 const withNode = this.startNode(WithStatement);
-                withNode.body = this.parseBlock(end);
+                withNode.body = this.parseBlock(end, true);
                 withNode.push(withNode.body);
-                this.finishNode(withNode, "WithStatement");
+                this.finishNodeAt(withNode, "WithStatement", this.state.pos + 1, this.state.curPostion());
                 if (!eventNode) {
                     node.body = withNode;
                     node.globalWith = withNode;
@@ -301,7 +301,10 @@ export class StatementParser extends ExpressionParser {
                     eventNode.body.body.push(withNode);
                     eventNode.body.push(withNode);
                     eventNode.push(eventNode.body);
-                    this.finishNode(eventNode.body, "BlockStatement");
+                    this.finishNodeAt(eventNode.body,
+                        "BlockStatement",
+                        this.state.pos + 1,
+                        this.state.curPostion());
                     this.finishNodeAt(eventNode,
                         event?.type ?? "EventSection",
                         this.state.pos + 1,
@@ -311,10 +314,10 @@ export class StatementParser extends ExpressionParser {
                 }
             } else {
                 if (!eventNode) {
-                    node.body = this.parseBlock(end);
+                    node.body = this.parseBlock(end, true);
                     node.push(node.body);
                 } else {
-                    eventNode.body = this.parseBlock(end);
+                    eventNode.body = this.parseBlock(end, true);
                     eventNode.push(eventNode.body);
                     this.finishNodeAt(
                         eventNode,
@@ -649,7 +652,7 @@ export class StatementParser extends ExpressionParser {
         return this.finishNode(node, "SetStatement");
     }
 
-    parseBlock(close: TokenType | Array<TokenType>): BlockStatement {
+    parseBlock(close: TokenType | Array<TokenType>, untilEnd = false): BlockStatement {
         const node = this.startNode(BlockStatement);
         const body: Statement[] = [];
         while (!this.matchOne(close)) {
@@ -659,7 +662,7 @@ export class StatementParser extends ExpressionParser {
         node.pushArr(node.body);
         return this.finishNodeAt(node,
             "BlockStatement",
-            this.state.lastTokenEnd,
+            untilEnd ? this.state.pos + 1 : this.state.lastTokenEnd,
             this.state.lastTokenEndLoc);
     }
 
