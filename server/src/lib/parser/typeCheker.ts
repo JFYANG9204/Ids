@@ -135,18 +135,11 @@ export class StaticTypeChecker extends StatementParser {
     checkFunctionBody(func: FunctionDeclaration) {
         this.addExtra(func.name, "declaration", func);
         this.scope.enter(ScopeFlags.function);
-        if (func.needReturn && func.binding) {
-            let binding;
-            if (typeof func.binding === "string") {
-                binding = this.scope.get(func.binding)?.result;
-            } else if (func.binding) {
-                binding = this.scope.get(func.binding.name.name,
-                    func.binding.namespace)?.result;
-            }
+        if (func.needReturn) {
             let declarator = this.startNodeAtNode(func.name, SingleVarDeclarator);
             this.finishNodeAt(declarator, "SingleVarDeclarator", func.name.end, func.name.loc.end);
             declarator.name = func.name;
-            declarator.binding = binding ?? "Variant";
+            declarator.binding = "";
             this.scope.declareName(func.name.name,
                 BindTypes.var, declarator);
         }
@@ -158,16 +151,13 @@ export class StaticTypeChecker extends StatementParser {
         this.checkBlock(func.body);
         if (func.needReturn) {
             let update = this.scope.get(func.name.name, undefined)?.result;
-            if (update) {
+            if (update instanceof SingleVarDeclarator && update.binding !== "") {
                 func.binding = this.createBindingTypeFromDeclarator(update);
+            } else {
+                this.raiseTypeError(func.name, ErrorMessages["FunctionNeedReturn"], false);
             }
         }
         func.scope = this.scope.currentScope();
-        if (func.needReturn && !func.binding) {
-            this.raiseTypeError(func.name,
-                ErrorMessages["FunctionNeedReturn"],
-                false);
-        }
         this.scope.exit();
     }
 

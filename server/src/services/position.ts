@@ -112,6 +112,7 @@ export interface NodePostionInfo {
     caller?: CallExpression | MemberExpression;
     id?: Identifier;
     preInclude?: PreIncludeStatement;
+    rejectCompletion?: true;
 }
 
 export function positionAtInfo<T extends NodeBase>(node: T,
@@ -125,6 +126,14 @@ export function positionAtInfo<T extends NodeBase>(node: T,
             case "MemberExpression":      info.caller = node as MemberExpression;        break;
             case "FunctionDeclaration":   info.funcNode = node as FunctionDeclaration;   break;
             case "PreIncludeStatement":   info.preInclude = node as PreIncludeStatement; break;
+            case "StringLiteral":
+            case "NullLiteral":
+            case "BooleanLiteral":
+            case "NumericLiteral":
+            case "DecimalLiteral":
+            case "CategoricalLiteral":
+                info.rejectCompletion = true;
+                break;
             default: break;
         }
         if (node instanceof EventSection) {

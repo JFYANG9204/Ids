@@ -830,6 +830,10 @@ async function getCompletionAtPostion(position: Position,
     }
 
     let info = positionAtInfo(file.program.body, pos - 1);
+    if (info.rejectCompletion) {
+        return EMPTY_COMPLETIONLIST;
+    }
+
     // #include "path"
     if (info.preInclude){
         if (distanceTo(info.preInclude.inc, pos - 1) === 0) {
