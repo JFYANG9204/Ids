@@ -1477,6 +1477,7 @@ export class StatementParser extends ExpressionParser {
             let file = parser.parse(
                 this.scope.store, true, this.scope.inWith, this.scope.currentEvent);
             node.files.push(file);
+            file.treeParent = node;
             if (search) {
                 search.file = file;
                 search.parser = parser;

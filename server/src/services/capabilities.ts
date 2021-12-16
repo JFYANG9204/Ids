@@ -47,6 +47,7 @@ import {
     MetadataBase,
     NamespaceDeclaration,
     NodeBase,
+    PreIncludeStatement,
     PropertyDeclaration,
     SingleVarDeclarator
 } from "../lib/types";
@@ -1169,22 +1170,27 @@ async function getRenameLocation(params: RenameParams,
 
 export { getRenameLocation };
 
-async function getDocumentLinks(params: DocumentLinkParams, document?: TextDocument) {
+async function getDocumentLinks(document?: TextDocument, file?: File) {
     const links: DocumentLink[] = [];
-    if (!document) {
+    if (!document || !file) {
         return links;
     }
-    const refs = getAllIncludeInFile(document.getText());
-    const folder = getFileFsPath(params.textDocument.uri);
-    refs.forEach(ref => {
-        let target = normalizeFileNameResolve(dirname(folder), ref);
-        if (existsSync(target)) {
+    Array.from(file.includes.values()).forEach(inc => {
+        let preIncNode;
+        if (inc.treeParent && ((preIncNode = inc.treeParent) instanceof PreIncludeStatement) &&
+            preIncNode.path !== "" && existsSync(preIncNode.path)) {
             links.push({
                 range: {
-                    start: { line: 0, character: 0 },
-                    end: { line: 0, character: 0 }
+                    start: {
+                        line: preIncNode.inc.loc.start.line - 1,
+                        character: preIncNode.inc.loc.start.column
+                    },
+                    end: {
+                        line: preIncNode.inc.loc.end.line - 1,
+                        character: preIncNode.inc.loc.end.column
+                    }
                 },
-                target
+                target: getFsPathToUri(preIncNode.path)
             });
         }
     });

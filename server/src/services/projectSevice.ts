@@ -96,8 +96,9 @@ export async function createProjectService(
             return await getRenameLocation(params, document, file);
         },
         async onDocumentLinks(params: DocumentLinkParams) {
+            let file = fileHandler.getCurrent(params.textDocument.uri);
             let document = documentService.getDocument(params.textDocument.uri);
-            return await getDocumentLinks(params, document);
+            return await getDocumentLinks(document, file);
         },
         async doValidate(document: TextDocument) {
             fileHandler.update(document.uri, document.getText());
