@@ -65,7 +65,7 @@ export async function createProjectService(
         async onCompletion({ textDocument, position }) {
             let file = fileHandler.getCurrent(textDocument.uri, true);
             let document = documentService.getDocument(textDocument.uri);
-            return await getCompletionAtPostion(position, document, file, text => connection.console.log(text));
+            return await getCompletionAtPostion(position, document, file);
         },
         async onHover({ textDocument, position }) {
             let file = fileHandler.getCurrent(textDocument.uri);

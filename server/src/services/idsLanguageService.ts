@@ -174,7 +174,7 @@ export class IdsLanguageService {
                 fileOperations: { willRename: { filters: [{ pattern: { glob: "**/*.{mrs,dms,ini,inc}" } }] } }
             },
             completionProvider: { resolveProvider: true, triggerCharacters: [".", "\\", "/", "#", "\""] },
-            signatureHelpProvider: { triggerCharacters: [ "(", "," ] },
+            signatureHelpProvider: { triggerCharacters: [ "(" ] },
             codeActionProvider: {
                 codeActionKinds: [
                     CodeActionKind.QuickFix
@@ -240,6 +240,7 @@ export class IdsLanguageService {
                 workspace.refCount--;
                 this.connection.console.log(`workspace decrease by count ${workspace.refCount} at ${workspace.fsPath}`);
                 if (workspace.refCount === 0) {
+                    this.projects.get(workspace.fsPath)?.dispose();
                     this.projects.delete(workspace.fsPath);
                     this.workspaces.delete(workspace.fsPath);
                     this.connection.console.log(`uninstall project: ${workspace.fsPath}`);

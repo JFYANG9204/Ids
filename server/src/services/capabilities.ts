@@ -9,6 +9,7 @@ import {
     CompletionItemKind,
     CompletionList,
     Definition,
+    Diagnostic,
     DocumentLink,
     DocumentLinkParams,
     Hover,
@@ -813,8 +814,7 @@ export { EMPTY_COMPLETIONLIST };
 
 async function getCompletionAtPostion(position: Position,
     textDocument?: TextDocument,
-    file?: File,
-    test?: (text: string) => void) : Promise<CompletionList> {
+    file?: File) : Promise<CompletionList> {
 
     if (!file || !textDocument) {
         return EMPTY_COMPLETIONLIST;
@@ -1114,14 +1114,22 @@ async function getCodeAction(context: CodeActionContext,
         actionMessages.setFileAsMetadata,
         "'metadata");
 
+    function isEqualRange(r1: Range, r2: Range) {
+        return  r1.start.character === r2.start.character &&
+                r1.start.line      === r2.start.line      &&
+                r1.end.character   === r2.end.character   &&
+                r1.end.line        === r2.end.line;
+    }
+
+    let filteredArr: Diagnostic[] = [];
     diags.forEach(diag => {
-        ignoreAllErrorAction.diagnostics?.push(diag);
-        ignoreAllPathErrorAction.diagnostics?.push(diag);
-        setFileAsMetadata.diagnostics?.push(diag);
-        actions.push(
-            createCodeActionByCommand(actionMessages.ignoreThisPathError, "ignore-path-error", diag.range.start.line),
-            createCodeActionByCommand(actionMessages.ignoreThisTypeError, "ignore-type-error", diag.range.start.line),
-        );
+        if (!filteredArr.find(err => isEqualRange(err.range, diag.range))) {
+            actions.push(
+                createCodeActionByCommand(actionMessages.ignoreThisPathError, "ignore-path-error", diag.range.start.line),
+                createCodeActionByCommand(actionMessages.ignoreThisTypeError, "ignore-type-error", diag.range.start.line),
+            );
+            filteredArr.push(diag);
+        }
     });
 
     actions.push(ignoreAllErrorAction, ignoreAllPathErrorAction, setFileAsMetadata);
