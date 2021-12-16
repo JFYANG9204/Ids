@@ -1,0 +1,7 @@
+clean_update.dms	Start Time:	12:51:00	2021/8/25
+clean_update.dms	End Time:	12:53:28	2021/8/25
+clean_update.dms	Start Time:	14:12:22	2021/8/25
+clean_update.dms	Start Time:	14:13:25	2021/8/25
+clean_update.dms	End Time:	14:16:06	2021/8/25
+clean_update.dms	Start Time:	14:27:09	2021/8/25
+clean_update.dms	End Time:	14:29:58	2021/8/25

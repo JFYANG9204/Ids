@@ -1,0 +1,130 @@
+'*****FILE VERSION=4, DATE LAST MODIFIED=2011/06/13, KO
+
+'File to use to write cleaning checks and for making data corrections
+
+#include "..\job.ini"
+'**************************************************************************************
+'**************************************************************************************
+'**************************************************************************************
+
+'#define WAVE_NO "W01"
+'#define WAVE_METADATA "W01\sbMetadata_dms.mrs"
+'#define WAVE_NEXTCASE "W01\sbOnNextCase.mrs"
+'#define WAVE_CORRECTIONS "W01\corrections.inc"
+
+#if not defined(RUN_DATA_NAME_IN)
+#define RUN_DATA_NAME_IN  WAVE_NO + "\" + INPUT_METADATA + "_" + WAVE_NO + "_withOE"
+#endif
+
+#if not defined(RUN_DATA_NAME_OUT)
+#define RUN_DATA_NAME_OUT WAVE_NO + "\" + INPUT_METADATA + "_" + WAVE_NO + "_FINAL"
+#endif
+
+'CHANGE:  TRUE/FALSE - include data corrections file or not
+#define INCLUDE_CORRECTIONS_FILE TRUE
+
+'CHANGE AS NEEDED:  filter used in query to check subset of respondents
+'#define QUERY_FILTER "where Comp={Completed}"
+
+'CHANGE AS NEEDED:  variable that contains unique identifier for each respondent (most likely respondent.serial or realid)
+#define RESP_NUMBER respondent.serial
+
+'CHANGE AS NEEDED:  variable that will be included in log for grouping respondents (most likely  datacollection.starttime, weekno, or some other quota variable)
+#define LOG_HELP_VAR respondent.serial
+
+'NO NEED TO CHANGE:  path to the CSV file - an interim file that will not be saved after Excel file is created
+#if not defined(CSV_FILE)
+#define CSV_FILE JOB_ROOT + "Clean_Results.csv"
+#endif
+
+'NO NEED TO CHANGE:  path to the Excel output file - relative paths will not work - type the full path name
+#if not defined(EXCEL_FILE)
+#define EXCEL_FILE JOB_ROOT + "Clean_Results.xlsx"
+#endif
+
+'**************************************************************************************
+'**************************************************************************************
+'**************************************************************************************
+
+Event(OnBeforeJobStart)
+
+        #include "..\Library\FileFunctions.mrs"
+'        sbLogTime("Clean.dms", "Start")
+        Dim oFso
+        Set oFso = CreateObject("Scripting.FileSystemObject")
+        If oFso.FileExists(RUN_DATA_NAME_OUT + ".ddf") Then oFso.DeleteFile(RUN_DATA_NAME_OUT + ".ddf",True)
+        If oFso.FileExists(RUN_DATA_NAME_OUT + ".mdd") Then oFso.DeleteFile(RUN_DATA_NAME_OUT + ".mdd",True)
+
+End Event
+
+InputDataSource(MyInputDataSource, "Loading in Data")
+        ConnectionString = "Provider=mrOleDB.Provider.2; _
+                Data Source=mrDataFileDsc; _
+                MR Init MDM Version = {}; _
+                MR Init MDM Access = 1; _
+                Mr Init MDM Category Names = 1; _
+                Initial Catalog=" + RUN_DATA_NAME_IN + ".mdd; _
+                Location=" + RUN_DATA_NAME_IN + ".ddf"
+        SelectQuery = "select * from vdata " + QUERY_FILTER
+End InputDataSource
+
+
+OutputDataSource(myOutputDataSource, "Exporting Data")
+        ConnectionString = "Provider=mrOleDB.Provider.2; _
+                Data Source=mrDataFileDsc;MR Init Overwrite=1; _
+                Location=" + RUN_DATA_NAME_OUT + ".ddf"
+        MetaDataOutputName = RUN_DATA_NAME_OUT + ".mdd"
+End OutputDataSource
+
+Logging(MyLog)
+        path=".\"
+        GROUP="DMGR"
+        ALIAS="Tester"
+        FileSize=500
+End Logging
+
+Metadata (LOCALE_DMS, MDD_TYPE, Label, MyInputDataSource)
+
+'***********************************************************************************************
+        #include "sbMetadata_dms.mrs"
+        #include WAVE_METADATA
+'        #include "Jacc_Metadata.mrs"
+'***********************************************************************************************
+
+End Metadata
+
+Event(OnJobStart, "Do the set up")
+        #include "..\Library\Clean_OnJobStart.mrs"
+End Event
+
+
+Event(OnNextCase, "Clean the data")
+
+#if INCLUDE_CORRECTIONS_FILE == TRUE
+        #include WAVE_CORRECTIONS
+#endif
+
+'***********************************************************************************************
+        #include "assign_functions.mrs"
+        #include "sbOnNextCase.mrs"
+        #include WAVE_NEXTCASE
+'        #include "Jacc_compute.mrs"
+'***********************************************************************************************
+        #include "..\Library\Clean_OnNextCase.mrs"
+        #include "..\Library\Clean_Functions.mrs"
+'***********************************************************************************************
+
+end Event
+
+
+Event(OnJobEnd)
+'        #include WAVE_WEIGHT
+'        #include "sbWeighting.mrs"
+        #include "..\Library\Clean_OnJobEnd.mrs"
+End Event
+
+Event(OnAfterJobEnd)
+        '#include "..\Library\Clean_OnAfterJobEnd.mrs"
+        #include "..\Library\FileFunctions.mrs"
+'        sbLogTime("clean.dms", "End")
+end Event

@@ -1,0 +1,260 @@
+
+dim cat
+dim sort_banner
+
+sort_banner = left(banner, find(banner, "{") )
+
+dim str_show_brand, str_show_brand_b13
+str_show_brand = "v1,t2,v3,v4,v2"
+str_show_brand_b13 = "v1,t2,v3,v2,v99"
+
+fnAddTable(TableDoc, "S1a_1" , banner,NULL,"")
+    .Item["T" + ctext(.count)].SortColumn = sort_banner+ "{T}"
+fnAddTable(TableDoc, "S1b"   , banner,NULL,"")
+fnAddTable(TableDoc, "S2"    , banner,NULL,"")
+fnAddTable(TableDoc, "qtaS3" , banner,NULL,"")
+fnAddTable(TableDoc, "_@S4_1", banner,NULL,"")
+    .Item["T" + ctext(.count)].SortColumn = sort_banner+ "{T}"
+fnAddTable(TableDoc, "S6"    , banner,NULL,"")
+    .Item["T" + ctext(.count)].SortColumn = sort_banner+ "{T}"
+fnAddTable(TableDoc, "S7"    , banner,NULL,"")
+fnAddTable(TableDoc, "S9"    , banner,NULL,"")
+fnAddTable(TableDoc, "S10"   , banner,NULL,"")
+fnAddTable(TableDoc, "S11"   , banner,NULL,"")
+
+fnAddGrid(TableDoc,"__S12_1[..].Column","__S12_1{total '第一+第二+第三' net({..})}",NULL,"")
+    .Item[.count-1].level = "Hdata"
+    .Item["TG" + ctext(.count)].Side.SubAxes[0].Label =.Item["TG" + ctext(.count)].Side.SubAxes[0].Label + " - Summary"
+fnAddTable(TableDoc,"__S12_1[..].Column","__S12_1{total '第一+第二+第三' combine({..})}>" + banner,NULL,"")
+    .Item[.count-1].level = "Hdata"
+    .Item["T" + ctext(.count)].SortColumn = "__S12_1{total}>" + sort_banner+ "{T}"
+    .Item["T" + ctext(.count)].Side.SubAxes[0].Label =.Item["T" + ctext(.count)].Side.SubAxes[0].Label + " - 第一+第二+第三"
+'fnAddGridSliceTables(TableDoc,"__S12_1[..].Column",banner,NULL,"",NULL,"")
+for each cat in mdm.fields["__S12_1"].categories
+    fnAddTable(TableDoc, "__S12_1[{" + cat.name + "}].Column"    , banner,NULL,"")
+    .Item["T" + ctext(.count)].SortColumn = sort_banner+ "{T}"
+next
+
+fnAddGrid(TableDoc,"__S13_1[..].Column","__S13_1{total '第一+第二+第三' net({..})}",NULL,"")
+    .Item[.count-1].level = "Hdata"
+    .Item["TG" + ctext(.count)].Side.SubAxes[0].Label =.Item["TG" + ctext(.count)].Side.SubAxes[0].Label + " - Summary"
+fnAddTable(TableDoc,"__S13_1[..].Column","__S13_1{total '第一+第二+第三' combine({..})}>" + banner,NULL,"")
+    .Item[.count-1].level = "Hdata"
+    .Item["T" + ctext(.count)].SortColumn = "__S13_1{total}>" + sort_banner+ "{T}"
+    .Item["T" + ctext(.count)].Side.SubAxes[0].Label =.Item["T" + ctext(.count)].Side.SubAxes[0].Label + " - 第一+第二+第三"
+'fnAddGridSliceTables(TableDoc,"__S13_1[..].Column",banner,NULL,"",NULL,"")
+for each cat in mdm.fields["__S13_1"].categories
+    fnAddTable(TableDoc, "__S13_1[{" + cat.name + "}].Column"    , banner,NULL,"")
+    .Item["T" + ctext(.count)].SortColumn = sort_banner+ "{T}"
+next
+
+fnAddTable(TableDoc, "_@S14_1"   , banner,NULL,"")
+
+fnAddTable(TableDoc, "_@B1_1"   , banner,NULL,"")
+
+add_two_bases_table( TableDoc, "_@B2_1"         , banner, NULL, NULL            , false, false, null, null, null )
+add_two_bases_table( TableDoc, "_@B3_1"         , banner, NULL, NULL            , false, false, null, null, null )
+add_two_bases_table( TableDoc, "B4"             , banner, NULL, NULL            , false, false, null, null, null )
+add_two_bases_table( TableDoc, "_@B5_1"         , banner, NULL, NULL            , false, false, null, null, null )
+add_two_bases_table( TableDoc, "B6"             , banner, NULL, NULL            , false, false, null, null, null )
+add_two_bases_table( TableDoc, "B7[..].Column"  , banner, NULL, str_b7_side     , true , true , null, null, null )
+add_two_bases_table( TableDoc, "_@B8_1"         , banner, NULL, NULL            , true , false, null, null, null )
+add_two_bases_table( TableDoc, "_@B9_1"         , banner, NULL, NULL            , true , false, null, null, null )
+add_two_bases_table( TableDoc, "B10"            , banner, NULL, NULL            , false, false, null, null, null )
+add_two_bases_table( TableDoc, "B11"            , banner, NULL, NULL            , true , false, null, null, null )
+add_two_bases_table( TableDoc, "B12[..].Column" , banner, NULL, str_b12b13_side , false, true , null, null, null )
+add_two_bases_table( TableDoc, "B13[..].Column" , banner, NULL, str_b12b13_side , false, true , null, null, str_show_brand_b13 )
+
+add_two_bases_table( TableDoc, "_@B14a_1", banner, NULL, NULL, true , false, null, null, null )
+add_two_bases_table( TableDoc, "_@B14b_1", banner, NULL, NULL, false, false, null, null, null )
+
+fnAddTable(TableDoc, "_@B20_1"   , banner,NULL,"")
+    .Item["T" + ctext(.count)].SortColumn = sort_banner+ "{T}"
+
+add_two_bases_table( TableDoc, "B21"     , banner, NULL, NULL, true , false, null, null, null )
+
+fnAddTable(TableDoc, "B22"   , banner,NULL,"")
+    .Item["T" + ctext(.count)].SortColumn = sort_banner+ "{T}"
+
+fnAddTable(TableDoc, "_@B23a_1"   , banner,NULL,"")
+fnAddTable(TableDoc, "_@B23b_1"   , banner,NULL,"")
+
+add_two_bases_table( TableDoc, "_@C1_1" , banner, NULL, NULL, false, false, null, null, null )
+add_two_bases_table( TableDoc, "C2a"    , banner, NULL, NULL, false, false, null, null, null )
+add_two_bases_table( TableDoc, "_@C7a_1", banner, NULL, NULL, false, false, null, null, null )
+add_two_bases_table( TableDoc, "C2b"    , banner, NULL, NULL, false, false, null, null, null )
+add_two_bases_table( TableDoc, "_@C7b_1", banner, NULL, NULL, false, false, null, null, null )
+add_two_bases_table( TableDoc, "C2e"    , banner, NULL, NULL, false, false, null, null, null )
+add_two_bases_table( TableDoc, "_@C7e_1", banner, NULL, NULL, false, false, null, null, null )
+add_two_bases_table( TableDoc, "C2c"    , banner, NULL, NULL, false, false, null, null, null )
+add_two_bases_table( TableDoc, "_@C7c_1", banner, NULL, NULL, false, false, null, null, null )
+add_two_bases_table( TableDoc, "C2d"    , banner, NULL, NULL, false, false, null, null, null )
+add_two_bases_table( TableDoc, "_@C7d_1", banner, NULL, NULL, false, false, null, null, null )
+
+add_two_bases_table( TableDoc, "cloop[..].C3"       , banner, "C3.手机系列营销活动认知渠道"                , str_c3_side, false, true, null, null, str_show_brand )
+add_two_bases_table( TableDoc, "__C3a_1[..].column" , banner, "C3a.渠道对Reno6系列购买意愿影响"            , null       , false, true, null, null, null           )
+add_two_bases_table( TableDoc, "cloop[..].C4"       , banner, "C4.手机系列营销活动认知渠道-视频网站"        , NULL,        false, true, null, null, str_show_brand )
+add_two_bases_table( TableDoc, "cloop[..].C5"       , banner, "C5.手机系列营销活动认知渠道-短视频"          , NULL,        false, true, null, null, str_show_brand )
+add_two_bases_table( TableDoc, "cloop[..].C6"       , banner, "C6.手机系列营销活动认知渠道-社交平台"        , NULL,        false, true, null, null, str_show_brand )
+add_two_bases_table( TableDoc, "cloop[..].C7"       , banner, "C7.手机系列营销活动认知渠道-电商平台"        , NULL,        false, true, null, null, str_show_brand )
+add_two_bases_table( TableDoc, "cloop[..].C8"       , banner, "C8.手机系列营销活动认知渠道-新闻资讯App"     , NULL,        false, true, null, null, str_show_brand )
+add_two_bases_table( TableDoc, "cloop[..].C9"       , banner, "C9.手机系列营销活动认知渠道-数码科技类网站"   , NULL,        false, true, null, null, str_show_brand )
+add_two_bases_table( TableDoc, "cloop[..].C10"      , banner, "C10.手机系列营销活动认知渠道-搜索引擎"       , NULL,        false, true, null, null, str_show_brand)
+add_two_bases_table( TableDoc, "cloop[..].C11"      , banner, "C11.手机系列营销活动认知渠道-官方渠道"       , NULL,        false, true, null, null, str_show_brand)
+add_two_bases_table( TableDoc, "cloop[..].C12"      , banner, "C12.手机系列营销活动认知渠道-教育类网站/App" , NULL,        false, true, null, null, str_show_brand)
+add_two_bases_table( TableDoc, "cloop[..].C13"      , banner, "C13.手机系列营销活动认知渠道-音乐类App"      , NULL,        false, true, null, null, str_show_brand)
+add_two_bases_table( TableDoc, "cloop[..].C14"      , banner, "C14.手机系列营销活动认知渠道-其他线上渠道"    , NULL,        false, true, null, null, str_show_brand )
+
+add_two_bases_table( TableDoc, "_@C15_1" , banner, NULL, NULL, true , false, null, null, null )
+add_two_bases_table( TableDoc, "_@C16a_1", banner, NULL, NULL, false, false, null, null, null )
+
+fnAddTable(TableDoc, "_@C16a_1"   , banner,NULL,"")
+.Item["T" + ctext(.count)].Filters.AddNew("f"+ ctext(.count), "_@C16a_1*{C16a_1,C16a_2,C16a_3,C16a_4,C16a_5,C16a_6,C16a_7,C16a_8,C16a_9}", "")
+.Item["T" + ctext(.count)].Side.SubAxes[0].Label =.Item["T" + ctext(.count)].Side.SubAxes[0].Label + " - Reno6营销活动"
+fnAddTable(TableDoc, "_@C16a_1"   , banner,NULL,"")
+.Item["T" + ctext(.count)].Filters.AddNew("f"+ ctext(.count), "_@C16a_1*{C16a_10,C16a_11,C16a_12,C16a_13,C16a_14}", "")
+.Item["T" + ctext(.count)].Side.SubAxes[0].Label =.Item["T" + ctext(.count)].Side.SubAxes[0].Label + " - vivo S9营销活动"
+fnAddTable(TableDoc, "_@C16a_1"   , banner,NULL,"")
+.Item["T" + ctext(.count)].Filters.AddNew("f"+ ctext(.count), "_@C16a_1*{C16a_15,C16a_16,C16a_17,C16a_18}", "")
+.Item["T" + ctext(.count)].Side.SubAxes[0].Label =.Item["T" + ctext(.count)].Side.SubAxes[0].Label + " - 荣耀营销活动"
+
+add_two_bases_table( TableDoc, "_@C16b_1", banner, NULL, NULL, false, false, null, null, null )
+
+fnAddTable(TableDoc, "_@C16b_1"   , banner,NULL,"")
+.Item["T" + ctext(.count)].Filters.AddNew("f"+ ctext(.count), "_@C16b_1*{C16b_1,C16b_2,C16b_3,C16b_4,C16b_5,C16b_6,C16b_7,C16b_8,C16b_9}", "")
+.Item["T" + ctext(.count)].Side.SubAxes[0].Label =.Item["T" + ctext(.count)].Side.SubAxes[0].Label + " - Reno6营销活动"
+fnAddTable(TableDoc, "_@C16b_1"   , banner,NULL,"")
+.Item["T" + ctext(.count)].Filters.AddNew("f"+ ctext(.count), "_@C16b_1*{C16b_10,C16b_11,C16b_12,C16b_13,C16b_14}", "")
+.Item["T" + ctext(.count)].Side.SubAxes[0].Label =.Item["T" + ctext(.count)].Side.SubAxes[0].Label + " - vivo S9营销活动"
+fnAddTable(TableDoc, "_@C16b_1"   , banner,NULL,"")
+.Item["T" + ctext(.count)].Filters.AddNew("f"+ ctext(.count), "_@C16b_1*{C16b_15,C16b_16,C16b_17,C16b_18}", "")
+.Item["T" + ctext(.count)].Side.SubAxes[0].Label =.Item["T" + ctext(.count)].Side.SubAxes[0].Label + " - 荣耀营销活动"
+
+add_two_bases_table( TableDoc, "_@C17a_1", banner, NULL, NULL, true, false, null, null, null )
+add_two_bases_table( TableDoc, "_@C17b_1", banner, NULL, NULL, true, false, null, null, null )
+
+'add_two_bases_table( TableDoc, "_@C16b_1", banner, NULL, NULL, false, false, "_@C16b_1*{C16b_1,C16b_2,C16b_3,C16b_4,C16b_5,C16b_6,C16b_7,C16b_8,C16b_9}", "Reno6营销活动"   )
+'add_two_bases_table( TableDoc, "_@C16b_1", banner, NULL, NULL, false, false, "_@C16b_1*{C16b_10,C16b_11,C16b_12,C16b_13,C16b_14}"                       , "vivo S9营销活动" )
+'add_two_bases_table( TableDoc, "_@C16b_1", banner, NULL, NULL, false, false, "_@C16b_1*{C16b_15,C16b_16,C16b_17,C16b_18}"                               , "荣耀营销活动"     )
+
+fnAddTable(TableDoc, "_@D0a_1"   , banner,NULL,"")
+
+dim ndx
+for ndx = lbound(tvc_ques) to ubound(tvc_ques)
+    add_two_bases_table( TableDoc, tvc_ques[ndx] , banner, NULL, NULL, false, false, null, null, null )
+next
+
+fnAddTable(TableDoc, "_@D0b_1"   , banner,NULL,"")
+
+dim bln_sort
+
+for ndx = lbound(kv_ques) to ubound(kv_ques)
+    if find(kv_ques[ndx], "@") <> -1 then bln_sort = true else bln_sort = false
+    add_two_bases_table( TableDoc, kv_ques[ndx] , banner, NULL, NULL, bln_sort, false, null, null, null )
+next
+
+fnAddTable(TableDoc, "_@D11a_1"   , banner,NULL,"")
+    .Item["T" + ctext(.count)].SortColumn = sort_banner+ "{T}"
+fnAddTable(TableDoc, "D11b"   , banner,NULL,"")
+    .Item["T" + ctext(.count)].SortColumn = sort_banner+ "{T}"
+fnAddTable(TableDoc, "D11c"   , banner,NULL,"")
+    .Item["T" + ctext(.count)].SortColumn = sort_banner+ "{T}"
+
+fnAddTable(TableDoc, "D12a"   , banner,NULL,"")
+fnAddTable(TableDoc, "D12b"   , banner,NULL,"")
+
+fnAddTable(TableDoc, "_@E1_1"   , banner,NULL,"")
+    .Item["T" + ctext(.count)].SortColumn = sort_banner+ "{T}"
+fnAddTable(TableDoc, "E2"   , banner,NULL,"")
+fnAddTable(TableDoc, "E3"   , banner,NULL,"")
+
+
+'
+'dim flt, str_label
+'
+'for each flt in mdm.fields["header1_demo"].categories
+'    if flt.name = "T" then str_label = "" else str_label = " - " + flt.label
+'    fnAddGrid(TableDoc,"brand_pyramid[..].Column","brand_pyramid",NULL,"")
+'    .Item["TG" + ctext(.count)].Filters.AddNew("f"+ ctext(.count), "header1_demo*{" + flt.name + "}", "")
+'    .Item["TG" + ctext(.count)].Side.SubAxes[0].Label =.Item["TG" + ctext(.count)].Side.SubAxes[0].Label + " - Summary" + str_label
+'next
+'
+'for each flt in mdm.fields["header1_demo"].categories
+'    if flt.name = "T" then str_label = "" else str_label = " - " + flt.label
+'    fnAddGrid(TableDoc,"brand_pyramid_series[..].Column","brand_pyramid_series",NULL,"")
+'    .Item["TG" + ctext(.count)].Filters.AddNew("f"+ ctext(.count), "header1_demo*{" + flt.name + "}", "")
+'    .Item["TG" + ctext(.count)].Side.SubAxes[0].Label =.Item["TG" + ctext(.count)].Side.SubAxes[0].Label + " - Summary" + str_label
+'next
+'fnAddGrid(TableDoc,"brand_pyramid_series[..].Column","brand_pyramid_series",NULL,"")
+'.Item["TG" + ctext(.count)].Filters.AddNew("f"+ ctext(.count), "B10*{v8,v9,v10,v11,v12,v13,v14,v15,v16}", "")
+'.Item["TG" + ctext(.count)].Side.SubAxes[0].Label =.Item["TG" + ctext(.count)].Side.SubAxes[0].Label + " - Summary - OPPO用户"
+'fnAddGrid(TableDoc,"brand_pyramid_series[..].Column","brand_pyramid_series",NULL,"")
+'.Item["TG" + ctext(.count)].Filters.AddNew("f"+ ctext(.count), "not b10.containsany({v8,v9,v10,v11,v12,v13,v14,v15,v16})", "")
+'.Item["TG" + ctext(.count)].Side.SubAxes[0].Label =.Item["TG" + ctext(.count)].Side.SubAxes[0].Label + " - Summary - 非OPPO用户"
+'
+'for each flt in mdm.fields["header1_demo"].categories
+'    if flt.name = "T" then str_label = "" else str_label = " - " + flt.label
+'    fnAddGrid(TableDoc,"B12[..].Column","B12",NULL,"")
+'    .Item["TG" + ctext(.count)].Filters.AddNew("f"+ ctext(.count), "header1_demo*{" + flt.name + "}", "")
+'    .Item["TG" + ctext(.count)].Side.SubAxes[0].Label =.Item["TG" + ctext(.count)].Side.SubAxes[0].Label + " - Summary" + str_label
+'next
+'fnAddGrid(TableDoc,"B12[..].Column","B12",NULL,"")
+'.Item["TG" + ctext(.count)].Filters.AddNew("f"+ ctext(.count), "B10*{v8,v9,v10,v11,v12,v13,v14,v15,v16}", "")
+'.Item["TG" + ctext(.count)].Side.SubAxes[0].Label =.Item["TG" + ctext(.count)].Side.SubAxes[0].Label + " - Summary - OPPO用户"
+'fnAddGrid(TableDoc,"B12[..].Column","B12",NULL,"")
+'.Item["TG" + ctext(.count)].Filters.AddNew("f"+ ctext(.count), "not b10.containsany({v8,v9,v10,v11,v12,v13,v14,v15,v16})", "")
+'.Item["TG" + ctext(.count)].Side.SubAxes[0].Label =.Item["TG" + ctext(.count)].Side.SubAxes[0].Label + " - Summary - 非OPPO用户"
+'
+'for each flt in mdm.fields["header1_demo"].categories
+'    if flt.name = "T" then str_label = "" else str_label = " - " + flt.label
+'    fnAddGrid(TableDoc,"B13[..].Column","B13",NULL,"")
+'    .Item["TG" + ctext(.count)].Filters.AddNew("f"+ ctext(.count), "header1_demo*{" + flt.name + "}", "")
+'    .Item["TG" + ctext(.count)].Side.SubAxes[0].Label =.Item["TG" + ctext(.count)].Side.SubAxes[0].Label + " - Summary" + str_label
+'next
+'fnAddGrid(TableDoc,"B13[..].Column","B13",NULL,"")
+'.Item["TG" + ctext(.count)].Filters.AddNew("f"+ ctext(.count), "B10*{v8,v9,v10,v11,v12,v13,v14,v15,v16}", "")
+'.Item["TG" + ctext(.count)].Side.SubAxes[0].Label =.Item["TG" + ctext(.count)].Side.SubAxes[0].Label + " - Summary - OPPO用户"
+'fnAddGrid(TableDoc,"B13[..].Column","B13",NULL,"")
+'.Item["TG" + ctext(.count)].Filters.AddNew("f"+ ctext(.count), "not b10.containsany({v8,v9,v10,v11,v12,v13,v14,v15,v16})", "")
+'.Item["TG" + ctext(.count)].Side.SubAxes[0].Label =.Item["TG" + ctext(.count)].Side.SubAxes[0].Label + " - Summary - 非OPPO用户"
+'
+'
+'dim cloop_summary
+'dim ques_response[]
+'ques_response[1]  = "c4"
+'ques_response[2]  = "c5"
+'ques_response[3]  = "c6"
+'ques_response[4]  = "c7"
+'ques_response[5]  = "c8"
+'ques_response[6]  = "c9"
+'ques_response[7]  = "c10"
+'ques_response[8]  = "c11"
+'ques_response[9]  = "c12"
+'ques_response[10] = "c13"
+'ques_response[11] = "c14"
+'
+'cloop_summary = "{e1 '' text(), base 'Base : All' base('true'),e2 '' text(),_
+'c3_all    '线上渠道'    expression('c3*{v1,v2,v3,v4,v5,v6,v7,v8,v9,v10,v11}'),_
+'"
+'
+'
+'for ndx = 1 to ubound(ques_response)
+'    cloop_summary = cloop_summary + "v" + ctext(ndx) + ","
+'    for each cat in mdm.fields["cloop[..]." + ques_response[ndx]].categories
+'        cloop_summary = cloop_summary + ques_response[ndx] + cat.name + " '" + cat.label + "' expression('" + ques_response[ndx] + "*{" + cat.name + "}'),"
+'    next
+'next
+'
+'cloop_summary = cloop_summary + "e99 '' text()}"
+''debug.log(cloop_summary)
+'fnAddGrid(TableDoc,"cloop[..].c3" + cloop_summary,"cloop","C3~C14认知渠道汇总","")
+'.Item["TG" + ctext(.count)].Side.SubAxes[0].Label =.Item["TG" + ctext(.count)].Side.SubAxes[0].Label + " - Summary"
+'
+'fnAddGrid(TableDoc,"kpi_tvc[..].column" ,"kpi_tvc",NULL,"")
+'.Item["TG" + ctext(.count)].Side.SubAxes[0].Label =.Item["TG" + ctext(.count)].Side.SubAxes[0].Label + " - Summary"
+'
+'fnAddGrid(TableDoc,"kpi_kv[..].column" ,"kpi_kv",NULL,"")
+'.Item["TG" + ctext(.count)].Side.SubAxes[0].Label =.Item["TG" + ctext(.count)].Side.SubAxes[0].Label + " - Summary"
+'
+
+

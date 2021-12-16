@@ -1,0 +1,442 @@
+'*****FILE VERSION=5, DATE LAST MODIFIED=2012/10/05, KO
+
+'!
+MDD FUNCTIONS / SUBS
+***********************
+
+sbSetTitleText(myMDD,Qst,Context,Language,Txt)
+----> set title text for a variable
+
+sbSetResponseText(myMDD,Qst,Context,Language,ID,Txt)
+---->  set label for a category
+
+sbSetDefineResponseText(myMDD,List,Context,Language,ID,Txt)
+----> set label for an element within a define list
+        ' this label will be applied to all variables that use the define list
+
+sbSetAxisExpression(myMDD,Qst,Txt)
+---->  add an axis expression
+
+sbCopyAxisExpressionFromThisToThat(myMDD,QstFrom,QstTo)
+---->  copy an axis expression from one question and apply to another
+
+sbChangeCaseFirstLetterToCaps(myMDD,Qst,Context,Language)
+---->  change the first letter of each word in the element labels
+
+'sbAddFactors(myMDD,Qst,Context,Language,dblSeed,dblIncrement,strSkip,blnLabel)
+'----> Adds factors to a field - it gives you the option for
+        '       -selecting the seed value to apply to the first element
+        '       -selecting the increment/decrement value
+        '       -passing in any categories that should not have factors assigned
+        '       -choosing whether or not the label should be modified to include the factor value
+        
+Load_Variables_From_File(strFileName, MDMDoc)
+----> add derived variables
+
+sub sbStripHTMLFromFieldLabels(objField,Context,Language)
+----> remove html tags from question and element labels
+
+sub sbAdjustCaseOfCategoriesOnUpperFields(mdm,fields)
+----> This sub will set the labels of categories within grids to whatever was selected by CASE_OPTION
+      It will not change the labels of the lowest field in the grid (i.e. the actual responses to the question)
+
+Sub sbAddAverageMentions(myMDD,Qst,Excludes,myLabel,IncludeBlankRow,DecimalPlaces)
+----> add an average number of endorsements to the end of an axis expression
+----> formally known as sbAddAverageEndorsementsToAxis
+
+!'
+
+
+sub sbAdjustCaseOfCategoriesOnUpperFields(mdm,fields)
+      'this sub will set the labels of categories within grids to whatever was selected by CASE_OPTION
+      'it will not change the labels of the lowest field in the grid (i.e. the actual responses to the question)
+      dim field
+      dim cat
+      for each field in fields.fields
+            if field.objecttypevalue = 1 then
+                  'debug.Log(field.name)
+                  for each cat in field.categories
+                        sbSetResponseText(MDM,field.fullname,MDD_TYPE,LOCALE,cat.name,fnCaseControl(cat.label,CASE_OPTION))
+                  next
+                  sbAdjustCaseOfCategoriesOnUpperFields(mdm,field)
+            end if
+      next
+end sub
+
+
+Sub Load_Variables_From_File(strFileName, MDMDoc)
+        Dim oFileSystem
+        Dim oFileReader
+
+        Set oFileSystem = CreateObject("Scripting.FileSystemObject")
+        Set oFileReader = oFileSystem.OpenTextFile(strFileName, 1)
+        If MDMDoc.Versions.Count > 0 Then
+    If MDMDoc.Versions.Latest.IsLocked Then
+        MDMDoc.Versions.AddNew()
+    End If
+End If
+        MDMDoc.Fields.AddScript(oFileReader.ReadAll())
+End Sub
+
+
+Sub sbSetTitleText(myMDD,Qst,Context,Language,Txt)
+    myMDD.Fields[Qst].Labels.Text[Context][Language]=Txt
+End Sub
+
+Sub sbSetResponseText(myMDD,Qst,Context,Language,ID,Txt)
+    myMDD.Fields[Qst].Elements.Elements[ID].Labels.Text[Context][Language]=Txt
+End Sub
+
+Sub sbSetDefineResponseText(myMDD,List,Context,Language,ID,Txt)
+    myMDD.Types[List].Elements[ID].Labels.Text[Context][Language]=Txt
+End Sub
+
+
+Sub sbSetAxisExpression(myMDD,Qst,Txt)
+    myMDD.Fields[Qst].AxisExpression=Txt
+End Sub
+
+Sub sbSetAxisExpression_WNS(myMDD,Qst,Txt,Base_Txt)
+    
+    Txt = Left(Txt, Len(Txt) - 1) + ",BlankLine9999 '' text(),Not_answer 'Not Answer' expression ('"+ Base_Txt + " and "+ Qst + ".answercount()=0')}" 
+    
+    myMDD.Fields[Qst].AxisExpression=Txt
+End Sub
+
+Sub sbCopyAxisExpressionFromThisToThat(myMDD,QstFrom,QstTo)
+        myMDD.Fields[QstTo].AxisExpression=Replace(myMDD.Fields[QstFrom].AxisExpression,QstFrom,QstTo,,,True)
+End Sub
+
+
+Sub sbMeanXto1WithTop2Net(myMDD,Qst)
+
+    Dim iNoElements, loopCounter, MyExpression, ElementArray[2][]
+    Redim(ElementArray,0,False)
+
+    iNoElements=myMDD.Fields[Qst].Elements.Elements.Count
+
+    Redim(ElementArray,iNoElements-1)
+
+    For loopCounter=0 to iNoElements-1
+        ElementArray[0][loopCounter]=myMDD.fields[qst].elements.elements[loopCounter].fullname
+        ElementArray[1][loopCounter]=myMDD.fields[qst].elements.elements[loopCounter].label
+        ElementArray[1][loopCounter]=Replace(ElementArray[1][loopCounter],"'","''")
+    Next
+
+    MyExpression="{TopBox 'Top 2 Box (NET)' combine({" + ElementArray[0][0] + ", " + ElementArray[0][1] + "}),"
+
+    For loopCounter=0 to iNoElements-1
+        MyExpression=MyExpression+ElementArray[0][loopCounter]+" '("+ctext(iNoElements-loopCounter)+") "+ElementArray[1][loopCounter]+"' [Factor=" + ctext(iNoElements-loopCounter)+"],"
+    Next
+
+    MyExpression=MyExpression + "mean() [IsFixed=True,Decimals=2],stddev(),stderr()}"
+
+    myMDD.Fields[Qst].AxisExpression=MyExpression
+
+End Sub
+
+Sub sbMeanXto1(myMDD,Qst)
+
+    Dim iNoElements, loopCounter, MyExpression, ElementArray[2][]
+    Redim(ElementArray,0,False)
+
+    iNoElements=myMDD.Fields[Qst].Elements.Elements.Count
+
+    Redim(ElementArray,iNoElements-1)
+
+    For loopCounter=0 to iNoElements-1
+        ElementArray[0][loopCounter]=myMDD.fields[qst].elements.elements[loopCounter].fullname
+        ElementArray[1][loopCounter]=myMDD.fields[qst].elements.elements[loopCounter].label
+        ElementArray[1][loopCounter]=Replace(ElementArray[1][loopCounter],"'","''")
+    Next
+
+    MyExpression="{"
+
+    For loopCounter=0 to iNoElements-1
+        MyExpression=MyExpression+ElementArray[0][loopCounter]+" '("+ctext(iNoElements-loopCounter)+") "+ElementArray[1][loopCounter]+"' [Factor=" + ctext(iNoElements-loopCounter)+"],"
+    Next
+
+    MyExpression=MyExpression + "mean() [IsFixed=True,Decimals=2],stddev(),stderr()}"
+
+    myMDD.Fields[Qst].AxisExpression=MyExpression
+
+End Sub
+
+
+
+Sub sbChangeCaseFirstLetterToCaps(myMDD,Qst,Context,Language)
+Dim parts
+Dim TxtElements
+        for each TxtElements in myMDD.Fields[Qst].Elements
+                'debug.log(qst + " - " + ctext(txtElements))
+                parts=UCASE(left(myMDD.Fields[Qst].Elements.Elements[ctext(TxtElements)].Labels.Text[Context][Language],1))
+                parts=ctext(parts)+right(myMDD.Fields[Qst].Elements.Elements[ctext(TxtElements)].Labels.Text[Context][Language],len(myMDD.Fields[Qst].Elements.Elements[ctext(TxtElements)].Labels.Text[Context][Language]) - 1)
+                myMDD.Fields[Qst].Elements.Elements[ctext(TxtElements)].Labels.Text[Context][Language]=parts
+                parts=""
+        next
+End Sub
+
+Sub sbChangeCaseFirstLetterToCaps2(myMDD,Qst,Context,Language)
+Dim parts
+Dim TxtElements
+        for each TxtElements in myMDD.Fields[Qst].Categories
+                debug.log(qst + " - " + ctext(txtElements))
+                parts=UCASE(left(myMDD.Fields[Qst].Categories[ctext(TxtElements)].Labels.Text[Context][Language],1))
+                parts=ctext(parts)+right(myMDD.Fields[Qst].Categories[ctext(TxtElements)].Labels.Text[Context][Language],len(myMDD.Fields[Qst].Elements.Elements[ctext(TxtElements)].Labels.Text[Context][Language]) - 1)
+                myMDD.Fields[Qst].Categories[ctext(TxtElements)].Labels.Text[Context][Language]=parts
+                parts=""
+        next
+End Sub
+
+Function fnRemoveCodeAndAnswers(mdd)
+
+SbCheckAnswersAndCodeRemoval(mdd.Fields)
+
+set fnRemoveCodeAndAnswers = mdd
+End Function
+
+
+
+Function fnRemoveVars(objmdm)
+
+'if objmdm.Fields.Exist["SP4a_Sponsor"] then objmdm.Fields.Remove("SP4a_Sponsor")
+
+set fnRemoveVars = objmdm
+End Function
+
+Function fnMakeLite(mdd, MOD_NAME)
+
+DIM MDD2,longList,mediumList,shortList,brand,subList,MyCloneObject
+
+unlockVersion(MDD)
+longList = MDD.Types["Brands"]
+Set MyCloneObject = MDD.Types["Brands"].GetInterface("{F2780F44-AC4C-4afa-A429-30E817C05D37}")
+
+Set mediumList = MyCloneObject.cloneEx
+mediumList.name = "Brands_Q4"
+
+for each brand in mediumList
+        If      Not(findItem(MDD.Fields["Brands_" + MOD_NAME + "_Q4"].elements,brand.name)) Then
+                debug.log(brand+ ": Removing from Brands_Q4")
+                mediumList.remove(brand.name)
+        Else
+                debug.log(brand + ": Keeping on Brands_Q4")
+        End If
+
+Next
+MDD.Types.Add(mediumList)
+
+
+Set shortList = MyCloneObject.cloneEx
+shortList.name = "Brands_Q7"
+Set subList = MDD.Fields["Brands_" + MOD_NAME + "_Q7"]
+MDD.Types.Add(shortList)
+for each brand in shortList
+        If Not(findItem(MDD.Fields["Brands_" + MOD_NAME + "_Q7"].elements,brand.name)) THEN
+                debug.log(brand+ ": Removing from Brands_Q7")
+                shortList.remove(brand.name)
+        Else
+                debug.log(brand + ": Keeping on Brands_Q7")
+        End If
+
+Next
+
+'MDD.Fields["Q4"].replaceElementList(MDD.Types["Brands_Q4"])
+
+set fnMakeLite = MDD
+
+End Function
+
+
+Sub unlockVersion(MDM)
+
+'get an unlocked version
+
+If mdm.Versions.Count > 0 Then
+        If mdm.Versions.Latest.IsLocked Then
+                mdm.Versions.AddNew()
+        End If
+End If
+
+end Sub
+
+Sub replaceElementList(question,list)
+        question.Elements.remove("Brands")
+        SET question.Elements.reference=list
+
+End Sub
+
+Sub SbCheckFieldRemoval(Fields)
+'removes all fields that also have _answers or _code fields
+        dim field
+        for each field in Fields
+                if Fields.Exist[ctext(field.name) + "_Answers"] or Fields.Exist[ctext(field.name) + "_Code"] then
+                        Fields.Remove(Field.Name)
+                end if
+                select case field.ObjectTypeValue
+                        case 1,2,3
+                        'ObjectTypesConstants.mtArray, ObjectTypesConstants.mtGrid, ObjectTypesConstants.mtClass
+                                SbCheckFieldRemoval(field.Fields)
+                end select
+        next
+End Sub
+
+Sub SbCheckAnswersAndCodeRemoval(Fields)
+'basically inverse of previous sub
+'removes all _code and _answers
+        dim field
+        for each field in Fields
+                if Fields.Exist[ctext(field.name) + "_Answers"] then
+                        Fields.Remove(ctext(field.name) + "_Answers")
+                elseif Fields.Exist[ctext(field.name) + "_Code"] then
+                        Fields.Remove(ctext(field.name) + "_Code")
+                end if
+                select case field.ObjectTypeValue
+                        case 1,2,3
+                        'ObjectTypesConstants.mtArray, ObjectTypesConstants.mtGrid, ObjectTypesConstants.mtClass
+                                SbCheckAnswersAndCodeRemoval(field.Fields)
+                end select
+        next
+End Sub
+
+
+sub sbAddFactors(myMDD,Qst,Context,Language,dblSeed,dblIncrement,strSkip,blnLabel)
+        'this sub adds factors to a field - it gives you the option for
+        '       -selecting the seed value to apply to the first element
+        '       -selecting the increment/decrement value
+        '       -passing in any categories that should not have factors assigned
+        '       -choosing whether or not the label should be modified to include the factor value
+        
+        dim vars
+        dim ele
+        dim arrSkip
+        dim blnSkip
+        dim i
+
+        set arrSkip = split(strSkip,",")
+
+        set vars = myMDD.fields[Qst]
+
+        for each ele in vars.elements.elements
+                blnSkip = False
+                for i = 0 to ubound(arrSkip)
+                        if ucase(ele.name) = ucase(arrSkip[i]) then
+                                blnSkip = True
+                                exit for
+                        end if
+                next
+        
+                if blnSkip = False then
+                        ele.Factor=dblSeed
+                        if blnLabel = True then
+                                'Update the label with the factor number if blnLabel = true
+                                if find(ele.labels.Text[Context][Language],"("+ctext(dblSeed)+")") = -1 then 
+                                        ele.Labels.Text[Context][Language]="("+ctext(dblSeed)+")  " + ele.label
+                                end if
+                        end if
+                        dblSeed = dblSeed + dblIncrement
+        end if
+        next
+end sub
+
+
+sub sbStripHTMLFromFieldLabels(objField,Context,Language)
+        dim field
+        dim elm
+
+        
+        'debug.Log("B: " + objField.label)      
+        objField.labels.text[Context][Language] = fnStripHTML(objField.labels.text[Context][Language])
+        'debug.Log("A: " + objField.label)      
+        
+        if objfield.objecttypevalue <> 0 then
+                if objfield.objecttypevalue = 1 or objfield.objecttypevalue = 2 then
+                        For each elm in objField.elements.elements
+                        'debug.log(mr.Tab + "B: " + elm.label)  
+                        elm.labels.text[Context][Language] = fnStripHTML(elm.labels.text[Context][Language])
+                        'debug.Log(mr.Tab + "A: " + elm.label)  
+                        Next
+                end if
+                for each field in objField.Fields
+                        sbStripHTMLFromFieldLabels(Field,Context,Language)
+                next
+        else
+                For each elm in objField.elements.elements
+                        'debug.log(mr.Tab + "B: " + elm.label)  
+                        elm.labels.text[Context][Language] = fnStripHTML(elm.labels.text[Context][Language])
+                        'debug.Log(mr.Tab + "A: " + elm.label)  
+                Next
+        end if
+end sub
+
+
+Sub sbAddAverageMentions(myMDD,Qst,Excludes,myLabel,IncludeBlankRow,DecimalPlaces)
+        'Adds an averge number of endorsements/mentions to the end of an existing axis expression as a new row.
+        'Notes:
+           'Does not work with axis expressions that reference a numeric variable type.
+           'If a total() function is used in the axis expression before this sub that total() function will need
+           '   to be changed to a subtotal() otherwise the value of the total() will triple in value because of elements within this sub.
+        'Parameters:
+           'myMDD => MDM
+           'Qst => categorical variable holding current axis expression
+           'Excludes => categories to not include in the sum figure (does not exclude them from the figure that divides into the sum figure).
+           '            Set to NULL if including all categories
+           'myLabel => Label/Text to be displayed with this calculation
+           'IncludeBlankRow  => TRUE/FALSE where TRUE inserts a blank row before this calculation
+           'DecimalPlaces => Number of decimal places to calculate this value
+        'Example:
+           'sbAddAverageMentions(MDM,"qb",NULL,"Average brand endorsement",true,"0")
+           'sbAddAverageMentions(MDM,"q3[..].slice","None,DK","Average brand endorsement",FALSE,"2")
+
+           
+        Dim strAxis
+        strAxis = myMDD.Fields[Qst].AxisExpression
+
+        If strAxis = "" Then strAxis = "{..}"
+
+        strAxis = Left(strAxis, Len(strAxis) - 1)
+        strAxis = strAxis + ",t0 subtotal() [IsHidden=True, IsFixed=True]"
+                If Excludes = NULL then
+                        strAxis = strAxis + ",n1 net({..}) [IsHidden=True,IsFixed=True]"
+                Else
+                        strAxis = strAxis + ",n1 net({..,^" + Replace(Excludes,",",",^") + "}) [IsHidden=True,IsFixed=True]"
+                End If
+        strAxis = strAxis + ",t1 subtotal() [IsHidden=True, IsFixed=True]"
+        strAxis = strAxis + ",n2 net({..}) [IsHidden=True, IsFixed=True]"
+        if IncludeBlankRow then strAxis = strAxis + ",text1 ' ' text()"
+        strAxis = strAxis + ",d1 '" + myLabel + "' derived('t1/n2') [Decimals="+DecimalPlaces+", IsFixed=True]}"
+
+        myMDD.Fields[Qst].AxisExpression = strAxis
+End Sub
+
+Sub sbLoadVariablesFromFile(strFileName, MDMDoc)
+        Dim oFileSystem
+        Dim oFileReader
+
+        Set oFileSystem = CreateObject("Scripting.FileSystemObject")
+        Set oFileReader = oFileSystem.OpenTextFile(strFileName, 1)
+        If MDMDoc.Versions.Count > 0 Then
+    If MDMDoc.Versions.Latest.IsLocked Then
+        MDMDoc.Versions.AddNew()
+    End If
+End If
+        MDMDoc.Fields.AddScript(oFileReader.ReadAll())
+End Sub
+
+Sub sbAddMetadata(strInputMDD,strOutputMDD,strSyntaxFile)
+
+'strInputMDD    location/name of input MDD
+'strOutputMDD   location/name of output MDD
+'strSyntaxFile  location/name of file containing metadata syntax to be added to input mdd
+
+Dim MDMDoc      'metadata object
+
+        set MDMDoc = CreateObject("MDM.Document")
+        MDMDoc.Open(strInputMDD)
+        sbLoadVariablesFromFile(strSyntaxFile, MDMDoc)
+        MDMDoc.CategoryMap.AutoAssignValues()
+        MDMDoc.url = strOutputMDD
+        MDMDoc.Save()
+        MDMDoc.Close()
+
+End Sub

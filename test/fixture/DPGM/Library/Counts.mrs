@@ -1,0 +1,6 @@
+'*****FILE VERSION=1, DATE LAST MODIFIED=2010/09/16, KO
+
+'these subroutines are called by hole count programs in each project directory
+'sbCounts - used for invidual variables
+'sbCounts2 - used for counts of multiple variables (total awareness for open end variables, etc.)
+

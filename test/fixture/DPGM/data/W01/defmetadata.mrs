@@ -1,0 +1,737 @@
+_@B1_1 ""
+categorical [..]
+{
+    B1_1 "华为/Huawei",
+    B1_2 "OPPO",
+    B1_3 "vivo",
+    B1_4 "iQOO",
+    B1_5 "荣耀/Honor",
+    B1_6 "苹果/ Apple",
+    B1_7 "三星/ SAMSUNG",
+    B1_8 "小米",
+    B1_9 "红米",
+    B1_10 "realme",
+    B1_11 "一加/OnePlus",
+    B1_98 "其他，请注明",
+    B1_99 "以上都不知道",
+    B1_97    "无"
+};
+
+B4 ""
+categorical[..]
+{
+    V1 "华为/Huawei"
+        [
+            Value = 1
+        ],
+    V2 "OPPO"
+        [
+            Value = 2
+        ],
+    V3 "vivo"
+        [
+            Value = 3
+        ],
+    V4 "iQOO"
+        [
+            Value = 4
+        ],
+    V5 "荣耀/Honor"
+        [
+            Value = 5
+        ],
+    V6 "苹果/ Apple"
+        [
+            Value = 6
+        ],
+    V7 "三星/ SAMSUNG"
+        [
+            Value = 7
+        ],
+    V8 "小米"
+        [
+            Value = 8
+        ],
+    V9 "红米"
+        [
+            Value = 9
+        ],
+    V10 "realme"
+        [
+            Value = 10
+        ],
+    V11 "一加/OnePlus"
+        [
+            Value = 11
+        ],
+    V98 "其他，请注明"
+        [
+            Value = 98
+        ],
+    V99 "以上都不考虑"
+        [
+            Value = 99
+        ],
+    V97 "无"
+};
+
+_@C1_1 ""
+categorical [..]
+{
+    C1_1  "华为/Huawei",
+    C1_2  "OPPO",
+    C1_3  "vivo",
+    C1_4  "iQOO",
+    C1_5  "荣耀/Honor",
+    C1_6  "苹果/ Apple",
+    C1_7  "三星/ SAMSUNG",
+    C1_8  "小米",
+    C1_9  "红米",
+    C1_10 "realme",
+    C1_11 "一加/OnePlus",
+    C1_99 "其他，请注明",
+    C1_97    "无"
+};
+
+
+_@B2_1 "@B2_1"
+categorical [..]
+{
+    B2_1 "P40/ Pro/ Pro+",
+    B2_2 "Mate30/ 30 Pro/ 30 RS/ 30E/ 30E Pro",
+    B2_3 "Mate40/ 40E/ 40 Pro/ 40 Pro+/ 40RS保时捷设计款",
+    B2_4 "Mate X2",
+    B2_5 "Nova7/ Pro/ SE",
+    B2_6 "Nova8/ Pro/ SE",
+    B2_7 "华为其他，请注明",
+    B2_8 "Reno Ace2",
+    B2_9 "Reno4/ Pro/ SE",
+    B2_10 "Reno3/ Pro ",
+    B2_11 "Reno 5/ Pro/ Pro+",
+    B2_12 "Reno 6/ Pro/ Pro+",
+    B2_13 "Find X2/ X2 Pro",
+    B2_14 "Find X3 / X3 Pro",
+    B2_15 "K7/ K7X",
+    B2_16 "OPPO其他，请注明",
+    B2_17 "iQOO 5/ Pro",
+    B2_18 "iQOO 7",
+    B2_19 "IQOO Neo5",
+    B2_20 "IQOO Z1/ Z3 ",
+    B2_21 "IQOO U3/ U3x",
+    B2_58 "iQOO其他，请注明",
+    B2_22 "vivo X60/ Pro/ Pro+/ X60t",
+    B2_23 "vivo X50/ Pro / Pro+",
+    B2_24 "vivo S9/ S9e",
+    B2_60 "vivo S10/ Pro",
+    B2_25 "vivo其他，请注明",
+    B2_26 "荣耀30/ Pro/ Pro+",
+    B2_27 "荣耀V40/ 轻奢版",
+    B2_28 "荣耀50/ Pro/ SE",
+    B2_29 "荣耀X20 SE",
+    B2_30 "荣耀其他，请注明",
+    B2_31 "iPhone 11 / Pro/ Pro Max",
+    B2_32 "iPhone 12/ mini/ Pro/ Pro Max",
+    B2_33 "iPhone XS/ XR/ XS Max",
+    B2_34 "iPhone SE/ SE2",
+    B2_35 "苹果其他，请注明",
+    B2_36 "Galaxy S20/ S20+/ S20 Ultra / S20 FE",
+    B2_37 "Galaxy S21/ S21+/ S21 Ultra",
+    B2_38 "Galaxy Note10+ / Note20 / Note20 Ultra",
+    B2_39 "Galaxy Z Fold2",
+    B2_40 "Galaxy Z Flip ",
+    B2_41 "Galaxy A51/ A52/ A71",
+    B2_42 "三星其他，请注明",
+    B2_43 "小米10/ 10 Pro/ 10至尊纪念版/ 10青春版",
+    B2_44 "小米11/ 11 Pro/ 11 Ultra/ 11青春版",
+    B2_45 "小米 MIX FOLD",
+    B2_59 "小米其他，请注明",
+    B2_46 "Redmi Note10/ 10 Pro",
+    B2_47 "Redmi Note9/ 9 Pro",
+    B2_48 "Redmi K40/ 40 Pro",
+    B2_49 "红米其他，请注明",
+    B2_50 "真我X50/ Pro",
+    B2_51 "真我Q3/ Q30i/ Q30 Pro",
+    B2_52 "真我X7/ X7 Pro",
+    B2_53 "真我V15",
+    B2_54 "realme其他，请注明",
+    B2_55 "一加8/ 8T",
+    B2_56 "一加9/ 9R",
+    B2_57 "一加其他，请注明",
+    B2_98 "其他品牌机型，请注明",
+    B2_81    "p30",
+    B2_82    "iPhone 不清楚型号"
+};
+
+
+_@B5_1 ""
+categorical [..]
+{
+        B5_1 "B5_1: P40/ Pro/ Pro+",
+        B5_2 "B5_2: Mate30/ 30 Pro/ 30 RS/ 30E/ 30E Pro",
+        B5_3 "B5_3: Mate40/ 40E/ 40 Pro/ 40 Pro+/ 40RS保时捷设计款",
+        B5_4 "B5_4: Mate X2",
+        B5_5 "B5_5: Nova7/ Pro/ SE",
+        B5_6 "B5_6: Nova8/ Pro/ SE",
+        B5_7 "B5_7: 华为其他，请注明",
+        B5_8 "B5_8: Reno Ace2",
+        B5_9 "B5_9: Reno4/ Pro/ SE",
+        B5_10 "B5_10: Reno3/ Pro ",
+        B5_11 "B5_11: Reno 5/ Pro/ Pro+",
+        B5_12 "B5_12: Reno 6/ Pro/ Pro+",
+        B5_13 "B5_13: Find X2/ X2 Pro",
+        B5_14 "B5_14: Find X3 / X3 Pro",
+        B5_15 "B5_15: K7/ K7X",
+        B5_16 "B5_16: OPPO其他，请注明",
+        B5_17 "B5_17: iQOO 5/ Pro",
+        B5_18 "B5_18: iQOO 7",
+        B5_19 "B5_19: IQOO Neo5",
+        B5_20 "B5_20: IQOO Z1/ Z3 ",
+        B5_21 "B5_21: IQOO U3/ U3x",
+        B5_58 "B5_58: iQOO其他，请注明",
+        B5_22 "B5_22: vivo X60/ Pro/ Pro+/ X60t",
+        B5_23 "B5_23: vivo X50/ Pro / Pro+",
+        B5_24 "B5_24: vivo S9/ S9e",
+        B5_60 "B5_60: vivo S10/ Pro",
+        B5_25 "B5_25: vivo其他，请注明",
+        B5_26 "B5_26: 荣耀30/ Pro/ Pro+",
+        B5_27 "B5_27: 荣耀V40/ 轻奢版",
+        B5_28 "B5_28: 荣耀50/ Pro/ SE",
+        B5_29 "B5_29: 荣耀X20 SE",
+        B5_30 "B5_30: 荣耀其他，请注明",
+        B5_31 "B5_31: iPhone 11 / Pro/ Pro Max",
+        B5_32 "B5_32: iPhone 12/ mini/ Pro/ Pro Max",
+        B5_33 "B5_33: iPhone XS/ XR/ XS Max",
+        B5_34 "B5_34: iPhone SE/ SE2",
+        B5_35 "B5_35: 苹果其他，请注明",
+        B5_36 "B5_36: Galaxy S20/ S20+/ S20 Ultra / S20 FE",
+        B5_37 "B5_37: Galaxy S21/ S21+/ S21 Ultra",
+        B5_38 "B5_38: Galaxy Note10+ / Note20 / Note20 Ultra",
+        B5_39 "B5_39: Galaxy Z Fold2",
+        B5_40 "B5_40: Galaxy Z Flip ",
+        B5_41 "B5_41: Galaxy A51/ A52/ A71",
+        B5_42 "B5_42: 三星其他，请注明",
+        B5_43 "B5_43: 小米10/ 10 Pro/ 10至尊纪念版/ 10青春版",
+        B5_44 "B5_44: 小米11/ 11 Pro/ 11 Ultra/ 11青春版",
+        B5_45 "B5_45: 小米 MIX FOLD",
+        B5_59 "B5_59: 小米其他，请注明",
+        B5_46 "B5_46: Redmi Note10/ 10 Pro",
+        B5_47 "B5_47: Redmi Note9/ 9 Pro",
+        B5_48 "B5_48: Redmi K40/ 40 Pro",
+        B5_49 "B5_49: 红米其他，请注明",
+        B5_50 "B5_50: 真我X50/ Pro",
+        B5_51 "B5_51: 真我Q3/ Q30i/ Q30 Pro",
+        B5_52 "B5_52: 真我X7/ X7 Pro",
+        B5_53 "B5_53: 真我V15",
+        B5_54 "B5_54: realme其他，请注明",
+        B5_55 "B5_55: 一加8/ 8T",
+        B5_56 "B5_56: 一加9/ 9R",
+        B5_57 "B5_57: 一加其他，请注明",
+        B5_98 "B5_98: 其他品牌机型，请注明",
+    B5_81    "p30",
+    B5_82    "iPhone 不清楚型号"
+};
+
+B6 ""
+categorical [..]
+{
+        V1 "P40/ Pro/ Pro+"
+            [
+                Value = 1
+            ],
+        V2 "Mate30/ 30 Pro/ 30 RS/ 30E/ 30E Pro"
+            [
+                Value = 2
+            ],
+        V3 "Mate40/ 40E/ 40 Pro/ 40 Pro+/ 40RS保时捷设计款"
+            [
+                Value = 3
+            ],
+        V4 "Mate X2"
+            [
+                Value = 4
+            ],
+        V5 "Nova7/ Pro/ SE"
+            [
+                Value = 5
+            ],
+        V6 "Nova8/ Pro/ SE"
+            [
+                Value = 6
+            ],
+        V7 "华为其他，请注明"
+            [
+                Value = 7
+            ],
+        V8 "Reno Ace2"
+            [
+                Value = 8
+            ],
+        V9 "Reno4/ Pro/ SE"
+            [
+                Value = 9
+            ],
+        V10 "Reno3/ Pro"
+            [
+                Value = 10
+            ],
+        V11 "Reno 5/ Pro/ Pro+"
+            [
+                Value = 11
+            ],
+        V12 "Reno 6/ Pro/ Pro+"
+            [
+                Value = 12
+            ],
+        V13 "Find X2/ X2 Pro"
+            [
+                Value = 13
+            ],
+        V14 "Find X3 / X3 Pro"
+            [
+                Value = 14
+            ],
+        V15 "K7/ K7X"
+            [
+                Value = 15
+            ],
+        V16 "OPPO其他，请注明"
+            [
+                Value = 16
+            ],
+        V17 "iQOO 5/ Pro"
+            [
+                Value = 17
+            ],
+        V18 "iQOO 7"
+            [
+                Value = 18
+            ],
+        V19 "IQOO Neo5"
+            [
+                Value = 19
+            ],
+        V20 "IQOO Z1/ Z3"
+            [
+                Value = 20
+            ],
+        V21 "IQOO U3/ U3x"
+            [
+                Value = 21
+            ],
+        V22 "vivo X60/ Pro/ Pro+/ X60t"
+            [
+                Value = 22
+            ],
+        V23 "vivo X50/ Pro / Pro+"
+            [
+                Value = 23
+            ],
+        V24 "vivo S9/ S9e"
+            [
+                Value = 24
+            ],
+        V25 "vivo其他，请注明"
+            [
+                Value = 25
+            ],
+        V26 "荣耀30/ Pro/ Pro+"
+            [
+                Value = 26
+            ],
+        V27 "荣耀V40/ 轻奢版"
+            [
+                Value = 27
+            ],
+        V28 "荣耀50/ Pro/ SE"
+            [
+                Value = 28
+            ],
+        V29 "荣耀X20 SE"
+            [
+                Value = 29
+            ],
+        V30 "荣耀其他，请注明"
+            [
+                Value = 30
+            ],
+        V31 "iPhone 11 / Pro/ Pro Max"
+            [
+                Value = 31
+            ],
+        V32 "iPhone 12/ mini/ Pro/ Pro Max"
+            [
+                Value = 32
+            ],
+        V33 "iPhone XS/ XR/ XS Max"
+            [
+                Value = 33
+            ],
+        V34 "iPhone SE/ SE2"
+            [
+                Value = 34
+            ],
+        V35 "苹果其他，请注明"
+            [
+                Value = 35
+            ],
+        V36 "Galaxy S20/ S20+/ S20 Ultra / S20 FE"
+            [
+                Value = 36
+            ],
+        V37 "Galaxy S21/ S21+/ S21 Ultra"
+            [
+                Value = 37
+            ],
+        V38 "Galaxy Note10+ / Note20 / Note20 Ultra"
+            [
+                Value = 38
+            ],
+        V39 "Galaxy Z Fold2"
+            [
+                Value = 39
+            ],
+        V40 "Galaxy Z Flip"
+            [
+                Value = 40
+            ],
+        V41 "Galaxy A51/ A52/ A71"
+            [
+                Value = 41
+            ],
+        V42 "三星其他，请注明"
+            [
+                Value = 42
+            ],
+        V43 "小米10/ 10 Pro/ 10至尊纪念版/ 10青春版"
+            [
+                Value = 43
+            ],
+        V44 "小米11/ 11 Pro/ 11 Ultra/ 11青春版"
+            [
+                Value = 44
+            ],
+        V45 "小米 MIX FOLD"
+            [
+                Value = 45
+            ],
+        V46 "Redmi Note10/ 10 Pro"
+            [
+                Value = 46
+            ],
+        V47 "Redmi Note9/ 9 Pro"
+            [
+                Value = 47
+            ],
+        V48 "Redmi K40/ 40 Pro"
+            [
+                Value = 48
+            ],
+        V49 "红米其他，请注明"
+            [
+                Value = 49
+            ],
+        V50 "真我X50/ Pro"
+            [
+                Value = 50
+            ],
+        V51 "真我Q3/ Q30i/ Q30 Pro"
+            [
+                Value = 51
+            ],
+        V52 "真我X7/ X7 Pro"
+            [
+                Value = 52
+            ],
+        V53 "真我V15"
+            [
+                Value = 53
+            ],
+        V54 "realme其他，请注明"
+            [
+                Value = 54
+            ],
+        V55 "一加8/ 8T"
+            [
+                Value = 55
+            ],
+        V56 "一加9/ 9R"
+            [
+                Value = 56
+            ],
+        V57 "一加其他，请注明"
+            [
+                Value = 57
+            ],
+        V58 "iQOO其他，请注明"
+            [
+                Value = 58
+            ],
+        V59 "小米其他，请注明"
+            [
+                Value = 59
+            ],
+        V60 "vivo S10/ Pro"
+            [
+                Value = 60
+            ],
+        V98 "其他品牌机型，请注明"
+            [
+                Value = 98
+            ],
+    V81    "p30",
+    V82    "iPhone 不清楚型号"
+};
+
+B10 ""
+categorical [..]
+{
+        V1 "P40/ Pro/ Pro+"
+            [
+                Value = 1
+            ],
+        V2 "Mate30/ 30 Pro/ 30 RS/ 30E/ 30E Pro"
+            [
+                Value = 2
+            ],
+        V3 "Mate40/ 40E/ 40 Pro/ 40 Pro+/ 40RS保时捷设计款"
+            [
+                Value = 3
+            ],
+        V4 "Mate X2"
+            [
+                Value = 4
+            ],
+        V5 "Nova7/ Pro/ SE"
+            [
+                Value = 5
+            ],
+        V6 "Nova8/ Pro/ SE"
+            [
+                Value = 6
+            ],
+        V7 "华为其他，请注明"
+            [
+                Value = 7
+            ],
+        V8 "Reno Ace2"
+            [
+                Value = 8
+            ],
+        V9 "Reno4/ Pro/ SE"
+            [
+                Value = 9
+            ],
+        V10 "Reno3/ Pro"
+            [
+                Value = 10
+            ],
+        V11 "Reno 5/ Pro/ Pro+"
+            [
+                Value = 11
+            ],
+        V12 "Reno 6/ Pro/ Pro+"
+            [
+                Value = 12
+            ],
+        V13 "Find X2/ X2 Pro"
+            [
+                Value = 13
+            ],
+        V14 "Find X3 / X3 Pro"
+            [
+                Value = 14
+            ],
+        V15 "K7/ K7X"
+            [
+                Value = 15
+            ],
+        V16 "OPPO其他，请注明"
+            [
+                Value = 16
+            ],
+        V17 "iQOO 5/ Pro"
+            [
+                Value = 17
+            ],
+        V18 "iQOO 7"
+            [
+                Value = 18
+            ],
+        V19 "IQOO Neo5"
+            [
+                Value = 19
+            ],
+        V20 "IQOO Z1/ Z3"
+            [
+                Value = 20
+            ],
+        V21 "IQOO U3/ U3x"
+            [
+                Value = 21
+            ],
+        V22 "vivo X60/ Pro/ Pro+/ X60t"
+            [
+                Value = 22
+            ],
+        V23 "vivo X50/ Pro / Pro+"
+            [
+                Value = 23
+            ],
+        V24 "vivo S9/ S9e"
+            [
+                Value = 24
+            ],
+        V25 "vivo其他，请注明"
+            [
+                Value = 25
+            ],
+        V26 "荣耀30/ Pro/ Pro+"
+            [
+                Value = 26
+            ],
+        V27 "荣耀V40/ 轻奢版"
+            [
+                Value = 27
+            ],
+        V28 "荣耀50/ Pro/ SE"
+            [
+                Value = 28
+            ],
+        V29 "荣耀X20 SE"
+            [
+                Value = 29
+            ],
+        V30 "荣耀其他，请注明"
+            [
+                Value = 30
+            ],
+        V31 "iPhone 11 / Pro/ Pro Max"
+            [
+                Value = 31
+            ],
+        V32 "iPhone 12/ mini/ Pro/ Pro Max"
+            [
+                Value = 32
+            ],
+        V33 "iPhone XS/ XR/ XS Max"
+            [
+                Value = 33
+            ],
+        V34 "iPhone SE/ SE2"
+            [
+                Value = 34
+            ],
+        V35 "苹果其他，请注明"
+            [
+                Value = 35
+            ],
+        V36 "Galaxy S20/ S20+/ S20 Ultra / S20 FE"
+            [
+                Value = 36
+            ],
+        V37 "Galaxy S21/ S21+/ S21 Ultra"
+            [
+                Value = 37
+            ],
+        V38 "Galaxy Note10+ / Note20 / Note20 Ultra"
+            [
+                Value = 38
+            ],
+        V39 "Galaxy Z Fold2"
+            [
+                Value = 39
+            ],
+        V40 "Galaxy Z Flip"
+            [
+                Value = 40
+            ],
+        V41 "Galaxy A51/ A52/ A71"
+            [
+                Value = 41
+            ],
+        V42 "三星其他，请注明"
+            [
+                Value = 42
+            ],
+        V43 "小米10/ 10 Pro/ 10至尊纪念版/ 10青春版"
+            [
+                Value = 43
+            ],
+        V44 "小米11/ 11 Pro/ 11 Ultra/ 11青春版"
+            [
+                Value = 44
+            ],
+        V45 "小米 MIX FOLD"
+            [
+                Value = 45
+            ],
+        V46 "Redmi Note10/ 10 Pro"
+            [
+                Value = 46
+            ],
+        V47 "Redmi Note9/ 9 Pro"
+            [
+                Value = 47
+            ],
+        V48 "Redmi K40/ 40 Pro"
+            [
+                Value = 48
+            ],
+        V49 "红米其他，请注明"
+            [
+                Value = 49
+            ],
+        V50 "真我X50/ Pro"
+            [
+                Value = 50
+            ],
+        V51 "真我Q3/ Q30i/ Q30 Pro"
+            [
+                Value = 51
+            ],
+        V52 "真我X7/ X7 Pro"
+            [
+                Value = 52
+            ],
+        V53 "真我V15"
+            [
+                Value = 53
+            ],
+        V54 "realme其他，请注明"
+            [
+                Value = 54
+            ],
+        V55 "一加8/ 8T"
+            [
+                Value = 55
+            ],
+        V56 "一加9/ 9R"
+            [
+                Value = 56
+            ],
+        V57 "一加其他，请注明"
+            [
+                Value = 57
+            ],
+        V58 "iQOO其他，请注明"
+            [
+                Value = 58
+            ],
+        V59 "小米其他，请注明"
+            [
+                Value = 59
+            ],
+        V98 "其他品牌机型，请注明"
+            [
+                Value = 98
+            ],
+        V998 "其他，请注明"
+            [
+                Value = 998
+            ],
+    V81    "p30",
+    V82    "iPhone 不清楚型号"
+};
+
+
+

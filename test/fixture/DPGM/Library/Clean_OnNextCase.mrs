@@ -1,0 +1,7 @@
+'*****FILE VERSION=1, DATE LAST MODIFIED=2010/09/16, KO
+
+    'set the respondent number into a global variable that can be used by all subroutines
+    dmgrJob.GlobalVariables.RespNum = RESP_NUMBER
+    
+    'set the log help var - a week, date, or quota variable to be included in the logging for grouping respondents
+    dmgrJob.GlobalVariables.LogHelpVar = LOG_HELP_VAR

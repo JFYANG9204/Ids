@@ -1,8 +1,0 @@
-dim vars,tester
-analfile.writeline("Version:"+version)
-analfile.WriteLine("Variable	Variable Label	Tabulate	Banner	Top2	Bot2	Sigma	Average Number	Mean	Folder")
-dim bann,outf[]
-bann=""
-for each vars in docMDM.fields
-        createdefs(docMDM,vars,bann,outfile,categ)
-next

@@ -1,0 +1,88 @@
+'*****FILE VERSION=3, DATE LAST MODIFIED=2011/06/13, KO
+
+'STRING FUNCTIONS / SUBS
+'***********************
+'
+'fnStripHTML(strHTML)           
+'----> strips out basic html tags
+'
+'fnRepeatText(strText,Count) 
+'----> repeat character Count number of times
+'
+'Function fnCaseControl(strText,intCaseOption)
+'----> control case text
+
+
+Function fnCaseControl(strText,intCaseOption)
+      'strText          text to be changed
+      'intCaseOption    choice of how to capitalize text
+      '                       1 = Capitalize first letter of the first word of each sentence
+      '                       2 = Capitalize first letter of each word
+      '                       3 = Capitalize everything
+      '                       4 = All lower case
+      '                       5 = Change nothing
+      
+        dim arrText,i
+        dim oRegExp
+        dim oMatches, oMatch
+        fnCaseControl = ""
+        
+        select case intCaseOption
+            case 1  'Capitalize first word of each sentence. 
+                  set oRegExp = CreateObject("VBScript.RegExp")
+                  oRegExp.Global = True
+                  oRegExp.Multiline = True
+                  oRegExp.Pattern = "[A-Za-z0-9\'\@][\w\W]*?(\.|!|\?|$)(\s+|$)" 
+                  set oMatches = oRegExp.Execute(strText)
+                  for each oMatch in oMatches
+                        fnCaseControl = fnCaseControl + ucase(Left(oMatch,1)) + Mid(oMatch,1)
+                  next
+            
+            case 2      'First Letter Of Each Word
+                  arrText = strText.Split(" ")
+                  i=0
+                  do while i < UBound(arrText) + 1 
+                     fnCaseControl = fnCaseControl + Ucase(Left(arrText[i],1)) + Mid(arrText[i],1,Len(arrText[i])) + " "
+                  i=i+1
+                  Loop
+            case 3  'CAPITALIZE EVERY LETTER
+                  fnCaseControl = ucase(strText)
+                  
+            case 4 'all lower case
+                  fnCaseControl = lcase(strText)
+            
+            case 5 'change nothing - only needed when some other function includes fnCaseControl and user
+                        'doesn't want it, but doesn't want to change the calling function
+                  fnCaseControl = strText
+                  
+        end select
+                  
+ End Function
+
+
+function fnStripHTML(strHTML)
+        Dim objRegExp   ' Regular Expression Object
+        
+       ' Create built In Regular Expression object
+        set objRegExp = CreateObject("VBScript.RegExp")
+        objRegExp.Global = True
+        ' Set the pattern To look For HTML tags
+        objRegExp.Pattern = "<[^>]*>"
+        strHTML=objRegExp.replace(strHTML, "")
+        strHTML=replace(strHTML,"&amp;", "&")
+        strHTML=Replace(strHTML,"&lt;br&gt;"," ")
+        strHTML=Replace(strHTML,"&nbsp;"," ")
+
+        ' Return the original String stripped of HTML
+        fnStripHTML = strHTML
+                
+        Set objRegExp = null    
+End function
+
+
+Function fnRepeatText(strText,Count)
+dim i
+for i = 1 to count
+        fnRepeatText= FnRepeatText + strText
+next
+End Function

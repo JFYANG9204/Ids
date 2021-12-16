@@ -1,0 +1,12 @@
+mrScript Command-line Utility (Unicode)
+(C) Copyright IBM Corp. 2001, 2011
+
+{Script} Table Run Time: 0 mins 5 seconds
+mrScript Command-line Utility (Unicode)
+(C) Copyright IBM Corp. 2001, 2011
+
+{Script} Table Run Time: 0 mins 6 seconds
+mrScript Command-line Utility (Unicode)
+(C) Copyright IBM Corp. 2001, 2011
+
+{Script} Table Run Time: 0 mins 5 seconds

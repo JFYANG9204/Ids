@@ -1,0 +1,114 @@
+
+
+
+
+'fnAddTable(TableDoc, build_axis_for_split_base( mdm, "_@B23b_1", "B23b_", "_@B23a_1", "B23a_", null, "Answer Base", true  )   , banner,"B23b.手机影像卖点吸引力","Answer base")
+'fnAddTable(TableDoc, build_axis_for_split_base( mdm, "_@B23b_1", "B23b_", "_@B23a_1", "B23a_", null, "Answer Base", false )   , banner,"B23b.手机影像卖点吸引力","Answer base")
+''.Item["T" + ctext(.count)].Filters.AddNew("f"+ ctext(.count), "_@B23a_1 is not null", "")
+'
+'
+'dim str_b14_side_group[]
+'str_b14_side_group[0] = "1,2,3,4,5,6,7,8;Net.影像"
+'str_b14_side_group[1] = "9,10,11,12,13,14,15,16,17;Net.使用体验"
+'str_b14_side_group[2] = "18,19,20,21,22,23,24,25,26;Net.硬件/性能"
+'str_b14_side_group[3] = "27,28,29;Net.外观"
+'str_b14_side_group[4] = "30,31;Net.屏幕"
+'str_b14_side_group[5] = "98,99"
+'
+'fnAddTable(TableDoc, build_axis_for_split_base( mdm, "_@B14b_1", "B14b_", "_@B14a_1", "B14a_", str_b14_side_group, "Answer Base", true  )   , banner,"B14b.Reno 6卖点吸引力","Answer base")
+'fnAddTable(TableDoc, build_axis_for_split_base( mdm, "_@B14b_1", "B14b_", "_@B14a_1", "B14a_", str_b14_side_group, "Answer Base", false )   , banner,"B14b.Reno 6卖点吸引力","Answer base")
+''.Item["T" + ctext(.count)].Filters.AddNew("f"+ ctext(.count), "_@B14a_1 is not null", "")
+
+
+
+'fnAddTable(TableDoc, "_@C16a_1"   , banner,NULL,"")
+'.Item["T" + ctext(.count)].Filters.AddNew("f"+ ctext(.count), "_@C16a_1*{C16a_15,C16a_16,C16a_17,C16a_18,C16a_27}", "")
+'.Item["T" + ctext(.count)].Side.SubAxes[0].Label =.Item["T" + ctext(.count)].Side.SubAxes[0].Label + " - 荣耀营销活动"
+'
+'fnAddTable(TableDoc, "_@C16a_1"   , banner,NULL,"")
+'.Item["T" + ctext(.count)].Filters.AddNew("f"+ ctext(.count), "_@C16a_1*{C16a_22,C16a_23,C16a_24,C16a_25,C16a_26}", "")
+'.Item["T" + ctext(.count)].Side.SubAxes[0].Label =.Item["T" + ctext(.count)].Side.SubAxes[0].Label + " - vivo S10营销活动"
+'
+'fnAddTable(TableDoc, "_@C16b_1"   , banner,NULL,"")
+'.Item["T" + ctext(.count)].Filters.AddNew("f"+ ctext(.count), "_@C16b_1*{C16b_15,C16b_16,C16b_17,C16b_18,C16b_27}", "")
+'.Item["T" + ctext(.count)].Side.SubAxes[0].Label =.Item["T" + ctext(.count)].Side.SubAxes[0].Label + " - 荣耀营销活动"
+'
+'fnAddTable(TableDoc, "_@C16b_1"   , banner,NULL,"")
+'.Item["T" + ctext(.count)].Filters.AddNew("f"+ ctext(.count), "_@C16b_1*{C16b_22,C16b_23,C16b_24,C16b_25,C16b_26}", "")
+'.Item["T" + ctext(.count)].Side.SubAxes[0].Label =.Item["T" + ctext(.count)].Side.SubAxes[0].Label + " - vivo S10营销活动"
+
+
+'dim str_code_c16_1[], str_code_c16_2[], str_code_c16_3[], str_code_c16_4[]
+'
+'str_code_c16_1[0] = "1,2,3,4,5,6,7,8,9,19,20,21"
+'str_code_c16_2[0] = "10,11,12,13,14"
+'str_code_c16_3[0] = "15,16,17,18,27"
+'str_code_c16_4[0] = "22,23,24,25,26"
+'
+'fnAddTable(TableDoc, build_axis_for_split_base( mdm, "_@C16b_1", "C16b_", "_@C16a_1", "C16a_", str_code_c16_1, "Answer Base", true  )   , banner,"C16b.手机营销活动吸引力 - Reno6营销活动","Answer base")
+'fnAddTable(TableDoc, build_axis_for_split_base( mdm, "_@C16b_1", "C16b_", "_@C16a_1", "C16a_", str_code_c16_1, "Answer Base", false )   , banner,"C16b.手机营销活动吸引力 - Reno6营销活动","Answer base")
+'
+'fnAddTable(TableDoc, build_axis_for_split_base( mdm, "_@C16b_1", "C16b_", "_@C16a_1", "C16a_", str_code_c16_2, "Answer Base", true  )   , banner,"C16b.手机营销活动吸引力 - vivo S9营销活动","Answer base")
+'fnAddTable(TableDoc, build_axis_for_split_base( mdm, "_@C16b_1", "C16b_", "_@C16a_1", "C16a_", str_code_c16_2, "Answer Base", false )   , banner,"C16b.手机营销活动吸引力 - vivo S9营销活动","Answer base")
+'
+'fnAddTable(TableDoc, build_axis_for_split_base( mdm, "_@C16b_1", "C16b_", "_@C16a_1", "C16a_", str_code_c16_3, "Answer Base", true  )   , banner,"C16b.手机营销活动吸引力 - 荣耀营销活动","Answer base")
+'fnAddTable(TableDoc, build_axis_for_split_base( mdm, "_@C16b_1", "C16b_", "_@C16a_1", "C16a_", str_code_c16_3, "Answer Base", false )   , banner,"C16b.手机营销活动吸引力 - 荣耀营销活动","Answer base")
+'
+'fnAddTable(TableDoc, build_axis_for_split_base( mdm, "_@C16b_1", "C16b_", "_@C16a_1", "C16a_", str_code_c16_4, "Answer Base", true  )   , banner,"C16b.手机营销活动吸引力 - vivo S10营销活动","Answer base")
+'fnAddTable(TableDoc, build_axis_for_split_base( mdm, "_@C16b_1", "C16b_", "_@C16a_1", "C16a_", str_code_c16_4, "Answer Base", false )   , banner,"C16b.手机营销活动吸引力 - vivo S10营销活动","Answer base")
+
+dim str_show_brand, str_show_brand_b13
+str_show_brand = "v1,t2,v3,v4,v2"
+str_show_brand_b13 = "v1,t2,v3,v2,v99"
+
+
+dim ques_response[]
+ques_response[1]  = "c4"
+ques_response[2]  = "c5"
+ques_response[3]  = "c6"
+ques_response[4]  = "c7"
+ques_response[5]  = "c8"
+ques_response[6]  = "c9"
+ques_response[7]  = "c10"
+ques_response[8]  = "c11"
+ques_response[9]  = "c12"
+ques_response[10] = "c13"
+ques_response[11] = "c14"
+
+dim label_response[]
+label_response[1]  = "视频网站"
+label_response[2]  = "短视频"
+label_response[3]  = "社交平台"
+label_response[4]  = "电商平台"
+label_response[5]  = "新闻资讯App"
+label_response[6]  = "数码科技类网站"
+label_response[7]  = "搜索引擎"
+label_response[8]  = "官方渠道"
+label_response[9]  = "教育类网站/App"
+label_response[10] = "音乐类App"
+label_response[11] = "其他线上渠道"
+
+dim cat, ndx, flt, str_axis, str_codes
+str_axis = "{e1 '' text(), base 'Base : Total Respondents' base('true'),e2 '' text()"
+for ndx = 1 to ubound(ques_response)
+    str_codes = ""
+    for each cat in mdm.fields["cloop[..]." + ques_response[ndx]].categories
+        if lcase(cat.name) <> "v98" and lcase(cat.name) <> "v99" then str_codes = str_codes + cat.name + ","
+    next
+    str_axis = str_axis + "," + ques_response[ndx] + " '" + label_response[ndx] + "' expression('" + ques_response[ndx] + "*{" + left(str_codes, len(str_codes) - 1) + "}')"
+next
+str_axis = str_axis + "}"
+
+dim str_label
+for each flt in mdm.fields["header1_demo"].categories
+    if flt.name = "T" then str_label = "" else str_label = " - " + flt.label
+    fnAddGrid(TableDoc,"cloop[..].c3" + str_axis,"cloop{" + str_show_brand + "}","C3~C14认知渠道汇总","")
+    .Item["TG" + ctext(.count)].Filters.AddNew("f"+ ctext(.count), "header1_demo*{" + flt.name + "}", "")
+    .Item["TG" + ctext(.count)].Side.SubAxes[0].Label =.Item["TG" + ctext(.count)].Side.SubAxes[0].Label + " - Total - Summary" + str_label
+next
+fnAddGrid(TableDoc,"cloop[..].c3" + str_axis,"cloop{" + str_show_brand + "}","C3~C14认知渠道汇总","")
+.Item["TG" + ctext(.count)].Filters.AddNew("f"+ ctext(.count), "header2_brand_kpi*{oppo}", "")
+.Item["TG" + ctext(.count)].Side.SubAxes[0].Label =.Item["TG" + ctext(.count)].Side.SubAxes[0].Label + " - Total - Summary - OPPO用户"
+fnAddGrid(TableDoc,"cloop[..].c3" + str_axis,"cloop{" + str_show_brand + "}","C3~C14认知渠道汇总","")
+.Item["TG" + ctext(.count)].Filters.AddNew("f"+ ctext(.count), "not header2_brand_kpi.containsany({oppo})", "")
+.Item["TG" + ctext(.count)].Side.SubAxes[0].Label =.Item["TG" + ctext(.count)].Side.SubAxes[0].Label + " - Total - Summary - 非OPPO用户"

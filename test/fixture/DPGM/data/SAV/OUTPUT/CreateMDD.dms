@@ -1,0 +1,43 @@
+#define FILEMANE "77125457_FINAL"
+
+Event(OnBeforeJobStart, "Create the mdd")
+   Dim MDM, DSC, DSCs, j, MyObject, MDMGridField
+
+   Dim oFso
+   Set oFso = CreateObject("Scripting.FileSystemObject")
+   If oFso.FileExists(FILEMANE + ".mdd") Then oFso.DeleteFile(FILEMANE + ".mdd",True)
+
+   ' Create the Data source component Collection
+   Set DSCs = CreateObject("MRDSCReg.Components")
+
+   ' Find the Sav DSC
+   Set DSC = DSCs["mrSavDsc"]
+
+   ' Create an MDM Document from the Quanvert database
+   Set MDM = DSC.Metadata.Open(FILEMANE + ".sav")
+
+   ' Save the MDM document to an .mdd file which we will use in the file transfer.
+   MDM.Save(FILEMANE + ".mdd")
+
+   MDM.Close()
+
+End Event
+
+InputDatasource(myInputDataSource, "My input data source")
+   ConnectionString = "Provider=mrOleDB.Provider.2;Data Source=mrSavDsc;Location=" + FILEMANE + ".sav;Initial Catalog=" + FILEMANE + ".mdd"
+End InputDatasource
+
+OutputDataSource(myOnputDataSource, "My onput data source")
+   ConnectionString = "Provider=mrOleDB.Provider.2;Data Source=mrDataFileDsc;Location=temp.ddf"
+   MetaDataOutputName = "temp.mdd"
+End OutputDataSource
+
+
+Event(OnAfterJobEnd)
+
+   Dim oFso
+   Set oFso = CreateObject("Scripting.FileSystemObject")
+   If oFso.FileExists("temp.mdd") Then oFso.DeleteFile("temp.mdd",True)
+   If oFso.FileExists("temp.ddf") Then oFso.DeleteFile("temp.ddf",True)
+
+end Event

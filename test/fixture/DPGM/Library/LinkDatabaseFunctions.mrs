@@ -1,0 +1,148 @@
+
+'********************************************************************************************************
+' Subs and Functions used for Link database output
+'********************************************************************************************************
+
+'Format first table
+Sub sbFormatDBCsv(strFileName,strOutFile)
+    Dim oRegExp
+    Dim oFS,oFileRead,oWriteFile,myCSV
+
+    Set oRegExp = CreateObject("VBScript.RegExp")
+    oRegExp.Global = True
+    oRegExp.IgnoreCase = True
+
+    Set oFS = CreateObject("Scripting.FileSystemObject")
+    Set oFileRead = oFS.OpenTextFile(strFileName,1,True,-2)
+    Set oWriteFile = oFS.OpenTextFile(strOutFile,2,True)
+    myCSV = oFileRead.ReadAll()
+
+'    oRegExp.Pattern = "(.+): (.+)"","".+(\n)"
+'    myCSV = oRegExp.Replace(myCSV, "$1"",""$2"",$3")
+'
+'    oRegExp.Pattern = "(@_SOURCE:.+""),""0"","
+'    myCSV = oRegExp.Replace(myCSV, "$1,")
+'
+'    oRegExp.Pattern = "(""@_ADNAME:.+""),""0"","
+'    myCSV = oRegExp.Replace(myCSV, "$1,")
+
+    oWriteFile.Write(myCSV)
+    oFileRead.Close()
+    oFS.DeleteFile(strFileName)
+End Sub
+
+
+'Save output as correct file format (ASCII)
+Sub sbChangeFileFormat(strFilename)
+    Dim objExcel, oFS, oPath
+    Set oFS = CreateObject("Scripting.FileSystemObject")
+    Set oPath = oFS.GetAbsolutePathName(".\")
+
+    Set objExcel = CreateObject("Excel.Application")
+    objExcel.Visible = False
+    objExcel.DisplayAlerts = False
+    objExcel.Workbooks.OpenText(oPath + "\" + strFilename,-535,1,1,1,0,0,0,1,0,0,0)
+    objExcel.ActiveWorkbook.SaveAs(strFilename,6,,,,0)
+    objExcel.Workbooks.Close()
+    objExcel.Quit()
+End Sub
+
+
+'Tabs with Raw Counts
+Function fnAddNewRC(TableDoc,spec)
+    With TableDoc
+        With .Tables
+            With .AddNew("T" + ctext(.count + 1),spec,"")
+            Tabledoc.DataSet.MdmDocument.Contexts.Current = "Analysis"
+            .description = TableDoc.DataSet.MdmDocument.Variables[ctext(.side.subaxes[0].name)].Label
+            End With
+            Set fnAddNewRC = .Item["T"+ctext(.Count)]
+            fnAddNewRC.CellItems.Clear()
+            fnAddNewRC.CellItems.AddNew(2)
+        End With
+    End With
+End Function
+
+
+'Remove blank tables
+'Sub sbRemoveBlankTables(TableDoc)
+'    Dim i
+'    With TableDoc
+'        For i=.Tables.Count-1 to 0 step -1
+'            Select Case .Tables[i].Base
+'                Case -1
+'                    Debug.Log("WARNING: Unable to determine if table "+.Tables[i].name+" is empty. Not removed")
+'                Case 0
+'                    Debug.Log("Table "+.Tables[i].name+" has been removed")
+'                    .Tables.Remove(i)
+'            End Select
+'        Next
+'    End With
+'End Sub
+
+
+'Adds text to the element label of a question
+Sub sbAddCodeToResponse(myMDD,Qst,Context,Language,ID,Txt)
+    myMDD.Fields[Qst].Elements.Elements[ID].Labels.Text[Context][Language]=Txt
+End Sub
+
+
+'Adds text to Question label
+Sub sbAddCodeToQuestion(myMDD,Qst,Context,Language,Txt)
+    myMDD.Fields[Qst].Labels.Text[Context][Language]=Txt
+End Sub
+
+
+'Create DDF file by running a temporary dms script
+Sub sbCreateDDF(mdd,ddf,sample,output)
+    Dim objFSO, objFile, objShell
+    Set objFSO = CreateObject("Scripting.FileSystemObject")
+    Set objFile = objFSO.CreateTextFile("temp.dms",True,False) 'Overwrite,ASCII
+    objFile.WriteLine("InputDataSource(In)")
+    objFile.WriteLine("    ConnectionString=""Provider=mrOleDB.Provider.2;Data Source=mrDataFileDsc;Initial Catalog="+mdd+";Location="+ddf+ChrW(34))
+    objFile.WriteLine("    SelectQuery = ""SELECT * FROM VDATA WHERE "+sample+ChrW(34))
+    objFile.WriteLine("End InputDataSource")
+    objFile.WriteBlankLines(1)
+    objFile.WriteLine("OutputDataSource(Out)")
+    objFile.WriteLine("    ConnectionString=""Provider=mrOleDB.Provider.2;Data Source=mrDataFileDsc;Location=.\"+output+".ddf;MR Init Overwrite=1"+ChrW(34))
+    objFile.WriteLine("End OutputDataSource")
+    objFile.Close()
+    Set objFile = Null
+    Set objShell = CreateObject("WScript.Shell")
+    objShell.Run("dmsrun temp.dms",,True) 'Wait for script to complete before continuing
+    objFSO.DeleteFile("temp.dms",True)
+    Set objFSO = Null
+End Sub
+
+
+'Run a basic SQL query to check for any errors in the mdd
+Function fnCheckForErrors(mdd,output)
+    On Error GoTo FoundError
+
+    Dim objADO, strConnect, SQLQuery, RecordSet, bError, bErrorText
+    fnCheckForErrors = True
+    strConnect="Provider=mrOleDB.Provider.2;Data Source=mrDataFileDsc;Initial Catalog="+mdd+";Location=.\"+output+".ddf;MR Init MDM Access=1"
+    Set objADO = CreateObject("ADODB.Connection")
+    objADO.ConnectionString = strConnect
+    objADO.Open()
+    SQLQuery = "Select * from VDATA"
+    Set RecordSet = CreateObject("ADODB.Recordset")
+    Set RecordSet = objADO.Execute(SQLQuery)
+    RecordSet.Close()
+    objADO.Close()
+    Set RecordSet = Null
+    Set objADO = Null
+    If bError Then
+        fnCheckForErrors = bErrorText
+    Else
+        fnCheckForErrors = Null
+    End If
+
+    Exit Function
+
+    FoundError:
+
+    bError = True
+    If bErrorText is Null Then bErrorText = err.Description
+    Resume Next
+End Function

@@ -1,0 +1,380 @@
+'*****FILE VERSION=6, DATE LAST MODIFIED=2012/08/29, KO
+
+'Script used to generate a Topline report
+
+#include ".\job.ini"
+'**************************************************************************************
+'**************************************************************************************
+'**************************************************************************************
+'CHANGE:  Path and name to mdd file
+#define METADATA "data\" + INPUT_METADATA + ".mdd"
+'#define METADATA "data\77114699_FINAL.mdd"
+
+'CHANGE AS NEEDED:  Define your metadata type - likely leave as "" unless not reading in a mdd file
+#define MDSC ""
+
+'CHANGE:  Path and name to casedata
+#define CASEDATA "data\" + INPUT_METADATA + ".ddf"
+'#define CASEDATA "data\77114699_FINAL.ddf"
+
+'CHANGE AS NEEDED:  Define your Casedata type
+#define CDSC "mrDataFileDsc"
+
+'CHANGE AS NEEDED:  Define a name for your output file
+#define OUTPUT "Topline"
+
+'CHANGE AS NEEDED:  HTML Output format
+#define HTMOUTPUT true
+
+'CHANGE AS NEEDED:  Excel Output format - This output takes longer to run
+#define EXCELOUTPUT false
+
+'CHANGE AS NEEDED:  Word Output format - The Word output formatting is not what you would expect and would likely require additional formatting 
+#define WORDOUTPUT false
+
+'CHANGE AS NEEDED:  Define filter if anything other than total sample
+#define FILTER ""
+
+'CHANGE AS NEEDED:  Optional banners
+#define BANNERS "QCity"
+
+'CHANGE AS NEEDED:  TRUE/FALSE - Whether or not to include full numeric (long/double) listings in topline.  When false, summary statistics will still be produced
+#define LISTNUMERICS true
+
+'CHANGE AS NEEDED: TRUE/FALSE - Whether or not to include the variable name in with the full variable label in the topline.  When false, the variable name is excluded.
+#DEFINE NUMERICVARNAME false
+
+'CHANGE AS NEEDED:  TRUE/FALSE - Exclude shell variables from topline
+#define EXCLUDESHELL true
+
+'CHANGE AS NEEDED:  TRUE/FALSE - Suppress blank rows
+#define SUPPRESSBLANKROWS false
+
+'CHANGE AS NEEDED:  TRUE/FALSE - Suppress blank columns
+#define SUPPRESSBLANKCOLUMNS false
+
+'CHANGE AS NEEDED:  TRUE/FALSE - Remove blank tables
+#define SUPPRESSBLANKTABLES false
+
+'!CHANGE AS NEEDED:  Display Loops As:
+        0 = Individual Slices Only
+        1 = Grids Only 
+        2 = Both Grids & Individual Slices
+"Grids Only" will usually be the quickest option!'
+#define SHOWGRIDS 2
+
+'CHANGE AS NEEDED:  MDD Version(s) to include.  All versions {..}
+#define VERSION "{..}"
+
+
+'**************************************************************************************
+'**************************************************************************************
+'**************************************************************************************
+
+
+
+
+
+'**************************************************************************************
+'No Need To Edit Below This Line
+'**************************************************************************************
+
+dim StartTime, EndTime
+
+StartTime = now()
+
+Dim TableDoc, strBanners, oField
+
+Set TableDoc=CreateObject("TOM.Document")
+
+With TableDoc
+
+    .DataSet.Load(METADATA,MDSC,CASEDATA,CDSC,,VERSION)
+
+    'SET ROUNDING OPTION
+    .Default.Properties["RoundingOptions"] = 1
+    
+    with .Default.Rules
+        if SUPPRESSBLANKROWS then .AddNew() 'No Blank Rows
+        if SUPPRESSBLANKCOLUMNS then .AddNew(,1) 'No Blank Cols
+    end with
+
+    If FILTER<>"" Then .Default.Filters.AddNew("Filter",FILTER,FILTER)
+    
+    strBanners=IIF(BANNERS<>""," * ","")+BANNERS
+
+    if SHOWGRIDS then
+        for each oField in .DataSet.MdmDocument.Fields
+            .sbProcessField(oField,strBanners,oField.FullName)
+        next
+    else
+        For Each oField in .DataSet.MDMDocument.Variables
+            if oField.IsSystemVariable = False _
+                And oField.HasCaseData = True _
+                And iif(EXCLUDESHELL,not (find(oField.Properties["ReportType"],"IsShell")>=0),true) _
+                And oField.fullname.Right(6).lcase()<>".codes" _
+                Then
+                
+                .sbCreateTable(oField,strBanners)
+                
+            end if
+        Next
+    end if
+    
+        .Populate()
+
+    if SUPPRESSBLANKTABLES then .sbRemoveBlankTables() 'Remove any blank tabs
+
+    With .Exports
+      If HTMOUTPUT Then
+        With .mrHtmlExport
+            .Properties["OverwriteOutput"]= True
+            .Properties["LaunchApplication"] = True
+            .Properties["DisplayOption"] = "Table Only"
+            .Properties["DisplayLogo"] = False
+            .Properties["LayoutStyle"] = "Single Document"
+            .Properties["UseStyles"] = False
+            .Export("..\report\" + OUTPUT + ".htm")
+        End With
+      End If
+    
+      If WORDOUTPUT Then
+        With .mrWordExport
+           .Properties["OverwriteOutput"] = True
+           .Properties["HideApplication"] =  True
+           .Properties["DisplayBorders"] =  False
+           .Properties["TemplateFileName"] = JOB_ROOT + "Validation\Toplines\Template.dot"
+           .Export("..\report\" + OUTPUT + ".doc")
+        End With
+      End If
+
+      If EXCELOUTPUT Then
+        With .mrExcelExport
+           .Properties["DisplayCharts"] = False
+           .Properties["HideApplication"] =True
+           .Properties["OverwriteOutput"] = True
+           .Export("..\report\" + OUTPUT + ".xls")
+        End With
+      End If
+    End With 'Exports
+
+End With
+
+EndTime = now()
+debug.Log("Start: " + CText(StartTime))
+debug.Log("End: " + Ctext(EndTime))
+debug.Log(Ctext(DateDiff(StartTime,EndTime,"s") / 60) + " mins " + Ctext(DateDiff(StartTime,EndTime,"s") mod 60) + " seconds" )
+
+exit
+
+'TOPLINE PROCEDURES
+
+'Remove blank tables
+Sub sbRemoveBlankTables(TableDoc)
+    Dim i
+
+    With TableDoc
+        For i=.Tables.Count-1 to 0 step -1
+            Select case .Tables[i].Base
+                Case -1
+                    debug.Log("WARNING: Unable to determine if table "+.Tables[i].name+" is empty. Not removed")
+                Case 0
+                    debug.Log("Table "+.Tables[i].name+" has been removed")
+                    .Tables.Remove(i)
+            End Select
+        Next
+    End With
+End Sub
+
+sub sbProcessField(TableDoc,oField,strBanners,strGridTop)
+    Dim oSubField, i, oCat, oParent
+
+        with TableDoc
+    
+        select case oField.ObjectTypeValue
+        
+                case 0 ' mtVariable - Simple variable
+                
+                if oField.IsSystemVariable = False _
+                    And oField.HasCaseData = True _
+                    And iif(EXCLUDESHELL,not (find(oField.Properties["ReportType"],"IsShell")>=0),true) _
+                    Then
+                    
+                    .sbCreateTable(oField,strBanners)
+                end if
+                
+            case 1,2 'mtArray, mtGrid - Loop
+        
+                .sbCreateGrid(oField,strBanners,strGridTop)
+
+                for each oSubField in oField.Fields
+                
+                        select case oSubField.ObjectTypeValue
+                
+                                 case 0 ' mtVariable - Simple variable
+                
+                                        if SHOWGRIDS=2 then
+                                                if oSubField.IsSystemVariable = False _
+                                                    And oSubField.HasCaseData = True _
+                                                    And iif(EXCLUDESHELL,not (find(oField.Properties["ReportType"],"IsShell")>=0),true) _
+                                                    Then
+                                                    
+                                                    set oParent=oSubField.parent.parent
+                                                for each oCat in oParent.elements.elements
+                                                        .sbCreateTable(.DataSet.MDMDocument.Variables[strGridTop+"["+IIF(oCat.objecttypevalue=4,"{","")+oCat.name+IIF(oCat.objecttypevalue=4,"}","")+"]."+oSubField.name],strBanners)
+                                                    next
+                                                end if
+                                            end if
+                                            
+                                case 1,2
+                        
+                                set oParent=oSubField.parent.parent
+                                for each oCat in oParent.elements.elements
+                                .sbProcessField(oSubField,strBanners,strGridTop+"["+IIF(oCat.objecttypevalue=4,"{","")+oCat.name+IIF(oCat.objecttypevalue=4,"}","")+"]."+oSubField.name)
+                                next
+                                
+                        case 3
+                        
+                                for i=0 to oSubField.items.count-1
+                                        sbProcessBlocksWithinLoop(TableDoc,oSubField.Items[i],strBanners,strGridTop)
+                                next
+                    end select
+                next
+        
+                case 3 'mtClass - Block
+                
+                        for i=0 to oField.items.count-1
+                        .sbProcessField(oField.Items[i],strBanners,oField.name+"."+oField.Items[i].Name)
+                next
+                
+        end select
+        
+    end with
+    
+end sub
+
+sub sbCreateTable(TableDoc,oField,strBanners)
+    Dim oTable, strSpec
+
+    with TableDoc
+    
+        select case oField.DataType
+            case mr.Categorical
+                if oField.categories.count>0 then
+                        set oTable=.Tables.AddNew("T"+CText(.Tables.Count+1),oField.FullName+strBanners,oField.FullName + mr.Tab + oField.FullLabel)
+                else
+                        set oTable=.Tables.AddNew("T"+CText(.Tables.Count+1),oField.FullName+"{base('false')}"+strBanners,oField.FullName + mr.Tab + oField.FullLabel)
+                end if
+                oTable.side.SubAxes[0].Label=" "
+            case mr.Long, mr.Double
+                strSpec=oField.fullname
+                if LISTNUMERICS then
+                    if not oField.HelperFields.FindItem("Categ") then .Coding.CreateCategorizedVariable(oField.fullname,oField.fullname+".Categ","{value}",,,false)
+                    strSpec=strSpec+".categ{..,"
+                else
+                        strSpec=strSpec+"{"
+                end if
+                strSpec=strSpec+"min 'Minimum value' min("+oField.fullname+"), max 'Maximum value' max("+oField.fullname+"), mean 'Mean' mean("+oField.fullname+")}"
+                if oField.HelperFields.FindItem("Codes") then 
+                        if oField.HelperFields["Codes"].Categories.Count>0 then strSpec=StrSpec+" + "+oField.fullname+".Codes"
+                end if
+               
+                'INCLUDE NUMERIC VARIABLE NAME IN WITH VARIABLE LABEL
+                IF NUMERICVARNAME=TRUE then
+                'Displaying Variable naming for numeric questions
+                     set oTable =.Tables.AddNew("Table"+ctext(.Tables.Count),strSpec+strBanners,oField.FullName + mr.Tab + oField.FullLabel)
+                ELSE
+                'DO NOT INCLUDE NUMERIC VARIABLE NAME IN WITH VARIABLE LABEL
+                     set oTable =.Tables.AddNew("Table"+ctext(.Tables.Count),strSpec+strBanners,oField.fulllabel)
+                END IF
+               
+               oTable.Properties["ZeroOtherSymbol"] = "0" 'If value is '0' then show '0' and not '-'
+               oTable.side.SubAxes[0].Label=" "
+        end select
+    end with
+    
+
+end sub
+
+sub sbCreateGrid(TableDoc,oField,strBanners,strGridTop)
+    Dim oSubField, strSpec
+
+         with TableDoc
+    
+        strSpec=""
+    
+        for each oSubField in oField.Fields
+                 if oSubField.ObjectTypeValue=0 then
+                if oSubField.HasCaseData then strSpec=strSpec+.fnBuildGridSide(oSubField)
+            end if
+        next
+    
+        if strSpec<>"" then
+            strSpec=left(strSpec,strSpec.Len()-2)+"* "+strGridTop
+                .tables.addnew("T"+CText(.Tables.Count+1),strSpec,oField.FullName + mr.Tab + oField.FullLabel)
+        end if
+        
+    end with
+    
+end sub
+
+sub sbProcessBlocksWithinLoop(TableDoc,oField,strBanners,strGridTop)
+        Dim strSpec, oParent, oCat, i
+
+        with TableDoc
+        
+                select case oField.ObjectTypeValue
+                        case 0
+                        
+                if oField.HasCaseData then strSpec=.fnBuildGridSide(oField)
+                
+                if strSpec<>"" then
+                        strSpec=left(strSpec,strSpec.Len()-2)+"* "+strGridTop
+                                .tables.addnew("T"+CText(.Tables.Count+1),strSpec,oField.FullName + mr.Tab + oField.FullLabel)
+                                
+                                if SHOWGRIDS=2 then                                    
+                        for each oCat in .DataSet.MDMDocument.Fields[strGridTop].elements.elements
+                                .sbCreateTable(.DataSet.MDMDocument.Variables[oField.FullName.Replace("..",IIF(oCat.objecttypevalue=4,"{","")+oCat.name+IIF(oCat.objecttypevalue=4,"}",""))],strBanners)
+                                        next
+                                    end if
+                        end if
+                        
+                        case 3
+                        
+                                for i=0 to oField.items.count-1         
+                        sbProcessBlocksWithinLoop(TableDoc,oField.Items[i],strBanners,strGridTop)
+                next
+                
+                        case else
+                        
+                                set oParent=oField.parent.parent.parent
+                                for each oCat in oParent.elements.elements
+                        .sbProcessField(oField,strBanners,strGridTop+"["+IIF(oCat.objecttypevalue=4,"{","")+oCat.name+IIF(oCat.objecttypevalue=4,"}","")+"]."+oField.Parent.name+"."+oField.Name)
+                next
+                
+                end select
+        end with
+end sub
+
+function fnBuildGridSide(TableDoc,oField)
+
+        fnBuildGridSide=""
+        
+        select case oField.DataType
+        case mr.Categorical
+                fnBuildGridSide=oField.FullName+" + "
+        case mr.Long, mr.Double
+                fnBuildGridSide=oField.fullname
+            if LISTNUMERICS then
+                if not oField.HelperFields.FindItem("Categ") then TableDoc.Coding.CreateCategorizedVariable(oField.fullname,oField.fullname+".Categ","{value}",,,false)
+                fnBuildGridSide=fnBuildGridSide+".Categ{..,"
+            else
+                fnBuildGridSide=fnBuildGridSide+"{"
+            end if
+            fnBuildGridSide=fnBuildGridSide+"min 'Minimum value' min("+oField.fullname+"), max 'Maximum value' max("+oField.fullname+"), mean 'Mean' mean("+oField.fullname+")} + "
+            if oField.HelperFields.FindItem("Codes") then 
+                if oField.HelperFields["Codes"].Categories.Count>0 then fnBuildGridSide=fnBuildGridSide+oField.fullname+".Codes + "
+            end if
+        end select
+        
+end function

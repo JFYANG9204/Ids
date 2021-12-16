@@ -1,0 +1,25 @@
+'*****FILE VERSION=1, DATE LAST MODIFIED=2010/09/16, KO
+
+
+Dim fso, f, f2
+
+#include "..\\job.ini"
+
+set fso = CreateObject("Scripting.FileSystemObject")
+set f=fso.openTextfile(".\" + BATCH_FILE,1,false,0)
+
+
+if not fso.FileExists("MasterLog.txt") then fso.CreateTextFile(".\\MasterLog.txt",false,false)
+
+set f2 = fso.OpenTextFile("Masterlog.txt",8,false,0 )
+f2.WriteLine("******************************************************************")
+f2.WriteLine(now())
+f2.WriteLine("******************************************************************")
+f2.WriteLine("")
+f2.WriteLine("")
+f2.WriteLine(f.ReadAll())
+f2.WriteLine("")
+f2.WriteLine("")
+
+f.Close()
+f2.Close()

@@ -1,0 +1,221 @@
+'*****FILE VERSION=3, DATE LAST MODIFIED=2012/02/01, KO
+
+
+
+
+Sub subUpdateMdd(INPUTMDM, OUTPUTMDM)
+On Error Goto ErrorHandler
+Dim MDMAscribe,MDMMaster
+Dim field,type,ascribeVI,masterVI,ascribeVarName,masterVarName,codevar,addToMap
+Dim blnVersionAdded
+
+blnVersionAdded = false
+
+
+
+' Open the input master mdd file (copy of project original)
+Set MDMMaster = CreateObject("MDM.Document")
+MDMMaster.Open(INPUTMDM,,)
+' Open the Ascribe .mdd file
+Set MDMAscribe = CreateObject("MDM.Document")
+MDMAscribe.Open(ASCRIBEMDM,,)
+' Does the document have versions?
+If MDMMaster.Versions.Count > 0 Then
+    If MDMMaster.Versions.Latest.IsLocked Then
+        MDMMaster.Versions.AddNew()
+        blnVersionAdded = true
+    End If
+End If
+
+' set up the elements lists in the input mdd if they do not exist.
+'Todo: if exists, add only new categories to existing list
+For Each type In MDMAscribe.Types
+        'if type.ObjectTypeValue = ObjectTypesConstants.mtElements then
+        if type.ObjectTypeValue = 5 then
+                if  (MDMMaster.Types.Exist[type.Name])  then
+                        subUpdateElementList(type.Name,MDMAscribe,MDMMaster)
+                else
+                        subAddElementList(type.Name,MDMAscribe,MDMMaster)
+                end if
+        end if
+'       for each addToMap in type.Elements
+'               debug.Log(type.Name)
+'       next
+next
+
+'Loop through all the variables in the Ascribe MDM
+'Using the label in the Ascribe mdd, match up to the correct
+'variable in the Master mdd.
+For Each ascribeVI In MDMAscribe.Variables
+        if not ascribeVI.IsSystemVariable then
+                masterVarName=ascribeVI.Label
+                        if masterVarName <> "" then
+                                
+                        set masterVI = MDMMaster.VariableInstance[masterVarName]
+
+                'If the .Coding helperfield does not exist, add it
+                If not MDMMaster.Fields.Exist[masterVarName + ".Coding"] Then
+                        Set codevar = MDMMaster.CreateVariable("Coding","")
+                        Set codevar.Name = "Coding"
+                        'Set codevar.DataType = DataTypeConstants.mtCategorical
+                        Set codevar.DataType = 3
+                        Set codevar.HasCaseData = true
+                        'codevar.UsageType = VariableUsageconstants.vtVariable '&H210
+                        codevar.UsageType = 0
+                        masterVI.HelperFields.Add(codevar,-1)
+                else
+                        Set codevar = MDMMaster.Fields[masterVarName + ".Coding"]
+                    end if
+
+
+                 else
+                        'there was no label for the ascribe variable - was modified by GridCodingHelp.mrs
+                        masterVarName = ascribeVI.name
+                        'If the field doesn't exist add it
+                If not MDMMaster.Fields.Exist[masterVarName] Then
+                        Set codevar = MDMMaster.CreateVariable(masterVarName,masterVarName)
+                        Set codevar.Name = mastervarname
+                        'Set codevar.DataType = DataTypeConstants.mtCategorical
+                        Set codevar.DataType = 3
+                        Set codevar.HasCaseData = true
+                        'codevar.UsageType = VariableUsageconstants.vtVariable '&H210
+                        codevar.UsageType = 0
+                        MDMMaster.Fields.Add(codevar,-1)
+                else
+                        Set codevar = MDMMaster.Fields[masterVarName]
+                    end if      
+                
+                end if
+
+            'Add the list and axis expression to the .Coding helperfield
+            codevar.Elements.ReferenceName = ascribeVI.Elements.ReferenceName
+                codevar.AxisExpression=MDMAscribe.Fields[ascribeVI.Name].AxisExpression
+                        
+                'Not quite sure why this is needed, however if you do not loop through
+                'each element, it does not get added to the category map.  Have asked SPSS
+                'but have never got a clear response.
+                for each addToMap in codevar.Elements
+                    debug.Log(addToMap.Name + "-Added-" + ctext(addtoMap.Value))
+                next
+        end if
+
+Next
+
+MDMMaster.CategoryMap.AutoAssignValues()
+if (blnVersionAdded) then MDMMaster.Versions.Latest.Lock()
+' Save the document to the output .mdd file
+MDMMaster.url = ""
+MDMMaster.Save(OUTPUTMDM)
+MDMMaster.Close()
+MDMAscribe.Close()
+
+goto Finished
+
+ErrorHandler:
+    Debug.MsgBox(CText(Err.LineNumber) + ": " + Err.Description)
+    MDMMaster.Close()
+    MDMAscribe.Close()
+    Set MDMMaster = Null
+        Set MDMAscribe = Null
+
+Finished:
+End Sub
+
+
+Sub subUpdateDB(ConnectionString)
+'This function updates the database with the categorical values for the questions
+'coded in Ascribe.  Each line from the file Ascribe exports is read
+'and the SQL query is executed.
+dim adoConnection,sqlQuery,oFS,oFile,oStream
+
+Set adoConnection = CreateObject("ADODB.Connection")
+adoConnection.Open(ConnectionString)
+Set oFS = CreateObject("Scripting.FileSystemObject")
+set oFile = oFS.GetFile(SQLUPDATE)
+set oStream = oFile.OpenAsTextStream(1, -2)
+
+adoConnection.Execute("exec xp_syncdb")
+
+Do While Not oStream.AtEndOfStream
+        sqlQuery=oStream.ReadLine()
+        debug.Log(sqlQuery)
+        adoConnection.Execute(sqlQuery)
+Loop
+oStream.Close()
+adoConnection.Close()
+End Sub
+
+Sub subAddElementList(elName,MDMAscribe,MDMMaster)
+        Dim ascribeEL,masterEL,element,newElement
+
+        Set masterEL = MDMMaster.CreateElements(elName)
+        MDMMaster.Types.Add(masterEL)
+
+        set ascribeEL = MDMAscribe.Types[elName]
+
+        For Each element In ascribeEL
+                set newElement = MDMMaster.CreateElement(element.Name,element.Label)
+                'newElement.Type = ElementTypeConstants.mtCategory
+                newElement.Type = 0
+                masterEL.Add(newElement)
+        next
+End Sub
+
+Sub subUpdateElementList(elName,MDMAscribe,MDMMaster)
+  Dim ascribeEL, masterEL, element, newelement
+
+  set masterEL = MDMMaster.Types[elName]
+  set ascribeEL = MDMAscribe.Types[elName]
+
+  for each element in ascribeEL
+     if not masterEL.Exist[element.name] then
+        set newElement = MDMMaster.CreateElement(element.Name,element.Label)
+                'newElement.Type = ElementTypeConstants.mtCategory
+                newElement.Type = 0
+                masterEL.Add(newElement)
+     end if
+  next
+End Sub
+
+Sub subUpdateDBFixRealID(ConnectionString)
+'added logic to grab respondent.serial instead of realid
+'either bug or some other reason that it just won't update anymore.
+
+dim dict
+set dict = CreateObject("Scripting.Dictionary")
+set dict = fnSetupDict_Realids()
+
+'This function updates the database with the categorical values for the questions
+'coded in Ascribe.  Each line from the file Ascribe exports is read
+'and the SQL query is executed.
+dim adoConnection,sqlQuery,oFS,oFile,oStream
+
+Set adoConnection = CreateObject("ADODB.Connection")
+adoConnection.Open(ConnectionString)
+Set oFS = CreateObject("Scripting.FileSystemObject")
+set oFile = oFS.GetFile(SQLUPDATE)
+set oStream = oFile.OpenAsTextStream(1, -2)
+
+adoConnection.Execute("exec xp_syncdb")
+
+Do While Not oStream.AtEndOfStream
+        sqlQuery=oStream.ReadLine()
+        if find(sqlQuery,"realid") <> -1 then
+                sqlQuery = fnSwitchRealid(sqlQuery,dict)
+        end if
+        debug.Log(sqlQuery)
+        adoConnection.Execute(sqlQuery)
+Loop
+oStream.Close()
+adoConnection.Close()
+End Sub
+
+
+Function fnSwitchRealid(sqlQuery,dict)
+sqlQuery = replace(sqlQuery,"realid","respondent.serial")
+sqlQuery = left(sqlQuery,find(sqlQuery,"=",,true) + 1) + dict.Item[right(sqlQuery,sqlQuery.Len() - find(sqlQuery,"=",,true)-2 )]
+fnSwitchRealid = sqlQuery
+end Function
+
+
+

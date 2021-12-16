@@ -1,0 +1,67 @@
+'*****FILE VERSION=3, DATE LAST MODIFIED=2012/08/29, KO
+
+'Use this file to amend/add axis expressions and analysis text
+
+'CHANGE AS NEEDED: Existence options applied to FnCreateExistenceAxisSpec - set options as required
+Dim iCategoryExistenceLabel,iDateDisplay,iVariableExistenceLabel,Context
+Context="Main"
+iCategoryExistenceLabel=0
+iDateDisplay=0
+iVariableExistenceLabel=0
+
+'This will remove any HTML tags included in labels of all fields and elements
+sbStripHTMLFromFieldLabels(MDM,"Analysis",LOCALE)
+
+'Note: this will change all the text format of each category of all grids as defined by the CASE_OPTION in the job.ini
+'If there is a need to treat the categories of an individual grid differently, you can use a loop such as:
+'    dim cat
+'    for each cat in mdm.fields["q3"].categories
+'      sbSetResponseText(MDM,"q3","Analysis",LOCALE,cat.name,fnCaseControl(cat.label,3))
+'    next
+sbAdjustCaseOfCategoriesOnUpperFields(mdm,mdm)
+
+'*************** ADD MDD MANIPULATION HERE *********************
+
+''**************************************************************
+''EXAMPLES
+''
+''Edit/Add an Axis Expression
+''sbSetAxisExpression(MDM,"q13tab[..].slice","{_
+''_7CompletelySatisfied '(7) Completely Satisfied' [factor = 7],_
+''_6 '(6)' [factor = 6],_
+''_5 '(5)' [factor = 5],_
+''_4 '(4)' [factor = 4],_
+''_3 '(3)' [factor = 3],_
+''_2 '(2)' [factor = 2],_
+''_1NotAtAllSatisfied '(1) Not at all satisfied' [factor = 1],_
+''mean() [IsFixed=True,Decimals=2],stddev(),stderr()}")
+''
+''Edit/Add Title Text
+''sbSetTitleText(MDM,"Q26","Analysis",LOCALE,"(Q26) Where seen ads - Newspaper Campaign")
+''
+''Edit/Add Response Text
+''sbSetResponseText(MDM,"Q26","Analysis",LOCALE,"StrAgr","(5) Strongly Agree")
+''
+''**************************************************************
+dim mean_inc
+mean_inc = "e99 '' text(),mean 'AVERAGE' mean()[Decimals=2],stdv 'STANDARD DEVIATION' StdDev()[Decimals=2]"
+
+dim cat
+
+'for each cat in mdm.fields["s8a"].categories
+'	sbSetTitleText(MDM,"S8a["+cat+"].slice","Analysis",LOCALE,"S8a. 请问您在过去3个月内，通过以下哪些电子设备下载/观看网络视频的频率是怎样的？(单选)")
+'	sbSetAxisExpression(MDM,"S8a["+cat+"].slice","{e1 '' text(),base 'Base : Total Respondent' base(),e2 '' text(),_
+'  _1 '(45 ) 每天多次  ' [factor=45] ,_
+'  _2 '(30 ) 每天一次  ' [factor=30] ,_
+'  _3 '(18 ) 1周4-6次  ' [factor=18] ,_
+'  _4 '(10 ) 1周2-3次  ' [factor=10] ,_
+'  _5 '(4  ) 1周1次    ' [factor=4]  ,_
+'  _6 '(2.5) 每2-3周1次' [factor=2.5],_
+'  _7 '(1  ) 每月1次   ' [factor=1]  ,_
+'  ..,_
+'	e3 '' text(),_
+'	sigma 'Sigma' subtotal(),"+ mean_inc +"}")
+'next
+
+
+''**************************************************************

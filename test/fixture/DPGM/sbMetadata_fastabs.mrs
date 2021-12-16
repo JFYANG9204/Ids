@@ -1,0 +1,8 @@
+'bk01 "" categorical[..]
+'{
+'    _01 "" expression ("NO_T2>0")
+'} axis("{
+'base 'змЬх' base(),
+'_01 [ishhiden=true]
+'}");
+

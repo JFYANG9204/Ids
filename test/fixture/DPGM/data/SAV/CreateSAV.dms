@@ -1,0 +1,263 @@
+'*****FILE VERSION=5, DATE LAST MODIFIED=2012/08/29, KO
+
+'script to thin metadata file and produce SAV output
+
+#include "..\..\job.ini"
+
+'**************************************************************************************
+'**************************************************************************************
+'**************************************************************************************
+'CHANGE AS NEEDED: path and name of metadata file to be used as input
+#define METADATA_IN "..\" + INPUT_METADATA + "_FINAL.mdd"
+
+'CHANGE AS NEEDED: path and name of case data file to be used as input
+#define CASEDATA_IN "..\" + INPUT_METADATA + "_FINAL.ddf"
+
+'CHANGE: FIELDLIST will be the fields that are either kept or not kept. 
+'You only have the ability to access from the top level fields here, so to keep individual 
+'variables from a grid,such as q10[brand1}].slice, q10[{brand2}].slice, etc. you would just 
+'need to have 'q10' in the FIELDLIST.  
+'If you want all fields in the MDD included set FIELDLIST to Null (do not enclose Null in double quotes)
+'Be sure to include a comma (,) after the last field in FIELDLIST so it will be included properly
+'#define FIELDLIST "respondent,yyyymmdd,weekno,"
+'#define FIELDLIST "Respondent.Serial,DMSq10Total,"
+#define FIELDLIST "Null"
+
+'CHANGE AS NEEDED:  KEEP True/False  
+'set to TRUE if you want all the fields in FIELDLIST to be kept.
+'set to FALSE if you want all the fields in FIELDLIST to be dropped.
+'#define KEEP True
+#define KEEP False
+
+'CHANGE AS NEEDED:  True/False - Convert categories that have AnalysisBase applied to it to be a regular category
+#define CONVERTBASE True
+
+'CHANGE AS NEEDED: metadata_out - name of the metadata file that will be associated with
+'the SAV file that is produced
+#define METADATA_OUT INPUT_METADATA + "_FINAL_SAV.mdd"
+
+'CHANGE AS NEEDED: casedata_out - name of the SAV file that will be produced
+#define CASEDATA_OUT INPUT_METADATA + "_FINAL.sav"
+
+'CHANGE AS NEEDED: select query filter to restrict records - fields will be filtered with FIELDLIST
+'use this to restrict records to a particular time period, region, etc.
+#define SELECT_QUERY_FILTER "where S2 is not null"
+
+'CHANGE AS NEEDED:  alternative context - this will be the context of labels that are used 
+'if no labels exist in the SAV context - typically will be Analysis or Question
+#define ALT_CONTEXT MDD_TYPE '"Analysis"
+
+'CHANGE AS NEEDED: Text variable size will be the length allocated to text variables.  
+'If this is not set, text variables that did not include limits when fielded will be 
+'allocated 1024 columns regardless of what response was given.
+'setting TEXTVARSIZE to zero ("0") will not restrict the length
+#define TEXTVARSIZE "500"
+
+'CHANGE AS NEEDED:  "True"/"False" - export factor values as data values (factors must be applied
+'to the metadata for this to work and not just to the axis expression)
+'#define USE_FACTORS "True"
+#define USE_FACTORS "True"
+
+
+'#define USE_QUESTIONNAME "%FullName. "
+#define USE_QUESTIONNAME ""
+
+#define LOCALE_SAV_OUTPUT "CHS"
+
+'**************************************************************************************
+'**************************************************************************************
+'**************************************************************************************
+
+
+'**************************************************************************************
+'No Need To Edit Below This Line
+'**************************************************************************************
+
+InputDataSource(DDFInputDataSource, "DDF input")
+    ConnectionString= " _
+        Provider=mrOleDB.Provider.2; _
+        Initial Catalog=.\interim.mdd; _
+        Data Source=mrDataFileDsc; _
+        Location=" + CASEDATA_IN + ";"
+    SelectQuery = "Select * from vdata " + SELECT_QUERY_FILTER
+End InputDataSource
+
+OutputDataSource(SAVContextOutput, "Sav context output")
+        ConnectionString = "Provider=mrOleDB.Provider.2; _
+        Data Source=mrSavDsc; _
+        Location=OUTPUT\" + CASEDATA_OUT + "; _
+        MR Init Custom = 'ExportFactors = " + USE_FACTORS + ";DefTextVarSize=" + TEXTVARSIZE + ";LabelFormatSingle=" + USE_QUESTIONNAME + "%Label;LabelFormatDichotomy=" + USE_QUESTIONNAME + "%label: %CategoryLabel; LabelFormatMultiple=" + USE_QUESTIONNAME + "%label: %CategoryLabel;'; _
+        MR Init MDM Language = " + LOCALE + "; _
+        MR Init MDM Context = SAV; _
+        MR Init Category Names = 1; _
+        MR Init Category Values = 0; _
+        MR Init Overwrite = 1; _
+        MR Init MDM Label Type = Label;"
+        MetaDataOutputName = "OUTPUT\" + METADATA_OUT
+End OutputDataSource
+
+
+Event(OnBeforeJobStart)
+    #include "..\..\Library\FileFunctions.mrs"
+    #include "..\..\Library\String.mrs"
+    #include "..\..\Library\MDD.mrs"
+
+'    sbLogTime("CreateSAV.dms", "Start")
+
+        
+        dim fso
+        dim mdm
+        dim oContext
+        dim bGotAnalysisContext
+        dim bGotSavContext
+        dim start,file
+
+        '**** remove output files from previous runs
+        set fso = createobject("scripting.filesystemobject")
+        if fso.FileExists("OUTPUT\" + METADATA_OUT) then
+                fso.DeleteFile("OUTPUT\" + METADATA_OUT)
+        end if
+        if fso.FileExists("OUTPUT\" + CASEDATA_OUT) then
+                fso.DeleteFile("OUTPUT\" + CASEDATA_OUT)
+        end if
+        if fso.FileExists("OUTPUT\" + CASEDATA_OUT + ".ini") then
+                fso.DeleteFile("OUTPUT\" + CASEDATA_OUT + ".ini")
+        end if
+
+        if fso.FileExists("OUTPUT\" + left(CASEDATA_OUT,len(CASEDATA_OUT)-4) + ".bak.sav") then
+                fso.DeleteFile("OUTPUT\" + left(CASEDATA_OUT,len(CASEDATA_OUT)-4) + ".bak.sav")
+        end if
+
+        set file=fso.createtextfile("OUTPUT\" + CASEDATA_OUT + ".ini",true,false)
+
+        file.WriteLine("[mrSavDsc]")
+        file.WriteLine("SavLanguage=" + LOCALE_SAV_OUTPUT)
+        file.Close()
+
+        set MDM = createobject("mdm.document")
+
+                MDM.Open(METADATA_IN)
+
+                start = ctext(MDM.Variables.Count)
+
+                'INCLUDE MDD MANIPULATION so all label changes are included in SAV output
+                '#include "..\..\MDD_Manipulation.mrs"
+
+                if FIELDLIST <> Null then
+                        sbRemoveAllOtherFields(MDM, FIELDLIST,KEEP)
+                end if
+                Debug.Log("You started with " + start + " variables")
+                Debug.Log("You ended with " + ctext(MDM.Variables.Count) + " variables")
+
+
+        '**** set alternative contexts
+        For Each oContext In mdm.Contexts
+                Select Case oContext.Name
+                        Case "Analysis"
+                                bGotAnalysisContext = True
+                        Case "SAV"
+                                bGotSavContext = True
+                End Select
+        Next
+
+        If Not bGotSavContext Then
+                mdm.Contexts.Add("SAV")
+        End If
+    
+       
+        If Not bGotAnalysisContext Then
+                mdm.Contexts.Add("Analysis")
+        End If
+                
+        'get labels from alternative context   
+        mdm.Contexts["SAV"].Alternatives.Add(ALT_CONTEXT)
+        
+
+        'loops through the fields and switches categories defined 
+        'as analysisbase to normal categories so they don't cause bad record errors
+        if CONVERTBASE = True then SbRemoveAnalysisBaseElements(MDM.Fields)
+   
+        'save the interim MDD file that will be used in the inputdatasource
+        mdm.Save(".\interim.mdd")
+
+
+   Sub sbRemoveAllOtherFields(MDM,Keepers,KeepMe)
+        'This sub removes all variables that aren't in the FIELDLIST if KeepME is True
+        'and removes all variables that are in FIELDLIST if KeepMe is False.
+        'Make sure to have commas after every variable, so we can only
+        'keep the variables that match the full text.
+
+        Dim Field,Field2,page
+
+        debug.Log("****************")
+                debug.Log("Fields kept:")
+        for each Field in MDM.Fields
+                if KeepMe = True then
+                        if (Find(split(Keepers.LCase(), ","),Field.Name.LCase()) <> -1) then
+                                        debug.Log(Field.Name)
+                                elseif (Find(Keepers.LCase(),Field.Name.LCase() + "[") <> -1) then
+                                        debug.Log(Field.Name)
+                                elseif (Find(Keepers.LCase(),Field.Name.LCase() + ".") <> -1) then
+                                        debug.Log(Field.Name)
+                        else
+                                MDM.Fields.Remove(Field.Name)
+                        end if
+                else
+                        if (Find(split(Keepers.LCase(), ","),Field.Name.LCase()) <> -1) then
+                                        MDM.Fields.Remove(Field.Name)
+                                elseif (Find(Keepers.LCase(),Field.Name.LCase() + "[") <> -1) then
+                                        MDM.Fields.Remove(Field.Name)
+                                elseif (Find(Keepers.LCase(),Field.Name.LCase() + ".") <> -1) then
+                                        MDM.Fields.Remove(Field.Name)
+                        else
+                                        debug.Log(Field.Name)
+                        end if  
+                end if
+        next
+
+        for each page in MDM.Pages
+                MDM.Pages.Remove(page.name)
+        next
+end sub
+
+
+
+
+Sub SbRemoveAnalysisBaseElements(Fields)
+'removes all fields that also have _answers or _code fields
+        dim field, ele
+        for each field in Fields
+                
+                select case field.ObjectTypeValue
+                        'case ObjectTypesConstants.mtArray, ObjectTypesConstants.mtGrid, ObjectTypesConstants.mtClass
+                        
+                        case 33,2,3,1
+                                SbRemoveAnalysisBaseElements(field.Fields)
+                        case 0
+                                for each ele in field.Elements
+                                          if ele.typename = "AnalysisBase" then                                         
+                                                ele.type = 0
+                                                ele.typename = "Category"
+                                          end if
+                                next
+                                debug.Log(field.fullname + " - " + CText(field.objecttypevalue))
+                end select
+        next
+End Sub
+
+
+
+end event
+
+
+Event(OnAfterJobEnd)
+     #include "..\..\Library\FileFunctions.mrs"
+    dim fso
+    
+    set fso = createobject("scripting.filesystemobject")
+        if fso.FileExists(".\interim.mdd") then
+                fso.DeleteFile(".\interim.mdd")
+        end if
+     
+'        sbLogTime("CreateSAV.dms", "End")
+End Event

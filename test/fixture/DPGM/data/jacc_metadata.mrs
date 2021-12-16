@@ -1,0 +1,297 @@
+' metadata
+Jacc_Top_B4B12 "" categorical[..]
+{
+    V1    "华为/Huawei"    expression("B4 * {V1}"),
+    V2    "OPPO"    expression("B4 * {V2}"),
+    V3    "vivo"    expression("B4 * {V3}"),
+    V4    "iQOO"    expression("B4 * {V4}"),
+    V5    "荣耀/Honor"    expression("B4 * {V5}"),
+    V6    "苹果/Apple"    expression("B4 * {V6}"),
+    V7    "三星/SAMSUNG"    expression("B4 * {V7}"),
+    V8    "小米"    expression("B4 * {V8}"),
+    V9    "红米/Redmi"    expression("B4 * {V9}"),
+    V10    "realme"    expression("B4 * {V10}"),
+    V11    "一加/OnePlus"    expression("B4 * {V11}")
+}  axis("{base '总体' base() [ishidden=true],nt1 'Total' net({..})}");
+
+Jacc_B4B12_1    double;
+Jacc_B4B12_2    double;
+Jacc_B4B12_3    double;
+Jacc_B4B12_4    double;
+Jacc_B4B12_5    double;
+Jacc_B4B12_6    double;
+Jacc_B4B12_7    double;
+Jacc_B4B12_8    double;
+Jacc_B4B12_9    double;
+Jacc_B4B12_10    double;
+Jacc_B4B12_11    double;
+Jacc_B4B12_12    double;
+Jacc_B4B12_13    double;
+Jacc_B4B12_14    double;
+Jacc_B4B12_15    double;
+Jacc_B4B12_16    double;
+Jacc_B4B12_17    double;
+Jacc_B4B12_18    double;
+Jacc_B4B12_19    double;
+Jacc_B4B12_20    double;
+Jacc_B4B12_21    double;
+Jacc_B4B12_22    double;
+Jacc_B4B12_23    double;
+Jacc_B4B12_24    double;
+Jacc_B4B12_25    double;
+Jacc_B4B12_26    double;
+Jacc_B4B12_27    double;
+Jacc_B4B12_28    double;
+
+Jacc_Top_B4B12oppo "" categorical[..]
+{
+    V2    "OPPO"    expression("B4 * {V2}")
+}  axis("{base '总体' base() [ishidden=true],nt1 'Total' net({..})}");
+
+Jacc_B4B12oppo_1    double;
+Jacc_B4B12oppo_2    double;
+Jacc_B4B12oppo_3    double;
+Jacc_B4B12oppo_4    double;
+Jacc_B4B12oppo_5    double;
+Jacc_B4B12oppo_6    double;
+Jacc_B4B12oppo_7    double;
+Jacc_B4B12oppo_8    double;
+Jacc_B4B12oppo_9    double;
+Jacc_B4B12oppo_10    double;
+Jacc_B4B12oppo_11    double;
+Jacc_B4B12oppo_12    double;
+Jacc_B4B12oppo_13    double;
+Jacc_B4B12oppo_14    double;
+Jacc_B4B12oppo_15    double;
+Jacc_B4B12oppo_16    double;
+Jacc_B4B12oppo_17    double;
+Jacc_B4B12oppo_18    double;
+Jacc_B4B12oppo_19    double;
+Jacc_B4B12oppo_20    double;
+Jacc_B4B12oppo_21    double;
+Jacc_B4B12oppo_22    double;
+Jacc_B4B12oppo_23    double;
+Jacc_B4B12oppo_24    double;
+Jacc_B4B12oppo_25    double;
+Jacc_B4B12oppo_26    double;
+Jacc_B4B12oppo_27    double;
+Jacc_B4B12oppo_28    double;
+
+Jacc_Top_B6B13 "" categorical[..]
+{
+    v1    "Reno6系列 "    expression("B6*{V12}"),
+    v2    "Vivo S9系列 "    expression("B6*{V24}"),
+    v3    "荣耀50系列 "    expression("B6*{V28}"),
+    t2    "Vivo S10系列 "    expression("B6*{V60}")
+}  axis("{base '总体' base() [ishidden=true],nt1 'Total' net({..})}");
+
+Jacc_B6B13_1    double;
+Jacc_B6B13_2    double;
+Jacc_B6B13_3    double;
+Jacc_B6B13_4    double;
+Jacc_B6B13_5    double;
+Jacc_B6B13_6    double;
+Jacc_B6B13_7    double;
+Jacc_B6B13_8    double;
+Jacc_B6B13_9    double;
+Jacc_B6B13_10    double;
+Jacc_B6B13_11    double;
+Jacc_B6B13_12    double;
+Jacc_B6B13_13    double;
+Jacc_B6B13_14    double;
+Jacc_B6B13_15    double;
+Jacc_B6B13_16    double;
+Jacc_B6B13_17    double;
+Jacc_B6B13_18    double;
+Jacc_B6B13_19    double;
+Jacc_B6B13_20    double;
+Jacc_B6B13_21    double;
+Jacc_B6B13_22    double;
+Jacc_B6B13_23    double;
+Jacc_B6B13_24    double;
+Jacc_B6B13_25    double;
+Jacc_B6B13_26    double;
+Jacc_B6B13_27    double;
+Jacc_B6B13_28    double;
+
+Jacc_Top_B5B14b "" categorical[..]
+{
+    b5_12    "Reno 6/ Pro/ Pro+"    expression("_@B5_1*{b5_12}"),
+    b5_24    "vivo S9/ S9e"    expression("_@B5_1*{b5_24}"),
+    b5_28    "荣耀50/ Pro/ SE"    expression("_@B5_1*{b5_28}"),
+    b5_44    "小米11/ 11 Pro/ 11 Ultra/ 11青春版"    expression("_@B5_1*{b5_44}"),
+    b5_60    "vivo S10/ Pro"    expression("_@B5_1*{b5_60}")
+}  axis("{base '总体' base() [ishidden=true],nt1 'Total' net({..})}");
+
+Jacc_B5B14b_1    double;
+Jacc_B5B14b_2    double;
+Jacc_B5B14b_3    double;
+Jacc_B5B14b_4    double;
+Jacc_B5B14b_5    double;
+Jacc_B5B14b_6    double;
+Jacc_B5B14b_7    double;
+Jacc_B5B14b_8    double;
+Jacc_B5B14b_9    double;
+Jacc_B5B14b_10    double;
+Jacc_B5B14b_11    double;
+Jacc_B5B14b_12    double;
+Jacc_B5B14b_13    double;
+Jacc_B5B14b_14    double;
+Jacc_B5B14b_15    double;
+Jacc_B5B14b_16    double;
+Jacc_B5B14b_17    double;
+Jacc_B5B14b_18    double;
+Jacc_B5B14b_19    double;
+Jacc_B5B14b_20    double;
+Jacc_B5B14b_21    double;
+Jacc_B5B14b_22    double;
+Jacc_B5B14b_23    double;
+Jacc_B5B14b_24    double;
+Jacc_B5B14b_25    double;
+Jacc_B5B14b_26    double;
+Jacc_B5B14b_27    double;
+Jacc_B5B14b_28    double;
+Jacc_B5B14b_29    double;
+Jacc_B5B14b_30    double;
+Jacc_B5B14b_31    double;
+Jacc_B5B14b_98    double;
+Jacc_B5B14b_99    double;
+
+Jacc_Top_B6B14b "" categorical[..]
+{
+    v12    "Reno 6/ Pro/ Pro+"    expression("B6*{v12}"),
+    v24    "vivo S9/ S9e"    expression("B6*{v24}"),
+    v28    "荣耀50/ Pro/ SE"    expression("B6*{v28}"),
+    v44    "小米11/ 11 Pro/ 11 Ultra/ 11青春版"    expression("B6*{v44}"),
+    v60    "vivo S10/ Pro"    expression("B6*{v60}")
+}  axis("{base '总体' base() [ishidden=true],nt1 'Total' net({..})}");
+
+Jacc_B6B14b_1    double;
+Jacc_B6B14b_2    double;
+Jacc_B6B14b_3    double;
+Jacc_B6B14b_4    double;
+Jacc_B6B14b_5    double;
+Jacc_B6B14b_6    double;
+Jacc_B6B14b_7    double;
+Jacc_B6B14b_8    double;
+Jacc_B6B14b_9    double;
+Jacc_B6B14b_10    double;
+Jacc_B6B14b_11    double;
+Jacc_B6B14b_12    double;
+Jacc_B6B14b_13    double;
+Jacc_B6B14b_14    double;
+Jacc_B6B14b_15    double;
+Jacc_B6B14b_16    double;
+Jacc_B6B14b_17    double;
+Jacc_B6B14b_18    double;
+Jacc_B6B14b_19    double;
+Jacc_B6B14b_20    double;
+Jacc_B6B14b_21    double;
+Jacc_B6B14b_22    double;
+Jacc_B6B14b_23    double;
+Jacc_B6B14b_24    double;
+Jacc_B6B14b_25    double;
+Jacc_B6B14b_26    double;
+Jacc_B6B14b_27    double;
+Jacc_B6B14b_28    double;
+Jacc_B6B14b_29    double;
+Jacc_B6B14b_30    double;
+Jacc_B6B14b_31    double;
+Jacc_B6B14b_98    double;
+Jacc_B6B14b_99    double;
+
+Jacc_Top_B2C3 "" categorical[..]
+{
+    v1    "OPPO Reno6系列 "    expression("_@B2_1*{b2_12}"),
+    v2    "Vivo S9系列 "    expression("_@B2_1*{b2_24}"),
+    v3    "荣耀50系列 "    expression("_@B2_1*{b2_28}"),
+    v4    "小米11系列 "    expression("_@B2_1*{b2_44}"),
+    t2    "Vivo S10系列 "    expression("_@B2_1*{b2_60}")
+}  axis("{base '总体' base() [ishidden=true],nt1 'Total' net({..})}");
+
+Jacc_B2C3_1    double;
+Jacc_B2C3_2    double;
+Jacc_B2C3_3    double;
+Jacc_B2C3_4    double;
+Jacc_B2C3_5    double;
+Jacc_B2C3_6    double;
+Jacc_B2C3_7    double;
+Jacc_B2C3_8    double;
+Jacc_B2C3_9    double;
+Jacc_B2C3_10    double;
+Jacc_B2C3_11    double;
+Jacc_B2C3_12    double;
+Jacc_B2C3_13    double;
+Jacc_B2C3_14    double;
+Jacc_B2C3_15    double;
+Jacc_B2C3_16    double;
+Jacc_B2C3_17    double;
+Jacc_B2C3_18    double;
+Jacc_B2C3_19    double;
+Jacc_B2C3_20    double;
+Jacc_B2C3_98    double;
+Jacc_B2C3_99    double;
+
+Jacc_Top_B5C3 "" categorical[..]
+{
+    v1    "OPPO Reno6系列 "    expression("_@B5_1*{b5_12}"),
+    v2    "Vivo S9系列 "    expression("_@B5_1*{b5_24}"),
+    v3    "荣耀50系列 "    expression("_@B5_1*{b5_28}"),
+    v4    "小米11系列 "    expression("_@B5_1*{b5_44}"),
+    t2    "Vivo S10系列 "    expression("_@B5_1*{b5_60}")
+}  axis("{base '总体' base() [ishidden=true],nt1 'Total' net({..})}");
+
+Jacc_B5C3_1    double;
+Jacc_B5C3_2    double;
+Jacc_B5C3_3    double;
+Jacc_B5C3_4    double;
+Jacc_B5C3_5    double;
+Jacc_B5C3_6    double;
+Jacc_B5C3_7    double;
+Jacc_B5C3_8    double;
+Jacc_B5C3_9    double;
+Jacc_B5C3_10    double;
+Jacc_B5C3_11    double;
+Jacc_B5C3_12    double;
+Jacc_B5C3_13    double;
+Jacc_B5C3_14    double;
+Jacc_B5C3_15    double;
+Jacc_B5C3_16    double;
+Jacc_B5C3_17    double;
+Jacc_B5C3_18    double;
+Jacc_B5C3_19    double;
+Jacc_B5C3_20    double;
+Jacc_B5C3_98    double;
+Jacc_B5C3_99    double;
+
+Jacc_Top_B6C3 "" categorical[..]
+{
+    v1    "OPPO Reno6系列 "    expression("b6*{v12}"),
+    v2    "Vivo S9系列 "    expression("b6*{v24}"),
+    v3    "荣耀50系列 "    expression("b6*{v28}"),
+    v4    "小米11系列 "    expression("b6*{v44}"),
+    t2    "Vivo S10系列 "    expression("b6*{v60}")
+}  axis("{base '总体' base() [ishidden=true],nt1 'Total' net({..})}");
+
+Jacc_B6C3_1    double;
+Jacc_B6C3_2    double;
+Jacc_B6C3_3    double;
+Jacc_B6C3_4    double;
+Jacc_B6C3_5    double;
+Jacc_B6C3_6    double;
+Jacc_B6C3_7    double;
+Jacc_B6C3_8    double;
+Jacc_B6C3_9    double;
+Jacc_B6C3_10    double;
+Jacc_B6C3_11    double;
+Jacc_B6C3_12    double;
+Jacc_B6C3_13    double;
+Jacc_B6C3_14    double;
+Jacc_B6C3_15    double;
+Jacc_B6C3_16    double;
+Jacc_B6C3_17    double;
+Jacc_B6C3_18    double;
+Jacc_B6C3_19    double;
+Jacc_B6C3_20    double;
+Jacc_B6C3_98    double;
+Jacc_B6C3_99    double;

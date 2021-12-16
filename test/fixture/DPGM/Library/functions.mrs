@@ -1,0 +1,619 @@
+sub createtop(MDM,vars,numb,axex[],outf[])
+	dim its,tempcr,temptop,cnt,i,comby,checker,ax
+	Const eDontknow      = &H0002
+	Const eRefuse        = &H0004
+	Const eNoanswer      = &H0008
+	temptop=null
+	tempcr=""
+	i=1
+	ax=numb
+	cnt=0
+	for each its in vars.elements.elements
+		if not(BitAnd(its.Flag,BitOr(eDontknow,eRefuse,eNoAnswer))) then
+		        cnt=cnt+1
+		        tempcr=tempcr+its.name+"+"
+		end if
+	next
+	temptop=split(tempcr,"+")
+	if cnt>numb then
+	      	for i = 0 to cnt
+	            while numb>0
+	                comby=comby+temptop[i]+","
+	                i=i+1
+	                numb=numb-1
+	            end while
+	            checker=split(axex[i]," ")
+	        next
+	        	if len(comby)>1 then comby=left(comby,len(comby)-1)
+				axex[0]=axex[0]+"myvar_t"+ctext(ax)+" 'Top "+ctext(ax)+" Box' combine({"+comby+"})"
+				if axex[0]<>"" then outf[4]=ctext(ax)
+        end if
+end sub
+
+function checknum(objTOM,vars)
+	dim its,tempcr,temptop,cnt
+	Const eDontknow      = &H0002
+	Const eRefuse        = &H0004
+	Const eNoanswer      = &H0008
+	cnt=0
+	for each its in vars.elements.elements
+		if not(BitAnd(its.Flag,BitOr(eDontknow,eRefuse,eNoAnswer))) then
+			cnt=cnt+1
+			tempcr=tempcr+its.name+"+"
+		end if
+	next
+	checknum=cnt
+end function
+
+sub createbot(MDM,vars,numb,axex[],outf[])
+	dim its,tempcr,temptop,cnt,i,comby,checker,ax
+	Const eDontknow      = &H0002
+	Const eRefuse        = &H0004
+	Const eNoanswer      = &H0008
+	temptop=null
+	tempcr=""
+	i=1
+	ax=numb
+	cnt=0
+	for each its in vars.elements.elements
+		if not(BitAnd(its.Flag,BitOr(eDontknow,eRefuse,eNoAnswer))) then
+		        cnt=cnt+1
+		        tempcr=tempcr+its.name+"+"
+		end if
+	next
+	temptop=split(tempcr,"+")
+	if cnt>numb then
+	      	for i = 1 to cnt
+	            while numb>0
+	                comby=comby+temptop[ubound(temptop)-i]+","
+	                i=i+1
+	                numb=numb-1
+	            end while
+	            checker=split(axex[i]," ")
+	            if checker[0]=temptop[ubound(temptop)-1] then
+			if len(comby)>1 then comby=left(comby,len(comby)-1)
+			axex[i]=axex[i]+",myvar_b"+ctext(ax)+" 'Bottom "+ctext(ax)+" Box' combine({"+comby+"})"
+           		outf[5]=ctext(ax)
+	            end if
+	        next
+        end if
+end sub
+
+sub createmeant(objTOM,vars,axex[])
+	dim cnt,ele,fact,doit,finex,i
+	Const eDontknow      = &H0002
+	Const eRefuse        = &H0004
+	Const eNoanswer      = &H0008
+
+	for each ele in vars.elements.elements
+		if not(BitAnd(ele.Flag,BitOr(eDontknow,eRefuse,eNoAnswer))) then
+			cnt=cnt+1
+		end if
+	next
+	for each ele in vars.elements.elements
+		for i = 1 to ubound(axex)
+			if find("myvar_mn",axex[1])>-1 then exit sub
+			if (not(BitAnd(ele.Flag,BitOr(eDontknow,eRefuse,eNoAnswer)))) and find(ele.name,axex[i])=0 then
+				ele.label=Replace(ele.label,"'","''")
+				axex[i]=axex[i]+" '"+ele.label+" ("+ctext(cnt)+")' [factor="+ctext(cnt)+"]"
+				cnt=cnt-1
+			end if
+		next
+	next
+	axex[ubound(axex)+1]="e3 '' text(),myvar_mn 'Mean' mean() [decimals=2],myvar_sd 'Standard Deviation' stddev() [decimals=2],myvar_se 'Standard Error' stderr() [decimals=2]"
+end sub
+
+sub createmeanb(objTOM,vars,axex[])
+	dim cnt,ele,fact,doit,finex,dwn,checker,check,i
+	Const eDontknow      = &H0002
+	Const eRefuse        = &H0004
+	Const eNoanswer      = &H0008
+	for each ele in vars.elements.elements
+			if not(BitAnd(ele.Flag,BitOr(eDontknow,eRefuse,eNoAnswer))) then
+				cnt=cnt+1
+			end if
+	next
+	dwn=0
+	for each ele in vars.elements.elements
+		for i = 1 to ubound(axex)
+			if find("myvar_mn",axex[i])> -1 then exit sub
+			if (not(BitAnd(ele.Flag,BitOr(eDontknow,eRefuse,eNoAnswer)))) and find(ele.name,axex[i])=0 then
+				ele.label=Replace(ele.label,"'","''")
+				dwn=dwn+1
+				axex[i]=axex[i]+" '"+ele.label+" ("+ctext(dwn)+")' [factor="+ctext(dwn)+"]"
+			end if
+		next
+	next
+	axex[ubound(axex)+1]="e2 '' text(),myvar_mn 'Mean' mean() [decimals=2],myvar_sd 'Standard Deviation' stddev() [decimals=2],myvar_se 'Standard Error' stderr() [decimals=2]"
+end sub
+
+sub createsigma(docMDM,vars,axex[])
+	dim its,tempcr
+	if vars.elements.elements.count > 0 then
+		for each its in vars.elements.elements '	objtom.DataSet.variables.addnewvariable("numvar_"+vars.name+" long expression("""+vars.name+".answercount()"");")
+			if find(its.name,"myvar")=-1 then tempcr=tempcr+its.name+"+"
+		next
+'		axex[ubound(axex)+1]="myvar_sg 'TOTAL ANSWERS' derived('"+left(tempcr,len(tempcr)-1)+"') [countsonly=true]"
+		axex[ubound(axex)+1]="e1 '' text(),myvar_sg 'Sigma' subtotal()"
+	end if
+end sub
+
+sub createavnum(docMDM,vars,axex[])
+	dim its,tempcr
+	if vars.elements.elements.count > 0 and vars.maxvalue <> 1 then
+		for each its in vars.elements.elements '	objtom.DataSet.variables.addnewvariable("numvar_"+vars.name+" long expression("""+vars.name+".answercount()"");")
+			tempcr=tempcr+its.name+"+"
+		next
+		if tempcr<>"" then axex[ubound(axex)+1]="myvar_ag 'AVERAGE ANSWERS' derived('("+left(tempcr,len(tempcr)-1)+")/b1') [countsonly=true,decimals=1]"
+	end if
+end sub
+
+
+
+
+
+sub fastadddef(docMDM,ques,prop)
+	dim txt,vars
+	if find(ques.fullname,".")> -1 then
+		set vars=getslice(docMDM,ques)
+	else
+		set vars=docMDM.fields[ques.fullname]
+	end if
+	txt=vars.properties.item["Fasttab"]
+	if find(txt,prop) = -1 then
+		txt=txt+","+prop
+		vars.properties.item["Fasttab"]=txt
+	end if
+end sub
+
+
+sub fastadd(docMDM,ques,prop)
+	dim txt,vars,blahy
+	if find(ques,".")> -1 then
+		set vars=getsliceobj(docMDM,ques)
+	else
+		set vars=docMDM.fields[ques]
+	end if
+	set blahy =getinterface(vars,"{887C268A-BC6B-4a03-9E67-4F210599F416}")
+	if blahy.hascasedata=true then
+		txt=vars.properties.item["Fasttab"]
+		if prop="meanb" and find(txt,"meant") > -1 then txt=replace(txt,"meant","")
+		if prop="meant" and find(txt,"meanb") > -1 then txt=replace(txt,"meanb","")
+		if find(txt,prop) = -1  and vars.datatype=3 then
+			if prop="bot2" then
+				txt=prop+","+txt
+			else
+				txt=txt+","+prop
+			end if
+			vars.properties.item["Fasttab"]=txt
+		end if
+	end if
+end sub
+
+sub foldadd(docMDM,ques,prop)
+	dim txt,vars
+	set vars=docMDM.fields[ques]
+	vars.properties.item["folder"]=prop
+end sub
+
+
+sub fastrem(docMDM,ques,prop)
+	dim txt,vars
+	if find(ques,".") > -1 then
+		set vars=getsliceobj(docMDM,ques)
+	else
+		set vars=docMDM.fields[ques]
+	end if
+	if find(vars.properties.item["Fasttab"],prop) <> -1 then
+		txt=replace(vars.properties.item["Fasttab"],prop,"")
+		vars.properties.item["Fasttab"]=txt
+	end if
+end sub
+
+sub tabrem(docMDM,ques)
+	dim txt,vars
+	if find(ques,".") > -1 then
+		set vars=getsliceobj(docMDM,ques)
+	else
+		set vars=docMDM.fields[ques]
+	end if
+	vars.properties.item["tabulate"]="false"
+end sub
+
+sub banneradd(docMDM,ques)
+	dim txt,vars
+	if find(ques,".") > -1 then
+		set vars=getsliceobj(docMDM,ques)
+	else
+		set vars=docMDM.fields[ques]
+	end if
+	vars.properties.item["banner"]="true"
+end sub
+
+sub bannerrem(docMDM,ques)
+	dim txt,vars
+	if find(ques,".") > -1 then
+		set vars=getsliceobj(docMDM,ques)
+	else
+		set vars=docMDM.fields[ques]
+	end if
+	vars.properties.item["banner"]="false"
+end sub
+
+sub tabadd(docMDM,ques)
+	dim txt,vars
+	if find(ques,".") > -1 then
+		set vars=getsliceobj(docMDM,ques)
+	else
+		set vars=docMDM.fields[ques]
+	end if
+	vars.properties.item["tabulate"]="true"
+end sub
+
+function fnCreateBanner(TableDoc,strBannerName,strBannerSpecification,booIsDefault)
+	'Creates an axis and adds it to the axes collection.  The base element of each subaxis is hidden.
+	'
+	'Parameters:
+	'TableDoc = TOM.Document
+	'strBannerName = A valid, unique name for the banner
+	'strBannerSpecification = Any valid axis expression
+	'
+	'Returns: The Banner
+	Dim i
+	with tabledoc
+	        if booIsDefault then
+	                set fnCreateBanner=.Default.Axes.AddNew(strBannerName)
+	        else
+		        set fnCreateBanner=.Axes.AddNew(strBannerName)
+                end if
+	        with fnCreateBanner
+		        .Specification=strBannerSpecification
+'			for i=1 to .subaxes.count-1
+'				.subaxes[i].elements[0].isHidden=true
+'			next
+		end with '.axes[strBannerName]
+	end with 'TableDoc
+end function
+
+sub createdefs(docMDM,vars,bann,outfile,categorize)
+	dim tabs,fast,useit,fielder,ele,axex,outf[],subq,splitter,blahy
+	set blahy =getinterface(vars,"{887C268A-BC6B-4a03-9E67-4F210599F416}")
+	outf[0]=vars.fullname
+	outf[1]=vars.label
+	if vars.properties.item["banner"]="true" then outf[3]="1"
+	if vars.objecttypevalue=0 then
+		if vars.datatype=1 or vars.datatype=6 then
+			if vars.properties.item["tabulate"]<>"false" and (find(vars.Properties.item["Reporttype"],"IsShell") = -1 or vars.name="YYYYMMDD" or vars.name="weekno" or vars.name="ttimem" or vars.name="ttimes" or vars.name="sampscr" or vars.name="qcountry" or vars.name="version") then	vars.properties.item["Tabulate"]="true"
+		end if
+		if vars.datatype=2 then
+			if vars.properties.item["tabulate"]<>"false" and (find(vars.Properties.item["Reporttype"],"IsShell") = -1 or vars.name="YYYYMMDD" or vars.name="weekno" or vars.name="ttimem" or vars.name="ttimes" or vars.name="sampscr" or vars.name="qcountry" or vars.name="version") and categorize=true then
+				vars.properties.item["Tabulate"]="true"
+			end if
+		end if
+		if vars.datatype=3 and blahy.hascasedata=true then
+			if vars.properties.item["tabulate"]<>"false" and (find(vars.Properties.item["Reporttype"],"IsShell") = -1 or vars.name="YYYYMMDD" or vars.name="weekno" or vars.name="ttimem" or vars.name="ttimes" or vars.name="sampscr" or vars.name="qcountry" or vars.name="version") then vars.properties.item["Tabulate"]="true"
+			if find(defs,"sigma")> -1 then fastadddef(docmdm,vars,"sigma")
+			if find(defs,"avnum")> -1 then fastadddef(docmdm,vars,"avnum")
+			if find(defs,"top2")> -1 then fastadddef(docmdm,vars,"top2")
+			if find(defs,"meant")> -1 then fastadddef(docmdm,vars,"meant")
+			if find(defs,"meanb")> -1 then fastadddef(docmdm,vars,"meanb")
+			if find(defs,"bot2")> -1 then fastadddef(docMDM,vars,"bot2")
+			outf[2]="1"
+		end if
+	end if
+	if vars.objecttypevalue=1 or vars.objecttypevalue=2 then
+		if vars.properties.item["Tabulate"]<>"false" and (find(vars.Properties.item["Reporttype"],"IsShell") = -1 or vars.name="YYYYMMDD" or vars.name="weekno" or vars.name="ttimem" or vars.name="ttimes" or vars.name="sampscr" or vars.name="qcountry" or vars.name="version") then
+			vars.properties.item["Tabulate"]="true"
+			vars.properties.item["Split"]="true"
+		end if
+		for each subq in vars.fields
+			createdefs(docMDM,subq,bann,outfile,categorize)
+		next
+	end if
+end sub
+
+
+
+sub createtab(docMDM,vars,bann,outfile,odictionary,tabledoc,analfile)
+	dim tabs,fast,useit,fielder,ele,axex[],outf[],subq,splitter,chk,chk1,chk2,cnt,buildit,upper,elecnt
+	elecnt=0
+	outf[0]=vars.fullname
+	outf[1]=left(vars.label,32)
+	vars.label=fnStripHTML_fastabs(vars.label)
+	vars.label=vars.label
+	if vars.properties.item["folder"]=false then
+	     if vars.issystem=true then 'If we have at least one level of folders to build...
+	           vars.properties.item["folder"]="System"
+         else
+           	if find(vars.properties.item["ReportType"],"IsShell")>-1 then
+    			vars.properties.item["folder"]="Shell"
+           	else
+                vars.properties.item["folder"]="Questionnaire"
+           	end if
+         end if
+    end if
+	if vars.objecttypevalue=1 or vars.objecttypevalue=2 then
+		for each subq in vars.fields
+			createtab(docMDM,subq,bann,outfile,odictionary,tabledoc,analfile)
+		next
+	end if
+	if vars.properties.item["Banner"]= "true" then
+		outf[3]="1"
+	end if
+	if vars.properties.item["Tabulate"]="true" then
+		outf[2]="1"
+		if vars.parent.parent<> null then
+			set fielder=getslice(docMDM,vars)
+		else
+			set fielder=vars
+		end if
+		if vars.objecttypevalue<>1 and vars.objecttypevalue<>2 and fielder.elements.elements.count > 0 then
+			for each ele in fielder.elements.elements
+				elecnt=elecnt+1
+				ele.label=fnStripHTML_fastabs(ele.label)
+				if ele.label="" then
+					ele.label=ele.name
+				else
+					ele.label=ele.label
+				end if
+				axex[elecnt]=ele.name
+				ele.style.image=null
+			next
+		end if
+		tabs=split(vars.properties.item["Fasttab"],",")
+		if vars.properties.item["isuserdefined"]<>true then
+			if fielder.axisexpression=null then
+				for each fast in tabs
+					select case fast
+						case "top2"
+							if vars.properties.item["scale"]="10" then
+								createtop(docMDM,fielder,3,axex,outf)
+							else
+								createtop(docMDM,fielder,2,axex,outf)
+							end if
+						case "sigma"
+							createsigma(docMDM,fielder,axex)
+							if find(axex[ubound(axex)],"myvar_sg")> -1 then outf[6]="1"
+						case "avnum"
+							createavnum(docMDM,fielder,axex)
+							if find(axex[ubound(axex)],"myvar_ag")> -1 then outf[7]="1"
+						case "meant"
+							if fielder.maxvalue = 1 then
+								createmeant(docMDM,fielder,axex)
+								if find(axex[ubound(axex)],"myvar_mn")> -1 then outf[8]="1 - t"
+							else
+								fielder.properties.item["fasttab"]=Replace(fielder.properties.item["fasttab"],"meant","")
+								outf[7]="Not Single"
+							end if
+						case "meanb"
+							if fielder.maxvalue = 1 then
+								createmeanb(docMDM,fielder,axex)
+								if find(axex[ubound(axex)],"myvar_mn")> -1 then outf[8]="1 - b"
+							else
+								fielder.properties.item["fasttab"]=Replace(fielder.properties.item["fasttab"],"meant","")
+								outf[8]="Not Single"
+							end if
+						case "bot2"
+							if vars.properties.item["scale"]="10" then
+								createbot(docMDM,fielder,3,axex,outf)
+							else
+								createbot(docMDM,fielder,2,axex,outf)
+							end if
+					end select
+				next
+			end if
+		end if
+		dim i,builder
+		elecnt=ubound(axex)
+		builder=""
+		if not (fielder.objecttypevalue=1 or fielder.objecttypevalue=2) then
+			if fielder.datatype=1 or fielder.datatype=6 then
+				outfile.writeline("'"+fielder.name)
+				outfile.writeline("sbSetTitleText(MDM,"""+fielder.fullname+""",""Analysis"",LOCALE,"""+fielder.name+": "+fielder.label+""")")
+				outfile.writeline("' Numeric needs banding")
+				outfile.writeline("sbSetAxisExpression(MDM,"""+fielder.fullname+""",{..})")
+			elseif fielder.datatype=3 then
+				outfile.writeline("'"+fielder.fullname)
+				builder="{eb1 '' text(),b1 'Base : Total Respondent' base(),eb2 '' text(),"
+				for i = 0 to elecnt
+					if i <> elecnt then
+						if axex[i]<>"" then builder=builder+axex[i]+","
+					else
+						builder=builder+axex[i]+"}"
+					end if
+				next
+				outfile.writeline("sbSetTitleText(MDM,"""+fielder.fullname+""",""Analysis"",LOCALE,"""+fielder.fullname+": "+fielder.label+""")")
+				outfile.writeline("sbSetAxisExpression(MDM,"""+fielder.fullname+""","""+builder+""")")
+			end if
+		end if
+		outfile.writeline("")
+		if fielder.axisexpression=null then fielder.axisexpression=builder
+		if elecnt>-1 then redim(axex,elecnt,false)
+	end if
+	outf[9]=vars.properties.item["folder"]
+	analfile.WriteLine(outf[0]+"	"+outf[1]+"	"+outf[2]+"	"+outf[3]+"	"+outf[4]+"	"+outf[5]+"	"+outf[6]+"	"+outf[7]+"	"+outf[8]+"	"+outf[9])
+	redim(outf,9,false)
+ end sub
+
+sub foldercreate(docMDM,ofield,odictionary,tabledoc)
+	Dim MDMDoc
+	Dim oFolder, strFolderName, strDictionaryItemName
+	dim oRoutingItem, oRoutingLevel,renme,fielder
+	dim strFieldName,strExpression
+	set oRoutingLevel=Tabledoc.DataSet.Variables                      'Start with the "top" level of routing
+    strDictionaryItemName=""                                          'Initialise the name we are going to use with the dictionary
+	strfoldername=oField.properties.item["folder"]
+        Set oRoutingItem = oRoutingLevel.FindItem(strFolderName) 'Look for the folder at the current routing level
+        If oRoutingItem.IsNullObject() Then 'If we can't find it we need to make it
+                Set oFolder = Tabledoc.DataSet.Variables.AddNewFolder(strFolderName) 'Create the folder
+        else
+                set oFolder=oRoutingItem 'Folder already exists so retrieve it from the dictionary
+        end if
+        if finditem(ofolder,ofield.name)=null then
+           	oFolder.Add(oField)'Add the field to the folder
+               	Tabledoc.DataSet.Variables.Remove(oField.name)
+        end if
+end sub
+
+function getslice(docMDM,vars)
+	dim slicer,tempname,cnt,valv
+	if find(vars.fullname,"[..]") > -1 then
+		tempname=replace(vars.fullname,"[..]","")
+	else
+		tempname=vars
+	end if
+	for each slicer in split(tempname,".")
+		cnt=cnt+1
+		if cnt=1 then
+			set valv=docMDM.fields[slicer]
+		else
+			set valv=valv.fields[slicer]
+		end if
+	next
+	set getslice=valv
+end function
+
+function getsliceobj(docMDM,vars)
+	dim slicer,tempname,cnt,valv
+	tempname=vars
+	for each slicer in split(tempname,".")
+		cnt=cnt+1
+		if cnt=1 then
+			set valv=docMDM.fields[slicer]
+		else
+			set valv=valv.fields[slicer]
+		end if
+	next
+	set getsliceobj=valv
+end function
+
+function getslicelabel(docMDM,vars)
+	dim slicer,tempname,cnt,valv,lbl
+	tempname=vars
+	for each slicer in split(tempname,".")
+		cnt=cnt+1
+		if cnt=1 then
+			set valv=docMDM.fields[slicer]
+			lbl=valv.label
+		else
+			set valv=valv.fields[slicer]
+			lbl=lbl+" : "+valv.label
+		end if
+	next
+	lbl=fnStripHTML_fastabs(lbl)
+	set getslicelabel=lbl
+end function
+
+sub sbRemoveBlankTables(TableDoc,run_log)
+	'Loops through a set of tables and removes any that are recognised as being blank.
+	'Logs where the base of a table is indeterminate.
+	'
+	'Parameters:
+	'TableDoc = TOM.Document
+	'
+	'NB: You must populate your tables before calling this procedure
+	Dim i,totsup
+	totsup=0
+	with TableDoc
+		for i=.Tables.Count-1 to 0 step -1
+		        Select case .Tables[i].Base
+		                case -1
+		                        debug.Log("WARNING: Unable to determine if table "+.Tables[i].name+" is empty. Not removed")
+	                        case 0
+	                       		totsup=totsup+1
+                                .Tables.Remove(i)
+	                 end select
+	         next
+	end with 'TableDoc
+	debug.Log(ctext(totsup)+" : Number of tables suppressed")
+	run_log.WriteLine(ctext(totsup)+" : tables were suppressed")
+end sub
+
+function fnStripHTML_fastabs(strHTML)
+	Dim objRegExp	' Regular Expression Object
+    	' Create built In Regular Expression object
+    	set objRegExp = CreateObject("VBScript.RegExp")
+    	objRegExp.Global = True
+    	' Set the pattern To look For HTML tags
+    	objRegExp.Pattern = "<[^>]*>"
+    	' Return the original String stripped of HTML
+    	fnStripHTML_fastabs = objRegExp.Replace(strHTML, "")
+         'OR replace it with a blank space
+         'fnStripHTML_fastabs = objRegExp.Replace(strHTML, " ")
+    	Set objRegExp = null
+End function
+
+sub shelladd(docMDM,ques)
+	dim txt,vars
+	set vars=docMDM.fields[ques]
+	txt=vars.properties.item["ReportType"]
+	if find(txt,"IshShell") = -1 then
+		txt=txt+",Isshell"
+		vars.properties.item["ReportType"]=txt
+	end if
+end sub
+
+
+sub filtadd(objMDM,filt)
+	if objMDM.properties.item["filter"]=null then
+		objMDM.properties.item["filter"]=filt
+	else
+		objMDM.properties.item["filter"]=objMDM.properties.item["filter"]+"@"+filt
+	end if
+	if filt=null then objMDM.properties.item["filter"]=null
+end sub
+
+sub sbAddEffectiveBase(oTable)
+        'Adds an effective base after every visible base it finds in the side axes of a table
+        'oTable - Table Object
+        Dim subAxis,i
+        if not oTable.IsEmptySide then
+                for each subAxis in oTable.Side.SubAxes
+                        for i=subAxis.Elements.Count-1 to 0 step -1 'Have to loop backwards as we are adding to this collection
+                                if subAxis.Elements[i].type=1 and not subAxis.Elements[i].IsHidden then '1 = elementtype.eBase
+                                        subAxis.Elements.AddNew("e" + ctext(subAxis.Elements.Count+1),3,i+1) '3 = elementtype.eEffectiveBase
+                                end if
+                        next
+                next
+        end if
+end sub
+
+sub sbIncludesig(TableDoc)
+	'Loops through a set of tables and removes any that are recognised as being blank.
+	'Logs where the base of a table is indeterminate.
+	'
+	'Parameters:
+	'TableDoc = TOM.Document
+	'
+	'NB: You must populate your tables before calling this procedure
+	Dim i,totsup
+	totsup=0
+	with TableDoc
+		for i=.Tables.Count-1 to 0 step -1
+		        Select case left(.Tables[i].Name,1)
+		                case "T"
+		                	If SIGTEST1 = TRUE then
+					            .tables[i].Statistics.Add("ColumnMeans")
+					            .tables[i].Statistics.Add("ColumnProportions")
+					            .tables[i].Statistics.ColumnProportions.SigLevel = SIGLEVEL1
+					            .tables[i].Statistics.ColumnMeans.SigLevel = SIGLEVEL1
+					            ' Add sig-testing 2nd level (not grids)
+					        If SIGTEST2 = TRUE then
+					              .tables[i].Statistics.ColumnProportions.SigLevelLow = SIGLEVEL2
+					              .tables[i].Statistics.ColumnMeans.SigLevelLow = SIGLEVEL2
+					        End If
+					            .tables[i].Statistics.ColumnProportions.MinBase = MINBASELEVEL
+					            .tables[i].Statistics.ColumnProportions.SmallBase = SMALLBASELEVEL
+					            .tables[i].Statistics.ColumnMeans.MinBase = MINBASELEVEL
+					            .tables[i].Statistics.ColumnMeans.SmallBase = SMALLBASELEVEL
+					            .tables[i].Statistics["ColumnProportions"].Properties["UseContinuityCorrection"] = CONTINUITYCORRECTION
+					            .tables[i].Statistics.ColumnIDs = SIGCOLUMNIDS
+					            .tables[i].Annotations[5].Specification="{statistics}"
+	            				If Len(SIGCOLUMNS)>2 Then .tables[i].Statistics.TestColumns = SIGCOLUMNS
+	            			end if
+		                	
+	                 end select
+	         next
+	end with 'TableDoc
+end sub
+

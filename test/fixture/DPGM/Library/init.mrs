@@ -1,0 +1,65 @@
+'Inititate prog
+dim objTOM,fso,docMDM,time,user,tabledoc
+Dim oDictionary
+#define version "2.00"
+set fso=createobject("scripting.filesystemobject")
+'set user=createobject("System")
+
+on error goto tidyup
+dim outfile,analfile,run_log,tabfile
+dim wshShell,fnEnvir1,fnEnvir2
+time=ctext(timenow())+" "+ctext(datenow())
+
+Set wshShell = CreateObject( "WScript.Shell" )
+fnEnvir1 = wshShell.ExpandEnvironmentStrings("%COMPUTERNAME%")
+fnEnvir2 = wshShell.ExpandEnvironmentStrings("%USERNAME%")
+if not fso.FileExists("run_log.csv") then fso.CreateTextFile("run_log.csv",true,true)
+set run_log=fso.OpenTextFile("run_log.csv",8,false,-1)
+run_log.WriteLine("STARTED:	"+ctext(time)+" : Using version:"+version)
+run_log.writeline("BY USER : "+fnEnvir2+" ON : "+fnenvir1)
+if mtdin<>"" then goto mtdinjump
+
+set outfile=fso.CreateTextFile("..\File\FT_MDD_manip_help.inc",true,true)
+set analfile=fso.CreateTextFile("logfile.csv",true,true)
+
+set tabfile=fso.CreateTextfile("..\File\FT_Tab_Help.inc",true,true)
+
+
+
+dim currdir
+currdir=fso.GetAbsolutePathName(".\")
+run_log.WriteLine("Input MDD:     "+currdir+"\"+mddin)
+run_log.WriteLine("Input Data:     "+currdir+"\"+datain)
+'debug.Log(currdir)
+
+if fso.FileExists("newone.mdd") then fso.DeleteFile("newone.mdd")
+if fso.FileExists("analysis.mdd") then fso.DeleteFile("analysis.mdd")
+
+
+set objTOM=createobject("Tom.Document")
+set docMDM=createobject("MDM.Document")
+
+set tabledoc=createobject("Tom.Document")
+set oDictionary=CreateObject("Scripting.Dictionary")
+
+Tabledoc.DataSet.Load(mddin)
+	'Tabledoc.DataSet.View=0
+docMDM.open(mddin)
+        If docMDM.Versions.Count > 0 Then
+        If docMDM.Versions.Latest.IsLocked Then
+                docMDM.Versions.AddNew()
+        End If
+        End If
+
+'set docMDM=Tabledoc.DataSet.MdmDocument
+tabledoc.LabelType="Label"
+tabfile.writeline("dim objTab")
+tabfile.writeline("")
+'tabledoc.Context="Question"
+
+
+
+
+
+
+

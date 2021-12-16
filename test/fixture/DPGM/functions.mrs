@@ -1,0 +1,463 @@
+
+function rebase_on_total( str_flt, str_txt, str_side, bln_mean )
+
+    rebase_on_total = "{e1 '' text(), base 'Base : " + str_txt + "' base(" + str_flt + "),e2 '' text(), " + iif(str_side = NULL, "..", str_side) + ", e3 '' text(), sigma 'Sigma' subtotal()" + iif( bln_mean = true, mean_inc(""), "" ) + "}"
+
+end function
+
+
+function code_in_field( mdm, ques, code )
+
+    dim res, cat
+    res = false
+    for each cat in mdm.fields[ques].categories
+        if lcase(cat.name) = lcase(code) then
+            res = true
+            exit for
+        end if
+    next
+    code_in_field = res
+
+end function
+
+sub correct_brands_label( mdm, ques, side_label )
+
+    sbSetResponseText(MDM, ques, MDD_TYPE, LOCALE, side_label + "1" ,"华为/Huawei")
+    sbSetResponseText(MDM, ques, MDD_TYPE, LOCALE, side_label + "2" ,"OPPO")
+    sbSetResponseText(MDM, ques, MDD_TYPE, LOCALE, side_label + "3" ,"vivo")
+    sbSetResponseText(MDM, ques, MDD_TYPE, LOCALE, side_label + "4" ,"iQOO")
+    sbSetResponseText(MDM, ques, MDD_TYPE, LOCALE, side_label + "5" ,"荣耀/Honor")
+    sbSetResponseText(MDM, ques, MDD_TYPE, LOCALE, side_label + "6" ,"苹果/Apple")
+    sbSetResponseText(MDM, ques, MDD_TYPE, LOCALE, side_label + "7" ,"三星/SAMSUNG")
+    sbSetResponseText(MDM, ques, MDD_TYPE, LOCALE, side_label + "8" ,"小米")
+    sbSetResponseText(MDM, ques, MDD_TYPE, LOCALE, side_label + "9" ,"红米/Redmi")
+    sbSetResponseText(MDM, ques, MDD_TYPE, LOCALE, side_label + "10","realme")
+    sbSetResponseText(MDM, ques, MDD_TYPE, LOCALE, side_label + "11","一加/OnePlus")
+    if code_in_field(mdm, ques, side_label + "98") = true then sbSetResponseText(MDM, ques, MDD_TYPE, LOCALE, side_label + "98","其他，请注明")
+    if code_in_field(mdm, ques, side_label + "99") = true then sbSetResponseText(MDM, ques, MDD_TYPE, LOCALE, side_label + "99","以上都不知道")
+
+end sub
+
+sub edit_brands_asked_field( mdm, ques, side_label, titel )
+
+    sbSetTitleText(MDM, ques,MDD_TYPE,LOCALE, titel)
+    sbSetAxisExpression(MDM, ques,"{e1 '' text(), base 'Base : All' base('true'),e2 '' text(), .., e3 '' text(), sigma 'Sigma' subtotal()}")
+    correct_brands_label( mdm, ques, side_label)
+
+end sub
+
+sub edit_sub_brands_asked_field( mdm, ques, side_label, titel, append_code )
+
+    dim axis
+    axis = "{e1 '' text(), base 'Base : All' base('true'),e2 '' text(),_
+    nt1    'Net.华为/Huawei'    net({" + side_label + "1," + side_label + "2," + side_label + "3," + side_label + "4," + side_label + "5," + side_label + "6," + iif(code_in_field(mdm, ques, side_label + "81") = true, side_label + "81,", "") + iif(code_in_field(mdm, ques, side_label + "70") = true, side_label + "70,", "") + iif(code_in_field(mdm, ques, side_label + "71") = true, side_label + "71,", "") + side_label + "7}),_
+    txt1 '' text(),_
+    nt2    'Net.OPPO'           net({" + side_label + "8," + side_label + "9," + side_label + "10," + side_label + "11," + side_label + "12," + side_label + "13," + side_label + "14," + side_label + "15," + side_label + "16}),_
+    txt2 '' text(),_
+    nt3    'Net.iQOO'           net({" + side_label + "17," + side_label + "18," + side_label + "19," + side_label + "20," + side_label + "21," + side_label + "58}),_
+    txt3 '' text(),_
+    nt4    'Net.vivo'           net({" + side_label + "22," + side_label + "23," + side_label + "24," + iif(code_in_field(mdm, ques, side_label + "60") = true, side_label + "60,", "") + side_label + "25}),_
+    txt4 '' text(),_
+    nt5    'Net.荣耀/Honor'     net({" + side_label + "26," + side_label + "27," + side_label + "28," + side_label + "29," + side_label + "30}),_
+    txt5 '' text(),_
+    nt6    'Net.苹果/Apple'     net({" + side_label + "31," + side_label + "32," + side_label + "33," + side_label + "34," + iif(code_in_field(mdm, ques, side_label + "82") = true, side_label + "82,", "") + iif(code_in_field(mdm, ques, side_label + "83") = true, side_label + "83,", "") + side_label + "35}),_
+    txt6 '' text(),_
+    nt7    'Net.三星/SAMSUNG'   net({" + side_label + "36," + side_label + "37," + side_label + "38," + side_label + "39," + side_label + "40," + side_label + "41," + side_label + "42}),_
+    txt7 '' text(),_
+    nt8    'Net.小米'           net({" + side_label + "43," + side_label + "44," + side_label + "45," + side_label + "59}),_
+    txt8 '' text(),_
+    nt9    'Net.红米'           net({" + side_label + "46," + side_label + "47," + side_label + "48," + side_label + "49}),_
+    txt9 '' text(),_
+    nt10   'Net.realme/真我'    net({" + side_label + "50," + side_label + "51," + side_label + "52," + side_label + "53," + iif(code_in_field(mdm, ques, side_label + "90") = true, side_label + "90,", "") + side_label + "54}),_
+    txt10 '' text(),_
+    nt11   'Net.一加/OnePlus'   net({" + side_label + "55," + side_label + "56," + side_label + "57}),_
+    txt11 '' text(),_
+    " + side_label + "98"
+
+    dim cat
+    if append_code <> null then
+        for each cat in split(append_code, ",")
+            axis = axis + "," + side_label + cat
+        next
+    end if
+    axis = axis + ",e3 '' text(), sigma 'Sigma' subtotal()}"
+
+    sbSetTitleText(MDM, ques,MDD_TYPE,LOCALE,titel)
+    sbSetAxisExpression(MDM, ques, axis)
+    sbSetResponseText(MDM, ques,MDD_TYPE,LOCALE, side_label + "1" ,"P40/ Pro/ Pro+")
+    sbSetResponseText(MDM, ques,MDD_TYPE,LOCALE, side_label + "2" ,"Mate30/ 30 Pro/ 30 RS/ 30E/ 30E Pro")
+    sbSetResponseText(MDM, ques,MDD_TYPE,LOCALE, side_label + "3" ,"Mate40/ 40E/ 40 Pro/ 40 Pro+/ 40RS保时捷设计款")
+    sbSetResponseText(MDM, ques,MDD_TYPE,LOCALE, side_label + "4" ,"Mate X2")
+    sbSetResponseText(MDM, ques,MDD_TYPE,LOCALE, side_label + "5" ,"Nova7/ Pro/ SE")
+    sbSetResponseText(MDM, ques,MDD_TYPE,LOCALE, side_label + "6" ,"Nova8/ Pro/ SE")
+    sbSetResponseText(MDM, ques,MDD_TYPE,LOCALE, side_label + "7" ,"华为其他，请注明")
+    sbSetResponseText(MDM, ques,MDD_TYPE,LOCALE, side_label + "8" ,"Reno Ace2")
+    sbSetResponseText(MDM, ques,MDD_TYPE,LOCALE, side_label + "9" ,"Reno4/ Pro/ SE")
+    sbSetResponseText(MDM, ques,MDD_TYPE,LOCALE, side_label + "10","Reno3/ Pro ")
+    sbSetResponseText(MDM, ques,MDD_TYPE,LOCALE, side_label + "11","Reno 5/ Pro/ Pro+")
+    sbSetResponseText(MDM, ques,MDD_TYPE,LOCALE, side_label + "12","Reno 6/ Pro/ Pro+")
+    sbSetResponseText(MDM, ques,MDD_TYPE,LOCALE, side_label + "13","Find X2/ X2 Pro")
+    sbSetResponseText(MDM, ques,MDD_TYPE,LOCALE, side_label + "14","Find X3 / X3 Pro")
+    sbSetResponseText(MDM, ques,MDD_TYPE,LOCALE, side_label + "15","K7/ K7X")
+    sbSetResponseText(MDM, ques,MDD_TYPE,LOCALE, side_label + "16","OPPO其他，请注明")
+    sbSetResponseText(MDM, ques,MDD_TYPE,LOCALE, side_label + "17","iQOO 5/ Pro")
+    sbSetResponseText(MDM, ques,MDD_TYPE,LOCALE, side_label + "18","iQOO 7")
+    sbSetResponseText(MDM, ques,MDD_TYPE,LOCALE, side_label + "19","iQOO Neo5")
+    sbSetResponseText(MDM, ques,MDD_TYPE,LOCALE, side_label + "20","iQOO Z1/ Z3")
+    sbSetResponseText(MDM, ques,MDD_TYPE,LOCALE, side_label + "21","iQOO U3/ U3x")
+    sbSetResponseText(MDM, ques,MDD_TYPE,LOCALE, side_label + "58","iQOO其他，请注明")
+    sbSetResponseText(MDM, ques,MDD_TYPE,LOCALE, side_label + "22","vivo X60/ Pro/ Pro+/ X60t")
+    sbSetResponseText(MDM, ques,MDD_TYPE,LOCALE, side_label + "23","vivo X50/ Pro / Pro+")
+    sbSetResponseText(MDM, ques,MDD_TYPE,LOCALE, side_label + "24","vivo S9/ S9e")
+    sbSetResponseText(MDM, ques,MDD_TYPE,LOCALE, side_label + "25","vivo其他，请注明")
+    sbSetResponseText(MDM, ques,MDD_TYPE,LOCALE, side_label + "26","荣耀30/ Pro/ Pro+")
+    sbSetResponseText(MDM, ques,MDD_TYPE,LOCALE, side_label + "27","荣耀V40/ 轻奢版")
+    sbSetResponseText(MDM, ques,MDD_TYPE,LOCALE, side_label + "28","荣耀50/ Pro/ SE")
+    sbSetResponseText(MDM, ques,MDD_TYPE,LOCALE, side_label + "29","荣耀X20 SE")
+    sbSetResponseText(MDM, ques,MDD_TYPE,LOCALE, side_label + "30","荣耀其他，请注明")
+    sbSetResponseText(MDM, ques,MDD_TYPE,LOCALE, side_label + "31","iPhone 11 / Pro/ Pro Max")
+    sbSetResponseText(MDM, ques,MDD_TYPE,LOCALE, side_label + "32","iPhone 12/ mini/ Pro/ Pro Max")
+    sbSetResponseText(MDM, ques,MDD_TYPE,LOCALE, side_label + "33","iPhone XS/ XR/ XS Max")
+    sbSetResponseText(MDM, ques,MDD_TYPE,LOCALE, side_label + "34","iPhone SE/ SE2")
+    sbSetResponseText(MDM, ques,MDD_TYPE,LOCALE, side_label + "35","苹果其他，请注明")
+    sbSetResponseText(MDM, ques,MDD_TYPE,LOCALE, side_label + "36","Galaxy S20/ S20+/ S20 Ultra / S20 FE")
+    sbSetResponseText(MDM, ques,MDD_TYPE,LOCALE, side_label + "37","Galaxy S21/ S21+/ S21 Ultra")
+    sbSetResponseText(MDM, ques,MDD_TYPE,LOCALE, side_label + "38","Galaxy Note10+ / Note20 / Note20 Ultra")
+    sbSetResponseText(MDM, ques,MDD_TYPE,LOCALE, side_label + "39","Galaxy Z Fold2")
+    sbSetResponseText(MDM, ques,MDD_TYPE,LOCALE, side_label + "40","Galaxy Z Flip ")
+    sbSetResponseText(MDM, ques,MDD_TYPE,LOCALE, side_label + "41","Galaxy A51/ A52/ A71")
+    sbSetResponseText(MDM, ques,MDD_TYPE,LOCALE, side_label + "42","三星其他，请注明")
+    sbSetResponseText(MDM, ques,MDD_TYPE,LOCALE, side_label + "43","小米10/ 10 Pro/ 10至尊纪念版/ 10青春版")
+    sbSetResponseText(MDM, ques,MDD_TYPE,LOCALE, side_label + "44","小米11/ 11 Pro/ 11 Ultra/ 11青春版")
+    sbSetResponseText(MDM, ques,MDD_TYPE,LOCALE, side_label + "45","小米 MIX FOLD")
+    sbSetResponseText(MDM, ques,MDD_TYPE,LOCALE, side_label + "59","小米其他，请注明")
+    sbSetResponseText(MDM, ques,MDD_TYPE,LOCALE, side_label + "46","Redmi Note10/ 10 Pro")
+    sbSetResponseText(MDM, ques,MDD_TYPE,LOCALE, side_label + "47","Redmi Note9/ 9 Pro")
+    sbSetResponseText(MDM, ques,MDD_TYPE,LOCALE, side_label + "48","Redmi K40/ 40 Pro")
+    sbSetResponseText(MDM, ques,MDD_TYPE,LOCALE, side_label + "49","红米其他，请注明")
+    sbSetResponseText(MDM, ques,MDD_TYPE,LOCALE, side_label + "50","真我X50/ Pro")
+    sbSetResponseText(MDM, ques,MDD_TYPE,LOCALE, side_label + "51","真我Q3/ Q30i/ Q30 Pro")
+    sbSetResponseText(MDM, ques,MDD_TYPE,LOCALE, side_label + "52","真我X7/ X7 Pro")
+    sbSetResponseText(MDM, ques,MDD_TYPE,LOCALE, side_label + "53","真我V15")
+    sbSetResponseText(MDM, ques,MDD_TYPE,LOCALE, side_label + "54","realme其他，请注明")
+    sbSetResponseText(MDM, ques,MDD_TYPE,LOCALE, side_label + "55","一加8/ 8T")
+    sbSetResponseText(MDM, ques,MDD_TYPE,LOCALE, side_label + "56","一加9/ 9R")
+    sbSetResponseText(MDM, ques,MDD_TYPE,LOCALE, side_label + "57","一加其他，请注明")
+    sbSetResponseText(MDM, ques,MDD_TYPE,LOCALE, side_label + "98","其他品牌机型，请注明")
+    if code_in_field(mdm, ques, side_label + "60") = true then sbSetResponseText(MDM, ques,MDD_TYPE,LOCALE, side_label + "60","vivo S10/ Pro")
+
+end sub
+
+sub edit_b14_side_field( mdm, ques, side_label, str_title )
+
+    dim axis
+    axis = "{e1 '' text(), base 'Base : All' base('true'),e2 '' text(),_
+    nt1 'Net.影像' net({" + side_label + "1," + side_label + "2," + side_label + "3," + side_label + "4," + side_label + "5," + side_label + "6," + side_label + "7," + side_label + "8}),_
+    e11 '' text(),_
+    nt2 'Net.使用体验' net({" + side_label + "9," + side_label + "10," + side_label + "11," + side_label + "12," + side_label + "13," + side_label + "14," + side_label + "15," + side_label + "16," + side_label + "17}),_
+    e12 '' text(),_
+    nt3 'Net.硬件/性能' net({" + side_label + "18,"+ side_label + "19,"+ side_label + "20,"+ side_label + "21,"+ side_label + "22,"+ side_label + "23,"+ side_label + "24,"+ side_label + "25,"+ side_label + "26}),_
+    e13 '' text(),_
+    nt4 'Net.外观' net({" + side_label + "27,"+ side_label + "28,"+ side_label + "29}),_
+    e14 '' text(),_
+    nt5 'Net.屏幕' net({" + side_label + "30,"+ side_label + "31}),_
+    e15 '' text(),_
+    " + side_label + "98," + side_label + "99,e3 '' text(), sigma 'Sigma' subtotal()}"
+
+    sbSetTitleText(MDM, ques,MDD_TYPE,LOCALE,str_title)
+    sbSetAxisExpression(MDM, ques, axis)
+    sbSetResponseText(MDM, ques,MDD_TYPE,LOCALE, side_label + "1" ,"焕采光斑人像视频")
+    sbSetResponseText(MDM, ques,MDD_TYPE,LOCALE, side_label + "2" ,"AI焕采美妆视频")
+    sbSetResponseText(MDM, ques,MDD_TYPE,LOCALE, side_label + "3" ,"AI焕采视频美颜")
+    sbSetResponseText(MDM, ques,MDD_TYPE,LOCALE, side_label + "4" ,"6400万水光人像镜头")
+    sbSetResponseText(MDM, ques,MDD_TYPE,LOCALE, side_label + "5" ,"3200万前置水光镜")
+    sbSetResponseText(MDM, ques,MDD_TYPE,LOCALE, side_label + "6" ,"多景录像")
+    sbSetResponseText(MDM, ques,MDD_TYPE,LOCALE, side_label + "7" ,"视频追焦")
+    sbSetResponseText(MDM, ques,MDD_TYPE,LOCALE, side_label + "8" ,"色温传感器")
+    sbSetResponseText(MDM, ques,MDD_TYPE,LOCALE, side_label + "9" ,"36个月流畅护航")
+    sbSetResponseText(MDM, ques,MDD_TYPE,LOCALE, side_label + "10","闪达窗口")
+    sbSetResponseText(MDM, ques,MDD_TYPE,LOCALE, side_label + "11","OPPO钱包")
+    sbSetResponseText(MDM, ques,MDD_TYPE,LOCALE, side_label + "12","系统分身")
+    sbSetResponseText(MDM, ques,MDD_TYPE,LOCALE, side_label + "13","隐私替身")
+    sbSetResponseText(MDM, ques,MDD_TYPE,LOCALE, side_label + "14","私密保险箱")
+    sbSetResponseText(MDM, ques,MDD_TYPE,LOCALE, side_label + "15","人像绘影")
+    sbSetResponseText(MDM, ques,MDD_TYPE,LOCALE, side_label + "16","呼吸壁纸")
+    sbSetResponseText(MDM, ques,MDD_TYPE,LOCALE, side_label + "17","AI自愿填报")
+    sbSetResponseText(MDM, ques,MDD_TYPE,LOCALE, side_label + "18","支持5G")
+    sbSetResponseText(MDM, ques,MDD_TYPE,LOCALE, side_label + "19","高通骁龙870")
+    sbSetResponseText(MDM, ques,MDD_TYPE,LOCALE, side_label + "20","天玑1200处理器")
+    sbSetResponseText(MDM, ques,MDD_TYPE,LOCALE, side_label + "21","最高12GB+256GB内存组合")
+    sbSetResponseText(MDM, ques,MDD_TYPE,LOCALE, side_label + "22","超级闪电启动")
+    sbSetResponseText(MDM, ques,MDD_TYPE,LOCALE, side_label + "23","全系线性马达（游戏4D振感）")
+    sbSetResponseText(MDM, ques,MDD_TYPE,LOCALE, side_label + "24","无级稳帧技术")
+    sbSetResponseText(MDM, ques,MDD_TYPE,LOCALE, side_label + "25","65W超级闪充")
+    sbSetResponseText(MDM, ques,MDD_TYPE,LOCALE, side_label + "26","大容量电池")
+    sbSetResponseText(MDM, ques,MDD_TYPE,LOCALE, side_label + "27","晶钻工艺3.0（夏日晴海）")
+    sbSetResponseText(MDM, ques,MDD_TYPE,LOCALE, side_label + "28","轻薄机身")
+    sbSetResponseText(MDM, ques,MDD_TYPE,LOCALE, side_label + "29","金属直角中框设计")
+    sbSetResponseText(MDM, ques,MDD_TYPE,LOCALE, side_label + "30","90Hz高感屏（曲面屏）")
+    sbSetResponseText(MDM, ques,MDD_TYPE,LOCALE, side_label + "31","6.43/6.55 英寸OLED屏幕")
+    sbSetResponseText(MDM, ques,MDD_TYPE,LOCALE, side_label + "98","其他，请注明")
+    sbSetResponseText(MDM, ques,MDD_TYPE,LOCALE, side_label + "99","以上都不记得")
+
+end sub
+
+sub edit_tvc_test_field( mdm, ques[], titles[] )
+
+    dim ndx
+    dim type
+
+    dim _5point_net
+    _5point_net = "t2b 'Net.Top 2 Box' combine({v4,v5}),_
+    t3b 'Net.Top 3 Box' combine({v3,v4,v5}),_
+    sigmahide subtotal() [ishidden=true],_
+    e11 '' text(),.."
+
+    for ndx = lbound(ques) to ubound(ques)
+
+        type = lcase(right(ques[ndx], 1))
+        sbSetTitleText(MDM, ques[ndx],MDD_TYPE,LOCALE, titles[ndx])
+
+        if type = "a" then
+            sbSetAxisExpression(MDM, ques[ndx],"{e1 '' text(), base 'Base : All' base('true'),e2 '' text(),_
+            v1,_
+            nt '没看见/记不清' net({v2,v3}), e3 '' text(), sigma 'Sigma' subtotal()}")
+        end if
+
+        if type = "b" or type = "c" or type = "d" then
+            sbSetAxisExpression(MDM, ques[ndx],"{e1 '' text(), base 'Base : All' base('true'),e2 '' text()," + _5point_net + ", e3 '' text(), sigma 'Sigma' subtotal()" + mean_inc("") + "}")
+            sbAddFactors(MDM,ques[ndx],MDD_TYPE,LOCALE,1, 1,"",true)
+        end if
+
+    next
+
+end sub
+
+sub edit_kv_test_field( mdm, ques[], titles[] )
+
+    dim ndx
+    dim type
+    dim _5point_net
+    _5point_net = "t2b 'Net.Top 2 Box' combine({v4,v5}),_
+    t3b 'Net.Top 3 Box' combine({v3,v4,v5}),_
+    sigmahide subtotal() [ishidden=true],_
+    e11 '' text(),.."
+
+    for ndx = lbound(ques) to ubound(ques)
+        type = null
+        sbSetTitleText(MDM, ques[ndx],MDD_TYPE,LOCALE, titles[ndx])
+        if find(ques[ndx], "@") <> -1 then
+            dim code_label
+            code_label = mid(ques[ndx], find(ques[ndx], "@") + 1, len(ques[ndx]) - find(ques[ndx], "@") - 2)
+            sbSetAxisExpression(MDM, ques[ndx],"{e1 '' text(), base 'Base : All' base('true'),e2 '' text(),.., e3 '' text(), sigma 'Sigma' subtotal()}")
+            sbSetResponseText(MDM, ques[ndx], MDD_TYPE, LOCALE, code_label + "1" ,"整体画面、颜色感受好")
+            sbSetResponseText(MDM, ques[ndx], MDD_TYPE, LOCALE, code_label + "2" ,"整体情绪、氛围感受好")
+            sbSetResponseText(MDM, ques[ndx], MDD_TYPE, LOCALE, code_label + "3" ,"产品表现精美，感受好")
+            sbSetResponseText(MDM, ques[ndx], MDD_TYPE, LOCALE, code_label + "4" ,"喜欢这个明星")
+            sbSetResponseText(MDM, ques[ndx], MDD_TYPE, LOCALE, code_label + "98","其他，请注明")
+        else
+
+            type = right(ques[ndx], 1)
+            if type = "a" then
+                sbSetAxisExpression(MDM, ques[ndx],"{e1 '' text(), base 'Base : All' base('true'),e2 '' text(),_
+                v1,_
+                nt '没看见/记不清' net({v2,v99}), e3 '' text(), sigma 'Sigma' subtotal()}")
+            end if
+            if type = "b" or type = "d" then
+                sbSetAxisExpression(MDM, ques[ndx],"{e1 '' text(), base 'Base : All' base('true'),e2 '' text()," + _5point_net + ", e3 '' text(), sigma 'Sigma' subtotal()" + mean_inc("") + "}")
+                sbAddFactors(MDM,ques[ndx],MDD_TYPE,LOCALE,1, 1,"",true)
+            end if
+
+        end if
+
+    next
+
+
+end sub
+
+
+function build_axis_for_split_base( mdm, str_side_var, str_side_code_label, str_filter_var, str_filter_code_label, str_code_group[], str_base_text, bln_hide_base )
+
+    dim axis, cat
+    dim side_var, filter_var
+    set side_var = mdm.fields[str_side_var]
+    set filter_var = mdm.fields[str_filter_var]
+
+    axis = "axis({e1 '' text(), base 'Base : " + str_base_text + "' base() [ishidden=" + iif(bln_hide_base = true, "false", "true") + "], e2 '' text()"
+
+    dim str_hidden
+    str_hidden = iif(bln_hide_base = true, " [ishidden=true]", "")
+
+    if str_code_group <> null then
+        dim ndx, str_codes, str_label
+        for ndx = lbound(str_code_group) to ubound(str_code_group)
+            if find(str_code_group[ndx], ";") <> -1 then
+                str_codes = left(str_code_group[ndx], find(str_code_group[ndx], ";"))
+                str_label = right(str_code_group[ndx], len(str_code_group[ndx]) - find(str_code_group[ndx], ";") - 1)
+                axis = axis + ",base_nt" + ctext(ndx) + " 'Base' base('" + str_side_var + " is not null and " + str_filter_var + "*{" + string_join(str_codes, ",", str_filter_code_label) + "}')" + str_hidden + ",_
+                ex_nt" + ctext(ndx) + " '" + str_label + "' expression('" + str_side_var + "*{" + string_join(str_codes, ",", str_side_code_label) + "} and " + str_filter_var + "*{" + string_join(str_codes, ",", str_filter_code_label) + "}')"
+                for each cat in split(str_codes, ",")
+                    axis = axis + ",base_" + trim(cat) + " 'Base' base('" + str_side_var + " is not null and " + str_filter_var + "*{" + str_filter_code_label + trim(cat) + "}')" + str_hidden + ",_
+                    ex_" + trim(cat) + " '" + side_var.categories[str_side_code_label + trim(cat)].label + "' expression('" + str_side_var + "*{" + str_side_code_label + trim(cat) + "} and " + str_filter_var + "*{" + str_filter_code_label + trim(cat) + "}')"
+                next
+            else
+                for each cat in split(str_code_group[ndx], ",")
+                    axis = axis + ",base_" + trim(cat) + " 'Base' base('" + str_side_var + " is not null and " + str_filter_var + "*{" + str_filter_code_label + trim(cat) + "}')" + str_hidden + ",_
+                    ex_" + trim(cat) + "'" + side_var.categories[str_side_code_label + trim(cat)].label + "' expression('" + str_side_var + "*{" + str_side_code_label + trim(cat) + "} and " + str_filter_var + "*{" + str_filter_code_label + trim(cat) + "}')"
+                next
+            end if
+        next
+    else
+        dim filter_code
+        for each cat in side_var.categories
+            filter_code = str_filter_code_label + right(cat.name, len(cat.name) - len(str_side_code_label))
+            if code_in_field(mdm, str_filter_var, filter_code) = true then
+                axis = axis + ",base_" + cat.name + " 'Base' base('" + str_side_var + " is not null and " + str_filter_var + "*{" + filter_code + "}')" + str_hidden + ",_
+                ex_" + cat.Name + " '" + cat.label + "' expression('" + str_side_var + "*{" + cat.name + "} and " + str_filter_var + "*{" + filter_code + "}')"
+            end if
+        next
+    end if
+    axis = axis + "})"
+    'debug.log(axis)
+    build_axis_for_split_base = axis
+
+end function
+
+function string_join(sourceString, split, joinString)
+
+    dim cat, result
+    for each cat in split(sourceString, split)
+        result = result + joinString + cat + split
+    next
+    string_join = left(result, len(result) - len(split))
+
+end function
+
+
+'''''''''''''''''''''''''''''''''   Tab part
+
+sub add_two_bases_table( TableDoc, str_side_var, str_top_var, str_title, str_side, bln_sort, bln_grid, str_flt, str_append_label, str_brands )
+
+    dim str_sort_banner
+    if find(str_top_var, "{") <> -1 then
+        str_sort_banner = left(str_top_var, find(str_top_var, "{") )
+    else
+        str_sort_banner = str_top_var
+    end if
+
+    if bln_grid = true then
+
+        dim str_grid_top, str_grid_side
+        dim field, parent, cat
+
+        str_grid_top = left(str_side_var, find(str_side_var, "["))
+        str_grid_side = right(str_side_var, len(str_side_var) - find(str_side_var, "]") - 2)
+
+        set field = Tabledoc.dataset.mdmdocument.fields[str_side_var]
+        set parent = field.parent.parent
+
+        dim str_show_brand
+        if str_brands = null then
+            for each cat in parent.categories
+                str_show_brand = str_show_brand + cat.name + ","
+            next
+            str_show_brand = left(str_show_brand, len(str_show_brand) - 1)
+        else
+            str_show_brand = str_brands
+        end if
+
+        fnAddGrid(TableDoc,str_side_var + rebase_on_total( "'true'", "All", str_side, false ),str_grid_top + iif(str_brands = null, "", "{" + str_brands + "}"),str_title,"")
+        if str_flt <> null then TableDoc.Tables.Item["TG" + ctext(TableDoc.Tables.count)].Filters.AddNew("f"+ ctext(TableDoc.Tables.count), str_flt, "")
+        TableDoc.Tables.Item["TG" + ctext(TableDoc.Tables.count)].Side.SubAxes[0].Label = TableDoc.Tables.Item["TG" + ctext(TableDoc.Tables.count)].Side.SubAxes[0].Label + iif(str_append_label <> null, " - " + str_append_label, "") + " - All - Summary"
+        for each cat in split(str_show_brand, ",")
+            fnAddTable(tabledoc, str_grid_top + "[{" + cat + "}]." + str_grid_side + rebase_on_total( "'true'", "All", str_side, false ), str_top_var, str_title, "")
+            if str_title <> null then
+                TableDoc.Tables.Item["T" + ctext(TableDoc.Tables.count)].Side.SubAxes[0].Label =TableDoc.Tables.Item["T" + ctext(TableDoc.Tables.count)].Side.SubAxes[0].Label + iif(str_append_label <> null, " - " + str_append_label, "") + " - All - " + parent.categories[cat].label
+            else
+                TableDoc.Tables.Item["T" + ctext(TableDoc.Tables.count)].Side.SubAxes[0].Label = TableDoc.Tables.Item["T" + ctext(TableDoc.Tables.count)].Side.SubAxes[0].Label + iif(str_append_label <> null, " - " + str_append_label, "") + " - All"
+            end if
+            if str_flt <> null   then TableDoc.Tables.Item["T" + ctext(TableDoc.Tables.count)].Filters.AddNew("f"+ ctext(TableDoc.Tables.count), str_flt, "")
+            if bln_sort = true then
+                Tabledoc.Tables.Item["T" + ctext(TableDoc.Tables.count)].SortColumn = str_sort_banner + "{T}"
+            end if
+        next
+
+        fnAddGrid(TableDoc,str_side_var,str_grid_top + iif(str_brands = null, "", "{" + str_brands + "}"),str_title,"")
+        if str_flt <> null then TableDoc.Tables.Item["TG" + ctext(TableDoc.Tables.count)].Filters.AddNew("f"+ ctext(TableDoc.Tables.count), str_flt, "")
+        TableDoc.Tables.Item["TG" + ctext(TableDoc.Tables.count)].Side.SubAxes[0].Label =TableDoc.Tables.Item["TG" + ctext(TableDoc.Tables.count)].Side.SubAxes[0].Label + iif(str_append_label <> null, " - " + str_append_label, "") + " - Answer - Summary"
+        for each cat in split(str_show_brand, ",")
+            fnAddTable(tabledoc, str_grid_top + "[{" + cat + "}]." + str_grid_side , str_top_var, str_title, "")
+            if str_title <> null then
+                TableDoc.Tables.Item["T" + ctext(TableDoc.Tables.count)].Side.SubAxes[0].Label =TableDoc.Tables.Item["T" + ctext(TableDoc.Tables.count)].Side.SubAxes[0].Label + iif(str_append_label <> null, " - " + str_append_label, "") + " - Answer - " + parent.categories[cat].label
+            else
+                TableDoc.Tables.Item["T" + ctext(TableDoc.Tables.count)].Side.SubAxes[0].Label =TableDoc.Tables.Item["T" + ctext(TableDoc.Tables.count)].Side.SubAxes[0].Label + iif(str_append_label <> null, " - " + str_append_label, "") + " - Answer"
+            end if
+            if str_flt <> null   then TableDoc.Tables.Item["T" + ctext(TableDoc.Tables.count)].Filters.AddNew("f"+ ctext(TableDoc.Tables.count), str_flt, "")
+            if bln_sort = true then
+                Tabledoc.Tables.Item["T" + ctext(TableDoc.Tables.count)].SortColumn = str_sort_banner + "{T}"
+            end if
+        next
+
+    else
+        fnAddTable(TableDoc,str_side_var + iif(str_side = null, "", str_side),str_top_var,str_title,"")
+        if str_flt <> null   then TableDoc.Tables.Item["T" + ctext(TableDoc.Tables.count)].Filters.AddNew("f"+ ctext(TableDoc.Tables.count), str_flt, "")
+        TableDoc.Tables.Item["T" + ctext(TableDoc.Tables.count)].Side.SubAxes[0].Label =TableDoc.Tables.Item["T" + ctext(TableDoc.Tables.count)].Side.SubAxes[0].Label + iif(str_append_label <> null, " - " + str_append_label, "") + " - All"
+        if bln_sort = true then
+            Tabledoc.Tables.Item["T" + ctext(TableDoc.Tables.count)].SortColumn = str_sort_banner + "{T}"
+        end if
+        fnAddTable(TableDoc,str_side_var + iif(str_side = null, "", str_side),str_top_var,str_title,"Answer")
+        Tabledoc.Tables.Item["T" + ctext(TableDoc.Tables.count)].Filters.AddNew("f"+ ctext(TableDoc.Tables.count), str_side_var + " is not null" + iif(str_flt <> Null, " and " + str_flt, ""), "")
+        TableDoc.Tables.Item["T" + ctext(TableDoc.Tables.count)].Side.SubAxes[0].Label =TableDoc.Tables.Item["T" + ctext(TableDoc.Tables.count)].Side.SubAxes[0].Label + iif(str_append_label <> null, " - " + str_append_label, "") + " - Answer"
+        if bln_sort = true then
+            Tabledoc.Tables.Item["T" + ctext(TableDoc.Tables.count)].SortColumn = str_sort_banner + "{T}"
+        end if
+    end if
+
+end sub
+
+
+function build_cloop_summary_axis(mdm, ques_response[], str_base_flt, str_base_text)
+
+    dim cloop_summary
+
+    cloop_summary = "{e1 '' text(), base 'Base : " + str_base_text + "' base(" + str_base_flt + "),e2 '' text(),_
+    c3_all    '线上渠道'    expression('c3*{v1,v2,v3,v4,v5,v6,v7,v8,v9,v10,v11}'),_
+    "
+    dim ndx, cat
+    for ndx = 1 to ubound(ques_response)
+        cloop_summary = cloop_summary + "v" + ctext(ndx) + ","
+        for each cat in mdm.fields["cloop[..]." + ques_response[ndx]].categories
+            cloop_summary = cloop_summary + ques_response[ndx] + cat.name + " '" + cat.label + "' expression('" + ques_response[ndx] + "*{" + cat.name + "}'),"
+        next
+    next
+
+    cloop_summary = cloop_summary + "e99 '' text()}"
+
+    build_cloop_summary_axis = cloop_summary
+
+end function
+
+
+function build_jaccards_axis(mdm, str_side_var, str_jacc_label, int_side_label_length,str_base_text, str_skip_code)
+
+    dim axis
+    axis  = "axis({e1 '' text(), base 'Base : " + iif(str_base_text = null or str_base_text = "", "Total Respondent", str_base_text) + "' base('true'),"
+
+    dim str_axis_mean, str_axis_stderr
+    str_axis_mean = ""
+    str_axis_stderr = ""
+
+    dim cat, ques
+    set ques = mdm.fields[str_side_var]
+    for each cat in ques.categories
+        if str_skip_code = null or (str_skip_code <> null and find(lcase(str_skip_code), lcase(cat.name)) = -1) then
+            str_axis_mean   = str_axis_mean   + "mean_" + cat.name + "    '" + cat.label + "'    mean(" + str_jacc_label + right(cat.name, len(cat.name) - int_side_label_length) + ") [decimals=2],"
+            str_axis_stderr = str_axis_stderr + "stde_" + cat.name + "    '" + cat.label + "'  stderr(" + str_jacc_label + right(cat.name, len(cat.name) - int_side_label_length) + ") [decimals=2],"
+        end if
+    next
+
+    axis = axis + "e2 'Jaccards-Mean' text()," + str_axis_mean + "e3 'Jaccards-Standard Error' text()," + str_axis_stderr + "e4 '' text()})"
+
+    build_jaccards_axis = axis
+
+end function

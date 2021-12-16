@@ -1,0 +1,389 @@
+' metadata
+header_wave "" categorical[..]
+{
+    w1   "一次"   expression("dp_wave*{v1}"),
+    w2   "二次"   expression("dp_wave*{v2}")
+} axis("{base '总体' base() [ishidden=true],..}");
+
+header1_demo "" categorical[..]
+{
+    T         "总体"                   expression("S2 is not null"),
+    t1        "Tier1"           expression("S1b={v1}"),
+    t2        "Tier2"           expression("S1b={v2}"),
+    t3        "Tier3"           expression("S1b={v3}"),
+    t4        "Tier4"           expression("S1b={v4}"),
+    genz      "GenZ"              expression("qtaS3*{v2,v3}"),
+    ngenz     "非GenZ"            expression("qtaS3*{v4,v5,v6}"),
+    age_1     "18-22岁"           expression("qtaS3*{v2}"),
+    age_2     "23-25岁"           expression("qtaS3*{v3}"),
+    age_3     "26-29岁"           expression("qtaS3*{v4}"),
+    age_4     "30-35岁"           expression("qtaS3*{v5}"),
+    age_5     "36-40岁"           expression("qtaS3*{v6}"),
+    samp_1    "大盘人群"         expression("_@S14_1*{S14_1}"),
+    samp_2    "目标人群"         expression("_@S14_1*{S14_2}"),
+    samp_3    "学生人群"         expression("_@S14_1*{S14_3}"),
+    samp1_1   "目标人群"         expression("_@S14_1*{S14_2}"),
+    samp1_2   "意向人群"         expression("_@B5_1*{B5_12}"),
+    samp1_3   "触达人群"         expression("C2a*{v5}"),
+    male      "男"                 expression("S2={v1}"),
+    female    "女"                 expression("S2={v2}"),
+    edu_1     "高中/中专及以下"    expression("s7*{v1,v2}"),
+    edu_2     "专科"               expression("s7*{v3}"),
+    edu_3     "本科"               expression("s7*{v4}"),
+    edu_4     "研究生或以上"        expression("s7*{v5}"),
+    cost_1    "低价位段用户"      expression("S9*{v2,v3,v4,v5}"),
+    cost_2    "中价位段用户"      expression("S9*{v6,v7,v8}"),
+    cost_3    "高价位段用户"      expression("S9*{v9,v10,v11,v12,v13,v14,v15,v16}"),
+
+    newTargetSample     "目标人群"         expression("qtaS3*{v2,v3,v4,v5,v6,v7} and s9*{v4,v5,v6,v7} and ((__S12_1[{S12_1}].column*{v4,v5,v6} and __S12_1[{S12_2}].column*{v4,v5,v6}) or (__S12_1[{S12_1}].column*{v4,v5,v6} and __S12_1[{S12_3}].column*{v4,v5,v6}) or (__S12_1[{S12_3}].column*{v4,v5,v6} and __S12_1[{S12_2}].column*{v4,v5,v6}))"),
+    newPriceTier_low    "低价位段用户"      expression("s9*{v2,v3}"),
+    newPriceTier_middle "中价位段用户"      expression("s9*{v4,v5,v6,v7}"),
+    newPriceTier_high   "高价位段用户"      expression("s9*{v8,v9,v10,v11,v12,v13,v14,v15,v16}")
+} axis("{base '总体' base() [ishidden=true],..}");
+
+header2_brand_kpi "" categorical[..]
+{
+    T                    "总体"                   expression("S2 is not null"),
+    oppo                 "OPPO用户"               expression("B10*{v8,v9,v10,v11,v12,v13,v14,v15,v16}"),
+    nonoppo              "非OPPO用户"             expression("not b10.containsany({v8,v9,v10,v11,v12,v13,v14,v15,v16})"),
+    isAwareOppo          "认知OPPO"              expression("_@B1_1*{B1_2}"),
+    nonAwareOppo         "不认知OPPO"             expression("not _@b1_1.containsany({b1_2})"),
+    doConsiderOppo       "考虑OPPO"               expression("_@B3_1*{B3_2}"),
+    dontConsiderOppo     "不考虑OPPO"             expression("not _@B3_1.containsany({B3_2})"),
+    doPreferOppo         "偏好OPPO"               expression("B4*{v2}"),
+    dontPreferOppo       "不偏好OPPO"             expression("not B4.containsany({v2})"),
+
+    huaweiUser           "华为"                   expression("B10*{v1,v2,v3,v4,v5,v6,v7}"),
+    oppoUser             "OPPO"                  expression("B10*{v8,v9,v10,v11,v12,v13,v14,v15,v16}"),
+    iqooUser             "IQOO"                  expression("B10*{v17,v18,v19,v20,v21,v58}"),
+    vivoUser             "vivo"                  expression("B10*{v22,v23,v24,v25,v60}"),
+    honorUser            "荣耀"                  expression("B10*{v26,v27,v28,v29,v30}"),
+    appleUser            "苹果"                  expression("B10*{v31,v32,v33,v34,v35}"),
+    samsungUser          "三星"                  expression("B10*{v36,v37,v38,v39,v40,v41,v42}"),
+    xiaomiUser           "小米"                  expression("B10*{v43,v44,v45,v59}"),
+    redmiUser            "红米"                  expression("B10*{v46,v47,v48,v49}"),
+    realmeUser           "realme"                expression("B10*{v50,v51,v52,v53,v54}"),
+    oneplusUser          "一加"                  expression("B10*{v55,v56,v57}"),
+
+    awareHuawei          "华为"                 expression("_@B1_1*{B1_1}"),
+    awareOppo            "OPPO"                 expression("_@B1_1*{B1_2}"),
+    awareVivo            "vivo"                 expression("_@B1_1*{B1_3}"),
+    awareIqoo            "iQOO"                 expression("_@B1_1*{B1_4}"),
+    awareHonor           "荣耀"                 expression("_@B1_1*{B1_5}"),
+    awareApple           "苹果"                 expression("_@B1_1*{B1_6}"),
+    awareSamsung         "三星"                 expression("_@B1_1*{B1_7}"),
+    awareXiaodmi         "小米"                 expression("_@B1_1*{B1_8}"),
+    awareRedmi           "红米"                 expression("_@B1_1*{B1_9}"),
+    awareRealme          "realme"              expression("_@B1_1*{B1_10}"),
+    awareOneplus         "一加"                 expression("_@B1_1*{B1_11}"),
+
+    preferHuawei         "华为"                 expression("B4*{v1}"),
+    preferOppo           "OPPO"                 expression("B4*{v2}"),
+    preferVivo           "vivo"                 expression("B4*{v3}"),
+    preferIqoo           "iQOO"                 expression("B4*{v4}"),
+    preferHonor          "荣耀"                 expression("B4*{v5}"),
+    preferApple          "苹果"                 expression("B4*{v6}"),
+    preferSamsung        "三星"                 expression("B4*{v7}"),
+    preferXiaodmi        "小米"                 expression("B4*{v8}"),
+    preferRedmi          "红米"                 expression("B4*{v9}"),
+    preferRealme         "realme"              expression("B4*{v10}"),
+    preferOneplus        "一加"                 expression("B4*{v11}"),
+
+    considerHuawei       "华为"                 expression("_@B3_1*{B3_1}"),
+    considerOppo         "OPPO"                 expression("_@B3_1*{B3_2}"),
+    considerVivo         "vivo"                 expression("_@B3_1*{B3_3}"),
+    considerIqoo         "iQOO"                 expression("_@B3_1*{B3_4}"),
+    considerHonor        "荣耀"                 expression("_@B3_1*{B3_5}"),
+    considerApple        "苹果"                 expression("_@B3_1*{B3_6}"),
+    considerSamsung      "三星"                 expression("_@B3_1*{B3_7}"),
+    considerXiaodmi      "小米"                 expression("_@B3_1*{B3_8}"),
+    considerRedmi        "红米"                 expression("_@B3_1*{B3_9}"),
+    considerRealme       "realme"              expression("_@B3_1*{B3_10}"),
+    considerOneplus      "一加"                 expression("_@B3_1*{B3_11}"),
+
+    isVivoUser           "vivo用户"             expression("B10*{v22,v23,v24,v25,v60}"),
+    isNotVivoUser        "非vivo用户"           expression("not B10.containsany({v22,v23,v24,v25,v60})"),
+    isHuaweiUser         "华为用户"             expression("B10*{v1,v2,v3,v4,v5,v6,v7}"),
+    isNotHuaweiUser      "非华为用户"           expression("not B10.containsany({v1,v2,v3,v4,v5,v6,v7})"),
+    isHonorUser          "荣耀用户"             expression("B10*{v26,v27,v28,v29,v30}"),
+    isNotHonorUser       "非荣耀用户"           expression("not B10.containsany({v26,v27,v28,v29,v30})"),
+    isXiaomiUser         "小米用户"             expression("B10*{v43,v44,v45,v59}"),
+    isNotXiaomiUser      "非小米用户"           expression("not B10.containsany({V43,v44,v45,v59})")
+
+} axis("{base '总体' base() [ishidden=true],..}");
+
+header3_series_kpi "" categorical[..]
+{
+    T                    "总体"                   expression("S2 is not null"),
+
+    isreno6User            "Reno6用户"              expression("B10*{v12}"),
+    isnotReno6User         "非Reno6用户"            expression("not B10.containsany({v12})"),
+
+    awareReno6           "认知Reno6系列"          expression("_@B2_1*{B2_12}"),
+    dontAwareReno6       "不认知Reno6系列"        expression("not _@B2_1.containsany({B2_12})"),
+
+    considerReno6        "考虑Reno6系列"          expression("_@B5_1*{B5_12}"),
+    dontConsiderReno6    "不考虑Reno6系列"        expression("not _@B5_1.containsany({B5_12})"),
+
+    preferReno6          "偏好Reno6系列"          expression("B6*{v12}"),
+    dontPreferReno6      "不偏好Reno6系列"        expression("not b6.containsany({V12})"),
+
+    reno6User                 "Reno6系列用户"          expression("B10*{v12}"),
+    vivoS9User                "vivoS9系列用户"         expression("B10*{v24}"),
+    vivoS10User               "vivoS10系列用户"         expression("B10*{v60}"),
+    honor50User               "荣耀50系列用户"         expression("B10*{v28}"),
+    mi11User                  "小米11系列用户"         expression("B10*{v44}"),
+    nova8User                 "华为Nova8系列"          expression("B10*{v6}"),
+
+    awareReno6Series          "认知Reno6系列"          expression("_@B2_1*{B2_12}"),
+    awarevivoS10Series        "认知vivoS10系列"        expression("_@B2_1*{B2_60}"),
+    awareHonor50Series        "认知荣耀50系列"         expression("_@B2_1*{B2_28}"),
+    awareMi11Series           "认知小米11系列"         expression("_@B2_1*{B2_44}"),
+    awareNova8Series          "认知华为Nova8系列"      expression("_@B2_1*{B2_6}"),
+    awareVivoS9Series         "认知vivoS9系列"         expression("_@B2_1*{B2_24}"),
+
+    considerRenoS6Series      "考虑Reno6系列"          expression("_@B5_1*{B5_12}"),
+    considervivoS10Series     "考虑vivoS10系列"        expression("_@B5_1*{B5_60}"),
+    considerHonor50Series     "考虑荣耀50系列"         expression("_@B5_1*{B5_28}"),
+    considerMi11Series        "考虑小米11系列"         expression("_@B5_1*{B5_44}"),
+    considerNova8Series       "考虑华为Nova8系列"      expression("_@B5_1*{B5_6}"),
+    considerVivoS9Series      "考虑vivoS9系列"         expression("_@B5_1*{B5_24}"),
+
+    preferRenoS6Series        "偏好Reno6系列"          expression("B6*{v12}"),
+    prefervivoS10Series       "偏好vivoS10系列"        expression("B6*{v60}"),
+    preferHonor50Series       "偏好荣耀50系列"         expression("B6*{v28}"),
+    preferMi11Series          "偏好小米11系列"         expression("B6*{v44}"),
+    preferNova8Series         "偏好华为Nova8系列"      expression("B6*{v6}"),
+    preferVivoS9Series        "偏好vivoS9系列"         expression("B6*{v24}"),
+
+    renoSeriesUser            "Reno系列用户"           expression("B10*{v8,v9,v10,v11,v12}"),
+    notRenoSeriesUser         "非Reno系列用户"         expression("not B10.containsany({v8,v9,v10,v11,v12})"),
+
+    awareRenoSeries           "认知Reno系列"           expression("_@B2_1*{B2_8,B2_9,B2_10,B1_11,B2_12}"),
+    dontAwareRenoSeries       "不认知Reno系列"         expression("not _@B2_1.containsany({B2_8,B2_9,B2_10,B1_11,B2_12})"),
+
+    considerRenoSeries        "考虑Reno系列"           expression("_@B5_1*{B5_8,B5_9,B5_10,B5_11,B5_12}"),
+    dontConsiderRenoSeries    "不考虑Reno系列"         expression("not _@B5_1.containsany({B5_8,B5_9,B5_10,B5_11,B5_12})"),
+
+    preferRenoSeries          "偏好Reno系列"           expression("B6*{v8,v9,v10,v11,v12}"),
+    dontPreferRenoSeries      "不偏好Reno系列"         expression("not B6.containsany({v8,v9,v10,v11,v12})"),
+
+    isVivoS9User              "vivoS9系列用户"         expression("B10*{v24}"),
+    isNotVivoS9User           "非vivoS9系列用户"       expression("not B10.containsany({v24})"),
+
+    isVivoS10User              "vivoS10系列用户"         expression("B10*{v60}"),
+    isNotVivoS10User           "非vivoS10系列用户"       expression("not B10.containsany({v60})"),
+
+    isHonor50User             "荣耀50系列用户"         expression("B10*{V28}"),
+    isNotHonorUser            "非荣耀50系列用户"       expression("not B10.containsany({v28})"),
+
+    isMi11User                "小米11系列用户"         expression("B10*{v44}"),
+    isNotMi11User             "非小米11系列用户"       expression("not B10.containsany({v44})")
+
+} axis("{base '总体' base() [ishidden=true],..}");
+
+
+header3_reno6_campaign "" categorical[..]
+{
+    T                    "总体"                   expression("S2 is not null"),
+
+    reno6Exposure                 "Reno6曝光组"            expression("C2a*{v5}"),
+    reno6Control                  "Reno6非曝光组"          expression("not C2a.containsany({v5})"),
+
+    newReno6Exposure              "Reno6曝光组"         expression("C2a*{v5} and qtaS3*{v2,v3,v4,v5,v6,v7} and s9*{v4,v5,v6,v7} and ((__S12_1[{S12_1}].column*{v4,v5,v6} and __S12_1[{S12_2}].column*{v4,v5,v6}) or (__S12_1[{S12_1}].column*{v4,v5,v6} and __S12_1[{S12_3}].column*{v4,v5,v6}) or (__S12_1[{S12_3}].column*{v4,v5,v6} and __S12_1[{S12_2}].column*{v4,v5,v6}))"),
+    newReno6Control               "Reno6非曝光组"       expression("not C2a.containsany({v5}) and qtaS3*{v2,v3,v4,v5,v6,v7} and s9*{v4,v5,v6,v7} and ((__S12_1[{S12_1}].column*{v4,v5,v6} and __S12_1[{S12_2}].column*{v4,v5,v6}) or (__S12_1[{S12_1}].column*{v4,v5,v6} and __S12_1[{S12_3}].column*{v4,v5,v6}) or (__S12_1[{S12_3}].column*{v4,v5,v6} and __S12_1[{S12_2}].column*{v4,v5,v6}))"),
+
+    oppoUserReno6Exposure         "OPPO用户-Reno6曝光组"     expression("B10*{v8,v9,v10,v11,v12,v13,v14,v15,v16} and c2a*{v5}"),
+    oppoUserReno6Control          "OPPO用户-Reno6非曝光组"   expression("B10*{v8,v9,v10,v11,v12,v13,v14,v15,v16} and not C2a.containsany({v5})"),
+    notOppoUserReno6Exposure      "非OPPO用户-Reno6曝光组"    expression("not B10.containsany({v8,v9,v10,v11,v12,v13,v14,v15,v16}) and c2a*{v5}"),
+    notOppoUserReno6Control       "非OPPO用户-Reno6非曝光组"  expression("not B10.containsany({v8,v9,v10,v11,v12,v13,v14,v15,v16}) and not C2a.containsany({v5})"),
+
+    reno6UserReno6Exposure        "Reno6用户-Reno6曝光组"      expression("B10*{v12} and c2a*{v5}"),
+    reno6UserReno6Control         "Reno6用户-Reno6非曝光组"    expression("B10*{V12} and not C2a.containsany({v5})"),
+    notReno6UserReno6Exposure     "非Reno6用户-Reno6曝光组"    expression("not b10.containsany({v12}) and c2a*{v5}"),
+    notReno6UserReno6Control      "非Reno6用户-Reno6非曝光组"  expression("not b10.containsany({v12}) and not C2a.containsany({v5})"),
+
+    tier1Reno6Exposure            "Tier1-Reno6曝光组"         expression("S1b*{v1} and c2a*{v5}"),
+    tier1Reno6Control             "Tier1-Reno6非曝光组"       expression("S1b*{v1} and not c2a.containsany({v5})"),
+    tier2Reno6Exposure            "Tier2-Reno6曝光组"         expression("S1b*{v2} and c2a*{v5}"),
+    tier2Reno6Control             "Tier2-Reno6非曝光组"       expression("S1b*{v2} and not c2a.containsany({v5})"),
+    tier3Reno6Exposure            "Tier3-Reno6曝光组"         expression("S1b*{v3} and c2a*{v5}"),
+    tier3Reno6Control             "Tier3-Reno6非曝光组"       expression("S1b*{v3} and not c2a.containsany({v5})"),
+    tier4Reno6Exposure            "Tier4-Reno6曝光组"         expression("S1b*{v4} and c2a*{v5}"),
+    tier4Reno6Control             "Tier4-Reno6非曝光组"       expression("S1b*{v4} and not c2a.containsany({v5})"),
+
+    genzReno6Exposure             "GenZ-Reno6曝光组"         expression("qtaS3*{v2,v3} and c2a*{v5}"),
+    genzReno6Control              "GenZ-Reno6非曝光组"       expression("qtaS3*{v2,v3} and not c2a.containsany({v5})"),
+    nonGenzReno6Exposure          "非GenZ-Reno6曝光组"       expression("qtaS3*{v4,v5,v6} and c2a*{v5}"),
+    nonGenzReno6Control           "非GenZ-Reno6非曝光组"     expression("qtaS3*{v4,v5,v6} and not c2a.containsany({v5})"),
+
+    samp1Reno6Exposure            "大盘人群-Reno6曝光组"         expression("_@S14_1*{S14_1} and c2a*{v5}"),
+    samp1Reno6Control             "大盘人群-Reno6非曝光组"       expression("_@S14_1*{S14_1} and not c2a.containsany({v5})"),
+    samp2Reno6Exposure            "目标人群-Reno6曝光组"         expression("_@S14_1*{S14_2} and c2a*{v5}"),
+    samp2Reno6Control             "目标人群-Reno6非曝光组"       expression("_@S14_1*{S14_2} and not c2a.containsany({v5})"),
+    samp3Reno6Exposure            "学生人群-Reno6曝光组"         expression("_@S14_1*{S14_3} and c2a*{v5}"),
+    samp3Reno6Control             "学生人群-Reno6非曝光组"       expression("_@S14_1*{S14_3} and not c2a.containsany({v5})"),
+
+    vivoS9Exposure                "vivoS9曝光组"                 expression("c2b*{v3}"),
+    vivoS9Control                 "vivoS9非曝光组"               expression("not c2b.containsany({v3})"),
+
+    vivoS10Exposure               "vivoS10曝光组"                expression("c2e*{v6}"),
+    vivoS10Control                "vivoS10非曝光组"              expression("not c2e.containsany({v6})"),
+
+    honor50Exposure               "荣耀50曝光组"                 expression("c2c*{v3}"),
+    honor50Control                "荣耀50非曝光组"               expression("not c2c.containsany({v3})"),
+
+    mi11Exposure                  "小米11曝光组"                 expression("c2d*{v2}"),
+    mi11Control                   "小米11非曝光组"               expression("not c2d.containsany({v2})")
+
+} axis("{base '总体' base() [ishidden=true],..}");
+
+header4_creative "" categorical[..]
+{
+    T                    "总体"                   expression("S2 is not null"),
+
+    reno6TvcExposure     "Reno6 TVC曝光组"         expression("d1a*{v1} or d2a*{v1} or d3a*{v1}"),
+    reno6TvcControl      "Reno6 TVC非曝光组"       expression("d1a*{v2,v3} and d2a*{v2,v3} and d3a*{v2,v3}"),
+
+    reno6KvExposure      "Reno6 KV曝光组"          expression("d7a*{v1} or d8a*{v1}"),
+    reno6KvControl       "Reno6 KV非曝光组"        expression("d7a*{v2,v3} and d8a*{V2,v3}"),
+
+    zzf1TvcExposure      "张子枫-星黛紫TVC曝光组"   expression("d1a*{v1}"),
+    zzf1TvcControl       "张子枫-星黛紫TVC非曝光组" expression("d1a*{v2,v3}"),
+
+    zdyTvcExposure       "周冬雨-十年TVC曝光组"     expression("d2a*{v1}"),
+    zdyTvcControl        "周冬雨-十年TVC非曝光组"   expression("d2a*{v2,v3}"),
+
+    zzf2TvcExposure      "张子枫-骑车篇TVC曝光组"   expression("d3a*{v1}"),
+    zzf2TvcControl       "张子枫-骑车篇TVC非曝光组" expression("d3a*{v2,v3}"),
+
+    lhrTvcExposure       "vivoS9刘昊然TVC曝光组"    expression("d4a*{v1}"),
+    lhrTvcControl        "vivoS9刘昊然TVC非曝光组"  expression("d4a*{v2,v3}"),
+
+    cxkTvcExposure       "vivoS10蔡徐坤TVC曝光组"    expression("d6a*{v1}"),
+    cxkTvcControl        "vivoS10蔡徐坤TVC非曝光组"  expression("d6a*{v2,v3}"),
+
+    gjTvcExposure        "荣耀50龚俊TVC曝光组"       expression("d5a*{v1}"),
+    gjTvcControl         "荣耀50龚俊TVC非曝光组"     expression("d5a*{v2,v3}"),
+
+    zzfKvExposure        "Reno6张子枫KV曝光组"       expression("d7a*{v1}"),
+    zzfKvControl         "Reno6张子枫KV非曝光组"     expression("d7a*{v2,v3}"),
+
+    zdyKvExposure        "Reno6周冬雨KV曝光组"       expression("d8a*{v1}"),
+    zdyKvControl         "Reno6周冬雨KV非曝光组"     expression("d8a*{v2,v3}"),
+
+    lhrKvExposure        "vivoS9刘昊然KV曝光组"    expression("d9a*{v1}"),
+    lhrKvControl         "vivoS9刘昊然KV非曝光组"  expression("d9a*{v2,v3}"),
+
+    lhrS10KvExposure     "vivoS10刘昊然KV曝光组"    expression("d13a*{v1}"),
+    lhrS10KvControl      "vivoS10刘昊然KV非曝光组"  expression("d13a*{v2,v3}"),
+
+    gjKvExposure         "荣耀50龚俊KV曝光组"    expression("d10a*{v1}"),
+    gjKvControl          "荣耀50龚俊KV非曝光组"  expression("d10a*{v2,v3}")
+
+} axis("{base '总体' base() [ishidden=true],..}");
+
+
+header6 "" categorical[..]
+{
+    T                    "总体"                   expression("S2 is not null"),
+    'Reno6柯南联名定制款 基于第二次数据
+    reno6KNExplore       "曝光组"                 expression("dp_wave*{v2} and _@C16a_1*{C16a_21}"),
+    reno6KNControl       "非曝光组"               expression("dp_wave*{v2} and not _@C16a_1.containsany({C16a_21})"),
+
+    'Reno6周冬雨 你还是毕业时的你吗 基于第二次数据
+    reno6ZDYExplore      "曝光组"                 expression("dp_wave*{v2} and _@C16a_1*{C16a_2}"),
+    reno6ZDYControl      "非曝光组"               expression("dp_wave*{v2} and not _@C16a_1.containsany({C16a_2})"),
+
+    'Reno6周冬雨 你还是毕业时的你吗 基于合并数据
+    reno6ZDYExploreCom   "曝光组"                 expression("_@C16a_1*{C16a_2}"),
+    reno6ZDYControlCom   "非曝光组"               expression("not _@C16a_1.containsany({C16a_2})"),
+
+    'Reno6视频同学录 基于第二次数据
+    reno6TXLExplore      "曝光组"                 expression("dp_wave*{v2} and _@C16a_1*{C16a_3}"),
+    reno6TXLControl      "非曝光组"               expression("dp_wave*{v2} and not _@C16a_1.containsany({C16a_3})"),
+
+    'Reno6视频同学录 基于合并数据
+    reno6TXLExploreCom   "曝光组"                 expression("_@C16a_1*{C16a_3}"),
+    reno6TXLControlCom   "非曝光组"               expression("not _@C16a_1.containsany({C16a_3})"),
+
+    'vivoS10营销活动
+    vivoS10ExploreCom   "曝光组"                 expression("_@C16a_1*{C16a_22,C16a_23,C16a_24,C16a_25,C16a_26}"),
+    vivoS10ControlCom   "非曝光组"               expression("not _@C16a_1.containsany({C16a_22,C16a_23,C16a_24,C16a_25,C16a_26})"),
+
+    'vivoS10营销活动 基于第二次数据
+    vivoS10Explore      "曝光组"                 expression("dp_wave*{v2} and _@C16a_1*{C16a_22,C16a_23,C16a_24,C16a_25,C16a_26}"),
+    vivoS10Control      "非曝光组"               expression("dp_wave*{v2} and not _@C16a_1.containsany({C16a_22,C16a_23,C16a_24,C16a_25,C16a_26})"),
+
+    '荣耀营销活动 基于第二次数据
+    honorExplore        "曝光组"                 expression("dp_wave*{v2} and _@C16a_1*{C16a_15,C16a_16,C16a_17,C16a_18}"),
+    honorControl        "非曝光组"               expression("dp_wave*{v2} and not _@C16a_1.containsany({C16a_15,C16a_16,C16a_17,C16a_18})"),
+
+    '荣耀营销活动 基于合并数据
+    honorExploreCom     "曝光组"                 expression("_@C16a_1*{C16a_15,C16a_16,C16a_17,C16a_18}"),
+    honorControlCom     "非曝光组"               expression("not _@C16a_1.containsany({C16a_15,C16a_16,C16a_17,C16a_18})"),
+
+    '华为nova系列营销活动
+    novaExplore        "曝光组"                 expression("_@C16a_1*{C16a_27}"),
+    novaControl        "非曝光组"               expression("not _@C16a_1.containsany({C16a_27})"),
+
+    'Reno6星黛紫
+    reno6XDZExplore    "曝光组"                 expression("_@C16a_1*{C16a_5}"),
+    reno6XDZControl    "非曝光组"               expression("not _@C16a_1.containsany({C16a_5})")
+
+} axis("{base '总体' base() [ishidden=true],..}");
+
+header7 "" categorical[..]
+{
+    T               "总体"       expression("S2 is not null"),
+
+    online          "线上渠道"       expression("(c2a*{v5} or c2b*{v3} or c2e*{v6} or c2c*{v3} or c2d*{v2}) and _@C3_1_1*{C3_1_1,C3_1_2,C3_1_3,C3_1_4,C3_1_5,C3_1_6,C3_1_7,C3_1_8,C3_1_9,C3_1_10,C3_2_1,C3_2_2,C3_2_3,C3_2_4,C3_2_5,C3_2_6,C3_2_7,C3_2_8,C3_2_9,C3_2_10,C3_3_1,C3_3_2,C3_3_3,C3_3_4,C3_3_5,C3_3_6,C3_3_7,C3_3_8,C3_3_9,C3_3_10,C3_4_1,C3_4_2,C3_4_3,C3_4_4,C3_4_5,C3_4_6,C3_4_7,C3_4_8,C3_4_9,C3_4_10}"),
+    offline         "线下渠道"       expression("(c2a*{v5} or c2b*{v3} or c2e*{v6} or c2c*{v3} or c2d*{v2}) and _@C3_1_1*{C3_1_12,C3_1_13,C3_1_14,C3_1_15,C3_1_16,C3_1_17,C3_1_18,C3_1_19,C3_1_20,C3_2_12,C3_2_13,C3_2_14,C3_2_15,C3_2_16,C3_2_17,C3_2_18,C3_2_19,C3_2_20,C3_3_12,C3_3_13,C3_3_14,C3_3_15,C3_3_16,C3_3_17,C3_3_18,C3_3_19,C3_3_20,C3_4_12,C3_4_13,C3_4_14,C3_4_15,C3_4_16,C3_4_17,C3_4_18,C3_4_19,C3_4_20}"),
+
+    videoWebsite    "视频网站"       expression("(c2a*{v5} or c2b*{v3} or c2e*{v6} or c2c*{v3} or c2d*{v2}) and _@C3_1_1*{C3_1_1,C3_2_1,C3_3_1,C3_4_1}"),
+    shortVideo      "短视频平台"     expression("(c2a*{v5} or c2b*{v3} or c2e*{v6} or c2c*{v3} or c2d*{v2}) and _@C3_1_1*{C3_1_2,C3_2_2,C3_3_2,C3_4_2}"),
+    socialPlatform  "社交平台"       expression("(c2a*{v5} or c2b*{v3} or c2e*{v6} or c2c*{v3} or c2d*{v2}) and _@C3_1_1*{C3_1_3,C3_2_3,C3_3_3,C3_4_3}"),
+    ecommc          "电商平台"       expression("(c2a*{v5} or c2b*{v3} or c2e*{v6} or c2c*{v3} or c2d*{v2}) and _@C3_1_1*{C3_1_4,C3_2_4,C3_3_4,C3_4_4}"),
+    newsApp         "新闻资讯App"    expression("(c2a*{v5} or c2b*{v3} or c2e*{v6} or c2c*{v3} or c2d*{v2}) and _@C3_1_1*{C3_1_5,C3_2_5,C3_3_5,C3_4_5}"),
+    techWebsite     "数码科技类网站" expression("(c2a*{v5} or c2b*{v3} or c2e*{v6} or c2c*{v3} or c2d*{v2}) and _@C3_1_1*{C3_1_6,C3_2_6,C3_3_6,C3_4_6}"),
+    searchWebsite   "搜索引擎"       expression("(c2a*{v5} or c2b*{v3} or c2e*{v6} or c2c*{v3} or c2d*{v2}) and _@C3_1_1*{C3_1_7,C3_2_7,C3_3_7,C3_4_7}"),
+    offical         "官方渠道"       expression("(c2a*{v5} or c2b*{v3} or c2e*{v6} or c2c*{v3} or c2d*{v2}) and _@C3_1_1*{C3_1_8,C3_2_8,C3_3_8,C3_4_8}"),
+    eduApp          "教育类网站/App" expression("(c2a*{v5} or c2b*{v3} or c2e*{v6} or c2c*{v3} or c2d*{v2}) and _@C3_1_1*{C3_1_9,C3_2_9,C3_3_9,C3_4_9}"),
+    musicApp        "音乐类App"      expression("(c2a*{v5} or c2b*{v3} or c2e*{v6} or c2c*{v3} or c2d*{v2}) and _@C3_1_1*{C3_1_10,C3_2_10,C3_3_10,C3_4_10}"),
+
+    tvAdv           "电视广告"              expression("(c2a*{v5} or c2b*{v3} or c2e*{v6} or c2c*{v3} or c2d*{v2}) and _@C3_1_1*{C3_1_12,C3_2_12,C3_3_12,C3_4_12}"),
+    outAdv          "户外广告"              expression("(c2a*{v5} or c2b*{v3} or c2e*{v6} or c2c*{v3} or c2d*{v2}) and _@C3_1_1*{C3_1_13,C3_2_13,C3_3_13,C3_4_13}"),
+    mgzAdv          "广播/报纸/杂志广告"     expression("(c2a*{v5} or c2b*{v3} or c2e*{v6} or c2c*{v3} or c2d*{v2}) and _@C3_1_1*{C3_1_14,C3_2_14,C3_3_14,C3_4_14}"),
+    relatives       "亲友/同事介绍"         expression("(c2a*{v5} or c2b*{v3} or c2e*{v6} or c2c*{v3} or c2d*{v2}) and _@C3_1_1*{C3_1_15,C3_2_15,C3_3_15,C3_4_15}"),
+    fiendCircl      "导购朋友圈介绍"        expression("(c2a*{v5} or c2b*{v3} or c2e*{v6} or c2c*{v3} or c2d*{v2}) and _@C3_1_1*{C3_1_16,C3_2_16,C3_3_16,C3_4_16}"),
+    operator        "运营商营业厅"          expression("(c2a*{v5} or c2b*{v3} or c2e*{v6} or c2c*{v3} or c2d*{v2}) and _@C3_1_1*{C3_1_17,C3_2_17,C3_3_17,C3_4_17}"),
+    exclusiveShop   "线下专卖店/手机大卖场"  expression("(c2a*{v5} or c2b*{v3} or c2e*{v6} or c2c*{v3} or c2d*{v2}) and _@C3_1_1*{C3_1_18,C3_2_18,C3_3_18,C3_4_18}"),
+    promotion       "商场/临街促销活动"      expression("(c2a*{v5} or c2b*{v3} or c2e*{v6} or c2c*{v3} or c2d*{v2}) and _@C3_1_1*{C3_1_19,C3_2_19,C3_3_19,C3_4_19}"),
+    flagShipStore   "线下官方旗舰店"         expression("(c2a*{v5} or c2b*{v3} or c2e*{v6} or c2c*{v3} or c2d*{v2}) and _@C3_1_1*{C3_1_20,C3_2_20,C3_3_20,C3_4_20}")
+
+} axis("{base '总体' base() [ishidden=true],..}");
+
+
+header8 "" categorical[..]
+{
+    T               "总体"       expression("S2 is not null"),
+
+    reno6ExposureCom                 "Reno6曝光组"            expression("C2a*{v5}"),
+    reno6ControlCom                  "Reno6非曝光组"          expression("not C2a.containsany({v5})"),
+
+    'vivo S9系列营销总认知 基于第一次数据
+    vivoS9Exposure                "vivoS9曝光组"                 expression("dp_wave*{v1} and c2b*{v3}"),
+    vivoS9Control                 "vivoS9非曝光组"               expression("dp_wave*{v1} and not c2b.containsany({v3})"),
+
+    'vivo S10系列营销总认知 基于第二次数据
+    vivoS10Exposure               "vivoS10曝光组"                expression("dp_wave*{v2} and c2e*{v6}"),
+    vivoS10Control                "vivoS10非曝光组"              expression("dp_wave*{v2} and not c2e.containsany({v6})"),
+
+    '荣耀50系列营销总认知 基于合并数据
+    honor50Exposure               "荣耀50曝光组"                 expression("c2c*{v3}"),
+    honor50Control                "荣耀50非曝光组"               expression("not c2c.containsany({v3})"),
+
+    mi11Exposure                  "小米11曝光组"                 expression("c2d*{v2}"),
+    mi11Control                   "小米11非曝光组"               expression("not c2d.containsany({v2})")
+
+} axis("{base '总体' base() [ishidden=true],..}");
