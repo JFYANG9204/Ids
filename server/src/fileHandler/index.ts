@@ -14,7 +14,7 @@ import {
     getMacroFromBatFile,
     readAllUsefulFileInFolder
 } from "./load";
-import { getFileFsPath, getFsPathToUri, isFileUri, normalizeFileNameResolve } from "./path";
+import { getFileFsPath, getFsPathToUri, getPathDepth, isFileUri, normalizeFileNameResolve } from "./path";
 
 
 
@@ -191,19 +191,18 @@ export class FileHandler {
             return;
         }
 
-        function getVertex(node: FileNode): FileNode | undefined {
-            for (const ref of node.references.values()) {
-                if (ref.isVertex) {
-                    return ref;
-                }
-                let cur = getVertex(node);
-                if (cur) {
-                    return cur;
-                }
+        function getAllVertex(node: FileNode): FileNode[] {
+            let vetexs: FileNode[] = [];
+            let refs = Array.from(node.references.values());
+            vetexs.push(...refs.filter(ref => ref.isVertex));
+            for (const ref of refs) {
+                vetexs.push(...getAllVertex(ref));
             }
+            return vetexs;
         }
 
-        this.startNode = getVertex(find);
+        let allVertex = getAllVertex(find).sort((a, b) => getPathDepth(a.fsPath, "\\") - getPathDepth(b.fsPath, "\\"));
+        this.startNode = allVertex.length > 0 ? allVertex[0] : undefined;
         this.connection?.console.log(`filehandler setstart at path = '${this.startNode?.fsPath}'`);
     }
 

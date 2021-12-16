@@ -36,3 +36,7 @@ export function normalizeAbsolutePath(fsPath: string, root: string) {
     return isAbsolute(fsPath) ? normalizeFileNameToFsPath(fsPath) : normalizeFileNameResolve(root, fsPath);
 }
 
+export function getPathDepth(filePath: string, separater: string) {
+    return filePath.split(separater).length;
+}
+

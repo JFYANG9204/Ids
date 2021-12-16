@@ -869,9 +869,6 @@ async function getCompletionAtPostion(position: Position,
         // identifier.
         if (info.id && !(info.id.treeParent instanceof MemberExpression)) {
             let dec: DeclarationBase = info.id.extra["declaration"];
-            if (test) {
-                test(`id: ${info.id.name}, definition: ${dec.name.name}`);
-            }
             if (dec) {
                 return CompletionList.create(getMemberCompletions(dec, file), false);
             }
@@ -879,9 +876,6 @@ async function getCompletionAtPostion(position: Position,
         // object.member. 或 object.method(). 或 function(). 或 object.member[]. 或 array[].
         if (info.caller) {
             let dec: DeclarationBase = info.caller.extra["declaration"];
-            if (test) {
-                test(`caller: ${info.caller}, definition: ${dec.name.name}`);
-            }
             if (dec) {
                 return CompletionList.create(getMemberCompletions(dec, file), false);
             }
