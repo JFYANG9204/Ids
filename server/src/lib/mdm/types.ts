@@ -5,12 +5,19 @@ export interface DeleteCollection<T> {
     values: T[];
 }
 
+export interface Styles extends DeleteCollection<Property> {
+}
+
+export interface LabelStyles extends Properties {
+}
+
 export interface Property {
     name: string;
     value: string;
     type: string;
     context: string;
     ds?: string;
+    styles?: Styles;
 }
 
 export interface Properties {
@@ -19,7 +26,7 @@ export interface Properties {
 }
 
 export interface Notes {
-    values?: Properties;
+    values: Properties;
 }
 
 export interface Connection {
@@ -28,8 +35,8 @@ export interface Connection {
     cdscName: string;
     project: string;
     id: string;
-    aliasVariables: AliasVariable[];
-    documentProperties: Property[];
+    aliasVariables?: AliasVariable[];
+    documentProperties?: Property[];
 }
 
 export interface DataSources {
@@ -40,7 +47,7 @@ export interface DataSources {
 export interface Label {
     context: string;
     language: string;
-    text?: string;
+    text: string;
 }
 
 export interface Labels {
@@ -52,42 +59,53 @@ export interface Category {
     id: string;
     name: string;
     fixed?: string;
+    nofilter?: string;
     missing?: string;
     exclusive?: string;
     otherLocal?: string;
     properties?: Properties;
+    templates?: Properties;
     labels?: Labels;
+    labelStyles?: LabelStyles;
     otherVariable?: Reference;
+    notes?: Notes;
 }
 
 export interface Categories extends DeleteCollection<Category> {
+    id?: string;
+    name?: string;
+    labels?: Labels;
     globalNamespace?: string;
+    categories?: Categories;
+    properties?: Properties;
+    templates?: Properties;
 }
 
 export interface FieldDefinitionBase {
     id: string;
     name: string;
-    type: string;
     usageType?: string;
     notes?: Notes;
     properties?: Properties;
+    templates?: Properties;
 }
 
 export interface HelperFields extends FieldDefinitionBase, DeleteCollection<Reference> {
     globalNamespace?: string;
 }
 
-export interface Variable extends FieldDefinitionBase {
+export interface Variable extends FieldDefinitionBase, MDMRange {
     type: string;
-    max?: string;
-    maxType?: string;
-    min?: string;
-    minType?: string;
     labels?: Labels;
     categories?: Categories;
+    helperFields?: HelperFields;
+    expression?: string;
+    sourceType?: string;
 }
 
 export interface OtherVariable extends FieldDefinitionBase {
+    type: string;
+    labels?: Labels;
 }
 
 export interface MDMRange {
@@ -245,7 +263,7 @@ export interface Metadata {
     datasources: DataSources;
     properties: Properties;
     templates: Properties;
-    definitions: FieldDefinitionBase[];
+    definitions: (FieldDefinitionBase | Categories)[];
     system: DeleteCollection<BlockField>[];
     routings: Routings[];
     mappings: VarInstance[];
