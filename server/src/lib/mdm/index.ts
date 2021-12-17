@@ -3,6 +3,7 @@ import {
 } from "fs";
 import {
     AliasVariable,
+    Axis,
     Categories,
     Category,
     Connection,
@@ -12,6 +13,7 @@ import {
     Label,
     Labels,
     LabelStyles,
+    Element as MDMElement,
     Notes,
     Properties,
     Property,
@@ -338,11 +340,28 @@ export class MDMDocument {
         };
     }
 
+    private readElement(ele: Element): MDMElement {
+        let labels: Labels | undefined;
+        this.iterateChildren(ele, child => {
+            switch (child.tagName) {
+                case "labels":  labels = this.readLables(child);          break;
+                default: this.unknownTagName(child.tagName, ele.tagName); break;
+            }
+        });
+        return {
+            id: this.getAttrNotEmpty(ele, "id"),
+            name: this.getAttrNotEmpty(ele, "name"),
+            type: this.getAttrNotEmpty(ele, "type"),
+            labels
+        };
+    }
+
     private readCategories(cats: Element): Categories {
         let properties: Properties | undefined;
         let categories: Categories | undefined;
         let templates: Properties | undefined;
         let labels: Labels | undefined;
+        let elements: MDMElement[] | undefined;
         let collection = this.readDeleteCollection(cats,
             this.readCategory.bind(this),
             (child, inDeleted) => {
@@ -354,6 +373,11 @@ export class MDMDocument {
                         case "categories":    categories = this.readCategories(child);     break;
                         case "templates":     templates = this.readPropertiesLike(child);  break;
                         case "labels":        labels = this.readLables(child);             break;
+                        case "element":
+                            elements ?
+                            elements.push(this.readElement(child)) :
+                            elements = [ this.readElement(child) ];
+                            break;
                         default:      this.unknownTagName(child.tagName, cats.tagName);    break;
                     }
                 } else {
@@ -369,10 +393,15 @@ export class MDMDocument {
             labels,
             values: collection.values,
             deleted: collection.deleted,
+            elements,
             properties,
             categories,
             templates
         };
+    }
+
+    private readAxis(axis: Element): Axis {
+        return { expression: this.getAttrNotEmpty(axis, "expression") };
     }
 
     private readDefinitionVariable(variable: Element): Variable {
@@ -380,12 +409,14 @@ export class MDMDocument {
         let labels: Labels | undefined;
         let categories: Categories | undefined;
         let helperFields: HelperFields | undefined;
+        let axis: Axis | undefined;
         this.iterateChildren(variable, child => {
             switch (child.tagName) {
                 case "notes":           notes = this.readNotes(child);                break;
                 case "labels":          labels = this.readLables(child);              break;
                 case "categories":      categories = this.readCategories(child);      break;
                 case "helperfields":    helperFields = this.readHelperFields(child);  break;
+                case "axis":            axis = this.readAxis(child);                  break;
                 default:
                     this.unknownTagName(child.tagName, variable.tagName);
                     break;
@@ -401,6 +432,9 @@ export class MDMDocument {
             minType: this.getAttr(variable, "mintype"),
             maxValue: this.getAttr(variable, "max"),
             maxType: this.getAttr(variable, "maxtype"),
+            effectiveMaxValue: this.getAttr(variable, "effectivemax"),
+            effectiveMinValue: this.getAttr(variable, "effectivemin"),
+            axis,
             notes,
             categories,
             helperFields

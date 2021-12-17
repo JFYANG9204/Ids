@@ -71,14 +71,26 @@ export interface Category {
     notes?: Notes;
 }
 
+export interface Element {
+    id: string;
+    name: string;
+    type: string;
+    labels?: Labels;
+}
+
 export interface Categories extends DeleteCollection<Category> {
     id?: string;
     name?: string;
     labels?: Labels;
     globalNamespace?: string;
     categories?: Categories;
+    elements?: Element[];
     properties?: Properties;
     templates?: Properties;
+}
+
+export interface Axis {
+    expression: string;
 }
 
 export interface FieldDefinitionBase {
@@ -101,6 +113,7 @@ export interface Variable extends FieldDefinitionBase, MDMRange {
     helperFields?: HelperFields;
     expression?: string;
     sourceType?: string;
+    axis?: Axis;
 }
 
 export interface OtherVariable extends FieldDefinitionBase {
