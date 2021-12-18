@@ -168,10 +168,9 @@ export interface Reference {
     ref: string;
 }
 
-export interface References {
+export interface References extends DeleteCollection<Reference> {
     name: string;
     globalNamespace: string;
-    refs?: Reference[];
 }
 
 export interface FieldDesignBase {
@@ -200,21 +199,19 @@ export interface Script {
     text: string;
 }
 
-export interface ScriptType {
+export interface ScriptType extends DeleteCollection<Script> {
     type: string;
     context: string;
     interviewModes: string;
     useKeycodes: string;
-    script: Script;
 }
 
-export interface ScriptTypes {
-    values: ScriptType;
-    deleted?: ScriptType[];
+export interface Scripts extends DeleteCollection<ScriptType> {
 }
 
 export interface Routings {
-    scripts: ScriptTypes;
+    name?: string;
+    scripts?: Scripts;
     ritems: Routing[];
 }
 

@@ -20,7 +20,15 @@ import {
     Reference,
     Styles,
     SubAlias,
-    Variable
+    Variable,
+    OtherVariable,
+    FieldDefinitionBase,
+    Routing,
+    RoutingItem,
+    Script,
+    ScriptType,
+    Scripts,
+    Routings
 } from "./types";
 import { DOMParser } from "xmldom";
 
@@ -435,9 +443,117 @@ export class MDMDocument {
             effectiveMaxValue: this.getAttr(variable, "effectivemax"),
             effectiveMinValue: this.getAttr(variable, "effectivemin"),
             axis,
+            labels,
             notes,
             categories,
             helperFields
+        };
+    }
+
+    private readOtherVariable(other: Element): OtherVariable {
+        let labels: Labels | undefined;
+        this.iterateChildren(other, child => {
+            switch (child.tagName) {
+                case "labels":     labels = this.readLables(child);   break;
+                default:
+                    this.unknownTagName(child.tagName, other.tagName);
+                    break;
+            }
+        });
+        return {
+            id: this.getAttrNotEmpty(other, "id"),
+            name: this.getAttrNotEmpty(other, "name"),
+            type: this.getAttrNotEmpty(other, "type"),
+            usageType: this.getAttr(other, "usagetype"),
+            labels
+        };
+    }
+
+    private readDefinitions(definition: Element) {
+        let definitions: (FieldDefinitionBase | Categories)[] = [];
+        this.iterateChildren(definition, def => {
+            switch (def.tagName) {
+                case "variable":
+                    definitions.push(this.readDefinitionVariable(def));
+                    break;
+                case "othervariable":
+                    definitions.push(this.readOtherVariable(def));
+                    break;
+                case "categories":
+                    definitions.push(this.readCategories(def));
+                    break;
+                default:
+                    this.unknownTagName(def.tagName, definition.tagName);
+                    break;
+            }
+        });
+        return definitions;
+    }
+
+    private readRoutingItem(ritem: Element): RoutingItem {
+        return {
+            name: this.getAttrNotEmpty(ritem, "name"),
+            item: this.getAttrNotEmpty(ritem, "item")
+        };
+    }
+
+    private readRouting(routing: Element): Routing {
+        let ritem: RoutingItem[] = [];
+        this.iterateChildren(routing, item => {
+            switch (item.tagName) {
+                case "ritem":    ritem.push(this.readRoutingItem(item)); break;
+                default:
+                    this.unknownTagName(item.tagName, routing.tagName);
+            }
+        });
+        return {
+            context: this.getAttrNotEmpty(routing, "context"),
+            interviewModes: this.getAttrNotEmpty(routing, "interviewmodes"),
+            useKeyCodes: this.getAttrNotEmpty(routing, "usekeycodes"),
+            ritem: ritem.length > 0 ? ritem : undefined
+        };
+    }
+
+    private readScript(script: Element): Script {
+        return {
+            name: this.getAttrNotEmpty(script, "name"),
+            default: this.getAttrNotEmpty(script, "default"),
+            text: script.firstChild?.nodeValue ?? ""
+        };
+    }
+
+    private readScriptType(scriptType: Element): ScriptType {
+        let collection = this.readDeleteCollection(scriptType, this.readScript);
+        return {
+            type: this.getAttrNotEmpty(scriptType, "type"),
+            context: this.getAttrNotEmpty(scriptType, "context"),
+            interviewModes: this.getAttrNotEmpty(scriptType, "interviewmodes"),
+            useKeycodes: this.getAttrNotEmpty(scriptType, "usekeycodes"),
+            deleted: collection.deleted,
+            values: collection.values
+        };
+    }
+
+    private readScripts(scripts: Element): Scripts {
+        return this.readDeleteCollection(scripts, this.readScriptType);
+    }
+
+    private readRoutings(routings: Element): Routings {
+        let scripts: Scripts | undefined;
+        let ritems: Routing[] = [];
+        this.iterateChildren(routings, child => {
+            switch (child.tagName) {
+                case "scripts": scripts = this.readScripts(child);    break;
+                case "routing": ritems.push(this.readRouting(child)); break;
+                default:
+                    this.unknownTagName(child.tagName, routings.tagName);
+                    break;
+            }
+        });
+        return {
+            name: this.getAttr(routings, "name"),
+            scripts,
+            ritems
         };
     }
 
