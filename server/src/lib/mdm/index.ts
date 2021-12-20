@@ -55,6 +55,7 @@ import {
 } from "./types";
 import { DOMParser } from "xmldom";
 
+
 export class MDMDocument {
 
     private xmlParser: DOMParser;
@@ -198,15 +199,15 @@ export class MDMDocument {
 
     // <nativevalue fullname="安徽省" value="1" />
     private readNativeValue(ele: ChildNode): { fullName: string, value: string } {
-        if (!(ele instanceof Element)) {
+        if (Object.prototype.toString.call(ele) !== Object.prototype.toString.call(Element)) {
             return {
                 fullName: "",
                 value: ""
             };
         }
         return {
-            fullName: this.getAttrNotEmpty(ele, "fullname"),
-            value: this.getAttrNotEmpty(ele, "value")
+            fullName: this.getAttrNotEmpty(ele as Element, "fullname"),
+            value: this.getAttrNotEmpty(ele as Element, "value")
         };
     }
 
@@ -939,10 +940,7 @@ export class MDMDocument {
 
     load() {
         for (let i = 0; i < this.xmlDoc.childNodes.length; ++i) {
-            const cur = this.xmlDoc.childNodes[i];
-            if (!(cur instanceof Element)) {
-                continue;
-            }
+            const cur = this.xmlDoc.childNodes[i] as Element;
             if (cur instanceof ProcessingInstruction) {
                 if (cur.tagName === "xml") {
                     this.xmlInstruction = {

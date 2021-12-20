@@ -8,9 +8,9 @@ const xmlPath = resolve("./server/src/lib/mdm/test/fixture/ger_21marw2.mdd");
 // const xmlContent = readFileSync(xmlPath).toString();
 // const xmlParser = new DOMParser();
 // const doc = xmlParser.parseFromString(xmlContent);
-// const fstChld = doc.firstChild;
+// const fstChld = doc.firstChild!;
 
-const doc = new MDMDocument(xmlPath);
+let doc = new MDMDocument(xmlPath);
 doc.load();
 
 console.log("end");

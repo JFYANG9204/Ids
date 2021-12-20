@@ -6,6 +6,18 @@
 	"version": "0.2.0",
     "configurations": [
         {
+            "name": "msvc build and debug",
+            "type": "cppvsdbg",
+            "request": "launch",
+            "program": "${fileDirname}\\${fileBasenameNoExtension}.exe",
+            "args": [],
+            "stopAtEntry": true,
+            "cwd": "${fileDirname}",
+            "environment": [],
+            "console": "externalTerminal",
+            "preLaunchTask": "msvc build"
+        },
+        {
             "name": "Launch Client",
             "type": "extensionHost",
             "request": "launch",

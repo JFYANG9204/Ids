@@ -7,7 +7,7 @@
 			"group": "build",
 			"presentation": {
 				"reveal": "never",
-				"panel": "dedicated",
+				"panel": "dedicated"
 			},
 			"problemMatcher": [
 				"$tsc"
@@ -17,17 +17,40 @@
 			"type": "npm",
 			"script": "watch",
 			"isBackground": true,
+			"group": "build",
+			"presentation": {
+				"reveal": "never",
+				"panel": "dedicated"
+			},
+			"problemMatcher": [
+				"$tsc-watch"
+			],
+			"label": "npm: watch",
+			"detail": "tsc -b -w"
+		},
+		{
+			"type": "cppbuild",
+			"label": "msvc build",
+			"command": "cl.exe",
+			"args": [
+				"/Zi",
+				"/EHsc",
+				"/nologo",
+				"/Fe:",
+				"${fileDirname}\\${fileBasenameNoExtension}.exe",
+				"${file}"
+			],
+			"options": {
+				"cwd": "${fileDirname}"
+			},
+			"problemMatcher": [
+				"$msCompile"
+			],
 			"group": {
 				"kind": "build",
 				"isDefault": true
 			},
-			"presentation": {
-				"reveal": "never",
-				"panel": "dedicated",
-			},
-			"problemMatcher": [
-				"$tsc-watch"
-			]
+			"detail": "compiler: cl.exe"
 		}
 	]
 }
