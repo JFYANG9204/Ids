@@ -25,6 +25,8 @@ export interface Properties {
     values: Property[];
 }
 
+export const EMPTY_PROPERTIES: Properties = { values: [] };
+
 export interface Notes {
     values: Properties;
 }
@@ -39,10 +41,20 @@ export interface Connection {
     documentProperties?: Property[];
 }
 
+export const EMPTY_CONNECTION: Connection = {
+    name: "",
+    dbLocation: "",
+    cdscName: "",
+    project: "",
+    id: ""
+};
+
 export interface DataSources {
     default: string;
     connections: Connection[];
 }
+
+export const EMPTY_DATASOURCES: DataSources = { default: "", connections: [] };
 
 export interface Label {
     context: string;
@@ -54,6 +66,8 @@ export interface Labels {
     context: string;
     texts: Label[];
 }
+
+export const EMPTY_LABELS: Labels = { context: "", texts: [] };
 
 export interface Category {
     id: string;
@@ -168,29 +182,52 @@ export interface Reference {
     ref: string;
 }
 
-export interface References extends DeleteCollection<Reference> {
+export interface References extends DeleteCollection<Reference | LoopField | BlockField> {
     name: string;
     globalNamespace: string;
 }
 
 export interface FieldDesignBase {
     name: string;
-    globalNamespace: string;
     templates?: Properties;
     properties?: Properties;
     labels?: Labels;
-    fields?: References;
+}
+
+export interface System extends DeleteCollection<BlockField> {
+    name: string;
+    globalNamespace: string;
+}
+
+export const EMPTY_SYSTEM: System = { values: [], name: "", globalNamespace: "" };
+
+export interface BlockSubFields extends DeleteCollection<Reference | LoopField | BlockField> {
+    name: string;
+    globalNamespace: string;
 }
 
 export interface BlockField extends FieldDesignBase {
     id: string;
+    globalNamespace: string;
     types?: References;
+    fields?: BlockSubFields;
+    routings?: Routings;
     pages?: References;
 }
 
-export interface LoopFields extends FieldDesignBase {
-    subFields: FieldDesignBase[];
+export interface LoopSubFields {
+    types?: References;
+    fields?: References;
+    pages?: References;
+}
+
+export interface LoopField extends FieldDesignBase {
+    id: string;
+    type: string;
+    isGrid?: string;
+    iteratorType?: string;
     categories?: Categories;
+    classes?: LoopSubFields;
 }
 
 export interface Script {
@@ -215,23 +252,27 @@ export interface Routings {
     ritems: Routing[];
 }
 
+export const EMPTY_ROUTINGS: Routings = { ritems: [] };
+
 export interface MDMXmlDesign {
-    fields: (Reference | BlockField | LoopFields)[];
-    types: References;
-    pages: References;
+    fields?: BlockSubFields;
+    types?: References;
+    pages?: References;
     routings?: Routings;
-    properties: Properties;
+    properties?: Properties;
 }
 
 export interface Language {
     name: string;
     id: string;
-    properties: Properties;
+    properties?: Properties;
 }
 
 export interface Languages extends DeleteCollection<Language> {
     base: string;
 }
+
+export const EMPTY_LANGUAGES: Languages = { base: "", values: [] };
 
 export interface Alternative {
     name: string;
@@ -246,6 +287,8 @@ export interface Contexts extends DeleteCollection<Context> {
     base: string;
 }
 
+export const EMPTY_CONTEXTS: Contexts = { base: "", values: [] };
+
 export interface UserSaveLog {
     name: string;
     fileVersion: string;
@@ -258,7 +301,7 @@ export interface SaveLog {
     userName: string;
     date: string;
     count: string;
-    user: UserSaveLog;
+    users: UserSaveLog[];
 }
 
 export interface Metadata {
@@ -270,21 +313,23 @@ export interface Metadata {
     systemVariable: string;
     dbFilterValidataion: string;
     xmlns: string;
-    datasources: DataSources;
+    dataSources: DataSources;
     properties: Properties;
     templates: Properties;
-    definitions: (FieldDefinitionBase | Categories)[];
-    system: DeleteCollection<BlockField>[];
-    routings: Routings[];
+    labels: Labels;
+    definition: (FieldDefinitionBase | Categories)[];
+    system: System;
+    systemRouting: Routings;
     mappings: VarInstance[];
     design: MDMXmlDesign;
     languages: Languages;
-    contexts: Context;
-    labelTypes: Context;
-    routingContexts: Context;
-    scriptTypes: Context;
+    contexts: Contexts;
+    labelTypes: Contexts;
+    routingContexts: Contexts;
+    scriptTypes: Contexts;
     saveLogs: SaveLog[];
     atoms: { name: string }[];
     categoryMap: { name: string, value: string }[];
+    versionList: undefined;
 }
 

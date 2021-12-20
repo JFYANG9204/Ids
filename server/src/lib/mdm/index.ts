@@ -28,7 +28,30 @@ import {
     Script,
     ScriptType,
     Scripts,
-    Routings
+    Routings,
+    References,
+    BlockField,
+    System,
+    VarInstance,
+    LoopField,
+    LoopSubFields,
+    BlockSubFields,
+    MDMXmlDesign,
+    Language,
+    Languages,
+    Alternative,
+    Context,
+    Contexts,
+    UserSaveLog,
+    SaveLog,
+    Metadata,
+    EMPTY_DATASOURCES,
+    EMPTY_PROPERTIES,
+    EMPTY_LABELS,
+    EMPTY_SYSTEM,
+    EMPTY_ROUTINGS,
+    EMPTY_LANGUAGES,
+    EMPTY_CONTEXTS
 } from "./types";
 import { DOMParser } from "xmldom";
 
@@ -38,6 +61,7 @@ export class MDMDocument {
     private xmlDoc: Document;
     private xmlInstruction: { version: string, encoding: string };
     private xmlStyleSheet: { type: string, href: string };
+    private metadata: Metadata | undefined;
 
     raiseErrorFunction?: (text: string) => void;
 
@@ -243,7 +267,7 @@ export class MDMDocument {
     //  	<text context="QUESTION" xml:lang="en-GB">Completion Indicator</text>
     //  	<text context="QUESTION" xml:lang="de-DE">Completion Indicator</text>
     //  </labels>
-    private readLables(labels: Element): Labels {
+    private readLabels(labels: Element): Labels {
         let texts: Label[] = [];
         this.iterateChildren(labels, label => texts.push(this.readText(label)));
         return {
@@ -294,6 +318,16 @@ export class MDMDocument {
         };
     }
 
+    private readReferences(refs: Element): References {
+        let collection = this.readDeleteCollection(refs, this.readReference.bind(this));
+        return {
+            name: this.getAttrNotEmpty(refs, "name"),
+            globalNamespace: this.getAttrNotEmpty(refs, "global-name-space"),
+            deleted: collection.deleted,
+            values: collection.values
+        };
+    }
+
     private readCategory(category: Element): Category {
         let properties: Properties | undefined;
         let templates: Properties | undefined;
@@ -305,7 +339,7 @@ export class MDMDocument {
             switch (child.tagName) {
                 case "properties":    properties = this.readPropertiesLike(child);   break;
                 case "templates":     templates = this.readPropertiesLike(child);    break;
-                case "labels":        labels = this.readLables(child);               break;
+                case "labels":        labels = this.readLabels(child);               break;
                 case "notes":         notes = this.readNotes(child);                 break;
                 case "othervariable": otherVariable = this.readReference(child);     break;
                 case "labelstyles":   labelStyles = this.readPropertiesLike(child);  break;
@@ -352,7 +386,7 @@ export class MDMDocument {
         let labels: Labels | undefined;
         this.iterateChildren(ele, child => {
             switch (child.tagName) {
-                case "labels":  labels = this.readLables(child);          break;
+                case "labels":  labels = this.readLabels(child);          break;
                 default: this.unknownTagName(child.tagName, ele.tagName); break;
             }
         });
@@ -380,7 +414,7 @@ export class MDMDocument {
                         case "properties":    properties = this.readPropertiesLike(child); break;
                         case "categories":    categories = this.readCategories(child);     break;
                         case "templates":     templates = this.readPropertiesLike(child);  break;
-                        case "labels":        labels = this.readLables(child);             break;
+                        case "labels":        labels = this.readLabels(child);             break;
                         case "element":
                             elements ?
                             elements.push(this.readElement(child)) :
@@ -421,7 +455,7 @@ export class MDMDocument {
         this.iterateChildren(variable, child => {
             switch (child.tagName) {
                 case "notes":           notes = this.readNotes(child);                break;
-                case "labels":          labels = this.readLables(child);              break;
+                case "labels":          labels = this.readLabels(child);              break;
                 case "categories":      categories = this.readCategories(child);      break;
                 case "helperfields":    helperFields = this.readHelperFields(child);  break;
                 case "axis":            axis = this.readAxis(child);                  break;
@@ -454,7 +488,7 @@ export class MDMDocument {
         let labels: Labels | undefined;
         this.iterateChildren(other, child => {
             switch (child.tagName) {
-                case "labels":     labels = this.readLables(child);   break;
+                case "labels":     labels = this.readLabels(child);   break;
                 default:
                     this.unknownTagName(child.tagName, other.tagName);
                     break;
@@ -555,6 +589,380 @@ export class MDMDocument {
             scripts,
             ritems
         };
+    }
+
+    private readBlockSubFields(fields: Element): BlockSubFields {
+        let collection = this.readDeleteCollection(fields, child => {
+            if (child.tagName === "variable") {
+                return this.readReference(child);
+            } else if (child.tagName === "loop") {
+                return this.readLoopFieldDesign(child);
+            } else {
+                return this.readBlockField(child);
+            }
+        });
+        return {
+            name: this.getAttrNotEmpty(fields, "name"),
+            globalNamespace: this.getAttrNotEmpty(fields, "global-name-space"),
+            deleted: collection.deleted,
+            values: collection.values
+        };
+    }
+
+    private readBlockField(block: Element): BlockField {
+        let labels: Labels | undefined;
+        let routings: Routings | undefined;
+        let pages: References | undefined;
+        let properties: Properties | undefined;
+        let templates: Properties | undefined;
+        let fields: BlockSubFields | undefined;
+        this.iterateChildren(block, child => {
+            switch (child.tagName) {
+                case "labels":
+                    labels = this.readLabels(child);
+                    break;
+                case "routings":
+                    routings = this.readRoutings(child);
+                    break;
+                case "properties":
+                    properties = this.readPropertiesLike(child);
+                    break;
+                case "templates":
+                    templates = this.readPropertiesLike(child);
+                    break;
+                case "fields":
+                    fields = this.readBlockSubFields(child);
+                    break;
+                case "pages":
+                    pages = this.readReferences(child);
+                    break;
+                default:
+                    this.unknownTagName(child.tagName, block.tagName);
+                    break;
+            }
+        });
+        return {
+            id: this.getAttrNotEmpty(block, "id"),
+            name: this.getAttrNotEmpty(block, "name"),
+            globalNamespace: this.getAttrNotEmpty(block, "global-name-space"),
+            labels,
+            properties,
+            templates,
+            fields,
+            pages,
+            routings
+        };
+    }
+
+    private readSystem(sys: Element): System {
+        let collection = this.readDeleteCollection(sys, this.readBlockField);
+        return {
+            name: this.getAttrNotEmpty(sys, "name"),
+            globalNamespace: this.getAttrNotEmpty(sys, "global-name-space"),
+            deleted: collection.deleted,
+            values: collection.values
+        };
+    }
+
+    private readVarInstance(varInstance: Element): VarInstance {
+        return {
+            name: this.getAttrNotEmpty(varInstance, "name"),
+            sourceType: this.getAttrNotEmpty(varInstance, "sourcetype"),
+            variable: this.getAttrNotEmpty(varInstance, "variable"),
+            fullName: this.getAttrNotEmpty(varInstance, "fullname")
+        };
+    }
+
+    private readMappings(mappings: Element): VarInstance[] {
+        let map: VarInstance[] = [];
+        this.iterateChildren(mappings, child => map.push(this.readVarInstance(child)));
+        return map;
+    }
+
+    private readSubClasses (sub: Element): LoopSubFields {
+        let types: References | undefined;
+        let fields: References | undefined;
+        let pages: References | undefined;
+        this.iterateChildren(sub, field => {
+            switch (field.tagName) {
+                case "types":     types = this.readReferences(field);   break;
+                case "fields":    fields = this.readReferences(field);  break;
+                case "pages":     pages = this.readReferences(field);   break;
+                default:
+                    this.unknownTagName(field.tagName, sub.tagName);
+                    break;
+            }
+        });
+        return { types, fields, pages };
+    }
+
+    private readLoopFieldDesign(loop: Element): LoopField {
+        let properties: Properties | undefined;
+        let labels: Labels | undefined;
+        let templates: Properties | undefined;
+        let categories: Categories | undefined;
+        let classes: LoopSubFields | undefined;
+        this.iterateChildren(loop, child => {
+            switch (child.tagName) {
+                case "properties":      properties = this.readPropertiesLike(child);  break;
+                case "templates":       templates = this.readPropertiesLike(child);   break;
+                case "labels":          labels = this.readLabels(child);              break;
+                case "categories":      categories = this.readCategories(child);      break;
+                case "class":           classes = this.readSubClasses(child);         break;
+            }
+        });
+        return {
+            id: this.getAttrNotEmpty(loop, "id"),
+            name: this.getAttrNotEmpty(loop, "name"),
+            type: this.getAttrNotEmpty(loop, "type"),
+            isGrid: this.getAttr(loop, "isgrid"),
+            iteratorType: this.getAttrNotEmpty(loop, "iteratortype"),
+            properties,
+            templates,
+            labels,
+            categories,
+            classes
+        };
+    }
+
+    private readDesign(design: Element): MDMXmlDesign {
+        let fields: BlockSubFields | undefined;
+        let properties: Properties | undefined;
+        let types: References | undefined;
+        let pages: References | undefined;
+        let routings: Routings | undefined;
+        this.iterateChildren(design, child => {
+            switch (child.tagName) {
+                case "fields":     fields = this.readBlockSubFields(child);     break;
+                case "types":      types = this.readReferences(child);          break;
+                case "pages":      pages = this.readReferences(child);          break;
+                case "routings":   routings = this.readRoutings(child);         break;
+                case "properties": properties = this.readPropertiesLike(child); break;
+                default:
+                    this.unknownTagName(child.tagName, design.tagName);
+                    break;
+            }
+        });
+        return { fields, properties, types, pages, routings };
+    }
+
+    private readLanguage(lang: Element): Language {
+        let properties: Properties | undefined;
+        this.iterateChildren(lang, child => {
+            if (child.tagName === "properties") {
+                properties = this.readPropertiesLike(child);
+            } else {
+                this.unknownTagName(child.tagName, lang.tagName);
+            }
+        });
+        return {
+            name: this.getAttrNotEmpty(lang, "name"),
+            id: this.getAttrNotEmpty(lang, "id"),
+            properties
+        };
+    }
+
+    private readLanguages(langs: Element): Languages {
+        let collection = this.readDeleteCollection(langs, this.readLanguage.bind(this));
+        return {
+            base: this.getAttrNotEmpty(langs, "base"),
+            values: collection.values,
+            deleted: collection.deleted
+        };
+    }
+
+    private readAlternative(alt: Element): Alternative {
+        return { name: this.getAttrNotEmpty(alt, "name") };
+    }
+
+    private readContext(context: Element): Context {
+        let alts: DeleteCollection<Alternative> | undefined;
+        this.iterateChildren(context, child => {
+            if (child.tagName === "alternatives") {
+                alts = this.readDeleteCollection(child, this.readAlternative.bind(this));
+            } else {
+                this.unknownTagName(child.tagName, context.tagName);
+            }
+        });
+        return {
+            name: this.getAttrNotEmpty(context, "name"),
+            alternatives: alts
+        };
+    }
+
+    private readContexts(contexts: Element): Contexts {
+        let collection = this.readDeleteCollection(contexts, this.readContext.bind(this));
+        return {
+            base: this.getAttrNotEmpty(contexts, "base"),
+            values: collection.values,
+            deleted: collection.deleted
+        };
+    }
+
+    private readUserSaveLog(user: Element): UserSaveLog {
+        return {
+            name: this.getAttrNotEmpty(user, "name"),
+            fileVersion: this.getAttrNotEmpty(user, "fileversion"),
+            comment: this.getAttrNotEmpty(user, "comment")
+        };
+    }
+
+    private readSaveLog(saveLog: Element): SaveLog {
+        let users: UserSaveLog[] = [];
+        this.iterateChildren(saveLog, user => {
+            if (user.tagName === "user") {
+                users.push(this.readUserSaveLog(user));
+            } else {
+                this.unknownTagName(user.tagName, saveLog.tagName);
+            }
+        });
+        return {
+            fileVersion: this.getAttrNotEmpty(saveLog, "fileversion"),
+            userName: this.getAttrNotEmpty(saveLog, "username"),
+            versionSet: this.getAttrNotEmpty(saveLog, "versionset"),
+            date: this.getAttrNotEmpty(saveLog, "date"),
+            count: this.getAttrNotEmpty(saveLog, "count"),
+            users
+        };
+    }
+
+    private readUserSaveLogs(saveLogs: Element): SaveLog[] {
+        let logs: SaveLog[] = [];
+        this.iterateChildren(saveLogs, log => {
+            if (log.tagName === "savelog") {
+                logs.push(this.readSaveLog(log));
+            } else {
+                this.unknownTagName(log.tagName, saveLogs.tagName);
+            }
+        });
+        return logs;
+    }
+
+    private readAtoms(atoms: Element): { name: string }[] {
+        let items: { name: string }[] = [];
+        this.iterateChildren(atoms, atom => {
+            if (atom.tagName === "atom") {
+                items.push({ name: this.getAttrNotEmpty(atom, "name") });
+            } else {
+                this.unknownTagName(atom.tagName, atoms.tagName);
+            }
+        });
+        return items;
+    }
+
+    private readCategoryMap(categoryMap: Element): { name: string, value: string }[] {
+        let map: { name: string, value: string }[] = [];
+        this.iterateChildren(categoryMap, cat => {
+            if (cat.tagName === "categoryid") {
+                map.push({ name: this.getAttrNotEmpty(cat, "name"), value: this.getAttrNotEmpty(cat, "id") });
+            } else {
+                this.unknownTagName(cat.tagName, categoryMap.tagName);
+            }
+        });
+        return map;
+    }
+
+    private readMDMMetadata(metadata: Element): Metadata {
+        let dataSources: DataSources = EMPTY_DATASOURCES,
+            properties: Properties = EMPTY_PROPERTIES,
+            templates: Properties = EMPTY_PROPERTIES,
+            labels: Labels = EMPTY_LABELS,
+            definition: (FieldDefinitionBase | Categories)[] = [],
+            system: System = EMPTY_SYSTEM,
+            systemRouting: Routings = EMPTY_ROUTINGS,
+            mappings: VarInstance[] = [],
+            design: MDMXmlDesign = {},
+            languages: Languages = EMPTY_LANGUAGES,
+            contexts: Contexts = EMPTY_CONTEXTS,
+            labelTypes: Contexts = EMPTY_CONTEXTS,
+            routingContexts: Contexts = EMPTY_CONTEXTS,
+            scriptTypes: Contexts = EMPTY_CONTEXTS,
+            saveLogs: SaveLog[] = [],
+            atoms: { name: string }[] = [],
+            categoryMap: { name: string, value: string }[] = [];
+
+        this.iterateChildren(metadata, child => {
+            switch (child.tagName) {
+                case "datasources":     dataSources = this.readDataSources(child);   break;
+                case "properties":      properties = this.readPropertiesLike(child); break;
+                case "templates":       templates = this.readPropertiesLike(child);  break;
+                case "labels":          labels = this.readLabels(child);             break;
+                case "definition":      definition = this.readDefinitions(child);    break;
+                case "system":          system = this.readSystem(child);             break;
+                case "systemrouting":   systemRouting = this.readRoutings(child);    break;
+                case "mappings":        mappings = this.readMappings(child);         break;
+                case "design":          design = this.readDesign(child);             break;
+                case "languages":       languages = this.readLanguages(child);       break;
+                case "contexts":        contexts = this.readContexts(child);         break;
+                case "labeltypes":      labelTypes = this.readContexts(child);       break;
+                case "routingcontexts": routingContexts = this.readContexts(child);  break;
+                case "scripttypes":     scriptTypes = this.readContexts(child);      break;
+                case "savelogs":        saveLogs = this.readUserSaveLogs(child);     break;
+                case "atoms":           atoms = this.readAtoms(child);               break;
+                case "categorymap":     categoryMap = this.readCategoryMap(child);   break;
+                case "versionlist":     break;
+                default:
+                    this.unknownTagName(child.tagName, metadata.tagName);
+                    break;
+            }
+        });
+
+        return {
+            mdmCreateVersion: this.getAttrNotEmpty(metadata, "mdm_createversion"),
+            mdmLastVersion: this.getAttrNotEmpty(metadata, "mdm_lastversion"),
+            id: this.getAttrNotEmpty(metadata, "id"),
+            dataVersion: this.getAttrNotEmpty(metadata, "data_version"),
+            dataSubVersion: this.getAttrNotEmpty(metadata, "data_sub_version"),
+            systemVariable: this.getAttrNotEmpty(metadata, "systemvariable"),
+            dbFilterValidataion: this.getAttrNotEmpty(metadata, "dbfiltervalidation"),
+            xmlns: this.getAttrNotEmpty(metadata, "xmlns:mdm"),
+            dataSources,
+            properties,
+            templates,
+            labels,
+            definition,
+            system,
+            systemRouting,
+            mappings,
+            design,
+            languages,
+            contexts,
+            labelTypes,
+            routingContexts,
+            scriptTypes,
+            saveLogs,
+            atoms,
+            categoryMap,
+            versionList: undefined
+        };
+    }
+
+    load() {
+        for (let i = 0; i < this.xmlDoc.childNodes.length; ++i) {
+            const cur = this.xmlDoc.childNodes[i];
+            if (!(cur instanceof Element)) {
+                continue;
+            }
+            if (cur instanceof ProcessingInstruction) {
+                if (cur.tagName === "xml") {
+                    this.xmlInstruction = {
+                        version: this.getAttrNotEmpty(cur, "version"),
+                        encoding: this.getAttrNotEmpty(cur, "encoding")
+                    };
+                } else if (cur.tagName === "xml-stylesheet") {
+                    this.xmlStyleSheet = {
+                        type: this.getAttrNotEmpty(cur, "type"),
+                        href: this.getAttrNotEmpty(cur, "href")
+                    };
+                }
+            } else {
+                if (cur.tagName === "xml") {
+                    this.metadata = this.readMDMMetadata(cur);
+                } else {
+                    this.unknownTagName(cur.tagName, "xml");
+                }
+            }
+        }
     }
 
 }
