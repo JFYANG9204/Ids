@@ -414,6 +414,80 @@ struct Categories : public MdmCollection<Category*>
 
 };
 
+// <Definition>
+
+struct MdmDefinitionBase
+{
+    MdmDefinitionBase(char* id, char* name, char* usageType = nullptr)
+    {
+        Id = id;
+        Name = name;
+        UsageType = usageType;
+        Notes = nullptr;
+        Properties = nullptr;
+        Templates = nullptr;
+    }
+
+    virtual ~MdmDefinitionBase()
+    {
+        if (Notes)      delete Notes;
+        if (Properties) delete Properties;
+        if (Templates)  delete Templates;
+    }
+
+    char* Id;
+    char* Name;
+    char* UsageType;
+    ::Notes* Notes;
+    ::Properties* Properties;
+    ::Properties* Templates;
+};
+
+struct MdmHelperFields : public MdmDefinitionBase, public MdmCollection<Reference*>
+{
+    MdmHelperFields(char* name, char* globalNs): MdmDefinitionBase(nullptr, name, nullptr), MdmCollection()
+    {
+        GlobalNamespace = globalNs;
+    }
+
+    char* GlobalNamespace;
+};
+
+struct MdmDefinitionVariable : public MdmDefinitionBase, public MdmRange
+{
+
+    MdmDefinitionVariable(char* id, char* name, char* type): MdmDefinitionBase(id, name, nullptr), MdmRange()
+    {
+        Type = type;
+        Labels = nullptr;
+        Categories = nullptr;
+        HelperFields = nullptr;
+        Expression = nullptr;
+        SourceType = nullptr;
+        Axis = nullptr;
+    }
+
+    ~MdmDefinitionVariable()
+    {
+        if (Labels)       delete Labels;
+        if (Categories)   delete Categories;
+        if (HelperFields) delete HelperFields;
+    }
+
+    char* Type;
+    ::Labels* Labels;
+    ::Categories* Categories;
+    ::MdmHelperFields* HelperFields;
+    char* Expression;
+    char* SourceType;
+    char* Axis;
+
+};
+
+
+
+// <Design>
+
 struct MdmField;
 struct MdmBlockField;
 struct MdmLoopField;
@@ -465,7 +539,7 @@ struct MdmFieldBase
 };
 
 
-struct MdmBlockSubField : public MdmCollection<MdmFieldType*>
+struct MdmBlockSubField : public MdmCollection<MdmField*>
 {
     MdmBlockSubField(char* name, char* globalNs): MdmCollection()
     {
