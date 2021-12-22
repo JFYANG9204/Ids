@@ -1,21 +1,29 @@
 
 
 export interface MdmCollection<T> {
-    deleted?: T[];
-    values: T[];
+    deleted: T[];
+    values?: T[];
 }
 
 export interface MdmSettings {
-    properties?: Properties;
-    templates?: Templates;
+    properties?: MdmProperties;
+    templates?: MdmTemplates;
 }
 
 export interface MdmLabeled {
-    labels?: Labels;
-    labelStyles?: LabelStyles;
+    labels?: MdmLabels;
+    labelStyles?: MdmLabelStyles;
+    notes?: MdmNotes;
 }
 
-export interface Connection {
+export interface MdmRange {
+    min?: string;
+    max?: string;
+    minType?: string;
+    maxType?: string;
+}
+
+export interface MdmConnection {
     name: string;
     dbLocation: string;
     cdscName: string;
@@ -23,53 +31,55 @@ export interface Connection {
     id: string;
 }
 
-export interface DataSources {
+export interface MdmDataSources {
     default: string;
-    connections: Connection[];
+    connections: MdmConnection[];
 }
 
-export interface Property {
+export interface MdmProperty {
     name: string;
     value: string;
     type: string;
     context: string;
-    properties?: Property[];
+    properties?: MdmProperty[];
 }
 
-export type Properties = Property[];
-export type Templates = Properties;
-export type LabelStyles = Properties;
+export type MdmProperties = MdmProperty[];
+export type MdmTemplates = MdmProperties;
+export type MdmLabelStyles = MdmProperties;
+export type MdmNotes = MdmProperties;
 
-export interface Text {
+export interface MdmText {
     context: string;
     language: string;
     text: string;
 }
 
-export interface Labels {
+export interface MdmLabels {
     context: string;
-    texts: Text[];
+    texts: MdmText[];
 }
 
-export interface Category extends MdmSettings, MdmLabeled {
+export interface MdmCategory extends MdmSettings, MdmLabeled {
     id: string;
     name: string;
+    otherVariable?: MdmReference;
 }
 
-export interface Categories extends MdmCollection<Category>, MdmLabeled {
+export interface MdmCategories extends MdmCollection<MdmCategory>, MdmLabeled {
     globalNamespace: string;
     id?: string;
     name?: string;
 }
 
-export interface DefinitionVariable extends MdmSettings, MdmLabeled {
+export interface MdmDefinitionVariable extends MdmSettings, MdmLabeled {
     id: string;
     name: string;
     type: string;
-    categories?: Categories;
+    categories?: MdmCategories;
 }
 
-export type MdmDefinitionField = DefinitionVariable | Categories;
+export type MdmDefinitionField = MdmDefinitionVariable | MdmCategories;
 
 export interface MdmReference {
     id: string;
@@ -77,9 +87,9 @@ export interface MdmReference {
     ref: string;
 }
 
-export type Page = MdmReference;
+export type MdmPage = MdmReference;
 
-export interface Pages extends MdmCollection<Page> {
+export interface MdmPages extends MdmCollection<MdmPage> {
     name: string;
     globalNamespace: string;
 }
@@ -89,37 +99,37 @@ export interface MdmSubFields extends MdmCollection<MdmReference> {
     globalNamespace: string;
 }
 
-export interface Script {
+export interface MdmScript {
     name: string;
     default: string;
     text: string;
 }
 
-export interface ScriptType extends MdmCollection<Script> {
+export interface MdmScriptType extends MdmCollection<MdmScript> {
     type: string;
     context: string;
     interviewModes: string;
     useKeycodes: string;
 }
 
-export type Scripts = MdmCollection<ScriptType>;
+export type MdmScripts = MdmCollection<MdmScriptType>;
 
-export interface RoutingItem {
+export interface MdmRoutingItem {
     name: string;
     item: string;
 }
 
-export interface Routing {
+export interface MdmRouting {
     context: string;
     interviewModes: string;
     useKeycodes: string;
-    ritems?: RoutingItem[];
+    ritems?: MdmRoutingItem[];
 }
 
-export interface Routings {
+export interface MdmRoutings {
     name: string;
-    scripts?: Scripts;
-    routing?: Routing[];
+    scripts?: MdmScripts;
+    routing?: MdmRouting[];
 }
 
 export interface MdmBlockVarDefinition extends MdmLabeled, MdmSettings {
@@ -127,12 +137,154 @@ export interface MdmBlockVarDefinition extends MdmLabeled, MdmSettings {
     name: string;
     globalNamespace: string;
     fields?: MdmSubFields;
-    routings?: Routings;
-    pages?: Pages;
+    routings?: MdmRoutings;
+    pages?: MdmPages;
 }
 
-export type HelperFields = MdmCollection<MdmBlockVarDefinition>;
+export type MdmHelperFields = MdmCollection<MdmBlockVarDefinition>;
+
+export interface MdmVarDefinition extends MdmLabeled, MdmSettings, MdmRange {
+    id: string;
+    name: string;
+    type: string;
+    categories?: MdmCategories;
+    helperFields?: MdmHelperFields;
+}
+
+export interface MdmOtherVarDefinition extends MdmLabeled, MdmSettings {
+    id: string;
+    name: string;
+    type: string;
+    usageType: string;
+}
+
+export type MdmDefinition = MdmVarDefinition | MdmOtherVarDefinition | MdmCategories;
+
+export interface MdmSystem extends MdmCollection<MdmBlockVarDefinition> {
+    name: string;
+    globalNamespace: string;
+}
+
+export interface MdmVarInstance {
+    name: string;
+    sourceType: string;
+    variable: string;
+    fullName: string;
+}
 
 
+export type MdmSystemRouting = MdmRouting[];
+export type MdmMappings = MdmVarInstance[];
 
+//  Design
+
+export type MdmTypes = MdmSubFields;
+
+export interface MdmLoopSubFieldsDesign extends MdmSettings, MdmLabeled {
+    name: string;
+    globalNamespace: string;
+    types?: MdmTypes;
+    fields: MdmSubFields;
+    pages?: MdmPages;
+}
+
+export interface MdmLoopDesign extends MdmLabeled, MdmSettings {
+    id: string;
+    name: string;
+    globalNamespace: string;
+    categories?: MdmCategories;
+    types?: MdmTypes;
+    class: MdmLoopSubFieldsDesign;
+    pages?: MdmPages;
+}
+
+export type MdmFieldDesignItem = MdmBlockVarDefinition | MdmLoopDesign;
+export interface MdmFieldDesign extends MdmCollection<MdmFieldDesignItem> {
+    name: string;
+    globalNamespace: string;
+}
+
+export interface MdmDesign {
+    fields: MdmFieldDesign;
+    types: MdmTypes;
+    pages: MdmPages;
+    routings: MdmRoutings;
+    properties: MdmProperties;
+}
+
+export interface MdmLanguage {
+    name: string;
+    id: string;
+    properties: MdmProperties;
+}
+
+export interface MdmLanguages extends MdmCollection<MdmLanguage> {
+    base: string;
+}
+
+export interface MdmAlternative {
+    name: string;
+}
+
+export type MdmAlternatives = MdmCollection<MdmAlternative>;
+
+export interface MdmContext {
+    name: string;
+    alternatives?: MdmAlternatives;
+}
+
+export interface MdmContexts extends MdmCollection<MdmContext> {
+    base: string;
+}
+
+export type MdmLabelTypes = MdmContexts;
+export type MdmRoutingContexts = MdmContexts;
+export type MdmScriptTypes = MdmContexts;
+
+export interface MdmUser {
+    name: string;
+    fileVersion: string;
+    comment: string;
+}
+
+export interface MdmSaveLog {
+    fileVersion: string;
+    versionSet: string;
+    userName: string;
+    date: string;
+    count: string;
+    user: MdmUser;
+}
+
+export type MdmSaveLogs = MdmSaveLog[];
+
+export interface MdmAtom {
+    name: string;
+}
+
+export type MdmAtoms = MdmAtom[];
+
+export interface MdmCategoryId {
+    name: string;
+    value: string;
+}
+
+export type MdmCategoryMap = MdmCategoryId[];
+
+export interface MdmDocument extends MdmLabeled, MdmSettings {
+    mdmCreateVersion: string;
+    mdmLastVersion: string;
+    id: string;
+    dataVersion: string;
+    dataSubVersion: string;
+    systemVariable: string;
+    dbFilterValidation: string;
+    xmlns: string;
+    datasources: MdmDataSources;
+    definition: MdmDefinition[];
+    system: MdmSystem;
+    systemRouting: MdmSystemRouting;
+    mappings: MdmMappings;
+    design: MdmDesign;
+}
 

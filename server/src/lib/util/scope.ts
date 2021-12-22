@@ -303,6 +303,9 @@ export class ScopeHandler {
         name: string,
         node: DeclarationBase
     ) {
+
+        const restrainName = [ "cat", "cat_1", "cat_2" ];
+
         if (node instanceof MetadataBase) {
             if (this.isRedeclared(scope, name, true)) {
                 this.raise(node.name, ErrorMessages["VarRedeclaration"], false, name);
@@ -314,7 +317,9 @@ export class ScopeHandler {
             this.inEnumerator       ||
             this.inFunction) {
             if (this.isRedeclared(scope, name)) {
-                this.raise(node.name, ErrorMessages["VarRedeclaration"], false, name);
+                if (!restrainName.includes(name.toLowerCase())) {
+                    this.raise(node.name, ErrorMessages["VarRedeclaration"], false, name);
+                }
                 return true;
             }
             return false;
@@ -322,7 +327,9 @@ export class ScopeHandler {
         if (this.isRedeclared(scope, name) ||
             this.isRedeclared(this.global, name) ||
             this.isRedeclared(this.store, name)) {
-            this.raise(node.name, ErrorMessages["VarRedeclaration"], false, name);
+            if (!restrainName.includes(name.toLowerCase())) {
+                this.raise(node.name, ErrorMessages["VarRedeclaration"], false, name);
+            }
             return true;
         }
         return false;
