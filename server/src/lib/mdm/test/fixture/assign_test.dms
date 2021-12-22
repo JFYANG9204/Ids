@@ -1,0 +1,12 @@
+
+
+Event(OnNextCase, "Clean the data")
+
+    For Each cat In M4_Image.Categories
+
+        For Each cat_1 In NEWSLP_Image[{V1}].Slice.Categories
+            If NEWSLP[cat_1.name].Slice * cat Then NEWSLP_Image[cat.name].Slice = NEWSLP_Image[cat.name].Slice + cat_1 + {base}
+        Next
+
+    Next
+end Event

@@ -867,7 +867,8 @@ export class TypeUtil extends UtilParser {
 
         if ((objType.type !== "ClassOrInterfaceDeclaration") &&
             (objType.type !== "PropertyDeclaration")         &&
-            (objType.type !== "ArrayDeclarator")) {
+            (objType.type !== "ArrayDeclarator")             &&
+            (objType.type !== "SingleVarDeclarator")) {
             if (!this.scope.inFunction &&
                 this.options.raiseTypeError &&
                 raiseError) {
@@ -896,6 +897,8 @@ export class TypeUtil extends UtilParser {
                     objProp.class.namespace?.name.name)?.result;
             } else if (objType.type === "ArrayDeclarator") {
                 parent = this.scope.get("Array")?.result;
+            } else if (objType.type === "SingleVarDeclarator") {
+                parent = this.maybeDeclaratorBinding(objType);
             }
             if (parent && parent.type === "ClassOrInterfaceDeclaration") {
                 child = this.getPropertyOrMethod(

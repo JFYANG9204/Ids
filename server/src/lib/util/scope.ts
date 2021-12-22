@@ -280,8 +280,10 @@ export class ScopeHandler {
     }
 
     declareUndefined(name: Identifier, type?: DeclarationBase) {
-        let declare = new SingleVarDeclarator(this.parser, this.parser.state.pos, this.parser.state.curPostion());
+        let declare = new SingleVarDeclarator(this.parser, name.start, name.loc.start);
         declare.name = name;
+        declare.loc.fileName = name.loc.fileName;
+        declare.type = "SingleVarDeclarator";
         if (!type) {
             declare.bindingType = this.get("IMDMField", "MDMLib")?.result;
             declare.binding = this.createBindingTypeFromId(name, "IMDMField", "MDMLib");
@@ -535,6 +537,10 @@ export class ScopeHandler {
     }
 
     updateUndefine(name: string, newType: DeclarationBase) {
+        // 检查是否为MDMField，由于MDMField可以直接被赋值，但是不应该改变其类型
+        if (this.getUndefined(name)?.name.name === "IMDMField") {
+            return;
+        }
         this.currentScope().undefined.set(name.toLowerCase(), newType);
     }
 
