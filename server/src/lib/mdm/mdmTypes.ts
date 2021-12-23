@@ -8,6 +8,7 @@ export interface MdmCollection<T> {
 export interface MdmSettings {
     properties?: MdmProperties;
     templates?: MdmTemplates;
+    styles?: MdmStyles;
 }
 
 export interface MdmLabeled {
@@ -21,6 +22,7 @@ export interface MdmRange {
     max?: string;
     minType?: string;
     maxType?: string;
+    rangeExp?: string;
 }
 
 export interface MdmConnection {
@@ -32,7 +34,7 @@ export interface MdmConnection {
 }
 
 export interface MdmDataSources {
-    default: string;
+    default?: string;
     connections: MdmConnection[];
 }
 
@@ -42,12 +44,14 @@ export interface MdmProperty {
     type: string;
     context: string;
     properties?: MdmProperty[];
+    styles?: MdmStyles;
 }
 
 export type MdmProperties = MdmProperty[];
 export type MdmTemplates = MdmProperties;
 export type MdmLabelStyles = MdmProperties;
 export type MdmNotes = MdmProperties;
+export type MdmStyles = MdmProperties;
 
 export interface MdmText {
     context: string;
@@ -63,20 +67,41 @@ export interface MdmLabels {
 export interface MdmCategory extends MdmSettings, MdmLabeled {
     id: string;
     name: string;
+    fixed?: string;
+    noFilter?: string;
+    otherLocal?: string;
+    missing?: string;
+    exclusive?: string;
+    factorValue?: string;
+    factorType?: string;
+    keycode?: string;
+    expression?: string;
     otherVariable?: MdmReference;
+    multiplierVariable?: MdmReference;
 }
 
-export interface MdmCategories extends MdmCollection<MdmCategory>, MdmLabeled {
+export interface MdmElement extends MdmCategory {
+    type: string;
+}
+
+export interface MdmCategories extends MdmCollection<MdmCategory | MdmElement | MdmCategories>, MdmLabeled {
     globalNamespace: string;
     id?: string;
     name?: string;
+    categoriesRef?: string;
+    inline?: string;
+    refName?: string;
+    fixed?: string;
+    noFilter?: string;
 }
 
 export interface MdmDefinitionVariable extends MdmSettings, MdmLabeled {
     id: string;
     name: string;
     type: string;
+    validation?: string;
     categories?: MdmCategories;
+    noCaseData?: string;
 }
 
 export type MdmDefinitionField = MdmDefinitionVariable | MdmCategories;
@@ -94,7 +119,7 @@ export interface MdmPages extends MdmCollection<MdmPage> {
     globalNamespace: string;
 }
 
-export interface MdmSubFields extends MdmCollection<MdmReference> {
+export interface MdmSubFields extends MdmCollection<MdmReference | MdmBlockVarDefinition | MdmLoopDesign> {
     name: string;
     globalNamespace: string;
 }
@@ -138,10 +163,11 @@ export interface MdmBlockVarDefinition extends MdmLabeled, MdmSettings {
     globalNamespace: string;
     fields?: MdmSubFields;
     routings?: MdmRoutings;
+    types?: MdmTypes;
     pages?: MdmPages;
 }
 
-export type MdmHelperFields = MdmCollection<MdmBlockVarDefinition>;
+export type MdmHelperFields = MdmCollection<MdmBlockVarDefinition | MdmReference>;
 
 export interface MdmVarDefinition extends MdmLabeled, MdmSettings, MdmRange {
     id: string;
@@ -156,9 +182,14 @@ export interface MdmOtherVarDefinition extends MdmLabeled, MdmSettings {
     name: string;
     type: string;
     usageType: string;
+    isOther: true;
 }
 
-export type MdmDefinition = MdmVarDefinition | MdmOtherVarDefinition | MdmCategories;
+export interface MdmMultiVarDefinition extends MdmOtherVarDefinition {
+    isMultiplier: true;
+}
+
+export type MdmDefinition = MdmVarDefinition | MdmOtherVarDefinition | MdmCategories | MdmMultiVarDefinition;
 
 export interface MdmSystem extends MdmCollection<MdmBlockVarDefinition> {
     name: string;
@@ -178,23 +209,34 @@ export type MdmMappings = MdmVarInstance[];
 
 //  Design
 
-export type MdmTypes = MdmSubFields;
+export type MdmTypes = MdmPages;
 
 export interface MdmLoopSubFieldsDesign extends MdmSettings, MdmLabeled {
     name: string;
     globalNamespace: string;
     types?: MdmTypes;
-    fields: MdmSubFields;
+    fields?: MdmSubFields;
     pages?: MdmPages;
 }
+
+export interface MdmLoopRange {
+    upperbound?: string;
+    lowerbound?: string;
+}
+
+export type MdmLoopRanges = MdmLoopRange[];
 
 export interface MdmLoopDesign extends MdmLabeled, MdmSettings {
     id: string;
     name: string;
-    globalNamespace: string;
+    globalNamespace?: string;
+    isGrid?: string;
+    iteratorType: string;
+    type: string;
     categories?: MdmCategories;
+    ranges?: MdmLoopRanges;
     types?: MdmTypes;
-    class: MdmLoopSubFieldsDesign;
+    fields?: MdmLoopSubFieldsDesign;
     pages?: MdmPages;
 }
 
@@ -271,7 +313,7 @@ export interface MdmCategoryId {
 
 export type MdmCategoryMap = MdmCategoryId[];
 
-export interface MdmDocument extends MdmLabeled, MdmSettings {
+export interface MdmMetadata extends MdmLabeled, MdmSettings {
     mdmCreateVersion: string;
     mdmLastVersion: string;
     id: string;
@@ -286,5 +328,13 @@ export interface MdmDocument extends MdmLabeled, MdmSettings {
     systemRouting: MdmSystemRouting;
     mappings: MdmMappings;
     design: MdmDesign;
+    languages: MdmLanguages;
+    contexts: MdmContexts;
+    labelTypes: MdmLabelTypes;
+    routingContexts: MdmRoutingContexts;
+    scriptTypes: MdmScriptTypes;
+    saveLogs: MdmSaveLogs;
+    atoms: MdmAtoms;
+    categoryMap: MdmCategoryMap;
 }
 

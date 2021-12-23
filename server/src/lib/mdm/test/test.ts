@@ -4,11 +4,24 @@ import { Builder, parseString } from "xml2js";
 import { Parser } from "../..";
 import { createBasicOptions } from "../../options";
 import { builtInModule } from "../../../declaration";
+import { DOMParser, XMLSerializer } from "xmldom";
 
-const xmlPath = resolve("./server/src/lib/mdm/test/fixture/assign_test.dms");
-const options = createBasicOptions(xmlPath, true);
-options.treatUnkownAsQuesion = true;
-const parser = new Parser(options, readFileSync(xmlPath).toString());
-parser.parse(builtInModule.scope);
+// const xmlPath = resolve("./server/src/lib/mdm/test/fixture/77403614_R1.MDD");
+// let fileStr = readFileSync(xmlPath).toString();
+// let parser = new DOMParser();
+// let result = parser.parseFromString(fileStr);
+// for (let i = 0; i < result.childNodes.length; ++i) {
+//     const element = result.childNodes[i];
+//     console.log(element.nodeType);
+//     if (element.firstChild) {
+//         let child = element.firstChild;
+//         console.log(child["getAttribute"]("mdm_createversion"));
+//     }
+// }
+
+let a = { a: "a", b: "b" };
+let b = { c: "d", e: "e", a: "b" };
+let c = Object.assign(a, b);
+
 console.log("end");
 
