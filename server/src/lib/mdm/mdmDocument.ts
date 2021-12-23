@@ -1,27 +1,41 @@
 import { readFileSync } from "fs";
 import { DOMParser } from "xmldom";
 import {
+    MdmAlternative,
+    MdmAlternatives,
+    MdmAtoms,
     MdmBlockVarDefinition,
     MdmCategories,
     MdmCategory,
     MdmCollection,
     MdmConnection,
+    MdmContext,
+    MdmContexts,
     MdmDataSources,
+    MdmDefinition,
     MdmElement,
+    MdmHelperFields,
     MdmLabeled,
     MdmLabels,
     MdmLabelStyles,
+    MdmLanguage,
+    MdmLanguages,
     MdmLoopDesign,
     MdmLoopRanges,
     MdmLoopSubFieldsDesign,
+    MdmMappings,
     MdmNotes,
+    MdmOtherVarDefinition,
     MdmPages,
     MdmProperties,
     MdmProperty,
+    MdmRange,
     MdmReference,
     MdmRouting,
     MdmRoutingItem,
     MdmRoutings,
+    MdmSaveLog,
+    MdmSaveLogs,
     MdmScript,
     MdmScripts,
     MdmScriptType,
@@ -30,7 +44,9 @@ import {
     MdmSubFields,
     MdmTemplates,
     MdmText,
-    MdmTypes
+    MdmTypes,
+    MdmUser,
+    MdmVarDefinition
 } from "./mdmTypes";
 
 export class MdmDocument {
@@ -543,6 +559,215 @@ export class MdmDocument {
             pages,
             types
         }, settings);
+    }
+
+    private readHelperFields(node: any): MdmHelperFields {
+        let collection = this.readMdmCollection<MdmBlockVarDefinition | MdmReference>(node, [
+            {
+                read: this.readReference,
+                test: node => this.getTagName(node) === "variable"
+            },
+            {
+                read: this.readBlock,
+                test: node => this.getTagName(node) === "class"
+            }
+        ], true);
+        return Object.assign({
+            id: this.getAttributeNotEmpty(node, "id"),
+            name: this.getAttributeNotEmpty(node, "name"),
+            globalNamespace: this.getAttributeNotEmpty(node, "global-name-space"),
+        }, collection);
+    }
+
+    private readDefinitionRange(node: any): MdmRange {
+        return {
+            min: this.getAttribute(node, "min"),
+            max: this.getAttribute(node, "max"),
+            minType: this.getAttribute(node, "mintype"),
+            maxType: this.getAttribute(node, "maxtype"),
+            rangeExp: this.getAttribute(node, "rangeexp")
+        };
+    }
+
+    private readVarDefinition(node: any): MdmVarDefinition {
+        let categories: MdmCategories | undefined;
+        let helperFields: MdmHelperFields | undefined;
+        let settings = this.readSettingAndLabel(node, child => {
+            let tagName = this.getTagName(child);
+            switch (tagName) {
+                case "categories":   categories = this.readCategories(child);      break;
+                case "helperfields": helperFields = this.readHelperFields(child);  break;
+                default:             this.unknownNode(child, node);                break;
+            }
+        });
+        let range = this.readDefinitionRange(node);
+        return Object.assign({
+            id: this.getAttributeNotEmpty(node, "id"),
+            name: this.getAttributeNotEmpty(node, "name"),
+            type: this.getAttributeNotEmpty(node, "type"),
+            categories,
+            helperFields
+        }, settings, range);
+    }
+
+    private readOtherVarDefinition(node: any, type: "other" | "multi"): MdmOtherVarDefinition {
+        let settings = this.readSettingAndLabel(node, () => {});
+        return Object.assign({
+            id: this.getAttributeNotEmpty(node, "id"),
+            name: this.getAttributeNotEmpty(node, "name"),
+            type: this.getAttributeNotEmpty(node, "type"),
+            usageType: this.getAttributeNotEmpty(node, "usagetype"),
+            isOtherOrMulti: type
+        }, settings);
+    }
+
+    private readDefinitions(node: any): MdmDefinition[] {
+        let definitions: MdmDefinition[] = [];
+        this.iterateChild(node, child => {
+            let tageName = this.getTagName(child);
+            switch (tageName) {
+                case "othervariable":       definitions.push(this.readOtherVarDefinition(child, "other")); break;
+                case "multiplier-variable": definitions.push(this.readOtherVarDefinition(child, "multi")); break;
+                case "variable":            definitions.push(this.readVarDefinition(child));               break;
+                case "categories":          definitions.push(this.readCategories(child));                  break;
+                default:                    this.unknownNode(child, node);                                 break;
+            }
+        });
+        return definitions;
+    }
+
+    private readMappings(node: any): MdmMappings {
+        let mappings: MdmMappings = [];
+        this.iterateChild(node, child => {
+            if (this.getTagName(child) === "varinstance") {
+                mappings.push({
+                    name: this.getAttributeNotEmpty(child, "name"),
+                    sourceType: this.getAttributeNotEmpty(child, "sourcetype"),
+                    variable: this.getAttributeNotEmpty(child, "variable"),
+                    fullName: this.getAttributeNotEmpty(child, "fullname")
+                });
+            } else {
+                this.unknownNode(child, node);
+            }
+        });
+        return mappings;
+    }
+
+    private readLanguage(node: any): MdmLanguage {
+        let properties: MdmProperties | undefined;
+        this.iterateChild(node, child => {
+            if (this.getTagName(child) === "properties") {
+                properties = this.readProperties(child);
+            } else {
+                this.unknownNode(child, node);
+            }
+        });
+        return {
+            name: this.getAttributeNotEmpty(node, "name"),
+            id: this.getAttributeNotEmpty(node, "id"),
+            properties
+        };
+    }
+
+    private readLanguages(node: any): MdmLanguages {
+        let collection = this.readMdmCollection(node, [
+            {
+                read: this.readLanguage,
+                test: node => this.getTagName(node) === "language"
+            }
+        ], true);
+        return Object.assign({
+            base: this.getAttributeNotEmpty(node, "base")
+        }, collection);
+    }
+
+    private readAlternatives(node: any): MdmAlternatives {
+        return this.readMdmCollection<MdmAlternative>(node, [
+            {
+                read: node => { return { name: this.getAttributeNotEmpty(node, "name") }; },
+                test: node => this.getTagName(node) === "alternative"
+            }
+        ], true);
+    }
+
+    private readContext(node: any): MdmContext {
+        let alternatives: MdmAlternatives | undefined;
+        this.iterateChild(node, child => {
+            if (this.getTagName(child) === "alternatives") {
+                alternatives = this.readAlternatives(child);
+            } else {
+                this.unknownNode(child, node);
+            }
+        });
+        return {
+            name: this.getAttributeNotEmpty(node, "name"),
+            alternatives
+        };
+    }
+
+    private readContexts(node: any): MdmContexts {
+        let collection = this.readMdmCollection(node, [
+            {
+                read: this.readContext,
+                test: node => this.getTagName(node) === "context"
+            }
+        ], true);
+        return Object.assign({
+            base: this.getAttributeNotEmpty(node, "base")
+        }, collection);
+    }
+
+    private readAtoms(node: any): MdmAtoms {
+        let atoms: MdmAtoms = [];
+        this.iterateChild(node, child => {
+            if (this.getTagName(child) === "atom") {
+                atoms.push({
+                    name: this.getAttributeNotEmpty(child, "name")
+                });
+            } else {
+                this.unknownNode(child, node);
+            }
+        });
+        return atoms;
+    }
+
+    private readUser(node: any): MdmUser {
+        return {
+            name: this.getAttributeNotEmpty(node, "name"),
+            fileVersion: this.getAttributeNotEmpty(node, "fileversion"),
+            comment: this.getAttributeNotEmpty(node, "comment")
+        };
+    }
+
+    private readSaveLog(node: any): MdmSaveLog {
+        let user: MdmUser | undefined;
+        this.iterateChild(node, child => {
+            if (this.getTagName(child) === "user") {
+                user = this.readUser(child);
+            } else {
+                this.unknownNode(child, node);
+            }
+        });
+        return {
+            fileVersion: this.getAttributeNotEmpty(node, "fileversion"),
+            versionSet: this.getAttributeNotEmpty(node, "versionset"),
+            userName: this.getAttributeNotEmpty(node, "username"),
+            date: this.getAttributeNotEmpty(node, "date"),
+            count: this.getAttributeNotEmpty(node, "count"),
+            user
+        };
+    }
+
+    private readSaveLogs(node: any): MdmSaveLogs {
+        let logs: MdmSaveLogs = [];
+        this.iterateChild(node, child => {
+            if (this.getTagName(child) === "savelog") {
+                logs.push(this.readSaveLog(child));
+            } else {
+                this.unknownNode(child, node);
+            }
+        });
+        return logs;
     }
 
 }

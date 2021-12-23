@@ -1,3 +1,4 @@
+import { type } from "os";
 
 
 export interface MdmCollection<T> {
@@ -167,7 +168,11 @@ export interface MdmBlockVarDefinition extends MdmLabeled, MdmSettings {
     pages?: MdmPages;
 }
 
-export type MdmHelperFields = MdmCollection<MdmBlockVarDefinition | MdmReference>;
+export interface MdmHelperFields extends MdmCollection<MdmBlockVarDefinition | MdmReference> {
+    id: string;
+    name: string;
+    globalNamespace: string;
+};
 
 export interface MdmVarDefinition extends MdmLabeled, MdmSettings, MdmRange {
     id: string;
@@ -182,12 +187,10 @@ export interface MdmOtherVarDefinition extends MdmLabeled, MdmSettings {
     name: string;
     type: string;
     usageType: string;
-    isOther: true;
+    isOtherOrMulti: "other" | "multi";
 }
 
-export interface MdmMultiVarDefinition extends MdmOtherVarDefinition {
-    isMultiplier: true;
-}
+export type MdmMultiVarDefinition = MdmOtherVarDefinition;
 
 export type MdmDefinition = MdmVarDefinition | MdmOtherVarDefinition | MdmCategories | MdmMultiVarDefinition;
 
@@ -257,7 +260,7 @@ export interface MdmDesign {
 export interface MdmLanguage {
     name: string;
     id: string;
-    properties: MdmProperties;
+    properties?: MdmProperties;
 }
 
 export interface MdmLanguages extends MdmCollection<MdmLanguage> {
@@ -295,7 +298,7 @@ export interface MdmSaveLog {
     userName: string;
     date: string;
     count: string;
-    user: MdmUser;
+    user?: MdmUser;
 }
 
 export type MdmSaveLogs = MdmSaveLog[];
