@@ -7,6 +7,7 @@ import {
     MdmBlockVarDefinition,
     MdmCategories,
     MdmCategory,
+    MdmCategoryMap,
     MdmCollection,
     MdmConnection,
     MdmContext,
@@ -768,6 +769,21 @@ export class MdmDocument {
             }
         });
         return logs;
+    }
+
+    private readCategoryMap(node: any): MdmCategoryMap {
+        let map: MdmCategoryMap = [];
+        this.iterateChild(node, child => {
+            if (this.getTagName(child) === "categoryid") {
+                map.push({
+                    name: this.getAttributeNotEmpty(child, "name"),
+                    value: this.getAttributeNotEmpty(child, "value")
+                });
+            } else {
+                this.unknownNode(child, node);
+            }
+        });
+        return map;
     }
 
 }
