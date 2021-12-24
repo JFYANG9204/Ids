@@ -3111,17 +3111,72 @@
                             <text context="QUESTION" xml:lang="zh-cn"></text>
                         </labels>
                     </element>
+                    <element id="_80fa51fb-29ea-4379-bf3d-167939cf37c1" name="category" type="14">
+                        <labels context="LABEL">
+                            <text context="QUESTION" xml:lang="zh-cn"></text>
+                        </labels>
+                    </element>
+                    <element id="_b404ba99-ea9d-4a51-beb0-ce5691470fdd" name="maximum" type="12">
+                        <labels context="LABEL">
+                            <text context="QUESTION" xml:lang="zh-cn"></text>
+                        </labels>
+                    </element>
+                    <element id="_2e6c1b27-43c9-4e06-88c3-20f1395e4104" name="mean" type="7">
+                        <labels context="LABEL">
+                            <text context="QUESTION" xml:lang="zh-cn"></text>
+                        </labels>
+                    </element>
+                    <element id="_4555e02f-87ae-44df-9893-c836a41bc255" name="minimum" type="11">
+                        <labels context="LABEL">
+                            <text context="QUESTION" xml:lang="zh-cn"></text>
+                        </labels>
+                    </element>
+                    <element id="_fe089ee9-d7e2-4275-b234-1319d304d52d" name="samplevariance" type="10">
+                        <labels context="LABEL">
+                            <text context="QUESTION" xml:lang="zh-cn"></text>
+                        </labels>
+                    </element>
+                    <element id="_5c8323df-98d5-4ea8-b0e2-0110410f4779" name="stddev" type="8">
+                        <labels context="LABEL">
+                            <text context="QUESTION" xml:lang="zh-cn"></text>
+                        </labels>
+                    </element>
+                    <element id="_59031166-0753-4c8c-a9be-7ac4fdfcbb3d" name="stderr" type="9">
+                        <labels context="LABEL">
+                            <text context="QUESTION" xml:lang="zh-cn"></text>
+                        </labels>
+                    </element>
+                    <element id="_92f7a12d-6f4f-42f9-9ff6-94508a036d9b" name="subheading" type="1">
+                        <labels context="LABEL">
+                            <text context="QUESTION" xml:lang="zh-cn"></text>
+                        </labels>
+                    </element>
+                    <element id="_c955d76a-1258-45a0-8844-33ecc7f5556e" name="subtotal" type="3">
+                        <labels context="LABEL">
+                            <text context="QUESTION" xml:lang="zh-cn"></text>
+                        </labels>
+                    </element>
+                    <element id="_5d8ee88c-23ca-4cab-946b-98f67138f6fb" name="summary" type="4">
+                        <labels context="LABEL">
+                            <text context="QUESTION" xml:lang="zh-cn"></text>
+                        </labels>
+                    </element>
+                    <element id="_9480bdc1-7cc9-40a0-b663-1d7b57c1015e" name="total" type="6">
+                        <labels context="LABEL">
+                            <text context="QUESTION" xml:lang="zh-cn"></text>
+                        </labels>
+                    </element>
                     <categories id="_fa8137e0-83e1-4872-a2f7-a30607575473" name="list" categoriesref="3932e138-78df-485e-85d3-49b6e2dce5c5" global-name-space="-1" ref_name="list">
                         <deleted />
                         <properties>
                             <property name="DisplayOrder" value="Randomized" type="8" context="Question" />
                         </properties>
                     </categories>
-                    <category id="_1431cb49-a906-43bb-b51e-d61e5105996b" name="_1" keycode="1" factor-value="1" factor-type="3">
+                    <element id="_1431cb49-a906-43bb-b51e-d61e5105996b" name="_1" keycode="1" type="14" factor-value="1" factor-type="3" nofilter="-1" fixed="-1" expression="respondent.serial &gt; 0">
                         <labels context="LABEL">
                             <text context="QUESTION" xml:lang="zh-cn">A</text>
                         </labels>
-                    </category>
+                    </element>
                     <category id="_eb5f11a5-1515-48d4-83b3-e2616419155a" name="_2" nofilter="-1">
                         <labels context="LABEL">
                             <text context="QUESTION" xml:lang="zh-cn">B</text>
@@ -3154,7 +3209,7 @@
                     <deleted />
                 </helperfields>
             </variable>
-            <variable id="8358973b-6d41-4723-acfb-1458ecfe57f6" name="TestQ2" type="3">
+            <variable id="8358973b-6d41-4723-acfb-1458ecfe57f6" name="TestQ2" type="3" min="1" mintype="3" max="1" maxtype="3">
                 <labels context="LABEL">
                     <text context="QUESTION" xml:lang="zh-cn">Test Q2</text>
                 </labels>
@@ -3168,10 +3223,14 @@
                     <text context="QUESTION" xml:lang="zh-cn">exact</text>
                 </labels>
             </othervariable>
-            <variable id="a620be72-abf1-4c17-b125-1ee96a5095ba" name="exact" type="1" min="19" mintype="3" max="64" maxtype="3" rangeexp="[19 .. 64]">
+            <variable id="a620be72-abf1-4c17-b125-1ee96a5095ba" name="exact" type="1" min="19" mintype="3" max="64" maxtype="3" initialanswer="21" initialanswer_type="3" rangeexp="[19 .. 64]" no-casedata="-1" precisions="39">
                 <labels context="LABEL">
                     <text context="QUESTION" xml:lang="zh-cn">exact</text>
                 </labels>
+                <helperfields name="@helperfields" global-name-space="-1">
+                    <deleted />
+                    <variable id="_0ea6f163-090c-4a95-a3df-e6a070f19bf0" name="Codes" ref="0ea6f163-090c-4a95-a3df-e6a070f19bf0" />
+                </helperfields>
             </variable>
             <categories id="3932e138-78df-485e-85d3-49b6e2dce5c5" name="list" global-name-space="0">
                 <labels context="LABEL">
@@ -3204,6 +3263,779 @@
                     <text context="QUESTION" xml:lang="zh-cn">multi</text>
                 </labels>
             </multiplier-variable>
+            <variable id="8c25453d-0a54-40fd-8b92-55dbb858d8e0" name="TestDouble" type="6">
+                <labels context="LABEL">
+                    <text context="QUESTION" xml:lang="zh-cn"></text>
+                </labels>
+            </variable>
+            <variable id="64f7cc50-2648-4c51-8fb3-d6d900b25987" name="testDate" type="5">
+                <labels context="LABEL">
+                    <text context="QUESTION" xml:lang="zh-cn"></text>
+                </labels>
+            </variable>
+            <variable id="4a71f23a-97d4-433c-a975-82b37e669ac4" name="testText" type="2" min="1" mintype="3" max="20" maxtype="3">
+                <labels context="LABEL">
+                    <text context="QUESTION" xml:lang="zh-cn"></text>
+                </labels>
+            </variable>
+            <variable id="26fb306b-77e1-473a-a723-ecadd4152ca1" name="testText2" type="2" max="20" maxtype="3">
+                <labels context="LABEL">
+                    <text context="QUESTION" xml:lang="zh-cn"></text>
+                </labels>
+            </variable>
+            <variable id="3e3dc872-4c35-4768-9bbf-add603d0ba71" name="testText3" type="2" min="1" mintype="3">
+                <labels context="LABEL">
+                    <text context="QUESTION" xml:lang="zh-cn"></text>
+                </labels>
+            </variable>
+            <variable id="0ea6f163-090c-4a95-a3df-e6a070f19bf0" name="Codes" type="3" usagetype="528">
+                <labels context="LABEL">
+                    <text context="QUESTION" xml:lang="zh-cn">Codes</text>
+                </labels>
+                <categories global-name-space="-1">
+                    <deleted />
+                    <category id="_ccc31a50-5608-441d-8fbb-bbbc6805aca6" name="DontKnow" fixed="-1" nofilter="-1" missing="dontknow" exclusive="-1">
+                        <labels context="LABEL">
+                            <text context="QUESTION" xml:lang="zh-cn">Don't know</text>
+                        </labels>
+                    </category>
+                    <category id="_b41f502e-4a0e-4f21-a387-77ea640fbb5d" name="Refused" fixed="-1" nofilter="-1" missing="refuse" exclusive="-1">
+                        <labels context="LABEL">
+                            <text context="QUESTION" xml:lang="zh-cn">Refused to answer</text>
+                        </labels>
+                    </category>
+                </categories>
+            </variable>
+            <variable id="466316a7-6a39-4555-898c-e3193a225bb0" name="testLong" type="1">
+                <labels context="LABEL">
+                    <text context="QUESTION" xml:lang="zh-cn"></text>
+                </labels>
+                <categories global-name-space="-1">
+                    <deleted />
+                    <category id="_2dbda1e2-420a-49aa-a2e7-7bc98a786b3e" name="low" factor-value="5000" factor-type="3">
+                        <labels context="LABEL">
+                            <text context="QUESTION" xml:lang="zh-cn">0 to 10,000</text>
+                        </labels>
+                    </category>
+                    <category id="_96a34b5a-5357-4c36-8f75-72068e3c8d2c" name="medium" factor-value="15000" factor-type="3">
+                        <labels context="LABEL">
+                            <text context="QUESTION" xml:lang="zh-cn">10,000 to 20,000</text>
+                        </labels>
+                    </category>
+                    <category id="_998530e6-92a3-4912-a57a-4b616cca5ecc" name="high" factor-value="25000" factor-type="3">
+                        <labels context="LABEL">
+                            <text context="QUESTION" xml:lang="zh-cn">20,000 to 30,000</text>
+                        </labels>
+                    </category>
+                </categories>
+            </variable>
+            <variable id="9eae6e20-37f1-4363-a634-97b812042ac3" name="testDate2" type="5" min="7/12/2002" mintype="7" max="7/11/2003" maxtype="7" rangeexp="[&quot;12-July-02 8:00am&quot; .. &quot;11-July-03 6:00pm&quot;]">
+                <labels context="LABEL">
+                    <text context="QUESTION" xml:lang="zh-cn"></text>
+                </labels>
+            </variable>
+            <variable id="357daf83-a28c-4bdb-96a0-880e803e9e4c" name="testDate3" type="5" min="7/12/2001" mintype="7" rangeexp="[&quot;12-July-01&quot; .. ]">
+                <labels context="LABEL">
+                    <text context="QUESTION" xml:lang="zh-cn"></text>
+                </labels>
+            </variable>
+            <variable id="29be6d78-162c-432d-bfa1-42900b7afe54" name="testDate4" type="5" max="7/12/2005" maxtype="7" rangeexp="[ .. &quot;07-12-05&quot;]">
+                <labels context="LABEL">
+                    <text context="QUESTION" xml:lang="zh-cn"></text>
+                </labels>
+            </variable>
+            <variable id="9d442338-23d2-4c71-a740-9fd730b156ac" name="testDate5" type="5" min="12:00:00 AM" mintype="7" max="2:00:00 AM" maxtype="7" rangeexp="[&quot;12:00am&quot;, &quot;1:00am&quot;, &quot;2:00am&quot;]">
+                <labels context="LABEL">
+                    <text context="QUESTION" xml:lang="zh-cn"></text>
+                </labels>
+            </variable>
+            <variable id="ae0cde82-5550-48bf-92b3-caae0e3643e8" name="testDate6" type="5" min="8:00:00 AM" mintype="7" max="6:00:00 PM" maxtype="7" rangeexp="[&quot;8:00am&quot; .. &quot;12:30pm&quot;, &quot;1:00pm&quot; .. &quot;6:00pm&quot;]">
+                <labels context="LABEL">
+                    <text context="QUESTION" xml:lang="zh-cn"></text>
+                </labels>
+            </variable>
+            <variable id="64178bd0-fd3d-43da-a803-455a64932aec" name="testDate7" type="5" min="12/1/2003" mintype="7" max="2/1/2004" maxtype="7" rangeexp="[&quot;1-Dec-03&quot; .. &quot;1-Feb-04&quot;, ^&quot;25-Dec-03&quot; .. &quot;26-Dec-03&quot;]">
+                <labels context="LABEL">
+                    <text context="QUESTION" xml:lang="zh-cn"></text>
+                </labels>
+                <helperfields name="@helperfields" global-name-space="-1">
+                    <deleted />
+                    <variable id="_524d01c2-c301-4a50-aa20-ee95a32bc454" name="Codes" ref="524d01c2-c301-4a50-aa20-ee95a32bc454" />
+                </helperfields>
+            </variable>
+            <variable id="3867c3a6-955e-404a-952b-9bdc1c79bf1c" name="testDate8" type="5">
+                <labels context="LABEL">
+                    <text context="QUESTION" xml:lang="zh-cn"></text>
+                </labels>
+                <categories global-name-space="-1">
+                    <deleted />
+                    <category id="_e48ef84d-ad35-4c93-a2b8-4fbd68739f87" name="thisyear" factor-value="2005/01/01" factor-type="8">
+                        <labels context="LABEL">
+                            <text context="QUESTION" xml:lang="zh-cn">2005</text>
+                        </labels>
+                    </category>
+                    <category id="_055537dc-b219-423c-b3ae-a0feb9e3affa" name="lastyear" factor-value="2004/01/01" factor-type="8">
+                        <labels context="LABEL">
+                            <text context="QUESTION" xml:lang="zh-cn">2004</text>
+                        </labels>
+                    </category>
+                </categories>
+            </variable>
+            <variable id="8c6e455b-d607-4e18-8e3b-e3d4375b41f2" name="testDate9" type="5">
+                <labels context="LABEL">
+                    <text context="QUESTION" xml:lang="zh-cn"></text>
+                </labels>
+                <helperfields id="5b69d787-00a6-45f4-a2a0-dfee2fba920d" name="@helperfields" global-name-space="-1">
+                    <deleted />
+                    <variable id="_3787c16d-0aa7-452b-9ff6-dab930317e1f" name="Codes" ref="3787c16d-0aa7-452b-9ff6-dab930317e1f" />
+                </helperfields>
+            </variable>
+            <variable id="3787c16d-0aa7-452b-9ff6-dab930317e1f" name="Codes" type="3" usagetype="528">
+                <labels context="LABEL">
+                    <text context="QUESTION" xml:lang="zh-cn">Codes</text>
+                </labels>
+                <categories global-name-space="-1">
+                    <deleted />
+                    <category id="_49ee4fe1-9fff-4264-baf2-bdbd7376f00a" name="NoAnswer" fixed="-1" nofilter="-1" missing="noanswer" exclusive="-1">
+                        <labels context="LABEL">
+                            <text context="QUESTION" xml:lang="zh-cn">No answer</text>
+                        </labels>
+                    </category>
+                    <category id="_9d1c85ca-7ef2-4b57-bd7c-b4449985c8c4" name="RefusedToAnswer" fixed="-1" nofilter="-1" missing="refuse" exclusive="-1">
+                        <labels context="LABEL">
+                            <text context="QUESTION" xml:lang="zh-cn">Refused to answer</text>
+                        </labels>
+                    </category>
+                </categories>
+            </variable>
+            <variable id="524d01c2-c301-4a50-aa20-ee95a32bc454" name="Codes" type="3" usagetype="528">
+                <labels context="LABEL">
+                    <text context="QUESTION" xml:lang="zh-cn">Codes</text>
+                </labels>
+                <categories global-name-space="-1">
+                    <deleted />
+                    <category id="_d377630c-da03-4218-a439-b23176fd2a8b" name="NoAnswer" fixed="-1" nofilter="-1" missing="noanswer" exclusive="-1">
+                        <labels context="LABEL">
+                            <text context="QUESTION" xml:lang="zh-cn">No answer</text>
+                        </labels>
+                    </category>
+                    <category id="_0e7cf0fe-abce-45af-b94d-d6473819f3d7" name="RefusedToAnswer" fixed="-1" nofilter="-1" missing="refuse" exclusive="-1">
+                        <labels context="LABEL">
+                            <text context="QUESTION" xml:lang="zh-cn">Refused to answer</text>
+                        </labels>
+                    </category>
+                </categories>
+            </variable>
+            <variable id="0341644e-964e-4f1d-8dd8-9005c1a3d410" name="testBoolean" type="7">
+                <labels context="LABEL">
+                    <text context="QUESTION" xml:lang="zh-cn"></text>
+                </labels>
+            </variable>
+            <variable id="1c7359f5-280c-41ee-bca1-aa0b3210c514" name="testBoolean2" type="7" defaultanswer="0" defaultanswer_type="11">
+                <labels context="LABEL">
+                    <text context="QUESTION" xml:lang="zh-cn"></text>
+                </labels>
+                <categories global-name-space="-1">
+                    <deleted />
+                    <category id="_857b7a2a-2b4d-4965-a471-3545e7d6e1f4" name="Yes" factor-value="-1" factor-type="11">
+                        <labels context="LABEL">
+                            <text context="QUESTION" xml:lang="zh-cn">Yes</text>
+                        </labels>
+                    </category>
+                    <category id="_7b1f18ce-8811-4a6f-894b-457a6a7754cd" name="No" factor-value="0" factor-type="11">
+                        <labels context="LABEL">
+                            <text context="QUESTION" xml:lang="zh-cn">No</text>
+                        </labels>
+                    </category>
+                </categories>
+            </variable>
+            <variable id="cfd74cac-6590-4693-adc5-34d386a13b4f" name="testBoolean3" type="7">
+                <labels context="LABEL">
+                    <text context="QUESTION" xml:lang="zh-cn"></text>
+                </labels>
+                <helperfields id="b0f5be97-cfab-458d-85cd-341cb84fc23c" name="@helperfields" global-name-space="-1">
+                    <deleted />
+                    <variable id="_ca3c033d-7883-4683-8319-104cbe333a38" name="Codes" ref="ca3c033d-7883-4683-8319-104cbe333a38" />
+                </helperfields>
+            </variable>
+            <variable id="ca3c033d-7883-4683-8319-104cbe333a38" name="Codes" type="3" usagetype="528">
+                <labels context="LABEL">
+                    <text context="QUESTION" xml:lang="zh-cn">Codes</text>
+                </labels>
+                <categories global-name-space="-1">
+                    <deleted />
+                    <category id="_347b3f2c-9a07-4521-9fd3-fd4db41635e1" name="NoAnswer" fixed="-1" nofilter="-1" missing="noanswer" exclusive="-1">
+                        <labels context="LABEL">
+                            <text context="QUESTION" xml:lang="zh-cn">No answer</text>
+                        </labels>
+                    </category>
+                </categories>
+            </variable>
+            <variable id="64036890-9cbe-4730-a211-1445295ee767" name="testInfo" type="0">
+                <labels context="LABEL">
+                    <text context="QUESTION" xml:lang="zh-cn"></text>
+                </labels>
+            </variable>
+            <variable id="22e3de2f-351c-4617-a85a-7aa71d0e39e0" name="Name" type="2" min="5" mintype="3" max="30" maxtype="3">
+                <labels context="LABEL">
+                    <text context="QUESTION" xml:lang="zh-cn">What is the person's name?</text>
+                </labels>
+            </variable>
+            <variable id="538aa0e7-c76f-4022-9f73-4eaa74bdf2b9" name="Gender" type="3" min="1" mintype="3" max="1" maxtype="3">
+                <labels context="LABEL">
+                    <text context="QUESTION" xml:lang="zh-cn">Male or Female?</text>
+                </labels>
+                <categories global-name-space="-1">
+                    <deleted />
+                    <category id="_40bb528d-e90a-4127-8505-4c3fc2165618" name="Male">
+                        <labels context="LABEL">
+                            <text context="QUESTION" xml:lang="zh-cn">Male</text>
+                        </labels>
+                    </category>
+                    <category id="_35730007-018a-4eb5-b57f-deb9f6c53a9a" name="Female">
+                        <labels context="LABEL">
+                            <text context="QUESTION" xml:lang="zh-cn">Female</text>
+                        </labels>
+                    </category>
+                </categories>
+            </variable>
+            <variable id="28dc8faa-f15c-49f8-8d3c-15d32d462993" name="Monday" type="1" min="0" mintype="3" max="100" maxtype="3" rangeexp="[0 .. 100]">
+                <labels context="LABEL">
+                    <text context="QUESTION" xml:lang="zh-cn">Monday</text>
+                </labels>
+            </variable>
+            <variable id="2d152afe-e83b-4a31-b4b1-abd15a8a87fd" name="Tuesday" type="1" min="0" mintype="3" max="100" maxtype="3" rangeexp="[0 .. 100]">
+                <labels context="LABEL">
+                    <text context="QUESTION" xml:lang="zh-cn">Tuesday</text>
+                </labels>
+            </variable>
+            <variable id="d4f43976-6918-4e7d-9be1-b4b5e60b8aec" name="Wednesday" type="1" min="0" mintype="3" max="100" maxtype="3" rangeexp="[0 .. 100]">
+                <labels context="LABEL">
+                    <text context="QUESTION" xml:lang="zh-cn">Wednesday</text>
+                </labels>
+            </variable>
+            <variable id="44f7e8d0-36f6-4bf7-82c1-d8a62aa810b7" name="Thursday" type="1" min="0" mintype="3" max="100" maxtype="3" rangeexp="[0 .. 100]">
+                <labels context="LABEL">
+                    <text context="QUESTION" xml:lang="zh-cn">Thursday</text>
+                </labels>
+            </variable>
+            <variable id="82961dc4-4cf5-45bc-a2fa-122add5a8cd3" name="Friday" type="1" min="0" mintype="3" max="100" maxtype="3" rangeexp="[0 .. 100]">
+                <labels context="LABEL">
+                    <text context="QUESTION" xml:lang="zh-cn">Friday</text>
+                </labels>
+            </variable>
+            <categories id="fd4826a3-092b-4f0b-a84b-1c89ca6140fa" name="DrinksList" global-name-space="0">
+                <labels context="LABEL">
+                    <text context="QUESTION" xml:lang="zh-cn">DrinksList</text>
+                </labels>
+                <deleted />
+                <category id="_d5a1ef85-8c24-42f0-a6be-315a2a9afe5a" name="Tea">
+                    <labels context="LABEL">
+                        <text context="QUESTION" xml:lang="zh-cn">Tea</text>
+                    </labels>
+                </category>
+                <category id="_5d988676-c8d0-49eb-8fca-89c9953da2a7" name="Coffee">
+                    <labels context="LABEL">
+                        <text context="QUESTION" xml:lang="zh-cn">Coffee</text>
+                    </labels>
+                </category>
+                <category id="_7cb4527a-30ca-4e6c-af5e-cbe29364c30b" name="Carbonated">
+                    <labels context="LABEL">
+                        <text context="QUESTION" xml:lang="zh-cn">Carbonated soft drinks</text>
+                    </labels>
+                </category>
+                <category id="_6be4e966-5cce-4460-89ef-c99bd16aa87d" name="Milk">
+                    <labels context="LABEL">
+                        <text context="QUESTION" xml:lang="zh-cn">Milk</text>
+                    </labels>
+                </category>
+                <category id="_5d587460-a3e8-4e26-8588-4515e88c5f2c" name="Fruit">
+                    <labels context="LABEL">
+                        <text context="QUESTION" xml:lang="zh-cn">Fruit and vegetable drinks</text>
+                    </labels>
+                </category>
+                <category id="_ebbe8897-e9ad-4104-b1a4-f05ed25eac32" name="PSD">
+                    <labels context="LABEL">
+                        <text context="QUESTION" xml:lang="zh-cn">Powdered soft drinks</text>
+                    </labels>
+                </category>
+                <category id="_a7d877ca-81ac-4572-8149-226c3f29edf5" name="Water">
+                    <labels context="LABEL">
+                        <text context="QUESTION" xml:lang="zh-cn">Water</text>
+                    </labels>
+                </category>
+            </categories>
+            <variable id="bed513bc-2bc5-40cb-b00f-4c3c8bbe1725" name="Rating" type="3" min="1" mintype="3" max="1" maxtype="3">
+                <labels context="LABEL">
+                    <text context="QUESTION" xml:lang="zh-cn">Rating</text>
+                </labels>
+                <categories global-name-space="-1">
+                    <deleted />
+                    <categories id="_bfecd282-bd1d-4c9f-8fa6-536646e82f6c" name="RatingCategories" categoriesref="dd5c2e76-eb5d-4970-97d8-be102b77b8cc" global-name-space="-1" inline="-1" ref_name="RatingCategories">
+                        <deleted />
+                    </categories>
+                </categories>
+            </variable>
+            <categories id="dd5c2e76-eb5d-4970-97d8-be102b77b8cc" name="RatingCategories" global-name-space="0">
+                <labels context="LABEL">
+                    <text context="QUESTION" xml:lang="zh-cn">RatingCategories</text>
+                </labels>
+                <deleted />
+                <category id="_c7cd88ee-5e7f-434c-b926-9951eb23387c" name="Not">
+                    <labels context="LABEL">
+                        <text context="QUESTION" xml:lang="zh-cn">Not at all interested</text>
+                    </labels>
+                </category>
+                <category id="_fdcf9b24-60d3-4534-ba71-1268e6276169" name="NotParticularly">
+                    <labels context="LABEL">
+                        <text context="QUESTION" xml:lang="zh-cn">Not particularly interested</text>
+                    </labels>
+                </category>
+                <category id="_6a400c98-88b3-4029-acc4-319e61e5bb35" name="NoOpinion">
+                    <labels context="LABEL">
+                        <text context="QUESTION" xml:lang="zh-cn">No opinion</text>
+                    </labels>
+                </category>
+                <category id="_aa6895ff-6802-4b18-b9c6-1118b458fc30" name="Slightly">
+                    <labels context="LABEL">
+                        <text context="QUESTION" xml:lang="zh-cn">Slightly interested</text>
+                    </labels>
+                </category>
+                <category id="_446b0e1e-dfcc-45ea-8773-8bcf6246cc7b" name="Very">
+                    <labels context="LABEL">
+                        <text context="QUESTION" xml:lang="zh-cn">Very interested</text>
+                    </labels>
+                </category>
+            </categories>
+            <variable id="921e78d7-5f9b-4883-bdfa-7096f48ce471" name="Days" type="3">
+                <labels context="LABEL">
+                    <text context="QUESTION" xml:lang="zh-cn">Days</text>
+                </labels>
+                <categories global-name-space="-1">
+                    <deleted />
+                    <category id="_7138472a-9f14-41b5-8a33-29f2f5b0b08d" name="Monday">
+                        <labels context="LABEL">
+                            <text context="QUESTION" xml:lang="zh-cn">Monday</text>
+                        </labels>
+                    </category>
+                    <category id="_629c0740-c6f5-4fb5-a86e-b583f9d6f751" name="Tuesday">
+                        <labels context="LABEL">
+                            <text context="QUESTION" xml:lang="zh-cn">Tuesday</text>
+                        </labels>
+                    </category>
+                    <category id="_5387ef62-9f96-4c44-89c5-c0d5034fe7dd" name="Wednesday">
+                        <labels context="LABEL">
+                            <text context="QUESTION" xml:lang="zh-cn">Wednesday</text>
+                        </labels>
+                    </category>
+                    <category id="_6fc5ea33-c127-4e83-ad2e-ad9b5e832430" name="Thursday">
+                        <labels context="LABEL">
+                            <text context="QUESTION" xml:lang="zh-cn">Thursday</text>
+                        </labels>
+                    </category>
+                    <category id="_e6a422de-19f9-448c-93bd-56778decfa8c" name="Friday">
+                        <labels context="LABEL">
+                            <text context="QUESTION" xml:lang="zh-cn">Friday</text>
+                        </labels>
+                    </category>
+                    <category id="_821203a6-e9c9-464b-87f3-2c5185612541" name="Saturday">
+                        <labels context="LABEL">
+                            <text context="QUESTION" xml:lang="zh-cn">Saturday</text>
+                        </labels>
+                    </category>
+                    <category id="_f3c170f6-d1bc-42a4-85bb-270c73f51899" name="Sunday">
+                        <labels context="LABEL">
+                            <text context="QUESTION" xml:lang="zh-cn">Sunday</text>
+                        </labels>
+                    </category>
+                </categories>
+            </variable>
+            <variable id="b524142d-98a0-4f6d-beea-6dd92a6496de" name="Plnview" type="3" autoelements="-1">
+                <labels context="LABEL">
+                    <text context="QUESTION" xml:lang="zh-cn">What do you plan to see today?</text>
+                </labels>
+                <categories derived="-1" global-name-space="0">
+                    <deleted />
+                    <categories id="_6687073f-44fc-4103-b1df-89d26587ce7d" name="GalleryList" derived="-1" ref_name="GalleryList" categoriesref="fe7f61e7-43ee-41c0-ac9d-080b774e8a36" global-name-space="-1" inline="-1">
+                        <deleted />
+                    </categories>
+                </categories>
+            </variable>
+            <variable id="0ef56925-2b2f-4d6f-8fc6-341a5c6ea7f5" name="Order" type="1" min="1" mintype="3" max="16" maxtype="3" rangeexp="[1 .. 16]">
+                <labels context="LABEL">
+                    <text context="QUESTION" xml:lang="zh-cn">Order of viewing</text>
+                </labels>
+            </variable>
+            <variable id="22dc5b46-1b50-4f77-824b-7e12bf847d01" name="Rating" type="3" min="1" mintype="3" max="1" maxtype="3">
+                <labels context="LABEL">
+                    <text context="QUESTION" xml:lang="zh-cn">Rating</text>
+                </labels>
+                <categories global-name-space="-1">
+                    <deleted />
+                    <categories id="_5d5b1e95-dc82-449b-926d-9370b72f8a1d" name="RatingList" categoriesref="62b94778-1f77-4c73-8271-a2f1bf9cd2d3" global-name-space="-1" inline="-1" ref_name="RatingList">
+                        <deleted />
+                    </categories>
+                </categories>
+            </variable>
+            <categories id="fe7f61e7-43ee-41c0-ac9d-080b774e8a36" name="GalleryList" global-name-space="0">
+                <labels context="LABEL">
+                    <text context="QUESTION" xml:lang="zh-cn">GalleryList</text>
+                </labels>
+                <deleted />
+                <category id="_8169885c-d45a-4caf-ba88-9c551006237c" name="Dinosaur">
+                    <labels context="LABEL">
+                        <text context="QUESTION" xml:lang="zh-cn">Dinosaur</text>
+                    </labels>
+                </category>
+                <category id="_0b0f8af6-b07c-4ce0-8505-77c6d9cd22c9" name="Conservation">
+                    <labels context="LABEL">
+                        <text context="QUESTION" xml:lang="zh-cn">Conservation</text>
+                    </labels>
+                </category>
+                <category id="_766b3d53-2686-4543-b10e-91082931e667" name="Fish">
+                    <labels context="LABEL">
+                        <text context="QUESTION" xml:lang="zh-cn">Fish and reptiles</text>
+                    </labels>
+                </category>
+                <category id="_a8c101ee-043f-40e5-8c2e-3f7829941bf1" name="Fossils">
+                    <labels context="LABEL">
+                        <text context="QUESTION" xml:lang="zh-cn">Fossils</text>
+                    </labels>
+                </category>
+                <category id="_fe46e078-b6cb-4cf8-81d1-be639613a3b9" name="Birds">
+                    <labels context="LABEL">
+                        <text context="QUESTION" xml:lang="zh-cn">Birds</text>
+                    </labels>
+                </category>
+                <category id="_d89031d4-075a-4c16-8b93-c8ae3893ae8c" name="Insects">
+                    <labels context="LABEL">
+                        <text context="QUESTION" xml:lang="zh-cn">Insects</text>
+                    </labels>
+                </category>
+                <category id="_751b723c-a9ca-4d52-96e8-b549d7fe1c1a" name="Whales">
+                    <labels context="LABEL">
+                        <text context="QUESTION" xml:lang="zh-cn">Whales</text>
+                    </labels>
+                </category>
+                <category id="_cae25f83-94bb-478d-a0ad-279d61855a94" name="Mammals">
+                    <labels context="LABEL">
+                        <text context="QUESTION" xml:lang="zh-cn">Mammals</text>
+                    </labels>
+                </category>
+                <category id="_93d1d0dc-d797-48b6-ab34-495967b1af85" name="Minerals">
+                    <labels context="LABEL">
+                        <text context="QUESTION" xml:lang="zh-cn">Minerals</text>
+                    </labels>
+                </category>
+                <category id="_145cdbd9-6b7a-4f93-9fe7-0dd1f8cc7f7a" name="Ecology">
+                    <labels context="LABEL">
+                        <text context="QUESTION" xml:lang="zh-cn">Ecology</text>
+                    </labels>
+                </category>
+                <category id="_e35c3e39-faa7-4b5b-94a4-f86653a6f5e1" name="Botany">
+                    <labels context="LABEL">
+                        <text context="QUESTION" xml:lang="zh-cn">Botany</text>
+                    </labels>
+                </category>
+                <category id="_bd6fe90b-bae7-49c8-8233-1d6cd60fe00f" name="Origin">
+                    <labels context="LABEL">
+                        <text context="QUESTION" xml:lang="zh-cn">Origin of Species</text>
+                    </labels>
+                </category>
+                <category id="_83797ecc-ec18-48b2-88ca-54cc0132b31c" name="Human">
+                    <labels context="LABEL">
+                        <text context="QUESTION" xml:lang="zh-cn">Human biology</text>
+                    </labels>
+                </category>
+                <category id="_c42d617f-ab90-4d5c-b129-c66c6d857128" name="Evolution">
+                    <labels context="LABEL">
+                        <text context="QUESTION" xml:lang="zh-cn">Evolution</text>
+                    </labels>
+                </category>
+                <category id="_c1b0296d-18e2-4e4e-968e-2c6700d2247e" name="Wildlife">
+                    <labels context="LABEL">
+                        <text context="QUESTION" xml:lang="zh-cn">Wildlife in danger</text>
+                    </labels>
+                </category>
+            </categories>
+            <categories id="62b94778-1f77-4c73-8271-a2f1bf9cd2d3" name="RatingList" global-name-space="0">
+                <labels context="LABEL">
+                    <text context="QUESTION" xml:lang="zh-cn">RatingList</text>
+                </labels>
+                <deleted />
+                <category id="_1b43a878-a22d-404c-8410-6d734f7bf344" name="Not">
+                    <labels context="LABEL">
+                        <text context="QUESTION" xml:lang="zh-cn">Not at all interested</text>
+                    </labels>
+                </category>
+                <category id="_95cff622-88b1-4759-92c7-0ae1629de564" name="NotParticularly">
+                    <labels context="LABEL">
+                        <text context="QUESTION" xml:lang="zh-cn">Not particularly interested</text>
+                    </labels>
+                </category>
+                <category id="_896ade0d-bf22-4b4d-8247-823eb4c01704" name="NoOpinion">
+                    <labels context="LABEL">
+                        <text context="QUESTION" xml:lang="zh-cn">No opinion</text>
+                    </labels>
+                </category>
+                <category id="_bca57c21-bdd4-4d8b-b5f2-bc0835669be5" name="Slightly">
+                    <labels context="LABEL">
+                        <text context="QUESTION" xml:lang="zh-cn">Slightly interested</text>
+                    </labels>
+                </category>
+                <category id="_7d837147-02b2-416f-83be-4b169a6cec36" name="Very">
+                    <labels context="LABEL">
+                        <text context="QUESTION" xml:lang="zh-cn">Very interested</text>
+                    </labels>
+                </category>
+            </categories>
+            <variable id="42e051c5-6182-415c-99b8-79dd9f389ddc" name="Gender" type="3" min="1" mintype="3" max="1" maxtype="3">
+                <labels context="LABEL">
+                    <text context="QUESTION" xml:lang="zh-cn">Gender of respondent</text>
+                </labels>
+                <categories global-name-space="-1">
+                    <deleted />
+                    <category id="_5c270bc9-483e-4091-8907-dac43ce65a35" name="Male">
+                        <labels context="LABEL">
+                            <text context="QUESTION" xml:lang="zh-cn">Male</text>
+                        </labels>
+                    </category>
+                    <category id="_db3e1bb6-b005-4f16-887b-1e59cf7f96b6" name="Female">
+                        <labels context="LABEL">
+                            <text context="QUESTION" xml:lang="zh-cn">Female</text>
+                        </labels>
+                    </category>
+                </categories>
+            </variable>
+            <variable id="6acd2f9e-0128-4a6a-a043-0aeea7c2b855" name="Age" type="3" min="1" mintype="3" max="1" maxtype="3">
+                <labels context="LABEL">
+                    <text context="QUESTION" xml:lang="zh-cn">To which age group do you belong?</text>
+                </labels>
+                <categories global-name-space="-1">
+                    <deleted />
+                    <category id="_c8f6a999-64a6-4326-ae9f-a35317106530" name="Y11_16">
+                        <labels context="LABEL">
+                            <text context="QUESTION" xml:lang="zh-cn">11-16 Years</text>
+                        </labels>
+                    </category>
+                    <category id="_40204db4-77e8-4ac9-8998-91a3d2c9e640" name="Y17_20">
+                        <labels context="LABEL">
+                            <text context="QUESTION" xml:lang="zh-cn">17-20 Years</text>
+                        </labels>
+                    </category>
+                    <category id="_79b6a3fa-89d8-4f57-b4b0-681e93eb7aed" name="Y21_24">
+                        <labels context="LABEL">
+                            <text context="QUESTION" xml:lang="zh-cn">21-24 Years</text>
+                        </labels>
+                    </category>
+                    <category id="_11521d70-3c68-4a30-b4b3-e778f28643e8" name="Y25_34">
+                        <labels context="LABEL">
+                            <text context="QUESTION" xml:lang="zh-cn">25-34 Years</text>
+                        </labels>
+                    </category>
+                    <category id="_c70ff8cd-a8b8-4aea-8e1f-f92882541d4d" name="Y35_44">
+                        <labels context="LABEL">
+                            <text context="QUESTION" xml:lang="zh-cn">35-44 Years</text>
+                        </labels>
+                    </category>
+                    <category id="_0edd2d63-7706-4083-86d4-0a1d0abba2e4" name="Y45_54">
+                        <labels context="LABEL">
+                            <text context="QUESTION" xml:lang="zh-cn">45-54 Years</text>
+                        </labels>
+                    </category>
+                    <category id="_898f4dff-fcce-49de-9884-5655222b64df" name="Y55_64">
+                        <labels context="LABEL">
+                            <text context="QUESTION" xml:lang="zh-cn">55-64 Years</text>
+                        </labels>
+                    </category>
+                    <category id="_e6f565b9-0472-45f0-a1e4-9ddf019dd9ab" name="Y65_pp">
+                        <labels context="LABEL">
+                            <text context="QUESTION" xml:lang="zh-cn">65+ Years</text>
+                        </labels>
+                    </category>
+                </categories>
+            </variable>
+            <variable id="063205e8-b93e-4db0-a060-160a10d636c8" name="name" type="2" min="40" mintype="3" max="40" maxtype="3">
+                <labels context="LABEL">
+                    <text context="QUESTION" xml:lang="zh-cn">Your name</text>
+                </labels>
+            </variable>
+            <variable id="7ade6033-379f-4e62-b67e-94c61e5a2ded" name="address" type="2">
+                <labels context="LABEL">
+                    <text context="QUESTION" xml:lang="zh-cn">Your address</text>
+                </labels>
+            </variable>
+            <variable id="f12593e8-3995-473a-badc-6e7648d5a9bf" name="phone" type="1" min="20" mintype="3" max="20" maxtype="3" rangeexp="[20]">
+                <labels context="LABEL">
+                    <text context="QUESTION" xml:lang="zh-cn">Your phone number</text>
+                </labels>
+            </variable>
+            <page id="1073741898" name="TestPage" global-name-space="0">
+                <labels context="LABEL">
+                    <text context="QUESTION" xml:lang="zh-cn">Contact details</text>
+                </labels>
+                <deleted />
+                <item name="name" id="fb789237-71b1-46a0-9193-db36c224183c" ref="063205e8-b93e-4db0-a060-160a10d636c8" />
+                <item name="address" id="ca941d77-f328-4a6d-8d35-0c485246c667" ref="7ade6033-379f-4e62-b67e-94c61e5a2ded" />
+                <item name="phone" id="9957d065-173f-43d4-a6e7-8de74d8a84e0" ref="f12593e8-3995-473a-badc-6e7648d5a9bf" />
+            </page>
+            <variable id="64f9cbfc-1ac7-4028-8b79-336e90b8bb13" name="MakeQ" isdb="-1" dbtype="1" dbdatatype="2" type="2">
+                <db>
+                    <property name="id" value="MakeID" type="8" context="Question" />
+                    <property name="Label" value="MakeLabel" type="8" context="Question" />
+                    <property name="CacheTimeout" value="500" type="3" context="Question" />
+                    <property name="MaxAnswers" value="1" type="3" context="Question" />
+                    <property name="MinAnswers" value="1" type="3" context="Question" />
+                    <property name="Table" value="Make" type="8" context="Question" />
+                    <property name="ConnectionString" value="Provider=Microsoft.ACE.OLEDB.12.0;Data Source=%PROJECT_DIRECTORY%\Cars.accdb;Persist Security Info=False" type="8" context="Question" />
+                </db>
+                <labels context="LABEL">
+                    <text context="QUESTION" xml:lang="zh-cn">Which car make do you prefer?</text>
+                </labels>
+            </variable>
+            <variable id="c9852c46-1203-4afb-9106-003bc98bb90b" name="TestDb1" isdb="-1" dbtype="1" dbdatatype="2" type="2">
+                <db>
+                    <property name="id" value="MakeID" type="8" context="Question" />
+                    <property name="Label" value="MakeLabel" type="8" context="Question" />
+                    <property name="CacheTimeout" value="500" type="3" context="Question" />
+                    <property name="MaxAnswers" value="1" type="3" context="Question" />
+                    <property name="MinAnswers" value="1" type="3" context="Question" />
+                    <property name="Table" value="Make" type="8" context="Question" />
+                    <property name="ConnectionString" value="Provider=Microsoft.ACE.OLEDB.12.0;Data Source=%PROJECT_DIRECTORY%\Cars.accdb;Persist Security Info=False" type="8" context="Question" />
+                </db>
+                <labels context="LABEL">
+                    <text context="QUESTION" xml:lang="zh-cn">Which car make do you prefer?</text>
+                </labels>
+            </variable>
+            <variable id="7840ce7d-9cea-46c6-941d-8972773a02a8" name="DBID" isdb="-1" dbtype="1" dbdatatype="2" type="2" min="1" mintype="3" max="3" maxtype="3">
+                <db>
+                    <property name="id" value="ModelID" type="8" context="Question" />
+                    <property name="Label" value="ModelLabel" type="8" context="Question" />
+                    <property name="CacheTimeout" value="500" type="3" context="Question" />
+                    <property name="MaxAnswers" value="3" type="3" context="Question" />
+                    <property name="MinAnswers" value="1" type="3" context="Question" />
+                    <property name="Table" value="Model" type="8" context="Question" />
+                    <property name="ConnectionString" value="Provider=Microsoft.ACE.OLEDB.12.0;Data Source=%PROJECT_DIRECTORY%\Cars.accdb;Persist Security Info=False" type="8" context="Question" />
+                </db>
+                <labels context="LABEL">
+                    <text context="QUESTION" xml:lang="zh-cn">ID</text>
+                </labels>
+            </variable>
+            <variable id="950911e9-7db3-4d18-889a-89aa0cf4a31d" name="DBID" isdb="-1" dbtype="1" dbdatatype="2" type="2">
+                <db>
+                    <property name="id" value="PartID" type="8" context="Question" />
+                    <property name="Label" value="PartLabel" type="8" context="Question" />
+                    <property name="CacheTimeout" value="500" type="3" context="Question" />
+                    <property name="Table" value="Parts" type="8" context="Question" />
+                    <property name="ConnectionString" value="Provider=Microsoft.ACE.OLEDB.12.0;Data Source=%PROJECT_DIRECTORY%\Cars.accdb;Persist Security Info=False" type="8" context="Question" />
+                    <property name="IteratorIDType" value="2" type="3" context="Question" />
+                </db>
+                <labels context="LABEL">
+                    <text context="QUESTION" xml:lang="zh-cn">ID</text>
+                </labels>
+            </variable>
+            <variable id="c96408c7-f858-4f14-b540-daf093aa0c1f" name="Engine" type="3" min="1" mintype="3" max="1" maxtype="3">
+                <labels context="LABEL">
+                    <text context="QUESTION" xml:lang="zh-cn">Rate the engine for the model.</text>
+                </labels>
+                <categories global-name-space="-1">
+                    <deleted />
+                    <category id="_79f1d636-c006-4919-bf0a-5542f14ee500" name="Perfect">
+                        <labels context="LABEL">
+                            <text context="QUESTION" xml:lang="zh-cn">Perfect</text>
+                        </labels>
+                    </category>
+                    <category id="_5713a1cb-2c57-4028-ac65-415f71ba01b4" name="Good">
+                        <labels context="LABEL">
+                            <text context="QUESTION" xml:lang="zh-cn">Good</text>
+                        </labels>
+                    </category>
+                    <category id="_36d9455d-ab57-4fde-bebf-61a97801271e" name="Normal">
+                        <labels context="LABEL">
+                            <text context="QUESTION" xml:lang="zh-cn">Normal</text>
+                        </labels>
+                    </category>
+                    <category id="_2ba94321-5a1a-4e11-b98f-5d0e547d0604" name="Bad">
+                        <labels context="LABEL">
+                            <text context="QUESTION" xml:lang="zh-cn">Bad</text>
+                        </labels>
+                    </category>
+                </categories>
+            </variable>
+            <variable id="590d90ec-1a57-44f4-abf4-6d5b06884230" name="Looks" type="3" min="1" mintype="3" max="1" maxtype="3">
+                <labels context="LABEL">
+                    <text context="QUESTION" xml:lang="zh-cn">Rate the looks for the model.</text>
+                </labels>
+                <categories global-name-space="-1">
+                    <deleted />
+                    <category id="_0e595766-a57f-4c0b-b6a2-d5eaaefd6e67" name="Perfect">
+                        <labels context="LABEL">
+                            <text context="QUESTION" xml:lang="zh-cn">Perfect</text>
+                        </labels>
+                    </category>
+                    <category id="_93d83a1a-e052-44bb-9616-6c2c731833be" name="Good">
+                        <labels context="LABEL">
+                            <text context="QUESTION" xml:lang="zh-cn">Good</text>
+                        </labels>
+                    </category>
+                    <category id="_26944abf-6444-4642-b1ff-3c114369a0b5" name="Normal">
+                        <labels context="LABEL">
+                            <text context="QUESTION" xml:lang="zh-cn">Normal</text>
+                        </labels>
+                    </category>
+                    <category id="_d6e00031-4740-443d-8e5a-44b21d9c7961" name="Bad">
+                        <labels context="LABEL">
+                            <text context="QUESTION" xml:lang="zh-cn">Bad</text>
+                        </labels>
+                    </category>
+                </categories>
+            </variable>
+            <variable id="62d5bbb8-ad7a-4a1c-b6f7-2236c88eaabc" name="Comfort" type="7">
+                <labels context="LABEL">
+                    <text context="QUESTION" xml:lang="zh-cn">Is the model comfortable?</text>
+                </labels>
+            </variable>
+            <variable id="564985f0-3e20-4c49-a583-9e31fd521437" name="TestDB4" isdb="-1" dbtype="1" dbdatatype="2" type="2">
+                <db>
+                    <property name="id" value="MakeID" type="8" context="Question" />
+                    <property name="Label" value="MakeLabel" type="8" context="Question" />
+                    <property name="CacheTimeout" value="500" type="3" context="Question" />
+                    <property name="MaxAnswers" value="1" type="3" context="Question" />
+                    <property name="MinAnswers" value="1" type="3" context="Question" />
+                    <property name="Table" value="Make$" type="8" context="Question" />
+                    <property name="ConnectionString" value="Driver={Microsoft Excel Driver (*.xls)};DriverId=790;&#xA;         Dbq=C:\Program Files\IBM\SPSS\DataCollection\6\DDL\Code\General\Excel\Cars.xls" type="8" context="Question" />
+                </db>
+                <labels context="LABEL">
+                    <text context="QUESTION" xml:lang="zh-cn">Which car make do you prefer?</text>
+                </labels>
+                <helperfields id="0e6a6782-a55c-4620-8dca-2ef861cce063" name="@helperfields" global-name-space="-1">
+                    <variable id="_f6d8ddb5-6c73-4796-9132-48a6357dc7e9" name="Codes" ref="f6d8ddb5-6c73-4796-9132-48a6357dc7e9" />
+                    <deleted />
+                </helperfields>
+            </variable>
+            <variable id="f6d8ddb5-6c73-4796-9132-48a6357dc7e9" name="Codes" usagetype="528" type="3">
+                <labels context="LABEL">
+                    <text context="QUESTION" xml:lang="zh-cn">Codes</text>
+                </labels>
+                <categories global-name-space="-1">
+                    <category id="_cf7fae02-50c5-4984-8a6d-a51d57c43890" name="NA" fixed="-1" nofilter="-1" missing="noanswer" exclusive="-1">
+                        <labels context="LABEL">
+                            <text context="QUESTION" xml:lang="zh-cn">No answers</text>
+                        </labels>
+                    </category>
+                    <category id="_d9f19636-d40d-462a-b20a-4dcd76982ec7" name="DK" fixed="-1" nofilter="-1" missing="dontknow" exclusive="-1">
+                        <labels context="LABEL">
+                            <text context="QUESTION" xml:lang="zh-cn">Don't know</text>
+                        </labels>
+                    </category>
+                    <category id="_64eef648-8ae0-4d63-8e21-14aceef57d0d" name="REF" fixed="-1" nofilter="-1" missing="refuse" exclusive="-1">
+                        <labels context="LABEL">
+                            <text context="QUESTION" xml:lang="zh-cn">Refuse answer</text>
+                        </labels>
+                    </category>
+                    <deleted />
+                </categories>
+            </variable>
         </definition>
         <system name="@fields" global-name-space="-1">
             <deleted />
@@ -3419,14 +4251,254 @@
                 <deleted />
                 <variable id="_dd0e8024-6ce3-4679-974c-14397bf86128" name="TestQ1" ref="dd0e8024-6ce3-4679-974c-14397bf86128" />
                 <variable id="_8358973b-6d41-4723-acfb-1458ecfe57f6" name="TestQ2" ref="8358973b-6d41-4723-acfb-1458ecfe57f6" />
+                <variable id="_466316a7-6a39-4555-898c-e3193a225bb0" name="testLong" ref="466316a7-6a39-4555-898c-e3193a225bb0" />
+                <variable id="_8c25453d-0a54-40fd-8b92-55dbb858d8e0" name="TestDouble" ref="8c25453d-0a54-40fd-8b92-55dbb858d8e0" />
+                <variable id="_64f7cc50-2648-4c51-8fb3-d6d900b25987" name="testDate" ref="64f7cc50-2648-4c51-8fb3-d6d900b25987" />
+                <variable id="_9eae6e20-37f1-4363-a634-97b812042ac3" name="testDate2" ref="9eae6e20-37f1-4363-a634-97b812042ac3" />
+                <variable id="_357daf83-a28c-4bdb-96a0-880e803e9e4c" name="testDate3" ref="357daf83-a28c-4bdb-96a0-880e803e9e4c" />
+                <variable id="_29be6d78-162c-432d-bfa1-42900b7afe54" name="testDate4" ref="29be6d78-162c-432d-bfa1-42900b7afe54" />
+                <variable id="_9d442338-23d2-4c71-a740-9fd730b156ac" name="testDate5" ref="9d442338-23d2-4c71-a740-9fd730b156ac" />
+                <variable id="_ae0cde82-5550-48bf-92b3-caae0e3643e8" name="testDate6" ref="ae0cde82-5550-48bf-92b3-caae0e3643e8" />
+                <variable id="_64178bd0-fd3d-43da-a803-455a64932aec" name="testDate7" ref="64178bd0-fd3d-43da-a803-455a64932aec" />
+                <variable id="_3867c3a6-955e-404a-952b-9bdc1c79bf1c" name="testDate8" ref="3867c3a6-955e-404a-952b-9bdc1c79bf1c" />
+                <variable id="_8c6e455b-d607-4e18-8e3b-e3d4375b41f2" name="testDate9" ref="8c6e455b-d607-4e18-8e3b-e3d4375b41f2" />
+                <variable id="_4a71f23a-97d4-433c-a975-82b37e669ac4" name="testText" ref="4a71f23a-97d4-433c-a975-82b37e669ac4" />
+                <variable id="_26fb306b-77e1-473a-a723-ecadd4152ca1" name="testText2" ref="26fb306b-77e1-473a-a723-ecadd4152ca1" />
+                <variable id="_3e3dc872-4c35-4768-9bbf-add603d0ba71" name="testText3" ref="3e3dc872-4c35-4768-9bbf-add603d0ba71" />
+                <variable id="_0341644e-964e-4f1d-8dd8-9005c1a3d410" name="testBoolean" ref="0341644e-964e-4f1d-8dd8-9005c1a3d410" />
+                <variable id="_1c7359f5-280c-41ee-bca1-aa0b3210c514" name="testBoolean2" ref="1c7359f5-280c-41ee-bca1-aa0b3210c514" />
+                <variable id="_cfd74cac-6590-4693-adc5-34d386a13b4f" name="testBoolean3" ref="cfd74cac-6590-4693-adc5-34d386a13b4f" />
+                <variable id="_64036890-9cbe-4730-a211-1445295ee767" name="testInfo" ref="64036890-9cbe-4730-a211-1445295ee767" />
+                <loop id="_1ddb03c3-6fb3-43b1-bfe5-a82dbd4c4ac6" name="testLoop" type="1" isgrid="1" iteratortype="2">
+                    <labels context="LABEL">
+                        <text context="QUESTION" xml:lang="zh-cn">Can you tell me how many of the following drinks you consumed each day last week? WRITE IN THE NUMBER OF DRINKS CONSUMED EACH DAY</text>
+                    </labels>
+                    <categories global-name-space="-1">
+                        <deleted />
+                        <categories id="_2fabc65b-eddb-4b4e-a244-97e0dba3acf8" name="DrinksList" categoriesref="fd4826a3-092b-4f0b-a84b-1c89ca6140fa" global-name-space="-1" inline="-1" ref_name="DrinksList">
+                            <deleted />
+                        </categories>
+                    </categories>
+                    <class name="@class" global-name-space="-1">
+                        <types name="@types" global-name-space="-1">
+                            <deleted />
+                        </types>
+                        <fields name="@fields" global-name-space="-1">
+                            <deleted />
+                            <variable id="_bed513bc-2bc5-40cb-b00f-4c3c8bbe1725" name="Rating" ref="bed513bc-2bc5-40cb-b00f-4c3c8bbe1725" />
+                            <variable id="_28dc8faa-f15c-49f8-8d3c-15d32d462993" name="Monday" ref="28dc8faa-f15c-49f8-8d3c-15d32d462993" />
+                            <variable id="_2d152afe-e83b-4a31-b4b1-abd15a8a87fd" name="Tuesday" ref="2d152afe-e83b-4a31-b4b1-abd15a8a87fd" />
+                            <variable id="_d4f43976-6918-4e7d-9be1-b4b5e60b8aec" name="Wednesday" ref="d4f43976-6918-4e7d-9be1-b4b5e60b8aec" />
+                            <variable id="_44f7e8d0-36f6-4bf7-82c1-d8a62aa810b7" name="Thursday" ref="44f7e8d0-36f6-4bf7-82c1-d8a62aa810b7" />
+                            <variable id="_82961dc4-4cf5-45bc-a2fa-122add5a8cd3" name="Friday" ref="82961dc4-4cf5-45bc-a2fa-122add5a8cd3" />
+                        </fields>
+                        <pages name="@pages" global-name-space="-1">
+                            <deleted />
+                        </pages>
+                    </class>
+                </loop>
+                <loop id="_b4bb54a7-693a-4d67-8094-c023e4af4f71" name="testNumericLoop" type="1" iteratortype="3">
+                    <labels context="LABEL">
+                        <text context="QUESTION" xml:lang="zh-cn">Household Questions</text>
+                    </labels>
+                    <class name="@class" global-name-space="-1">
+                        <types name="@types" global-name-space="-1">
+                            <deleted />
+                        </types>
+                        <fields name="@fields" global-name-space="-1">
+                            <deleted />
+                            <variable id="_22e3de2f-351c-4617-a85a-7aa71d0e39e0" name="Name" ref="22e3de2f-351c-4617-a85a-7aa71d0e39e0" />
+                            <variable id="_538aa0e7-c76f-4022-9f73-4eaa74bdf2b9" name="Gender" ref="538aa0e7-c76f-4022-9f73-4eaa74bdf2b9" />
+                        </fields>
+                        <pages name="@pages" global-name-space="-1">
+                            <deleted />
+                        </pages>
+                    </class>
+                    <ranges>
+                        <range upperbound="10" lowerbound="1" />
+                    </ranges>
+                </loop>
+                <loop id="_3d887b7e-a1e7-4251-b696-bde1d863ec83" name="TestGrid" type="1" isgrid="1" iteratortype="2">
+                    <labels context="LABEL">
+                        <text context="QUESTION" xml:lang="zh-cn">Which of the following drinks did you consume last week?</text>
+                    </labels>
+                    <categories global-name-space="-1">
+                        <deleted />
+                        <category id="_b42b6e71-013b-4739-8261-81e128e8cb25" name="Milk">
+                            <labels context="LABEL">
+                                <text context="QUESTION" xml:lang="zh-cn">Milk</text>
+                            </labels>
+                        </category>
+                        <category id="_e44e45f1-828e-4fae-b36b-a22ab0f5fb93" name="Coffee">
+                            <labels context="LABEL">
+                                <text context="QUESTION" xml:lang="zh-cn">Coffee</text>
+                            </labels>
+                        </category>
+                        <category id="_4bfac4fb-e57a-4d59-ba21-35905ea00e59" name="Tea">
+                            <labels context="LABEL">
+                                <text context="QUESTION" xml:lang="zh-cn">Tea</text>
+                            </labels>
+                        </category>
+                        <category id="_bca069dd-adf9-415c-b9c9-9589b57aa6b4" name="Orange">
+                            <labels context="LABEL">
+                                <text context="QUESTION" xml:lang="zh-cn">Orange</text>
+                            </labels>
+                        </category>
+                    </categories>
+                    <class name="@class" global-name-space="-1">
+                        <types name="@types" global-name-space="-1">
+                            <deleted />
+                        </types>
+                        <fields name="@fields" global-name-space="-1">
+                            <deleted />
+                            <variable id="_921e78d7-5f9b-4883-bdfa-7096f48ce471" name="Days" ref="921e78d7-5f9b-4883-bdfa-7096f48ce471" />
+                        </fields>
+                        <pages name="@pages" global-name-space="-1">
+                            <deleted />
+                        </pages>
+                    </class>
+                </loop>
+                <compound id="_524c1794-de89-4772-9607-eb0c96601654" name="testCompound" global-name-space="0">
+                    <labels context="LABEL">
+                        <text context="QUESTION" xml:lang="zh-cn">testCompound</text>
+                    </labels>
+                    <types name="@types" global-name-space="-1">
+                        <deleted />
+                    </types>
+                    <fields name="@fields" global-name-space="-1">
+                        <deleted />
+                        <variable id="_b524142d-98a0-4f6d-beea-6dd92a6496de" name="Plnview" ref="b524142d-98a0-4f6d-beea-6dd92a6496de" />
+                        <loop id="_5b312b78-2f02-4254-804e-552db036f9f2" name="Plnord" type="1" isgrid="1" iteratortype="2" autoelements="-1">
+                            <labels context="LABEL">
+                                <text context="QUESTION" xml:lang="zh-cn">What do you plan to see first, second, third, and so on?</text>
+                            </labels>
+                            <categories derived="-1" global-name-space="0">
+                                <deleted />
+                                <categories id="_aa887167-96c5-4922-a98a-6c9cd6e22992" name="GalleryList" derived="-1" ref_name="GalleryList" categoriesref="fe7f61e7-43ee-41c0-ac9d-080b774e8a36" global-name-space="-1" inline="-1">
+                                    <deleted />
+                                </categories>
+                            </categories>
+                            <class name="@class" global-name-space="-1">
+                                <types name="@types" global-name-space="-1">
+                                    <deleted />
+                                </types>
+                                <fields name="@fields" global-name-space="-1">
+                                    <deleted />
+                                    <variable id="_0ef56925-2b2f-4d6f-8fc6-341a5c6ea7f5" name="Order" ref="0ef56925-2b2f-4d6f-8fc6-341a5c6ea7f5" />
+                                </fields>
+                                <pages name="@pages" global-name-space="-1">
+                                    <deleted />
+                                </pages>
+                            </class>
+                        </loop>
+                        <loop id="_41e3ece4-c3fd-49fa-9cc9-04c6f4e55705" name="Ratent" type="1" isgrid="1" iteratortype="2" autoelements="-1">
+                            <labels context="LABEL">
+                                <text context="QUESTION" xml:lang="zh-cn">How interested are you in the following museum displays?</text>
+                            </labels>
+                            <categories derived="-1" global-name-space="0">
+                                <deleted />
+                                <categories id="_3c4fe89f-c251-41d5-829d-417df3bfdeab" name="GalleryList" derived="-1" ref_name="GalleryList" categoriesref="fe7f61e7-43ee-41c0-ac9d-080b774e8a36" global-name-space="-1" inline="-1">
+                                    <deleted />
+                                </categories>
+                            </categories>
+                            <class name="@class" global-name-space="-1">
+                                <types name="@types" global-name-space="-1">
+                                    <deleted />
+                                </types>
+                                <fields name="@fields" global-name-space="-1">
+                                    <deleted />
+                                    <variable id="_22dc5b46-1b50-4f77-824b-7e12bf847d01" name="Rating" ref="22dc5b46-1b50-4f77-824b-7e12bf847d01" />
+                                </fields>
+                                <pages name="@pages" global-name-space="-1">
+                                    <deleted />
+                                </pages>
+                            </class>
+                        </loop>
+                    </fields>
+                    <pages name="@pages" global-name-space="-1">
+                        <deleted />
+                    </pages>
+                    <categories global-name-space="0">
+                        <deleted />
+                        <categories id="_32e86877-1e1b-4e29-bf63-b4f510bd6381" name="GalleryList" categoriesref="fe7f61e7-43ee-41c0-ac9d-080b774e8a36" global-name-space="-1" inline="-1" ref_name="GalleryList">
+                            <deleted />
+                        </categories>
+                    </categories>
+                </compound>
+                <class id="_9a751bf1-aea3-49c6-88da-90f3573bee1c" name="testBlock" global-name-space="0">
+                    <labels context="LABEL">
+                        <text context="QUESTION" xml:lang="zh-cn">Demographics block</text>
+                    </labels>
+                    <types name="@types" global-name-space="-1">
+                        <deleted />
+                    </types>
+                    <fields name="@fields" global-name-space="-1">
+                        <deleted />
+                        <variable id="_42e051c5-6182-415c-99b8-79dd9f389ddc" name="Gender" ref="42e051c5-6182-415c-99b8-79dd9f389ddc" />
+                        <variable id="_6acd2f9e-0128-4a6a-a043-0aeea7c2b855" name="Age" ref="6acd2f9e-0128-4a6a-a043-0aeea7c2b855" />
+                    </fields>
+                    <pages name="@pages" global-name-space="-1">
+                        <deleted />
+                    </pages>
+                </class>
+                <variable id="_063205e8-b93e-4db0-a060-160a10d636c8" name="name" ref="063205e8-b93e-4db0-a060-160a10d636c8" />
+                <variable id="_7ade6033-379f-4e62-b67e-94c61e5a2ded" name="address" ref="7ade6033-379f-4e62-b67e-94c61e5a2ded" />
+                <variable id="_f12593e8-3995-473a-badc-6e7648d5a9bf" name="phone" ref="f12593e8-3995-473a-badc-6e7648d5a9bf" />
+                <variable id="_c9852c46-1203-4afb-9106-003bc98bb90b" name="TestDb1" ref="c9852c46-1203-4afb-9106-003bc98bb90b" />
+                <loop id="_c09b7f76-3dfa-4712-9d02-c46ce4d9c5e4" name="TestDB2" isdb="-1" dbtype="2" dbdatatype="2" type="1" iteratortype="1" rangeexp="[1..3]" upperbound="2" lowerbound="0">
+                    <labels context="LABEL">
+                        <text context="QUESTION" xml:lang="zh-cn">Select the top three models you prefer in the brand{Q1}</text>
+                    </labels>
+                    <class name="@class" global-name-space="-1">
+                        <types name="@types" global-name-space="-1">
+                            <deleted />
+                        </types>
+                        <fields name="@fields" global-name-space="-1">
+                            <deleted />
+                            <variable id="_7840ce7d-9cea-46c6-941d-8972773a02a8" name="DBID" ref="7840ce7d-9cea-46c6-941d-8972773a02a8" />
+                        </fields>
+                        <pages name="@pages" global-name-space="-1">
+                            <deleted />
+                        </pages>
+                    </class>
+                </loop>
+                <loop id="_33f8b98e-7b6b-476b-a1c1-9a941252c8f6" name="TestDB3" isdb="-1" dbtype="3" dbdatatype="2" type="0" iteratortype="3" rangeexp="[..]">
+                    <labels context="LABEL">
+                        <text context="QUESTION" xml:lang="zh-cn">Please answer the following question for each brand.</text>
+                    </labels>
+                    <class name="@class" global-name-space="-1">
+                        <types name="@types" global-name-space="-1">
+                            <deleted />
+                        </types>
+                        <fields name="@fields" global-name-space="-1">
+                            <deleted />
+                            <variable id="_950911e9-7db3-4d18-889a-89aa0cf4a31d" name="DBID" ref="950911e9-7db3-4d18-889a-89aa0cf4a31d" />
+                            <variable id="_c96408c7-f858-4f14-b540-daf093aa0c1f" name="Engine" ref="c96408c7-f858-4f14-b540-daf093aa0c1f" />
+                            <variable id="_590d90ec-1a57-44f4-abf4-6d5b06884230" name="Looks" ref="590d90ec-1a57-44f4-abf4-6d5b06884230" />
+                            <variable id="_62d5bbb8-ad7a-4a1c-b6f7-2236c88eaabc" name="Comfort" ref="62d5bbb8-ad7a-4a1c-b6f7-2236c88eaabc" />
+                        </fields>
+                        <pages name="@pages" global-name-space="-1">
+                            <deleted />
+                        </pages>
+                    </class>
+                    <ranges>
+                        <range upperbound="2147483647" lowerbound="-2147483648" />
+                    </ranges>
+                </loop>
+                <variable id="_564985f0-3e20-4c49-a583-9e31fd521437" name="TestDB4" ref="564985f0-3e20-4c49-a583-9e31fd521437" />
                 <variable id="_a620be72-abf1-4c17-b125-1ee96a5095ba" name="exact" ref="a620be72-abf1-4c17-b125-1ee96a5095ba" />
             </fields>
             <types name="@types" global-name-space="-1">
                 <deleted />
                 <categories id="_3932e138-78df-485e-85d3-49b6e2dce5c5" name="list" ref="3932e138-78df-485e-85d3-49b6e2dce5c5" />
+                <categories id="_fd4826a3-092b-4f0b-a84b-1c89ca6140fa" name="DrinksList" ref="fd4826a3-092b-4f0b-a84b-1c89ca6140fa" />
+                <categories id="_dd5c2e76-eb5d-4970-97d8-be102b77b8cc" name="RatingCategories" ref="dd5c2e76-eb5d-4970-97d8-be102b77b8cc" />
+                <categories id="_fe7f61e7-43ee-41c0-ac9d-080b774e8a36" name="GalleryList" ref="fe7f61e7-43ee-41c0-ac9d-080b774e8a36" />
+                <categories id="_62b94778-1f77-4c73-8271-a2f1bf9cd2d3" name="RatingList" ref="62b94778-1f77-4c73-8271-a2f1bf9cd2d3" />
             </types>
             <pages name="@pages" global-name-space="-1">
                 <deleted />
+                <page id="_1073741898" name="TestPage" ref="1073741898" />
             </pages>
             <routings>
                 <scripts>
@@ -3472,7 +4544,7 @@
             <context name="MRSCRIPTBASIC" />
         </scripttypes>
         <savelogs>
-            <savelog fileversion="6.0.1.1.60" versionset="" username="JWHD" date="12/23/2021 3:55:01 PM" count="38">
+            <savelog fileversion="6.0.1.1.60" versionset="" username="JWHD" date="12/24/2021 4:37:09 PM" count="99">
                 <user name="mrStudio.exe" fileversion="6.0.101.31" comment="Executable of the process MDM run under" />
             </savelog>
         </savelogs>
@@ -4092,6 +5164,13 @@
             <atom name="sourcetype" />
             <atom name="validation" />
             <atom name="precisions" />
+            <atom name="DisplayOrientation" />
+            <atom name="CacheTimeout" />
+            <atom name="MaxAnswers" />
+            <atom name="MinAnswers" />
+            <atom name="Table" />
+            <atom name="ConnectionString" />
+            <atom name="IteratorIDType" />
         </atoms>
         <versionlist />
         <categorymap>
@@ -4131,8 +5210,111 @@
             <categoryid name="list.t1" value="34" />
             <categoryid name="list.t2" value="35" />
             <categoryid name="list.t3" value="36" />
+            <categoryid name="samplevariance" value="37" />
+            <categoryid name="stddev" value="38" />
+            <categoryid name="stderr" value="39" />
             <categoryid name="_3" value="40" />
             <categoryid name="_4" value="41" />
+            <categoryid name="summary" value="42" />
+            <categoryid name="total" value="43" />
+            <categoryid name="dontknow" value="54" />
+            <categoryid name="refused" value="55" />
+            <categoryid name="high" value="56" />
+            <categoryid name="thisyear" value="57" />
+            <categoryid name="lastyear" value="58" />
+            <categoryid name="noanswer" value="59" />
+            <categoryid name="refusedtoanswer" value="60" />
+            <categoryid name="yes" value="61" />
+            <categoryid name="no" value="62" />
+            <categoryid name="male" value="63" />
+            <categoryid name="female" value="64" />
+            <categoryid name="carbonated" value="65" />
+            <categoryid name="milk" value="66" />
+            <categoryid name="fruit" value="67" />
+            <categoryid name="psd" value="68" />
+            <categoryid name="water" value="69" />
+            <categoryid name="drinkslist" value="70" />
+            <categoryid name="drinkslist." value="71" />
+            <categoryid name="drinkslist.tea" value="72" />
+            <categoryid name="drinkslist.coffee" value="73" />
+            <categoryid name="drinkslist.carbonated" value="74" />
+            <categoryid name="drinkslist.milk" value="75" />
+            <categoryid name="drinkslist.fruit" value="76" />
+            <categoryid name="drinkslist.psd" value="77" />
+            <categoryid name="drinkslist.water" value="78" />
+            <categoryid name="not" value="79" />
+            <categoryid name="notparticularly" value="80" />
+            <categoryid name="noopinion" value="81" />
+            <categoryid name="slightly" value="82" />
+            <categoryid name="very" value="83" />
+            <categoryid name="ratingcategories" value="84" />
+            <categoryid name="ratingcategories." value="85" />
+            <categoryid name="ratingcategories.not" value="86" />
+            <categoryid name="ratingcategories.notparticularly" value="87" />
+            <categoryid name="ratingcategories.noopinion" value="88" />
+            <categoryid name="ratingcategories.slightly" value="89" />
+            <categoryid name="ratingcategories.very" value="90" />
+            <categoryid name="orange" value="93" />
+            <categoryid name="monday" value="94" />
+            <categoryid name="tuesday" value="95" />
+            <categoryid name="thursday" value="96" />
+            <categoryid name="wednesday" value="97" />
+            <categoryid name="friday" value="98" />
+            <categoryid name="saturday" value="99" />
+            <categoryid name="sunday" value="100" />
+            <categoryid name="dinosaur" value="101" />
+            <categoryid name="conservation" value="102" />
+            <categoryid name="fish" value="103" />
+            <categoryid name="fossils" value="104" />
+            <categoryid name="birds" value="105" />
+            <categoryid name="botany" value="106" />
+            <categoryid name="insects" value="107" />
+            <categoryid name="whales" value="108" />
+            <categoryid name="wildlife" value="109" />
+            <categoryid name="mammals" value="110" />
+            <categoryid name="minerals" value="111" />
+            <categoryid name="ecology" value="112" />
+            <categoryid name="evolution" value="113" />
+            <categoryid name="origin" value="114" />
+            <categoryid name="human" value="115" />
+            <categoryid name="gallerylist" value="116" />
+            <categoryid name="gallerylist." value="117" />
+            <categoryid name="gallerylist.dinosaur" value="118" />
+            <categoryid name="gallerylist.conservation" value="119" />
+            <categoryid name="gallerylist.fish" value="120" />
+            <categoryid name="gallerylist.fossils" value="121" />
+            <categoryid name="gallerylist.birds" value="122" />
+            <categoryid name="gallerylist.botany" value="123" />
+            <categoryid name="gallerylist.insects" value="124" />
+            <categoryid name="gallerylist.whales" value="125" />
+            <categoryid name="gallerylist.wildlife" value="126" />
+            <categoryid name="gallerylist.mammals" value="127" />
+            <categoryid name="gallerylist.minerals" value="128" />
+            <categoryid name="gallerylist.ecology" value="129" />
+            <categoryid name="gallerylist.evolution" value="130" />
+            <categoryid name="gallerylist.origin" value="131" />
+            <categoryid name="gallerylist.human" value="132" />
+            <categoryid name="ratinglist" value="133" />
+            <categoryid name="ratinglist." value="134" />
+            <categoryid name="ratinglist.not" value="135" />
+            <categoryid name="ratinglist.notparticularly" value="136" />
+            <categoryid name="ratinglist.noopinion" value="137" />
+            <categoryid name="ratinglist.slightly" value="138" />
+            <categoryid name="ratinglist.very" value="139" />
+            <categoryid name="y11_16" value="140" />
+            <categoryid name="y17_20" value="141" />
+            <categoryid name="y21_24" value="142" />
+            <categoryid name="y25_34" value="143" />
+            <categoryid name="y35_44" value="144" />
+            <categoryid name="y45_54" value="145" />
+            <categoryid name="y55_64" value="146" />
+            <categoryid name="y65_pp" value="147" />
+            <categoryid name="perfect" value="148" />
+            <categoryid name="good" value="149" />
+            <categoryid name="normal" value="150" />
+            <categoryid name="bad" value="151" />
+            <categoryid name="dk" value="152" />
+            <categoryid name="ref" value="153" />
         </categorymap>
     </mdm:metadata>
 </xml>

@@ -1,4 +1,3 @@
-import { type } from "os";
 
 
 export interface MdmCollection<T> {
@@ -105,6 +104,12 @@ export interface MdmDefinitionVariable extends MdmSettings, MdmLabeled {
     noCaseData?: string;
 }
 
+export interface MdmDefinitionPage extends MdmCollection<MdmReference>, MdmSettings, MdmLabeled {
+    id: string;
+    name: string;
+    globalNamespace: string;
+}
+
 export type MdmDefinitionField = MdmDefinitionVariable | MdmCategories;
 
 export interface MdmReference {
@@ -178,6 +183,10 @@ export interface MdmVarDefinition extends MdmLabeled, MdmSettings, MdmRange {
     id: string;
     name: string;
     type: string;
+    isDb?: string;
+    dbType?: string;
+    dbDataType?: string;
+    db?: MdmProperties;
     categories?: MdmCategories;
     helperFields?: MdmHelperFields;
 }

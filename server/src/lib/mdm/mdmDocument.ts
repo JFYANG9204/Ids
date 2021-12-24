@@ -14,6 +14,7 @@ import {
     MdmContexts,
     MdmDataSources,
     MdmDefinition,
+    MdmDefinitionPage,
     MdmDesign,
     MdmElement,
     MdmFieldDesign,
@@ -605,9 +606,11 @@ export class MdmDocument {
     private readVarDefinition(node: any): MdmVarDefinition {
         let categories: MdmCategories | undefined;
         let helperFields: MdmHelperFields | undefined;
+        let db: MdmProperties | undefined;
         let settings = this.readSettingAndLabel(node, child => {
             let tagName = this.getTagName(child);
             switch (tagName) {
+                case "db":           db = this.readProperties(child);              break;
                 case "categories":   categories = this.readCategories(child);      break;
                 case "helperfields": helperFields = this.readHelperFields(child);  break;
                 default:             this.unknownNode(child, node);                break;
@@ -618,6 +621,10 @@ export class MdmDocument {
             id: this.getAttributeNotEmpty(node, "id"),
             name: this.getAttributeNotEmpty(node, "name"),
             type: this.getAttributeNotEmpty(node, "type"),
+            isDb: this.getAttribute(node, "isdb"),
+            dbType: this.getAttribute(node, "dbtype"),
+            dbDataType: this.getAttribute(node, "dbdatatype"),
+            db,
             categories,
             helperFields
         }, settings, range);
@@ -632,6 +639,21 @@ export class MdmDocument {
             usageType: this.getAttributeNotEmpty(node, "usagetype"),
             isOtherOrMulti: type
         }, settings);
+    }
+
+    private readPageDefinition(node: any): MdmDefinitionPage {
+        let settings = this.readSettingAndLabel(node, () => {});
+        let collection = this.readMdmCollection(node, [
+            {
+                test: node => this.getTagName(node) === "item",
+                read: this.readReference.bind(this)
+            }
+        ], true);
+        return Object.assign({
+            id: this.getAttributeNotEmpty(node, "id"),
+            name: this.getAttributeNotEmpty(node, "name"),
+            globalNamespace: this.getAttributeNotEmpty(node, "global-name-space"),
+        }, settings, collection);
     }
 
     private readDefinitions(node: any): Map<string, MdmDefinition> {
@@ -650,6 +672,10 @@ export class MdmDocument {
                     break;
                 case "variable":
                     definition = this.readVarDefinition(child);
+                    definitions.set(definition.id, definition);
+                    break;
+                case "page":
+                    definition = this.readPageDefinition(child);
                     definitions.set(definition.id, definition);
                     break;
                 case "categories":
