@@ -14,17 +14,22 @@ import {
     MdmContexts,
     MdmDataSources,
     MdmDefinition,
+    MdmDesign,
     MdmElement,
+    MdmFieldDesign,
+    MdmFieldDesignItem,
     MdmHelperFields,
     MdmLabeled,
     MdmLabels,
     MdmLabelStyles,
+    MdmLabelTypes,
     MdmLanguage,
     MdmLanguages,
     MdmLoopDesign,
     MdmLoopRanges,
     MdmLoopSubFieldsDesign,
     MdmMappings,
+    MdmMetadata,
     MdmNotes,
     MdmOtherVarDefinition,
     MdmPages,
@@ -33,6 +38,7 @@ import {
     MdmRange,
     MdmReference,
     MdmRouting,
+    MdmRoutingContexts,
     MdmRoutingItem,
     MdmRoutings,
     MdmSaveLog,
@@ -40,9 +46,12 @@ import {
     MdmScript,
     MdmScripts,
     MdmScriptType,
+    MdmScriptTypes,
     MdmSettings,
     MdmStyles,
     MdmSubFields,
+    MdmSystem,
+    MdmSystemRouting,
     MdmTemplates,
     MdmText,
     MdmTypes,
@@ -55,6 +64,7 @@ export class MdmDocument {
     private xml: string = "";
     private path: string;
     private xmlDocument: Document;
+    private metadata: MdmMetadata;
 
     raiseError?: (text: string) => string;
 
@@ -67,9 +77,11 @@ export class MdmDocument {
         }
         let parser = new DOMParser();
         this.xmlDocument = parser.parseFromString(this.xml);
-    }
-
-    load() {
+        let xmlNode = this.xmlDocument.documentElement.lastChild;
+        if (!xmlNode) {
+            throw new Error(`node '${this.getTagName(this.xmlDocument)}' need child tag`);
+        }
+        this.metadata = this.readMetadata(xmlNode);
     }
 
     private unknownNode(child: any, base: any) {
@@ -84,7 +96,7 @@ export class MdmDocument {
 
     private getAttribute(node: any, name: string): string | undefined {
         if (node["getAttribute"]) {
-            return node["getAttribute"](name);
+            return node["getAttribute"](name) ?? undefined;
         }
         return undefined;
     }
@@ -227,7 +239,7 @@ export class MdmDocument {
             } else if (tagName === "notes") {
                 notes = this.readProperties(child);
             } else {
-                callback(node);
+                callback(child);
             }
         });
         return {
@@ -352,7 +364,7 @@ export class MdmDocument {
     private readPages(node: any): MdmPages {
         let collection = this.readMdmCollection(node, [
             {
-                read: this.readReference,
+                read: this.readReference.bind(this),
                 test: node => this.getTagName(node) === "page"
             }
         ], true);
@@ -423,7 +435,7 @@ export class MdmDocument {
     private readScriptType(node: any): MdmScriptType {
         let collection = this.readMdmCollection(node, [
             {
-                read: this.readScript,
+                read: this.readScript.bind(this),
                 test: node => this.getTagName(node) === "script"
             }
         ], true);
@@ -438,7 +450,7 @@ export class MdmDocument {
     private readScripts(node: any): MdmScripts {
         return this.readMdmCollection(node, [
             {
-                read: this.readScriptType,
+                read: this.readScriptType.bind(this),
                 test: node => this.getTagName(node) === "scripttype"
             }
         ], true);
@@ -448,15 +460,15 @@ export class MdmDocument {
         let collection = this.readMdmCollection<MdmReference | MdmBlockVarDefinition | MdmLoopDesign>(node, [
             {
                 test: node => this.getTagName(node) === "variable",
-                read: this.readReference
+                read: this.readReference.bind(this)
             },
             {
                 test: node => this.getTagName(node) === "class",
-                read: this.readBlock
+                read: this.readBlock.bind(this)
             },
             {
                 test: node => this.getTagName(node) === "loop" || this.getTagName(node) === "grid",
-                read: this.readLoop
+                read: this.readLoop.bind(this)
             }
         ], true);
         return Object.assign({
@@ -565,11 +577,11 @@ export class MdmDocument {
     private readHelperFields(node: any): MdmHelperFields {
         let collection = this.readMdmCollection<MdmBlockVarDefinition | MdmReference>(node, [
             {
-                read: this.readReference,
+                read: this.readReference.bind(this),
                 test: node => this.getTagName(node) === "variable"
             },
             {
-                read: this.readBlock,
+                read: this.readBlock.bind(this),
                 test: node => this.getTagName(node) === "class"
             }
         ], true);
@@ -622,16 +634,37 @@ export class MdmDocument {
         }, settings);
     }
 
-    private readDefinitions(node: any): MdmDefinition[] {
-        let definitions: MdmDefinition[] = [];
+    private readDefinitions(node: any): Map<string, MdmDefinition> {
+        let definitions = new Map<string, MdmDefinition>();
         this.iterateChild(node, child => {
             let tageName = this.getTagName(child);
+            let definition;
             switch (tageName) {
-                case "othervariable":       definitions.push(this.readOtherVarDefinition(child, "other")); break;
-                case "multiplier-variable": definitions.push(this.readOtherVarDefinition(child, "multi")); break;
-                case "variable":            definitions.push(this.readVarDefinition(child));               break;
-                case "categories":          definitions.push(this.readCategories(child));                  break;
-                default:                    this.unknownNode(child, node);                                 break;
+                case "othervariable":
+                    definition = this.readOtherVarDefinition(child, "other");
+                    definitions.set(definition.id, definition);
+                    break;
+                case "multiplier-variable":
+                    definition = this.readOtherVarDefinition(child, "multi");
+                    definitions.set(definition.id, definition);
+                    break;
+                case "variable":
+                    definition = this.readVarDefinition(child);
+                    definitions.set(definition.id, definition);
+                    break;
+                case "categories":
+                    definition = this.readCategories(child);
+                    if (!definition.id) {
+                        if (this.raiseError) {
+                            this.raiseError(`node ${this.getTagName(child)} need attribute 'id'`);
+                        }
+                    } else {
+                        definitions.set(definition.id, definition);
+                    }
+                    break;
+                default:
+                    this.unknownNode(child, node);
+                    break;
             }
         });
         return definitions;
@@ -673,7 +706,7 @@ export class MdmDocument {
     private readLanguages(node: any): MdmLanguages {
         let collection = this.readMdmCollection(node, [
             {
-                read: this.readLanguage,
+                read: this.readLanguage.bind(this),
                 test: node => this.getTagName(node) === "language"
             }
         ], true);
@@ -709,7 +742,7 @@ export class MdmDocument {
     private readContexts(node: any): MdmContexts {
         let collection = this.readMdmCollection(node, [
             {
-                read: this.readContext,
+                read: this.readContext.bind(this),
                 test: node => this.getTagName(node) === "context"
             }
         ], true);
@@ -785,6 +818,130 @@ export class MdmDocument {
         });
         return map;
     }
+
+    private readDesignField(node: any): MdmFieldDesign {
+        let collection = this.readMdmCollection<MdmFieldDesignItem>(node, [
+            {
+                read: this.readReference.bind(this),
+                test: node => this.getTagName(node) === "variable"
+            },
+            {
+                read: this.readBlock.bind(this),
+                test: node => this.getTagName(node) === "class"
+            },
+            {
+                read: this.readLoop.bind(this),
+                test: node => this.getTagName(node) === "loop" || this.getTagName(node) === "grid"
+            }
+        ], true);
+        return Object.assign({
+            name: this.getAttributeNotEmpty(node, "name"),
+            globalNamespace: this.getAttributeNotEmpty(node, "global-name-space")
+        }, collection);
+    }
+
+    private readDesign(node: any): MdmDesign {
+        let fields: MdmFieldDesign | undefined;
+        let types: MdmTypes | undefined;
+        let pages: MdmPages | undefined;
+        let routings: MdmRoutings | undefined;
+        let settings = this.readSettingAndLabel(node, child => {
+            let tagName = this.getTagName(child);
+            switch (tagName) {
+                case "fields":   fields = this.readDesignField(child);  break;
+                case "types":    types = this.readPages(child);         break;
+                case "pages":    pages = this.readPages(child);         break;
+                case "routings": routings = this.readRoutings(child);   break;
+                default:         this.unknownNode(child, node);         break;
+            }
+        });
+        return Object.assign({
+            fields, types, pages, routings
+        }, settings);
+    }
+
+    private readSystem(node: any): MdmSystem {
+        let collection = this.readMdmCollection(node, [
+            {
+                read: this.readBlock.bind(this),
+                test: node => this.getTagName(node) === "class"
+            }
+        ], true);
+        return Object.assign({
+            name: this.getAttributeNotEmpty(node, "name"),
+            globalNamespace: this.getAttributeNotEmpty(node, "global-name-space")
+        }, collection);
+    }
+
+    private readSystemRouting(node: any): MdmSystemRouting {
+        let routings = this.readRoutings(node);
+        return routings.routing ?? [];
+    }
+
+    private readMetadata(node: any): MdmMetadata {
+        let dataSources: MdmDataSources | undefined,
+            definition: Map<string, MdmDefinition> | undefined,
+            system: MdmSystem | undefined,
+            systemRouting: MdmSystemRouting | undefined,
+            mappings: MdmMappings | undefined,
+            design: MdmDesign | undefined,
+            languages: MdmLanguages | undefined,
+            contexts: MdmContexts | undefined,
+            labelTypes: MdmLabelTypes | undefined,
+            routingContexts: MdmRoutingContexts | undefined,
+            scriptTypes: MdmScriptTypes | undefined,
+            saveLogs: MdmSaveLogs | undefined,
+            atoms: MdmAtoms | undefined,
+            categoryMap: MdmCategoryMap | undefined;
+
+        let settings = this.readSettingAndLabel(node, child => {
+            let tagName = this.getTagName(child);
+            switch (tagName) {
+                case "datasources":     dataSources = this.readDataSources(child);     break;
+                case "definition":      definition = this.readDefinitions(child);      break;
+                case "system":          system = this.readSystem(child);               break;
+                case "systemrouting":   systemRouting = this.readSystemRouting(child); break;
+                case "mappings":        mappings = this.readMappings(child);           break;
+                case "design":          design = this.readDesign(child);               break;
+                case "languages":       languages = this.readLanguages(child);         break;
+                case "contexts":        contexts = this.readContexts(child);           break;
+                case "labeltypes":      labelTypes = this.readContexts(child);         break;
+                case "routingcontexts": routingContexts = this.readContexts(child);    break;
+                case "scripttypes":     scriptTypes = this.readContexts(child);        break;
+                case "savelogs":        saveLogs = this.readSaveLogs(child);           break;
+                case "atoms":           atoms = this.readAtoms(child);                 break;
+                case "categorymap":     categoryMap = this.readCategoryMap(child);     break;
+                case "versionlist":                                                    break;
+                default:                this.unknownNode(child, node);                 break;
+            }
+        });
+
+        return Object.assign({
+            mdmCreateVersion: this.getAttributeNotEmpty(node, "mdm_createversion"),
+            mdmLastVersion: this.getAttributeNotEmpty(node, "mdm_lastversion"),
+            id: this.getAttributeNotEmpty(node, "id"),
+            dataVersion: this.getAttributeNotEmpty(node, "data_version"),
+            dataSubVersion: this.getAttributeNotEmpty(node, "data_sub_version"),
+            systemVariable: this.getAttributeNotEmpty(node, "systemvariable"),
+            dbFilterValidation: this.getAttributeNotEmpty(node, "dbfiltervalidation"),
+            xmlns: this.getAttributeNotEmpty(node, "xmlns:mdm"),
+            dataSources,
+            definition,
+            system,
+            systemRouting,
+            mappings,
+            design,
+            languages,
+            contexts,
+            labelTypes,
+            routingContexts,
+            scriptTypes,
+            saveLogs,
+            atoms,
+            categoryMap
+        }, settings);
+    }
+
 
 }
 

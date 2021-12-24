@@ -243,18 +243,17 @@ export interface MdmLoopDesign extends MdmLabeled, MdmSettings {
     pages?: MdmPages;
 }
 
-export type MdmFieldDesignItem = MdmBlockVarDefinition | MdmLoopDesign;
+export type MdmFieldDesignItem = MdmBlockVarDefinition | MdmLoopDesign | MdmReference;
 export interface MdmFieldDesign extends MdmCollection<MdmFieldDesignItem> {
     name: string;
     globalNamespace: string;
 }
 
-export interface MdmDesign {
-    fields: MdmFieldDesign;
-    types: MdmTypes;
-    pages: MdmPages;
-    routings: MdmRoutings;
-    properties: MdmProperties;
+export interface MdmDesign extends MdmSettings {
+    fields?: MdmFieldDesign;
+    types?: MdmTypes;
+    pages?: MdmPages;
+    routings?: MdmRoutings;
 }
 
 export interface MdmLanguage {
@@ -325,19 +324,19 @@ export interface MdmMetadata extends MdmLabeled, MdmSettings {
     systemVariable: string;
     dbFilterValidation: string;
     xmlns: string;
-    datasources: MdmDataSources;
-    definition: MdmDefinition[];
-    system: MdmSystem;
-    systemRouting: MdmSystemRouting;
-    mappings: MdmMappings;
-    design: MdmDesign;
-    languages: MdmLanguages;
-    contexts: MdmContexts;
-    labelTypes: MdmLabelTypes;
-    routingContexts: MdmRoutingContexts;
-    scriptTypes: MdmScriptTypes;
-    saveLogs: MdmSaveLogs;
-    atoms: MdmAtoms;
-    categoryMap: MdmCategoryMap;
+    dataSources?: MdmDataSources;
+    definition?: Map<string, MdmDefinition>;
+    system?: MdmSystem;
+    systemRouting?: MdmSystemRouting;
+    mappings?: MdmMappings;
+    design?: MdmDesign;
+    languages?: MdmLanguages;
+    contexts?: MdmContexts;
+    labelTypes?: MdmLabelTypes;
+    routingContexts?: MdmRoutingContexts;
+    scriptTypes?: MdmScriptTypes;
+    saveLogs?: MdmSaveLogs;
+    atoms?: MdmAtoms;
+    categoryMap?: MdmCategoryMap;
 }
 

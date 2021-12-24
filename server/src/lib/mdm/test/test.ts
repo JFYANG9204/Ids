@@ -5,8 +5,9 @@ import { Parser } from "../..";
 import { createBasicOptions } from "../../options";
 import { builtInModule } from "../../../declaration";
 import { DOMParser, XMLSerializer } from "xmldom";
+import { MdmDocument } from "../mdmDocument";
 
-// const xmlPath = resolve("./server/src/lib/mdm/test/fixture/77403614_R1.MDD");
+const xmlPath = resolve("./server/src/lib/mdm/test/fixture/77403614_R1.MDD");
 // let fileStr = readFileSync(xmlPath).toString();
 // let parser = new DOMParser();
 // let result = parser.parseFromString(fileStr);
@@ -18,10 +19,7 @@ import { DOMParser, XMLSerializer } from "xmldom";
 //         console.log(child["getAttribute"]("mdm_createversion"));
 //     }
 // }
-
-let a = { a: "a", b: "b" };
-let b = { c: "d", e: "e", a: "b" };
-let c = Object.assign(a, b);
+let mdm = new MdmDocument(xmlPath);
 
 console.log("end");
 
