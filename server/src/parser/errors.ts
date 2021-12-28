@@ -2,6 +2,9 @@
 
 namespace ds {
 
+    const errors: ParsingError[] = [];
+    const warinings: ParsingError[] = [];
+
     export type ParsingErrorType = "error" | "warning";
 
     export interface ParsingError extends SyntaxError {
@@ -24,10 +27,7 @@ namespace ds {
         unexpectedToken: createErrorTemplate(1001, "意外的标识符,应为'%0'."),
     };
 
-    function raiseParsingError(options: { range: ReadonlyRange, fsPath: string }, template: ErrorTemplate, ...params: any): ParsingError;
-    function raiseParsingError(node: Node, template: ErrorTemplate, ...params: any): ParsingError;
-
-    function raiseParsingError(options: { range: ReadonlyRange, fsPath: string } | Node, template: ErrorTemplate, ...params: any): ParsingError {
+    function raiseParsingErrorBase(options: { range: ReadonlyRange, fsPath: string } | Node, template: ErrorTemplate, type: ParsingErrorType, ...params: any): ParsingError {
         const message = template.template.replace(/%(\d+)/g, (_, i: number) => params[i]);
         let range: Range;
         let fsPath: string;
@@ -40,7 +40,29 @@ namespace ds {
             range = option.range;
             fsPath = options.fsPath;
         }
-        return { range, code: template.code, message, fsPath, type: "error", name: "DS_SYNTAX_ERROR" };
+        return { range, code: template.code, message, fsPath, type, name: "DS_SYNTAX_ERROR" };
+    }
+
+    function raiseError(options: { range: ReadonlyRange, fsPath: string }, template: ErrorTemplate, ...params: any): void;
+    function raiseError(node: Node, template: ErrorTemplate, ...params: any): void;
+
+    function raiseError(options: { range: ReadonlyRange, fsPath: string } | Node, template: ErrorTemplate, ...params: any) {
+        errors.push(raiseParsingErrorBase(options, template, "error",...params));
+    }
+
+    function raiseWarning(options: { range: ReadonlyRange, fsPath: string }, template: ErrorTemplate, ...params: any): void;
+    function raiseWarning(node: Node, template: ErrorTemplate, ...params: any): void;
+
+    function raiseWarning(options: { range: ReadonlyRange, fsPath: string } | Node, template: ErrorTemplate, ...params: any) {
+        warinings.push(raiseParsingErrorBase(options, template, "warning", ...params));
+    }
+
+    /**
+     * 清除所有当前的错误和警告等提示信息
+     */
+    function clearErrorAndWarnings() {
+        errors.splice(0);
+        warinings.splice(0);
     }
 
 }

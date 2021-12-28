@@ -231,6 +231,27 @@ namespace ds {
             || code === CharacterCodes.at;           // '@'
     }
 
+    /**
+     * 判断`Id`对应字符串是否为合法的命名
+     * @param name `Identifier`字符串内容
+     * @returns
+     */
+    export function isIdentifierName(name: string): boolean {
+        let char = name.codePointAt(0);
+        if (!char || !isIdentifierStart(char)) {
+            return false;
+        }
+        if (name.length > 1) {
+            for (let i = 1; i < name.length; i++) {
+                char = name.codePointAt(i);
+                if (!char || !isIdentifierSubsequent(char)) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
     function getMapEntries(obj: { [key: string]: number }) {
         let entries: [string, number][] = [];
         Object.keys(obj).forEach(key => entries.push([ key, obj[key] ]));
@@ -349,11 +370,90 @@ namespace ds {
     }
 
     /**
+     * 判断是否为空白字符
+     * @param code
+     * @returns
+     */
+    function isWhitespace(code: number): boolean {
+        switch (code) {
+            case 0x0009: // CHARACTER TABULATION
+            case 0x000b: // LINE TABULATION
+            case 0x000c: // FORM FEED
+            case CharacterCodes.space:
+            case CharacterCodes.nonBreakingSpace:
+            case CharacterCodes.oghamSpace:
+            case 0x2000: // EN QUAD
+            case 0x2001: // EM QUAD
+            case 0x2002: // EN SPACE
+            case 0x2003: // EM SPACE
+            case 0x2004: // THREE-PER-EM SPACE
+            case 0x2005: // FOUR-PER-EM SPACE
+            case 0x2006: // SIX-PER-EM SPACE
+            case 0x2007: // FIGURE SPACE
+            case 0x2008: // PUNCTUATION SPACE
+            case 0x2009: // THIN SPACE
+            case 0x200a: // HAIR SPACE
+            case 0x202f: // NARROW NO-BREAK SPACE
+            case 0x205f: // MEDIUM MATHEMATICAL SPACE
+            case 0x3000: // IDEOGRAPHIC SPACE
+            case 0xfeff: // ZERO WIDTH NO-BREAK SPACE
+              return true;
+
+            default:
+              return false;
+        }
+    }
+
+    /**
+     * 判断是否为空白符或者换行符
+     * @param code
+     * @returns
+     */
+    function isWhitespaceLike(code: number): boolean {
+        return isWhitespace(code) || isLineBreak(code);
+    }
+
+    /**
      * 获取文本对应的Token类型，不是保留字或符号时，返回空
      * @param text
      */
     function getTextTokenKind(text: string): SyntaxKind | undefined {
         return textToTokenKind.get(text.toLowerCase());
+    }
+
+    // 匹配完整的换行符，用来计算行数
+    const lineBreak = /\r\n?|[\n\u2028\u2029]/;
+    const lineBreakG = new RegExp(lineBreak.source, "g");
+
+    let lineStarts: number[] = [];
+
+    /**
+     * 获取输入字符串中，所有新行开始的位置
+     * @param input 输入文本内容
+     * @returns
+     */
+    function getLineStarts(input: string): number[] {
+        let lineStarts: number[] = [];
+        lineBreakG.lastIndex = 0;
+        while (lineBreakG.exec(input)) {
+            lineStarts.push(lineBreakG.lastIndex);
+        }
+        return lineStarts;
+    }
+
+    /**
+     * 获取源文件的所有行起始位置，如果当前没有赋值，则读取起始位置
+     * @param sourceFile 源文件对象
+     * @returns
+     */
+    function getSourceFileLineStarts(sourceFile: SourceFile) {
+        return sourceFile.lineStarts || (sourceFile.lineStarts = getLineStarts(sourceFile.text));
+    }
+
+    export function createScanner(input: string) {
+        let text = input;
+        // 当前字符位置
+        let pos = 0;
     }
 
 }

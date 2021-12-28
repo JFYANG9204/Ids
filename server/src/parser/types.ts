@@ -13,7 +13,13 @@ namespace ds {
     }
 
     export interface Position {
+        /**
+         * 0开始的行号
+         */
         line: number;
+        /**
+         * 0开始的列号
+         */
         character: number;
     }
 
