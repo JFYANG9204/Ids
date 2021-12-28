@@ -1,6 +1,17 @@
 
 namespace ds {
 
+    export enum ScriptKind {
+        dms,
+        mrs
+    }
+
+    export enum FileKind {
+        declare,
+        script,
+        metadata
+    }
+
     export interface Position {
         line: number;
         character: number;
@@ -303,6 +314,7 @@ namespace ds {
         readonly parent: Node;           // 父节点
         symbol: Symbol;                  // 此节点声明的符号
         original?: Node;                 // 如果此节点更新过，保存原始节点
+        fsPath: string;                  // 文件系统路径
     }
 
     export interface TypeBindingNode extends Node {

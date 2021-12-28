@@ -169,6 +169,40 @@ namespace ds {
     }
 
     /**
+     * 判断是否是16进制数字编码
+     *
+     *  包括 0-9 a-f A-F
+     *
+     * @param code
+     * @returns
+     */
+    export function isHexNumberCode(code: number): boolean {
+        return isNumberCode(code)
+        || (CharacterCodes.uppercaseA <= code && code <= CharacterCodes.uppercaseF)
+        || (CharacterCodes.lowercaseA <= code && code <= CharacterCodes.lowercaseF);
+    }
+
+    /**
+     * 判断是否是换行符
+     *
+     * | 值      | 名称                   |  |
+     * | :------ | :------------------- | :----- |
+     * | \u000A  |  Line Feed           | <LF> |
+     * | \u000D  |  Carriage Return     | <CR> |
+     * | \u2028  |  Line Separator      | <LS> |
+     * | \u2029  |  Paragraph Separator | <PS> |
+     *
+     * @param code
+     * @returns
+     */
+    export function isLineBreak(code: number): boolean {
+        return code === CharacterCodes.lineFeed
+            || code === CharacterCodes.carriageReturn
+            || code === CharacterCodes.paragraphSeparator
+            || code === CharacterCodes.lineSeparator;
+    }
+
+    /**
      * 判断字符是否为允许的`Identifier`开始字符，
      * 允许字符为 下划线'_' 或 英文字母 或 Unicode Standard 3.0 定义的字符
      * @param code 字符编码值
@@ -195,6 +229,131 @@ namespace ds {
             || code === CharacterCodes.dollar        // '$'
             || code === CharacterCodes.hash          // '#'
             || code === CharacterCodes.at;           // '@'
+    }
+
+    function getMapEntries(obj: { [key: string]: number }) {
+        let entries: [string, number][] = [];
+        Object.keys(obj).forEach(key => entries.push([ key, obj[key] ]));
+        return entries;
+    }
+
+    const textToScriptKeywordTokenKindObject: { [key: string]: number } = {
+        "and"            : SyntaxKind.andKeyword,
+        "case"           : SyntaxKind.caseKeyword,
+        "const"          : SyntaxKind.constKeyword,
+        "dim"            : SyntaxKind.dimKeyword,
+        "do"             : SyntaxKind.doKeyword,
+        "each"           : SyntaxKind.eachKeyword,
+        "else"           : SyntaxKind.elseKeyword,
+        "elseif"         : SyntaxKind.elseIfKeyword,
+        "end"            : SyntaxKind.endKeyword,
+        "error"          : SyntaxKind.errorKeyword,
+        "exit"           : SyntaxKind.exitKeyword,
+        "explicit"       : SyntaxKind.exlplicitKeyword,
+        "false"          : SyntaxKind.falseKeyword,
+        "for"            : SyntaxKind.forKeyword,
+        "function"       : SyntaxKind.functionKeyword,
+        "globalvariables": SyntaxKind.globalVariablesKeyword,
+        "goto"           : SyntaxKind.gotoKeywords,
+        "if"             : SyntaxKind.ifKeyword,
+        "implicit"       : SyntaxKind.implicitKeyword,
+        "in"             : SyntaxKind.inKeyword,
+        "is"             : SyntaxKind.isKeyword,
+        "like"           : SyntaxKind.likeKeyword,
+        "loop"           : SyntaxKind.loopKeyword,
+        "mod"            : SyntaxKind.modKeyword,
+        "next"           : SyntaxKind.nextKeyword,
+        "not"            : SyntaxKind.notKeyword,
+        "null"           : SyntaxKind.nullKeyword,
+        "on"             : SyntaxKind.onKeyword,
+        "option"         : SyntaxKind.optionKeyword,
+        "or"             : SyntaxKind.orKeyword,
+        "paper"          : SyntaxKind.paperKeyword,
+        "resume"         : SyntaxKind.resumeKeyword,
+        "section"        : SyntaxKind.sectionKeyword,
+        "select"         : SyntaxKind.selectKeyword,
+        "step"           : SyntaxKind.stepKeyword,
+        "sub"            : SyntaxKind.subKeyword,
+        "then"           : SyntaxKind.thenKeyword,
+        "to"             : SyntaxKind.toKeyword,
+        "true"           : SyntaxKind.trueKeyword,
+        "until"          : SyntaxKind.untilKeyword,
+        "while"          : SyntaxKind.whileKeyword,
+        "with"           : SyntaxKind.withKeyword,
+        "xor"            : SyntaxKind.xorKeyword
+    };
+
+    const textToDeclareKeywordTokenKindObject: { [key: string]: number } = {
+        "enum"       : SyntaxKind.enumKeyword,
+        "implements" : SyntaxKind.implementsKeyword,
+        "optional"   : SyntaxKind.optionalKeyword,
+        "default"    : SyntaxKind.defaultKeyword,
+        "namespace"  : SyntaxKind.namespaceKeyword,
+        "interface"  : SyntaxKind.interfaceKeyword,
+        "class"      : SyntaxKind.classKeyword,
+        "readonly"   : SyntaxKind.readonlyKeyword,
+        "writeonly"  : SyntaxKind.writeonlyKeyword,
+        "property"   : SyntaxKind.propertyKeyword,
+        "paramarray" : SyntaxKind.paramArrayKeyword,
+        "get"        : SyntaxKind.getKeyword,
+        "set"        : SyntaxKind.setKeyword,
+        "as"         : SyntaxKind.asKeyword,
+        "of"         : SyntaxKind.ofKeyword
+    };
+
+    const textToTokenKindObject: { [key: string]: number } = {
+        ...textToScriptKeywordTokenKindObject,
+        ...textToDeclareKeywordTokenKindObject,
+        "("  : SyntaxKind.openParenToken,
+        ")"  : SyntaxKind.closeParenToken,
+        "["  : SyntaxKind.openBracketToken,
+        "]"  : SyntaxKind.closeBracketToken,
+        "{"  : SyntaxKind.openBraceToken,
+        "}"  : SyntaxKind.closeBraceToken,
+        "+"  : SyntaxKind.plusToken,
+        "-"  : SyntaxKind.minusToken,
+        "*"  : SyntaxKind.asteriskToken,
+        "/"  : SyntaxKind.slashToken,
+        "\\" : SyntaxKind.backSlashToken,
+        "="  : SyntaxKind.equalsToken,
+        "<"  : SyntaxKind.lessThanToken,
+        ">"  : SyntaxKind.greaterThanToken,
+        "<=" : SyntaxKind.lessThanEqualsToken,
+        ">=" : SyntaxKind.greaterThanEqualsToken,
+        ","  : SyntaxKind.commaToken,
+        ":"  : SyntaxKind.colonToken,
+        ";"  : SyntaxKind.semicolonToken,
+        "."  : SyntaxKind.dotToken,
+        ".." : SyntaxKind.dotDotToken,
+        "^"  : SyntaxKind.caretToken,
+        "||" : SyntaxKind.barBarToken,
+        "&&" : SyntaxKind.ampersandAmpersandToken,
+    };
+
+    const textToScriptKeywordTokenKind = new Map(getMapEntries(textToScriptKeywordTokenKindObject));
+    const textToDeclareKeywordTokenKind = new Map(getMapEntries(textToDeclareKeywordTokenKindObject));
+    const textToTokenKind = new Map(getMapEntries(textToTokenKindObject));
+
+    /**
+     * 判断是否为保留字，声明文件(.d.mrs)和一般脚本文件(.dms,.mrs)有所区别
+     * @param word 文本值
+     * @param kind 文件类型，主要区分是否为'.d.mrs'声明文件
+     * @returns
+     */
+    function isReservedWord(word: string, kind?: FileKind): SyntaxKind | undefined {
+        let lowerName = word.toLowerCase();
+        if (kind === FileKind.declare && textToDeclareKeywordTokenKind.has(lowerName)) {
+            return textToDeclareKeywordTokenKind.get(lowerName);
+        }
+        return textToScriptKeywordTokenKind.get(lowerName);
+    }
+
+    /**
+     * 获取文本对应的Token类型，不是保留字或符号时，返回空
+     * @param text
+     */
+    function getTextTokenKind(text: string): SyntaxKind | undefined {
+        return textToTokenKind.get(text.toLowerCase());
     }
 
 }
