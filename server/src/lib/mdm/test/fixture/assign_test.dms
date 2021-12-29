@@ -1,5 +1,0 @@
-
-
-Event(OnNextCase, "Clean the data")
-If record > 0           Then DP_Wave = {V24}
-end Event

@@ -102,7 +102,7 @@ export class StaticTypeChecker extends StatementParser {
     checkFuncInScope(scope: Scope) {
         if (!this.searchParserNode) {
             if (!this.options.inGraph) {
-                for (const func of scope.functions.values()) {
+                for (const func of Array.from(scope.functions.values())) {
                     const lowerName = func.name.name.toLowerCase();
                     if (this.updatedReturnTypeFunction.has(lowerName)) {
                         continue;
@@ -114,7 +114,7 @@ export class StaticTypeChecker extends StatementParser {
             return;
         }
 
-        for (const func of scope.functions.values()) {
+        for (const func of Array.from(scope.functions.values())) {
 
             let search = this.searchParserNode(func.loc.fileName);
             if (!search || !search.parser || !search.file) {

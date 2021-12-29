@@ -31,7 +31,7 @@ namespace ds {
         const message = template.template.replace(/%(\d+)/g, (_, i: number) => params[i]);
         let range: Range;
         let fsPath: string;
-        if (options["kind"]) {
+        if ("kind" in options) {
             let node = options as Node;
             range = { start: node.start, end: node.end };
             fsPath = node.fsPath;

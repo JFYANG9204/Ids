@@ -1,16 +1,17 @@
 {
-  "compilerOptions": {
-    "target": "es5",
-    "module": "commonjs",
-    "lib": ["ES2019"],
-    "outDir": "./out",
-    "rootDir": "./src",
-    "strict": true,
-    "composite": true,
-    "suppressImplicitAnyIndexErrors": true,
-    "downlevelIteration": true,
-    "noEmit": true
-  },
-  "exclude": ["node_modules"],
-  "include": ["src"]
+    "compilerOptions": {
+      "target": "es5",
+      "module": "CommonJS",
+      "lib": ["ES2019"],
+      "outDir": "./out",
+      "rootDir": "./src",
+      // "outFile": "./out/server.js",
+      // "moduleResolution": "Node",
+      "strict": true,
+      "composite": true,
+      "suppressImplicitAnyIndexErrors": true,
+      "downlevelIteration": true
+    },
+    "exclude": ["node_modules"],
+    "include": ["src"]
 }

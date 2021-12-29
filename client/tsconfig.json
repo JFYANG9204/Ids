@@ -1,15 +1,15 @@
 {
   "compilerOptions": {
     "target": "es5",
-    "module": "commonjs",
-    "lib": ["ES2019" ],
+    "module": "CommonJS",
+    "lib": ["ES2019"],
     "outDir": "./out",
     "rootDir": "./src",
+    // "outFile": "./out/extension.js",
+    // "moduleResolution": "Node",
     "strict": true,
     "composite": true,
-    "suppressImplicitAnyIndexErrors": true,
-    "downlevelIteration": true,
-    "noEmit": true
+    "suppressImplicitAnyIndexErrors": true
   },
   "exclude": ["node_modules"],
   "include": ["src"]

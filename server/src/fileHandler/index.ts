@@ -209,7 +209,7 @@ export class FileHandler {
     parse() {
 
         function iterateIncludeFile(node: File, callback: (n: File) => void) {
-            for (const inc of node.includes.values()) {
+            for (const inc of Array.from(node.includes.values())) {
                 callback(inc);
                 iterateIncludeFile(inc, callback);
             }
