@@ -314,20 +314,40 @@ namespace ds {
         failed,
     }
 
+    export interface Comment extends ReadonlyRange {
+        readonly kind: SyntaxKind.singleLineComment | SyntaxKind.multiLineComment;
+        readonly value: string;
+    }
+
+    export interface CommentWhitespace extends ReadonlyRange {
+        readonly comments: Array<Comment>;
+        readonly leadingNode?: Node;
+        readonly trailingNode?: Node;
+        readonly containerNode?: Node;
+        _commentWhitespace: any;
+    }
+
     export interface Node extends ReadonlyRange {
         readonly kind: SyntaxKind;
         readonly flags: NodeFlags;
-        readonly parent: Node;           // 父节点
-        symbol: Symbol;                  // 此节点声明的符号
-        original?: Node;                 // 如果此节点更新过，保存原始节点
-        fsPath: string;                  // 文件系统路径
+        readonly modifiers?: Array<Modifier>;// 针对声明文件，保存类成员的修饰符
+        readonly parent: Node;               // 父节点
+        symbol: Symbol;                      // 此节点的符号
+        localSymbol?: Symbol;                // 对于引用声明变量的节点，此属性为声明符号对象
+        locals?: SymbolTable;                // 此节点相关联的符号表
+        original?: Node;                     // 如果此节点更新过，保存原始节点
+        fsPath: string;                      // 文件系统路径
+        leadingComment?: CommentWhitespace;  // `Node`前注释
+        trailingComment?: CommentWhitespace; // `Node`后注释
+        innerComment?: CommentWhitespace;    // `Node`内注释
     }
 
     export interface TypeBindingNode extends Node {
         _typeBindingNode: any;
     }
 
-    export interface NodeArray<T extends Node> extends ReadonlyArray<T>, Range {
+    export interface NodeArray<T extends Node> extends Range {
+        readonly nodes: Array<T>;
     }
 
     export interface Token<TKind extends SyntaxKind> extends Node {

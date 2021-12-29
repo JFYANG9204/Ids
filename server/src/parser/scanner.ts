@@ -1,5 +1,4 @@
 
-
 namespace ds {
 
     export interface Scanner {
@@ -10,7 +9,6 @@ namespace ds {
         isReservedWord(): boolean;
         next(): SyntaxKind;
     }
-
     // `Identifier`允许的开始字符和后续字符表，以2个数字为一组范围，
     // 所以，后续检索时，需要以偶数索引为上限，以其+1索引为下限，如果搜索值在
     // 这两个数的范围内，则视为搜索到，如果是离散值，则范围上下限相同。
@@ -361,7 +359,7 @@ namespace ds {
      * @param kind 文件类型，主要区分是否为'.d.mrs'声明文件
      * @returns
      */
-    function isReservedWord(word: string, kind?: FileKind): SyntaxKind | undefined {
+    function isIdentifierReservedWord(word: string, kind?: FileKind): SyntaxKind | undefined {
         let lowerName = word.toLowerCase();
         if (kind === FileKind.declare && textToDeclareKeywordTokenKind.has(lowerName)) {
             return textToDeclareKeywordTokenKind.get(lowerName);
@@ -441,6 +439,7 @@ namespace ds {
         return lineStarts;
     }
 
+
     /**
      * 获取源文件的所有行起始位置，如果当前没有赋值，则读取起始位置
      * @param sourceFile 源文件对象
@@ -450,10 +449,36 @@ namespace ds {
         return sourceFile.lineStarts || (sourceFile.lineStarts = getLineStarts(sourceFile.text));
     }
 
-    export function createScanner(input: string) {
-        let text = input;
+    /**
+     * 创建词法分析器
+     * @param sourceFile
+     */
+    export function createScanner(sourceFile: SourceFile) {
+        // 输入字符串
+        let input = sourceFile.text;
+        // 当前Token的字符串值
+        let tokenText = "";
         // 当前字符位置
         let pos = 0;
+        // 行起始位置
+        let lineStarts = getSourceFileLineStarts(sourceFile);
+
+
+        function getText() {
+            return input;
+        }
+
+        function getTokenText() {
+            return tokenText;
+        }
+
+        function isReservedWord() {
+            return isIdentifierReservedWord(tokenText, sourceFile.kind);
+        }
+
+        function isIdentifier() {
+            return isIdentifierName(tokenText);
+        }
     }
 
 }

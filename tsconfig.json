@@ -4,9 +4,8 @@
     "module": "commonjs",
     "lib": ["ES2019"],
     "strict": true,
-    "sourceMap": true,
-    "suppressImplicitAnyIndexErrors": true,
-    "downlevelIteration": true
+    "downlevelIteration": true,
+    "noEmit": true
   },
   "references": [
     { "path": "./client" },
