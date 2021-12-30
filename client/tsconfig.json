@@ -5,8 +5,8 @@
     "lib": ["ES2019"],
     "outDir": "./out",
     "rootDir": "./src",
-    // "outFile": "./out/extension.js",
-    // "moduleResolution": "Node",
+    //"outFile": "./out/extension.js",
+    //"moduleResolution": "Node",
     "strict": true,
     "composite": true,
     "suppressImplicitAnyIndexErrors": true

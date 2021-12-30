@@ -56,11 +56,6 @@
   resolved "https://registry.npmmirror.com/@types/luxon/download/@types/luxon-2.0.5.tgz#29d3b095d55ee50df8f4cf109b16009334d9828e"
   integrity sha1-KdOwldVe5Q349M8QmxYAkzTZgo4=
 
-"@types/node@*":
-  version "17.0.2"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-17.0.2.tgz#a4c07d47ff737e8ee7e586fe636ff0e1ddff070a"
-  integrity sha512-JepeIUPFDARgIs0zD/SKPgFsJEAF0X5/qO80llx59gOxFTboS9Amv3S+QfB7lqBId5sFXJ99BN0J6zFRvL9dDA==
-
 "@types/node@^16.6.2":
   version "16.11.6"
   resolved "https://registry.npmmirror.com/@types/node/download/@types/node-16.11.6.tgz?cache=0&sync_timestamp=1635213425908&other_urls=https%3A%2F%2Fregistry.npmmirror.com%2F%40types%2Fnode%2Fdownload%2F%40types%2Fnode-16.11.6.tgz#6bef7a2a0ad684cf6e90fcfe31cecabd9ce0a3ae"
@@ -70,13 +65,6 @@
   version "1.62.0"
   resolved "https://registry.yarnpkg.com/@types/vscode/-/vscode-1.62.0.tgz#b4d6d192d5aeb75e91d0adef689c3ecef9879da7"
   integrity sha512-iGlQJ1w5e3qPUryroO6v4lxg3ql1ztdTCwQW3xEwFawdyPLoeUSv48SYfMwc7kQA7h6ThUqflZIjgKAykeF9oA==
-
-"@types/xml2js@^0.4.9":
-  version "0.4.9"
-  resolved "https://registry.yarnpkg.com/@types/xml2js/-/xml2js-0.4.9.tgz#a38267d8c2fe121c96922b12ee3bd89a58a6e20e"
-  integrity sha512-CHiCKIihl1pychwR2RNX5mAYmJDACgFVCMT5OArMaO3erzwXVcBqPcusr+Vl8yeeXukxZqtF8mZioqX+mpjjdw==
-  dependencies:
-    "@types/node" "*"
 
 "@types/xmldom@^0.1.31":
   version "0.1.31"

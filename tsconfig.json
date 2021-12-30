@@ -4,6 +4,8 @@
         "module": "CommonJS",
         "lib": ["ES2019"],
         "strict": true,
+        "suppressImplicitAnyIndexErrors": true,
+        "downlevelIteration": true,
         "noEmit": true
     },
     "references": [
